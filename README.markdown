@@ -1,4 +1,4 @@
-# BPDoc: business proccess documents organizator and generator
+# BPDoc: business proccess documents organizer and generator
 
 **BPDoc** - первый шаг в организации для внедрения процессного подхода.
 BPDoc позволит в wiki-подобной среде выделить процессы, удобно вести их список.
