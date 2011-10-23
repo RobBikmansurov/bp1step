@@ -1,0 +1,48 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Ptitle:</b>
+  <%= @b_proc.ptitle %>
+</p>
+
+<p>
+  <b>Pbody:</b>
+  <%= @b_proc.pbody %>
+</p>
+
+<p>
+  <b>Pcode:</b>
+  <%= @b_proc.pcode %>
+</p>
+
+<h2>Роли</h2>
+<% @b_proc.roles.each do |role| %>
+  <p>
+    <b>name:</b>
+    <%= role.name %>
+  </p>
+  <p>
+    <b>note:</b>
+    <%= role.note %>
+  </p>
+ 
+<% end %>
+
+<h2>Add a role:</h2>
+<%= form_for([@b_procs, @b_procs.roles.build]) do |f| %>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :note %><br />
+    <%= f.text_area :note %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+
+<%= link_to 'Edit', edit_b_proc_path(@b_proc) %> |
+<%= link_to 'Back', b_procs_path %>

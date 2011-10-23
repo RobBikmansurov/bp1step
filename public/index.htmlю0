@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ruby on Rails: Welcome aboard</title>
+  </head>
+  <body>
+    <h1>BP1stStep</h1>
+    <%= link_to "Процессы", posts_path %>
+  </body>
+</html>
