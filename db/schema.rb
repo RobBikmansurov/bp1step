@@ -11,7 +11,25 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111004142353) do
+ActiveRecord::Schema.define(:version => 20111023104115) do
+
+  create_table "b_procs", :force => true do |t|
+    t.string   "ptitle"
+    t.text     "pbody"
+    t.string   "pcode"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "roles", :force => true do |t|
+    t.string   "name"
+    t.text     "note"
+    t.integer  "b_proc_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "roles", ["b_proc_id"], :name => "index_roles_on_b_proc_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                                 :default => "", :null => false

@@ -32,7 +32,7 @@
   <h1>BP1stStep</h1>
   <ul class="menu">
     <li><a href="b_procs">Процессы</a></li>
-    <li><a href="roles">Роли</a></li>
+    <li><a href="#">Роли</a></li>
     <li><a href="#">Рабочие места</a></li>
     <li><a href="#">Приложения</a></li>
     <li><a href="#">Документы</a></li>

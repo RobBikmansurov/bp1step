@@ -1,0 +1,29 @@
+<%= form_for(@b_proc) do |f| %>
+  <% if @b_proc.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@b_proc.errors.count, "error") %> prohibited this b_proc from being saved:</h2>
+
+      <ul>
+      <% @b_proc.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :ptitle %><br />
+    <%= f.text_field :ptitle %>
+  </div>
+  <div class="field">
+    <%= f.label :pbody %><br />
+    <%= f.text_area :pbody %>
+  </div>
+  <div class="field">
+    <%= f.label :pcode %><br />
+    <%= f.text_field :pcode %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
