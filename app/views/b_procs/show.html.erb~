@@ -16,7 +16,7 @@
 </p>
 
 <h2>Роли</h2>
-<% @b_procs.roles.each do |role| %>
+<% @b_proc.roles.each do |role| %>
   <p>
     <b>name:</b>
     <%= role.name %>
@@ -29,7 +29,7 @@
 <% end %>
 
 <h2>Add a role:</h2>
-<%= form_for([@b_procs, @b_procs.roles.build]) do |f| %>
+<%= form_for([@b_proc, @b_proc.roles.build]) do |f| %>
   <div class="field">
     <%= f.label :name %><br />
     <%= f.text_field :name %>

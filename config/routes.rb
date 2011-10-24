@@ -1,10 +1,12 @@
 BPDoc::Application.routes.draw do
 
+  resources :roles do
+    resources :roles
+  end
   resources :b_procs do
     resources :roles
   end
 
-  resources :roles
 
   devise_for :users
   root :to => "home#index"
