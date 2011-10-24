@@ -4,6 +4,8 @@ BPDoc::Application.routes.draw do
     resources :roles
   end
 
+  resources :roles
+
   devise_for :users
   root :to => "home#index"
 
