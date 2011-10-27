@@ -1,14 +1,26 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE HTML>
 <html>
   <head>
-    <title>Ruby on Rails: Welcome aboard</title>
+    <title>Business Process - 1st Step</title>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="main." />
     <style type="text/css">
-      ul.menu { padding: 0; margin: 0; list-style: none; font: bold 14px Helvetica, Arial, sans-serif; text-transform: uppercase; text-decoration: none; color: #3072B0; }
-      ul.menu-right { padding: 0; margin: 0; list-style: none; font: bold 14px Helvetica, Arial, sans-serif; text-transform: uppercase; text-decoration: none; color: #3072B0; }
-      ul.menu li { float: left; margin-right: 10px; margin-bottom: 4px;}
-      ul.menu-right li { float: right; margin-right: 10px; margin-bottom: 4px;}
-      ul.menu li a { font: bold 11px Helvetica, Arial, sans-serif; text-transform: uppercase; text-decoration: none; color: #3072B0; }
-      ul.menu-right li a { font: bold 11px Helvetica, Arial, sans-serif; text-transform: uppercase; text-decoration: none; color: #3072B0; }
+      body, ul { font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; }
+      /* СЃС‚СЂСѓРєС‚СѓСЂР° СЃС‚СЂР°РЅРёС†С‹ */
+      #header { background: #EEE; margin:0 auto;}
+      #footer{background: #333;color: #FFF}
+      #wrapper{float:right;width:100%;margin-right:-33%}
+      #content{margin-right:33%}
+      #leftblock{float:left;width:32.9%}
+      #footer{clear:both;width:95%; margin:0 auto;}
+      
+      ul.menu { padding: 0; margin: 0; list-style: none; font: bold 6px; text-transform: uppercase; text-decoration: none; color: #3072B0; }
+      ul.menu-right { padding: 0; margin: 0; list-style: none; font: bold 10px; text-transform: uppercase; text-decoration: none; color: #3072B0; }
+      ul.menu li { float: left; margin-right: 9px; margin-bottom: 4px;}
+      ul.menu-right li { float: right; margin-right: 9px; margin-bottom: 4px;}
+      ul.menu li a { font: bold 10px; text-transform: uppercase; text-decoration: none; color: #3072B0; }
+      ul.menu-right li a { font: bold 10px; text-transform: uppercase; text-decoration: none; color: #3072B0; }
       ul.menu li a:visited { color: #3072B0; }
       ul.menu-right li a:visited { color: #3072B0; }
       ul.menu a:hover { border-bottom: 2px solid #3072B0; text-decoration: none; }
@@ -29,30 +41,25 @@
     </script>
   </head>
   <body>
-  <h1>BP1stStep</h1>
+  <div id="container">
+  <div id="header">
+    <h1>BP1stStep</h1>
   <ul class="menu">
-    <li><a href="b_procs">Процессы</a></li>
-    <li><a href="#">Роли</a></li>
-    <li><a href="#">Рабочие места</a></li>
-    <li><a href="#">Приложения</a></li>
-    <li><a href="#">Документы</a></li>
-    <li><a href="#">Сотрудники</a></li>
+    <li><a href="b_procs">РџСЂРѕС†РµСЃСЃС‹</a></li>
+    <li><a href="roles">Р РѕР»Рё</a></li>
+    <li><a href="#">Р Р°Р±РѕС‡РёРµ РјРµСЃС‚Р°</a></li>
+    <li><a href="#">РџСЂРёР»РѕР¶РµРЅРёСЏ</a></li>
+    <li><a href="#">Р”РѕРєСѓРјРµРЅС‚С‹</a></li>
+    <li><a href="#">РЎРѕС‚СЂСѓРґРЅРёРєРё</a></li>
   </ul>
   <ul class="menu-right">
-    <li><a href="#">Настройки</a></li>
-    <li><a href="#">Справка</a></li>
+    <li><a href="#">РќР°СЃС‚СЂРѕР№РєРё</a></li>
+    <li><a href="#">РЎРїСЂР°РІРєР°</a></li>
   </ul>
   <p>&nbsp;
-    <div id="page">
+  </div>
 
-      <div id="content">
-
-        <div id="about">
-          <h3><a href="rails/info/properties" onclick="about(); return false">About your application&rsquo;s environment</a></h3>
-          <div id="about-content" style="display: none"></div>
-        </div>
-
-      <div id="footer">&nbsp;</div>
-    </div>
+    <div id="footer"><p>Copyright &copy; 2011 <a href="/">BP1Step</a> </p></div>
+  </div> <!--container >
   </body>
 </html>

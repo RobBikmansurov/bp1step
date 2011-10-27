@@ -8,7 +8,7 @@
     <%= csrf_meta_tag %>
     <%= yield(:head) %>
   </head>
-  <body>
+  <body style="background: #EEEEEE;">
     <div id="container">
       <div id="user_nav">
         <% if user_signed_in? %>
