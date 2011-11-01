@@ -11,7 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111023104115) do
+ActiveRecord::Schema.define(:version => 20111101100244) do
+
+  create_table "applications", :force => true do |t|
+    t.string   "app_name"
+    t.string   "app_type"
+    t.string   "app_note"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "b_procs", :force => true do |t|
     t.string   "ptitle"

@@ -23,5 +23,6 @@
 </table>
 
 <br />
+<%= link_to 'В начало', '/'%> &nbsp;
 <%= link_to 'Новый Бизнес-процесс', new_b_proc_path %>
-<%= link_to 'start', '/'%>
+

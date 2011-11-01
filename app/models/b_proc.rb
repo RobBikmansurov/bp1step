@@ -6,4 +6,5 @@ class BProc < ActiveRecord::Base
   validates :pcode, :presence => true
 
   has_many :roles
+  has_many :applications
 end
