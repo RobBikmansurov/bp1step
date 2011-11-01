@@ -7,6 +7,7 @@ gem 'rails'
 
 gem 'sqlite3'
 gem 'devise'
+gem 'active_scaffold'
 
 # Use unicorn as the web server
 # gem 'unicorn'
