@@ -14,30 +14,31 @@
       <div id="topbar">
         <div class="topbar-inner">
           <div class="container">
-          <h3><a href="#">BP1stStep</a></h3>
+	  <a href="/"><%= image_tag "logo.png", :alt => "Home" %></a>
+          <br>
           <% if user_signed_in? %>
             Signed in as <%= current_user.email %>. Not you?
             <%= link_to "Sign out", destroy_user_session_path %>
           <% else %>
             <%= link_to "Sign up", new_user_registration_path %> or <%= link_to "sign in", new_user_session_path %>
           <% end %>
-
-        <ul class="nav">
-        <li><%= link_to "Процессы", 'b_procs' %></li>
-        <li><%= link_to "Роли", '#' %></li>
-        <li><%= link_to "Рабочие места", '#' %></li>
-        <li><%= link_to "Приложения", 'applications' %></li>
-        <li><%= link_to "Документы", '#' %></li>
-        <li><%= link_to "Сотрудники", '#' %></li>
-      </ul>
-       <form class="pull-left" action="">
+          <ul class="nav">
+            <li><%= link_to "Процессы", 'b_procs' %></li>
+            <li><%= link_to "Роли", '#' %></li>
+            <li><%= link_to "Рабочие места", '#' %></li>
+            <li><%= link_to "Приложения", 'applications' %></li>
+            <li><%= link_to "Документы", '#' %></li>
+            <li><%= link_to "Сотрудники", '#' %></li>
+          </ul>
+          <form class="pull-left" action="">
             <input type="text" placeholder="Search" />
           </form>
-      <ul class="nav secondary-nav">
-        <li><%= link_to "Настройки", '#' %></li>
-        <li><%= link_to "Справка", '#' %></li>
-      </ul>
-      <p>&nbsp;
+          <ul class="nav secondary-nav">
+            <li><%= link_to "Настройки", '#' %></li>
+            <li><%= link_to "Справка", '#' %></li>
+          </ul>
+        </div>
+      </div>
       
       <% flash.each do |name, msg| %>
         <%= content_tag :div, msg, :id => "flash_#{name}" %>
