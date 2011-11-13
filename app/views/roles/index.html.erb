@@ -3,8 +3,7 @@
 <table>
   <tr>
     <th>Name</th>
-    <th>Note</th>
-    <th>B proc</th>
+    <th>Description</th>
     <th></th>
     <th></th>
     <th></th>
@@ -13,8 +12,7 @@
 <% @roles.each do |role| %>
   <tr>
     <td><%= role.name %></td>
-    <td><%= role.note %></td>
-    <td><%= role.b_proc %></td>
+    <td><%= role.description %></td>
     <td><%= link_to 'Show', role %></td>
     <td><%= link_to 'Edit', edit_role_path(role) %></td>
     <td><%= link_to 'Destroy', role, confirm: 'Are you sure?', method: :delete %></td>

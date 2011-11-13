@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Designation:</b>
+  <%= @workplace.designation %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @workplace.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @workplace.description %>
+</p>
+
+<p>
+  <b>Typical:</b>
+  <%= @workplace.typical %>
+</p>
+
+<p>
+  <b>Location:</b>
+  <%= @workplace.location %>
+</p>
+
+
+<%= link_to 'Edit', edit_workplace_path(@workplace) %> |
+<%= link_to 'Back', workplaces_path %>

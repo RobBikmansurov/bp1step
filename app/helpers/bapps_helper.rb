@@ -1,0 +1,2 @@
+module BappsHelper
+end

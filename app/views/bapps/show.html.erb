@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @bapp.name %>
+</p>
+
+<p>
+  <b>Type:</b>
+  <%= @bapp.type %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @bapp.description %>
+</p>
+
+
+<%= link_to 'Edit', edit_bapp_path(@bapp) %> |
+<%= link_to 'Back', bapps_path %>

@@ -1,6 +1,16 @@
 BPDoc::Application.routes.draw do
 
-  resources :applications do as_routes end
+  resources :documents
+
+  resources :bapps
+
+  resources :roles
+
+  resources :staffs
+
+  resources :workplaces
+
+  resources :bproces
 
   get "home/index"
 
