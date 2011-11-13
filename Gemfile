@@ -7,7 +7,12 @@ gem 'rails'
 
 gem 'sqlite3'
 gem 'devise'
+gem 'will_paginate'
 gem 'active_scaffold'
+##gem 'sass-rails'
+##gem 'coffee-script'
+
+gem 'jquery-rails'
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -28,8 +33,12 @@ gem 'active_scaffold'
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
-group :development, :test do
+group :development do
   gem 'webrat'
-  gem 'rspec'
   gem 'rspec-rails'
+end
+group :test do
+  gem 'rspec-rails'
+  gem 'webrat'
+  gem 'factory_girl_rails'
 end

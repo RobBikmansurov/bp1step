@@ -1,0 +1,27 @@
+<h1>Listing bproces</h1>
+
+<table>
+  <tr>
+    <th>Shortname</th>
+    <th>Name</th>
+    <th>Fullname</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @bproces.each do |bproce| %>
+  <tr>
+    <td><%= bproce.shortname %></td>
+    <td><%= bproce.name %></td>
+    <td><%= bproce.fullname %></td>
+    <td><%= link_to 'Show', bproce %></td>
+    <td><%= link_to 'Edit', edit_bproce_path(bproce) %></td>
+    <td><%= link_to 'Destroy', bproce, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Bproce', new_bproce_path %>
