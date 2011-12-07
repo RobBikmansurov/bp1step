@@ -11,6 +11,8 @@ gem 'will_paginate'
 gem 'active_scaffold'
 ##gem 'sass-rails'
 ##gem 'coffee-script'
+gem 'forgery'
+gem 'faker'
 
 gem 'jquery-rails'
 
