@@ -1,40 +1,19 @@
-<p id="notice"><%= notice %></p>
+<p id="notice"><%= notice %></br>
+
+<br>  <b>Name:</b>  <%= @document.name %>
+
+<br>  <b>Filename:</b>  <%= @document.filename %>
+
+<br>  <b>Description:</b>  <%= @document.description %>
+
+<br>  <b>Status:</b>  <%= @document.status %>
+
+<br>  <b>Part:</b>  <%= @document.part %>
+
+<br>  <b>Approved:</b>  <%= @document.approved %>
+
+<br>  <b>Place:</b>  <%= @document.place %>
 
 <p>
-  <b>Name:</b>
-  <%= @document.name %>
-</p>
-
-<p>
-  <b>Filename:</b>
-  <%= @document.filename %>
-</p>
-
-<p>
-  <b>Description:</b>
-  <%= @document.description %>
-</p>
-
-<p>
-  <b>Status:</b>
-  <%= @document.status %>
-</p>
-
-<p>
-  <b>Part:</b>
-  <%= @document.part %>
-</p>
-
-<p>
-  <b>Approved:</b>
-  <%= @document.approved %>
-</p>
-
-<p>
-  <b>Place:</b>
-  <%= @document.place %>
-</p>
-
-
 <%= link_to 'Edit', edit_document_path(@document) %> |
 <%= link_to 'Back', documents_path %>
