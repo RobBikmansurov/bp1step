@@ -7,12 +7,12 @@ gem 'rails'
 
 gem 'sqlite3'
 gem 'devise'
-gem 'will_paginate'
-gem 'active_scaffold'
-##gem 'sass-rails'
+##gem 'will_paginate'
+##gem 'active_scaffold'
+#gem 'sass-rails'
 ##gem 'coffee-script'
-
-gem 'jquery-rails'
+gem 'haml-rails'
+##gem 'jquery-rails'
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -40,5 +40,5 @@ end
 group :test do
   gem 'rspec-rails'
   gem 'webrat'
-  gem 'factory_girl_rails'
+##  gem 'factory_girl_rails'
 end
