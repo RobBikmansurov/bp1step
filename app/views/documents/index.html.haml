@@ -1,0 +1,27 @@
+%h1Список документов
+
+%table
+  %tr
+    %th Наименование
+    %th Описание
+    %th Имя файла
+    %th Статус
+    %th Раздел
+    %th Дата
+    %th Место
+    %th
+    
+  - @documents.each do |document|
+    %tr
+      %td= link_to document.name, edit_document_path(document)
+      %td= document.description
+      %td= document.filename
+      %td= document.status
+      %td= document.part
+      %td= document.approved 
+      %td= document.place 
+      %td= link_to 'Удалить', document, confirm: 'Действительно хотите удалить?', method: :delete 
+ 
+= link_to 'Новый документ', new_document_path 
+
+%br
