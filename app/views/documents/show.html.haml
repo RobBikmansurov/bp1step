@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%p
+  %b Наименование:
+  = @document.name
+%p
+  %b Описание:
+  = @document.description
+
+= link_to 'Edit', edit_document_path(@document)
+\|
+= link_to 'Back', document_path

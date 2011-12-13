@@ -12,11 +12,9 @@ gem 'devise'
 #gem 'sass-rails'
 ##gem 'coffee-script'
 gem 'haml-rails'
-##gem 'jquery-rails'
-##gem 'forgery'
-##gem 'faker'
-
 #gem 'jquery-rails'
+#gem 'forgery'
+#gem 'faker'
 
 # Use unicorn as the web server
 # gem 'unicorn'
