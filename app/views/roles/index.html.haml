@@ -1,0 +1,21 @@
+%h1 Список Ролей
+
+%table
+  %tr
+    %th Наименование
+    %th Описание
+    %th
+    %th
+    %th
+  
+
+  -@roles.each do |role|
+    %tr
+      %td= link_to role.name, edit_role_path(role)
+      %td= role.description
+      %td= link_to 'Show', role
+      %td= link_to 'Удалить', role, confirm: 'Are you sure?', method: :delete
+  
+%br
+
+= link_to 'New Role', new_role_path
