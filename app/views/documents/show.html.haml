@@ -6,6 +6,22 @@
 %p
   %b Описание:
   = @document.description
+%p
+  %b Filename:
+  = @document.filename
+%p
+  %b Status:
+  = @document.status
+%p
+  %b Part:
+  = @document.part
+%p
+  %b Approved:
+  = @document.approved
+%p
+  %b Place:
+  = @document.place
+
 
 = link_to 'Edit', edit_document_path(@document)
 \|
