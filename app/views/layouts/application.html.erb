@@ -4,24 +4,31 @@
     <title><%= yield(:title) || "Untitled" %></title>
     <meta charset="utf-8" />
     <link rel="shortcut icon" href="/favicon.ico" />
-    <%= stylesheet_link_tag 'bootstrap.min' %>
+    <%= stylesheet_link_tag 'blueprint/print', :media => "print" %>
+    <%= stylesheet_link_tag 'blueprint/screen' %>
+    <%= stylesheet_link_tag 'style' %>
     <%= javascript_include_tag :defaults %>
     <%= csrf_meta_tag %>
     <%= yield(:head) %>
   </head>
   <body>
-    <div id="container">
-      <div id="topbar">
-        <div class="topbar-inner">
-          <div class="container">
-	  <a href="/"><%= image_tag "logo.png", :alt => "Home" %></a>
-          <br>
+    <div class="container">
+      <div id="header" class="span-24 last">
+        <div id="logo" class="span-6">
+          <a href="/"><%= image_tag "logo.png", :alt => "Home" %></a>
+        </div>
+        <div id="search" class="span-6">
+          <form class="pull-left" action="search">
+            <input type="text" placeholder="Search" />
+          </form>
+        </div>
           <% if user_signed_in? %>
             Signed in as <%= current_user.email %>. Not you?
             <%= link_to "Sign out", destroy_user_session_path %>
           <% else %>
             <%= link_to "Sign up", new_user_registration_path %> or <%= link_to "sign in", new_user_session_path %>
           <% end %>
+        <div id="menu" class="span-24 last">
           <ul class="nav">
             <li><%= link_to "Бизнес-процессы", '/bproces' %></li>
             <li><%= link_to "Роли", '/roles' %></li>
@@ -30,27 +37,25 @@
             <li><%= link_to "Документы", '/documents' %></li>
             <li><%= link_to "Сотрудники", '/staffs' %></li>
           </ul>
-          <form class="pull-left" action="">
-            <input type="text" placeholder="Search" />
-          </form>
-          <ul class="nav secondary-nav">
+          <ul class="nav" style="float:right">
             <li><%= link_to "Настройки", '#' %></li>
             <li><%= link_to "Справка", '#' %></li>
           </ul>
         </div>
       </div>
+      <hr />
+      <div id="main" class="span-24 last">
+        <% flash.each do |name, msg| %>
+          <%= content_tag :div, msg, :id => "flash_#{name}" %>
+        <% end %>
       
-      <% flash.each do |name, msg| %>
-        <%= content_tag :div, msg, :id => "flash_#{name}" %>
-      <% end %>
+        <%= yield %>
       </div>
+
+      <hr />
+      <div id="footer" class="span-24 last">
+        <p>Copyright &copy; 2011 <a href="/">BP1Step</a> </p>
       </div>
-      
-      <%= yield %>
-    </div>
-    <div id="footer">
-      <p>Copyright &copy; 2011 <a href="/">BP1Step</a> </p>
-    </div>
   </div>
   </body>
 </html>
