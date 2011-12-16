@@ -1,6 +1,7 @@
 class DocumentsController < ApplicationController
   def index
-    @documents = Document.all
+##    @documents = Document.all
+    @documents = Document.search(params[:search])
 
     respond_to do |format|
       format.html # index.html.erb

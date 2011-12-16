@@ -18,8 +18,8 @@
           <a href="/"><%= image_tag "logo.png", :alt => "Home" %></a>
         </div>
         <div id="search" class="span-6">
-          <form class="pull-left" action="search">
-            <input type="text" placeholder="Search" />
+          <form class="inline" action="/documents" method="get">
+            <input type="text" name="search" value=<%= params[:search] %> />
           </form>
         </div>
           <% if user_signed_in? %>
@@ -30,7 +30,7 @@
           <% end %>
         <div id="menu" class="span-24 last">
           <ul class="nav">
-            <li><%= link_to "Бизнес-процессы", '/bproces' %></li>
+            <li><%= link_to "Процессы", '/bproces' %></li>
             <li><%= link_to "Роли", '/roles' %></li>
             <li><%= link_to "Рабочие места", '/workplaces' %></li>
             <li><%= link_to "Приложения", '/bapps' %></li>
