@@ -1,12 +1,9 @@
 class Document < ActiveRecord::Base
   belongs_to :bproce
-  def self.search(search)
-  if search
-    find(:all, :conditions => ['name LIKE ? or description LIKE ?', "%#{search}%", "%#{search}%"])
-  else
-    find(:all)
+  def self.search(search, page)
+    paginate :per_page => 10, :page => page,
+           :conditions => ['name LIKE ? or description LIKE ?', "%#{search}%", "%#{search}%"],
+           :order => 'name'
   end
-end
-
 
 end

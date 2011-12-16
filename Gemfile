@@ -7,7 +7,7 @@ gem 'rails'
 
 gem 'sqlite3'
 gem 'devise'
-##gem 'will_paginate'
+gem 'will_paginate'
 ##gem 'active_scaffold'
 #gem 'sass-rails'
 ##gem 'coffee-script'

@@ -1,7 +1,7 @@
 class DocumentsController < ApplicationController
   def index
 ##    @documents = Document.all
-    @documents = Document.search(params[:search])
+    @documents = Document.search(params[:search], params[:page])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -54,5 +54,13 @@ class DocumentsController < ApplicationController
     end
   end
 
+  def destroy
+    @document = Document.find(params[:id])
+    @document.destroy
+
+    respond_to do |format|
+      format.html { redirect_to documents_url }
+    end
+  end
 
 end
