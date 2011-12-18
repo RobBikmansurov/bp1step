@@ -14,8 +14,8 @@
       %td= link_to role.name, edit_role_path(role)
       %td= role.description
       %td= link_to 'Show', role
-      %td= link_to 'Удалить', role, confirm: 'Are you sure?', method: :delete
-  
-%br
+      %td
+        = link_to 'Destroy', role, :confirm => 'Are you sure?', :method => :delete
+= will_paginate @roles 
 
 = link_to 'New Role', new_role_path
