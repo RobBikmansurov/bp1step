@@ -1,32 +1,16 @@
 BPDoc::Application.routes.draw do
 
   resources :documents
-
   resources :bapps
-
   resources :roles
-
   resources :staffs
-
   resources :workplaces
-
   resources :bproces
-  resources :bproces do
-    resources :documents
-  end
 
-  get "home/index"
-
-  resources :roles do
-    resources :roles
-  end
-  resources :b_procs do
-    resources :roles
-  end
-
+##  get "home/index"
 
   devise_for :users
-  root :to => "home#index"
+ # root :to => "home#index"
 
 #  get "pages/home"
 #  get "pages/contact"

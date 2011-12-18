@@ -16,6 +16,8 @@ gem 'haml-rails'
 #gem 'forgery'
 #gem 'faker'
 
+gem 'rb-readline'
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
