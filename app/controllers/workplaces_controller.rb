@@ -2,7 +2,7 @@ class WorkplacesController < ApplicationController
   # GET /workplaces
   # GET /workplaces.json
   def index
-    @workplaces = Workplace.all
+    @workplaces = Workplace.search(params[:search], params[:page])
 
     respond_to do |format|
       format.html # index.html.erb
