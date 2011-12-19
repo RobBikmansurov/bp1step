@@ -1,4 +1,4 @@
-%h1Список документов
+%h1Каталог Документов
 
 %table
   %tr
@@ -20,7 +20,8 @@
       %td= document.status
       %td= document.approved 
       %td= document.place 
-      %td= link_to 'Удалить', document, confirm: 'Действительно хотите удалить?', method: :delete 
+      %td= link_to 'Удалить', document, confirm: 'Действительно хотите удалить?', :method => :delete 
+
 = will_paginate @documents 
  
 = link_to 'Новый документ', new_document_path 

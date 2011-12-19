@@ -5,7 +5,7 @@ class RolesController < ApplicationController
     @roles = Role.search(params[:search], params[:page])
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @roles }
+##      format.json { render json: @roles }
     end
   end
 
