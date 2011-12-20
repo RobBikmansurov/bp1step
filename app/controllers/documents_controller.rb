@@ -1,4 +1,6 @@
 class DocumentsController < ApplicationController
+  respond_to :html, :xml, :json
+
   def index
 ##    @documents = Document.all
     @documents = Document.search(params[:search], params[:page])
