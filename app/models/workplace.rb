@@ -1,4 +1,5 @@
 class Workplace < ActiveRecord::Base
+  validates :designation, :length => {:minimum => 8, :maximum => 50}
   has_many :bapps
   def self.search(search, page)
     paginate :per_page => 10, :page => page,
