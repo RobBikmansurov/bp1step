@@ -22,6 +22,7 @@
       %td= document.place 
       %td= link_to 'Удалить', document, confirm: 'Действительно хотите удалить?', :method => :delete 
 
-= will_paginate @documents 
+.apple_pagination
+  = will_paginate @documents 
  
 = link_to 'Новый документ', new_document_path 

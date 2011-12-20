@@ -1,0 +1,23 @@
+%h1Каталог Рабочих мест 
+
+%table
+  %tr
+    %th Обозначение 
+    %th Наименование
+    %th Описание
+    %th Тип?
+    %th Местоположение
+    %th
+    
+  - @workplaces.each do |workplace|
+    %tr
+      %td= link_to workplace.designation, edit_workplace_path(workplace)
+      %td= workplace.name
+      %td= workplace.description
+      %td= workplace.typical
+      %td= workplace.location
+      %td= link_to 'Удалить', workplace, confirm: 'Действительно хотите удалить?', :method => :delete 
+
+= will_paginate @workplaces 
+ 
+= link_to 'Добавить Рабочее место', new_workplace_path 
