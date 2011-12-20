@@ -12,7 +12,7 @@ gem 'will_paginate'
 #gem 'sass-rails'
 ##gem 'coffee-script'
 gem 'haml-rails'
-#gem 'jquery-rails'
+gem 'jquery-rails'
 #gem 'forgery'
 #gem 'faker'
 

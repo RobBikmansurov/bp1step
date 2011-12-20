@@ -4,3 +4,4 @@ log/*.log
 tmp/
 *.0
 *.rar
+Gemfile.lock
