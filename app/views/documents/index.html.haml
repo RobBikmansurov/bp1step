@@ -3,11 +3,11 @@
 %table
   %tr
     %th 
-    %th Наименование
-    %th Описание
+    %th= link_to "Наименование", :sort => "name"
+    %th= link_to "Описание", :sort => "description"
     -#    %th Имя файла
     -#%th authority
-    %th Статус
+    %th= link_to "Статус", :sort => "status"
     %th Дата
     -#%th responsible
     %th Место
