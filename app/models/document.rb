@@ -1,6 +1,6 @@
 class Document < ActiveRecord::Base
-  validates :name,  :presence => true, 
-                    :length => {:minimum => 10, :maximum => 254}
+  validates :name, :presence => true, 
+                   :length => {:minimum => 10, :maximum => 254}
   belongs_to :bproce
 
   def self.search(search, page)
