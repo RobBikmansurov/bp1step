@@ -1,13 +1,19 @@
 %h1Каталог Документов
+= form_tag documents_path, :method => 'get' do
+  = hidden_field_tag :direction, params[:direction]
+  = hidden_field_tag :sort, params[:sort]
+  %p  
+    = text_field_tag :search, params[:search]
+    = submit_tag "Search", :name => nil
 
 %table
   %tr
     %th 
-    %th= link_to "Наименование", :sort => "name"
-    %th= link_to "Описание", :sort => "description"
+    %th= sortable "name", "Наименование"
+    %th= sortable "description", "Описание"
     -#    %th Имя файла
     -#%th authority
-    %th= link_to "Статус", :sort => "status"
+    %th= sortable "status", "Статус"
     %th Дата
     -#%th responsible
     %th Место

@@ -3,10 +3,12 @@ class Document < ActiveRecord::Base
                    :length => {:minimum => 10, :maximum => 254}
   belongs_to :bproce
 
-  def self.search(search, page)
-    paginate :per_page => 10, :page => page,
-           :conditions => ['name LIKE ? or description LIKE ?', "%#{search}%", "%#{search}%"],
-           :order => 'part, name'
+  def self.search(search)
+    if search  
+      where('name LIKE ? or description LIKE ?', "%#{search}%", "%#{search}%")
+    else  
+      scoped
+    end  
   end
 
 end
