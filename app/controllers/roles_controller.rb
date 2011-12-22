@@ -8,12 +8,12 @@ class RolesController < ApplicationController
   
   def new
     @role = Role.new
-    respond_with($role)
+    respond_with(@role)
   end
 
   def create
     @role = Role.create(params[:role])
-    flash[:notice] = "Successfully created role." if $role.save
+    flash[:notice] = "Successfully created role." if @role.save
     respond_with(@role)
   end
 
@@ -27,14 +27,14 @@ class RolesController < ApplicationController
 
   def update
     @role = Role.find(params[:id])
-    flash[:notice] = "Successfully updated role."  if $role.update_attributes(params[:role])
+    flash[:notice] = "Successfully updated role."  if @role.update_attributes(params[:role])
     respond_with(@role)
   end
 
   def destroy
     @role = Role.find(params[:id])
     @role.destroy
-    flash[:notice] = "Successfully destroyed role." if $role.save
+    flash[:notice] = "Successfully destroyed role." if @role.save
     respond_with(@role)
   end
 

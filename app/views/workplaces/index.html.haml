@@ -2,11 +2,11 @@
 
 %table
   %tr
-    %th Обозначение 
-    %th Наименование
-    %th Описание
+    %th= sortable "designation", "Обозначение"
+    %th= sortable "name", "Наименование"
+    %th= sortable "description", "Описание"
     %th Тип?
-    %th Местоположение
+    %th= sortable "location", "Местоположение"
     %th
     
   - @workplaces.each do |workplace|
