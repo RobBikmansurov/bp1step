@@ -1,14 +1,9 @@
 class DocumentsController < ApplicationController
   respond_to :html, :xml, :json
+  helper_method :sort_column, :sort_direction
 
   def index
-##    @documents = Document.all
-    @documents = Document.search(params[:search], params[:page])
-
-    respond_to do |format|
-      format.html # index.html.erb
-##      format.json { render json: @documents }
-    end
+    @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end
 
   def edit
@@ -29,18 +24,10 @@ class DocumentsController < ApplicationController
 
   def show
     @document = Document.find(params[:id])
-
-    respond_to do |format|
-      format.html
-    end
   end
 
   def new
     @document = Document.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-    end
   end
 
   def create
@@ -59,10 +46,18 @@ class DocumentsController < ApplicationController
   def destroy
     @document = Document.find(params[:id])
     @document.destroy
-
     respond_to do |format|
       format.html { redirect_to documents_url }
     end
   end
+
+private  
+  def sort_column  
+    params[:sort] || "name"  
+  end  
+    
+  def sort_direction  
+    params[:direction] || "asc"  
+  end  
 
 end

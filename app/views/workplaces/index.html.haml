@@ -18,6 +18,7 @@
       %td= workplace.location
       %td= link_to 'Удалить', workplace, confirm: 'Действительно хотите удалить?', :method => :delete 
 
-= will_paginate @workplaces 
+.apple_pagination
+  = will_paginate @workplaces 
  
 = link_to 'Добавить Рабочее место', new_workplace_path 
