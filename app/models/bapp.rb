@@ -4,4 +4,12 @@ class Bapp < ActiveRecord::Base
 
   has_many :bproces
   has_many :workplaces
+
+  def self.search(search)
+   if search
+      where('name LIKE ? or description LIKE ?', "%#{search}%", "%#{search}%")
+    else
+      scoped
+    end
+  end
 end
