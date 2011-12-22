@@ -17,18 +17,20 @@
       <div id="header" class="span-24 last">
         <div id="logo" class="span-6">
           <a href="/"><%= image_tag "logo.png", :alt => "Home" %></a>
-          </div>
-          <div id="search" class="span-6">
-            <form class="inline" method="get">
-              <input type="text" name="search" value="<%= params[:search] %>" />
-            </form>
-          </div>
+        </div>
+        <div id="search" class="span-6">
+          <form class="inline" method="get">
+            <input type="text" name="search" value="<%= params[:search] %>" />
+          </form>
+        </div>
+        <div id="users" class="span-12 last">
           <% if user_signed_in? %>
             Signed in as <%= current_user.email %>. Not you?
             <%= link_to "Sign out", destroy_user_session_path %>
           <% else %>
             <%= link_to "Sign up", new_user_registration_path %> or <%= link_to "sign in", new_user_session_path %>
           <% end %>
+        </div>
         <div id="menu" class="span-24 last">
           <ul class="nav">
             <li><%= link_to "Процессы", '/bproces' %></li>

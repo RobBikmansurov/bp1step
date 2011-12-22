@@ -7,11 +7,14 @@
         -@role.errors.full_messages.each do |msg|
           %li= msg
 
-  .field
-    = f.label :name
-    = f.text_field :name
-  .field
-    = f.label :description
-    = f.text_field :description
+  .fieldset
+    .field
+      = f.label :name
+      .text
+        = f.text_field :name
+    .field
+      = f.label :description
+      .text
+        = f.text_area :description, :size => "5x4"
   .actions
     = f.submit
