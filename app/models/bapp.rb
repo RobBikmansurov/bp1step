@@ -1,6 +1,6 @@
 class Bapp < ActiveRecord::Base
   validates :name,  :presence => true, 
-            :uniqueness => true
+            :uniqueness => true,
             :length => {:minimum => 8, :maximum => 50}
 
   has_many :bproces
