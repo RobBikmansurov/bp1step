@@ -1,0 +1,17 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @bapp.name
+
+%p
+  %b Type:
+  = @bapp.type
+
+%p
+  %b Description:
+  = @bapp.description
+
+= link_to 'Edit', edit_bapp_path(@bapp)
+| 
+= link_to 'Back', bapps_path

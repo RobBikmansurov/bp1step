@@ -1,0 +1,22 @@
+%h1 Каталог Приложений
+
+%table
+  %tr
+    %th= sortable "name", "Наименование"
+    %th= sortable "description", "Описание"
+    %th
+    %th
+    %th
+  
+
+  -@bapps.each do |bapp|
+    %tr
+      %td= link_to bapp.name, edit_bapp_path(bapp)
+      %td= bapp.description
+      %td= link_to 'Show', bapp
+      %td
+        = link_to 'Destroy', bapp, :confirm => 'Are you sure?', :method => :delete
+.apple_pagination
+  = will_paginate @bapps 
+
+= link_to "Добавить новое приложение" , new_bapp_path

@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Shortname:</b>
+  <%= @bproce.shortname %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @bproce.name %>
+</p>
+
+<p>
+  <b>Fullname:</b>
+  <%= @bproce.fullname %>
+</p>
+
+
+<%= link_to 'Edit', edit_bproce_path(@bproce) %> |
+<%= link_to 'Back', bproces_path %>
