@@ -1,3 +1,8 @@
+a:hover {
+  border-radius: 1em;
+  color: #fff;
+  background-color: #000;
+}
 .nav {
   display: block;
   margin: 0 10px 0 0;
@@ -16,6 +21,7 @@
 .nav a:hover {
   color: #fff;
   background-color: #000;
+  border-radius: 1em;
 }
 #menu {background: #ccc;}
 th {
