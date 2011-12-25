@@ -1,0 +1,15 @@
+ru:
+  activerecord:
+    models:
+      roles: Роли
+      workplaces: Рабочие места
+      user: Пользователь
+    attributes:
+      profile:
+        name: "Отображаемое имя"
+        phone: Телефон
+      role:
+        name: "Обозначение роли"
+      workplace:
+        designation: "Обозначение Рабочего места"
+      

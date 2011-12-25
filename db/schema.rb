@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111113142925) do
+ActiveRecord::Schema.define(:version => 20111225070829) do
 
   create_table "b_procs", :force => true do |t|
     t.string   "ptitle"
@@ -37,6 +37,15 @@ ActiveRecord::Schema.define(:version => 20111113142925) do
     t.datetime "updated_at"
   end
 
+  create_table "categories", :force => true do |t|
+    t.string   "cat_table"
+    t.string   "cat_type"
+    t.string   "cat_name"
+    t.integer  "sortorder"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "documents", :force => true do |t|
     t.string   "name"
     t.string   "filename"
@@ -47,6 +56,7 @@ ActiveRecord::Schema.define(:version => 20111113142925) do
     t.string   "place"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "status_id"
   end
 
   create_table "roles", :force => true do |t|

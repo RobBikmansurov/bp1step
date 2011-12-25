@@ -19,11 +19,8 @@
     = f.label 'Статус документа'
     = f.text_field :status
   .field
-    -# =<label for="document_status_id">Статус:</label><br />
-    -# = f.collection_select :document_id, Status.find(:all), :id, :name, :prompt => "Select a Status" 
-    -#or create one:
-    -#= f.text_field :new_status_name
-
+    = f.label :status_id, "Choose your status:"
+    = f.collection_select :status_id, Category.all, :id, :name,:prompt => ""
   .field
     = f.label 'Раздел'
     = f.text_field :part
