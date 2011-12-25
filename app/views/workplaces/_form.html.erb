@@ -25,6 +25,7 @@
   </div>
   <div class="field">
     <%= f.label :typical %><br />
+    <%= f.collection_select :id, Workplace.all(:order => "designation"), :id, :designation, :include_blank => true %>
     <%= f.check_box :typical %>
   </div>
   <div class="field">
