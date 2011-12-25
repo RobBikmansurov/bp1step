@@ -20,7 +20,7 @@
     = f.text_field :status
   .field
     = f.label :status_id, "Choose your status:"
-    = f.collection_select :status_id, Category.all, :id, :name,:prompt => ""
+    = f.collection_select :status_id, Category.all(:order => "sortorder"), :id, :cat_name, :include_blank => true
   .field
     = f.label 'Раздел'
     = f.text_field :part
