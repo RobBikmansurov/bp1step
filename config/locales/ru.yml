@@ -300,3 +300,8 @@ ru:
       words_connector: ", "
       two_words_connector: " и "
       last_word_connector: " и "
+
+  will_paginate:
+    previous_label: "&#8592; Пред."
+    next_label: "След. &#8594;"
+    page_gap: "&hellip;"
