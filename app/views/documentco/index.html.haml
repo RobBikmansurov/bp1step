@@ -1,0 +1,9 @@
+%h1Документы
+
+- @documents.each do |document|
+  =link_to document.name, edit_document_path(document)
+
+.apple_pagination
+  = will_paginate @documents 
+ 
+= link_to 'Добавить новый документ', new_document_path 
