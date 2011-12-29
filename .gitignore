@@ -5,3 +5,5 @@ tmp/
 *.0
 *.rar
 Gemfile.lock
+test
+*.swp
