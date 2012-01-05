@@ -7,7 +7,6 @@ class DocumentcoController < ApplicationController
 
   def show
     @documents = Document.search(params[:search]).paginate(:per_page => 10, :page => params[:page])
-    @document = @documents.first
     @document = @documents.find(params[:id])
   end
 
