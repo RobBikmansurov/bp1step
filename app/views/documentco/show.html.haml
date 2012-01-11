@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .container
   %h2Документы
   -# Список/дерево документов для выбора
@@ -30,6 +31,45 @@
         %p
           %b Part:
           = @document.part
+=======
+%h2Документы
+-# Список/дерево документов для выбора
+.span-6
+  #list
+    - @documents.each do |document|
+      %li
+        =link_to document.name, documentco_path(document)
+
+    .apple_pagination
+      = will_paginate @documents 
+ 
+    -#= link_to 'Добавить новый документ', new_document_path 
+
+-# Информация о выбранном документе
+.span-18
+%p
+  %b Наименование:
+  = @document.name
+%p
+  %b Описание:
+  = @document.description
+%p
+  %b Filename:
+  = @document.filename
+%p
+  %b Status:
+  = @document.status
+%p
+  %b Part:
+  = @document.part
+%p
+  %b Approved:
+  = @document.approved
+%p
+  %b Place:
+  = @document.place
+
+>>>>>>> f74bfabb6be8b7164a363cd348ead46c7d784fd0
 
 -# сброс
 .span-24
