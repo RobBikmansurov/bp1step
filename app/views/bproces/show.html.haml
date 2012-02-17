@@ -1,20 +1,13 @@
-<p id="notice"><%= notice %></p>
+%p.notice =notice
+%bОбозначение:
+= @bproce.shortname
+%p
+%b Название:
+= @bproce.name
+%p
+%b Полное наименование:
+= @bproce.fullname
 
-<p>
-  <b>Shortname:</b>
-  <%= @bproce.shortname %>
-</p>
-
-<p>
-  <b>Name:</b>
-  <%= @bproce.name %>
-</p>
-
-<p>
-  <b>Fullname:</b>
-  <%= @bproce.fullname %>
-</p>
-
-
-<%= link_to 'Edit', edit_bproce_path(@bproce) %> |
-<%= link_to 'Back', bproces_path %>
+%p
+= link_to 'Edit', edit_bproce_path(@bproce) |
+= link_to 'Back', bproces_path

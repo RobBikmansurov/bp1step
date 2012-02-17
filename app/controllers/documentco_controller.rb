@@ -7,15 +7,15 @@ class DocumentcoController < ApplicationController
 
   def show
     @documents = Document.search(params[:search]).paginate(:per_page => 10, :page => params[:page])
-<<<<<<< HEAD
-    if @documents.any? {|d| d.id == :id}
-      @document = @documents.find(params[:id])
+    logger.debug(@documents.to_yaml)
+    logger.debug(params[:id], @id)
+    if @documents.any? {|d| d.id == params[:id]}
+      logger.debug(params[:id])
+      @document = Document.find(params[:id])
     else
+      logger.debug("1")
       @document = @documents.first
     end 
-=======
-    @document = @documents.find(params[:id])
->>>>>>> f74bfabb6be8b7164a363cd348ead46c7d784fd0
   end
 
 end
