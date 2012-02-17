@@ -1,13 +1,9 @@
 class BprocesController < ApplicationController
-  # GET /bproces
-  # GET /bproces.json
-  def index
-    @bproces = Bproce.all
+  respond_to :html, :xml, :json
+  helper_method :sort_column, :sort_direction
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @bproces }
-    end
+  def index
+    @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end
 
   # GET /bproces/1
@@ -80,4 +76,15 @@ class BprocesController < ApplicationController
       format.json { head :ok }
     end
   end
+
+private
+  def sort_column
+    params[:sort] || "shortname"
+  end
+
+  def sort_direction
+    params[:direction] || "asc"
+  end
+
+
 end
