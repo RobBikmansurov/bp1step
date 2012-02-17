@@ -1,0 +1,27 @@
+-title "Каталог Процессов"
+%h1 Каталог Процессов 
+
+%table
+  %tr
+    %th= sortable "shortname", "Обозначение"
+    %th= sortable "name", "Наименование"
+    %th= sortable "fullname", "Полное наименование"
+    %th
+    %th
+    %th
+  
+
+  -@bproces.each do |bproce|
+    %tr
+      %td= link_to bproce.shortname, edit_bproce_path(bproce)
+      %td= bproce.name
+      %td= bproce.fullname
+      %td= link_to 'Show', bproce
+      %td
+        = link_to 'Destroy', bproce, :confirm => 'Are you sure?', :method => :delete
+.apple_pagination
+  -#.page_info
+    -#    = page_entries_info @brpoces
+  = will_paginate @bproces 
+
+= link_to "Добавить новый процесс" , new_bproce_path
