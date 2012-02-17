@@ -1,0 +1,24 @@
+= form_for(@bproce) do |f|
+  -if @bproce.errors.any?
+    #error_explanation
+      %h2 = "#{pluralize(@bproce.errors.count, "error")} %> prohibited this bproce from being saved:"
+
+      %ul
+        -@bproce.errors.full_messages.each do |msg|
+          %li = msg
+
+  .fieldset
+    .field
+      = f.label :shortname
+      .text
+        = f.text_field :shortname
+    .field
+      = f.label :name
+      .text
+        = f.text_field :name
+    .field
+      = f.label :fullname
+      .text
+        = f.text_area :fullname
+  .actions
+    = f.submit 
