@@ -1,11 +1,12 @@
 ru:
   activerecord:
     models:
-      roles: Роли
-      bproces: Процессы
-      workplaces: Рабочие места
+      role: Роль
+      workplace: Рабочее место
       user: Пользователь
-      bproce: Процессы
+      bproce: Процесс
+      bapp: Приложение
+      staff: Сотрудник
     attributes:
       profile:
         name: "Отображаемое имя"
@@ -16,10 +17,16 @@ ru:
         fullname: "Полное наименование процесса"
       role:
         name: "Обозначение роли"
+        description: "Название роли"
       workplace:
         designation: "Обозначение Рабочего места"
-      bproce:
-        shortname: "Обозначение"
         name: "Название"
-        fullname: "Название полное"
-      
+        location: "Местоположение"
+        description: "Описание"
+      bapp:
+        name: "Название"
+        type: Тип приложения
+        description: "Описание"
+      staff:
+        fullname: Фамилия Имя Отчество
+        position: Должность
