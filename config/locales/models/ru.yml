@@ -4,6 +4,7 @@ ru:
       roles: Роли
       workplaces: Рабочие места
       user: Пользователь
+      bproce: Процессы
     attributes:
       profile:
         name: "Отображаемое имя"
@@ -12,4 +13,8 @@ ru:
         name: "Обозначение роли"
       workplace:
         designation: "Обозначение Рабочего места"
+      bproce:
+        shortname: "Обозначение"
+        name: "Название"
+        fullname: "Название полное"
       
