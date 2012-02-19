@@ -10,23 +10,23 @@
     .field
       = f.label "Наименование"
       .text
-        = f.text_field :name
+      = f.text_field :name, :size => "50"
     .field
       = f.label 'Описание'
       .text_area
         = f.text_area :description, :size => "5x4"
     .field
       = f.label 'Имя файла'
-      .text
-        = f.text_field :filename
+      -#      -form_for @document do |ff|
+      -#        =ff.file_field :document
+        
     .field
-      = f.label 'Статус документа'
+      = f.label :status_id, "Статус документа:"
       .text
-        = f.text_field :status
-    .field
-      = f.label :status_id, "Choose your status:"
-      .text
-        = f.collection_select :status_id, Category.all(:order => "sortorder"), :id, :cat_name, :include_blank => true
+        = f.collection_select :status_id, Category.all(:order => "sortorder"), :id, :cat_name, :include_blank => false, :prompt => "Выбрать категорию"
+        выберите категорию или создайте новую:
+        .text
+          = f.text_field :new_category_name
     .field
       = f.label 'Раздел'
       .text
@@ -41,4 +41,4 @@
         = f.text_field :place
 
   .actions
-    = f.submit 'Сохранить'
+    = f.submit
