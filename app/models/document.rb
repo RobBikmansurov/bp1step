@@ -7,7 +7,7 @@ class Document < ActiveRecord::Base
   before_save :create_category_from_name
 
   def create_category_from_name
-    create_category(:name => new_category_name) unless new_category_name.blank?
+    create_category(:cat_name => new_category_name) unless new_category_name.blank?
   end
 
   def self.search(search)
