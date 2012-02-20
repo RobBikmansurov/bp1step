@@ -7,6 +7,7 @@ ru:
       bproce: Процесс
       bapp: Приложение
       staff: Сотрудник
+      document: Документ
     attributes:
       profile:
         name: "Отображаемое имя"
@@ -15,6 +16,8 @@ ru:
         name: "Наименование процесса"
         shortname: "Обозначение процесса"
         fullname: "Полное наименование процесса"
+      document:
+        name: "Наименование документа"
       role:
         name: "Обозначение роли"
         description: "Название роли"

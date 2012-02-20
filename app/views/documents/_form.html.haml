@@ -23,8 +23,8 @@
     .field
       = f.label :status_id, "Статус документа:"
       .text
-        = f.collection_select :status_id, Category.all(:order => "sortorder"), :id, :cat_name, :include_blank => false, :prompt => "Выбрать категорию"
-        выберите категорию или создайте новую:
+        = f.collection_select :status_id, Category.all(:order => "sortorder"), :id, :cat_name, :include_blank => false, :prompt => "Выбрать статус"
+        выберите статус или создайте новый:
         .text
           = f.text_field :new_category_name
     .field
