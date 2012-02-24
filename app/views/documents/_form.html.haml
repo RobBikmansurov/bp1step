@@ -1,8 +1,8 @@
 = form_for(@document) do |f|
   -if @document.errors.any?
     #error_explanation
-      %h2= "#{pluralize(@document.errors.count, "error")} prohibited this document from being saved:"
-      %ul
+      %h2 "#{pluralize(@document.errors.count, "error")} prohibited this document from being saved:"
+      %ul 
         - @document.errors.full_messages.each do |msg|
           %li= msg
 
@@ -14,7 +14,7 @@
     .field
       = f.label 'Описание'
       .text_area
-        = f.text_area :description, :size => "5x4"
+        = f.text_area :description
     .field
       = f.label 'Имя файла'
       -#      -form_for @document do |ff|

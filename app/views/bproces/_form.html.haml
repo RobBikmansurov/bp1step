@@ -1,11 +1,10 @@
 = form_for(@bproce) do |f|
   -if @bproce.errors.any?
     #error_explanation
-      %h2 = "#{pluralize(@bproce.errors.count, "error")} %> prohibited this bproce from being saved:"
-
+      %h2 "#{pluralize(@bproce.errors.count, "error")} prohibited from being saved:"
       %ul
         -@bproce.errors.full_messages.each do |msg|
-          %li = msg
+          %li= msg
 
   .fieldset
     .field

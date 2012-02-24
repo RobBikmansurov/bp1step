@@ -1,7 +1,7 @@
 = form_for(@role) do |f|
   -if @role.errors.any?
     #error_explanation
-      %h2 = "#{pluralize(@role.errors.count, "error")} prohibited this role from being saved:"
+      %h2 "#{pluralize(@role.errors.count, "error")} prohibited from being saved:"
 
       %ul
         -@role.errors.full_messages.each do |msg|
@@ -15,6 +15,6 @@
     .field
       = f.label :description
       .text
-        = f.text_area :description, :size => "5x4"
+        = f.text_area :description
   .actions
     = f.submit
