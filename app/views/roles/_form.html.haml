@@ -2,7 +2,6 @@
   -if @role.errors.any?
     #error_explanation
       %h2 "#{pluralize(@role.errors.count, "error")} prohibited from being saved:"
-
       %ul
         -@role.errors.full_messages.each do |msg|
           %li= msg
@@ -16,5 +15,9 @@
       = f.label :description
       .text
         = f.text_area :description
+    .field
+      = f.label :bproce
+      = f.collection_select :id, Bproce.all(:order => "name"), :id, :shortname, :include_blank => true
+
   .actions
     = f.submit

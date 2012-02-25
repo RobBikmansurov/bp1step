@@ -2,7 +2,7 @@ class Bproce < ActiveRecord::Base
 
   has_many :documents
   has_many :roles
-  has_many :bapp
+  has_many :bapps
   validates :shortname,  :presence => true,
                     :length => {:minimum => 4, :maximum => 50}
   validates :name,  :presence => true,
