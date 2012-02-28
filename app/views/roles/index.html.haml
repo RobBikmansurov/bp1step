@@ -3,8 +3,9 @@
 
 %table
   %tr
-    %th= sortable "name", "Наименование"
+    %th= sortable "name", "Роль"
     %th= sortable "description", "Описание"
+    %th= sortable "bproce_id", "Процесс"
     %th
     %th
     %th
@@ -14,6 +15,7 @@
     %tr
       %td= link_to role.name, edit_role_path(role)
       %td= role.description
+      %td= role.bproce_id
       %td= link_to 'Show', role
       %td
         = link_to 'Destroy', role, :confirm => 'Are you sure?', :method => :delete

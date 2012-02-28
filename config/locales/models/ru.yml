@@ -21,6 +21,7 @@ ru:
       role:
         name: "Обозначение роли"
         description: "Название роли"
+        bproce_id: "Процесс"
       workplace:
         designation: "Обозначение Рабочего места"
         name: "Название"
