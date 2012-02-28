@@ -7,3 +7,5 @@ tmp/
 Gemfile.lock
 test
 *.swp
+*.haml~
+*.rb~
