@@ -10,7 +10,7 @@ class Bproce < ActiveRecord::Base
   validates :fullname,  :presence => true,
                     :length => {:minimum => 10, :maximum => 250}
   def self.search(search)
-   if search
+    if search
       where('shortname LIKE ? or name LIKE ? or fullname LIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
     else
       scoped
