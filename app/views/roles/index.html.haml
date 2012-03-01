@@ -15,7 +15,7 @@
     %tr
       %td= link_to role.name, edit_role_path(role)
       %td= role.description
-      %td= role.bproce_id
+      %td= link_to role.bproce.name, edit_bproce_path(role.bproce) if role.bproce_id?
       %td= link_to 'Show', role
       %td
         = link_to 'Destroy', role, :confirm => 'Are you sure?', :method => :delete
