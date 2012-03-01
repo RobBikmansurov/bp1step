@@ -27,7 +27,7 @@ class RolesController < ApplicationController
 
   def update
     @role = Role.find(params[:id])
-    flash[:notice] = "Successfully updated role."  if @role.update_attributes(params[:role])
+    flash[:notice] = "Successfully updated role." if @role.update_attributes(params[:role])
     respond_with(@role)
   end
 

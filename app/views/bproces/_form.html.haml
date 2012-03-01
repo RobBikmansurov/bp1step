@@ -19,5 +19,10 @@
       = f.label :fullname
       .text
         = f.text_area :fullname
+
+  Роли в процессе:
+  -@bproce.roles.find_with_associations.each do |role|
+    %br
+    = role.name
   .actions
     = f.submit 
