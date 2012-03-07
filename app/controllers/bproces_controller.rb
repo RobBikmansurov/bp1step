@@ -1,5 +1,6 @@
 class BprocesController < ApplicationController
-  respond_to :html, :xml, :json
+  respond_to :html
+  respond_to :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
 
   def index

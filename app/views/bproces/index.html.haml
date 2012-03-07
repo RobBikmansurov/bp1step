@@ -9,7 +9,6 @@
     %th
     %th
     %th
-  
 
   -@bproces.each do |bproce|
     %tr
@@ -19,6 +18,7 @@
       %td= link_to 'Show', bproce
       %td
         = link_to 'Destroy', bproce, :confirm => 'Are you sure?', :method => :delete
+
 .apple_pagination
   -#.page_info
     -#    = page_entries_info @brpoces

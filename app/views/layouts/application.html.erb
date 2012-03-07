@@ -25,7 +25,7 @@
         </div>
         <div id="users" class="span-12 last">
           <% if user_signed_in? %>
-            Signed in as <%= current_user.email %>. Not you?
+            Signed in as <strong><%= current_user.email %></strong>>. Not you?
             <%= link_to "Sign out", destroy_user_session_path %>
           <% else %>
             <%= link_to "Sign up", new_user_registration_path %> or <%= link_to "sign in", new_user_session_path %>
@@ -42,7 +42,7 @@
           </ul>
           <ul class="nav" style="float:right">
             <li><%= link_to "Настройки", '#' %></li>
-            <li><%= link_to "Справка", '/about' %></li>
+            <li><%= link_to "Справка", '/pages/about' %></li>
           </ul>
         </div>
       </div>

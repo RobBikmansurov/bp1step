@@ -10,27 +10,33 @@ ru:
       document: Документ
     attributes:
       profile:
-        name: "Отображаемое имя"
+        name: Отображаемое имя
         phone: Телефон
       bproce:
-        name: "Наименование процесса"
-        shortname: "Обозначение процесса"
-        fullname: "Полное наименование процесса"
+        name: Наименование
+        shortname: Обозначение
+        fullname: Полное наименование процесса
       document:
-        name: "Наименование документа"
+        description: Описание
+        name: Наименование
+        status: Статус
+        part: Раздел
+        place: Место хранения
+        approved: Дата утверждения
+        bproce_id: Процесс
       role:
-        name: "Обозначение роли"
-        description: "Название роли"
-        bproce_id: "Процесс"
+        name: Обозначение
+        description: Назначение роли
+        bproce_id: Процесс
       workplace:
-        designation: "Обозначение Рабочего места"
-        name: "Название"
-        location: "Местоположение"
-        description: "Описание"
+        designation: Обозначение
+        name: Название
+        location: Местоположение
+        description: Описание
       bapp:
-        name: "Название"
+        name: Название
         type: Тип приложения
-        description: "Описание"
+        description: Описание
       staff:
         fullname: Фамилия Имя Отчество
         position: Должность

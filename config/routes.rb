@@ -4,14 +4,14 @@ BPDoc::Application.routes.draw do
   resources :documents, :bapps, :roles, :staffs, :workplaces, :bproces
   resources :documentco
 
-##  get "home/index"
+  get "pages/home"
+  get "pages/contact"
+  get "pages/about"
+
+  get "home/index"
 
   devise_for :users
   root :to => "home#index"
-
-#  get "pages/home"
-#  get "pages/contact"
-  get "pages/about"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

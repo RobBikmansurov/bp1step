@@ -12,8 +12,10 @@ class DocumentsController < ApplicationController
 
   def update
     @document = Document.find(params[:id])
-    flash[:notice] = "Successfully updated role."  if @document.update_attributes(params[:document])
-    respond_with(@document)
+    flash[:notice] = "Successfully updated document."  if @document.update_attributes(params[:document])
+    respond_to do |format|
+      format.html { redirect_to documents_url }
+    end
   end
 
   def show
