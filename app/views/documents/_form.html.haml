@@ -8,37 +8,36 @@
 
   .fieldset
     .field
-      = f.label "Наименование"
+      = f.label :name
       .text
       = f.text_field :name, :size => "50"
     .field
-      = f.label 'Описание'
+      = f.label :description
       .text_area
         = f.text_area :description
-    .field
-      = f.label 'Имя файла'
+    -#.field
+      -#= f.label 'Имя файла'
       -#      -form_for @document do |ff|
       -#        =ff.file_field :document
-        
     .field
-      = f.label :status_id, "Статус документа:"
+      = f.label :status_id
       .text
         = f.collection_select :status_id, Category.all(:order => "sortorder"), :id, :cat_name, :include_blank => false, :prompt => "Выбрать статус"
-        выберите статус или создайте новый:
-        .text
-          = f.text_field :new_category_name
+        выберите или создайте новый статус:
+        = f.text_field :new_category_name
     .field
-      = f.label 'Раздел'
-      .text
-        = f.text_field :part
+      = f.label :part
+      = f.text_field :part, :size => "10"
     .field
-      = f.label 'Дата'
-      .text
-        = f.text_field :approved
+      = f.label :approved
+      = f.text_field :approved, :size => "10"
     .field
-      = f.label 'Место хранения'
-      .text
-        = f.text_field :place
-
+      = f.label :place
+      = f.text_field :place
+    .field
+      = f.label :bproce_id
+      = f.collection_select :bproce_id, Bproce.all(:order => "name"), :id, :name, :include_blank => true
+  %p
   .actions
     = f.submit
+

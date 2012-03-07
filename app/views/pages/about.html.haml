@@ -1,0 +1,29 @@
+%h1 Бизнес-процессы: Первый шаг
+
+%h2 Легенда
+=link_to "Процесс", bproces_path
+описывается 
+= link_to "Документами", documents_path
+%p
+При выделении
+= link_to "Процеса", bproces_path
+ему назначается уникальное название, определяется цель, выделяются
+= link_to "Роли", roles_path
+определяются ресурсы (например, 
+=link_to "Приложения", bapps_path
+)
+%p
+=link_to "Исполнитель", staffs_path
+участвует в 
+= link_to "Процессе", bproces_path
+и исполняет назначенные ему
+= link_to "Роли", roles_path
+%p
+=link_to "Исполнитель", staffs_path
+находится на
+= link_to "Рабочем месте", workplaces_path
+и использует в своей работе 
+=link_to "Приложения", bapps_path
+
+
+%p

@@ -22,7 +22,7 @@ class RolesController < ApplicationController
   end
 
   def edit
-    @role = Role.find(params[:id])
+    @role = Role.find(params[:id], :include => :bproce)
   end
 
   def update

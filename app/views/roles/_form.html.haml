@@ -9,16 +9,14 @@
   .fieldset
     .field
       = f.label :name
-      .text
-        = f.text_field :name
+      = f.text_field :name
     .field
       = f.label :description
       .text
-        = f.text_area :description
+      = f.text_area :description
     .field
       = f.label :bproce_id
-      .text
-        = f.collection_select :bproce_id, Bproce.all(:order => "name"), :id, :name, :include_blank => true
+      = f.collection_select :bproce_id, Bproce.all(:order => "name"), :id, :name, :include_blank => true
   %p
   .actions
     = f.submit

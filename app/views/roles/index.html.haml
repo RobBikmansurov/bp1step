@@ -4,8 +4,8 @@
 %table
   %tr
     %th= sortable "name", "Роль"
-    %th= sortable "description", "Описание"
     %th= sortable "bproce_id", "Процесс"
+    %th= sortable "description", "Назначение"
     %th
     %th
     %th
@@ -14,8 +14,8 @@
   -@roles.each do |role|
     %tr
       %td= link_to role.name, edit_role_path(role)
-      %td= role.description
       %td= link_to role.bproce.name, edit_bproce_path(role.bproce) if role.bproce_id?
+      %td= role.description
       %td= link_to 'Show', role
       %td
         = link_to 'Destroy', role, :confirm => 'Are you sure?', :method => :delete
