@@ -1,4 +1,5 @@
 class Bproce < ActiveRecord::Base
+  acts_as_nested_set
   has_many :documents
   has_many :roles
   has_many :bapps

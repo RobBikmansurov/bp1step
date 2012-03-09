@@ -11,7 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120307120112) do
+ActiveRecord::Schema.define(:version => 20120309092935) do
+
+  create_table "b_procs", :force => true do |t|
+    t.string   "ptitle"
+    t.text     "pbody"
+    t.string   "pcode"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "bapps", :force => true do |t|
     t.string   "name"
@@ -29,6 +37,10 @@ ActiveRecord::Schema.define(:version => 20120307120112) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "goal"
+    t.integer  "parent_id"
+    t.integer  "lft"
+    t.integer  "rgt"
+    t.integer  "depth"
   end
 
   create_table "categories", :force => true do |t|
