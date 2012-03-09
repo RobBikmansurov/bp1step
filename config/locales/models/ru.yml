@@ -16,6 +16,7 @@ ru:
         name: Наименование
         shortname: Обозначение
         fullname: Полное наименование процесса
+        goal: Цель процесса
       document:
         description: Описание
         name: Наименование
@@ -37,6 +38,7 @@ ru:
         name: Название
         type: Тип приложения
         description: Описание
+        purpose: Назначение
       staff:
         fullname: Фамилия Имя Отчество
         position: Должность

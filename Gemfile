@@ -16,6 +16,7 @@ gem 'haml-rails'
 gem 'jquery-rails'
 #gem 'forgery'
 #gem 'faker'
+gem 'awesome_nested_set'
 
 gem 'rb-readline'
 
