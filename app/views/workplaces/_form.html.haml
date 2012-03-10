@@ -1,0 +1,41 @@
+= form_for(@workplace) do |f|
+  -if @workplace.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@bproce.errors.count, "error")} prohibited from being saved:"
+      %ul
+        -@workplace.errors.full_messages.each do |msg|
+          %li = msg
+
+  .fieldset
+    .field
+      = f.label :designation
+      = f.text_field :designation
+    .field
+      = f.label :name
+      = f.text_field :name
+    .field
+      = f.label :description
+      = f.text_field :description
+    .field
+      = f.label :typical
+      = f.collection_select :id, Workplace.all(:order => "designation"), :id, :designation, :include_blank => true
+      = f.check_box :typical
+    .field
+      = f.label :location
+      = f.text_field :location
+  %p
+  -# не показывать для нового рабочего места связанные с ним объекты - их еще нет
+  -if @workplace.id?
+    %table
+      %tr
+        %th Это Рабочее место участвует в Процессах:
+      %tr
+        %td
+          -#-@workplace.bproces.find_with_associations.each do ||
+            = link_to doc.name, edit_document_path(doc)
+            %br
+
+
+  %p
+  .actions
+    = f.submit
