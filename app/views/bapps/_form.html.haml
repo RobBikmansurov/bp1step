@@ -22,6 +22,20 @@
       = f.label :purpose
       .text
       = f.text_area :purpose
+    .field
+      -#= f.label :bproce_id
+        = f.collection_select :bproce_id, Bproce.all(:order => "name"), :id, :name, :include_blank => true
+  -# не показывать для нового приложения связанные с ним процессы - их еще нет
+  -if @bapp.id?
+    %table
+      %tr
+        %th Это Приложение участвует в Процессах:
+      %tr
+        %td
+          -#-@bapp.documents.find_with_associations.each do ||
+            = link_to doc.name, edit_document_path(doc)
+            %br
+
   %p
   .actions
     = f.submit
