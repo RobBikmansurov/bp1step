@@ -4,6 +4,8 @@ class Role < ActiveRecord::Base
   validates :bproce_id,  :presence => true
   # роль участвует в процессе
   belongs_to :bproce
+  # роль может исполняется на нескольких рабочих местах
+  has_and_belongs_to_many :workplaces
 
   def self.search(search)
     if search

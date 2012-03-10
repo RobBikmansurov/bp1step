@@ -1,9 +1,9 @@
 class Bapp < ActiveRecord::Base
-  validates :name,  :presence => true, 
-            :uniqueness => true,
+  validates :name, :uniqueness => true,
             :length => {:minimum => 8, :maximum => 50}
+  validates :description, :presence => true
 
-  has_many :bproces
+  has_and_belongs_to_many :bproce
   has_many :workplaces
 
   def self.search(search)

@@ -1,5 +1,6 @@
 class Document < ActiveRecord::Base
   validates :name, :length => {:minimum => 10, :maximum => 200}
+  validates :bproce_id, :presence => true
   belongs_to :category
   # документ относится к процессу
   belongs_to :bproce

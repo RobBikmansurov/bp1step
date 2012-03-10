@@ -1,22 +1,25 @@
 ru:
   activerecord:
     models:
+      bapp: Приложение
+      bproce: Процесс
+      document: Документ
       role: Роль
+      staff: Сотрудник
       workplace: Рабочее место
       user: Пользователь
-      bproce: Процесс
-      bapp: Приложение
-      staff: Сотрудник
-      document: Документ
     attributes:
-      profile:
-        name: Отображаемое имя
-        phone: Телефон
+      bapp:
+        name: Название
+        type: Тип приложения
+        description: Описание
+        purpose: Назначение
       bproce:
         name: Наименование
         shortname: Обозначение
         fullname: Полное наименование процесса
         goal: Цель процесса
+        parent_id: Родительский процесс
       document:
         description: Описание
         name: Наименование
@@ -25,20 +28,19 @@ ru:
         place: Место хранения
         approved: Дата утверждения
         bproce_id: Процесс
+      profile:
+        name: Отображаемое имя
+        phone: Телефон
       role:
         name: Обозначение
         description: Назначение роли
         bproce_id: Процесс
+      staff:
+        fullname: Фамилия Имя Отчество
+        position: Должность
       workplace:
         designation: Обозначение
         name: Название
         location: Местоположение
         description: Описание
-      bapp:
-        name: Название
-        type: Тип приложения
-        description: Описание
-        purpose: Назначение
-      staff:
-        fullname: Фамилия Имя Отчество
-        position: Должность
+
