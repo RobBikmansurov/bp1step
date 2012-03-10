@@ -22,20 +22,28 @@
       = f.label :goal
       .text
       = f.text_area :goal
-
-  %table
-    %tr
-      %th В процессе участвуют Роли:
-      %th Процесс описывают Документы:
-    %tr
-      %td
-        -@bproce.roles.find_with_associations.each do |role|
-          = link_to role.name, edit_role_path(role)
-          %br
-      %td
-        -@bproce.documents.find_with_associations.each do |doc|
-          = link_to doc.name, edit_document_path(doc)
-          %br
+    -#if @bproce.new_record?
+    .field
+      = f.label :parent_id
+      .text
+      = f.select :parent_id, nested_set_options(Bproce, @bproce) {|i| "#{'-' * i.level} #{i.name}" }
+  -#= select_tag 'parent_id', options_for_select(nested_set_options(Bproce) {|i| "#{'-' * i.level} #{i.name}" } )
+  %p
+  -# не показывать для нового процесса связанные с ним объекты - их еще нет
+  -if @bproce.id?
+    %table
+      %tr
+        %th В процессе участвуют Роли:
+        %th Процесс описывают Документы:
+      %tr
+        %td
+          -@bproce.roles.find_with_associations.each do |role|
+            = link_to role.name, edit_role_path(role)
+            %br
+        %td
+          -@bproce.documents.find_with_associations.each do |doc|
+            = link_to doc.name, edit_document_path(doc)
+            %br
 
   %p
   .actions

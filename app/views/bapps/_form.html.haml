@@ -1,0 +1,27 @@
+= form_for(@bapp) do |f|
+  -if @bapp.errors.any?
+    #error_explanation
+      %h2 "#{pluralize(@bproce.errors.count, "error")} prohibited from being saved:"
+      %ul
+        -@bapp.errors.full_messages.each do |msg|
+          %li =msg
+
+  .fieldset
+    .field
+      = f.label :name
+      = f.text_field :name
+    .field
+      = f.label :type
+      .text
+      = f.text_field :type
+    .field
+      = f.label :description
+      .text
+      = f.text_field :description
+    .field
+      = f.label :purpose
+      .text
+      = f.text_area :purpose
+  %p
+  .actions
+    = f.submit

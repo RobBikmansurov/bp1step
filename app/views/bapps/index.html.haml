@@ -6,7 +6,6 @@
     %th= sortable "description", "Описание"
     %th
     %th
-    %th
   
 
   -@bapps.each do |bapp|
@@ -16,6 +15,7 @@
       %td= link_to 'Show', bapp
       %td
         = link_to 'Destroy', bapp, :confirm => 'Are you sure?', :method => :delete
+
 .apple_pagination
   = will_paginate @bapps 
 
