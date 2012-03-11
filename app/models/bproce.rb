@@ -2,8 +2,10 @@ class Bproce < ActiveRecord::Base
   acts_as_nested_set
   has_many :documents
   has_many :roles
-  has_and_belongs_to_many :bapps
+  has_many :bproce_bapps, :dependent => :destroy
+  has_many :bapps, :through => :bproce_bapps
   has_and_belongs_to_many :workplaces
+  
 
   validates :shortname, :uniqueness => true,
                         :length => {:minimum => 3, :maximum => 50}
