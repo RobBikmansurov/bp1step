@@ -3,7 +3,8 @@ class Bapp < ActiveRecord::Base
             :length => {:minimum => 8, :maximum => 50}
   validates :description, :presence => true
 
-  has_and_belongs_to_many :bproce
+  has_many :bproce_bapps
+  has_many :bproce, :through => :bproce_bapps
   has_many :workplaces
 
   def self.search(search)
