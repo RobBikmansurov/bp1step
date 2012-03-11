@@ -10,13 +10,14 @@
     %th= sortable "shortname", "Обозначение"
     %th= sortable "name", "Наименование"
     %th= sortable "fullname", "Полное наименование"
-    %th
+    %th= 'Tree.debug'
     %th
 
   -@bproces.each do |bproce|
     %tr
       %td
-        = link_to "-" * (bproce.depth) + ' ' + bproce.shortname, edit_bproce_path(bproce)
+        = link_to "—" * (bproce.depth) + bproce.shortname, edit_bproce_path(bproce)
+        -#= link_to "-" * (bproce.depth) + bproce.shortname, edit_bproce_path(bproce)
       %td= bproce.name
       %td= bproce.fullname
       -#%td= link_to 'Show', bproce
