@@ -13,14 +13,6 @@
 
 ActiveRecord::Schema.define(:version => 20120309092935) do
 
-  create_table "b_procs", :force => true do |t|
-    t.string   "ptitle"
-    t.text     "pbody"
-    t.string   "pcode"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "bapps", :force => true do |t|
     t.string   "name"
     t.string   "type"

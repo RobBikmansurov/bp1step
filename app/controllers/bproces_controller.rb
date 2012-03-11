@@ -80,7 +80,7 @@ class BprocesController < ApplicationController
 
 private
   def sort_column
-    params[:sort] || "shortname"
+    params[:sort] || "lft"
   end
 
   def sort_direction
