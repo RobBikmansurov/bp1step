@@ -17,6 +17,7 @@
     .field
       = f.label :bproce_id
       = f.collection_select :bproce_id, Bproce.all(:order => "name"), :id, :name, :include_blank => true
+      -#= link_to :go, edit_bproce_path([bproce_id])
   %p
   .actions
     = f.submit

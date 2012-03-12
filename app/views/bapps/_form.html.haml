@@ -32,9 +32,12 @@
         %th Это Приложение используется в Процессах:
       %tr
         %td
-          -#-@bapp.documents.find_with_associations.each do ||
-            = link_to doc.name, edit_document_path(doc)
+          -@bapp.bproce.each do |bp|
+            = link_to bp.name, edit_bproce_path(bp)
             %br
+    .field
+      -#= f.label :bproce_id
+      -#= f.collection_select :bproce.bproce_id, @bapp.bproce.all(:order => "name"), :id, :name, :include_blank => true
 
   %p
   .actions
