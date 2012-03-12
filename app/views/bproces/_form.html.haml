@@ -44,6 +44,19 @@
           -@bproce.documents.find_with_associations.each do |doc|
             = link_to doc.name, edit_document_path(doc)
             %br
+    %table
+      %tr
+        %th В процессе используются Приложения:
+        %th В процессе участвуют Рабочие Места:
+      %tr
+        %td
+          -@bproce.bapps.each do |ba|
+            = link_to ba.name, edit_bapp_path(ba)
+            %br
+        %td
+          -@bproce.bapps.each do |ba|
+            = link_to ba.name, edit_bapp_path(ba)
+            %br
 
   %p
   .actions
