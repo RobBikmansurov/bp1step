@@ -4,7 +4,8 @@ class Bapp < ActiveRecord::Base
   validates :description, :presence => true
 
   has_many :bproce_bapps
-  has_many :bproce, :through => :bproce_bapps
+  has_many :bproces, :through => :bproce_bapps
+  accepts_nested_attributes_for :bproces, :allow_destroy => true 
   has_many :workplaces
 
   def self.search(search)

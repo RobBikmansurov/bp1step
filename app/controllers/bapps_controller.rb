@@ -23,6 +23,9 @@ class BappsController < ApplicationController
 
   def edit
     @bapp = Bapp.find(params[:id])
+    #@bapp.bproce_bapps.build
+    #@bapp.update_attributes(params[:bproce]) ?
+    #  redirect_to(bapp_path(@bapp)) : render(:action => :edit)
   end
 
   def update
