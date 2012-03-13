@@ -2,13 +2,11 @@ BPDoc::Application.routes.draw do
 
   resources :categories
   resources :documents, :bapps, :roles, :staffs, :workplaces, :bproces
+  #resources :bproce_bapps
   resources :documentco
 
-  get "pages/home"
-  get "pages/contact"
-  get "pages/about"
-
-  get "home/index"
+  match '/about' => 'pages#about', :via => :get
+  get 'pages/about'
 
   devise_for :users
   root :to => "home#index"

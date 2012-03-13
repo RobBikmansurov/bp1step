@@ -14,6 +14,7 @@ ru:
         type: Тип приложения
         description: Описание
         purpose: Назначение
+        bproce_id: Процесс
       bproce:
         name: Наименование
         shortname: Обозначение

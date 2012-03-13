@@ -1,3 +1,4 @@
+debug params
 = form_for(@bapp) do |f|
   -if @bapp.errors.any?
     #error_explanation
@@ -22,9 +23,7 @@
       = f.label :purpose
       .text
       = f.text_area :purpose
-    .field
-      -#= f.label :bproce_id
-        = f.collection_select :bproce_id, Bproce.all(:order => "name"), :id, :name, :include_blank => true
+
   -# не показывать для нового приложения связанные с ним процессы - их еще нет
   -if @bapp.id?
     %table
@@ -32,12 +31,12 @@
         %th Это Приложение используется в Процессах:
       %tr
         %td
-          -@bapp.bproce.each do |bp|
+          -@bapp.bproces.each do |bp|
             = link_to bp.name, edit_bproce_path(bp)
             %br
     .field
-      -#= f.label :bproce_id
-      -#= f.collection_select :bproce.bproce_id, @bapp.bproce.all(:order => "name"), :id, :name, :include_blank => true
+      = f.label :bproce_id
+      = f.collection_select :bproce_bapp_ids, Bproce.all(:order => "name"), :id, :name, :include_blank => true
 
   %p
   .actions
