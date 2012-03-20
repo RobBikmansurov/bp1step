@@ -1,8 +1,12 @@
 BPDoc::Application.routes.draw do
 
+  get "bproce_bapp/new"
+
+  get "bproce_bapp/destroy"
+
   resources :categories
   resources :documents, :bapps, :roles, :staffs, :workplaces, :bproces
-  #resources :bproce_bapps
+  resources :bproce_bapps
   resources :documentco
 
   match '/about' => 'pages#about', :via => :get

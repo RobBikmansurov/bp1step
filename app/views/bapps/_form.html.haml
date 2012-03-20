@@ -1,4 +1,3 @@
-debug params
 = form_for(@bapp) do |f|
   -if @bapp.errors.any?
     #error_explanation
@@ -13,17 +12,13 @@ debug params
       = f.text_field :name
     .field
       = f.label :type
-      .text
       = f.text_field :type
     .field
       = f.label :description
-      .text
       = f.text_field :description
     .field
       = f.label :purpose
-      .text
       = f.text_area :purpose
-
   -# не показывать для нового приложения связанные с ним процессы - их еще нет
   -if @bapp.id?
     %table
@@ -34,10 +29,19 @@ debug params
           -@bapp.bproces.each do |bp|
             = link_to bp.name, edit_bproce_path(bp)
             %br
-    .field
-      = f.label :bproce_id
-      = f.collection_select :bproce_bapp_ids, Bproce.all(:order => "name"), :id, :name, :include_blank => true
+  .field
+    = f.label :bproce_id
 
-  %p
   .actions
     = f.submit
+
+= form_for(@bproce_bapp) do |ff|
+  .fieldset
+    .field
+    = ff.label :bproce_id
+    = ff.collection_select :bproce_id, Bproce.all(:order => "name"), :id, :name, :include_blank => true
+  .action
+    ff.submit
+
+=debug params
+=debug @bproce_bapp
