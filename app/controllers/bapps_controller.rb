@@ -23,7 +23,11 @@ class BappsController < ApplicationController
 
   def edit
     @bapp = Bapp.find(params[:id])
-    @bproce_bapp = BproceBapp.new
+    #@bproce_bapps = @bapp.bproces
+    @bproce_bapp = BproceBapp.new(:bapp_id => @bapp.id)
+    #@bproce_bapp.bapp_id = @bapp.id
+    #render :text => @bproce_bapp.inspect
+    #Rails.logger.debug("bproce_bapp: #{@bproce_bapp.inspect}")
     #@bproce_bapp.build
     #@bapp.update_attributes(params[:bproce]) ?
     #  redirect_to(bapp_path(@bapp)) : render(:action => :edit)
