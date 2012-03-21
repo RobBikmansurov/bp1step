@@ -38,8 +38,7 @@
     -#= ff.label :bproce_id
     = ff.collection_select :bproce_id, Bproce.all(:order => "name"), :id, :name, :include_blank => true
     .field
-      = ff.label :bapp_id
-      = ff.text_field :bapp_id
+      = ff.text_field :bapp_id, :hidden=>true
 
   .action
     = ff.submit
