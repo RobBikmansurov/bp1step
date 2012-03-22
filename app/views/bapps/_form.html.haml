@@ -11,27 +11,31 @@
       = f.label :name
       = f.text_field :name
     .field
-      = f.label :type
-      = f.text_field :type
+      = f.label :apptype
+      = f.text_field :apptype
     .field
       = f.label :description
       = f.text_field :description
     .field
       = f.label :purpose
       = f.text_area :purpose
+
+  .actions
+    = f.submit
+  %p
+  %p
   -# не показывать для нового приложения связанные с ним процессы - их еще нет
   -if @bapp.id?
     %table
       %tr
         %th Это Приложение используется в Процессах:
-      %tr
-        %td
-          -@bapp.bproces.each do |bp|
-            = link_to bp.name, edit_bproce_path(bp)
-            %br
-  .actions
-    = f.submit
-
+        %th
+      -@bapp.bproce_bapps.each do |bp|
+        %tr
+          %td
+            = link_to bp.bproce.name, edit_bproce_path(bp.bproce_id)
+          %td
+            = link_to 'Destroy', bp, :confirm => 'Are you sure?', :method => :delete
 = form_for(@bproce_bapp) do |ff|
   .fieldset
     .field
@@ -43,5 +47,5 @@
   .action
     = ff.submit
 
-=debug params
-=debug @bproce_bapp
+-#=debug params
+-#=debug @bproce_bapp

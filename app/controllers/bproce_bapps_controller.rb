@@ -1,5 +1,5 @@
 class BproceBappsController < ApplicationController
-  respond_to :html, :xml, :json
+  respond_to :html, :json
 
   def new
     @bproce_bapp = BproceBapp.new
@@ -12,6 +12,10 @@ class BproceBappsController < ApplicationController
   end
   
   def destroy
+    @bproce_bapp = BproceBapp.find(params[:id])
+    @bproce_bapp.destroy
+    flash[:notice] = "Successfully destroyed brpoce_bapp." if @bproce_bapp.save
+    respond_with(@bproce_bapp.bapp)
   end
 
 end
