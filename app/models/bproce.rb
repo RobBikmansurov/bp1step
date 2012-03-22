@@ -4,7 +4,9 @@ class Bproce < ActiveRecord::Base
   has_many :roles
   has_many :bproce_bapps, :dependent => :destroy
   has_many :bapps, :through => :bproce_bapps
-  has_and_belongs_to_many :workplaces
+  has_many :bproce_workplaces, :dependent => :destroy
+  has_many :workplaces, :through => :bproce_workplaces
+  #has_and_belongs_to_many :workplaces
   
 
   validates :shortname, :uniqueness => true,

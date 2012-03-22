@@ -23,19 +23,30 @@
     .field
       = f.label :location
       = f.text_field :location
+  .actions
+    = f.submit
   %p
   -# не показывать для нового рабочего места связанные с ним объекты - их еще нет
   -if @workplace.id?
     %table
       %tr
         %th Это Рабочее место участвует в Процессах:
-      %tr
-        %td
-          -#-@workplace.bproces.find_with_associations.each do ||
-            = link_to doc.name, edit_document_path(doc)
-            %br
+        %th
+      -#-@workplace.bproce_workplaces.each do |wp|
+        %tr
+          %td
+            = link_to wp.bproce.name, edit_bproce_path(wp.bproce_id)
+          %td
+            = link_to 'Destroy', wp, :confirm => 'Are you sure?', :method => :delete
+
+= form_for(@bproce_workplace) do |ff|
+  .fieldset
+    .field
+    -#= ff.label :bproce_id
+    = ff.collection_select :bproce_id, Bproce.all(:order => "name"), :id, :name, :include_blank => true
+    .field
+      = ff.text_field :workplace_id, :hidden=>true
+  .action
+    = ff.submit
 
 
-  %p
-  .actions
-    = f.submit

@@ -17,6 +17,12 @@ class WorkplacesController < ApplicationController
 
   def edit
     @workplace = Workplace.find(params[:id])
+    if flash[:bapp]
+      @workplace = flash[:bapp]
+    else
+      @workplace = Workplace.find(params[:id])
+      @bproce_workplace = BproceWorkplace.new(:workplace_id => @workplace.id)
+    end
   end
 
   def create

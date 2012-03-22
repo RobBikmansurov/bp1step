@@ -29,6 +29,9 @@
       = f.select :parent_id, nested_set_options(Bproce, @bproce) {|i| "#{'-' * i.level} #{i.name}" }
   -#= select_tag 'parent_id', options_for_select(nested_set_options(Bproce) {|i| "#{'-' * i.level} #{i.name}" } )
   %p
+  .actions
+    = f.submit
+  %p
   -# не показывать для нового процесса связанные с ним объекты - их еще нет
   -if @bproce.id?
     %table
@@ -54,10 +57,7 @@
             = link_to ba.name, edit_bapp_path(ba)
             %br
         %td
-          -@bproce.bapps.each do |ba|
-            = link_to ba.name, edit_bapp_path(ba)
+          -@bproce.workplaces.each do |wp|
+            = link_to wp.name, edit_workplace_path(wp)
             %br
 
-  %p
-  .actions
-    = f.submit 

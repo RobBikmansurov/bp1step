@@ -11,7 +11,7 @@ ru:
     attributes:
       bapp:
         name: Название
-        type: Тип приложения
+        apptype: Тип приложения
         description: Описание
         purpose: Назначение
         bproce_id: Процесс
