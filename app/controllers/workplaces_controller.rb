@@ -12,6 +12,7 @@ class WorkplacesController < ApplicationController
 
   def new
     @workplace = Workplace.new
+    @bproce_workplace = BproceWorkplace.new
     respond_with(@workplace)
   end
 

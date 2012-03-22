@@ -1,0 +1,2 @@
+module BproceBappsHelper
+end
