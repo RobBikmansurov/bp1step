@@ -32,7 +32,7 @@
       %tr
         %th Это Рабочее место участвует в Процессах:
         %th
-      -#-@workplace.bproce_workplaces.each do |wp|
+      -@workplace.bproce_workplaces.each do |wp|
         %tr
           %td
             = link_to wp.bproce.name, edit_bproce_path(wp.bproce_id)
