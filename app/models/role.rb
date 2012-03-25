@@ -1,7 +1,9 @@
 class Role < ActiveRecord::Base
-  validates :name, :length => {:minimum => 5, :maximum => 50}
-  validates :description, :length => {:minimum => 8}
-  validates :bproce_id,  :presence => true
+  validates :name, :presence => true,
+                   :length => {:minimum => 5, :maximum => 50}
+  validates :description, :presence => true,
+                          :length => {:minimum => 8}
+  validates :bproce_id, :presence => true
   # роль участвует в процессе
   belongs_to :bproce
   # роль может исполняется на нескольких рабочих местах

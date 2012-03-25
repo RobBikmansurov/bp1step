@@ -1,23 +1,7 @@
-= form_for(@role) do |f|
-  -if @role.errors.any?
-    %h2 "#{pluralize(@role.errors.count, "error")} prohibited from being saved:"
-    #error_explanation
-      %ul
-        -@role.errors.full_messages.each do |msg|
-          %li= msg
-
-  .fieldset
-    .field
-      = f.label :name
-      = f.text_field :name
-    .field
-      = f.label :description
-      .text
-      = f.text_area :description
-    .field
-      = f.label :bproce_id
-      = f.collection_select :bproce_id, Bproce.all(:order => "name"), :id, :name, :include_blank => true
-      -#= link_to :go, edit_bproce_path([bproce_id])
-  %p
-  .actions
-    = f.submit
+= simple_form_for(@role) do |f|
+  = f.error_notification
+  = f.input :name
+  = f.input :description, :as => :text
+  = f.association :bproce, :label => 'Участвует в процессе'
+  = f.error :base
+  = f.button :submit
