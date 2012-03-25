@@ -1,27 +1,11 @@
-= form_for(@bapp) do |f|
-  -if @bapp.errors.any?
-    #error_explanation
-      %h2 "#{pluralize(@bproce.errors.count, "error")} prohibited from being saved:"
-      %ul
-        -@bapp.errors.full_messages.each do |msg|
-          %li =msg
-
-  .fieldset
-    .field
-      = f.label :name
-      = f.text_field :name
-    .field
-      = f.label :apptype
-      = f.text_field :apptype
-    .field
-      = f.label :description
-      = f.text_field :description
-    .field
-      = f.label :purpose
-      = f.text_area :purpose
-
-  .actions
-    = f.submit
+= simple_form_for(@bapp) do |f|
+  = f.error_notification
+  = f.input :name
+  = f.input :apptype
+  = f.input :description, :as => :text
+  = f.input :purpose, :as => :text
+  = f.error :base
+  = f.button :submit
   %p
   %p
   -# не показывать для нового приложения связанные с ним процессы - их еще нет
@@ -36,16 +20,13 @@
             = link_to bp.bproce.name, edit_bproce_path(bp.bproce_id)
           %td
             = link_to 'Destroy', bp, :confirm => 'Are you sure?', :method => :delete
-= form_for(@bproce_bapp) do |ff|
-  .fieldset
-    .field
-    -#= ff.label :bproce_id
-    = ff.collection_select :bproce_id, Bproce.all(:order => "name"), :id, :name, :include_blank => true
-    .field
-      = ff.text_field :bapp_id, :hidden=>true
 
-  .action
-    = ff.submit
+= simple_form_for(@bproce_bapp) do |ff|
+  = ff.error_notification
+  = ff.association :bproce
+  = ff.hidden_field :bapp_id
+  = ff.error :base
+  = ff.button :submit
 
 -#=debug params
 -#=debug @bproce_bapp

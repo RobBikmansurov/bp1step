@@ -17,8 +17,18 @@ gem 'jquery-rails'
 #gem 'forgery'
 #gem 'faker'
 gem 'awesome_nested_set'
-
+gem 'simple_form'
 gem 'rb-readline'
+group :assets do
+  gem 'sass-rails'
+  gem 'coffee-rails'
+
+  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+  # gem 'therubyracer'
+
+  #gem 'uglifier', '>= 1.0.3'
+end
+
 
 # Use unicorn as the web server
 # gem 'unicorn'

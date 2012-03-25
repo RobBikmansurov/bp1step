@@ -1,43 +1,15 @@
-= form_for(@document) do |f|
-  -if @document.errors.any?
-    #error_explanation
-      %h2 "#{pluralize(@document.errors.count, "error")} prohibited this document from being saved:"
-      %ul 
-        - @document.errors.full_messages.each do |msg|
-          %li= msg
-
-  .fieldset
-    .field
-      = f.label :name
-      .text
-      = f.text_field :name, :size => "50"
-    .field
-      = f.label :description
-      .text_area
-        = f.text_area :description
-    -#.field
-      -#= f.label 'Имя файла'
-      -#      -form_for @document do |ff|
-      -#        =ff.file_field :document
-    .field
-      = f.label :status_id
-      .text
-        = f.collection_select :status_id, Category.all(:order => "sortorder"), :id, :cat_name, :include_blank => false, :prompt => "Выбрать статус"
-        выберите или создайте новый статус:
-        = f.text_field :new_category_name
-    .field
-      = f.label :part
-      = f.text_field :part, :size => "10"
-    .field
-      = f.label :approved
-      = f.text_field :approved, :size => "10"
-    .field
-      = f.label :place
-      = f.text_field :place
-    .field
-      = f.label :bproce_id
-      = f.collection_select :bproce_id, Bproce.all(:order => "name"), :id, :name, :include_blank => true
-  %p
-  .actions
-    = f.submit
-
+= simple_form_for(@document) do |f|
+  = f.error_notification
+  = f.input :name
+  = f.input :description, :as => :text
+  -#.field
+    -#= f.label 'Имя файла'
+    -#      -form_for @document do |ff|
+    -#        =ff.file_field :document
+  -#= f.association :status, Category.all
+  = f.input :approved
+  = f.input :part, :collection => 1..11, as: :radio_buttons
+  = f.input :place
+  = f.association :bproce, :label => 'Процесс'
+  = f.error :base
+  = f.button :submit
