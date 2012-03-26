@@ -8,7 +8,8 @@
     -#        =ff.file_field :document
   -#= f.association :status, Category.all
   = f.input :approved
-  = f.input :part, :collection => 1..11, as: :radio_buttons
+  = f.input :part, :collection => 1..11, :prompt => "Select your age"
+  %p
   = f.input :place
   = f.association :bproce, :label => 'Процесс'
   = f.error :base
