@@ -24,12 +24,12 @@
           %td
             = link_to 'Destroy', wp, :confirm => 'Are you sure?', :method => :delete
 
-    = simple_form_for(@bproce_workplace) do |ff|
-      = ff.error_notification
-      = ff.association :bproce
-      = ff.hidden_field :workplace_id
-      = ff.error :base
-      = ff.button :submit
-=debug params
-=debug @bproce
-=debug @bproce_workplace
+= simple_form_for(@bproce_workplace) do |ff|
+  = ff.error_notification
+  = ff.association :bproce
+  = ff.hidden_field :workplace_id
+  = ff.error :base
+  = ff.button :submit, 'Связать с процессом'
+-#=debug params
+-#  =debug @bproce
+-#  =debug @bproce_workplace

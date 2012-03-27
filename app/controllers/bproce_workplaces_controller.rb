@@ -8,13 +8,13 @@ class BproceWorkplacesController < ApplicationController
   def create
     @bproce_workplace = BproceWorkplace.create(params[:bproce_workplace])
     flash[:notice] = "Successfully created bproce_workplace." if @bproce_workplace.save
-    #respond_with(@bproce_workplace.workplace)
+    respond_with(@bproce_workplace.workplace)
   end
   
   def destroy
     @bproce_workplace = BproceWorkplace.find(params[:id])
     @bproce_workplace.destroy
-    flash[:notice] = "Successfully destroyed brpoce_workplace." if @bproce_workplace.save
-    #respond_with(@bproce_workplace.workplace)
+    flash[:notice] = "Successfully destroyed bproce_workplace." if @bproce_workplace.save
+    respond_with(@bproce_workplace.workplace)
   end
 end
