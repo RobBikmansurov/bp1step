@@ -42,13 +42,15 @@ class BappsController < ApplicationController
   def update
     @bapp = Bapp.find(params[:id])
     flash[:notice] = "Successfully updated bapp."  if @bapp.update_attributes(params[:bapp])
-    respond_with(@bapp)
     #Rails.logger.debug("update-bproce_bapp: #{@bproce_bapp.inspect}")
     #Rails.logger.debug("update-bapp: #{@bapp.inspect}")
     if !@bapp.save # there was an error!
       flash[:bapp] = @bapp
       redirect_to :action => :edit
     end
+    #redirect_to :action => :edit
+    redirect_to :action => :index  # пойдем сразу на список Приложений
+    #respond_with(@bapp)
   end
 
   def destroy
