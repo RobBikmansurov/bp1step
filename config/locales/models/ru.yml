@@ -8,6 +8,8 @@ ru:
       staff: Сотрудник
       workplace: Рабочее место
       user: Пользователь
+      bproce_bapp: Приложения Процесса
+      bproce_workplace: Рабочие места Процесса
     attributes:
       bapp:
         name: Название
@@ -24,9 +26,11 @@ ru:
       document:
         description: Описание
         name: Наименование
+        dlevel: Уровень
         status: Статус
         part: Раздел
-        place: Место хранения
+        place: Место хранения оригинала
+        eplace: Электронный документ
         approved: Дата утверждения
         bproce_id: Процесс
       profile:
@@ -44,4 +48,6 @@ ru:
         name: Название
         location: Местоположение
         description: Описание
+      bproce_bapp:
+        apurpose: Назначение в процессе
 

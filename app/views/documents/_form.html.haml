@@ -1,16 +1,20 @@
 = simple_form_for(@document) do |f|
   = f.error_notification
   = f.input :name
+  = f.input :dlevel, :collection => 1..4, :as => :radio_buttons, :hint => 'Уровень документа: Политики - Положения - Регламенты - Свидетельства'
   = f.input :description, :as => :text
   -#.field
     -#= f.label 'Имя файла'
     -#      -form_for @document do |ff|
-    -#        =ff.file_field :document
-  -#= f.association :status, Category.all
+    =f.file_field :filename, :size => 200
+  -#= f.association :status_id, Category.all
   = f.input :approved
-  = f.input :part, :collection => 1..11, :prompt => "Select your age"
+  = f.input :part, :collection => 1..11, :prompt => "Раздел Документооборота"
   %p
-  = f.input :place
-  = f.association :bproce, :label => 'Процесс'
+  = f.input :place, :hint => 'Место хранения оригиналов на бумаге'
+  = f.input :eplace, :hint => 'Место хранения электронного документа'
+  = f.association :bproce, :label => 'Процесс', :hint => 'Выберите Процесс, к которому относится документ'
   = f.error :base
   = f.button :submit
+-#=debug params
+-#=debug @document
