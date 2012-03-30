@@ -32,6 +32,7 @@ ru:
         place: Место хранения оригинала
         eplace: Электронный документ
         approved: Дата утверждения
+        approveorgan: Орган
         bproce_id: Процесс
       profile:
         name: Отображаемое имя

@@ -27,6 +27,7 @@
         %td
           -@bproce.documents.find_with_associations.each do |doc|
             = link_to doc.name, edit_document_path(doc)
+            = ' ' + doc.approved.to_s
             %br
     %table
       %tr
