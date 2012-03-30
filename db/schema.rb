@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(:version => 20120328122559) do
     t.integer  "status_id"
     t.integer  "bproce_id"
     t.string   "eplace"
+    t.string   "approveorgan"
     t.integer  "dlevel"
   end
 
