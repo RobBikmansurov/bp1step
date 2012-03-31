@@ -2,6 +2,10 @@
 
 = render 'form'
 
-= link_to 'XML', document_path(@document)+'.xml'
-\|
-= link_to 'Back', documents_path
+.button
+  = link_to 'XML', document_path(@document)+'.xml'
+\| 
+.button
+  = link_to 'Back', documents_path
+
+

@@ -11,3 +11,5 @@ test
 *.haml~
 *.rb~
 *.yml~
+*.erb~
+*.css~
