@@ -6,7 +6,9 @@ gem 'rails'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
-gem 'devise'
+gem "devise", "~> 1.4"
+gem "devise_ldap_authenticatable"
+gem "cancan"
 gem 'will_paginate'
 #gem 'inherited_resources'
 ##gem 'active_scaffold'
