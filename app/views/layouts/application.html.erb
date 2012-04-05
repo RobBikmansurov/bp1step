@@ -26,11 +26,10 @@
         </div>
         <div id="users" class="span-12 last">
           <% if user_signed_in? %>
-            Signed in as <strong><%= current_user.email %></strong>>. Not you?
-            #<%= link_to "Sign out", destroy_user_session_path %>
-            <%= link_to('Logout', destroy_user_session_path, :method => 'delete') %>
+            Welcome <%= current_user.firstname %>, you last logged on <%= current_user.last_sign_in_at %> from <%= current_user.last_sign_in_ip %>
+            <%= link_to "Sign out", destroy_user_session_path %>
           <% else %>
-            <%= link_to "Sign up", new_user_registration_path %> or <%= link_to "sign in", new_user_session_path %>
+            <%= link_to "login", new_user_session_path %>
           <% end %>
         </div>
         <div id="menu" class="span-24 last">

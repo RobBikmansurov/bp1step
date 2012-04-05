@@ -24,7 +24,9 @@ describe CategoriesController do
   # Category. As you add validations to Category, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {}
+    {
+      :id => "1"
+    }
   end
 
   describe "GET index" do

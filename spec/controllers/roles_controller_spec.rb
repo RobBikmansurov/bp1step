@@ -24,7 +24,12 @@ describe RolesController do
   # Role. As you add validations to Role, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {}
+    {
+      :id => 1,
+      :description => "test_descr",
+      :name => "test_name",
+      :bproce_id => 1
+    }
   end
 
   describe "GET index" do

@@ -10,12 +10,13 @@ BPDoc::Application.routes.draw do
   resources :documents, :bapps, :roles, :staffs, :workplaces, :bproces
   resources :bproce_bapps
   resources :bproce_workplaces
-  resources :documentco
 
   match '/about' => 'pages#about', :via => :get
   get 'pages/about'
 
-  devise_for :users
+  devise_for :users do
+    get '/users/sign_out' => 'devise/sessions#destroy'
+  end
   root :to => "home#index"
 
   # The priority is based upon order of creation:
