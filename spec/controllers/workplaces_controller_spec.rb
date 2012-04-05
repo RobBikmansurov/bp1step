@@ -24,7 +24,11 @@ describe WorkplacesController do
   # Workplace. As you add validations to Workplace, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {}
+    {
+      :id => 1,
+      :name => "test_name",
+      :designation => "test_designation"
+    }
   end
 
   describe "GET index" do
@@ -103,8 +107,8 @@ describe WorkplacesController do
         # specifies that the Workplace created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
-        Workplace.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => workplace.id, :workplace => {'these' => 'params'}
+        Workplace.any_instance.should_receive(:update_attributes).with({'id' => '1'})
+        put :update, :id => workplace.id, :workplace => {'id' => '1'}
       end
 
       it "assigns the requested workplace as @workplace" do
@@ -133,7 +137,7 @@ describe WorkplacesController do
         workplace = Workplace.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Workplace.any_instance.stub(:save).and_return(false)
-        put :update, :id => workplace.id, :workplace => {}
+        put :update, :id => workplace.id, :workplace => {:id => 1}
         response.should render_template("edit")
       end
     end

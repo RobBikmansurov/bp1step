@@ -24,7 +24,11 @@ describe BappsController do
   # Bapp. As you add validations to Bapp, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {}
+    {
+      :id => 1,
+      :name => "test_name",
+      :description => "test_description"
+    }
   end
 
   describe "GET index" do

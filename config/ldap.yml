@@ -21,12 +21,12 @@ authorizations: &AUTHORIZATIONS
 ## Enviornments
 
 development:
-  host: localhost
+  host: ldap.ad.bankperm.ru
   port: 389
-  attribute: cn
-  base: ou=people,dc=test,dc=com
-  admin_user: cn=admin,dc=test,dc=com
-  admin_password: admin_password
+  attribute: sAMAccountName
+  base: DC=ad,DC=bankperm,DC=ru
+  admin_user: CN=AdminLDAP,OU=Services,DC=ad,DC=bankperm,DC=ru
+  admin_password: LDAPP@ssw0rd
   ssl: false
   # <<: *AUTHORIZATIONS
 

@@ -24,7 +24,12 @@ describe BprocesController do
   # Bproce. As you add validations to Bproce, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {}
+    {
+      :id => 1,
+      :shortname => "test_short",
+      :name => "test_name10",
+      :fullname => "test_fullname"
+    }
   end
 
   describe "GET index" do
