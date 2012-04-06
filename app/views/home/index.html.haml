@@ -1,5 +1,9 @@
 %h1 Бизнес-процессы: Первый шаг
 
+- if user_signed_in?
+  %h3
+    = current_user.displayname
+
 %h3
   = link_to "Процессы:", bproces_path
   = Bproce.count
