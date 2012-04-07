@@ -12,34 +12,43 @@
   -#= select_tag 'parent_id', options_for_select(nested_set_options(Bproce) {|i| "#{'-' * i.level} #{i.name}" } )
   = f.error :base
   = f.button :submit
-  %p
-  -# не показывать для нового процесса связанные с ним объекты - их еще нет
-  -if @bproce.id?
-    %table
-      %tr
-        %th В процессе участвуют Роли:
-        %th Процесс описывают Документы:
-      %tr
-        %td
-          -@bproce.roles.find_with_associations.each do |role|
-            = link_to role.name, edit_role_path(role)
-            %br
-        %td
-          -@bproce.documents.find_with_associations.each do |doc|
-            = link_to doc.name, edit_document_path(doc)
-            = ' ' + doc.approved.to_s
-            %br
-    %table
-      %tr
-        %th В процессе используются Приложения:
-        %th В процессе участвуют Рабочие Места:
-      %tr
-        %td
-          -@bproce.bapps.each do |ba|
-            = link_to ba.name, edit_bapp_path(ba)
-            %br
-        %td
-          -@bproce.workplaces.each do |wp|
-            = link_to wp.designation, edit_workplace_path(wp)
-            %br
-
+%p
+-# не показывать для нового процесса связанные с ним объекты - их еще нет
+-if @bproce.id?
+  %table
+    %tr
+      %th В процессе участвуют Роли:
+      %th Процесс описывают Документы:
+    %tr
+      %td
+        -@bproce.roles.find_with_associations.each do |role|
+          = link_to role.name, edit_role_path(role)
+          %br
+        = simple_form_for(@role) do |r|
+          = r.error_notification
+          = r.input :name
+          = r.input :description
+          = r.hidden_field :bproce_id
+          = r.error :base
+          = r.button :submit, 'Добавить Роль'
+      %td
+        -@bproce.documents.find_with_associations.each do |doc|
+          = link_to doc.name, edit_document_path(doc)
+          = ' ' + doc.approved.to_s
+          %br
+  %table
+    %tr
+      %th В процессе используются Приложения:
+      %th В процессе участвуют Рабочие Места:
+    %tr
+      %td
+        -@bproce.bapps.each do |ba|
+          = link_to ba.name, edit_bapp_path(ba)
+          %br
+      %td
+        -@bproce.workplaces.each do |wp|
+          = link_to wp.designation, edit_workplace_path(wp)
+          %br
+-#=debug params
+  =debug @bproce
+  =debug @role
