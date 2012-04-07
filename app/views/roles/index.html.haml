@@ -10,14 +10,15 @@
     %th
   
 
-  -@roles.each do |role|
+  -@roles.each do |ro|
     %tr
-      %td= link_to role.name, edit_role_path(role)
-      %td= link_to role.bproce.name, edit_bproce_path(role.bproce) if role.bproce_id?
-      %td= role.description
-      %td= link_to 'Show', role
+      %td= link_to ro.name, edit_role_path(ro)
       %td
-        = link_to 'Destroy', role, :confirm => 'Are you sure?', :method => :delete
+        = link_to ro.bproce.name, edit_bproce_path(ro.bproce_id) if !ro.bproce.nil?
+      %td= ro.description
+      %td= link_to 'Show', ro
+      %td
+        = link_to 'Destroy', ro, :confirm => 'Are you sure?', :method => :delete
 .apple_pagination
   -#.page_info
     -#    = page_entries_info @roles
