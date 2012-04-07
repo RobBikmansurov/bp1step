@@ -4,7 +4,6 @@ describe Document do
   before(:each) do
     @doc = Document.new
     @doc.name = 'test_doc_name'
-    @doc.bproce_id = 1
   end
   it "should be valid" do
     @doc.should be_valid
