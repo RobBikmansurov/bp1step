@@ -2,23 +2,21 @@ class BprocesController < ApplicationController
   respond_to :html
   respond_to :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
+  before_filter :get_bproce, :except => :index
 
   def index
     @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end
 
   def show
-    @bproce = Bproce.find(params[:id])
     respond_with(@bproce)
   end
 
   def new
-    @bproce = Bproce.new
     respond_with(@bproce)
   end
 
   def edit
-    @bproce = Bproce.find(params[:id])
     @role = Role.new(:bproce_id => @bproce.id)
   end
 
@@ -29,17 +27,14 @@ class BprocesController < ApplicationController
   end
 
   def update
-    @bproce = Bproce.find(params[:id])
     @role = Role.new(params[:role])
-    @role.save if @role.id
-    flash[:notice] = "Successfully updated Bproce."  if @bproce.update_attributes(params[:bproce])
-    respond_with(@bproce)
+    @role.save if !@role.nil
+    flash[:notice] = "Successfully updated Bproce." if @bproce.update_attributes(params[:bproce])
+    respond_to(@bproces)
   end
 
   def destroy
-    @bproce = Bproce.find(params[:id])
     @bproce.destroy
-    flash[:notice] = "Successfully destroyed Bproce." if @bproce.save
     respond_with(@bproce)
   end
 
@@ -52,5 +47,8 @@ private
     params[:direction] || "asc"
   end
 
+  def get_bproce
+    @bproce = params[:id].present? ? Bproce.find(params[:id]) : Bproce.new
+  end
 
 end

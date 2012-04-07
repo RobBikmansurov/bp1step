@@ -8,7 +8,7 @@ class Role < ActiveRecord::Base
   # роль участвует в процессе
   belongs_to :bproce
   # роль может исполняется на нескольких рабочих местах
-  has_and_belongs_to_many :workplaces
+  #has_and_belongs_to_many :workplaces
 
   def self.search(search)
     if search
