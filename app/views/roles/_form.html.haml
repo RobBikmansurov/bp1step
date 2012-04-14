@@ -3,7 +3,11 @@
   = f.input :name
   = f.input :description, :as => :text
   = f.association :bproce, :label => 'Участвует в процессе'
-  = link_to '>>', edit_bproce_path(@role.bproce)
   = f.error :base
   = f.button :submit
+= link_to '>>', edit_bproce_path(@role.bproce)
+-#=debug params
+  =debug @bproce
+  =debug @role
+
 

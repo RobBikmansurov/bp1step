@@ -27,10 +27,19 @@ class BprocesController < ApplicationController
   end
 
   def update
-    @role = Role.new(params[:role])
-    @role.save if !@role.nil
+    if params[:role].present?
+      @role = Role.new(params[:role])
+      @role.save if !@role.nil?
+    end
     flash[:notice] = "Successfully updated Bproce." if @bproce.update_attributes(params[:bproce])
-    respond_to(@bproces)
+    if !@bproce.save # there was an error!
+      flash[:bproce] = @bproce
+      redirect_to :action => :edit
+    end
+    redirect_to :action => :index  # пойдем сразу на список Процессов
+
+
+
   end
 
   def destroy
