@@ -11,25 +11,24 @@
   = f.error :base
   = f.button :submit
   %p
-  -# не показывать для нового рабочего места связанные с ним объекты - их еще нет
-  -if @workplace.id?
-    %table
+-# не показывать для нового рабочего места связанные с ним объекты - их еще нет
+-if @workplace.id?
+  %table
+    %tr
+      %th Это Рабочее место участвует в Процессах:
+      %th
+    -@workplace.bproce_workplaces.each do |wp|
       %tr
-        %th Это Рабочее место участвует в Процессах:
-        %th
-      -@workplace.bproce_workplaces.each do |wp|
-        %tr
-          %td
-            = link_to wp.bproce.name, edit_bproce_path(wp.bproce_id)
-          %td
-            = link_to 'Destroy', wp, :confirm => 'Are you sure?', :method => :delete
-
-= simple_form_for(@bproce_workplace) do |ff|
-  = ff.error_notification
-  = ff.association :bproce
-  = ff.hidden_field :workplace_id
-  = ff.error :base
-  = ff.button :submit, 'Связать с процессом'
+        %td
+          = link_to wp.bproce.name, edit_bproce_path(wp.bproce_id)
+        %td
+          = link_to 'Destroy', wp, :confirm => 'Are you sure?', :method => :delete
+  = simple_form_for(@bproce_workplace) do |ff|
+    = ff.error_notification
+    = ff.association :bproce, :label => 'Процесс', :hint => 'Выберите процесс'
+    = ff.hidden_field :workplace_id
+    = ff.error :base
+    = ff.button :submit, 'Связать с процессом'
 -#=debug params
 -#  =debug @bproce
 -#  =debug @bproce_workplace
