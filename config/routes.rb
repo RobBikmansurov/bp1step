@@ -1,11 +1,5 @@
 BPDoc::Application.routes.draw do
 
-  #get "bproce_workplaces/:new"
-  #get "bproce_workplaces/:create"
-  #get "bproce_workplaces/:destroy"
-  #get "bproce_bapp/new"
-  #get "bproce_bapp/destroy"
-
   resources :categories
   resources :documents, :bapps, :roles, :staffs, :workplaces, :bproces
   resources :bproce_bapps
