@@ -23,20 +23,12 @@ class BappsController < ApplicationController
   end
 
   def edit
-    #@bproce_bapps = @bapp.bproces
-    #@bproce_bapp.bapp_id = @bapp.id
-    #render :text => @bproce_bapp.inspect
-    #Rails.logger.debug("bproce_bapp: #{@bproce_bapp.inspect}")
-    #@bproce_bapp.build
     if flash[:bapp]
       @bapp = flash[:bapp]
     else
       @bapp = Bapp.find(params[:id])
       @bproce_bapp = BproceBapp.new(:bapp_id => @bapp.id)
     end
-    #redirect_to(@bapp) @bproce_bapp.update_attributes(params[:bproce_bapp]) ?
-    #Rails.logger.debug("edit-bproce_bapp: #{@bproce_bapp.inspect}")
-    #Rails.logger.debug("edit-bapp: #{@bapp.inspect}")
   end
 
   def update
