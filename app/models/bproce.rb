@@ -12,6 +12,7 @@ class Bproce < ActiveRecord::Base
   has_many :bapps, :through => :bproce_bapps
   has_many :bproce_workplaces, :dependent => :destroy
   has_many :workplaces, :through => :bproce_workplaces
+  belongs_to :bproce
   #accepts_nested_attributes_for :roles
   #has_and_belongs_to_many :workplaces
   

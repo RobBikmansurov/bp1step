@@ -18,6 +18,7 @@ class BprocesController < ApplicationController
 
   def edit
     @role = Role.new(:bproce_id => @bproce.id)
+    @document = Document.new(:bproce_id => @bproce.id)
   end
 
   def create
@@ -31,15 +32,16 @@ class BprocesController < ApplicationController
       @role = Role.new(params[:role])
       @role.save if !@role.nil?
     end
+    if params[:document].present?
+      @document = Document.new(params[:document])
+      @document.save if !@document.nil?
+    end
     flash[:notice] = "Successfully updated Bproce." if @bproce.update_attributes(params[:bproce])
     if !@bproce.save # there was an error!
       flash[:bproce] = @bproce
       redirect_to :action => :edit
     end
     redirect_to :action => :index  # пойдем сразу на список Процессов
-
-
-
   end
 
   def destroy

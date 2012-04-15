@@ -1,28 +1,16 @@
 %p#notice= notice
-
+%b Наименование:
+= @document.name
+%br
+%b Описание:
+= @document.description
+%br
+%b Filename:
+= @document.filename
+%br
+%b Place:
+= @document.place
 %p
-  %b Наименование:
-  = @document.name
-%p
-  %b Описание:
-  = @document.description
-%p
-  %b Filename:
-  = @document.filename
-%p
-  %b Status:
-  = @document.status
-%p
-  %b Part:
-  = @document.part
-%p
-  %b Approved:
-  = @document.approved
-%p
-  %b Place:
-  = @document.place
-
-
 = link_to 'Edit', edit_document_path(@document)
 \|
 = link_to 'Back', documents_path
