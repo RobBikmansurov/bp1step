@@ -7,7 +7,8 @@
   = f.input :goal
   -#if @bproce.new_record?
   = f.label 'Родительский процесс'
-  = f.select :parent_id, :collection => options_for_select(nested_set_options(Bproce) {|i| "#{'-' * i.level} #{i.name}" } )
+  = f.select :parent_id, nested_set_options(Bproce, @bproce) {|i| "#{'-' * i.level} #{i.name}" }
+
   = f.error :base
   = f.button :submit
 %p
@@ -54,6 +55,6 @@
         -@bproce.workplaces.each do |wp|
           = link_to wp.designation, edit_workplace_path(wp)
           %br
-=debug params
-=debug @bproces
+-#=debug params
+-#=debug @bproce
 -#=debug @role
