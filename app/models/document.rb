@@ -1,6 +1,8 @@
 class Document < ActiveRecord::Base
+  # TODO добавить StateMachine
   validates :name, :length => {:minimum => 10, :maximum => 200}
   validates :bproce_id, :presence => true
+  validates :dlevel, :numericality => {:less_than => 5, :greater_than => 0}
   belongs_to :category
   # документ относится к процессу
   belongs_to :bproce
