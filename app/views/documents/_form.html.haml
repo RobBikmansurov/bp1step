@@ -8,7 +8,8 @@
     -#      -form_for @document do |ff|
     =f.file_field :filename, :size => 200
   -#= f.association :status_id, Category.all
-  = f.input :approveorgan
+  = f.input :status, :collection => %w[Проект Согласование Утвержден], :promp => 'Статус документа'
+  = f.input :approveorgan, :collection => %w[СоветДиректоров Правление ПредседательПравления]
   = f.input :approved, :as => :string, :order => [:day, :month, :year], :discard_day => true
   = f.input :part, :collection => 1..11, :prompt => "Раздел Документооборота"
   %p
