@@ -1,18 +1,14 @@
 class Document < ActiveRecord::Base
   # TODO добавить StateMachine
+  # FIXME разобраться со статусами на русском
+  # STATUSES = %w[Проект Согласование Утвержден]
+  # validates_inclusion_of :status, in: STATUSES
   validates :name, :length => {:minimum => 10, :maximum => 200}
   validates :bproce_id, :presence => true
   validates :dlevel, :numericality => {:less_than => 5, :greater_than => 0}
-  belongs_to :category
+
   # документ относится к процессу
   belongs_to :bproce
-
-  attr_accessor :new_category_name
-  before_save :create_category_from_name
-
-  def create_category_from_name
-    create_category(:cat_name => new_category_name) unless new_category_name.blank?
-  end
 
   def self.search(search)
     if search  
