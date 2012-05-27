@@ -18,5 +18,6 @@
   = f.association :bproce, :label => 'Процесс', :hint => 'Выберите Процесс, к которому относится документ'
   = f.error :base
   = f.button :submit
+= link_to '>>', edit_bproce_path(@document.bproce)
 -#=debug params
 -#=debug @document

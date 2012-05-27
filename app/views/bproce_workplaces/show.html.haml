@@ -1,0 +1,22 @@
+%h2
+  Рабочие места процесса
+  = link_to @bp.name, edit_bproce_path(@bp)
+
+%table
+  %tr
+    %thОбозначение
+    %thНаименование
+    %thОписание
+    %th Тип?
+    %thМестоположение
+    -#%th
+    
+  - @workplaces.each do |workplace|
+    %tr
+      %td= link_to workplace.designation, edit_workplace_path(workplace)
+      %td= workplace.name
+      %td= workplace.description
+      %td= workplace.typical
+      %td= workplace.location
+      -#%td= link_to 'Удалить', workplace, confirm: 'Действительно хотите удалить?', :method => :delete 
+

@@ -1,0 +1,15 @@
+%h2
+  Приложения процесса
+  = link_to @bp.name, edit_bproce_path(@bp)
+
+%table
+  %tr
+    %thНаименование
+    %thОписание
+  
+
+  -@bapps.each do |bapp|
+    %tr
+      %td= link_to bapp.name, edit_bapp_path(bapp)
+      %td= bapp.description
+

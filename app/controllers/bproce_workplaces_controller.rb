@@ -17,4 +17,10 @@ class BproceWorkplacesController < ApplicationController
     flash[:notice] = "Successfully destroyed bproce_workplace." if @bproce_workplace.save
     respond_with(@bproce_workplace.workplace)
   end
+
+  def show
+    @bp = Bproce.find(params[:id])
+    respond_with(@workplaces = @bp.workplaces)
+  end
+
 end

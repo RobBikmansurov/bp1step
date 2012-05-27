@@ -1,0 +1,36 @@
+%h1Каталог Документов
+-#= form_tag documents_path, :method => 'get' do
+  = hidden_field_tag :direction, params[:direction]
+  = hidden_field_tag :sort, params[:sort]
+  %p  
+    = text_field_tag :search, params[:search]
+    = submit_tag "Search", :name => nil
+
+%table
+  %tr
+    %th 
+    %th= sortable "name", "Наименование"
+    %th= sortable "description", "Описание"
+    -#    %th Имя файла
+    -#%th authority
+    %th= sortable "status", "Статус"
+    %th Дата
+    -#%th responsible
+    %th Место
+    %th
+    
+  - @documents.each do |document|
+    %tr
+      %td= document.part
+      %td= link_to document.name, edit_document_path(document)
+      %td= document.description
+      -#      %td= document.filename
+      %td= document.status
+      %td= document.approved 
+      %td= document.place 
+      %td= link_to 'Удалить', document, confirm: 'Действительно хотите удалить?', :method => :delete 
+
+.apple_pagination
+  = will_paginate @documents 
+ 
+= link_to 'Добавить новый документ', new_document_path 
