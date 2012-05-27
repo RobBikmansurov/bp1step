@@ -1,10 +1,11 @@
 BPDoc::Application.routes.draw do
-
   resources :categories
   resources :documents, :bapps, :roles, :staffs, :workplaces, :bproces
-  resources :bproce_bapps
-  resources :bproce_workplaces
-
+  resources :bproce_bapps, :only => [:new, :create, :destroy, :show]
+  resources :bproce_workplaces, :only => [:new, :create, :destroy, :show]
+  resources :bproce_documents, :only => [:show]
+  resources :bproce_roles, :only => [:show]
+  
   match '/about' => 'pages#about', :via => :get
   get 'pages/about'
 

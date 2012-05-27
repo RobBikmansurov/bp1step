@@ -1,0 +1,15 @@
+-title "Каталог Ролей"
+%h2
+  Роли процесса
+  = link_to @bp.name, edit_bproce_path(@bp)
+
+%table
+  %tr
+    %th Роль
+    %th Назначение в процессе
+  
+
+  -@roles.each do |ro|
+    %tr
+      %td= link_to ro.name, edit_role_path(ro)
+      %td= ro.description

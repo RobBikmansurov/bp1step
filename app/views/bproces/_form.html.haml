@@ -16,8 +16,12 @@
 -if @bproce.id?
   %table
     %tr
-      %th В процессе участвуют Роли:
-      %th Процесс описывают Документы:
+      %th
+        В процессе участвуют
+        =link_to 'Роли:', bproce_role_path(@bproce)
+      %th
+        Процесс описывают
+        =link_to 'Документы:', bproce_document_path(@bproce)
     %tr
       %td
         -@bproce.roles.find_with_associations.each do |role|
@@ -44,8 +48,13 @@
           = r.button :submit, 'Добавить Документ'
   %table
     %tr
-      %th В процессе используются Приложения:
-      %th В процессе участвуют Рабочие Места:
+      %th
+        В процессе используются
+        =link_to 'Приложения:', bproce_bapp_path(@bproce)
+
+      %th
+        В процессе участвуют
+        =link_to 'Рабочие Места:', bproce_workplace_path(@bproce)
     %tr
       %td
         -@bproce.bapps.each do |ba|

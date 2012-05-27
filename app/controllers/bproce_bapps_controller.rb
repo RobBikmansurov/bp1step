@@ -18,4 +18,9 @@ class BproceBappsController < ApplicationController
     respond_with(@bproce_bapp.bapp)
   end
 
+  def show
+    @bp = Bproce.find(params[:id])
+    respond_with(@bapps = @bp.bapps)
+  end
+
 end
