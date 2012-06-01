@@ -1,4 +1,5 @@
 class BproceBappsController < ApplicationController
+  # TODO редактировать назначение Приложения в Процессе (пока есть только создание/удаление из Процесса)
   respond_to :html, :json
 
   def new
@@ -19,8 +20,9 @@ class BproceBappsController < ApplicationController
   end
 
   def show
-    @bp = Bproce.find(params[:id])
-    respond_with(@bapps = @bp.bapps)
+    @bp = Bproce.find(params[:id])  # нужный процесс
+    @bapps = @bp.bapps # приложения
+    respond_with(@bpapps = @bp.bproce_bapps)  # приложения процесса
   end
 
 end

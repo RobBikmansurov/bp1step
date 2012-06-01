@@ -5,11 +5,18 @@
 %table
   %tr
     %thНаименование
+    %thНазначение в процессе
     %thОписание
   
 
+  -@bpapps.each do |bapp|
+    %tr
+      %td
+      %td= bapp.apurpose
+      %td
   -@bapps.each do |bapp|
     %tr
       %td= link_to bapp.name, edit_bapp_path(bapp)
+      %td
       %td= bapp.description
 
