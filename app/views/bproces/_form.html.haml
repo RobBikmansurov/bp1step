@@ -49,12 +49,20 @@
   %table
     %tr
       %th
-        В процессе используются
-        =link_to 'Приложения:', bproce_bapp_path(@bproce)
+        - if @bproce.bapps.empty?
+          В процессе пока не используются
+          =link_to "Приложения", bapps_path
+        - else
+          В процессе используются
+          =link_to 'Приложения:', bproce_bapp_path(@bproce)
 
       %th
-        В процессе участвуют
-        =link_to 'Рабочие Места:', bproce_workplace_path(@bproce)
+        - if @bproce.workplaces.empty?
+          В процессе пока не участвуют
+          =link_to "Рабочие Места", workplaces_path
+        - else
+          В процессе участвуют
+          =link_to 'Рабочие Места:', bproce_workplace_path(@bproce)
     %tr
       %td
         -@bproce.bapps.each do |ba|
