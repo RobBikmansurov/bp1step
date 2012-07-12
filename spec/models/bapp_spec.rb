@@ -16,5 +16,22 @@ describe Bapp do
     @bapp.should_not be_valid
 #    @bapp.errors.on(:name).should_not be_nil
   end
+  it "should require uniqueness name" do
+    @bapp1 = Bapp.new
+    @bapp1.name = "test_name"
+    @bapp1.should_not be_valid
+  end
+  it "should require long name" do
+    @bapp.name = "short"
+    @bapp.should_not be_valid
+  end
+  it "should require max lenght name 50" do
+    @bapp.name = "maxlenght1maxlenght2maxlenght3maxlenght4maxlenght5_"
+    @bapp.should_not be_valid
+  end
+  it "should require description" do
+    @bapp.description = nil
+    @bapp.should_not be_valid
+  end
 
 end
