@@ -16,4 +16,20 @@ describe Document do
     @doc.name = "short"
     @doc.should_not be_valid
   end
+  it "should require dlevel <= 4" do
+    @doc.dlevel = 4
+    @doc.should be_valid
+  end
+  it "should require dlevel < 5" do
+    @doc.dlevel = 5
+    @doc.should_not be_valid
+  end
+  it "should require dlevel >= 1" do
+    @doc.dlevel = 1
+    @doc.should be_valid
+  end
+  it "should require dlevel > 0" do
+    @doc.dlevel = 0
+    @doc.should_not be_valid
+  end
 end
