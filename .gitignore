@@ -2,6 +2,7 @@
 db/*.sqlite3
 log/*.log
 tmp/
+config/
 *.0
 *.rar
 Gemfile.lock

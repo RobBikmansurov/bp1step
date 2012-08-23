@@ -15,7 +15,7 @@ namespace :bp1step do
 	#host = LDAP_CONFIG['audiocast_uri_format']
 
 	filter = Net::LDAP::Filter.eq("title", "*")	# пользователи обязательно имеют должность
-	#filter = Net::LDAP::Filter.eq("sAMAccountName", "mr_rob")
+	#filter = Net::LDAP::Filter.eq("sAMAccountName", "ks5")
 	#filter = Net::LDAP::Filter.eq(&(objectClass=person)(objectClass=user)(middleName=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))
 	treebase = LDAP_CONFIG["development"]["base"]
 	attrs = ["sn", "givenname", "MiddleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description"]
@@ -27,7 +27,7 @@ namespace :bp1step do
   		email = entry["mail"].first				# это обязательные параметры + к ним левые уникальные password и reset_password_token
   		username = entry["sAMAccountName"].first.downcase
   		puts username, email
-	    usr = User.find_or_create_by_email :username => username, :email => email, :password => username
+	    usr = User.find_or_create_by_email :username => username, :email => email, :password => email
 	    if usr.new_record?
 	    	new_users = new_users + 1
 	        usr.save
