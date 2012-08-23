@@ -20,7 +20,7 @@ namespace :bp1step do
 	treebase = LDAP_CONFIG["development"]["base"]
 	attrs = ["sn", "givenname", "MiddleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description"]
 
-	i, new_users, upd_users = 0
+	i, new_users, upd_users = 0, 0, 0	# счетчики
 	ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do |entry|
 	#ldap.search(:base => treebase, :filter => filter) do |entry|
 		i = i + 1
@@ -29,14 +29,37 @@ namespace :bp1step do
   		puts username, email
 	    usr = User.find_or_create_by_email :username => username, :email => email, :password => username
 	    if usr.new_record?
+	    	new_users = new_users + 1
 	        usr.save
-			puts "#{i}. #{entry.sAMAccountName} #{entry.dn}"
+			puts "#{i}+#{new_users}. #{entry.sAMAccountName} #{entry.dn}"
 	    else	# а здесь надо проверить - не изменилось ли что либо у этого пользователя в AD
-	      	#usr.save
+	    	f_change = 0
+			if usr.department != entry["department"].first	# подразделение
+				usr.department = entry["department"].first
+				f_change += 1
+			end
+			if usr.position != entry["title"].first	# должность
+				usr.position = entry["title"].first
+				f_change += 1
+			end
+			if usr.phone != entry["telephonenumber"].first	# телефон
+				usr.phone = entry["telephonenumber"].first
+				f_change += 1
+			end
+
+			if usr.office != entry["physicaldeliveryofficename"].first	# офис
+				usr.office = entry["physicaldeliveryofficename"].first
+				f_change += 1
+			end
+			if f_change > 0
+	    		upd_users = upd_users + 1
+				puts "#{i}=#{upd_users}. #{entry.sAMAccountName} #{entry.dn}"
+	      		usr.save
+	      	end
 	    end
 
 	end
-	puts i, new_users, upd_users
-	p ldap.get_operation_result
+	puts "All: #{i}, add: #{new_users}, update: #{upd_users} users"
+	#p ldap.get_operation_result
   end
 end

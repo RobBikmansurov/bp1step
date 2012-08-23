@@ -1,6 +1,6 @@
 BPDoc::Application.routes.draw do
   resources :categories
-  resources :documents, :bapps, :roles, :staffs, :workplaces, :bproces
+  resources :documents, :bapps, :roles, :workplaces, :bproces
   resources :bproce_bapps, :only => [:new, :create, :destroy, :show]
   resources :bproce_workplaces, :only => [:new, :create, :destroy, :show]
   resources :bproce_documents, :only => [:show]
@@ -12,6 +12,7 @@ BPDoc::Application.routes.draw do
   devise_for :users do
     get '/users/sign_out' => 'devise/sessions#destroy'
   end
+  resources :users, :only => [:index, :show]
   root :to => "home#index"
 
   # The priority is based upon order of creation:
