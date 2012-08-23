@@ -43,4 +43,14 @@ class User < ActiveRecord::Base
   #def get_ldap_email
   #  self.email = Devise::LdapAdapter get_ldap_param(self.username,"mail")
   #end
+
+  def self.search(search)
+   if search
+      where('username LIKE ? or displayname LIKE ?', "%#{search}%", "%#{search}%")
+    else
+      scoped
+    end
+  end
+
+
 end
