@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120823102543) do
+ActiveRecord::Schema.define(:version => 20120824114034) do
 
   create_table "bapps", :force => true do |t|
     t.string   "name"
@@ -86,13 +86,31 @@ ActiveRecord::Schema.define(:version => 20120823102543) do
     t.integer  "bproce_id"
   end
 
-  create_table "staffs", :force => true do |t|
-    t.string   "fullname"
-    t.string   "position"
-    t.boolean  "supervisor"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "user_roles", :force => true do |t|
+    t.date     "date_from"
+    t.date     "date_to"
+    t.string   "note"
+    t.integer  "user_id"
+    t.integer  "role_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
+
+  add_index "user_roles", ["role_id"], :name => "index_user_roles_on_role_id"
+  add_index "user_roles", ["user_id"], :name => "index_user_roles_on_user_id"
+
+  create_table "user_workplaces", :force => true do |t|
+    t.date     "date_from"
+    t.date     "date_to"
+    t.string   "note"
+    t.integer  "user_id"
+    t.integer  "workplace_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "user_workplaces", ["user_id"], :name => "index_user_workplaces_on_user_id"
+  add_index "user_workplaces", ["workplace_id"], :name => "index_user_workplaces_on_workplace_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                                 :default => "", :null => false
