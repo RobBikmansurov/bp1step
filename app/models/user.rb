@@ -11,6 +11,11 @@ class User < ActiveRecord::Base
   #attr_accessible :username, :email, :password
   before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
 
+  has_many :user_roles
+  has_many :roles, :through => :user_roles
+  has_many :user_workplaces
+  has_many :workplaces, :through => :user_workplaces
+
   def get_ldap_lastname
       #Rails::logger.info("### Getting the users last name")
       tempname = Devise::LdapAdapter.get_ldap_param(self.username,"sn")
