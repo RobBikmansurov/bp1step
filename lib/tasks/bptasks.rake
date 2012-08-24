@@ -15,7 +15,7 @@ namespace :bp1step do
 	#host = LDAP_CONFIG['audiocast_uri_format']
 
 	filter = Net::LDAP::Filter.eq("title", "*")	# пользователи обязательно имеют должность
-	#filter = Net::LDAP::Filter.eq("sAMAccountName", "ks5")
+	#filter = Net::LDAP::Filter.eq("sAMAccountName", "ks1")
 	#filter = Net::LDAP::Filter.eq(&(objectClass=person)(objectClass=user)(middleName=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))
 	treebase = LDAP_CONFIG["development"]["base"]
 	attrs = ["sn", "givenname", "MiddleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description"]
@@ -26,35 +26,43 @@ namespace :bp1step do
 		i = i + 1
   		email = entry["mail"].first				# это обязательные параметры + к ним левые уникальные password и reset_password_token
   		username = entry["sAMAccountName"].first.downcase
-  		puts username, email
-	    usr = User.find_or_create_by_email :username => username, :email => email, :password => email
+#	    usr = User.find_or_create_by_email :username => username, :email => email, :password => email
+	    usr = User.find_or_create_by_username :username => username, :email => email, :password => email
 	    if usr.new_record?
-	    	new_users = new_users + 1
-	        usr.save
-			puts "#{i}+#{new_users}. #{entry.sAMAccountName} #{entry.dn}"
+			if email.to_s.empty?	# пропустим с пустым email
+				puts "#{i}!#{new_users}. #{entry.sAMAccountName} #{entry.dn} email is NULL!"
+			else
+	    		new_users = new_users + 1
+	        	usr.save
+				puts "#{i}+#{new_users}. #{entry.sAMAccountName} #{entry.dn}"
+	        	puts usr.errors
+	        end
 	    else	# а здесь надо проверить - не изменилось ли что либо у этого пользователя в AD
 	    	f_change = 0
-			if usr.department != entry["department"].first	# подразделение
+			if !usr.department == entry["department"].first	# подразделение
 				usr.department = entry["department"].first
+				puts "#{usr.department} = #{entry['department'].first}: #{usr.department == entry['department'].first}"
 				f_change += 1
 			end
-			if usr.position != entry["title"].first	# должность
+			if !usr.position == entry["title"].first	# должность
 				usr.position = entry["title"].first
+				puts "#{usr.position} = #{entry['title'].first}: #{usr.position == entry['title'].first}"
 				f_change += 1
 			end
-			if usr.phone != entry["telephonenumber"].first	# телефон
+			if !usr.phone == entry["telephonenumber"].first	# телефон
 				usr.phone = entry["telephonenumber"].first
+				puts "#{usr.phone} = #{entry['telephonenumber'].first}: #{usr.phone == entry['telephonenumber'].first}"
 				f_change += 1
 			end
-
-			if usr.office != entry["physicaldeliveryofficename"].first	# офис
+			if !usr.office == entry["physicaldeliveryofficename"].first	# офис
 				usr.office = entry["physicaldeliveryofficename"].first
+				puts "#{usr.office} = #{entry['physicaldeliveryofficename'].first}: #{usr.office == entry['physicaldeliveryofficename'].first}"
 				f_change += 1
 			end
 			if f_change > 0
 	    		upd_users = upd_users + 1
-				puts "#{i}=#{upd_users}. #{entry.sAMAccountName} #{entry.dn}"
 	      		usr.save
+				puts "#{i}=#{upd_users}. #{entry.sAMAccountName} #{entry.dn}"
 	      	end
 	    end
 

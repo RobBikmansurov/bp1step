@@ -1,0 +1,22 @@
+%h1 Список сотрудников
+
+%table
+  %tr
+    %th= sortable "displayname", "ФИО"
+    %th= sortable "email", "Почта"
+    %th= sortable "phone", "Телефон"
+    %th Должность
+    %th Офис
+  
+
+  -@users.each do |user|
+    %tr
+      %td= link_to user.displayname, user
+      %td= user.email
+      %td= user.phone
+      %td= user.position
+      %td= user.office
+
+.apple_pagination
+  = will_paginate @users 
+
