@@ -7,8 +7,10 @@ class UsersController < ApplicationController
   end
 
   def show
-    #@user = params[:id].present? ? User.find(params[:id]) : user.new
-    respond_with(@user = User.find(params[:id]))
+    @usr = User.find(params[:id])  # отображаемый пользователь
+    @uroles = @usr.user_roles      # исполняет роли
+    @uworkplaces = @usr.user_workplaces # рабочие места пользователя
+    respond_with(@roles = @usr.roles)
   end
 
 private
