@@ -1,2 +1,25 @@
-%h1 User#show
-%p Find me in app/views/user/show.html.haml
+%h1 
+  = @usr.displayname
+  = @usr.email
+%p
+= @usr.department
+= @usr.position
+= @usr.office
+= @usr.phone
+= @usr.email
+
+%h2
+  = @usr.displayname
+  исполняет роли
+%table
+  %tr
+    %th Роль
+    %th с
+    %th по
+  -@roles.each do |ro|
+    %tr
+      %td= link_to ro.note, edit_role_path(ro)
+      %td= ro.date_from
+      %td= ro.date_to
+
+= link_to 'Back', users_path

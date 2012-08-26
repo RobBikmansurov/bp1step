@@ -86,14 +86,22 @@ ActiveRecord::Schema.define(:version => 20120824114034) do
     t.integer  "bproce_id"
   end
 
+  create_table "staffs", :force => true do |t|
+    t.string   "fullname"
+    t.string   "position"
+    t.boolean  "supervisor"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "user_roles", :force => true do |t|
     t.date     "date_from"
     t.date     "date_to"
     t.string   "note"
     t.integer  "user_id"
     t.integer  "role_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_roles", ["role_id"], :name => "index_user_roles_on_role_id"
@@ -105,8 +113,8 @@ ActiveRecord::Schema.define(:version => 20120824114034) do
     t.string   "note"
     t.integer  "user_id"
     t.integer  "workplace_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_workplaces", ["user_id"], :name => "index_user_workplaces_on_user_id"
