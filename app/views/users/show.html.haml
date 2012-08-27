@@ -1,20 +1,31 @@
 %h1 
   = @usr.displayname
-  = @usr.email
+  = @usr.position  
 %p
+= @usr.email
 = @usr.department
-= @usr.position
 = @usr.office
 = @usr.phone
 
-%p
-=@uworkplaces.inspect
-%p
-=@uworkplaces.count
 %h2 Рабочие места
-- @uworkplaces.each do |uw|
-  = uw.inspect
-  -#= @uw.note
+%table
+  %tr
+    %thРабочее место
+    %thНазначение в процессе
+    %thОписание
+
+  -@workplaces.each do |workplace|
+    %tr
+      %td= link_to workplace.name, edit_workplace_path(workplace)
+      %td= workplace.description
+      %td
+  -@uworkplaces.each do |user_workplace|
+    %tr
+      %td= user_workplace.note
+      %td= user_workplace.date_from
+      %td= user_workplace.date_to
+
+
 
 %h2
   = @usr.displayname
