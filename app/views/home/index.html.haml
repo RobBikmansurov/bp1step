@@ -3,6 +3,10 @@
 - if user_signed_in?
   %h3
     = current_user.displayname
+  %h4
+    = current_user.position
+    |
+    = current_user.email
 
 %h3
   = link_to "Процессы:", bproces_path

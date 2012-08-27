@@ -3,6 +3,6 @@ class UserRolesController < ApplicationController
   
   def show
   	@ur = User.find(params[:id])
-  	respond_with(@roles = @ur.roles)
+  	respond_with(@roles = @ur.user_roles)
   end
 end

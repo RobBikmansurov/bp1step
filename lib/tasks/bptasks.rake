@@ -14,8 +14,8 @@ namespace :bp1step do
      	}
 	#host = LDAP_CONFIG['audiocast_uri_format']
 
-	filter = Net::LDAP::Filter.eq("title", "*")	# пользователи обязательно имеют должность
-	#filter = Net::LDAP::Filter.eq("sAMAccountName", "ks1")
+	#filter = Net::LDAP::Filter.eq("title", "*")	# пользователи обязательно имеют должность
+	filter = Net::LDAP::Filter.eq("sAMAccountName", "mr_rob")
 	#filter = Net::LDAP::Filter.eq(&(objectClass=person)(objectClass=user)(middleName=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))
 	treebase = LDAP_CONFIG["development"]["base"]
 	attrs = ["sn", "givenname", "MiddleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description"]
@@ -39,22 +39,22 @@ namespace :bp1step do
 	        end
 	    else	# а здесь надо проверить - не изменилось ли что либо у этого пользователя в AD
 	    	f_change = 0
-			if !usr.department == entry["department"].first	# подразделение
+			if !(usr.department == entry["department"].first)	# подразделение
 				usr.department = entry["department"].first
 				puts "#{usr.department} = #{entry['department'].first}: #{usr.department == entry['department'].first}"
 				f_change += 1
 			end
-			if !usr.position == entry["title"].first	# должность
+			if !(usr.position == entry["title"].first)	# должность
 				usr.position = entry["title"].first
 				puts "#{usr.position} = #{entry['title'].first}: #{usr.position == entry['title'].first}"
 				f_change += 1
 			end
-			if !usr.phone == entry["telephonenumber"].first	# телефон
+			if !(usr.phone == entry["telephonenumber"].first)	# телефон
 				usr.phone = entry["telephonenumber"].first
 				puts "#{usr.phone} = #{entry['telephonenumber'].first}: #{usr.phone == entry['telephonenumber'].first}"
 				f_change += 1
 			end
-			if !usr.office == entry["physicaldeliveryofficename"].first	# офис
+			if !(usr.office == entry["physicaldeliveryofficename"].first)	# офис
 				usr.office = entry["physicaldeliveryofficename"].first
 				puts "#{usr.office} = #{entry['physicaldeliveryofficename'].first}: #{usr.office == entry['physicaldeliveryofficename'].first}"
 				f_change += 1
