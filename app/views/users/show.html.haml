@@ -6,7 +6,15 @@
 = @usr.position
 = @usr.office
 = @usr.phone
-= @usr.email
+
+%p
+=@uworkplaces.inspect
+%p
+=@uworkplaces.count
+%h2 Рабочие места
+- @uworkplaces.each do |uw|
+  = uw.inspect
+  -#= @uw.note
 
 %h2
   = @usr.displayname
@@ -16,10 +24,10 @@
     %th Роль
     %th с
     %th по
-  -@roles.each do |ro|
+  - @uroles.each do |ur|
     %tr
-      %td= link_to ro.note, edit_role_path(ro)
-      %td= ro.date_from
-      %td= ro.date_to
+      %td= ur.note
+      %td= ur.date_from
+      %td= ur.date_to
 
 = link_to 'Back', users_path

@@ -1,4 +1,11 @@
 class User < ActiveRecord::Base
+  validates :username, :presence => true
+  
+  has_many :user_role  # роли пользователя
+  has_many :roles, :through => :user_role
+  has_many :user_workplace # рабочие места пользователя
+  has_many :workplaces, :through => :user_workplace
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   devise :ldap_authenticatable, :registerable,
@@ -10,11 +17,6 @@ class User < ActiveRecord::Base
   attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :firstname, :lastname, :displayname
   #attr_accessible :username, :email, :password
   before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
-
-  has_many :user_roles
-  has_many :roles, :through => :user_roles
-  has_many :user_workplaces
-  has_many :workplaces, :through => :user_workplaces
 
   def get_ldap_lastname
       #Rails::logger.info("### Getting the users last name")
