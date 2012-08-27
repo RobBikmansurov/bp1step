@@ -13,19 +13,16 @@
     %thРабочее место
     %thНазначение в процессе
     %thОписание
+    %th
 
-  -@workplaces.each do |workplace|
-    %tr
-      %td= link_to workplace.name, edit_workplace_path(workplace)
-      %td= workplace.description
-      %td
   -@uworkplaces.each do |user_workplace|
     %tr
+      %td= link_to user_workplace.workplace.designation, edit_workplace_path(user_workplace.workplace)
+      %td= user_workplace.workplace.location
+      %td= user_workplace.workplace.name
       %td= user_workplace.note
       %td= user_workplace.date_from
       %td= user_workplace.date_to
-
-
 
 %h2
   = @usr.displayname

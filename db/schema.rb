@@ -100,8 +100,8 @@ ActiveRecord::Schema.define(:version => 20120824114034) do
     t.string   "note"
     t.integer  "user_id"
     t.integer  "role_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_roles", ["role_id"], :name => "index_user_roles_on_role_id"
@@ -113,8 +113,8 @@ ActiveRecord::Schema.define(:version => 20120824114034) do
     t.string   "note"
     t.integer  "user_id"
     t.integer  "workplace_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_workplaces", ["user_id"], :name => "index_user_workplaces_on_user_id"
