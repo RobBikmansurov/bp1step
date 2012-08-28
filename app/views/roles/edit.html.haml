@@ -1,6 +1,21 @@
 %h1 Роль
 
 = render 'form'
+%p
+%table
+  %tr
+    %th Исполнители
+    %th
+    %th период
+  - @role.user_role.each do |user_role|
+    %tr
+      %td= link_to user_role.user.displayname, user_role.user
+      %td= user_role.note
+      %td
+        = user_role.date_from
+        -
+        = user_role.date_to
+
 
 = link_to 'Show', @role |
 = link_to 'Back', roles_path 
