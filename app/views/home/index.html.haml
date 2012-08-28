@@ -7,7 +7,37 @@
     = current_user.position
     |
     = current_user.email
+  %table
+    %tr
+      %th Рабочее место
+      %th Расположение
+      %th Описание
+      %th Основание
+      %th
+    -current_user.user_workplace.each do |user_workplace|
+      %tr
+        %td= link_to user_workplace.workplace.designation, edit_workplace_path(user_workplace.workplace)
+        %td= user_workplace.workplace.location
+        %td= user_workplace.workplace.name
+        %td= user_workplace.note
+        %td
+          = user_workplace.date_from
+          = user_workplace.date_to
 
+  %table
+    %tr
+      %th Исполняет Роли
+      %th
+      %th
+    - current_user.user_role.each do |user_role|
+      %tr
+        %td= link_to user_role.role.name, edit_role_path(user_role.role)
+        %td= user_role.note
+        %td
+          = user_role.date_from
+          = user_role.date_to
+%p
+%hr
 %h3
   = link_to "Процессы:", bproces_path
   = Bproce.count

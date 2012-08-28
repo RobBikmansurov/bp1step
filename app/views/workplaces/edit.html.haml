@@ -1,4 +1,12 @@
-%h1 Рабочее место
 = render 'form'
 %p
+%h2 Исполнители:
+- @workplace.user_workplace.each do |user_workplace|
+  = link_to user_workplace.user.displayname, user_workplace.user
+  (
+  = user_workplace.date_from
+  = user_workplace.date_to
+  )
+%p
+
 = link_to 'Back', workplaces_path

@@ -7,12 +7,13 @@
 = @usr.office
 = @usr.phone
 
-%h2 Рабочие места
+%h2 Рабочие места:
 %table
   %tr
-    %thРабочее место
-    %thНазначение в процессе
-    %thОписание
+    %th Рабочее место
+    %th Расположение
+    %th Описание
+    %th
     %th
 
   -@uworkplaces.each do |user_workplace|
@@ -26,16 +27,18 @@
 
 %h2
   = @usr.displayname
-  исполняет роли
+  исполняет роли:
 %table
   %tr
     %th Роль
+    %th
     %th с
     %th по
-  - @uroles.each do |ur|
+  - @uroles.each do |user_role|
     %tr
-      %td= ur.note
-      %td= ur.date_from
-      %td= ur.date_to
+      %td= link_to user_role.role.name, edit_role_path(user_role.role)
+      %td= user_role.note
+      %td= user_role.date_from
+      %td= user_role.date_to
 
 = link_to 'Back', users_path
