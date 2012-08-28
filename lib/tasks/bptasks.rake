@@ -39,6 +39,8 @@ namespace :bp1step do
 	        end
 	    else	# а здесь надо проверить - не изменилось ли что либо у этого пользователя в AD
 	    	f_change = 0
+			tmp = usr.department
+			puts "#{usr.department} = #{entry['department'].first}: #{(tmp == entry['department'].first)}"
 			if !(usr.department == entry["department"].first)	# подразделение
 				usr.department = entry["department"].first
 				puts "#{usr.department} = #{entry['department'].first}: #{usr.department == entry['department'].first}"
@@ -68,6 +70,6 @@ namespace :bp1step do
 
 	end
 	puts "All: #{i}, add: #{new_users}, update: #{upd_users} users"
-	#p ldap.get_operation_result
+	p ldap.get_operation_result
   end
 end
