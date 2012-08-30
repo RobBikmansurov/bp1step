@@ -26,10 +26,10 @@
         </div>
         <div id="users" class="span-12 last">
           <% if user_signed_in? %>
-            Welcome <%= current_user.displayname %>, you last logged on <%= current_user.last_sign_in_at %> 
-            <%= link_to "Sign out", destroy_user_session_path %>
+            <%= current_user.displayname %> (<%= current_user.last_sign_in_at %>)
+            <%= link_to "Выйти", destroy_user_session_path %>
           <% else %>
-            <%= link_to "login", new_user_session_path %>
+            <%= link_to "Войти", new_user_session_path %>
           <% end %>
         </div>
         <div id="menu" class="span-24 last">
