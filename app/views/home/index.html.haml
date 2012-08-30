@@ -1,7 +1,5 @@
-%h1 Бизнес-процессы: Первый шаг
-
 - if user_signed_in?
-  %h3
+  %h1
     = current_user.displayname
   %h4
     = current_user.position
@@ -23,7 +21,6 @@
         %td
           = user_workplace.date_from
           = user_workplace.date_to
-
   %table
     %tr
       %th Исполняет Роли
@@ -36,6 +33,9 @@
         %td
           = user_role.date_from
           = user_role.date_to
+- else
+  %h1 Бизнес-процессы: Первый шаг
+
 %p
 %hr
 %h3
