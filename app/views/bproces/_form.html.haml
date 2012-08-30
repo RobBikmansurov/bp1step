@@ -18,17 +18,17 @@
     %tr
       %th
         В процессе участвуют
-        =link_to 'Роли:', bproce_role_path(@bproce)
+        =link_to 'Роли:', bproce_business_role_path(@bproce)
       %th
         Процесс описывают
         =link_to 'Документы:', bproce_document_path(@bproce)
     %tr
       %td
-        -@bproce.roles.find_with_associations.each do |role|
-          = link_to role.name, edit_role_path(role)
-          = link_to 'Destroy', role, :confirm => 'Are you sure?', :method => :delete
+        -@bproce.business_roles.find_with_associations.each do |business_role|
+          = link_to business_role.name, edit_business_role_path(business_role)
+          = link_to 'Destroy', business_role, :confirm => 'Are you sure?', :method => :delete
           %br
-        = simple_form_for(@role) do |r|
+        = simple_form_for(@business_role) do |r|
           = r.error_notification
           = r.input :name
           = r.input :description
@@ -74,4 +74,4 @@
           %br
 -#=debug params
 -#=debug @bproce
--#=debug @role
+-#=debug @business_role
