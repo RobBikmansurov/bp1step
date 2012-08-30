@@ -1,0 +1,13 @@
+= simple_form_for(@business_role) do |f|
+  = f.error_notification
+  = f.input :name
+  = f.input :description, :as => :text
+  = f.association :bproce, :label => 'Участвует в процессе'
+  = f.error :base
+  = f.button :submit
+= link_to '>>', edit_bproce_path(@business_role.bproce)
+-#=debug params
+  =debug @bproce
+  =debug @business_role
+
+

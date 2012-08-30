@@ -17,7 +17,7 @@ class BprocesController < ApplicationController
   end
 
   def edit
-    @role = Role.new(:bproce_id => @bproce.id)
+    @business_role = Role.new(:bproce_id => @bproce.id)
     @document = Document.new(:bproce_id => @bproce.id)
   end
 
@@ -28,9 +28,9 @@ class BprocesController < ApplicationController
   end
 
   def update
-    if params[:role].present?
-      @role = Role.new(params[:role])
-      @role.save if !@role.nil?
+    if params[:business_role].present?
+      @business_role = Role.new(params[:business_role])
+      @business_role.save if !@business_role.nil?
     end
     if params[:document].present?
       @document = Document.new(params[:document])

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120824114034) do
+ActiveRecord::Schema.define(:version => 20120830145242) do
 
   create_table "bapps", :force => true do |t|
     t.string   "name"
@@ -49,6 +49,16 @@ ActiveRecord::Schema.define(:version => 20120824114034) do
     t.integer  "rgt"
     t.integer  "depth"
   end
+
+  create_table "business_roles", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.integer  "bproce_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "business_roles", ["bproce_id"], :name => "index_business_roles_on_bproce_id"
 
   create_table "categories", :force => true do |t|
     t.string   "cat_table"

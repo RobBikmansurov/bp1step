@@ -7,13 +7,13 @@ class Bproce < ActiveRecord::Base
 
   acts_as_nested_set
   has_many :documents
-  has_many :roles
+  has_many :business_roles
   has_many :bproce_bapps, :dependent => :destroy
   has_many :bapps, :through => :bproce_bapps
   has_many :bproce_workplaces, :dependent => :destroy
   has_many :workplaces, :through => :bproce_workplaces
   belongs_to :bproce
-  #accepts_nested_attributes_for :roles
+  #accepts_nested_attributes_for :business_roles
   #has_and_belongs_to_many :workplaces
   
   def self.search(search)

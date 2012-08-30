@@ -1,0 +1,10 @@
+%p.notice =notice
+<b>Name:</b>
+= @business_role.name 
+%p
+%b Description:
+= @business_role.description 
+
+%p
+= link_to 'Edit', edit_business_role_path(@business_role) |
+= link_to 'Back', business_roles_path
