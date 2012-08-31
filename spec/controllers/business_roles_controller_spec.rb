@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe BusinessBusinessRolesController do
+describe BusinessRolesController do
 
   def valid_attributes
     {
