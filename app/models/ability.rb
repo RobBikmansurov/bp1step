@@ -5,10 +5,12 @@ class Ability
     user ||= User.new
 
     if user.role? :admin
-      can :manage, :all
+      #can :manage, :all
+      can :manage, [User]
     elsif user.role? :analitic
-      can :destroy, [Bproce, BusinessRole, Workplace]
-      can :create, [Bproce, BusinessRole, Workplace]
+      can :destroy, [Bproce, BusinessRole, Workplace, Bapp]
+      can :create, [Bproce, BusinessRole, Workplace, Bapp]
+      can :update, [Bproce, BusinessRole, Workplace, Bapp]
     else
       can :read, :all
       if user.role? :user
@@ -25,7 +27,7 @@ class Ability
     end
   end
         
-      # Define abilities for the passed in user here. For example:
+    # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
     #   if user.admin?
