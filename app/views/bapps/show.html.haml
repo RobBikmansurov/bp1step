@@ -1,15 +1,31 @@
-%p
-  %b Name:
-  = @bapp.name
+%h2
+  = @bapp.name 
+%h3 Описание
+= @bapp.description
+= @bapp.apptype
+%h3
+  Участвует в процессе
+-if @bapp.id?
+  %table
+    %tr
+      %th Это Приложение используется в Процессах:
+      %th Назначение в процессе
+      %th
+    -@bapp.bproce_bapps.each do |bp|
+      %tr
+        %td
+          = link_to bp.bproce.name, edit_bproce_path(bp.bproce_id)
+        %td
+          = bp.apurpose
+        %td
+
+
+
 
 %p
-  %b Type:
-  = @bapp.apptype
+- if can? :update, Bapp
+  .button
+    = link_to 'Edit', edit_bapp_path(@bapp) |
 
-%p
-  %b Description:
-  = @bapp.description
-
-= link_to 'Edit', edit_bapp_path(@bapp)
-| 
-= link_to 'Back', bapps_path
+.button
+  = link_to 'Back', bapps_path

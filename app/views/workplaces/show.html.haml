@@ -1,0 +1,34 @@
+%h2
+  [
+  = @workplace.designation
+  ] 
+%h2
+  = @workplace.name
+%h3 Описание
+= @workplace.description
+- if @workplace.typical
+  Типовое рабочее место
+%h3
+  Местоположение:
+  = @workplace.location
+
+%h3
+  Участвует в процессах
+%h2 Исполнители:
+- @workplace.user_workplace.each do |user_workplace|
+  = link_to user_workplace.user.displayname, user_workplace.user
+  (
+  = user_workplace.date_from
+  = user_workplace.date_to
+  )
+
+%table
+  %tr
+    %th Это Приложение используется в Процессах:
+%p
+- if can? :update, Workplace
+  .button
+    = link_to 'Edit', edit_workplace_path(@bapp) |
+
+.button
+  = link_to 'Back', workplaces_path

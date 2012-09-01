@@ -4,16 +4,16 @@
   %tr
     %th= sortable "username", "Наименование"
     %th= sortable "description", "Описание"
-    %th
     - if can? :destroy, Bapp
       %th
   
-
   -@bapps.each do |bapp|
     %tr
-      %td= link_to bapp.name, edit_bapp_path(bapp)
+      - if can? :modify, bapp
+        %td= link_to bapp.name, edit_bapp_path(bapp)
+      - else
+        %td= link_to bapp.name, bapp
       %td= bapp.description
-      %td= link_to 'Show', bapp
     - if can? :destroy, bapp
       %td
         = link_to 'Destroy', bapp, :confirm => 'Are you sure?', :method => :delete
