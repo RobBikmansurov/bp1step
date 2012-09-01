@@ -9,7 +9,7 @@
     %th Назначение в процессе
   
 
-  -@roles.each do |ro|
+  -@business_roles.each do |ro|
     %tr
-      %td= link_to ro.name, edit_role_path(ro)
+      %td= link_to ro.name, edit_business_role_path(ro)
       %td= ro.description

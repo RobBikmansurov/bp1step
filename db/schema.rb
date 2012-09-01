@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120830145242) do
+ActiveRecord::Schema.define(:version => 20120901094943) do
 
   create_table "bapps", :force => true do |t|
     t.string   "name"
@@ -103,6 +103,19 @@ ActiveRecord::Schema.define(:version => 20120830145242) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "user_business_roles", :force => true do |t|
+    t.date     "date_from"
+    t.date     "date_to"
+    t.string   "note"
+    t.integer  "user_id",          :null => false
+    t.integer  "business_role_id", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_business_roles", ["business_role_id"], :name => "index_user_business_roles_on_business_role_id"
+  add_index "user_business_roles", ["user_id"], :name => "index_user_business_roles_on_user_id"
 
   create_table "user_roles", :force => true do |t|
     t.date     "date_from"

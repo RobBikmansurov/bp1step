@@ -34,11 +34,11 @@
     %th
     %th с
     %th по
-  - @uroles.each do |user_role|
+  - @uroles.each do |business_role|
     %tr
-      %td= link_to user_role.role.name, edit_role_path(user_role.role)
-      %td= user_role.note
-      %td= user_role.date_from
-      %td= user_role.date_to
+      %td= link_to business_role.business_role.name, edit_business_role_path(business_role.business_role)
+      %td= business_role.note
+      %td= business_role.date_from
+      %td= business_role.date_to
 
 = link_to 'Back', users_path

@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
   validates :username, :presence => true
   
-  has_many :user_role  # роли пользователя
-  has_many :roles, :through => :user_role
+  has_many :user_business_role  # бизнес-роли пользователя
+  has_many :business_roles, :through => :user_business_role
   has_many :user_workplace # рабочие места пользователя
   has_many :workplaces, :through => :user_workplace
 
