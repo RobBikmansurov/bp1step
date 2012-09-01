@@ -1,4 +1,5 @@
 BPDoc::Application.routes.draw do
+  resources :roles
   resources :business_roles
   resources :categories
   resources :documents, :bapps, :workplaces, :bproces

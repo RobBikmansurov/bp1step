@@ -13,7 +13,10 @@
     
   - @workplaces.each do |workplace|
     %tr
-      %td= link_to workplace.designation, edit_workplace_path(workplace)
+      - if can? :modify, workplace
+        %td= link_to workplace.designation, edit_workplace_path(workplace)
+      - else
+        %td= link_to workplace.designation, workplace_path(workplace)
       %td= workplace.name
       %td= workplace.description
       %td= workplace.typical
