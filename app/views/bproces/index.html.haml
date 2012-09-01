@@ -10,8 +10,9 @@
     %th= sortable "shortname", "Обозначение"
     %th= sortable "name", "Наименование"
     %th= sortable "fullname", "Полное наименование"
-    %th= 'Tree.debug'
-    %th
+    - if can? :destroy, Bproce
+      %th
+      %th= 'Tree.debug'
 
   -@bproces.each do |bproce|
     %tr
@@ -22,18 +23,21 @@
       
       %td= bproce.fullname
       -#%td= link_to 'Show', bproce
-      %td
-        = bproce.lft
-        = ' - '         
-        = bproce.rgt
-        = ' : '
-        = bproce.depth
-      %td
-        = link_to 'Destroy', bproce, :confirm => 'Are you sure?', :method => :delete
+      - if can? :destroy, bproce
+        %td
+          = link_to 'Destroy', bproce, :confirm => 'Are you sure?', :method => :delete
+        %td
+          = bproce.lft
+          = ' - '         
+          = bproce.rgt
+          = ' : '
+          = bproce.depth
 
 .apple_pagination
   -#.page_info
     -#    = page_entries_info @brpoces
   = will_paginate @bproces 
-.button
-  = link_to "Добавить новый процесс" , new_bproce_path
+
+- if can? :create, @bproces.first
+  .button
+    = link_to "Добавить новый процесс" , new_bproce_path

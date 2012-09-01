@@ -17,7 +17,8 @@
     %th Дата
     -#%th responsible
     %th Место
-    %th
+    - if can? :destroy, Document
+      %th
     
   - @documents.each do |document|
     %tr
@@ -28,9 +29,13 @@
       %td= document.status
       %td= document.approved 
       %td= document.place 
-      %td= link_to 'Удалить', document, confirm: 'Действительно хотите удалить?', :method => :delete 
+      - if can? :destroy, document
+        %td
+          = link_to 'Удалить', document, confirm: 'Действительно хотите удалить?', :method => :delete 
 
 .apple_pagination
   = will_paginate @documents 
  
-= link_to 'Добавить новый документ', new_document_path 
+- if can? :destroy, Document
+  .button
+    = link_to 'Добавить новый документ', new_document_path 

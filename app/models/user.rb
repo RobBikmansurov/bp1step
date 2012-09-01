@@ -1,22 +1,28 @@
 class User < ActiveRecord::Base
-  validates :username, :presence => true
+  #validates :username, :presence => true
+  validates :email, :presence => true, :uniqueness => true
   
   has_many :user_business_role  # бизнес-роли пользователя
   has_many :business_roles, :through => :user_business_role
   has_many :user_workplace # рабочие места пользователя
   has_many :workplaces, :through => :user_workplace
+  has_many :user_role  # роли доступа пользователя
+  has_many :roles, :through => :user_role
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :ldap_authenticatable, :registerable,
+  #devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+
+  before_create :create_role
 
   # Setup accessible (or protected) attributes for your model
   #attr_accessible :email, :password, :password_confirmation, :remember_me
   #before_save :get_ldap_email
   attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :firstname, :lastname, :displayname
   #attr_accessible :username, :email, :password
-  before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
+  ##before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
 
   def get_ldap_lastname
       #Rails::logger.info("### Getting the users last name")
@@ -59,5 +65,12 @@ class User < ActiveRecord::Base
     end
   end
 
-
+  def role?(role)
+    return !!self.roles.find_by_name(role)
+  end 
+  
+  private
+    def create_role
+      self.roles << Role.find_by_name(:user)  if ENV["RAILS_ENV"] != 'test' 
+    end
 end
