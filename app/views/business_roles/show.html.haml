@@ -1,10 +1,30 @@
-%p.notice =notice
-<b>Name:</b>
-= @business_role.name 
-%p
-%b Description:
+%h2
+  = @business_role.name 
+%h3 Описание
 = @business_role.description 
+%h3
+  Участвует в процессе
+  = link_to @business_role.bproce.name, edit_bproce_path(@business_role.bproce)
 
+%h3 Исполнители
+%table
+  %tr
+    %th ФИО
+    %th период
+    %th примечание
+  - @business_role.user_business_role.each do |user_business_role|
+    %tr
+      %td= link_to user_business_role.user.displayname, user_business_role.user
+      %td
+        с
+        = user_business_role.date_from
+        по
+        = user_business_role.date_to
+      %td= user_business_role.note
 %p
-= link_to 'Edit', edit_business_role_path(@business_role) |
-= link_to 'Back', business_roles_path
+- if can? :update, BusinessRole
+  .button
+    = link_to 'Edit', edit_business_role_path(@business_role) |
+
+.button
+  = link_to 'Back', business_roles_path

@@ -6,17 +6,18 @@
     %th= sortable "name", "Роль"
     %th= sortable "bproce_id", "Процесс"
     %th= sortable "description", "Назначение"
-    %th
     - if can? :destroy, BusinessRole
       %th
 
   -@business_roles.each do |ro|
     %tr
-      %td= link_to ro.name, edit_business_role_path(ro)
+      - if can? :update, ro
+        %td= link_to ro.name, edit_business_role_path(ro)
+      - else
+        %td= link_to ro.name, ro
       %td
         = link_to ro.bproce.name, edit_bproce_path(ro.bproce_id) if !ro.bproce.nil?
       %td= ro.description
-      %td= link_to 'Show', ro
       - if can? :destroy, ro
         %td
           = link_to 'Destroy', ro, :confirm => 'Are you sure?', :method => :delete
