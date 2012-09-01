@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe UserRole do
+describe UserBusinessRole do
   before(:each) do
-    @ur = UserRole.new
+    @ur = UserBusinessRole.new
     @ur.user_id = 1
-    @ur.role_id = 1
+    @ur.business_role_id = 1
   end
 
   it "should be valid" do
@@ -14,9 +14,8 @@ describe UserRole do
     @ur.user_id = nil
     @ur.should_not be_valid
   end
-  it "should require role_id" do
-    @ur.role_id = nil
+  it "should require business_role_id" do
+    @ur.business_role_id = nil
     @ur.should_not be_valid
   end
-
 end

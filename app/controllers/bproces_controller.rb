@@ -17,7 +17,7 @@ class BprocesController < ApplicationController
   end
 
   def edit
-    @business_role = Role.new(:bproce_id => @bproce.id)
+    @business_role = BusinessRole.new(:bproce_id => @bproce.id)
     @document = Document.new(:bproce_id => @bproce.id)
   end
 
