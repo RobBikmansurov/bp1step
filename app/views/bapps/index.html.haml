@@ -5,7 +5,8 @@
     %th= sortable "username", "Наименование"
     %th= sortable "description", "Описание"
     %th
-    %th
+    - if can? :destroy, Bapp
+      %th
   
 
   -@bapps.each do |bapp|
@@ -13,10 +14,13 @@
       %td= link_to bapp.name, edit_bapp_path(bapp)
       %td= bapp.description
       %td= link_to 'Show', bapp
+    - if can? :destroy, bapp
       %td
         = link_to 'Destroy', bapp, :confirm => 'Are you sure?', :method => :delete
 
 .apple_pagination
   = will_paginate @bapps 
 
-= link_to "Добавить новое приложение" , new_bapp_path
+- if can? :destroy, Bapp
+  .button
+    = link_to "Добавить новое приложение" , new_bapp_path

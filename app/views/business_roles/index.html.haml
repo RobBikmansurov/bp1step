@@ -7,8 +7,8 @@
     %th= sortable "bproce_id", "Процесс"
     %th= sortable "description", "Назначение"
     %th
-    %th
-  
+    - if can? :destroy, BusinessRole
+      %th
 
   -@business_roles.each do |ro|
     %tr
@@ -17,11 +17,15 @@
         = link_to ro.bproce.name, edit_bproce_path(ro.bproce_id) if !ro.bproce.nil?
       %td= ro.description
       %td= link_to 'Show', ro
-      %td
-        = link_to 'Destroy', ro, :confirm => 'Are you sure?', :method => :delete
+      - if can? :destroy, ro
+        %td
+          = link_to 'Destroy', ro, :confirm => 'Are you sure?', :method => :delete
+
 .apple_pagination
   -#.page_info
     -#    = page_entries_info @business_roles
   = will_paginate @business_roles 
 
-= link_to "Добавить новую роль" , new_business_role_path
+- if can? :destroy, BusinessRole
+  .button
+    = link_to "Добавить новую роль" , new_business_role_path
