@@ -6,11 +6,13 @@ class Ability
 
     if user.role? :admin
       #can :manage, :all
-      can :manage, [User]
+      can :manage, [User, Document]
+      can :destroy, [Document]
+      can :update, [Document]
     elsif user.role? :analitic
       can :destroy, [Bproce, BusinessRole, Workplace, Bapp]
       can :create, [Bproce, BusinessRole, Workplace, Bapp]
-      can :update, [Bproce, BusinessRole, Workplace, Bapp]
+      can :update, [Bproce, BusinessRole, Workplace, Bapp, Document]
     else
       can :read, :all
       if user.role? :user
@@ -23,7 +25,7 @@ class Ability
     
     unless user.new_record?
     can :update, Bproce do |bproce|
-      !bproce.users.include?(user)    
+      #!bproce.users.include?(user)    
     end
   end
         

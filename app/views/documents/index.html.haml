@@ -23,7 +23,10 @@
   - @documents.each do |document|
     %tr
       %td= document.part
-      %td= link_to document.name, edit_document_path(document)
+      - if can? :update, document
+        %td= link_to document.name, edit_document_path(document)
+      - else
+        %td= link_to document.name, document
       %td= document.description
       -#      %td= document.filename
       %td= document.status

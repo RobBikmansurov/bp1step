@@ -1,16 +1,35 @@
-%p#notice= notice
-%b Наименование:
-= @document.name
-%br
-%b Описание:
+%h2
+  = @document.name 
+
+%h3 Описание
 = @document.description
-%br
-%b Filename:
-= @document.filename
-%br
-%b Place:
-= @document.place
+
+%h3
+  Относится к процессу
+  - if can? :update, @document.bproce
+    = link_to @document.bproce.name, edit_bproce_path(@document.bproce)
+  - else
+    = link_to @document.bproce.name, bproce_path(@document.bproce)
 %p
-= link_to 'Edit', edit_document_path(@document)
-\|
-= link_to 'Back', documents_path
+= @document.inspect
+%hr
+= @document.filename
+= @document.status_id
+= @document.part
+= @document.approved
+= @document.approveorgan
+= @document.dlevel
+%hr
+%h3
+  Место хранения оригиналов на бумаге
+  = @document.place
+%h3
+  Место хранения электронного документа
+  = @document.eplace
+
+%p
+-if can? :update, Document
+  .button
+    = link_to 'Edit', edit_document_path(@document)
+.button
+  = link_to 'Back', documents_path

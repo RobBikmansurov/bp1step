@@ -14,9 +14,9 @@
       - else
         %td= link_to bapp.name, bapp
       %td= bapp.description
-    - if can? :destroy, bapp
-      %td
-        = link_to 'Destroy', bapp, :confirm => 'Are you sure?', :method => :delete
+      - if can? :destroy, bapp
+        %td
+          = link_to 'Destroy', bapp, :confirm => 'Are you sure?', :method => :delete
 
 .apple_pagination
   = will_paginate @bapps 

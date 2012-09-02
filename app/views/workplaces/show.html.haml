@@ -1,4 +1,4 @@
-%h2
+%h3
   [
   = @workplace.designation
   ] 
@@ -12,19 +12,25 @@
   Местоположение:
   = @workplace.location
 
-%h3
-  Участвует в процессах
-%h2 Исполнители:
-- @workplace.user_workplace.each do |user_workplace|
-  = link_to user_workplace.user.displayname, user_workplace.user
-  (
-  = user_workplace.date_from
-  = user_workplace.date_to
-  )
+-if @workplace.bproce_workplaces.count > 0
+  %h2
+    Участвует в процессах
+  -@workplace.bproce_workplaces.each do |wp|
+    -if can? :update, wp
+      = link_to wp.bproce.name, edit_bproce_path(wp.bproce_id)
+    -else
+      = link_to wp.bproce.name, bproce_path(wp.bproce_id)
 
-%table
-  %tr
-    %th Это Приложение используется в Процессах:
+-if @workplace.user_workplace.count > 0
+  %h2 Исполнители:
+  - @workplace.user_workplace.each do |user_workplace|
+    = link_to user_workplace.user.displayname, user_workplace.user
+    (
+    = user_workplace.date_from
+    \-
+    = user_workplace.date_to
+    )
+
 %p
 - if can? :update, Workplace
   .button

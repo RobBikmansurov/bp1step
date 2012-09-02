@@ -1,7 +1,10 @@
 -title "Каталог Ролей"
 %h2
   Роли процесса
-  = link_to @bp.name, edit_bproce_path(@bp)
+  - if can? :update, @bp
+    = link_to @bp.name, edit_bproce_path(@bp)
+  - else
+    = link_to @bp.name, bproce_path(@bp)
 
 %table
   %tr
