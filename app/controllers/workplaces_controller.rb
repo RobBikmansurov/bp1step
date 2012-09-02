@@ -2,6 +2,7 @@ class WorkplacesController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
   before_filter :get_workplace, :except => :index
+  #load_and_authorize_resource
 
   def index
     @workplaces = Workplace.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
@@ -36,8 +37,9 @@ class WorkplacesController < ApplicationController
     if !@workplace.save # there was an error!
       flash[:workplace] = @workplace
       redirect_to :action => :edit
+    else
+      respond_with(@workplace)
     end
-    respond_with(@workplace)
   end
 
   def destroy

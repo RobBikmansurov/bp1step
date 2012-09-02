@@ -4,7 +4,10 @@
 = @business_role.description 
 %h3
   Участвует в процессе
-  = link_to @business_role.bproce.name, edit_bproce_path(@business_role.bproce)
+  - if can? :update, @bproce
+    = link_to @business_role.bproce.name, edit_bproce_path(@business_role.bproce)
+  - else
+    = link_to @business_role.bproce.name, bproce_path(@business_role.bproce)
 
 %h3 Исполнители
 %table
@@ -16,9 +19,8 @@
     %tr
       %td= link_to user_business_role.user.displayname, user_business_role.user
       %td
-        с
         = user_business_role.date_from
-        по
+        \-
         = user_business_role.date_to
       %td= user_business_role.note
 %p
