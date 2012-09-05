@@ -21,7 +21,7 @@
       %th
     -current_user.user_workplace.each do |user_workplace|
       %tr
-        %td= link_to user_workplace.workplace.designation, edit_workplace_path(user_workplace.workplace)
+        %td= link_to user_workplace.workplace.designation, workplace_path(user_workplace.workplace)
         %td= user_workplace.workplace.location
         %td= user_workplace.workplace.name
         %td= user_workplace.note
@@ -35,7 +35,7 @@
       %th
     - current_user.user_business_role.each do |user_business_role|
       %tr
-        %td= link_to user_business_role.business_role.name, edit_business_role_path(user_business_role.business_role)
+        %td= link_to user_business_role.business_role.name, business_role_path(user_business_role.business_role)
         %td= user_business_role.note
         %td
           = user_business_role.date_from

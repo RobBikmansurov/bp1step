@@ -16,10 +16,7 @@
         = "—-" * (bproce.depth) + bproce.shortname
         -#= link_to "-" * (bproce.depth) + bproce.shortname, edit_bproce_path(bproce)
       
-      - if can? :update, bproce
-        %td= link_to bproce.name, edit_bproce_path(bproce)
-      - else
-        %td= link_to bproce.name, bproce_path(bproce)
+      %td= link_to bproce.name, bproce_path(bproce)
       
       -#%td= bproce.fullname
       -#%td= link_to 'Show', bproce

@@ -6,10 +6,7 @@
 
 %h3
   Относится к процессу
-  - if can? :update, @document.bproce
-    = link_to @document.bproce.name, edit_bproce_path(@document.bproce)
-  - else
-    = link_to @document.bproce.name, bproce_path(@document.bproce)
+  = link_to @document.bproce.name, bproce_path(@document.bproce)
 %p
 = @document.inspect
 %hr

@@ -1,5 +1,8 @@
 %h1 Приложение
 = render 'form'
 %p
-= link_to 'Show', @bapp |
-= link_to 'Back', bapps_path
+- if can? :update, @bapp
+  .button
+    = link_to 'Show', @bapp
+.button
+  = link_to 'Back', bapps_path

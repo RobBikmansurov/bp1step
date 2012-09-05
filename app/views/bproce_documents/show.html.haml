@@ -1,6 +1,6 @@
 %h2
   Документы процесса
-  = link_to @bp.name, edit_bproce_path(@bp)
+  = link_to @bp.name, bproce_path(@bp)
 
 -#= form_tag documents_path, :method => 'get' do
 %table
@@ -18,7 +18,7 @@
   - @documents.each do |document|
     %tr
       %td= document.part
-      %td= link_to document.name, edit_document_path(document)
+      %td= link_to document.name, document_path(document)
       %td= document.description
       -#      %td= document.filename
       %td= document.status

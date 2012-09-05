@@ -18,12 +18,8 @@
         %td
           = bp.apurpose
         %td
-
-
-
-
 %p
-- if can? :update, Bapp
+- if can? :update, @bapp
   .button
     = link_to 'Edit', edit_bapp_path(@bapp) |
 
