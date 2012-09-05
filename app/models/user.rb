@@ -6,8 +6,9 @@ class User < ActiveRecord::Base
   has_many :business_roles, :through => :user_business_role
   has_many :user_workplace # рабочие места пользователя
   has_many :workplaces, :through => :user_workplace 
-  has_many :user_role  # роли доступа пользователя
+  has_many :user_role, :dependent => :destroy  # роли доступа пользователя
   has_many :roles, :through => :user_role
+  has_many :bproce  #, :through => :user
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable

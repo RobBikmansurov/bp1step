@@ -13,6 +13,7 @@ class Bproce < ActiveRecord::Base
   has_many :bproce_workplaces, :dependent => :destroy
   has_many :workplaces, :through => :bproce_workplaces
   belongs_to :bproce
+  belongs_to :user #, :class_name => "User"
   #accepts_nested_attributes_for :business_roles
   #has_and_belongs_to_many :workplaces
   

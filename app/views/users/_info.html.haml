@@ -1,0 +1,11 @@
+%h4
+  = current_user.position
+  |
+  = current_user.email
+  |
+  = current_user.phone
+  |
+  - if current_user.roles.count > 0
+    %b роли доступа:
+    - current_user.roles.each do |role|
+      = role.name

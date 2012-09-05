@@ -6,9 +6,13 @@
   = f.input :fullname
   = f.input :goal
   -#if @bproce.new_record?
+  -#= f.association :user, :collection => User.all(:order => 'displayname'), :label_method => lambda { |user| "#{user.displayname}" }, :include_blank => true, :label => 'Владелец процесса'
+  = f.association :user, :collection => User.all(:order => 'displayname'), :include_blank => true, :prompt => 'Владелец процесса', :label_method => :displayname, :label => 'Владелец процесса'
   = f.label 'Родительский процесс'
   = f.select :parent_id, nested_set_options(Bproce, @bproce) {|i| "#{'-' * i.level} #{i.name}" }
+  -#= f.select(User, :user_id, User.all.collect {|u| [u.displayname, u.id ] })
 
+  -#= f.select :user_id, collection(User, @user) {|i| "#{i.displayname}" }
   = f.error :base
   = f.button :submit
 %p

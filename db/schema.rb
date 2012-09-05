@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120901133906) do
+ActiveRecord::Schema.define(:version => 20120904085344) do
 
   create_table "bapps", :force => true do |t|
     t.string   "name"
@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(:version => 20120901133906) do
     t.integer  "lft"
     t.integer  "rgt"
     t.integer  "depth"
+    t.integer  "user_id"
   end
 
   create_table "business_roles", :force => true do |t|
@@ -93,14 +94,6 @@ ActiveRecord::Schema.define(:version => 20120901133906) do
     t.string   "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-  end
-
-  create_table "staffs", :force => true do |t|
-    t.string   "fullname"
-    t.string   "position"
-    t.boolean  "supervisor"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "user_business_roles", :force => true do |t|
