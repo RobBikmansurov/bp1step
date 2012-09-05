@@ -62,7 +62,7 @@
     = link_to ba.name, bapp_path(ba)
 
 %p
--if can? :update, Document
+-if can? :update, @bproce
   .button
     = link_to 'Edit', edit_bproce_path(@bproce) |
 .button

@@ -2,10 +2,13 @@
   = f.error_notification
   = f.input :name
   = f.input :description, :as => :text
-  = f.association :bproce, :label => 'Участвует в процессе'
+  = f.association :bproce, :label => 'Участвует в процессе', :include_blank => false
   = f.error :base
-  = f.button :submit
-= link_to '>>', edit_bproce_path(@business_role.bproce)
+  -if can? :update, @business_role
+    = f.button :submit
+-if @business_role.bproce_id?
+  Перейти к процессу
+  = link_to @business_role.bproce.name, bproce_path(@business_role.bproce)
 -#=debug params
   =debug @bproce
   =debug @business_role
