@@ -5,7 +5,8 @@
   = f.input :description, :as => :text
   = f.input :purpose, :as => :text
   = f.error :base
-  = f.button :submit
+  - if can? :update, @bapp
+    = f.button :submit
   %p
   %p
 -# не показывать для нового приложения связанные с ним процессы - их еще нет
@@ -18,11 +19,12 @@
     -@bapp.bproce_bapps.each do |bp|
       %tr
         %td
-          = link_to bp.bproce.name, edit_bproce_path(bp.bproce_id)
+          = link_to bp.bproce.name, bproce_path(bp.bproce_id)
         %td
           = bp.apurpose
         %td
-          = link_to 'Destroy', bp, :confirm => 'Are you sure?', :method => :delete
+          - if can? :update, @bapp
+            = link_to 'Destroy', bp, :confirm => 'Are you sure?', :method => :delete
   = simple_form_for(@bproce_bapp) do |ff|
     = ff.error_notification
     = ff.association :bproce, :label => 'Процесс', :hint => 'Выберите процесс'

@@ -22,7 +22,7 @@
   - @documents.each do |document|
     %tr
       %td= document.part
-      %td= link_to document.name, edit_document_path(document)
+      %td= link_to document.name, document_path(document)
       %td= document.description
       -#      %td= document.filename
       %td= document.status

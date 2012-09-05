@@ -45,7 +45,8 @@ class BprocesController < ApplicationController
       flash[:bproce] = @bproce
       redirect_to :action => :edit
     end
-    redirect_to :action => :index  # пойдем сразу на список Процессов
+    #redirect_to :action => :index  # пойдем сразу на список Процессов
+    redirect_to :action => :show  # пойдем сразу на список Процессов
   end
 
   def destroy

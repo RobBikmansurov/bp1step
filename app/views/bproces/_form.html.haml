@@ -5,16 +5,12 @@
   = f.input :name
   = f.input :fullname
   = f.input :goal
-  -#if @bproce.new_record?
-  -#= f.association :user, :collection => User.all(:order => 'displayname'), :label_method => lambda { |user| "#{user.displayname}" }, :include_blank => true, :label => 'Владелец процесса'
   = f.association :user, :collection => User.all(:order => 'displayname'), :include_blank => true, :prompt => 'Владелец процесса', :label_method => :displayname, :label => 'Владелец процесса'
   = f.label 'Родительский процесс'
-  = f.select :parent_id, nested_set_options(Bproce, @bproce) {|i| "#{'-' * i.level} #{i.name}" }
-  -#= f.select(User, :user_id, User.all.collect {|u| [u.displayname, u.id ] })
-
-  -#= f.select :user_id, collection(User, @user) {|i| "#{i.displayname}" }
+  = f.select :parent_id, nested_set_options(Bproce, @bproce) {|i| "#{'-' * i.level} #{i.name}" }, :include_blank => true
   = f.error :base
-  = f.button :submit
+  -if can? :update, @bproce
+    = f.button :submit
 %p
 -# не показывать для нового процесса связанные с ним объекты - их еще нет
 -if @bproce.id?
@@ -29,8 +25,9 @@
     %tr
       %td
         -@bproce.business_roles.find_with_associations.each do |business_role|
-          = link_to business_role.name, edit_business_role_path(business_role)
-          = link_to 'Destroy', business_role, :confirm => 'Are you sure?', :method => :delete
+          = link_to business_role.name, business_role_path(business_role)
+          -if can? :destroy, business_role
+            = link_to 'Destroy', business_role, :confirm => 'Are you sure?', :method => :delete
           %br
         = simple_form_for(@business_role) do |r|
           = r.error_notification
@@ -38,10 +35,11 @@
           = r.input :description
           = r.hidden_field :bproce_id
           = r.error :base
-          = r.button :submit, 'Добавить Роль'
+          -if can? :update, @bproce
+            = r.button :submit, 'Добавить Роль'
       %td
         -@bproce.documents.find_with_associations.each do |doc|
-          = link_to doc.name, edit_document_path(doc)
+          = link_to doc.name, document_path(doc)
           = ' ' + doc.approved.to_s
           %br
         = simple_form_for(@document) do |r|
@@ -49,7 +47,8 @@
           = r.input :name
           = r.hidden_field :bproce_id
           = r.error :base
-          = r.button :submit, 'Добавить Документ'
+          -if can? :update, @bproce
+            = r.button :submit, 'Добавить Документ'
   %table
     %tr
       %th
@@ -70,11 +69,11 @@
     %tr
       %td
         -@bproce.bapps.each do |ba|
-          = link_to ba.name, edit_bapp_path(ba)
+          = link_to ba.name, bapp_path(ba)
           %br
       %td
         -@bproce.workplaces.each do |wp|
-          = link_to wp.designation, edit_workplace_path(wp)
+          = link_to wp.designation, workplace_path(wp)
           %br
 -#=debug params
 -#=debug @bproce

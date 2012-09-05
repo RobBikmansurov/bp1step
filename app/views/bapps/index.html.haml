@@ -10,10 +10,7 @@
   
   -@bapps.each do |bapp|
     %tr
-      - if can? :modify, bapp
-        %td= link_to bapp.name, edit_bapp_path(bapp)
-      - else
-        %td= link_to bapp.name, bapp
+      %td= link_to bapp.name, bapp
       %td= bapp.description
       - if can? :destroy, bapp
         %td
