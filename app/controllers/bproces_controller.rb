@@ -4,6 +4,9 @@ class BprocesController < ApplicationController
   helper_method :sort_column, :sort_direction
   before_filter :get_bproce, :except => :index
 
+  def list
+    @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction)
+  end
   def index
     @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end
@@ -19,6 +22,7 @@ class BprocesController < ApplicationController
   def edit
     @business_role = BusinessRole.new(:bproce_id => @bproce.id)
     @document = Document.new(:bproce_id => @bproce.id)
+    #@user = User.find_or_initialize(@bproce.user_id)
   end
 
   def create

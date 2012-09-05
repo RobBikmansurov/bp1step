@@ -14,8 +14,8 @@ namespace :bp1step do
      	}
 	#host = LDAP_CONFIG['audiocast_uri_format']
 
-	#filter = Net::LDAP::Filter.eq("title", "*")	# пользователи обязательно имеют должность
-	filter = Net::LDAP::Filter.eq("sAMAccountName", "mr_rob")
+	filter = Net::LDAP::Filter.eq("title", "*")	# пользователи обязательно имеют должность
+	#filter = Net::LDAP::Filter.eq("sAMAccountName", "mr_rob")
 	#filter = Net::LDAP::Filter.eq(&(objectClass=person)(objectClass=user)(middleName=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))
 	treebase = LDAP_CONFIG["development"]["base"]
 	attrs = ["sn", "givenname", "MiddleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description"]
@@ -40,7 +40,7 @@ namespace :bp1step do
 	    else	# а здесь надо проверить - не изменилось ли что либо у этого пользователя в AD
 	    	f_change = 0
 			tmp = usr.department
-			puts "#{usr.department} = #{entry['department'].first}: #{(tmp == entry['department'].first)}"
+			#puts "#{usr.department} = #{entry['department'].first}: #{(tmp == entry['department'].first)}"
 			if !(usr.department == entry["department"].first)	# подразделение
 				usr.department = entry["department"].first
 				puts "#{usr.department} = #{entry['department'].first}: #{usr.department == entry['department'].first}"

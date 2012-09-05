@@ -5,6 +5,13 @@
     = current_user.position
     |
     = current_user.email
+    |
+    = current_user.phone
+    |
+    - if current_user.roles.count > 0
+      %b роли доступа:
+      - current_user.roles.each do |role|
+        = role.name
   %table
     %tr
       %th Рабочее место
@@ -42,19 +49,19 @@
   = link_to "Процессы:", bproces_path
   = Bproce.count
 %h3
-  = link_to "Роли", business_roles_path
+  = link_to "Роли:", business_roles_path
   = BusinessRole.count
 %h3
-  = link_to "Рабочие места", workplaces_path
+  = link_to "Рабочие места:", workplaces_path
   = Workplace.count
 %h3
-  = link_to "Приложения", bapps_path
+  = link_to "Приложения:", bapps_path
   = Bapp.count
 %h3
-  = link_to "Документы", documents_path
+  = link_to "Документы:", documents_path
   = Document.count
 %h3
-  = link_to "Сотрудники", users_path
+  = link_to "Сотрудники:", users_path
   = User.count
 
 %p

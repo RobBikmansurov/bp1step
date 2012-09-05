@@ -23,6 +23,7 @@ ru:
         fullname: Полное наименование
         goal: Цель процесса
         parent_id: Родительский процесс
+        user_id: Владелец процесса
       document:
         description: Описание
         name: Наименование
@@ -37,7 +38,7 @@ ru:
       profile:
         name: Отображаемое имя
         phone: Телефон
-      role:
+      business_role:
         name: Обозначение
         description: Назначение роли
         bproce_id: Процесс

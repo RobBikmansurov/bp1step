@@ -12,7 +12,7 @@ class BusinessRolesController < ApplicationController
   end
 
   def create
-    @business_role = BusinessRole.new(params[:role])
+    @business_role = BusinessRole.new(params[:business_role])
     flash[:notice] = "Successfully created role." if @business_role.save
     respond_with(@business_role)
   end

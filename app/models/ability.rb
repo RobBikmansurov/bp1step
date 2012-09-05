@@ -7,7 +7,7 @@ class Ability
     if user.role? :admin
       #can :manage, :all
       can :manage, [User, Document]
-      can :destroy, [Document]
+      can :destroy, [User, Document]
       can :update, [Document]
     elsif user.role? :analitic
       can :destroy, [Bproce, BusinessRole, Workplace, Bapp]
@@ -16,10 +16,10 @@ class Ability
     else
       can :read, :all
       if user.role? :user
-        can :create, Post
-        can :update, Post do |post|
-          post.try(:user) == user
-        end
+        #can :create, Post
+        #can :update, Post do |post|
+          #post.try(:user) == user
+        #end
       end
     end
     

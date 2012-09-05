@@ -17,7 +17,7 @@ describe BusinessRole do
     @business_role.should_not be_valid
   end
   it "should require uniqueness name" do
-    @business_role1 = Role.new
+    @business_role1 = BusinessRole.new
     @business_role1.name = "test_workplaces_1"
     @business_role1.should_not be_valid
   end

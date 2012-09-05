@@ -1,11 +1,21 @@
 %h1 
   = @usr.displayname
   = @usr.position  
-%p
-= @usr.email
-= @usr.department
-= @usr.office
-= @usr.phone
+%h4
+  = @usr.position
+  |
+  = @usr.department
+  |
+  = @usr.office
+  |
+  = mail_to @usr.email, @usr.email, :subject => "BP1Step:"
+  |
+  = @usr.phone
+  |
+  - if @usr.roles.count > 0
+    %b роли доступа:
+    - @usr.roles.each do |role|
+      = role.name
 
 %h2 Рабочие места:
 %table
@@ -41,4 +51,5 @@
       %td= business_role.date_from
       %td= business_role.date_to
 
-= link_to 'Back', users_path
+.button
+  = link_to 'Back', users_path

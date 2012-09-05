@@ -13,6 +13,11 @@
       = link_to @bproce.parent.name, edit_bproce_path(@bproce.parent_id)
     -else
       = link_to @bproce.parent.name, bproce_path(@bproce.parent_id)
+%h3 Подпроцессы:
+- Bproce.where("parent_id=?", @bproce).each do |bp|
+  = link_to bp.name, bproce_path(bp)
+
+
 %h3
   %b
     Полное наименование:
@@ -21,6 +26,14 @@
   %b
     Цель:
   = @bproce.goal
+%h3
+  Владелец процесса:
+  -if @bproce.user_id?
+    = link_to User.find(@bproce.user_id).displayname, user_path(@bproce.user_id)
+  -else
+    %b
+      не задан
+
 %hr
 - if @bproce.business_roles.count > 0
   %h4
