@@ -9,6 +9,7 @@
   = f.label 'Родительский процесс'
   = f.select :parent_id, nested_set_options(Bproce, @bproce) {|i| "#{'-' * i.level} #{i.name}" }, :include_blank => true
   = f.error :base
+  %p
   -if can? :update, @bproce
     = f.button :submit
 %p
