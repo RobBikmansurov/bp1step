@@ -29,4 +29,9 @@ describe BusinessRole do
     @business_role.name = "maxlenght1maxlenght2maxlenght3maxlenght4maxlenght5_"
     @business_role.should_not be_valid
   end
+  it "should can have user" do
+    @user = User.create(:displayname => "TestUser", :email => "test@test.com")
+    @business_role.user_business_role.create(:user_id => 1)
+    @business_role.user_business_role.count.should == "1"
+  end
 end

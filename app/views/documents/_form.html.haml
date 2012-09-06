@@ -14,7 +14,7 @@
   = f.input :part, :collection => 1..11, :prompt => "Раздел Документооборота"
   %p
   = f.input :place, :hint => 'Место хранения оригиналов на бумаге'
-  = f.input :eplace, :hint => 'Место хранения электронного документа'
+  = f.input :eplace, :as => :file, :hint => 'Место хранения электронного документа'
   = f.association :bproce, :label => 'Процесс', :hint => 'Выберите Процесс, к которому относится документ'
   = f.error :base
   = f.button :submit

@@ -13,9 +13,9 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   # аутентификация - через БД
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  #devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
   # аутентификация - через LDAP
-  #devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
    
   before_create :create_role
 

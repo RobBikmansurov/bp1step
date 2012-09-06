@@ -52,4 +52,7 @@ ru:
         description: Описание
       bproce_bapp:
         apurpose: Назначение в процессе
-
+      user_business_role:
+        note: Примечание
+        date_from: Дата начала
+        date_to: Дата окончания

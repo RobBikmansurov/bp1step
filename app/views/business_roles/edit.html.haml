@@ -4,26 +4,22 @@
 %table
   %tr
     %th Исполнители
-    %th
     %th период
+    %th примечание
+    %th
   - @business_role.user_business_role.each do |user_business_role|
     %tr
       %td= link_to user_business_role.user.displayname, user_business_role.user
-      %td= user_business_role.note
       %td
         = user_business_role.date_from
         -
         = user_business_role.date_to
-= simple_form_for(@business_role) do |f|
-  = f.error_notification
-  = f.input :name
-  = f.association :user, :collection => User.all(:order => 'displayname'), :include_blank => true, :prompt => 'Исполнитель в процессе', :label_method => :displayname, :label => 'Исполнитель'
-  = f.input :description, :as => :text
-  = f.error :base
-  -if can? :update, @business_role
-    = f.button :submit
+      %td= user_business_role.note
+      - if can? :destroy, @business_role
+        %td
+          = link_to 'Destroy', user_business_role, :confirm => 'Are you sure?', :method => :delete
 
-
+= render 'user_business_roles/form'
 
 %p
 .button

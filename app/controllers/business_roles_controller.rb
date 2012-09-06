@@ -22,6 +22,7 @@ class BusinessRolesController < ApplicationController
   end
 
   def edit
+    @user_business_role = UserBusinessRole.new(:business_role_id => @business_role.id)
     respond_with(@business_role)
   end
 
