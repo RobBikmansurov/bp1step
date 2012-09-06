@@ -24,11 +24,7 @@
   - @documents.each do |document|
     %tr
       %td= document.part
-      - if can? :update, document
-        %td= link_to document.name, edit_document_path(document)
-      - else
-        %td= link_to document.name, document
-      %td= document.description
+      %td= link_to document.name, edit_document_path(document)
       -#      %td= document.filename
       %td= document.status
       %td= document.approved 
