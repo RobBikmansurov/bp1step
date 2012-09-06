@@ -1,10 +1,10 @@
 %h2
   = @business_role.name 
+%h3
+  Процесс
+  = link_to @business_role.bproce.name, bproce_path(@business_role.bproce)
 %h3 Описание
 = @business_role.description 
-%h3
-  Участвует в процессе
-  = link_to @business_role.bproce.name, bproce_path(@business_role.bproce)
 
 %h3 Исполнители
 %table
@@ -20,6 +20,7 @@
         \-
         = user_business_role.date_to
       %td= user_business_role.note
+
 %p
 - if can? :update, @business_role
   .button

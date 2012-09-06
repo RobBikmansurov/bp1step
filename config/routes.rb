@@ -8,6 +8,7 @@ BPDoc::Application.routes.draw do
   resources :bproce_documents, :only => [:show]
   resources :bproce_business_roles, :only => [:show]
   resources :user_workplaces, :only => [:new, :create, :destroy]
+  resources :user_business_roles, :only => [:new, :create, :destroy]
   resources :bproces
   match '/bproceses' => 'bproces#list', :via => :get
   

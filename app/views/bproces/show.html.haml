@@ -13,13 +13,11 @@
 %h3 Подпроцессы:
 - Bproce.where("parent_id=?", @bproce).each do |bp|
   = link_to bp.name, bproce_path(bp)
-
-
 %h3
   %b
     Полное наименование:
   = @bproce.fullname
-%h3
+%h4
   %b
     Цель:
   = @bproce.goal
