@@ -30,16 +30,19 @@
           = user_workplace.date_to
   %table
     %tr
-      %th Исполняет Роли
+      %th Исполняет роли:
       %th
-      %th
-    - current_user.user_business_role.each do |user_business_role|
+      %th с
+      %th по
+      %th в процессе
+    - current_user.user_business_role.each do |business_role|
       %tr
-        %td= link_to user_business_role.business_role.name, business_role_path(user_business_role.business_role)
-        %td= user_business_role.note
-        %td
-          = user_business_role.date_from
-          = user_business_role.date_to
+        %td= link_to business_role.business_role.name, edit_business_role_path(business_role.business_role)
+        %td= business_role.note
+        %td= business_role.date_from
+        %td= business_role.date_to
+        %td= link_to Bproce.find(business_role).shortname, bproce_path(business_role)
+
 - else
   %h1 Бизнес-процессы: Первый шаг
 

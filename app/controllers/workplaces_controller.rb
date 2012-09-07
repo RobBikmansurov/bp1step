@@ -24,12 +24,8 @@ class WorkplacesController < ApplicationController
   end
 
   def edit
-    if flash[:workplace]
-      @workplace = flash[:workplace]
-    else
-      @workplace = Workplace.find(params[:id])
-      @bproce_workplace = BproceWorkplace.new(:workplace_id => @workplace.id)
-    end
+    @bproce_workplace = BproceWorkplace.new(:workplace_id => @workplace.id)
+    respond_with(@bproce_workplace)
   end
 
   def update
