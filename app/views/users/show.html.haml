@@ -28,7 +28,7 @@
 
   -@uworkplaces.each do |user_workplace|
     %tr
-      %td= link_to user_workplace.workplace.designation, edit_workplace_path(user_workplace.workplace)
+      %td= link_to user_workplace.workplace.designation, workplace_path(user_workplace.workplace)
       %td= user_workplace.workplace.location
       %td= user_workplace.workplace.name
       %td= user_workplace.note
