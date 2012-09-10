@@ -41,7 +41,7 @@
         %td= business_role.note
         %td= business_role.date_from
         %td= business_role.date_to
-        %td= link_to Bproce.find(business_role).shortname, bproce_path(business_role)
+        %td= link_to Bproce.find(business_role.business_role.bproce).shortname, bproce_path(business_role.business_role.bproce)
 
 - else
   %h1 Бизнес-процессы: Первый шаг
