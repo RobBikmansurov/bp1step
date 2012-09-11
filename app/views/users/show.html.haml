@@ -32,9 +32,15 @@
       %td= user_workplace.workplace.location
       %td= user_workplace.workplace.name
       %td= user_workplace.note
-      %td= user_workplace.date_from
-      %td= user_workplace.date_to
+      %td
+        = user_workplace.date_from
+        \-
+        = user_workplace.date_to
 
+- if @usr.bproce.count > 0
+  %h3 Владелец процессов:
+  - @usr.bproce.each do |bproce|
+    = link_to bproce.name, bproce_path(bproce)
 %h2
   = @usr.displayname
   исполняет роли:
@@ -47,7 +53,7 @@
     %th Процесс
   - @uroles.each do |business_role|
     %tr
-      %td= link_to business_role.business_role.name, edit_business_role_path(business_role.business_role)
+      %td= link_to business_role.business_role.name, business_role_path(business_role.business_role)
       %td= business_role.note
       %td= business_role.date_from
       %td= business_role.date_to

@@ -37,7 +37,7 @@
       %th в процессе
     - current_user.user_business_role.each do |business_role|
       %tr
-        %td= link_to business_role.business_role.name, edit_business_role_path(business_role.business_role)
+        %td= link_to business_role.business_role.name, business_role_path(business_role.business_role)
         %td= business_role.note
         %td= business_role.date_from
         %td= business_role.date_to
@@ -45,26 +45,25 @@
 
 - else
   %h1 Бизнес-процессы: Первый шаг
+  %p
+  %hr
+  %h3
+    = link_to "Процессы:", bproces_path
+    = Bproce.count
+  %h3
+    = link_to "Роли:", business_roles_path
+    = BusinessRole.count
+  %h3
+    = link_to "Рабочие места:", workplaces_path
+    = Workplace.count
+  %h3
+    = link_to "Приложения:", bapps_path
+    = Bapp.count
+  %h3
+    = link_to "Документы:", documents_path
+    = Document.count
+  %h3
+    = link_to "Сотрудники:", users_path
+    = User.count
 
-%p
-%hr
-%h3
-  = link_to "Процессы:", bproces_path
-  = Bproce.count
-%h3
-  = link_to "Роли:", business_roles_path
-  = BusinessRole.count
-%h3
-  = link_to "Рабочие места:", workplaces_path
-  = Workplace.count
-%h3
-  = link_to "Приложения:", bapps_path
-  = Bapp.count
-%h3
-  = link_to "Документы:", documents_path
-  = Document.count
-%h3
-  = link_to "Сотрудники:", users_path
-  = User.count
-
-%p
+  %p
