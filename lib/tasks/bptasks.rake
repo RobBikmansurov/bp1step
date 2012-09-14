@@ -13,9 +13,11 @@ namespace :bp1step do
             :password => LDAP_CONFIG["development"]["admin_password"]
      	}
 	#host = LDAP_CONFIG['audiocast_uri_format']
+	debug_flag = false
 
-	filter = Net::LDAP::Filter.eq("title", "*")	# пользователи обязательно имеют должность
+	#filter = Net::LDAP::Filter.eq("title", "*")	# пользователи обязательно имеют должность
 	#filter = Net::LDAP::Filter.eq("sAMAccountName", "mr_rob")
+	filter = Net::LDAP::Filter.eq("sAMAccountName", "ks16")
 	#filter = Net::LDAP::Filter.eq(&(objectClass=person)(objectClass=user)(middleName=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))
 	treebase = LDAP_CONFIG["development"]["base"]
 	attrs = ["sn", "givenname", "MiddleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description"]
@@ -40,32 +42,43 @@ namespace :bp1step do
 	    else	# а здесь надо проверить - не изменилось ли что либо у этого пользователя в AD
 	    	f_change = 0
 			tmp = usr.department
-			#puts "#{usr.department} = #{entry['department'].first}: #{(tmp == entry['department'].first)}"
+			puts "#{entry['department'].first}" if debug_flag
+			puts "1" if debug_flag
 			if !(usr.department == entry["department"].first)	# подразделение
 				usr.department = entry["department"].first
-				puts "#{usr.department} = #{entry['department'].first}: #{usr.department == entry['department'].first}"
+				#puts "#{usr.department} = #{entry['department'].first}: #{usr.department == entry['department'].first}"
 				f_change += 1
 			end
+			puts "#{entry['title'].first}" if debug_flag
+			puts "2" if debug_flag
 			if !(usr.position == entry["title"].first)	# должность
 				usr.position = entry["title"].first
-				puts "#{usr.position} = #{entry['title'].first}: #{usr.position == entry['title'].first}"
+				#puts "#{usr.position} = #{entry['title'].first}: #{usr.position == entry['title'].first}"
 				f_change += 1
 			end
+			puts "#{entry['telephonenumber'].first}" if debug_flag
+			puts "3" if debug_flag
 			if !(usr.phone == entry["telephonenumber"].first)	# телефон
 				usr.phone = entry["telephonenumber"].first
-				puts "#{usr.phone} = #{entry['telephonenumber'].first}: #{usr.phone == entry['telephonenumber'].first}"
+				#puts "#{usr.phone} = #{entry['telephonenumber'].first}: #{usr.phone == entry['telephonenumber'].first}"
 				f_change += 1
 			end
+			puts "#{entry['physicaldeliveryofficename'].first}" if debug_flag
+			puts "4" if debug_flag
 			if !(usr.office == entry["physicaldeliveryofficename"].first)	# офис
 				usr.office = entry["physicaldeliveryofficename"].first
-				puts "#{usr.office} = #{entry['physicaldeliveryofficename'].first}: #{usr.office == entry['physicaldeliveryofficename'].first}"
+				#puts "#{usr.office} = #{entry['physicaldeliveryofficename'].first}: #{usr.office == entry['physicaldeliveryofficename'].first}"
 				f_change += 1
 			end
+			puts "5" if debug_flag
 			if f_change > 0
 	    		upd_users = upd_users + 1
-	      		usr.save
-				puts "#{i}=#{upd_users}. #{entry.sAMAccountName} #{entry.dn}"
+	    		puts usr.valid? if debug_flag
+	    		usr.save
+	    		puts usr.errors
+				#puts "#{i}=#{upd_users}. #{entry.sAMAccountName} #{entry.dn}"
 	      	end
+			puts "6" if debug_flag
 	    end
 
 	end
