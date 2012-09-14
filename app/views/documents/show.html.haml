@@ -4,9 +4,12 @@
 %h3 Описание
 = @document.description
 
-%h3
-  Относится к процессу
-  = link_to @document.bproce.name, bproce_path(@document.bproce)
+-if @document.bproce
+  %h3
+    Относится к процессу
+    = link_to @document.bproce.name, bproce_path(@document.bproce)
+-else
+  %h3 Процесс не назначен
 %p
 = @document.inspect
 %hr
