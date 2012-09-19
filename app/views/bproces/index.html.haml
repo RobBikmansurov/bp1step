@@ -17,7 +17,7 @@
   -@bproces.each do |bproce|
     %tr
       %td
-        = "—-" * (bproce.depth) + bproce.shortname
+        = "——" * (bproce.depth) + bproce.shortname
         -#= link_to "-" * (bproce.depth) + bproce.shortname, edit_bproce_path(bproce)
       
       %td= link_to bproce.name, bproce_path(bproce)
