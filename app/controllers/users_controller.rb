@@ -10,6 +10,7 @@ class UsersController < ApplicationController
     @usr = User.find(params[:id])     # отображаемый пользователь
     @uroles = @usr.user_business_role   # исполняет роли
     @uworkplaces = @usr.user_workplace 	# рабочие места пользователя
+    @documents = Document.find_all_by_responsible(@usr)
     respond_with()
   end
 

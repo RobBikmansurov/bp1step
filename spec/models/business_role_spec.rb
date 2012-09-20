@@ -31,7 +31,8 @@ describe BusinessRole do
   end
   it "should can have user" do
     @user = User.create(:displayname => "TestUser", :email => "test@test.com")
-    @business_role.user_business_role.create(:user_id => 1)
+    @user.save
+    @business_role.user_business_role.create(:user_id => @user)
     @business_role.user_business_role.count.should == "1"
   end
 end

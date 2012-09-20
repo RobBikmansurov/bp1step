@@ -12,6 +12,13 @@
   %p
   -if can? :update, @bproce
     = f.button :submit
+
+-#if can? :create, @bproce
+  %p
+  = simple_form_for(@subproce) do |fs|
+    = fs.input :name
+    = fs.button :submit, "Новый Подпроцесс"
+
 %p
 -# не показывать для нового процесса связанные с ним объекты - их еще нет
 -if @bproce.id?

@@ -11,9 +11,8 @@
     Родительский процесс:
     = link_to @bproce.parent.name, bproce_path(@bproce.parent_id)
 %h3 Подпроцессы:
--# Bproce.where("parent_id=?", @bproce).each do |bp|
 - Bproce.where("lft>? and rgt<?", @bproce.lft, @bproce.rgt).order("lft").each do |bp|
-  = "——" * (bp.depth)
+  = "——" * (bp.depth - @bproce.depth)
   = bp.depth
   = link_to bp.name, bproce_path(bp)
   %br

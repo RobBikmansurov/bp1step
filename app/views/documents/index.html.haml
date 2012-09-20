@@ -36,6 +36,6 @@
 .apple_pagination
   = will_paginate @documents 
  
-- if can? :destroy, Document
+- if can? :create, Document
   .button
     = link_to 'Добавить новый документ', new_document_path 

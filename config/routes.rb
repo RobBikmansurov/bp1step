@@ -1,4 +1,6 @@
 BPDoc::Application.routes.draw do
+  resources :document_directives
+  resources :directives
   resources :roles
   resources :business_roles
   resources :categories

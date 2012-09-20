@@ -1,10 +1,6 @@
 -title "Каталог Процессов"
 %h1 Каталог Процессов 
 
--#= form_for(@bproce) do |f|
-  = f.select :parent_id, nested_set_options(Bproce, @bproce) {|i| "#{'-' * i.level} #{i.name}" }
-  = select_tag 'parent_id', options_for_select(nested_set_options(Bproce) {|i| "#{'-' * i.level} #{i.name}" } )
-
 %table
   %tr
     %th= sortable "shortname", "Обозначение"
