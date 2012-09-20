@@ -59,5 +59,11 @@
       %td= business_role.date_to
       %td= link_to Bproce.find(business_role.business_role.bproce).shortname, bproce_path(business_role.business_role.bproce)
 
+- if @documents
+  %h3 Ответственный за документы:
+  - @documents.each do |doc|
+    = link_to doc.name, document_path(doc)
+    %br
+
 .button
   = link_to 'Back', users_path

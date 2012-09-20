@@ -12,6 +12,7 @@ class DocumentsController < ApplicationController
 
   def update
     @document = Document.find(params[:id])
+    user_id = @document.owner_id
     flash[:notice] = "Successfully updated document."  if @document.update_attributes(params[:document])
     respond_with(@document)
   end

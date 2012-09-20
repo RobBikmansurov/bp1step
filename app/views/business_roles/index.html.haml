@@ -13,7 +13,7 @@
     %tr
       %td= link_to ro.name, ro
       %td
-        = link_to ro.bproce.name, bproce_path(ro.bproce_id) if !ro.bproce.nil?
+        = link_to ro.bproce.shortname, bproce_path(ro.bproce_id) if !ro.bproce.nil?
       %td= ro.description
       - if can? :destroy, ro
         %td

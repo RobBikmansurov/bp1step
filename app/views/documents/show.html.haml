@@ -11,6 +11,16 @@
 -else
   %h3 Процесс не назначен
 %p
+%h3
+  Ответственный за документ:
+  -if @document.responsible?
+    = link_to User.find(@document.responsible).displayname, user_path(@document.responsible)
+  -else
+    %b
+      не задан
+
+
+
 = @document.inspect
 %hr
 = @document.filename
