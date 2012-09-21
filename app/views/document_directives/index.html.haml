@@ -1,0 +1,23 @@
+%h1 Listing document_directives
+
+%table
+  %tr
+    %th Documents
+    %th Directives
+    %th Note
+    %th
+    %th
+    %th
+
+  - @document_directives.each do |document_directive|
+    %tr
+      %td= document_directive.documents
+      %td= document_directive.directives
+      %td= document_directive.note
+      %td= link_to 'Show', document_directive
+      %td= link_to 'Edit', edit_document_directive_path(document_directive)
+      %td= link_to 'Destroy', document_directive, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New Document directive', new_document_directive_path

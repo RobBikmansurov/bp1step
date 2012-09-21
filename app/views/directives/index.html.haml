@@ -1,0 +1,29 @@
+-title "Руководящие документы, Директивы, Указания"
+%h1 Директивы
+%table
+  %tr
+    %th= sortable "number", "Номер"
+    %th= sortable "approval", "От"
+    %th Орган
+    %th Наименование
+    - if can? :destroy, Directive
+      %th
+
+  - @directives.each do |directive|
+    %tr
+      %td= link_to directive.number, directive
+      %td= directive.approval
+      %td
+        = directive.title
+        = directive.body
+      %td= directive.name
+      - if can? :destroy, Directive
+        %td
+          = link_to 'Destroy', directive, :confirm => 'Are you sure?', :method => :delete
+
+.apple_pagination
+  = will_paginate @directives
+
+- if can? :create, Directive
+  .button
+    = link_to "Добавить новую директиву", new_directive_path

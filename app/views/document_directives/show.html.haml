@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Documents:
+  = @document_directive.documents
+%p
+  %b Directives:
+  = @document_directive.directives
+%p
+  %b Note:
+  = @document_directive.note
+
+= link_to 'Edit', edit_document_directive_path(@document_directive)
+\|
+= link_to 'Back', document_directives_path
