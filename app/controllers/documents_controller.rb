@@ -1,5 +1,6 @@
 class DocumentsController < ApplicationController
-  respond_to :html, :xml, :json
+  respond_to :html
+  respond_to :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
 
   def index
@@ -8,13 +9,14 @@ class DocumentsController < ApplicationController
 
   def edit
     @document = Document.find(params[:id])
-  end
+    @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
+    @directive = @document.directive.new # заготовка для новой связи с директивой
+end
 
   def update
     @document = Document.find(params[:id])
     user_id = @document.owner_id
     flash[:notice] = "Successfully updated document."  if @document.update_attributes(params[:document])
-    respond_with(@document)
   end
 
   def show

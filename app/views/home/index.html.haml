@@ -1,6 +1,6 @@
 - if user_signed_in?
   %h1
-    = current_user.displayname
+    = link_to current_user.displayname, user_path(current_user)
   %h4
     = current_user.position
     |

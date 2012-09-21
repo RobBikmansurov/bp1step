@@ -18,7 +18,7 @@ class BusinessRolesController < ApplicationController
   end
 
   def show
-    respond_with(@business_role = BusinessRole.find(params[:id]))
+    respond_with(@business_role)
   end
 
   def edit
