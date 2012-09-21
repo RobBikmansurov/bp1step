@@ -1,0 +1,10 @@
+= simple_form_for(@document_directive) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :documents
+    = f.input :directives
+    = f.input :note
+
+  .form-actions
+    = f.button :submit

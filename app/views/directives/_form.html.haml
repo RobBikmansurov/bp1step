@@ -1,0 +1,33 @@
+= simple_form_for(@directive) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :title
+    = f.input :number
+    = f.input :approval
+    = f.input :name, :as => :text
+    = f.input :note
+    = f.input :body
+
+  - if can? :update, @directive
+    = f.button :submit
+
+%p
+-if @directive.document.count > 0
+  %h4 На основании этого документа разработаны следующие внутренние документы банка:
+  %table
+    - @directive.document.each do |document|
+      %tr
+        %td= link_to document.name, document_path(document)
+        -if can? :update, @directive
+          %td= link_to 'Destroy', document, :confirm => 'Are you sure?', :method => :delete
+-if @directive.id?
+  %p
+  = simple_form_for(@document_directive) do |dd|
+    = dd.error_notification
+    = dd.hidden_field :directive_id
+    = dd.input :document_id, :collection => Document.all(:order => 'name'), :include_blank => true, :prompt => 'Добавить внутренний документ банка', :label_method => :shortname
+    -#= dd.association :document, :include_blank => true, :prompt => 'Добавить внутренний документ банка'
+    = dd.error :base
+    -if can? :update, @directive
+      = dd.button :submit, 'Добавить Внутренний документ банка'
