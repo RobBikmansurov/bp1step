@@ -19,8 +19,6 @@
     %b
       не задан
 
-
-
 = @document.inspect
 %hr
 = @document.filename
@@ -29,7 +27,15 @@
 = @document.approved
 = @document.approveorgan
 = @document.dlevel
-%hr
+
+-if @document.directive.count > 0
+  %h4 Документ разработан на основе следующих руководящих документов:
+  - @document.directive.each do |directive|
+    = link_to directive.shortname, directive_path(directive)
+    %br
+
+
+
 %h3
   Место хранения оригинала:
   = @document.place

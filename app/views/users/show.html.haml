@@ -1,5 +1,6 @@
 %h1 
-  = @usr.displayname
+  %b
+    = @usr.displayname
   = @usr.position  
 %h4
   = @usr.position
@@ -60,10 +61,11 @@
       %td= link_to Bproce.find(business_role.business_role.bproce).shortname, bproce_path(business_role.business_role.bproce)
 
 - if @documents
-  %h3 Ответственный за документы:
+  %h3
+    = @usr.displayname
+    отвечает за внутренние документы банка:
   - @documents.each do |doc|
-    = link_to doc.name, document_path(doc)
-    %br
-
+    %li= link_to doc.name, document_path(doc)
+%p
 .button
   = link_to 'Back', users_path

@@ -53,6 +53,7 @@ class BprocesController < ApplicationController
 
   def destroy
     @bproce.destroy
+    flash[:notice] = "Successfully destroyed Bproce." if @bproce.save
     respond_with(@bproce)
   end
 

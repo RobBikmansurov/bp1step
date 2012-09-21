@@ -4,6 +4,7 @@ ru:
       bapp: Приложение
       bproce: Процесс
       document: Документ
+      directive: Директива
       role: Роль
       staff: Сотрудник
       workplace: Рабочее место
@@ -56,3 +57,10 @@ ru:
         note: Примечание
         date_from: Дата начала
         date_to: Дата окончания
+      directive:
+        title: Тип документа
+        number: Номер
+        name: Наименование
+        approval: Дата утверждения
+        body: Принявший орган
+        note: Примечание

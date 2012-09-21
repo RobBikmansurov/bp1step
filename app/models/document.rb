@@ -11,7 +11,11 @@ class Document < ActiveRecord::Base
   belongs_to :bproce
   has_many :user, :through => :document_user
   has_many :directive, :through => :document_directive
+  has_many :document_directive, :dependent => :destroy
 
+  def shortname
+    return name.split(//u)[0..50].join
+  end
 
   def self.search(search)
     if search  
