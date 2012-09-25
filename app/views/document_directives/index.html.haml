@@ -11,8 +11,9 @@
 
   - @document_directives.each do |document_directive|
     %tr
-      %td= document_directive.documents
-      %td= document_directive.directives
+      %td= document_directive.document.shortname
+      %td= document_directive.directive.shortname
+      %td= document_directive.id
       %td= document_directive.note
       %td= link_to 'Show', document_directive
       %td= link_to 'Edit', edit_document_directive_path(document_directive)

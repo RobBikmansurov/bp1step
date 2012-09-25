@@ -12,8 +12,8 @@
   %h4
     примечание:
     = @directive.note
-
--if @directive.document.count > 0
+%p
+- if @directive.document_directive.count > 0
   %h4 На основании этого документа разработаны следующие внутренние документы банка:
   - @directive.document.each do |document|
     %li= link_to document.name, document_path(document)

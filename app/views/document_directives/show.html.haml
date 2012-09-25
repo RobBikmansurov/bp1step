@@ -1,11 +1,13 @@
 %p#notice= notice
 
+= @document_directive.inspect
+
 %p
-  %b Documents:
-  = @document_directive.documents
+  %b Document:
+  = @document_directive.document.shortname
 %p
-  %b Directives:
-  = @document_directive.directives
+  %b Directive:
+  -#= @document_directive.directive.shortname
 %p
   %b Note:
   = @document_directive.note

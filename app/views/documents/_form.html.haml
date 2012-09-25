@@ -26,17 +26,18 @@
 
   - if can? :update, @document
     = f.button :submit
-%p
--if @document.directive.count > 0
-  %h4 Документ разработан на основании следующих директив:
-  %table
-    - @document.document_directive.each do |dd|
-      %tr
-        %td= link_to dd.directive.shortname, directive_path(dd.directive)
-        -if can? :update, @document
-          %td
-            =link_to 'Destroy', dd, :confirm => 'Are you sure?', :method => :delete
-            =debug dd
+
+-if @document.id? # ну какие ссылки на директивы для нового документа
+  %p
+  -if @document_directives.count > 0
+    %h4 Документ разработан на основании следующих директив:
+    %table
+      - @document_directives.each do |dd|
+        %tr
+          %td= link_to dd.document.shortname, directive_path(dd.document)
+          -if can? :update, @document
+            %td
+              =link_to 'Destroy', dd, :confirm => 'Are you sure?', :method => :delete
 %p
 = simple_form_for(@document_directive) do |dd|
   = dd.error_notification

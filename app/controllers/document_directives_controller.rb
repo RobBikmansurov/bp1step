@@ -1,24 +1,13 @@
 class DocumentDirectivesController < ApplicationController
-  # GET /document_directives
-  # GET /document_directives.json
+  respond_to :html
+  before_filter :get_document_directive, :except => :index
+
   def index
     @document_directives = DocumentDirective.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @document_directives }
-    end
   end
 
-  # GET /document_directives/1
-  # GET /document_directives/1.json
   def show
-    @document_directive = DocumentDirective.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @document_directive }
-    end
+    respond_with(@document_directive)
   end
 
   # GET /document_directives/new
@@ -80,4 +69,10 @@ class DocumentDirectivesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def get_document_directive
+    @document_directive = params[:id].present? ? DocumentDirective.find(params[:id]) : DocumentDirective.new
+  end
+
+
 end

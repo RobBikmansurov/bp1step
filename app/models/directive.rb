@@ -5,7 +5,7 @@ class Directive < ActiveRecord::Base
 
   has_many :document, :through => :document_directive
   has_many :document_directive, :dependent => :destroy
-  
+
   def shortname
     return title + " " + number + " " + approval.to_s
   end

@@ -13,6 +13,7 @@ class DirectivesController < ApplicationController
   end
 
   def new
+    @document_directive = @directive.document_directive.new # заготовка для новой связи с документом
     respond_with(@directive)
   end
 
