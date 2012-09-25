@@ -15,11 +15,10 @@ ActiveRecord::Schema.define(:version => 20120920130258) do
 
   create_table "bapps", :force => true do |t|
     t.string   "name"
+    t.string   "type"
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "purpose"
-    t.string   "apptype"
   end
 
   create_table "bproce_bapps", :force => true do |t|
@@ -43,20 +42,14 @@ ActiveRecord::Schema.define(:version => 20120920130258) do
     t.string   "fullname"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "goal"
-    t.integer  "parent_id"
-    t.integer  "lft"
-    t.integer  "rgt"
-    t.integer  "depth"
-    t.integer  "user_id"
   end
 
   create_table "business_roles", :force => true do |t|
     t.string   "name"
     t.string   "description"
     t.integer  "bproce_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "business_roles", ["bproce_id"], :name => "index_business_roles_on_bproce_id"
@@ -77,16 +70,16 @@ ActiveRecord::Schema.define(:version => 20120920130258) do
     t.string   "name"
     t.string   "note"
     t.string   "body"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "document_directives", :force => true do |t|
     t.integer  "document_id"
     t.integer  "directive_id"
     t.string   "note"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "documents", :force => true do |t|
@@ -94,18 +87,13 @@ ActiveRecord::Schema.define(:version => 20120920130258) do
     t.string   "filename"
     t.string   "description"
     t.string   "status"
+    t.integer  "status_id"
+    t.integer  "owner_id"
     t.string   "part"
     t.date     "approved"
     t.string   "place"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "status_id"
-    t.integer  "bproce_id"
-    t.string   "eplace"
-    t.string   "approveorgan"
-    t.integer  "dlevel"
-    t.integer  "owner_id"
-    t.integer  "responsible"
   end
 
   add_index "documents", ["id"], :name => "index_documents_on_id", :unique => true
@@ -113,8 +101,16 @@ ActiveRecord::Schema.define(:version => 20120920130258) do
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.string   "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "staffs", :force => true do |t|
+    t.string   "fullname"
+    t.string   "position"
+    t.boolean  "supervisor"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "user_business_roles", :force => true do |t|
@@ -123,8 +119,8 @@ ActiveRecord::Schema.define(:version => 20120920130258) do
     t.string   "note"
     t.integer  "user_id",          :null => false
     t.integer  "business_role_id", :null => false
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_business_roles", ["business_role_id"], :name => "index_user_business_roles_on_business_role_id"
@@ -136,8 +132,8 @@ ActiveRecord::Schema.define(:version => 20120920130258) do
     t.string   "note"
     t.integer  "user_id"
     t.integer  "role_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_roles", ["role_id"], :name => "index_user_roles_on_role_id"
@@ -149,8 +145,8 @@ ActiveRecord::Schema.define(:version => 20120920130258) do
     t.string   "note"
     t.integer  "user_id"
     t.integer  "workplace_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_workplaces", ["user_id"], :name => "index_user_workplaces_on_user_id"
@@ -169,14 +165,6 @@ ActiveRecord::Schema.define(:version => 20120920130258) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "firstname"
-    t.string   "lastname"
-    t.string   "username"
-    t.string   "displayname"
-    t.string   "department"
-    t.string   "position"
-    t.string   "office"
-    t.string   "phone"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

@@ -25,6 +25,7 @@
   = f.error :base
 
   - if can? :update, @document
+    %p
     = f.button :submit
 
 -if @document.id? # ну какие ссылки на директивы для нового документа
