@@ -6,6 +6,7 @@ class CreateDocuments < ActiveRecord::Migration
       t.string :description
       t.string :status
       t.integer :status_id
+      t.integer :owner_id
       t.string :part
       t.date :approved
       t.string :place
