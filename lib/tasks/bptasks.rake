@@ -1,3 +1,4 @@
+# coding: utf-8
 # утилиты для поддержки работы BP1Step
 namespace :bp1step do
   desc "Sync users from ActiveDirectory"
@@ -13,11 +14,11 @@ namespace :bp1step do
             :password => LDAP_CONFIG["development"]["admin_password"]
      	}
 	#host = LDAP_CONFIG['audiocast_uri_format']
-	debug_flag = false
+	debug_flag = true
 
 	#filter = Net::LDAP::Filter.eq("title", "*")	# пользователи обязательно имеют должность
 	#filter = Net::LDAP::Filter.eq("sAMAccountName", "mr_rob")
-	filter = Net::LDAP::Filter.eq("sAMAccountName", "ks16")
+	filter = Net::LDAP::Filter.eq("sAMAccountName", "bb25")
 	#filter = Net::LDAP::Filter.eq(&(objectClass=person)(objectClass=user)(middleName=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))
 	treebase = LDAP_CONFIG["development"]["base"]
 	attrs = ["sn", "givenname", "MiddleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description"]

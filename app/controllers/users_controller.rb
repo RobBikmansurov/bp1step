@@ -1,3 +1,4 @@
+# coding: utf-8
 class UsersController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
