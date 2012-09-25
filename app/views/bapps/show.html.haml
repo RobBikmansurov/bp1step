@@ -1,20 +1,27 @@
 %h2
-  = @bapp.name 
-%h3 Описание
-= @bapp.description
-= @bapp.apptype
+  = @bapp.name
+%h4
+  Тип приложения:
+  = @bapp.apptype
+%h4
+  Описание:
+  = @bapp.description
+%h4
+  Назначение:
+  = @bapp.purpose
 %h3
   Участвует в процессе
--if @bapp.id?
+
+-if @bapp.id? # новая запись еще нигде не используется
   %table
     %tr
-      %th Это Приложение используется в Процессах:
+      %th Процесс:
       %th Назначение в процессе
       %th
     -@bapp.bproce_bapps.each do |bp|
       %tr
         %td
-          = link_to bp.bproce.name, edit_bproce_path(bp.bproce_id)
+          = link_to bp.bproce.name, bproce_path(bp.bproce_id)
         %td
           = bp.apurpose
         %td

@@ -1,6 +1,6 @@
 class Bapp < ActiveRecord::Base
   validates :name, :uniqueness => true,
-            :length => {:minimum => 8, :maximum => 50}
+            :length => {:minimum => 6, :maximum => 50}
   validates :description, :presence => true
 
   has_many :bproce_bapps

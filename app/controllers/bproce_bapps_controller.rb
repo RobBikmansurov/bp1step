@@ -11,6 +11,11 @@ class BproceBappsController < ApplicationController
     flash[:notice] = "Successfully created bproce_bapp." if @bproce_bapp.save
     respond_with(@bproce_bapp.bapp)
   end
+
+  def edit
+    @bproce_bapp = BproceBapp.find(params[:id])
+    respond_with(@bproce_bapp)
+  end
   
   def destroy
     @bproce_bapp = BproceBapp.find(params[:id])

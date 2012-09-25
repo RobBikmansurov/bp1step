@@ -25,12 +25,12 @@
         %td
           - if can? :update, @bapp
             = link_to 'Destroy', bp, :confirm => 'Are you sure?', :method => :delete
-  = simple_form_for(@bproce_bapp) do |ff|
-    = ff.error_notification
-    = ff.association :bproce, :label => 'Процесс', :hint => 'Выберите процесс'
-    = ff.hidden_field :bapp_id
-    = ff.input :apurpose, :hint => 'Укажите назначение приложения в выбранном процессе'
-    = ff.error :base
-    = ff.button :submit, 'Связать с процессом'
+= simple_form_for(@bproce_bapp) do |ff|
+  = ff.error_notification
+  = ff.association :bproce, :label => 'Процесс', :hint => 'Выберите процесс'
+  = ff.hidden_field :bapp_id
+  = ff.input :apurpose, :hint => 'Укажите назначение приложения в выбранном процессе'
+  = ff.error :base
+  = ff.button :submit, 'Связать с процессом'
 -#=debug params
 -#=debug @bproce_bapp
