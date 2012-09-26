@@ -7,7 +7,8 @@ class DocumentDirectivesController < ApplicationController
   end
 
   def show
-    respond_with(@document_directive)
+    #respond_with(@document_directive)
+    redirect_to :back
   end
 
   # GET /document_directives/new
