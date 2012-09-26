@@ -2,8 +2,9 @@ class UserBusinessRolesController < ApplicationController
   respond_to :html, :xml, :json
   
   def show
-  	@u = User.find(params[:id])
-  	respond_with(@business_roles = @u.business_user_roles)
+  	#@u = User.find(params[:id])
+  	#respond_with(@business_roles = @u.business_user_roles)
+    redirect_to :back
   end
 
   def new
