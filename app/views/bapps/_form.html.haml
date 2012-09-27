@@ -21,7 +21,7 @@
         %td
           = link_to bp.bproce.name, bproce_path(bp.bproce_id)
         %td
-          = bp.apurpose
+          = link_to bp.apurpose, bproce_bapp_path(bp)
         %td
           - if can? :update, @bapp
             = link_to 'Destroy', bp, :confirm => 'Are you sure?', :method => :delete
