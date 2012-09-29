@@ -1,0 +1,7 @@
+= simple_form_for(@bproce_bapp) do |f|
+  = f.error_notification
+  = f.input :apurpose, :as => :text
+  = f.error :base
+  - if can? :update, @bproce_bapp
+    = f.button :submit
+  %p

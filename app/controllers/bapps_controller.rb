@@ -8,7 +8,6 @@ class BappsController < ApplicationController
   end
   
   def new
-    @bproce_bapp = BproceBapp.new
     respond_with(@bapp)
   end
 

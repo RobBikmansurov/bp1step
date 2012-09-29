@@ -1,9 +1,19 @@
 -title "Внутренний документ банка"
 %h2
   = @document.name 
-
 %h3 Описание
 = @document.description
+%h3
+  утвердил
+  %b
+    = @document.approveorgan
+  от
+  %b
+    = @document.approved
+%h3
+  раздел документооборота:
+  %b
+    = @document.part
 
 -if @document.bproce
   %h3
@@ -20,14 +30,11 @@
     %b
       не задан
 
-= @document.inspect
+-#= @document.inspect
 %hr
-= @document.filename
-= @document.status_id
-= @document.part
-= @document.approved
-= @document.approveorgan
-= @document.dlevel
+%h4
+  Файл с документом:
+  = @document.filename
 
 -if @document.directive.count > 0
   %h4 Документ разработан на основе следующих руководящих документов:
