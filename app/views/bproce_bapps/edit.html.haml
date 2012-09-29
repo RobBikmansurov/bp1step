@@ -1,18 +1,18 @@
+-title "Приложение процесса"
 %h3
   Приложение
   = link_to @bproce_bapp.bapp.name, bapp_path(@bproce_bapp.bapp)
 %h3
   используется в процессе
   = link_to @bproce_bapp.bproce.name, bproce_path(@bproce_bapp.bproce)
+
 %h2
   Назначение:
-= @bproce_bapp.apurpose
+= render 'form'
 
 %p
 - if can? :update, @bproce_bapp
   .button
-    = link_to 'Edit', edit_bproce_bapp_path(@bproce_bapp) |
-
+    = link_to 'Show', @bproce_bapp
 .button
   = link_to 'Back', bproce_bapps_path
-
