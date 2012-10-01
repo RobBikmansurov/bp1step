@@ -4,7 +4,13 @@ class BappsController < ApplicationController
   before_filter :get_bapp, :except => :index
 
   def index
-    @bapps = Bapp.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    if params[:bproce_id].present?
+      @bproce = Bproce.find(params[:bproce_id])
+      @bapps = @bproce.bapps.paginate(:per_page => 10, :page => params[:page])
+    else
+      @bapps = Bapp.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    end
+
   end
   
   def new
@@ -32,8 +38,6 @@ class BappsController < ApplicationController
 
   def update
     flash[:notice] = "Successfully updated bapp."  if @bapp.update_attributes(params[:bapp])
-    #Rails.logger.debug("update-bproce_bapp: #{@bproce_bapp.inspect}")
-    #Rails.logger.debug("update-bapp: #{@bapp.inspect}")
     if !@bapp.save # there was an error!
       flash[:bapp] = @bapp
       redirect_to :action => :edit

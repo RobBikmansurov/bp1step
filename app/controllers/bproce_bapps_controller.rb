@@ -27,7 +27,12 @@ class BproceBappsController < ApplicationController
   end
 
   def index
-    @bproce_bapp = BproceBapp.all #.paginate(:per_page => 10, :page => params[:page])
+    if params[:bproce_id].present?
+      @bproce = Bproce.find(params[:bproce_id])
+      @bproce_bapp = @bproce.bapps
+    else
+      @bproce_bapp = BproceBapp.all #.paginate(:per_page => 10, :page => params[:page])
+    end
   end
 
   def update
