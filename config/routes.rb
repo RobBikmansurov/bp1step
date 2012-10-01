@@ -12,7 +12,7 @@ BPDoc::Application.routes.draw do
   resources :user_workplaces
   resources :user_business_roles, :only => [:new, :create, :destroy]
   resources :bproces
-  resources :bprocess do
+  resources :bproces do
     resources :bapps
   end
   match '/bproceses' => 'bproces#list', :via => :get
