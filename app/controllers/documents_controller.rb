@@ -6,7 +6,12 @@ class DocumentsController < ApplicationController
 
 
   def index
-    @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    if params[:directive_id].present?
+      @directive = Directive.find(params[:directive_id])
+      @documents = @directive.document.paginate(:per_page => 10, :page => params[:page])
+    else
+      @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    end
   end
 
   def edit

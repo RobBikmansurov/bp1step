@@ -1,6 +1,8 @@
 BPDoc::Application.routes.draw do
   resources :document_directives
-  resources :directives
+  resources :directives do
+      resources :documents  # документы на основании директивы
+  end
   resources :roles
   resources :business_roles
   resources :categories
@@ -15,6 +17,7 @@ BPDoc::Application.routes.draw do
   resources :bproces do
     resources :bapps
   end
+
   match '/bproceses' => 'bproces#list', :via => :get
   
   match '/about' => 'pages#about', :via => :get
