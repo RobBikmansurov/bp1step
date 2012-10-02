@@ -1,3 +1,4 @@
+-title "Директива, руководящий документ"
 %h2
   = @directive.title
   = @directive.body
@@ -14,7 +15,9 @@
     = @directive.note
 %p
 - if @directive.document_directive.count > 0
-  %h4 На основании этого документа разработаны следующие внутренние документы банка:
+  %h4
+    На основании этой директивы разработаны следующие
+    = link_to "внутренние документы банка:", directive_documents_path(@directive)
   - @directive.document.each do |document|
     %li= link_to document.name, document_path(document)
 

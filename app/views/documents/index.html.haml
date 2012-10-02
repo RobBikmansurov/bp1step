@@ -1,11 +1,11 @@
--title "Каталог Документов"
-%h1Каталог Документов
--#= form_tag documents_path, :method => 'get' do
-  = hidden_field_tag :direction, params[:direction]
-  = hidden_field_tag :sort, params[:sort]
-  %p  
-    = text_field_tag :search, params[:search]
-    = submit_tag "Search", :name => nil
+-if @directive.blank?
+  -title "Каталог Документов"
+  %h1 Каталог Документов
+-else
+  -title "Список внутренних документов банка"
+  %h2
+    Список Документов, разработанных на основании 
+    =link_to @directive.number, directive_path(@directive)
 
 %table
   %tr
