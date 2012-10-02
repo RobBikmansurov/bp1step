@@ -1,33 +1,57 @@
 class BproceBappsController < ApplicationController
-  # TODO редактировать назначение Приложения в Процессе (пока есть только создание/удаление из Процесса)
   respond_to :html, :json
+  helper_method :sort_column, :sort_direction
+  before_filter :get_bapp, :except => :index
 
   def new
     @bproce_bapp = BproceBapp.new
   end
 
   def create
-    @bproce_bapp = BproceBapp.create(params[:bproce_bapp])
     flash[:notice] = "Successfully created bproce_bapp." if @bproce_bapp.save
     respond_with(@bproce_bapp.bapp)
   end
 
   def edit
-    @bproce_bapp = BproceBapp.find(params[:id])
     respond_with(@bproce_bapp)
   end
   
   def destroy
-    @bproce_bapp = BproceBapp.find(params[:id])
     @bproce_bapp.destroy
     flash[:notice] = "Successfully destroyed brpoce_bapp." if @bproce_bapp.save
     respond_with(@bproce_bapp.bapp)
   end
 
   def show
-    @bp = Bproce.find(params[:id])  # нужный процесс
-    @bapps = @bp.bapps # приложения
-    respond_with(@bpapps = @bp.bproce_bapps)  # приложения процесса
+    respond_with(@bproce_bapp)
   end
+
+  def index
+    if params[:bproce_id].present?
+      @bproce = Bproce.find(params[:bproce_id])
+      @bproce_bapp = @bproce.bapps
+    else
+      @bproce_bapp = BproceBapp.all #.paginate(:per_page => 10, :page => params[:page])
+    end
+  end
+
+  def update
+    flash[:notice] = "Successfully updated bproce_bapp." if @bproce_bapp.update_attributes(params[:bproce_bapp])
+    respond_with(@bproce_bapp)
+  end
+
+private
+  def sort_column
+    params[:sort] || "name"
+  end
+
+  def sort_direction
+    params[:direction] || "asc"
+  end
+
+  def get_bapp
+    @bproce_bapp = params[:id].present? ? BproceBapp.find(params[:id]) : BproceBapp.new
+  end
+  
 
 end

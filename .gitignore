@@ -1,3 +1,4 @@
+.gitignore
 app/models/user.rb
 app/views/devise/sessions/new.html.erb
 config/initializers/devise.rb
@@ -19,3 +20,7 @@ test
 *.yml~
 *.erb~
 *.css~
+/app/models/user.rb.db_auth
+/db/20120925.sl
+/db.auth.off
+/db.auth.on

@@ -10,9 +10,9 @@ class Ability
       can :destroy, [User, Document]
       can :update, [Document]
     elsif user.role? :analitic
-      can :destroy, [Bproce, BusinessRole, Workplace, Bapp, Document, Directive]
-      can :create, [Bproce, BusinessRole, Workplace, Bapp, Document, Directive]
-      can :update, [Bproce, BusinessRole, Workplace, Bapp, Document, Directive]
+      can :destroy, [Bproce, BusinessRole, Workplace, Bapp, Document, Directive, BproceBapp]
+      can :create, [Bproce, BusinessRole, Workplace, Bapp, Document, Directive, BproceBapp]
+      can :update, [Bproce, BusinessRole, Workplace, Bapp, Document, Directive, BproceBapp]
     else
       can :read, :all
       if user.role? :user

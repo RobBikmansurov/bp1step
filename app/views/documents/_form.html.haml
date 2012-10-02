@@ -40,16 +40,15 @@
             %td
               =link_to 'Destroy', dd, :confirm => 'Are you sure?', :method => :delete
 %p
-= simple_form_for(@document_directive) do |dd|
-  = dd.error_notification
-  = dd.hidden_field :document_id
-  = dd.input :directive_id, :collection => Directive.all(:order => 'name'), :include_blank => true, :prompt => 'Добавить Директиву', :label_method => :shortname
-  -#= dd.association :document, :include_blank => true, :prompt => 'Добавить внутренний документ банка'
-  = dd.error :base
-  -if can? :update, @document
-    = dd.button :submit, 'Добавить Директиву'
-
-
+-if @document_directive != nil
+  = simple_form_for(@document_directive) do |dd|
+    = dd.error_notification
+    = dd.hidden_field :document_id
+    = dd.input :directive_id, :collection => Directive.all(:order => 'name'), :include_blank => true, :prompt => 'Добавить Директиву', :label_method => :shortname
+    -#= dd.association :document, :include_blank => true, :prompt => 'Добавить внутренний документ банка'
+    = dd.error :base
+    -if can? :update, @document
+      = dd.button :submit, 'Добавить Директиву'
 
 -#=debug params
   =debug @document
