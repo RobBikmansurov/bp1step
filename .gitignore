@@ -1,7 +1,4 @@
 .gitignore
-app/models/user.rb
-app/views/devise/sessions/new.html.erb
-config/initializers/devise.rb
 .bundle
 db/*.sqlite3
 db/*.sql
