@@ -1,11 +1,13 @@
 -title "Роль"
 %h2
-  = @business_role.name 
+  [
+  =@business_role.name
+  ]
+%h3 Описание
+= @business_role.description
 %h3
   Процесс
   = link_to @business_role.bproce.name, bproce_path(@business_role.bproce)
-%h3 Описание
-= @business_role.description 
 
 %h3 Исполнители
 %table

@@ -1,15 +1,19 @@
 -title "Приложение"
 %h2
   = @bapp.name
-%h4
-  Тип приложения:
-  = @bapp.apptype
+-if not @bapp.apptype.blank?
+  %h4
+    Тип приложения:
+    = @bapp.apptype
 %h4
   Описание:
   = @bapp.description
 %h4
   Назначение:
-  = @bapp.purpose
+  -if @bapp.purpose.blank?
+    не определено
+  -else
+    = @bapp.purpose
 %h3
   Участвует в процессе
 
@@ -17,14 +21,17 @@
   %table
     %tr
       %th Процесс:
-      %th Назначение в процессе
+      %th Назначение приложения в процессе
       %th
     -@bapp.bproce_bapps.each do |bp|
       %tr
         %td
           = link_to bp.bproce.name, bproce_path(bp.bproce_id)
         %td
-          = bp.apurpose
+          -if bp.apurpose.blank?
+            = link_to 'не определено', edit_bproce_bapp_path(bp)
+          -else
+            = link_to bp.apurpose, bproce_bapp_path(bp)
         %td
 %p
 - if can? :update, @bapp
