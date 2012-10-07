@@ -16,7 +16,8 @@
   - if @usr.roles.count > 0
     %b роли доступа:
     - @usr.roles.each do |role|
-      = role.name
+      = role.description
+      \/
 
 %h2 Рабочие места:
 %table

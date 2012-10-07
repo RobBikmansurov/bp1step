@@ -34,7 +34,7 @@
       - if can? :destroy, user
         %td
           -user.roles.each do |role|
-            = role.name
+            = role.description
 
 .apple_pagination
   = will_paginate @users 
