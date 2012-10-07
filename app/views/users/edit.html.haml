@@ -1,0 +1,30 @@
+%h1 
+  %b
+    = @usr.displayname
+  = @usr.position  
+%h4
+  = @usr.department
+  |
+  = @usr.office
+  |
+  = mail_to @usr.email, @usr.email, :subject => "BP1Step:"
+  |
+  = @usr.phone
+  |
+
+= simple_form_for(@usr) do |u|
+  = u.error_notification
+  = u.collection_check_boxes :role_ids, Role.all, :id, :description
+  = u.error :base
+  %p
+  -if current_user.role? :admin
+    = u.button :submit
+
+%p
+.button
+  = link_to 'Show', @usr
+.button
+  = link_to 'Back', users_path 
+
+
+

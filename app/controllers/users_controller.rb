@@ -15,6 +15,26 @@ class UsersController < ApplicationController
     respond_with()
   end
 
+  def edit
+    @usr = User.find(params[:id])     # отображаемый пользователь
+  end
+
+  def update
+    @usr = User.find(params[:id])
+    if @usr.update_attributes(params[:user])
+      redirect_to @usr, notice: "Successfully created user access roles."
+    else
+      render :edit
+    end
+    #@usr = User.find(params[:id])
+    #if params[:role].present?
+      #@business_role = Role.new(params[:business_role])
+      #@user_role.save if !@user_role.nil?
+    #end
+    #redirect_to :action => :edit
+  end
+
+
 private
   def sort_column
     params[:sort] || "displayname"

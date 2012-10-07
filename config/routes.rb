@@ -26,7 +26,7 @@ BPDoc::Application.routes.draw do
   devise_for :users do
     get '/users/sign_out' => 'devise/sessions#destroy'
   end
-  resources :users, :only => [:index, :show]
+  resources :users, :only => [:index, :show, :edit, :update]
   root :to => "home#index"
 
   # The priority is based upon order of creation:
