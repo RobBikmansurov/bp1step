@@ -11,7 +11,8 @@
     - if current_user.roles.count > 0
       %b роли доступа:
       - current_user.roles.each do |role|
-        = role.name
+        = role.description
+        \/
   %table
     %tr
       %th Рабочее место
