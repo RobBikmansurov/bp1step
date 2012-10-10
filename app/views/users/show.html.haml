@@ -3,8 +3,6 @@
     = @usr.displayname
   = @usr.position  
 %h4
-  = @usr.position
-  |
   = @usr.department
   |
   = @usr.office
@@ -61,7 +59,7 @@
       %td= business_role.date_to
       %td= link_to Bproce.find(business_role.business_role.bproce).shortname, bproce_path(business_role.business_role.bproce)
 
-- if @documents
+- if @documents.count > 0
   %h3
     = @usr.displayname
     отвечает за внутренние документы банка:
