@@ -21,6 +21,7 @@ gem 'jquery-rails'
 gem 'awesome_nested_set'
 gem 'simple_form'
 gem 'rb-readline'
+gem 'odf-report'
 group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
