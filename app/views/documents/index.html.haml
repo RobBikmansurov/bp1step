@@ -38,8 +38,8 @@
  
 - if can? :create, Document
   .button
-    = link_to 'Каталог', documents_path(@document)+'.pdf?all=1'
+    = link_to 'Каталог', documents_path(@document)+'.odt?all=1'
   .button
-    = link_to 'ODT', documents_path(@document)+'.pdf'
+    = link_to 'ODT', documents_path(@document)+'.odt'
   .button
     = link_to 'Добавить новый документ', new_document_path 
