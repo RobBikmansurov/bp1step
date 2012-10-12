@@ -1,6 +1,6 @@
 class DocumentsController < ApplicationController
-  respond_to :html
-  respond_to :pdf, :odf, :xml, :json, :only => :index
+  respond_to :odt, :only => :index
+  respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
   before_filter :get_document, :except => :index
 
@@ -18,7 +18,8 @@ class DocumentsController < ApplicationController
     end
     respond_to do |format|
       format.html
-      format.pdf { print }
+      format.odt { print }
+      #format.pdf { print }
     end
   end
 
