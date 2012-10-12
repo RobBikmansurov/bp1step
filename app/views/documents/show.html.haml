@@ -42,14 +42,15 @@
     = link_to directive.shortname, directive_path(directive)
     %br
 
-
-
-%h3
-  Место хранения оригинала:
-  = @document.place
-%h3
-  Электронного документ:
-  = @document.eplace
+%h3 Место хранения
+%li
+  оригинал:
+  %b
+    = @document.place
+%li
+  электронный документ:
+  %b
+    = @document.eplace
 
 %p
 -if can? :update, Document

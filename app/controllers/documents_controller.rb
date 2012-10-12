@@ -1,6 +1,6 @@
 class DocumentsController < ApplicationController
   respond_to :html
-  respond_to :xml, :json, :only => :index
+  respond_to :pdf, :odf, :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
   before_filter :get_document, :except => :index
 
@@ -10,7 +10,15 @@ class DocumentsController < ApplicationController
       @directive = Directive.find(params[:directive_id])
       @documents = @directive.document.paginate(:per_page => 10, :page => params[:page])
     else
-      @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      if params[:all].present?
+        @documents = Document.all
+      else
+        @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      end
+    end
+    respond_to do |format|
+      format.html
+      format.pdf { print }
     end
   end
 
@@ -49,6 +57,28 @@ class DocumentsController < ApplicationController
   end
 
 private  
+
+  def print
+    report = ODFReport::Report.new("reports/documents.odt") do |r|
+      r.add_field "REPORT_DATE", Date.today
+      r.add_table("TABLE_01", @documents, :header=>true) do |t|
+        t.add_column(:name, :name)
+        t.add_column(:organ, :approveorgan)
+        t.add_column(:approved, :approved)
+        #u = User.find(@docs.id).displayname
+        t.add_column(:responsible, :id)
+        #t.add_column(:eplace, @docs.name)
+        t.add_column(:place, :place)
+      end
+      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    report_file_name = report.generate
+    send_file(report_file_name,
+      :type => 'application/msword',
+      :filename => "documents.odt",
+      :disposition => 'inline' )
+  end
 
   def get_document
     @document = params[:id].present? ? Document.find(params[:id]) : Document.new
