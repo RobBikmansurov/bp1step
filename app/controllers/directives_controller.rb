@@ -29,6 +29,7 @@ class DirectivesController < ApplicationController
   end
 
   def update
+    @document_directive = @directive.document_directive.new # заготовка для новой связи с документом
     flash[:notice] = "Successfully updated directive." if @directive.update_attributes(params[:directive])
     respond_with(@directive)
   end

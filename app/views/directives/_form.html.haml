@@ -22,12 +22,13 @@
           -if can? :update, @directive
             %td= link_to 'Destroy', document, :confirm => 'Are you sure?', :method => :delete
 
-%p
-= simple_form_for(@document_directive) do |dd|
-  = dd.error_notification
-  = dd.hidden_field :directive_id
-  = dd.input :document_id, :collection => Document.all(:order => 'name'), :include_blank => true, :prompt => 'Добавить внутренний документ банка', :label_method => :shortname
-  -#= dd.association :document, :include_blank => true, :prompt => 'Добавить внутренний документ банка'
-  = dd.error :base
-  -if can? :update, @directive
-    = dd.button :submit, 'Добавить Внутренний документ банка'
+  %p
+
+  = simple_form_for(@document_directive) do |dd|
+    = dd.error_notification
+    = dd.hidden_field :directive_id
+    = dd.input :document_id, :collection => Document.all(:order => 'name'), :include_blank => true, :prompt => 'Добавить внутренний документ банка', :label_method => :shortname
+    -#= dd.association :document, :include_blank => true, :prompt => 'Добавить внутренний документ банка'
+    = dd.error :base
+    -if can? :update, @directive
+      = dd.button :submit, 'Добавить Внутренний документ банка'
