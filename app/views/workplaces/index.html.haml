@@ -30,4 +30,8 @@
 
 - if can? :destroy, Workplace
   .button
-    = link_to 'Добавить Рабочее место', new_workplace_path 
+    = link_to 'Каталог', workplaces_path + '.pdf?all=1'
+  .button
+    = link_to 'ODT', workplaces_path + '.pdf'
+  .button
+    = link_to 'Добавить Рабочее место', new_workplace_path
