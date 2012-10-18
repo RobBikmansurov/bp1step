@@ -1,11 +1,20 @@
 class WorkplacesController < ApplicationController
-  respond_to :html, :xml, :json
+  respond_to :html
+  respond_to :pdf, :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
   before_filter :get_workplace, :except => :index
   #load_and_authorize_resource
 
   def index
-    @workplaces = Workplace.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    if params[:all].present?
+      @workplaces = Workplace.order(sort_column + ' ' + sort_direction)
+    else
+      @workplaces = Workplace.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    end
+    respond_to do |format|
+      format.html
+      format.pdf { print }
+    end
   end
 
   def show
@@ -53,7 +62,28 @@ private
   def sort_direction
     params[:direction] || "asc"
   end
+
   def get_workplace
     @workplace = params[:id].present? ? Workplace.find(params[:id]) : Workplace.new
   end
+
+  def print
+    report = ODFReport::Report.new("reports/workplaces.odt") do |r|
+      r.add_field "REPORT_DATE", Date.today
+      r.add_table("TABLE_01", @workplaces, :header=>true) do |t|
+        t.add_column(:designation, :designation)
+        t.add_column(:name, :name)
+        t.add_column(:description, :description)
+        t.add_column(:location, :location)
+      end
+      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    report_file_name = report.generate
+    send_file(report_file_name,
+      :type => 'application/msword',
+      :filename => "documents.odt",
+      :disposition => 'inline' )
+  end
+
 end
