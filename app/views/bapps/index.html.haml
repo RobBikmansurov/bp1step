@@ -1,6 +1,11 @@
 -title "Каталог Приложений"
-%h1 Каталог Приложений
-
+-if @bproce = nil
+  %h1 Каталог Приложений
+-else
+  %h1
+    Приложения процесса
+    -#= @bproce.name
+=@bproce.inspect
 %table
   %tr
     %th= sortable "username", "Наименование"
@@ -20,5 +25,9 @@
   = will_paginate @bapps 
 
 - if can? :destroy, Bapp
+  .button
+    = link_to 'Каталог', bapps_path + '.pdf?all=1'
+  .button
+    = link_to 'ODT', bapps_path + '.pdf'
   .button
     = link_to "Добавить новое приложение" , new_bapp_path

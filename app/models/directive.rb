@@ -1,6 +1,6 @@
 class Directive < ActiveRecord::Base
   validates :number, :presence => true
-  validates :name, :length => {:minimum => 10}
+  validates :name, :presence => true, :length => {:minimum => 10}
   validates :body, :length => {:minimum => 4, :maximum => 100}	# орган, утвердивший документ
 
   has_many :document, :through => :document_directive

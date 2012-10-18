@@ -1,6 +1,6 @@
 class BprocesController < ApplicationController
   respond_to :html
-  respond_to :xml, :json, :only => :index
+  respond_to :pdf, :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
   before_filter :get_bproce, :except => :index
 
@@ -9,7 +9,15 @@ class BprocesController < ApplicationController
   end
   
   def index
-    @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    if params[:all].present?
+      @bproces = Bproce.order(sort_column + ' ' + sort_direction)
+    else
+      @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    end
+    respond_to do |format|
+      format.html
+      format.pdf { print }
+    end
   end
 
   def show
@@ -68,6 +76,24 @@ private
 
   def get_bproce
     @bproce = params[:id].present? ? Bproce.find(params[:id]) : Bproce.new
+  end
+
+  def print
+    report = ODFReport::Report.new("reports/bprocess.odt") do |r|
+      r.add_field "REPORT_DATE", Date.today
+      r.add_table("TABLE_01", @bproces, :header=>true) do |t|
+        t.add_column(:name, :name)
+        t.add_column(:fullname, :fullname)
+        t.add_column(:goal, :goal)
+      end
+      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    report_file_name = report.generate
+    send_file(report_file_name,
+      :type => 'application/msword',
+      :filename => "documents.odt",
+      :disposition => 'inline' )
   end
 
 end
