@@ -1,6 +1,4 @@
 class Workplace < ActiveRecord::Base
-  validates :name, :uniqueness => true,
-            :length => {:minimum => 8, :maximum => 50}
   validates :designation, :uniqueness => true,
                           :length => {:minimum => 8, :maximum => 50}
 
