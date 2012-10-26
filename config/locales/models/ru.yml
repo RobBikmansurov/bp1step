@@ -46,11 +46,6 @@ ru:
       staff:
         fullname: Фамилия Имя Отчество
         position: Должность
-      workplace:
-        designation: Обозначение
-        name: Название
-        location: Местоположение
-        description: Описание
       bproce_bapp:
         apurpose: Назначение в процессе
       user_business_role:
@@ -64,3 +59,9 @@ ru:
         approval: Дата утверждения
         body: Принявший орган
         note: Примечание
+      workplace:
+        designation: Обозначение
+        name: Название
+        location: Местоположение
+        description: Описание
+        typical: Типовое рабочее место

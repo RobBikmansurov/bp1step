@@ -3,10 +3,7 @@
   = f.input :designation
   = f.input :name
   = f.input :description, :as => :text
-  -#  .field
-    -#= f.label :typical
-    -#   = f.collection_select :id, Workplace.all(:order => "designation"), :id, :designation, :include_blank => true
-    -#   = f.check_box :typical
+  = f.input :typical
   = f.input :location
   = f.error :base
   = f.button :submit

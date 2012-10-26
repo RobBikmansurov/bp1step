@@ -10,7 +10,7 @@
   Типовое рабочее место
 %h3
   Местоположение:
-  = @workplace.location
+  = link_to @workplace.location, workplaces_path + '?location=' + @workplace.location
 
 -if @workplace.bproce_workplaces.count > 0
   %h2
