@@ -9,7 +9,11 @@ class WorkplacesController < ApplicationController
     if params[:all].present?
       @workplaces = Workplace.order(sort_column + ' ' + sort_direction)
     else
-      @workplaces = Workplace.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      if params[:location].present?
+        @workplaces = Workplace.where(:location => params[:location]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      else
+        @workplaces = Workplace.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      end
     end
     respond_to do |format|
       format.html
@@ -23,6 +27,7 @@ class WorkplacesController < ApplicationController
 
   def new
     @bproce_workplace = BproceWorkplace.new
+    @workplace.location = params[:location] if params[:location].present?
     respond_with(@workplace)
   end
 
