@@ -5,7 +5,8 @@ before(:each) do
     @wp = Workplace.new
     @wp.name = "test_workplaces_1"
     @wp.description = "Workplace description"
-    @wp.designation = "Workplace designation"
+    @wp.designation = "WorkplaceDesignation"
+    @wp.save
   end
   
   #  t.string   "designation"
@@ -17,21 +18,24 @@ before(:each) do
     @wp.should be_valid
   end
 
-  it "should require name" do
-    @wp.name = nil
-    @wp.should_not be_valid
+  it "should require designation" do
+      @wp.designation = nil
+      @wp.should_not be_valid
   end
-  it "should require uniqueness name" do
+
+  it "should require uniqueness designation" do
     @wp1 = Workplace.new
-    @wp1.name = "test_workplaces_1"
+    @wp1.designation = "WorkplaceDesignation"
     @wp1.should_not be_valid
   end
-  it "should require long name" do
-    @wp.name = "short"
+
+  it "should require long Designation" do
+    @wp.designation = "short"
     @wp.should_not be_valid
   end
+
   it "should require max lenght name 50" do
-    @wp.name = "maxlenght1maxlenght2maxlenght3maxlenght4maxlenght5_"
+    @wp.designation = "maxlenght1maxlenght2maxlenght3maxlenght4maxlenght5_"
     @wp.should_not be_valid
   end
 end

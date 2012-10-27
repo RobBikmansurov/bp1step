@@ -1,12 +1,16 @@
 -title "Каталог Рабочих мест" 
-%h1Каталог Рабочих мест 
+%h1
+  Каталог Рабочих мест
+  -if params[:location].present?
+    [
+    = params[:location]
+    ]
 
 %table
   %tr
     %th= sortable "designation", "Обозначение"
     %th= sortable "name", "Наименование"
     %th= sortable "description", "Описание"
-    %th Тип?
     %th= sortable "location", "Местоположение"
     - if can? :destroy, Workplace
       %th
@@ -19,7 +23,6 @@
         %td= link_to workplace.designation, workplace_path(workplace)
       %td= workplace.name
       %td= workplace.description
-      %td= workplace.typical
       %td= workplace.location
       - if can? :destroy, workplace
         %td
@@ -34,4 +37,7 @@
   .button
     = link_to 'ODT', workplaces_path + '.pdf'
   .button
-    = link_to 'Добавить Рабочее место', new_workplace_path
+    -if params[:location].present?
+      = link_to 'Добавить Рабочее место', new_workplace_path + '?location=' + params[:location]
+    -else
+      = link_to 'Добавить Рабочее место', new_workplace_path
