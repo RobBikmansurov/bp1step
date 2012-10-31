@@ -49,8 +49,11 @@
     = @document.place
 %li
   электронный документ:
-  %b
-    = @document.eplace
+  -if !@document.eplace.empty?
+    %b
+      = File.basename(@document.eplace).gsub(/%20/, ' ')  # заменим %20 на пробел
+    %br
+    =link_to 'Смотреть', document_path(@document)+'.pdf'
 
 %p
 -if can? :update, Document
