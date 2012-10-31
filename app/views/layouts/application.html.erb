@@ -3,7 +3,7 @@
   <head lang="ru">
     <title>BP1Step: <%= yield (:title) || "Business Process 1st Step" %></title>
     <meta charset="utf-8" />
-    <link rel="shortcut icon" href="/favicon.ico" />
+    <%= favicon_link_tag %>
     <%= stylesheet_link_tag 'blueprint/print', :media => "print" %>
     <%= stylesheet_link_tag 'blueprint/screen' %>
     <%= stylesheet_link_tag 'pagination' %>

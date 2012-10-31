@@ -1,5 +1,7 @@
+# coding: utf-8
 class DocumentsController < ApplicationController
   respond_to :odt, :only => :index
+  respond_to :pdf, :only => :show
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
   before_filter :get_document, :except => :index
@@ -36,7 +38,11 @@ class DocumentsController < ApplicationController
   end
 
   def show
-    respond_with(@document)
+    respond_to do |format|
+      format.html
+      format.pdf { view }
+    end
+    #respond_with(@document)
   end
 
   def new
@@ -79,6 +85,16 @@ private
       :type => 'application/msword',
       :filename => "documents.odt",
       :disposition => 'inline' )
+  end
+
+  def view
+    #fname = '/home/DOMAIN_SQL/mr_rob/.gvfs/smb-share\:server\=cluster\,share\=docs/_1_Нормативные документы банка/Внутренние документы Банка_действующие/Документы по информационным технологиям/SMS-информирование клиентов Описание процесса 20120326.pdf'
+    #fname = 'files/_1_Нормативные документы банка/__Внутренние документы Банка_действующие/Документы по информационным технологиям/SMS-информирование клиентов Описание процесса 20120326.pdf'
+    fname = @document.eplace[(@document.eplace.index("_1_Норма")-1)..-1]  # обрежем начало - путь шары
+    fname = fname.gsub(/%20/, ' ')  # заменим %20 на пробел
+    fname = "files" + fname
+    send_file(fname, :type => 'application/pdf', :filename => File.basename(@document.eplace).gsub(/%20/, ' '), :disposition => 'inline' )
+
   end
 
   def get_document
