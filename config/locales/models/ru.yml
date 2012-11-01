@@ -25,6 +25,14 @@ ru:
         goal: Цель процесса
         parent_id: Родительский процесс
         user_id: Владелец процесса
+      directive:
+        title: Тип документа
+        number: Номер
+        name: Наименование
+        approval: Дата утверждения
+        body: Принявший орган
+        note: Примечание
+        annotation: Аннотация
       document:
         description: Описание
         name: Наименование
@@ -52,13 +60,6 @@ ru:
         note: Примечание
         date_from: Дата начала
         date_to: Дата окончания
-      directive:
-        title: Тип документа
-        number: Номер
-        name: Наименование
-        approval: Дата утверждения
-        body: Принявший орган
-        note: Примечание
       workplace:
         designation: Обозначение
         name: Название
