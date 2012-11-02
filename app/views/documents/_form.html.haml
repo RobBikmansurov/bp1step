@@ -1,4 +1,4 @@
-= simple_form_for(@document, :html => {:class => 'form-horizontal' }) do |f|
+= simple_form_for(@document) do |f|
   = f.error_notification
   = f.input :name
   = f.input :dlevel, :collection => 1..4, :as => :radio_buttons, :hint => 'Уровень документа: Политики - Положения - Регламенты - Свидетельства'
@@ -8,7 +8,7 @@
   -#.field
     -#= f.label 'Имя файла'
     -#      -form_for @document do |ff|
-    =f.file_field :filename, :size => 200
+  =f.input :eplace, :size => 200
   -#= f.association :status_id, Category.all
   -#= f.input :status, :collection => %w[Проект Согласование Утвержден], :prompt => 'Статус документа'
   = f.input :approveorgan, :collection => %w[СоветДиректоров Правление ПредседательПравления], :prompt => 'Уполномоченный орган'

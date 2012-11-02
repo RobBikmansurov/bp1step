@@ -1,15 +1,18 @@
 class BproceBappsController < ApplicationController
   respond_to :html, :json
   helper_method :sort_column, :sort_direction
-  before_filter :get_bapp, :except => :index
+  before_filter :get_bproce_bapp, :except => :index
 
   def new
-    @bproce_bapp = BproceBapp.new
   end
 
   def create
-    flash[:notice] = "Successfully created bproce_bapp." if @bproce_bapp.save
-    respond_with(@bproce_bapp.bapp)
+    if @bproce_bapp.save
+      flash[:notice] = "Successfully created bproce_bapp."
+      redirect_to(@bproce_bapp.bapp)
+    else
+      respond_with(@bproce_bapp)
+    end
   end
 
   def edit
@@ -23,6 +26,7 @@ class BproceBappsController < ApplicationController
   end
 
   def show
+    @bp = Bproce.find(@bproce_bapp.bproce)
     respond_with(@bproce_bapp)
   end
 
@@ -31,7 +35,7 @@ class BproceBappsController < ApplicationController
       @bproce = Bproce.find(params[:bproce_id])
       @bproce_bapp = @bproce.bapps
     else
-      @bproce_bapp = BproceBapp.all #.paginate(:per_page => 10, :page => params[:page])
+      @bproce_bapp = BproceBapp.paginate(:per_page => 10, :page => params[:page])
     end
   end
 
@@ -49,9 +53,8 @@ private
     params[:direction] || "asc"
   end
 
-  def get_bapp
-    @bproce_bapp = params[:id].present? ? BproceBapp.find(params[:id]) : BproceBapp.new
+  def get_bproce_bapp
+    @bproce_bapp = params[:id].present? ? BproceBapp.find(params[:id]) : BproceBapp.new(params[:bproce_bapp])
   end
   
-
 end

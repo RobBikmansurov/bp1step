@@ -6,8 +6,8 @@ class BappsController < ApplicationController
 
   def index
     if params[:bproce_id].present?
-      @bproce = Bproce.find(params[:bproce_id])
-      @bapps = @bproce.bapps.paginate(:per_page => 10, :page => params[:page])
+      @bp = Bproce.find(params[:bproce_id])
+      @bapps = @bp.bapps.paginate(:per_page => 10, :page => params[:page])
     else
       if params[:all].present?
         @bapps = Bapp.all
@@ -36,12 +36,7 @@ class BappsController < ApplicationController
   end
 
   def edit
-    if flash[:bapp]
-      @bapp = flash[:bapp]
-    else
-      @bapp = Bapp.find(params[:id])
-      @bproce_bapp = BproceBapp.new(:bapp_id => @bapp.id)
-    end
+    @bproce_bapp = BproceBapp.new(:bapp_id => @bapp.id)
   end
 
   def update

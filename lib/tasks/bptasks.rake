@@ -18,7 +18,7 @@ namespace :bp1step do
 
 	#filter = Net::LDAP::Filter.eq("title", "*")	# пользователи обязательно имеют должность
 	#filter = Net::LDAP::Filter.eq("sAMAccountName", "mr_rob")
-	filter = Net::LDAP::Filter.eq("sAMAccountName", "bb25")
+	filter = Net::LDAP::Filter.eq("sAMAccountName", "ks16")
 	#filter = Net::LDAP::Filter.eq(&(objectClass=person)(objectClass=user)(middleName=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))
 	treebase = LDAP_CONFIG["development"]["base"]
 	attrs = ["sn", "givenname", "MiddleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description"]
@@ -31,6 +31,7 @@ namespace :bp1step do
   		username = entry["sAMAccountName"].first.downcase
 #	    usr = User.find_or_create_by_email :username => username, :email => email, :password => email
 	    usr = User.find_or_create_by_username :username => username, :email => email, :password => email
+	    puts entry["sn"].first
 	    if usr.new_record?
 			if email.to_s.empty?	# пропустим с пустым email
 				puts "#{i}!#{new_users}. #{entry.sAMAccountName} #{entry.dn} email is NULL!"

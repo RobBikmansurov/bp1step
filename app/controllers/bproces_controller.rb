@@ -32,6 +32,7 @@ class BprocesController < ApplicationController
     @business_role = BusinessRole.new(:bproce_id => @bproce.id)
     @document = Document.new(:bproce_id => @bproce.id)  # заготовка для нового документа
     @subproce = Bproce.new(:parent_id => @bproce.id)  # заготовка для подпроцесса
+    @bproce_bapp = BproceBapp.new(:bproce_id => @bproce.id)  # заготовка для нового приложения
     #@user = User.find_or_initialize(@bproce.user_id)
   end
 
