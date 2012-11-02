@@ -1,0 +1,12 @@
+-title "Приложение процесса"
+=debug @bproce_bapp
+%h2
+  Назначение:
+= render 'form'
+
+%p
+- if can? :update, @bproce_bapp
+  .button
+    = link_to 'Show', @bproce_bapp
+.button
+  = link_to 'Back', bproce_bapps_path
