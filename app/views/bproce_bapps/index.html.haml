@@ -4,8 +4,8 @@
 -else
   %h1
     Каталог Приложений процесса
-    -#= @bproce.name
-=@bproce.inspect
+    = @bproce.name
+-#=@bproce.inspect
 %table
   %tr
     %th Процесс
@@ -28,7 +28,7 @@
         %td
           = link_to 'Destroy', bb, :confirm => 'Are you sure?', :method => :delete
 
--#.apple_pagination
+.apple_pagination
   = will_paginate @bproce_bapp 
 
 - if can? :destroy, BproceBapp

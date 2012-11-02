@@ -49,7 +49,7 @@
     = @document.place
 %li
   электронный документ:
-  -if !@document.eplace.empty?
+  -if !@document.eplace.nil?
     %b
       = File.basename(@document.eplace).gsub(/%20/, ' ')  # заменим %20 на пробел
     %br

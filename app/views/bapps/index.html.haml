@@ -1,11 +1,10 @@
 -title "Каталог Приложений"
--if @bproce = nil
+-if @bp.nil?
   %h1 Каталог Приложений
 -else
-  %h1
+  %h2
     Приложения процесса
-    -#= @bproce.name
-=@bproce.inspect
+    = link_to @bp.name, @bp
 %table
   %tr
     %th= sortable "username", "Наименование"
