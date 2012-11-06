@@ -12,7 +12,7 @@ BPDoc::Application.routes.draw do
   resources :bproce_business_roles, :only => [:show]
   resources :user_workplaces
   resources :user_business_roles, :only => [:new, :create, :destroy]
-  resources :bproce_bapps, :only => [:new, :create, :destroy, :show, :edit]
+  resources :bproce_bapps, :only => [:new, :create, :destroy, :show, :edit, :update]
   resources :bproces do
     resources :bapps
   end
