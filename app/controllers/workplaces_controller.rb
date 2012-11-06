@@ -38,8 +38,8 @@ class WorkplacesController < ApplicationController
   end
 
   def edit
-    #@bproce_workplace = BproceWorkplace.new(:workplace_id => @workplace.id)
-    #@user_workplace = UserWorkplace.new(:workplace_id => @workplace.id)
+    @bproce_workplace = BproceWorkplace.new(:workplace_id => @workplace.id)
+    @user_workplace = UserWorkplace.new(:workplace_id => @workplace.id)
     respond_with(@workplace)
   end
 
