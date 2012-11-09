@@ -1,4 +1,5 @@
 # coding: utf-8
+#FIXME: надо заменять разделитель пути формата Windows на Linux: \ -> /
 class DocumentsController < ApplicationController
   respond_to :odt, :only => :index
   respond_to :pdf, :only => :show
@@ -33,6 +34,12 @@ class DocumentsController < ApplicationController
 
   def update
     user_id = @document.owner_id
+    uploaded_file = params[:document][:uploaded_file] # информация о загруженном файле
+    #if !uploaded_file.nil?
+    #  logger.debug "uploaded_file = #{uploaded_file.inspect}"
+    #  logger.debug "headers = #{uploaded_file.headers}"
+    #  params[:document][:eplace] = uploaded_file.original_filename
+    #end
     flash[:notice] = "Successfully updated document."  if @document.update_attributes(params[:document])
     respond_with(@document)
   end
@@ -93,8 +100,15 @@ private
     fname = @document.eplace[(@document.eplace.index("_1_Норма")-1)..-1]  # обрежем начало - путь шары
     fname = fname.gsub(/%20/, ' ')  # заменим %20 на пробел
     fname = "files" + fname
-    send_file(fname, :type => 'application/pdf', :filename => File.basename(@document.eplace).gsub(/%20/, ' '), :disposition => 'inline' )
-
+    case File.extname(fname)  # определим по расширению файла его mime-тип
+    when '.pdf'
+      type = 'application/pdf'
+    when '.doc'
+      type = 'application/msword'
+    else
+      type = 'application/vnd.oasis.opendocument.text'
+    end
+    send_file(fname, :type => type, :filename => File.basename(@document.eplace.gsub(/%20/, ' ')), :disposition => 'inline' )
   end
 
   def get_document
@@ -102,7 +116,7 @@ private
   end
 
   def sort_column  
-    params[:sort] || "name"  
+    params[:sort] || "name"
   end  
     
   def sort_direction  

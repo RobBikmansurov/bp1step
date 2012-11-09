@@ -32,10 +32,6 @@
 
 -#= @document.inspect
 %hr
-%h4
-  Файл с документом:
-  = @document.filename
-
 -if @document.directive.count > 0
   %h4 Документ разработан на основе следующих руководящих документов:
   - @document.directive.each do |directive|
@@ -50,14 +46,18 @@
 %li
   электронный документ:
   -if !@document.eplace.nil?
-    %b
-      = File.basename(@document.eplace).gsub(/%20/, ' ')  # заменим %20 на пробел
-    %br
-    =link_to 'Смотреть', document_path(@document)+'.pdf'
+    -if !@document.eplace.empty?
+      %b
+        = File.dirname(@document.eplace[(@document.eplace.index("_1_Норма")-1)..-1].gsub(/%20/, ' ')) + '/'  # заменим %20 на пробел
+        %br
+        = File.basename(@document.eplace).gsub(/%20/, ' ')  # заменим %20 на пробел
+      %br
+        =link_to 'Смотреть', document_path(@document)+'.pdf'
 
 %p
 -if can? :update, Document
   .button
     = link_to 'Edit', edit_document_path(@document)
 .button
-  = link_to 'Back', documents_path
+  -#= link_to 'Back', documents_path
+  = link_to 'Back', :back
