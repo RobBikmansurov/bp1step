@@ -9,9 +9,10 @@
 %h3 Назначение
 = @business_role.description
 
--if current_user.role? :admin
-  %h3 Особенности настройки:
-  = @business_role.features
+-if !current_user.nil?
+  -if current_user.role? :admin
+    %h3 Особенности настройки:
+    = @business_role.features
 
 %h3
   Исполнители роли

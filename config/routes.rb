@@ -12,12 +12,13 @@ BPDoc::Application.routes.draw do
   resources :bproce_business_roles, :only => [:show]
   resources :user_workplaces
   resources :user_business_roles, :only => [:new, :create, :destroy]
-  resources :bproce_bapps, :only => [:new, :create, :destroy, :show, :edit]
+  resources :bproce_bapps, :only => [:new, :create, :destroy, :show, :edit, :update]
   resources :bproces do
     resources :bapps
   end
 
   match '/bproceses' => 'bproces#list', :via => :get  # получение полного списка процессов
+  match '/bproces/:id/card' => 'bproces#card', :via => :get  # карточка процесса
   
   match '/about' => 'pages#about', :via => :get
   get 'pages/about'
