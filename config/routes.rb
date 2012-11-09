@@ -18,6 +18,7 @@ BPDoc::Application.routes.draw do
   end
 
   match '/bproceses' => 'bproces#list', :via => :get  # получение полного списка процессов
+  match '/bproces/:id/card' => 'bproces#card', :via => :get  # карточка процесса
   
   match '/about' => 'pages#about', :via => :get
   get 'pages/about'
