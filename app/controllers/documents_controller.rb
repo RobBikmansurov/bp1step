@@ -16,7 +16,11 @@ class DocumentsController < ApplicationController
       if params[:all].present?
         @documents = Document.all
       else
-        @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        if params[:place].present?
+          @documents = Document.where(:place => params[:place]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        else
+          @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        end
       end
     end
     respond_to do |format|

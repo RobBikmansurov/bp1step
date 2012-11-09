@@ -42,7 +42,10 @@
 %li
   оригинал:
   %b
-    = @document.place
+    = link_to @document.place, documents_path + '?place=' + @document.place
+
+
+
 %li
   электронный документ:
   -if !@document.eplace.nil?
