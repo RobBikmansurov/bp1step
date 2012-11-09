@@ -13,6 +13,8 @@ class Document < ActiveRecord::Base
   has_many :directive, :through => :document_directive
   has_many :document_directive, :dependent => :destroy
 
+  attr_protected :uploaded_file # чтобы не было ошибки при массовом сохранении из params
+
   def shortname
     return name.split(//u)[0..50].join
   end
