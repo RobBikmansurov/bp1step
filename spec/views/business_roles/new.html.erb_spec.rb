@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe "business_roles/new.html.erb" do
+describe "business_roles/new.html.haml" do
   before(:each) do
-    assign(:business_role, stub_model(Role,
+    assign(:business_role, stub_model(BusinessRole,
       :name => "MyString",
       :description => "MyString"
     ).as_new_record)

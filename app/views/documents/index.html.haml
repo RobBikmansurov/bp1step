@@ -1,6 +1,11 @@
 -if @directive.blank?
   -title "Каталог Документов"
-  %h1 Каталог Документов
+  %h1
+    Каталог Документов
+    -if params[:place].present?
+      [
+      = params[:place]
+      ]
 -else
   -title "Список внутренних документов банка"
   %h2
