@@ -17,8 +17,9 @@
   = u.collection_check_boxes :role_ids, Role.all, :id, :description
   = u.error :base
   %p
-  -if current_user.role? :admin
-    = u.button :submit
+  -if !current_user.nil?
+    -if current_user.role? :admin
+      = u.button :submit
 
 %p
 .button
