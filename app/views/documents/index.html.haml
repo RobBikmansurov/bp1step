@@ -1,11 +1,13 @@
 -if @directive.blank?
   -title "Каталог Документов"
-  %h1
-    Каталог Документов
-    -if params[:place].present?
+  -if params[:place].present?
+    %h2
+      Список Документов, находящихся в
       [
       = params[:place]
       ]
+  -else
+    %h1 Каталог Документов
 -else
   -title "Список внутренних документов банка"
   %h2
@@ -20,7 +22,7 @@
     -#    %th Имя файла
     -#%th authority
     %th= sortable "status", "Статус"
-    %th Дата
+    %th Место
     -#%th responsible
     - if can? :destroy, Document
       %th
