@@ -28,17 +28,19 @@
     %p
     = f.button :submit
 
+-#= @document_directives.inspect
+-#= @document.directive
 -if @document.id? # ну какие ссылки на директивы для нового документа
   %p
-  -if @document_directives.count > 0
+  -if @document.directive.count > 0
     %h4 Документ разработан на основании следующих директив:
     %table
-      - @document_directives.each do |dd|
+      - @document.directive.each do |directive|
         %tr
-          %td= link_to dd.document.shortname, directive_path(dd.document)
+          %td= link_to directive.shortname, directive_path(directive)
           -if can? :update, @document
             %td
-              =link_to 'Destroy', dd, :confirm => 'Are you sure?', :method => :delete
+              =link_to 'Destroy', directive, :confirm => 'Are you sure?', :method => :delete
 %p
 -if @document_directive != nil
   = simple_form_for(@document_directive) do |dd|
