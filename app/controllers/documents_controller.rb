@@ -103,7 +103,8 @@ private
     #fname = 'files/_1_Нормативные документы банка/__Внутренние документы Банка_действующие/Документы по информационным технологиям/SMS-информирование клиентов Описание процесса 20120326.pdf'
     fname = @document.eplace[(@document.eplace.index("_1_Норма")-1)..-1]  # обрежем начало - путь шары
     fname = fname.gsub(/%20/, ' ')  # заменим %20 на пробел
-    fname = "files" + fname
+    fname = fname.gsub('\\', '/')   # заменим обратные слэши Windows на нормальные
+    fname = "files" + fname         # добавим путь к файлам
     case File.extname(fname)  # определим по расширению файла его mime-тип
     when '.pdf'
       type = 'application/pdf'
