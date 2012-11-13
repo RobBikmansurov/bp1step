@@ -1,5 +1,4 @@
 class Document < ActiveRecord::Base
-  # TODO добавить StateMachine
   # FIXME разобраться со статусами на русском
   # STATUSES = %w[Проект Согласование Утвержден]
   # validates_inclusion_of :status, in: STATUSES

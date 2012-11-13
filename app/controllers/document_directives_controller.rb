@@ -47,7 +47,6 @@ class DocumentDirectivesController < ApplicationController
   # PUT /document_directives/1.json
   def update
     @document_directive = DocumentDirective.find(params[:id])
-
     respond_to do |format|
       if @document_directive.update_attributes(params[:document_directive])
         format.html { redirect_to @document_directive, notice: 'Document directive was successfully updated.' }
@@ -59,14 +58,12 @@ class DocumentDirectivesController < ApplicationController
     end
   end
 
-  # DELETE /document_directives/1
-  # DELETE /document_directives/1.json
   def destroy
-    @document_directive = DocumentDirective.find(params[:id])
+    -#@document_directive = DocumentDirective.find(params[:id])
+    -#logger.debug "@document_directive = #{@document_directive.inspect}"
     @document_directive.destroy
-
     respond_to do |format|
-      format.html { redirect_to document_directives_url }
+      format.html { redirect_to @document, notice: 'Document directive was successfully deleted.' }
       format.json { head :no_content }
     end
   end
