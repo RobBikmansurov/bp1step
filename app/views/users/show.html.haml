@@ -41,7 +41,7 @@
   %h3 Владелец процессов:
   - @usr.bproce.each do |bproce|
     = link_to bproce.name, bproce_path(bproce)
--if !@uroles.count
+- if @uroles.count > 0
   %h2
     = @usr.displayname
     исполняет роли:
@@ -54,7 +54,9 @@
       %th Процесс
     - @uroles.each do |business_role|
       %tr
-        %td= link_to business_role.business_role.name, business_role_path(business_role.business_role)
+        %td
+          -#= business_role.inspect
+          = link_to business_role.business_role.name, business_role_path(business_role.business_role)
         %td= business_role.note
         %td= business_role.date_from
         %td= business_role.date_to
