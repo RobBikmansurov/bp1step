@@ -27,7 +27,7 @@
             = link_to 'Destroy', bp, :confirm => 'Are you sure?', :method => :delete
   = simple_form_for(@bproce_bapp) do |ff|
     = ff.error_notification
-    = ff.association :bproce, :label => 'Процесс', :hint => 'Выберите процесс'
+    = ff.association :bproce, :label => 'Процесс', :hint => 'Выберите процесс', :prompt => 'Выберите процесс, где Приложение используется'
     = ff.hidden_field :bapp_id
     = ff.input :apurpose, :hint => 'Укажите назначение приложения в выбранном процессе'
     = ff.error :base

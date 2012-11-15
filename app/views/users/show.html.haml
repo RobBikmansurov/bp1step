@@ -41,23 +41,24 @@
   %h3 Владелец процессов:
   - @usr.bproce.each do |bproce|
     = link_to bproce.name, bproce_path(bproce)
-%h2
-  = @usr.displayname
-  исполняет роли:
-%table
-  %tr
-    %th Роль
-    %th
-    %th с
-    %th по
-    %th Процесс
-  - @uroles.each do |business_role|
+-if !@uroles.count
+  %h2
+    = @usr.displayname
+    исполняет роли:
+  %table
     %tr
-      %td= link_to business_role.business_role.name, business_role_path(business_role.business_role)
-      %td= business_role.note
-      %td= business_role.date_from
-      %td= business_role.date_to
-      %td= link_to Bproce.find(business_role.business_role.bproce).shortname, bproce_path(business_role.business_role.bproce)
+      %th Роль
+      %th
+      %th с
+      %th по
+      %th Процесс
+    - @uroles.each do |business_role|
+      %tr
+        %td= link_to business_role.business_role.name, business_role_path(business_role.business_role)
+        %td= business_role.note
+        %td= business_role.date_from
+        %td= business_role.date_to
+        %td= link_to Bproce.find(business_role.business_role.bproce).shortname, bproce_path(business_role.business_role.bproce)
 
 - if @documents.count > 0
   %h3
