@@ -7,7 +7,7 @@
   = f.input :goal
   = f.association :user, :collection => User.all(:order => 'displayname'), :include_blank => true, :prompt => 'Владелец процесса', :label_method => :displayname, :label => 'Владелец процесса'
   = f.label 'Родительский процесс'
-  = f.select :parent_id, nested_set_options(Bproce, @bproce) {|i| "#{'-' * i.level} #{i.name}" }, :include_blank => true
+  = f.select :parent_id, nested_set_options(Bproce, @bproce) {|i| "#{'-' * i.level} #{i.name}" }, :prompt => 'Выберите родительский процесс из списка'
   = f.error :base
   %p
   -if can? :update, @bproce
