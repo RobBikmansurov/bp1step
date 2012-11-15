@@ -21,3 +21,4 @@ test
 /db/20120925.sl
 /db.auth.off
 /db.auth.on
+*.sublime*
