@@ -2,7 +2,7 @@ class BprocesController < ApplicationController
   respond_to :html
   respond_to :pdf, :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
-  before_filter :get_bproce, :except => :index
+  before_filter :get_bproce, :except => :card
 
   def list
     @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction)
@@ -22,6 +22,14 @@ class BprocesController < ApplicationController
 
   def show
     respond_with(@bproce)
+  end
+
+  def card
+    @bproces = Bproce.order(sort_column + ' ' + sort_direction)
+    respond_to do |format|
+      format.html { print_card }
+      format.pdf { print_card }
+    end
   end
 
   def new
@@ -86,6 +94,27 @@ private
         t.add_column(:name, :name)
         t.add_column(:fullname, :fullname)
         t.add_column(:goal, :goal)
+      end
+      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    report_file_name = report.generate
+    send_file(report_file_name,
+      :type => 'application/msword',
+      :filename => "documents.odt",
+      :disposition => 'inline' )
+  end
+
+  def print_card
+    report = ODFReport::Report.new("reports/bp-card.odt") do |r|
+      r.add_field "REPORT_DATE", Date.today
+      @nn = 0
+      r.add_table("TABLE_01", @bproces, :header=>true) do |t|
+        # TODO: здесь надо вставить порядковый номер строки в таблице
+        # t.add_column(:nn, :id)
+        t.add_column(:name)
+        t.add_column(:fullname)
+        t.add_column(:goal)
       end
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
