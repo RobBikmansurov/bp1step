@@ -31,5 +31,9 @@ describe BprocesController do
       delete("/bproces/1").should route_to("bproces#destroy", :id => "1")
     end
 
+    it "routes to #card" do
+      get("/bproces/1/card").should route_to("bproces#card", :id => "1")
+    end
+
   end
 end
