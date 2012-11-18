@@ -78,15 +78,29 @@ private
 
   def print
     report = ODFReport::Report.new("reports/documents.odt") do |r|
+      nn = 0  # порядковый номер строки
       r.add_field "REPORT_DATE", Date.today
-      r.add_table("TABLE_01", @documents, :header=>true) do |t|
-        t.add_column(:name, :name)
+      r.add_table("TABLE_01", @documents, :header => true) do |t|
+        t.add_column(:nn) do |ca|
+          nn += 1
+          "#{nn}."
+        end
+        t.add_column(:name)
         t.add_column(:organ, :approveorgan)
-        t.add_column(:approved, :approved)
-        #u = User.find(@docs.id).displayname
-        t.add_column(:responsible, :id)
+        t.add_column(:approved)
+        t.add_column(:responsible) do |document|  # владелец документа, если задан
+          if document.responsible
+            u=User.find(document.responsible)
+            "#{u.displayname}"
+          end
+        end
+
+        #t.add_column(:responsible) do |ca|
+          #u = User.find(@documents[responsible]).displayname
+          #"#{u}"
+        #end
         #t.add_column(:eplace, @docs.name)
-        t.add_column(:place, :place)
+        t.add_column(:place)
       end
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname

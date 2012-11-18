@@ -71,8 +71,13 @@ private
 
   def print
     report = ODFReport::Report.new("reports/bapps.odt") do |r|
+      nn = 0
       r.add_field "REPORT_DATE", Date.today
       r.add_table("TABLE_01", @bapps, :header=>true) do |t|
+        t.add_column(:nn) do |ca|
+          nn += 1
+          "#{nn}."
+        end
         t.add_column(:name, :name)
         t.add_column(:description, :description)
         t.add_column(:purpose, :purpose)
