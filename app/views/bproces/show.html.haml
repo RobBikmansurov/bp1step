@@ -66,6 +66,9 @@
 %p
 -if can? :update, @bproce
   .button
-    = link_to 'Edit', edit_bproce_path(@bproce) |
+    = link_to 'Edit', edit_bproce_path(@bproce)
 .button
   = link_to 'Back', bproces_path
+-if can? :update, @bproce
+  .button
+    = link_to 'Card', bproce_path(@bproce) + '/card'
