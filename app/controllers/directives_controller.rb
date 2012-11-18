@@ -5,7 +5,15 @@ class DirectivesController < ApplicationController
   before_filter :get_directive, :except => :index
 
   def index
-    @directives = Directive.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    if params[:title].present?
+      @directives = Directive.where(:title => params[:title]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    else
+      if params[:body].present?
+        @directives = Directive.where(:body => params[:body]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      else
+        @directives = Directive.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      end
+    end
   end
 
   def show

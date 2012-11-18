@@ -1,7 +1,7 @@
 -title "Директива, руководящий документ"
 %h2
-  = @directive.title
-  = @directive.body
+  = link_to @directive.title, directives_path + '?title=' + @directive.title
+  = link_to @directive.body, directives_path + '?body=' + @directive.body
   %b
     №
     = @directive.number

@@ -1,5 +1,19 @@
 -title "Руководящие документы, Директивы, Указания"
-%h1 Директивы
+-if params[:title].present?
+  %h2
+    Директивы
+    [
+    = params[:title]
+    ]  
+-else
+  -if params[:body].present?
+    %h2
+      Директивы
+      [
+      = params[:body]
+      ]  
+  -else
+    %h1 Директивы
 %table
   %tr
     %th= sortable "number", "Номер"
