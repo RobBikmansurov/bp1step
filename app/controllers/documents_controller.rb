@@ -9,17 +9,25 @@ class DocumentsController < ApplicationController
 
 
   def index
-    if params[:directive_id].present?
+    if params[:directive_id].present? # документы относящиеся к директиве
       @directive = Directive.find(params[:directive_id])
       @documents = @directive.document.paginate(:per_page => 10, :page => params[:page])
     else
       if params[:all].present?
         @documents = Document.all
       else
-        if params[:place].present?
+        if params[:place].present?  # список документов по месту хранения
           @documents = Document.where(:place => params[:place]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
         else
-          @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+          if params[:dlevel].present? #  список документов уровня
+            @documents = Document.where(:dlevel => params[:dlevel]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+          else
+            if params[:part].present? #  список документов раздела документооборота
+              @documents = Document.where(:part => params[:part]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+            else
+              @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+            end
+          end
         end
       end
     end
