@@ -9,7 +9,7 @@
     - if can? :destroy, BusinessRole
       %th
 
-  -@business_roles.each do |ro|
+  -@broles.each do |ro|
     %tr
       %td= link_to ro.name, ro
       %td
@@ -22,8 +22,12 @@
 .apple_pagination
   -#.page_info
     -#    = page_entries_info @business_roles
-  = will_paginate @business_roles 
+  = will_paginate @broles 
 
 - if can? :destroy, BusinessRole
+  .button
+    = link_to 'Каталог', business_roles_path + '.odt?all=1'
+  .button
+    = link_to 'ODT', business_roles_path + '.odt'
   .button
     = link_to "Добавить новую роль" , new_business_role_path
