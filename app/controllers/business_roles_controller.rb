@@ -1,10 +1,20 @@
 class BusinessRolesController < ApplicationController
-  respond_to :html, :xml, :json
+  respond_to :html
+  respond_to :odt, :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
   before_filter :get_business_role, :except => :index
 
   def index
-    @business_roles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    if params[:all].present?
+      @broles = BusinessRole.order(sort_column + ' ' + sort_direction)
+    else
+      @broles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    end
+    respond_to do |format|
+      format.html
+      format.odt { print }
+    end
+
   end
   
   def new
@@ -48,6 +58,31 @@ private
   
   def get_business_role
     @business_role = params[:id].present? ? BusinessRole.find(params[:id]) : BusinessRole.new
+  end
+
+  def print
+    report = ODFReport::Report.new("reports/broles.odt") do |r|
+      nn = 0
+      r.add_field "REPORT_DATE", Date.today
+      r.add_table("TABLE_01", @broles, :header=>true) do |t|
+        t.add_column(:nn) do |ca|
+          nn += 1
+          "#{nn}."
+        end
+        t.add_column(:name)
+        t.add_column(:bpname) do |br|
+          "#{br.bproce.shortname}" if :bproce_id?
+        end
+        t.add_column(:description)
+      end
+      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    report_file_name = report.generate
+    send_file(report_file_name,
+      :type => 'application/msword',
+      :filename => "business_roles.odt",
+      :disposition => 'inline' )
   end
 
 end

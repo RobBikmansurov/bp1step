@@ -109,7 +109,7 @@ private
     report_file_name = report.generate
     send_file(report_file_name,
       :type => 'application/msword',
-      :filename => "documents.odt",
+      :filename => "processess.odt",
       :disposition => 'inline' )
   end
 
@@ -196,7 +196,7 @@ private
     report_file_name = report.generate
     send_file(report_file_name,
       :type => 'application/msword',
-      :filename => "documents.odt",
+      :filename => "card.odt",
       :disposition => 'inline' )
   end
 
