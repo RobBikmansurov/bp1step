@@ -92,7 +92,7 @@ private
     report_file_name = report.generate
     send_file(report_file_name,
       :type => 'application/msword',
-      :filename => "documents.odt",
+      :filename => "workplaces.odt",
       :disposition => 'inline' )
   end
 
