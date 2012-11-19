@@ -11,9 +11,12 @@
   %b
     = @document.approved
 %h3
+  уровень документа:
+  %b
+    = link_to @document.dlevel, documents_path + '?dlevel=' + @document.dlevel.to_s
   раздел документооборота:
   %b
-    = @document.part
+    = link_to @document.part, documents_path + '?part=' + @document.part
 
 -if @document.bproce
   %h3
