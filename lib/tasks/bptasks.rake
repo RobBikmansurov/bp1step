@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: utf-8
 # утилиты для поддержки работы BP1Step
 namespace :bp1step do
   desc "Sync users from ActiveDirectory"
@@ -18,7 +18,7 @@ namespace :bp1step do
 
 	#filter = Net::LDAP::Filter.eq("title", "*")	# пользователи обязательно имеют должность
 	#filter = Net::LDAP::Filter.eq("sAMAccountName", "mr_rob")
-	filter = Net::LDAP::Filter.eq("sAMAccountName", "ks16")
+	filter = Net::LDAP::Filter.eq("sAMAccountName", "bb26")
 	#filter = Net::LDAP::Filter.eq(&(objectClass=person)(objectClass=user)(middleName=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))
 	treebase = LDAP_CONFIG["development"]["base"]
 	attrs = ["sn", "givenname", "MiddleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description"]
@@ -31,60 +31,53 @@ namespace :bp1step do
   		username = entry["sAMAccountName"].first.downcase
 #	    usr = User.find_or_create_by_email :username => username, :email => email, :password => email
 	    usr = User.find_or_create_by_username :username => username, :email => email, :password => email
-	    puts entry["sn"].first
+	    puts "#{entry["sn"].first} [#{username}]"
 	    if usr.new_record?
 			if email.to_s.empty?	# пропустим с пустым email
 				puts "#{i}!#{new_users}. #{entry.sAMAccountName} #{entry.dn} email is NULL!"
 			else
 	    		new_users = new_users + 1
-	        	usr.save
-				puts "#{i}+#{new_users}. #{entry.sAMAccountName} #{entry.dn}"
-	        	puts usr.errors
+	    		usr1 = User.find_by_email(email.to_s)	# поищем по e-mail
+	    		if usr1.nil?
+	        		usr.save
+					puts "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} #{entry.dn}"
+	        		puts usr.errors
+	        	else
+					puts "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} = #{usr1.username}"
+					puts "    уже есть пользователь с таким e-mail, #id= #{usr1.id}"
+	        	end
 	        end
 	    else	# а здесь надо проверить - не изменилось ли что либо у этого пользователя в AD
-	    	f_change = 0
-			tmp = usr.department
-			puts "#{entry['department'].first}" if debug_flag
-			puts "1" if debug_flag
-			if !(usr.department == entry["department"].first)	# подразделение
-				usr.department = entry["department"].first
-				#puts "#{usr.department} = #{entry['department'].first}: #{usr.department == entry['department'].first}"
-				f_change += 1
+			#puts usr.department.encoding
+	    	s1 = entry["department"].first.to_s.force_encoding("UTF-8")
+	    	#puts str.encoding
+			if !(usr.department == s1)	# подразделение
+				puts "#{usr.department} = #{entry['department'].first}: #{usr.department == entry['department'].first}" if debug_flag
+				usr.update_attribute(:department, entry["department"].first)
 			end
-			puts "#{entry['title'].first}" if debug_flag
-			puts "2" if debug_flag
-			if !(usr.position == entry["title"].first)	# должность
-				usr.position = entry["title"].first
-				#puts "#{usr.position} = #{entry['title'].first}: #{usr.position == entry['title'].first}"
-				f_change += 1
+	    	s2 = entry["title"].first.to_s.force_encoding("UTF-8")
+			if !(usr.position == s2)	# должность
+				puts "#{usr.position} = #{entry['title'].first}: #{usr.position == entry['title'].first}" if debug_flag
+				usr.update_attribute(:position, entry["title"].first)
 			end
-			puts "#{entry['telephonenumber'].first}" if debug_flag
-			puts "3" if debug_flag
 			if !(usr.phone == entry["telephonenumber"].first)	# телефон
-				usr.phone = entry["telephonenumber"].first
-				#puts "#{usr.phone} = #{entry['telephonenumber'].first}: #{usr.phone == entry['telephonenumber'].first}"
-				f_change += 1
+				puts "#{usr.phone} = #{entry['telephonenumber'].first}: #{usr.phone == entry['telephonenumber'].first}" if debug_flag
+				usr.update_attribute(:phone, entry["telephonenumber"].first)
 			end
-			puts "#{entry['physicaldeliveryofficename'].first}" if debug_flag
-			puts "4" if debug_flag
 			if !(usr.office == entry["physicaldeliveryofficename"].first)	# офис
-				usr.office = entry["physicaldeliveryofficename"].first
-				#puts "#{usr.office} = #{entry['physicaldeliveryofficename'].first}: #{usr.office == entry['physicaldeliveryofficename'].first}"
-				f_change += 1
+				usr.update_attribute(:office, entry["physicaldeliveryofficename"].first)
+				puts "#{usr.office} = #{entry['physicaldeliveryofficename'].first}: #{usr.office == entry['physicaldeliveryofficename'].first}" if debug_flag
 			end
-			puts "5" if debug_flag
-			if f_change > 0
-	    		upd_users = upd_users + 1
-	    		puts usr.valid? if debug_flag
-	    		usr.save
-	    		puts usr.errors
-				#puts "#{i}=#{upd_users}. #{entry.sAMAccountName} #{entry.dn}"
-	      	end
-			puts "6" if debug_flag
 	    end
 
 	end
 	puts "All: #{i}, add: #{new_users}, update: #{upd_users} users"
 	p ldap.get_operation_result
+  end
+
+  desc "Sync users from ActiveDirectory"
+  task :sync_document_files  => :environment do 		# синхронизация списка документов с файлами
+	d = Dir.new("files")
+	d.each  {|x| puts "Got #{x}" }
   end
 end
