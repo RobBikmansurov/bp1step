@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Document < ActiveRecord::Base
   # FIXME разобраться со статусами на русском
   # STATUSES = %w[Проект Согласование Утвержден]
@@ -13,6 +14,17 @@ class Document < ActiveRecord::Base
   has_many :document_directive, :dependent => :destroy
 
   attr_protected :uploaded_file # чтобы не было ошибки при массовом сохранении из params
+
+  before_save :file_name_sanityze # удалим из имени файла коды пробелов и заменим обратные слэши на прямые
+
+  def file_name_sanityze
+    if !self.eplace.empty?  # если имя файла не пустое
+      fname = self.eplace[(self.eplace.index("_1_Норма")-1)..-1]  # обрежем начало - путь шары
+      fname = fname.gsub(/%20/, ' ')  # заменим %20 на пробел
+      fname = fname.gsub('\\', '/')   # заменим обратные слэши Windows на нормальные
+      self.eplace = fname
+    end
+  end
 
   def shortname
     return name.split(//u)[0..50].join
