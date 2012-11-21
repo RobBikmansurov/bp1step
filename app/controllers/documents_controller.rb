@@ -1,5 +1,4 @@
 # coding: utf-8
-#FIXME: надо заменять разделитель пути формата Windows на Linux: \ -> /
 class DocumentsController < ApplicationController
   respond_to :odt, :only => :index
   respond_to :pdf, :only => :show
@@ -121,12 +120,7 @@ private
   end
 
   def view
-    #fname = '/home/DOMAIN_SQL/mr_rob/.gvfs/smb-share\:server\=cluster\,share\=docs/_1_Нормативные документы банка/Внутренние документы Банка_действующие/Документы по информационным технологиям/SMS-информирование клиентов Описание процесса 20120326.pdf'
-    #fname = 'files/_1_Нормативные документы банка/__Внутренние документы Банка_действующие/Документы по информационным технологиям/SMS-информирование клиентов Описание процесса 20120326.pdf'
-    fname = @document.eplace[(@document.eplace.index("_1_Норма")-1)..-1]  # обрежем начало - путь шары
-    fname = fname.gsub(/%20/, ' ')  # заменим %20 на пробел
-    fname = fname.gsub('\\', '/')   # заменим обратные слэши Windows на нормальные
-    fname = "files" + fname         # добавим путь к файлам
+    fname = "files" + @document.file_name         # добавим путь к файлам
     case File.extname(fname)  # определим по расширению файла его mime-тип
     when '.pdf'
       type = 'application/pdf'
@@ -135,7 +129,7 @@ private
     else
       type = 'application/vnd.oasis.opendocument.text'
     end
-    send_file(fname, :type => type, :filename => File.basename(@document.eplace.gsub(/%20/, ' ')), :disposition => 'inline' )
+    send_file(fname, :type => type, :filename => File.basename(@document.file_name), :disposition => 'inline' )
   end
 
   def get_document

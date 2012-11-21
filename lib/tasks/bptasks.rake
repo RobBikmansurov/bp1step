@@ -16,9 +16,9 @@ namespace :bp1step do
 	#host = LDAP_CONFIG['audiocast_uri_format']
 	debug_flag = true
 
-	#filter = Net::LDAP::Filter.eq("title", "*")	# пользователи обязательно имеют должность
+	filter = Net::LDAP::Filter.eq("title", "*")	# пользователи обязательно имеют должность
 	#filter = Net::LDAP::Filter.eq("sAMAccountName", "mr_rob")
-	filter = Net::LDAP::Filter.eq("sAMAccountName", "bb26")
+	#filter = Net::LDAP::Filter.eq("sAMAccountName", "bb26")
 	#filter = Net::LDAP::Filter.eq(&(objectClass=person)(objectClass=user)(middleName=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))
 	treebase = LDAP_CONFIG["development"]["base"]
 	attrs = ["sn", "givenname", "MiddleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description"]
@@ -26,17 +26,17 @@ namespace :bp1step do
 	i, new_users, upd_users = 0, 0, 0	# счетчики
 	ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do |entry|
 	#ldap.search(:base => treebase, :filter => filter) do |entry|
-		i = i + 1
+		i += 1
   		email = entry["mail"].first				# это обязательные параметры + к ним левые уникальные password и reset_password_token
   		username = entry["sAMAccountName"].first.downcase
 #	    usr = User.find_or_create_by_email :username => username, :email => email, :password => email
 	    usr = User.find_or_create_by_username :username => username, :email => email, :password => email
-	    puts "#{entry["sn"].first} [#{username}]"
+	    puts "#{entry["sn"].first} \t[#{username}] \t"
 	    if usr.new_record?
 			if email.to_s.empty?	# пропустим с пустым email
 				puts "#{i}!#{new_users}. #{entry.sAMAccountName} #{entry.dn} email is NULL!"
 			else
-	    		new_users = new_users + 1
+	    		new_users += 1
 	    		usr1 = User.find_by_email(email.to_s)	# поищем по e-mail
 	    		if usr1.nil?
 	        		usr.save
@@ -69,15 +69,33 @@ namespace :bp1step do
 				puts "#{usr.office} = #{entry['physicaldeliveryofficename'].first}: #{usr.office == entry['physicaldeliveryofficename'].first}" if debug_flag
 			end
 	    end
-
 	end
-	puts "All: #{i}, add: #{new_users}, update: #{upd_users} users"
+	puts "All: #{i}, add: #{new_users} users"
 	p ldap.get_operation_result
   end
 
-  desc "Sync users from ActiveDirectory"
-  task :sync_document_files  => :environment do 		# синхронизация списка документов с файлами
-	d = Dir.new("files")
-	d.each  {|x| puts "Got #{x}" }
+  desc "Check document files in eplace location"
+  task :check_document_files  => :environment do 		# проверка наличия файлов документов в каталоге
+    docs = Document.all
+    nn = 1
+    nf = 0
+    docs.each do |d|
+      fname = d.eplace
+      if !fname.nil?   # если указано имя файла документа
+        if fname.size > 20
+          fname = "files" + d.file_name         # добавим путь к файлам
+          if File.exist?(fname)
+          else
+            nf += 1
+            puts "##{d.id} \t- file not found: \t#{File.basename(fname)}"
+          end
+        end
+      end
+      nn += 1
+	end
+    puts "All: #{nn} docs, but #{nf} files not found"
   end
+
+
+
 end
