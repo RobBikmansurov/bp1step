@@ -54,11 +54,14 @@
   -if !@document.eplace.nil?
     -if !@document.eplace.empty?
       %b
-        = File.dirname(@document.eplace[(@document.eplace.index("_1_Норма")-1)..-1].gsub(/%20/, ' ')) + '/'  # заменим %20 на пробел
-        %br
-        = File.basename(@document.eplace).gsub(/%20/, ' ')  # заменим %20 на пробел
+        -#= File.dirname(@document.file_name) + '/' # выведем путь и имя файла в разных строках
+          %br
+        = File.basename(@document.file_name)
       %br
-        =link_to 'Смотреть', document_path(@document)+'.pdf'
+        - if File.exist?("files/" + @document.file_name)
+          = link_to 'Смотреть', document_path(@document)+'.pdf'
+        - else
+          Файл отсутствует!
 
 %p
 -if can? :update, Document

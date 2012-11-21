@@ -26,6 +26,11 @@ class Document < ActiveRecord::Base
     end
   end
 
+  def file_name
+    file_name_sanityze
+    return self.eplace
+  end
+
   def shortname
     return name.split(//u)[0..50].join
   end
