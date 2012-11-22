@@ -3,21 +3,36 @@ require 'spec_helper'
 describe BproceBapp do
   before(:each) do
     @bpbap = BproceBapp.new
+    @bpbap.bproce_id = 1
+    @bpbap.bapp_id = 1
     @bpbap.apurpose = "purpose_1"
+    @bpbap.save
+  end
+  context "validates" do
+    it "is valid with valid attributes" do
+      @bpbap.should be_valid
+    end 
+    it "should require bproce_id" do
+      @bpbap.bproce_id = nil
+      @bpbap.should_not be_valid
+    end 
+    it "should require bapp_id" do
+      @bpbap.bapp_id = nil
+      @bpbap.should_not be_valid
+    end 
+    it "should require purpose" do
+      @bpbap.apurpose = nil
+      @bpbap.should_not be_valid
+    end
   end
 
-  it "should require id" do
-  	@bpbap.bproce_id = 1
-  	@bpbap.bapp_id = 1
-    @bpbap.should be_valid
-  end 
-
-  it "should require id" do
-    @bpbap.should_not be_valid
-  end 
-
-  it "should require purpose" do
-    @bpbap.apurpose = nil
-    @bpbap.should_not be_valid
+  context "associations" do
+    it "belongs_to :bproce" do
+      should belong_to(:bproce) #приложение относится ко многим процессам
+    end
+    it "belongs_to :bapp" do
+      should belong_to(:bapp) #приложение относится ко многим процессам
+    end
   end
+
 end
