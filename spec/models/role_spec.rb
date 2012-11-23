@@ -49,7 +49,7 @@ describe Role do
       should have_many(:user_roles) # у пользователя может быть много ролей доступа
     end
     it "has_many :user, :through => :user_roles" do
-      should have_many(:user).through(:user_roles) # роль доступа может быть у многих пользователей
+      should have_many(:users).through(:user_roles) # роль доступа может быть у многих пользователей
     end
   end
 

@@ -2,6 +2,20 @@
   %b
     = @usr.displayname
   = @usr.position  
+
+
+права доступа
+-if can? :assign_roles, @usr
+  assign_role
+-if can? :manage, User
+  manage User
+
+-if can? :read, :all
+  read all
+
+-if can? :manage, [Bproce, BusinessRole, Document]
+  manage, [Bproce, BusinessRole, Document]
+
 %h4
   = @usr.department
   |
@@ -17,9 +31,8 @@
   = u.collection_check_boxes :role_ids, Role.all, :id, :description
   = u.error :base
   %p
-  -if !current_user.nil?
-    -if current_user.role? :admin
-      = u.button :submit
+  -if can? :assign_roles, @usr
+    = u.button :submit, 'Сохранить роли доступа'
 
 %p
 .button

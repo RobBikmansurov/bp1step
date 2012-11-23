@@ -7,8 +7,8 @@ class User < ActiveRecord::Base
   has_many :business_roles, :through => :user_business_role
   has_many :user_workplace # рабочие места пользователя
   has_many :workplaces, :through => :user_workplace 
-  has_many :user_role, :dependent => :destroy  # роли доступа пользователя
-  has_many :roles, :through => :user_role
+  has_many :user_roles, :dependent => :destroy  # роли доступа пользователя
+  has_many :roles, :through => :user_roles
   has_many :bproce
 
   # Include default devise modules. Others available are:
@@ -26,6 +26,10 @@ class User < ActiveRecord::Base
   attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :firstname, :lastname, :displayname
   #attr_accessible :username, :email, :password
   before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
+
+  def has_role?(role_sym)
+    roles.any? { |r| r.name.underscore.to_sym == role_sym }
+  end
 
   def get_ldap_lastname
       #Rails::logger.info("### Getting the users last name")
