@@ -12,8 +12,6 @@ gem "cancan"
 gem 'will_paginate'
 #gem 'inherited_resources'
 ##gem 'active_scaffold'
-#gem 'sass-rails'
-##gem 'coffee-script'
 gem 'haml-rails'
 gem 'jquery-rails'
 #gem 'forgery'
@@ -30,6 +28,11 @@ group :assets do
   # gem 'therubyracer'
 
   #gem 'uglifier', '>= 1.0.3'
+end
+group :test do
+  gem 'rspec-rails'
+  gem 'shoulda-matchers'
+  gem "factory_girl_rails"
 end
 
 
