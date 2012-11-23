@@ -8,11 +8,10 @@
     %th= sortable "phone", "Телефон"
     %th Должность
     %th Офис
-    -if current_user != nil
-      -if current_user.role? :admin
-        %th Login (ip)
-        %th Last login
-    - if can? :destroy, User
+    -if can? :manage, @users
+      %th Login (ip)
+      %th Last login
+    - if can? :destroy, @users
       %th Роли доступа
   
 
@@ -23,14 +22,13 @@
       %td= user.phone
       %td= user.position
       %td= user.office
-      -if current_user != nil
-        -if current_user.role? :admin
-          %td
-            = user.current_sign_in_at
-            (
-            = user.current_sign_in_ip
-            )
-          %td= user.last_sign_in_at
+      -if can? :manage, user
+        %td
+          = user.current_sign_in_at
+          (
+          = user.current_sign_in_ip
+          )
+        %td= user.last_sign_in_at
       - if can? :destroy, user
         %td
           -user.roles.each do |role|
