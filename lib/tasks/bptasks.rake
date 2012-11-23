@@ -1,8 +1,10 @@
 # encoding: utf-8
 # утилиты для поддержки работы BP1Step
+
 namespace :bp1step do
   desc "Sync users from ActiveDirectory"
-  task :sync_active_directory_users  => :environment do 		# синхронизация списка пользователей с AD
+  task :sync_active_directory_users  => :environment do 	# синхронизация списка пользователей LDAP -> User
+  															# не умеет удалять пользователей User, удаленных в LDAP
     require 'rubygems'
     require 'net/ldap'
     LDAP_CONFIG = YAML.load_file(Devise.ldap_config)	# считаем конфиги доступа к LDAP
@@ -18,7 +20,7 @@ namespace :bp1step do
 
 	filter = Net::LDAP::Filter.eq("title", "*")	# пользователи обязательно имеют должность
 	#filter = Net::LDAP::Filter.eq("sAMAccountName", "mr_rob")
-	#filter = Net::LDAP::Filter.eq("sAMAccountName", "bb26")
+	#filter = Net::LDAP::Filter.eq("sAMAccountName", "mb2")
 	#filter = Net::LDAP::Filter.eq(&(objectClass=person)(objectClass=user)(middleName=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))
 	treebase = LDAP_CONFIG["development"]["base"]
 	attrs = ["sn", "givenname", "MiddleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description"]
@@ -31,7 +33,6 @@ namespace :bp1step do
   		username = entry["sAMAccountName"].first.downcase
 #	    usr = User.find_or_create_by_email :username => username, :email => email, :password => email
 	    usr = User.find_or_create_by_username :username => username, :email => email, :password => email
-	    puts "#{entry["sn"].first} \t[#{username}] \t"
 	    if usr.new_record?
 			if email.to_s.empty?	# пропустим с пустым email
 				puts "#{i}!#{new_users}. #{entry.sAMAccountName} #{entry.dn} email is NULL!"
@@ -39,6 +40,7 @@ namespace :bp1step do
 	    		new_users += 1
 	    		usr1 = User.find_by_email(email.to_s)	# поищем по e-mail
 	    		if usr1.nil?
+				    puts "+ #{entry["sn"].first} \t[#{username}] \t"
 	        		usr.save
 					puts "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} #{entry.dn}"
 	        		puts usr.errors
@@ -48,9 +50,12 @@ namespace :bp1step do
 	        	end
 	        end
 	    else	# а здесь надо проверить - не изменилось ли что либо у этого пользователя в AD
-			#puts usr.department.encoding
+			if !(usr.email == email)	# e-mail
+				puts "#{usr.email} = #{email}: #{usr.email == email}" if debug_flag
+				usr.update_attribute(:email, email)
+				usr.email = email
+			end
 	    	s1 = entry["department"].first.to_s.force_encoding("UTF-8")
-	    	#puts str.encoding
 			if !(usr.department == s1)	# подразделение
 				puts "#{usr.department} = #{entry['department'].first}: #{usr.department == entry['department'].first}" if debug_flag
 				usr.update_attribute(:department, entry["department"].first)
@@ -68,6 +73,7 @@ namespace :bp1step do
 				usr.update_attribute(:office, entry["physicaldeliveryofficename"].first)
 				puts "#{usr.office} = #{entry['physicaldeliveryofficename'].first}: #{usr.office == entry['physicaldeliveryofficename'].first}" if debug_flag
 			end
+		    puts "#{entry["sn"].first} \t[#{username}] \t #{usr.changed}" if usr.changed?
 	    end
 	end
 	puts "All: #{i}, add: #{new_users} users"
@@ -76,6 +82,8 @@ namespace :bp1step do
 
   desc "Check document files in eplace location"
   task :check_document_files  => :environment do 		# проверка наличия файлов документов в каталоге
+    # TODO добавить конфиги для константы "files"
+    # TODO добавить mailer - отправлять письмо ответственному за документ об отсутствии файла документа
     docs = Document.all
     nn = 1
     nf = 0
