@@ -22,13 +22,15 @@ describe Bapp do
       @bapp2 = create(:bapp, name: "test_name2")
       @bapp2.should be_valid
     end
-    it "is not valid if length of title < 6" do
-      @bapp.name = "short"
+    it "is not valid if length of title < 4 or > 50" do
+      @bapp.name = "123"
       @bapp.should_not be_valid
-    end
-    it "is not valid if length of title > 50" do
+      @bapp.name = "1234"
+      @bapp.should be_valid
       @bapp.name = "maxlenght1maxlenght2maxlenght3maxlenght4maxlenght5_"
       @bapp.should_not be_valid
+      @bapp.name = "maxlenght1maxlenght2maxlenght3maxlenght4maxlenght5"
+      @bapp.should be_valid
     end
     it "is not valid without a description" do
       @bapp.description = nil

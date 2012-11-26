@@ -22,10 +22,10 @@ describe Role do
       @role2 = create(:role, name: 'test_role_name2')
       @role2.should be_valid
     end
-    it "is not valid if length of name < 5" do #validates :name, :presence => true, :length => {:minimum => 5}
-      @role.name = "1234"
+    it "is not valid if length of name < 4" do #validates :name, :presence => true, :length => {:minimum => 4}
+      @role.name = "123"
       @role.should_not be_valid
-      @role.name = "12345"
+      @role.name = "1234"
       @role.should be_valid
     end
 
