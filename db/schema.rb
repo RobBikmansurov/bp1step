@@ -16,8 +16,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
   create_table "bapps", :force => true do |t|
     t.string   "name"
     t.string   "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.text     "purpose"
     t.string   "apptype"
   end
@@ -25,24 +25,24 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
   create_table "bproce_bapps", :force => true do |t|
     t.integer  "bproce_id"
     t.integer  "bapp_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.text     "apurpose"
   end
 
   create_table "bproce_workplaces", :force => true do |t|
     t.integer  "bproce_id"
     t.integer  "workplace_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "bproces", :force => true do |t|
     t.string   "shortname"
     t.string   "name"
     t.string   "fullname"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.text     "goal"
     t.integer  "parent_id"
     t.integer  "lft"
@@ -67,8 +67,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "cat_type"
     t.string   "cat_name"
     t.integer  "sortorder"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "directives", :force => true do |t|
@@ -98,17 +98,17 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "filename"
     t.string   "description"
     t.string   "status"
+    t.integer  "status_id"
+    t.integer  "owner_id"
     t.string   "part"
     t.date     "approved"
     t.string   "place"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "status_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "bproce_id"
     t.string   "eplace"
     t.string   "approveorgan"
     t.integer  "dlevel"
-    t.integer  "owner_id"
     t.integer  "responsible"
   end
 
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.string   "description"
+    t.integer  "bproce_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
@@ -173,8 +174,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                            :null => false
+    t.datetime "updated_at",                                            :null => false
     t.string   "firstname"
     t.string   "lastname"
     t.string   "username"
@@ -194,8 +195,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "description"
     t.boolean  "typical"
     t.string   "location"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
 end
