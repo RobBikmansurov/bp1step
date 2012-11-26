@@ -2,12 +2,7 @@ require 'spec_helper'
 
 describe Role do
   before(:each) do
-    #@role = factory :role
-    #let(:role) { FactoryGirl.create :role }
-    @role = Role.new
-    @role.name = 'test_role_name'
-    @role.description = 'test_role_description'
-    @role.save
+    @role = create(:role) #, name: 'test_role_name', description: 'test_role_description')
   end
 
   context "validates" do
@@ -20,16 +15,12 @@ describe Role do
       @role.should_not be_valid
     end
     it "it require uniqueness name" do
-      @role1 = Role.new
-      @role1.name = "test_role_name"
-      @role1.description='test_description'
+      @role1 = create(:role, name: 'test_role_name1')
+      @role1.should be_valid
+      @role1.name = 'test_role_name'
       @role1.should_not be_valid
-      @role1.save
-      @role2 = Role.new
-      @role2.name = "test_role_name2"
-      @role2.description='test_description'
+      @role2 = create(:role, name: 'test_role_name2')
       @role2.should be_valid
-      @role2.save
     end
     it "is not valid if length of name < 5" do #validates :name, :presence => true, :length => {:minimum => 5}
       @role.name = "1234"

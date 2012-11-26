@@ -2,11 +2,7 @@ require 'spec_helper'
 
 describe Document do
   before(:each) do
-    @doc = Document.new
-    @doc.name = 'test_doc_name'
-    @doc.bproce_id = 1
-    @doc.dlevel = 1
-    #@doc.save
+    @doc = create(:document)
   end
 
   context "validates" do
