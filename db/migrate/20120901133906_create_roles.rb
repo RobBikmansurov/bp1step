@@ -3,7 +3,7 @@ class CreateRoles < ActiveRecord::Migration
     create_table :roles do |t|
       t.string :name
       t.string :description
-
+	  t.integer :bproce_id
       t.timestamps
     end
   end
