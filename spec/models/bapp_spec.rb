@@ -2,10 +2,7 @@ require 'spec_helper'
 
 describe Bapp do
   before(:each) do
-    @bapp = Bapp.new
-    @bapp.name = 'test_name'
-    @bapp.description='test_description'
-    @bapp.save
+    @bapp = create(:bapp)
   end
 
   context "validates" do
@@ -18,16 +15,12 @@ describe Bapp do
       @bapp.should_not be_valid
     end
     it "it require uniqueness name" do
-      @bapp1 = Bapp.new
-      @bapp1.name = "test_name"
-      @bapp1.description='test_description'
+      @bapp1 = create(:bapp, name: "test_name1")
+      @bapp1.should be_valid
+      @bapp1.name = 'test_name'
       @bapp1.should_not be_valid
-      @bapp1.save
-      @bapp2 = Bapp.new
-      @bapp2.name = "test_name2"
-      @bapp2.description='test_description'
+      @bapp2 = create(:bapp, name: "test_name2")
       @bapp2.should be_valid
-      @bapp2.save
     end
     it "is not valid if length of title < 6" do
       @bapp.name = "short"

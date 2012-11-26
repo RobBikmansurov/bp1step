@@ -2,14 +2,7 @@ require 'spec_helper'
 
 describe Directive do
   before(:each) do
-    @directive = Directive.new
-    @directive.name = 'test_directive_name'
-    @directive.title = 'test_directive_title'
-    @directive.number = 'test_directive_number'
-    @directive.note = 'test_directive_note'
-    @directive.body = 'test_directive_body'
-    @directive.annotation = 'test_directive_annotation'
-    @directive.save
+    @directive = create(:directive)
   end
 
   context "validates" do

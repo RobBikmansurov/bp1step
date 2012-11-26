@@ -2,11 +2,7 @@ require 'spec_helper'
 
 describe BproceBapp do
   before(:each) do
-    @bpbap = BproceBapp.new
-    @bpbap.bproce_id = 1
-    @bpbap.bapp_id = 1
-    @bpbap.apurpose = "purpose_1"
-    @bpbap.save
+    @bpbap = create(:bproce_bapp)
   end
   context "validates" do
     it "is valid with valid attributes" do

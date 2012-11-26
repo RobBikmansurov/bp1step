@@ -2,37 +2,54 @@ require 'spec_helper'
 
 describe BusinessRole do
   before(:each) do
-    @business_role = BusinessRole.new
-    @business_role.bproce_id = 1
-    @business_role.name = 'test_business_role_name'
-    @business_role.description = "test_business_role_description"
+    @business_role = create(:business_role)
   end
 
-  it "should be valid" do
-    @business_role.should be_valid
+  context "validates" do
+    it "is valid with valid attributes: name, description, bproce_id" do
+      @business_role.should be_valid
+    end
+    it "is not valid without a name" do #validates :name, :presence => true, :length => {:minimum => 5, :maximum => 50}
+      @business_role.name = nil
+      @business_role.should_not be_valid
+    end
+    it "is not valid if length of name < 5 or > 50" do
+      @business_role.name = "1234"
+      @business_role.should_not be_valid
+      @business_role.name = '1234567890'
+      @business_role.should be_valid
+      @business_role.name = "1234567890" * 5 + "1"
+      @business_role.should_not be_valid
+      @business_role.name = "1234567890" * 5 
+      @business_role.should be_valid
+    end
+    it "is not valid without a description" do #validates :description, :presence => true, :length => {:minimum => 8}
+      @business_role.description = nil
+      @business_role.should_not be_valid
+    end
+    it "is not valid if length of description < 8" do
+      @business_role.description = "1234567"
+      @business_role.should_not be_valid
+      @business_role.description = '12345678'
+      @business_role.should be_valid
+    end
+
+    it "is not valid without a bproce_id" do #validates :bproce_id, :presence => true
+      @business_role.bproce_id = nil
+      @business_role.should_not be_valid
+    end
   end
 
-  it "should require name" do
-    @business_role.name = nil
-    @business_role.should_not be_valid
+  context "associations" do
+    it "belongs_to :bproce" do
+      should belong_to(:bproce) # бизнес-роль в процессе
+    end
+    it "has_many :user_business_role" do
+      should have_many(:user_business_role) # бизнес-роль может исполняться многими пользователями
+    end
+    it "has_many :users, :through => :user_business_role" do #has_many :users, :through => :user_business_role
+      should have_many(:users).through(:user_business_role) #приложение относится ко многим процессам
+    end
   end
-  it "should require uniqueness name" do
-    @business_role1 = BusinessRole.new
-    @business_role1.name = "test_workplaces_1"
-    @business_role1.should_not be_valid
-  end
-  it "should require long name" do
-    @business_role.name = "1234"
-    @business_role.should_not be_valid
-  end
-  it "should require max lenght name 50" do
-    @business_role.name = "maxlenght1maxlenght2maxlenght3maxlenght4maxlenght5_"
-    @business_role.should_not be_valid
-  end
-  it "should can have user" do
-    @user = User.create(:displayname => "TestUser", :email => "test@test.com")
-    @business_role.save
-    @business_role.user_business_role.create(:user_id => @user)
-    @business_role.user_business_role.count.should == 1
-  end
+
 end
