@@ -47,8 +47,6 @@
   %b
     = link_to @document.place, documents_path + '?place=' + @document.place
 
-
-
 %li
   электронный документ:
   -if !@document.eplace.nil?
@@ -59,7 +57,8 @@
         = File.basename(@document.file_name)
       %br
         - if File.exist?("files/" + @document.file_name)
-          = link_to 'Смотреть', document_path(@document)+'.pdf'
+          - if can? :view_document, @document
+            = link_to 'Смотреть', document_path(@document)+'.pdf'
         - else
           Файл отсутствует!
 

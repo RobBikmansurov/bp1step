@@ -5,10 +5,10 @@ class Ability
     user ||= User.new   # guest user (not logged in)
 
     if user.roles.size == 0
-      cannot :read, User
       can :read, :all #for guest without roles
+      cannot :show, User
     else
-      #can :read, :all
+      can :view_document, Document  # зарегистрированные пользователи могут просматривать файл с документом
       if user.has_role? :admin
         can :assign_roles, User   # администратор может изменять роли доступа пользователям
         can :manage, [User, Workplace, Bapp]
