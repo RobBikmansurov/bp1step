@@ -17,7 +17,11 @@
 
   -@users.each do |user|
     %tr
-      %td= link_to user.displayname, user
+      %td
+        -if can? :show, user
+          = link_to user.displayname, user
+        -else
+          = user.displayname
       %td= mail_to user.email, user.email, :subject => "BP1Step"
       %td= user.phone
       %td= user.position

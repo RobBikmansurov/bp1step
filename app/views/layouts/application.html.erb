@@ -26,7 +26,7 @@
         </div>
         <div id="users" class="span-12 last">
           <% if user_signed_in? %>
-            <%= current_user.displayname %> (<%= current_user.last_sign_in_at %>)
+            <%= link_to current_user.displayname, user_path(current_user) %> (<%= current_user.last_sign_in_at %>)
             <%= link_to "Выйти", destroy_user_session_path %>
           <% else %>
             <%= link_to "Войти", new_user_session_path %>
