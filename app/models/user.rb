@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   #attr_accessible :email, :password, :password_confirmation, :remember_me
   #before_save :get_ldap_email
-  attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :firstname, :lastname, :displayname
+  attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :firstname, :lastname, :displayname, :role_ids
   #attr_accessible :username, :email, :password
   before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
 
