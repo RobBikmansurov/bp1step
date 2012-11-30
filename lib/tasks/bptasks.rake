@@ -114,14 +114,15 @@ namespace :bp1step do
 	p ldap.get_operation_result
   end
 
+
+
   desc "Check document files in eplace location"
   task :check_document_files  => :environment do 		# проверка наличия файлов документов в каталоге
     # TODO добавить конфиги для константы "files"
     # TODO добавить mailer - отправлять письмо ответственному за документ об отсутствии файла документа
-    docs = Document.all
     nn = 1
     nf = 0
-    docs.each do |d|
+    Document.all.each do |d|
       fname = d.eplace
       if !fname.nil?   # если указано имя файла документа
         if fname.size > 20
@@ -138,6 +139,40 @@ namespace :bp1step do
     puts "All: #{nn} docs, but #{nf} files not found"
   end
 
+
+
+
+  desc "Create documents from files"
+  task :create_documents_from_files  => :environment do 		# создание новых документов из файов в каталоге
+    # TODO добавить конфиги для константы "files"
+    # TODO добавить mailer - отправлять письмо ответственному за документ об отсутствии файла документа
+    nn = 1
+    nf = 0
+    pathfrom = 'files/_1_Нормативные\ документы\ банка/__Внутренние\ документы\ Банка_действующие/'
+    d = Dir.new(pathfrom)
+	d.entries.each do |e|
+  		next if e =~ /^\./
+  		file = File.join(d.path, e)
+  		puts file
+  		#File.delete(file) if File.file?(file)
+	end
+
+    Document.first.each do |d|
+      fname = d.eplace
+      if !fname.nil?   # если указано имя файла документа
+        if fname.size > 20
+          fname = "files" + d.file_name         # добавим путь к файлам
+          if File.exist?(fname)
+          else
+            nf += 1
+            puts "##{d.id} \t- file not found: \t#{File.basename(fname)}"
+          end
+        end
+      end
+      nn += 1
+	end
+    puts "All: #{nn} docs, but #{nf} files not found"
+  end
 
 
 end
