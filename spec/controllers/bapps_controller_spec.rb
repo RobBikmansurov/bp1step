@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'factory_girl'
 
 describe BappsController do
 
@@ -11,6 +12,25 @@ describe BappsController do
       :name => "test_name",
       :description => "test_description"
     }
+  end
+
+  describe "GET new" do
+    before(:each) {
+      @user = create(:user)
+      @user.roles << create(:role)
+      #sign_in @user
+    }
+    it "assigns a new bapp as @bapp" do
+      get :new
+      assigns(:bapp).should be_a_new(Bapp)
+      response.should render_template('bapps/new')
+    end
+
+    it "asigns a new bapp as @bapps if User auth" do
+      get 'new'
+      assigns(:bapp).should be_a_new(Bapp)
+      response.should render_template('bapps/new')
+    end
   end
 
   describe "GET index" do
@@ -76,7 +96,7 @@ describe BappsController do
         # Trigger the behavior that occurs when invalid params are submitted
         Bapp.any_instance.stub(:save).and_return(false)
         post :create, :bapp => {}
-        response.should render_template("new")
+        response.should render_template("bapps/new")
       end
     end
   end

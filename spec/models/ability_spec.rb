@@ -1,6 +1,6 @@
 require "cancan/matchers"
 require "spec_helper"
-#require 'factory_girl'
+require 'factory_girl'
 
 describe Ability do
   let(:guest) { Ability.new(user) }
@@ -49,17 +49,21 @@ describe Ability do
     end
   end
 
+  let(:auth_user) { Ability.new(user) }
   context "authorized user" do
-    let(:user){ User.create(:authorized_user) }
+    let(:user) do
+      user = create(:user_user)
+      #user.role.create(role)
+      #auth_user = Ability.new(user)
+    end
 
-
-      #it{ should be_able_to(:show, User) }
+    #it{ should be_able_to(:show, User) }
     it "can view document" do
-      guest.can?(:view_document, Document).should be_true
+      auth_user.can?(:view_document, Document).should be_true
     end
     it "can :show User" do
-      guest.can?(:show, User).should be_true # видит подробностей о пользователе
-      guest.can?(:index, User).should be_true
+      auth_user.can?(:show, User).should be_true # видит подробностей о пользователе
+      auth_user.can?(:index, User).should be_true
     end
 
     end
