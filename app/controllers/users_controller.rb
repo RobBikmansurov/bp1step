@@ -2,13 +2,13 @@
 class UsersController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
+  before_filter :get_user, :except => :index
 
   def index
     @users = User.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end
 
   def show
-    @usr = User.find(params[:id])     # отображаемый пользователь
     @uroles = @usr.user_business_role   # исполняет роли
     @uworkplaces = @usr.user_workplace 	# рабочие места пользователя
     @documents = Document.find_all_by_responsible(@usr)
@@ -16,11 +16,9 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @usr = User.find(params[:id])     # отображаемый пользователь
   end
 
   def update
-    @usr = User.find(params[:id])
     if @usr.update_attributes(params[:user])
       redirect_to @usr, notice: "Successfully created user access roles."
     else
@@ -42,6 +40,10 @@ private
 
   def sort_direction
     params[:direction] || "asc"
+  end
+
+  def get_user
+    @usr = params[:id].present? ? User.find(params[:id]) : User.new
   end
 
 end
