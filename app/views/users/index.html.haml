@@ -1,5 +1,10 @@
 -title "Список сотрудников"
-%h1 Список сотрудников
+%h1
+  Список сотрудников
+  -if params[:role].present?
+    [
+    = params[:role]
+    ]
 
 %table
   %tr

@@ -14,7 +14,10 @@
   - if @usr.roles.count > 0
     %b роли доступа:
     - @usr.roles.each do |role|
-      = role.description
+      -if current_user.role? :admin
+        = link_to role.description, users_path + '?role=' + role.name
+      -else
+        = role.description
       \/
 
 %h2 Рабочие места:
