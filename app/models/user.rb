@@ -14,9 +14,9 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   # аутентификация - через БД
-  #devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
   # аутентификация - через LDAP
-  devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  #devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
    
   before_create :create_role
 
@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   #before_save :get_ldap_email
   attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :firstname, :lastname, :displayname, :role_ids
   #attr_accessible :username, :email, :password
-  before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
+  #before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
 
   def has_role?(role_sym)
     roles.any? { |r| r.name.underscore.to_sym == role_sym }
@@ -71,11 +71,11 @@ class User < ActiveRecord::Base
       scoped
     end
   end
-
+  
   def role?(role)
     return !!self.roles.find_by_name(role)
-  end 
-  
+  end
+
   private
     def create_role
       self.roles << Role.find_by_name(:user)  if ENV["RAILS_ENV"] != 'test' 
