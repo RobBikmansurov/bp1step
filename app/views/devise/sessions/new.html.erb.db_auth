@@ -8,7 +8,7 @@
   </div>
 
   <div class="actions">
-    <%= f.button :submit, "Sign in" %>
+    <%= f.button :submit, "Войти" %>
   </div>
 <% end %>
 
