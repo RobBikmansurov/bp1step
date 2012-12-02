@@ -1,5 +1,6 @@
 require "cancan/matchers"
 require "spec_helper"
+#require 'factory_girl'
 
 describe Ability do
   let(:guest) { Ability.new(user) }
@@ -8,7 +9,6 @@ describe Ability do
 
   context "guest user" do   # незарегистрированный пользователь
     let(:user) { nil }
-
     it "can :read any Objects" do
       guest.can?(:read, Bapp).should be_true
       guest.can?(:read, Bproce).should be_true
@@ -48,5 +48,20 @@ describe Ability do
       guest.can?(:view_document, Document).should be_false
     end
   end
+
+  context "authorized user" do
+    let(:user){ User.create(:authorized_user) }
+
+
+      #it{ should be_able_to(:show, User) }
+    it "can view document" do
+      guest.can?(:view_document, Document).should be_true
+    end
+    it "can :show User" do
+      guest.can?(:show, User).should be_true # видит подробностей о пользователе
+      guest.can?(:index, User).should be_true
+    end
+
+    end
 
 end
