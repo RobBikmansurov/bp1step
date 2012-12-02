@@ -9,4 +9,5 @@ class ApplicationController < ActionController::Base
     flash[:error] = "Access"#exception.message
     redirect_to root_url
   end
+
 end

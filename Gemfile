@@ -6,16 +6,12 @@ gem 'rails'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
-gem "devise", "~> 1.4"
+gem "devise"#, "~> 1.4"
 gem "devise_ldap_authenticatable"
 gem "cancan"
 gem 'will_paginate'
-#gem 'inherited_resources'
-##gem 'active_scaffold'
 gem 'haml-rails'
 gem 'jquery-rails'
-#gem 'forgery'
-#gem 'faker'
 gem 'awesome_nested_set'
 gem 'simple_form'
 gem 'rb-readline'
