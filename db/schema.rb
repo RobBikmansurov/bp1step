@@ -16,8 +16,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
   create_table "bapps", :force => true do |t|
     t.string   "name"
     t.string   "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "purpose"
     t.string   "apptype"
   end
@@ -25,24 +25,24 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
   create_table "bproce_bapps", :force => true do |t|
     t.integer  "bproce_id"
     t.integer  "bapp_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "apurpose"
   end
 
   create_table "bproce_workplaces", :force => true do |t|
     t.integer  "bproce_id"
     t.integer  "workplace_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "bproces", :force => true do |t|
     t.string   "shortname"
     t.string   "name"
     t.string   "fullname"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "goal"
     t.integer  "parent_id"
     t.integer  "lft"
@@ -55,8 +55,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "name"
     t.string   "description"
     t.integer  "bproce_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "features"
   end
 
@@ -67,8 +67,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "cat_type"
     t.string   "cat_name"
     t.integer  "sortorder"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "directives", :force => true do |t|
@@ -78,8 +78,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "name"
     t.string   "note"
     t.string   "body"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "annotation"
   end
 
@@ -87,8 +87,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.integer  "document_id"
     t.integer  "directive_id"
     t.string   "note"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "document_directives", ["document_id", "directive_id"], :name => "index_document_directives_on_document_id_and_directive_id", :unique => true
@@ -98,18 +98,17 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "filename"
     t.string   "description"
     t.string   "status"
-    t.integer  "status_id"
-    t.integer  "owner_id"
     t.string   "part"
     t.date     "approved"
     t.string   "place"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "status_id"
     t.integer  "bproce_id"
     t.string   "eplace"
-    t.string   "approveorgan"
     t.integer  "dlevel"
     t.integer  "responsible"
+    t.string   "approveorgan"
   end
 
   add_index "documents", ["id"], :name => "index_documents_on_id", :unique => true
@@ -117,9 +116,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.string   "description"
-    t.integer  "bproce_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "roles", ["name"], :name => "index_roles_on_name", :unique => true
@@ -130,8 +128,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "note"
     t.integer  "user_id",          :null => false
     t.integer  "business_role_id", :null => false
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_business_roles", ["business_role_id"], :name => "index_user_business_roles_on_business_role_id"
@@ -143,8 +141,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "note"
     t.integer  "user_id"
     t.integer  "role_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_roles", ["role_id"], :name => "index_user_roles_on_role_id"
@@ -156,8 +154,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "note"
     t.integer  "user_id"
     t.integer  "workplace_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_workplaces", ["user_id"], :name => "index_user_workplaces_on_user_id"
@@ -174,8 +172,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                            :null => false
-    t.datetime "updated_at",                                            :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "firstname"
     t.string   "lastname"
     t.string   "username"
@@ -195,8 +193,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "description"
     t.boolean  "typical"
     t.string   "location"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end

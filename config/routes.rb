@@ -1,7 +1,7 @@
 BPDoc::Application.routes.draw do
   resources :document_directives
   resources :directives do
-      resources :documents  # документы на основании директивы
+    resources :documents  # документы на основании директивы
   end
   resources :roles
   resources :business_roles
@@ -22,9 +22,16 @@ BPDoc::Application.routes.draw do
   
   match '/about' => 'pages#about', :via => :get
   get 'pages/about'
-
-  devise_for :users do
-    get '/users/sign_out' => 'devise/sessions#destroy'
+  #devise_for :users do
+  #devise_scope :users do
+  #  get '/users/sign_in' => 'devise/sessions#new'
+  #  get '/users/sign_out' => 'devise/sessions#destroy'
+  #end
+  devise_for :users
+  devise_scope :users do
+    get "sign_in", :to => "devise/sessions#new"
+    get "sign_out", :to => "devise/sessions#destroy"
+    get "sign_up", :to => "devise/registrations#new"
   end
   resources :users, :only => [:index, :show, :edit, :update]
   root :to => "home#index"
