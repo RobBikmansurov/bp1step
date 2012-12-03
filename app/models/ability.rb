@@ -18,6 +18,9 @@ class Ability
         can :assign_roles, User   # администратор может изменять роли доступа пользователям
         can :manage, [Bproce, BusinessRole, Document]
       end
+      if user.has_role? :autor
+        can :manage, [Directive, Document]
+      end
     end
   
   end         
