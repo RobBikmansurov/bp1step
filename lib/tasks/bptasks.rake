@@ -146,30 +146,18 @@ namespace :bp1step do
   task :create_documents_from_files  => :environment do 		# создание новых документов из файов в каталоге
     # TODO добавить конфиги для константы "files"
     # TODO добавить mailer - отправлять письмо ответственному за документ об отсутствии файла документа
+    require 'find'
     nn = 1
     nf = 0
-    pathfrom = 'files/_1_Нормативные\ документы\ банка/__Внутренние\ документы\ Банка_действующие/'
+    pathfrom = 'files/_1_Нормативные документы банка/__Внутренние документы Банка_действующие/'
     d = Dir.new(pathfrom)
-	d.entries.each do |e|
-  		next if e =~ /^\./
-  		file = File.join(d.path, e)
-  		puts file
-  		#File.delete(file) if File.file?(file)
-	end
 
-    Document.first.each do |d|
-      fname = d.eplace
-      if !fname.nil?   # если указано имя файла документа
-        if fname.size > 20
-          fname = "files" + d.file_name         # добавим путь к файлам
-          if File.exist?(fname)
-          else
-            nf += 1
-            puts "##{d.id} \t- file not found: \t#{File.basename(fname)}"
-          end
-        end
-      end
-      nn += 1
+	Find.find( pathfrom ) do |f|	# обход всех файлов в каталогах с джокументами
+  		if not File.stat(f).directory?
+  			nf += 1
+  			fname = f[pathfrom.size..-1]
+  			puts "#{nf} #{fname}"
+  		end
 	end
     puts "All: #{nn} docs, but #{nf} files not found"
   end

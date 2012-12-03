@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121122095343) do
+ActiveRecord::Schema.define(:version => 20121203105816) do
 
   create_table "bapps", :force => true do |t|
     t.string   "name"
@@ -55,8 +55,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "name"
     t.string   "description"
     t.integer  "bproce_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.text     "features"
   end
 
@@ -78,8 +78,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "name"
     t.string   "note"
     t.string   "body"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.text     "annotation"
   end
 
@@ -87,8 +87,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.integer  "document_id"
     t.integer  "directive_id"
     t.string   "note"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   add_index "document_directives", ["document_id", "directive_id"], :name => "index_document_directives_on_document_id_and_directive_id", :unique => true
@@ -106,9 +106,10 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.integer  "status_id"
     t.integer  "bproce_id"
     t.string   "eplace"
-    t.integer  "dlevel"
-    t.integer  "responsible"
     t.string   "approveorgan"
+    t.integer  "dlevel"
+    t.integer  "owner_id"
+    t.integer  "responsible"
   end
 
   add_index "documents", ["id"], :name => "index_documents_on_id", :unique => true
@@ -116,8 +117,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.string   "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   add_index "roles", ["name"], :name => "index_roles_on_name", :unique => true
@@ -128,8 +129,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "note"
     t.integer  "user_id",          :null => false
     t.integer  "business_role_id", :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   add_index "user_business_roles", ["business_role_id"], :name => "index_user_business_roles_on_business_role_id"
@@ -141,8 +142,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "note"
     t.integer  "user_id"
     t.integer  "role_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "user_roles", ["role_id"], :name => "index_user_roles_on_role_id"
@@ -154,8 +155,8 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "note"
     t.integer  "user_id"
     t.integer  "workplace_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   add_index "user_workplaces", ["user_id"], :name => "index_user_workplaces_on_user_id"
@@ -182,6 +183,7 @@ ActiveRecord::Schema.define(:version => 20121122095343) do
     t.string   "position"
     t.string   "office"
     t.string   "phone"
+    t.string   "remember_token"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
