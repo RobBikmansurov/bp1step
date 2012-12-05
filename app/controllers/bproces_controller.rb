@@ -113,9 +113,11 @@ private
       :disposition => 'inline' )
   end
 
+  # печать карточки процесса
   def print_card
     report = ODFReport::Report.new("reports/bp-card.odt") do |r|
       r.add_field "REPORT_DATE", Date.today
+      r.add_field :id, @bproce.id
       r.add_field :shortname, @bproce.shortname
       r.add_field :name, @bproce.name
       r.add_field :fullname, @bproce.fullname
@@ -131,8 +133,22 @@ private
         r.add_field :owner, "-"
       end
 
+      sp = 0 # порядковый номер строки для подпроцессов
+      subs = Bproce.where("lft>? and rgt<?", @bproce.lft, @bproce.rgt).order("lft")  # все подпроцессы процесса
+      r.add_table("SUBPROC", subs, :header => false, :skip_if_empty => true) do |t|
+        if subs.count > 0  # если документов нет - пустая таблица не будет выведена
+          t.add_column(:sp) do |ca| # порядковый номер строки таблицы
+            sp += 1
+          end
+          t.add_column(:spname) do |sub|
+            spname = '__' * (sub.depth - @bproce.depth) + sub.name
+            #spname = sub.name
+          end
+        end
+      end
+
       nn = 0 # порядковый номер строки для документов
-      r.add_table("TABLE_DOCS", @bproce.documents, :header=>true, :skip_if_empty => true) do |t|
+      r.add_table("TABLE_DOCS", @bproce.documents, :header => true, :skip_if_empty => true) do |t|
         if @bproce.documents.count > 0  # если документов нет - пустая таблица не будет выведена
           t.add_column(:nn) do |ca| # порядковый номер строки таблицы
             nn += 1
