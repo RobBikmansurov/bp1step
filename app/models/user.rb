@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   #before_save :get_ldap_email
   attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :firstname, :lastname, :displayname, :role_ids
   #attr_accessible :username, :email, :password
-  #before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
+  before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
 
   def has_role?(role_sym)
     roles.any? { |r| r.name.underscore.to_sym == role_sym }
