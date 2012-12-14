@@ -7,7 +7,7 @@ class Ability
     if user.roles.size == 0
       can :read, :all #for guest without roles
       cannot :show, User
-    else  #зарегистрированные пользователи могут:
+    else  #зарегистрированные пользователи хотя бы с одной ролью могут:
       can :view_document, Document  # просматривать файл с документом
       can :read, User   # видеть подробности о других пользователях
       if user.has_role? :admin
