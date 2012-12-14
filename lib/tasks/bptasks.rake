@@ -23,18 +23,17 @@ namespace :bp1step do
 	c3 = Net::LDAP::Filter.eq('samAccountType', '805306368')
 	c4 = Net::LDAP::Filter.eq('title', '*')		# пользователи с должностью
 	c5 = Net::LDAP::Filter.eq('mail', '*')		# имеют e-mail
-	#c6 = Net::LDAP::Filter.ne('userAccountControl:1.2.840.113556.1.4.803:', '2')
-	c6 = Net::LDAP::Filter.ne('userAccountControl', '2')	# не заблокированные (не отключенные)
+	c6 = Net::LDAP::Filter.ne('userAccountControl', '2')	# не заблокированные (не отключенные) - 'userAccountControl:1.2.840.113556.1.4.803:', '2'
 	filter = c1 & c2 & c3 & c4 & c5 & c6	#выбрать только учетные записи пользователей, имеющих атрибут title и не заблокированных. 
 	treebase = LDAP_CONFIG["development"]["base"]
 	attrs = ["sn", "givenname", "MiddleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description", "userAccountControl"]
 
 	i, new_users, upd_users, not_found_users, disabled_users = 0, 0, 0, 0, 0	# счетчики
 	ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do |entry|
-	#ldap.search(:base => treebase, :filter => filter) do |entry|
 		i += 1
   		email = entry["mail"].first				# это обязательные параметры + к ним левые уникальные password и reset_password_token
   		username = entry["sAMAccountName"].first.downcase
+  		#puts username if debug_flag
   		uac = entry["userAccountControl"].first.to_i	# второй бит = 1 означает отключенного пользователя в AD
 		if uac & 2 == 0	# пользователь не заблокирован
 		    usr = User.find_or_create_by_username :username => username, :email => email, :password => email
@@ -61,14 +60,14 @@ namespace :bp1step do
 					usr.email = email
 				end
 		    	s1 = entry["department"].first.to_s.force_encoding("UTF-8")
-				if !(usr.department == s1)	# подразделение
+				if !(usr.department.to_s == s1)	# подразделение
 					puts "#{usr.department} = #{entry['department'].first}: #{usr.department == entry['department'].first}" if debug_flag
-					usr.update_attribute(:department, entry["department"].first)
+					usr.update_attribute(:department, s1)
 				end
 		    	s2 = entry["title"].first.to_s.force_encoding("UTF-8")
 				if !(usr.position == s2)	# должность
 					puts "#{usr.position} = #{entry['title'].first}: #{usr.position == entry['title'].first}" if debug_flag
-					usr.update_attribute(:position, entry["title"].first)
+					usr.update_attribute(:position, s2)
 				end
 				if !(usr.phone == entry["telephonenumber"].first)	# телефон
 					puts "#{usr.phone} = #{entry['telephonenumber'].first}: #{usr.phone == entry['telephonenumber'].first}" if debug_flag
