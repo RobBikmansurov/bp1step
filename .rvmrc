@@ -1,2 +1,2 @@
-rvm use 1.9.3@bpdoc
+rvm use 1.9.3@bp1step
 rvm_trust_rvmrcs_flag=1
