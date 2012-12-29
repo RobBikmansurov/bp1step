@@ -16,8 +16,9 @@ test
 *.yml~
 *.erb~
 *.css~
-/app/models/user.rb.db_auth
-/db/20120925.sl
-/db.auth.off
-/db.auth.on
+app/models/user.rb.db_auth
+db/*
+db.auth.off
+db.auth.on
 *.sublime*
+files/*

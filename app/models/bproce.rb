@@ -1,6 +1,6 @@
 class Bproce < ActiveRecord::Base
   validates :shortname, :uniqueness => true,
-                        :length => {:minimum => 3, :maximum => 50}
+                        :length => {:minimum => 1, :maximum => 50}
   validates :name, :uniqueness => true,
                    :length => {:minimum => 10, :maximum => 250}
   validates :fullname, :length => {:minimum => 10, :maximum => 250}
