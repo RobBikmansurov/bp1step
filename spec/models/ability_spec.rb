@@ -52,9 +52,13 @@ describe Ability do
   let(:auth_user) { Ability.new(user) }
   context "authorized user" do
     let(:user) do
-      user = create(:user_user)
-      #user.role.create(role)
-      #auth_user = Ability.new(user)
+      user = User.new()
+      user.username = 'test_name'
+      user.password = 'test_password'
+      user.email = 'test@example.com'
+      create(:role)
+      #user.roles.create()
+      #user = Ability.new(user)
     end
 
     #it{ should be_able_to(:show, User) }
@@ -66,6 +70,6 @@ describe Ability do
       auth_user.can?(:index, User).should be_true
     end
 
-    end
+  end
 
 end

@@ -1,10 +1,6 @@
 source 'http://rubygems.org'
 
 gem 'rails'
-
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
 gem 'sqlite3'
 gem "devise"#, "~> 1.4"
 gem "devise_ldap_authenticatable"
@@ -16,6 +12,7 @@ gem 'awesome_nested_set'
 gem 'simple_form'
 gem 'rb-readline'
 gem 'odf-report'
+gem 'newrelic_rpm'
 group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
@@ -29,11 +26,14 @@ group :test do
   gem 'rspec-rails'
   gem 'shoulda-matchers'
   gem "factory_girl_rails"
+  gem 'rspec-rails'
+  gem 'webrat'
 end
 
 
-# Use unicorn as the web server
-gem 'unicorn'
+group :production do
+  gem 'unicorn'   # Use unicorn as the web server
+end
 
 
 # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
@@ -54,10 +54,5 @@ group :development do
   gem 'webrat'
   gem 'rspec-rails'
   gem 'capistrano'	# Deploy with Capistrano
-end
-group :test do
-  gem 'rspec-rails'
-  gem 'webrat'
-###  gem 'autotest'
-##  gem 'factory_girl_rails'
+  gem 'capistrano-deploy', :require => false
 end
