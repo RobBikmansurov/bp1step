@@ -12,7 +12,6 @@ gem 'awesome_nested_set'
 gem 'simple_form'
 gem 'rb-readline'
 gem 'odf-report'
-gem 'newrelic_rpm'
 group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
@@ -33,6 +32,7 @@ end
 
 group :production do
   gem 'unicorn'   # Use unicorn as the web server
+  gem 'newrelic_rpm'
 end
 
 
