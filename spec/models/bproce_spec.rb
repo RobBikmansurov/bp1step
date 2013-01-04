@@ -43,10 +43,10 @@ describe Bproce do
       @bp2 = create(:bproce, name: 'test_process2', shortname: "tst2")
       @bp2.should be_valid
     end
-    it "is not valid if length of shortname < 3 or > 50" do
-      @bp.shortname = "12"
+    it "is not valid if length of shortname < 1 or > 50" do
+      @bp.shortname = ""
       @bp.should_not be_valid
-      @bp.shortname = "123"
+      @bp.shortname = "1"
       @bp.should be_valid
       @bp.shortname = "1234567890" * 5 + "1"
       @bp.should_not be_valid
