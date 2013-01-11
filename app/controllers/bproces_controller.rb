@@ -2,7 +2,7 @@ class BprocesController < ApplicationController
   respond_to :html
   respond_to :pdf, :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
-  before_filter :get_bproce, :except => :index
+  before_filter :get_bproce, :except => [:index, :list, :print, :print_card]
 
   def list
     @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction)
@@ -83,7 +83,12 @@ private
   end
 
   def get_bproce
-    @bproce = params[:id].present? ? Bproce.find(params[:id]) : Bproce.new
+    if params[:search].present? # это поиск
+      @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      render :index # покажем список найденного
+    else
+      @bproce = params[:id].present? ? Bproce.find(params[:id]) : Bproce.new
+    end
   end
 
   def print

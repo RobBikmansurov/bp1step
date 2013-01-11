@@ -37,7 +37,6 @@ class UsersController < ApplicationController
     #redirect_to :action => :edit
   end
 
-
 private
   def sort_column
     params[:sort] || "displayname"
@@ -48,7 +47,12 @@ private
   end
 
   def get_user
-    @usr = params[:id].present? ? User.find(params[:id]) : User.new
+    if params[:search].present? # это поиск
+      @users = User.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      render :index # покажем список найденного
+    else
+      @usr = params[:id].present? ? User.find(params[:id]) : User.new
+    end
   end
 
 end

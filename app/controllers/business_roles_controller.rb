@@ -2,7 +2,7 @@ class BusinessRolesController < ApplicationController
   respond_to :html
   respond_to :odt, :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
-  before_filter :get_business_role, :except => :index
+  before_filter :get_business_role, :except => [:index, :print]
 
   def index
     if params[:all].present?
@@ -14,7 +14,6 @@ class BusinessRolesController < ApplicationController
       format.html
       format.odt { print }
     end
-
   end
   
   def new
@@ -57,7 +56,12 @@ private
   end
   
   def get_business_role
-    @business_role = params[:id].present? ? BusinessRole.find(params[:id]) : BusinessRole.new
+    if params[:search].present? # это поиск
+      @broles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      render :index # покажем список найденных бизнес-ролей
+    else
+      @business_role = params[:id].present? ? BusinessRole.find(params[:id]) : BusinessRole.new
+    end
   end
 
   def print

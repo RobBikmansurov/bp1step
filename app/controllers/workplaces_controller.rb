@@ -2,7 +2,7 @@ class WorkplacesController < ApplicationController
   respond_to :html
   respond_to :pdf, :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
-  before_filter :get_workplace, :except => :index
+  before_filter :get_workplace, :except => [:index, :print]
   #load_and_authorize_resource
 
   def index
@@ -69,7 +69,12 @@ private
   end
 
   def get_workplace
-    @workplace = params[:id].present? ? Workplace.find(params[:id]) : Workplace.new
+    if params[:search].present? # это поиск
+      @workplaces = Workplace.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      render :index # покажем список найденного
+    else
+      @workplace = params[:id].present? ? Workplace.find(params[:id]) : Workplace.new
+    end
   end
 
   def print

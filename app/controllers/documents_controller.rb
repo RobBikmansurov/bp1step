@@ -4,8 +4,7 @@ class DocumentsController < ApplicationController
   respond_to :pdf, :only => :show
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
-  before_filter :get_document, :except => :index
-
+  before_filter :get_document, :except => [:index, :print, :view]
 
   def index
     if params[:directive_id].present? # документы относящиеся к директиве
@@ -133,7 +132,12 @@ private
   end
 
   def get_document
-    @document = params[:id].present? ? Document.find(params[:id]) : Document.new
+    if params[:search].present? # это поиск
+      @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      render :index # покажем список найденного
+    else
+      @document = params[:id].present? ? Document.find(params[:id]) : Document.new
+    end
   end
 
   def sort_column  

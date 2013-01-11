@@ -57,6 +57,11 @@ private
   end
 
   def get_directive
-    @directive = params[:id].present? ? Directive.find(params[:id]) : Directive.new
+    if params[:search].present? # это поиск
+      @directives = Directive.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      render :index # покажем список найденного
+    else
+      @directive = params[:id].present? ? Directive.find(params[:id]) : Directive.new
+    end
   end
 end
