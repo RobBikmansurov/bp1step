@@ -2,7 +2,7 @@ class BappsController < ApplicationController
   respond_to :html
   respond_to :pdf, :odf, :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
-  before_filter :get_bapp, :except => :index
+  before_filter :get_bapp, :except => [:index, :print]
 
   def index
     if params[:bproce_id].present?
@@ -66,7 +66,12 @@ private
   end
   
   def get_bapp
-    @bapp = params[:id].present? ? Bapp.find(params[:id]) : Bapp.new
+    if params[:search].present? # это поиск
+      @bapps = Bapp.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      render :index # покажем список найденного
+    else
+      @bapp = params[:id].present? ? Bapp.find(params[:id]) : Bapp.new
+    end
   end
 
   def print

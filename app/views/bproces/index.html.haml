@@ -1,5 +1,10 @@
 -title "Каталог Процессов"
-%h1 Каталог Процессов 
+%h1
+  Каталог Процессов 
+  -if params[:search].present?
+    [ 
+    = params[:search]
+    ]
 
 %table
   %tr

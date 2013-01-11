@@ -2,9 +2,14 @@
 %h1
   Каталог Рабочих мест
   -if params[:location].present?
-    [
+    [ 
     = params[:location]
     ]
+  -else
+    -if params[:search].present?
+      [ 
+      = params[:search]
+      ]
 
 %table
   %tr

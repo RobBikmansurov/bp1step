@@ -7,7 +7,12 @@
       = params[:place]
       ]
   -else
-    %h1 Каталог Документов
+    %h1
+      Каталог Документов
+      -if params[:search].present?
+        [ 
+        = params[:search]
+        ]
 -else
   -title "Список внутренних документов банка"
   %h2

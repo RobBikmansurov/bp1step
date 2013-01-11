@@ -13,7 +13,12 @@
       = params[:body]
       ]  
   -else
-    %h1 Директивы
+    %h1
+      Директивы
+      -if params[:search].present?
+        [ 
+        = params[:search]
+        ]
 %table
   %tr
     %th= sortable "number", "Номер"

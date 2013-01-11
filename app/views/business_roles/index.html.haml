@@ -1,5 +1,10 @@
 -title "Каталог Ролей"
-%h1 Каталог Ролей
+%h1
+  Каталог Ролей
+  -if params[:search].present?
+    [ 
+    = params[:search]
+    ]
 
 %table
   %tr

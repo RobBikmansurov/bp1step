@@ -5,6 +5,11 @@
     [
     = @role.description
     ]
+  -else
+    -if params[:search].present?
+      [ 
+      = params[:search]
+      ]
 
 %table
   %tr

@@ -1,6 +1,11 @@
 -title "Каталог Приложений"
 -if @bproce == nil
-  %h1 Каталог Приложений
+  %h1
+    Каталог Приложений
+    -if params[:search].present?
+      [ 
+      = params[:search]
+      ]
 -else
   %h1
     Приложения процесса
