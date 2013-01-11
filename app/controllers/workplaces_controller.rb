@@ -7,7 +7,8 @@ class WorkplacesController < ApplicationController
 
   def index
     if params[:all].present?
-      @workplaces = Workplace.order(sort_column + ' ' + sort_direction)
+      @workplaces = Workplace.find(:all, :include => :users)
+      #@workplaces = Workplace.find(:all, :include => :users).order(sort_column + ' ' + sort_direction)
     else
       if params[:location].present?
         @workplaces = Workplace.where(:location => params[:location]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])

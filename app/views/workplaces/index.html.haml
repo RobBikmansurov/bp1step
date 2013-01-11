@@ -16,7 +16,8 @@
     %th= sortable "designation", "Обозначение"
     %th= sortable "name", "Наименование"
     %th= sortable "description", "Описание"
-    %th= sortable "location", "Местоположение"
+    %th Исполнитель
+    %th= sortable "location", "Каб."
     - if can? :destroy, Workplace
       %th
     
@@ -28,13 +29,15 @@
         %td= link_to workplace.designation, workplace_path(workplace)
       %td= workplace.name
       %td= workplace.description
+      %td= workplace.users.first
       %td= workplace.location
       - if can? :destroy, workplace
         %td
           = link_to 'Удалить', workplace, confirm: 'Действительно хотите удалить?', :method => :delete 
 
-.apple_pagination
-  = will_paginate @workplaces 
+-if ! params[:all].present? # если список всех мест - отключить постраничый вывод
+  .apple_pagination
+    = will_paginate @workplaces 
 
 - if can? :destroy, Workplace
   .button
