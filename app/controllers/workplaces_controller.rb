@@ -8,15 +8,14 @@ class WorkplacesController < ApplicationController
   def index
     if params[:all].present?
       @workplaces = Workplace.find(:all, :include => :users)
-      #@workplaces = Workplace.find(:all, :include => :users).order(sort_column + ' ' + sort_direction)
     else
       if params[:location].present?
         @workplaces = Workplace.where(:location => params[:location]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
       else
         @workplaces = Workplace.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
       end
+      @workplaces = @workplaces.find(:all, :include => :users)
     end
-    @workplaces = @workplaces.find(:all, :include => :users)
     respond_to do |format|
       format.html
       format.pdf { print }
