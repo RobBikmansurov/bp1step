@@ -29,7 +29,14 @@
         %td= link_to workplace.designation, workplace_path(workplace)
       %td= workplace.name
       %td= workplace.description
-      %td= workplace.users.first
+      -if workplace.users.first
+        %td
+          = link_to workplace.users.first.displayname, workplace.users.first
+          -if workplace.users.count > 1
+            \..
+            = workplace.users.count
+      -else
+        %td
       %td= workplace.location
       - if can? :destroy, workplace
         %td

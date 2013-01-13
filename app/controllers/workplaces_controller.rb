@@ -16,6 +16,7 @@ class WorkplacesController < ApplicationController
         @workplaces = Workplace.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
       end
     end
+    @workplaces = @workplaces.find(:all, :include => :users)
     respond_to do |format|
       format.html
       format.pdf { print }
@@ -71,7 +72,8 @@ private
 
   def get_workplace
     if params[:search].present? # это поиск
-      @workplaces = Workplace.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      @workplaces = Workplace.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page]).find(:all, :include => :users)
+    #@workplaces = @workplaces.find(:all, :include => :users)
       render :index # покажем список найденного
     else
       @workplace = params[:id].present? ? Workplace.find(params[:id]) : Workplace.new
