@@ -10,6 +10,7 @@ class BusinessRolesController < ApplicationController
     else
       @broles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
     end
+    @broles = @broles.find(:all, :include => :users)
     respond_to do |format|
       format.html
       format.odt { print }
@@ -57,7 +58,7 @@ private
   
   def get_business_role
     if params[:search].present? # это поиск
-      @broles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      @broles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page]).find(:all, :include => :users)
       render :index # покажем список найденных бизнес-ролей
     else
       @business_role = params[:id].present? ? BusinessRole.find(params[:id]) : BusinessRole.new
