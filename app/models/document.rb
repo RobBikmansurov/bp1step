@@ -23,6 +23,7 @@ class Document < ActiveRecord::Base
       fname = self.eplace[(self.eplace.index("_1_Норма")-1)..-1]  # обрежем начало - путь шары
       fname = fname.gsub(/%20/, ' ')  # заменим %20 на пробел
       fname = fname.gsub('\\', '/')   # заменим обратные слэши Windows на нормальные
+      fname = fname.gsub('__Внут', '_1_Внут')
       self.eplace = fname
     end
   end

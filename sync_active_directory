@@ -4,9 +4,10 @@ exec 2>&1
 WDIR=/home/rubydev/bp1step/
 LOG=$WDIR/log/bp1step.log
 exec 1>>$LOG
-cd $WDIR
 echo
-echo `date +'%Y.%m.%d %H:%M'`
+echo `date +'%Y.%m.%d %H:%M'` - "${0##*/}"
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+cd $WDIR >> /dev/null
 # load rvm ruby
 RPATH=`rvm env --path`
 source $RPATH
