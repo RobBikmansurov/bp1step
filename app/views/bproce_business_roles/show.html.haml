@@ -7,9 +7,17 @@
   %tr
     %th Роль
     %th Назначение в процессе
-  
+    %th Исполнитель
 
   -@business_roles.each do |ro|
     %tr
       %td= link_to ro.name, business_role_path(ro)
       %td= ro.description
+      -if ro.users.first
+        %td
+          = link_to ro.users.first.displayname, ro.users.first
+          -if ro.users.count > 1
+            \..
+            = ro.users.count
+      -else
+        %td
