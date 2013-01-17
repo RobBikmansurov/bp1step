@@ -54,5 +54,6 @@ group :development do
   gem 'webrat'
   gem 'rspec-rails'
   gem 'capistrano'	# Deploy with Capistrano
+  gem 'rvm-capistrano'
   gem 'capistrano-deploy', :require => false
 end
