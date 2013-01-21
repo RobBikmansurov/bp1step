@@ -7,7 +7,6 @@ tmp/
 config/
 *.0
 *.rar
-Gemfile.lock
 Gemfile~
 test
 *.swp
