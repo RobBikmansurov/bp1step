@@ -32,20 +32,21 @@ class User < ActiveRecord::Base
   end
 
   def get_ldap_lastname
-      tempname = Devise::LdapAdapter.get_ldap_param(self.username,"sn")
-      tempname = tempname.force_encoding("UTF-8") if !tempname == nil
-      self.lastname = tempname
+    s = Devise::LdapAdapter.get_ldap_param(self.username,"sn")
+    s = s.to_s.force_encoding("UTF-8")
+    self.lastname = s
   end 
 
   def get_ldap_firstname
-      tempname = Devise::LdapAdapter.get_ldap_param(self.username,"givenname")
-      tempname = tempname.force_encoding("UTF-8") if !tempname == nil
-      self.firstname = tempname
+    s = Devise::LdapAdapter.get_ldap_param(self.username,"givenname")
+    s = s.to_s.force_encoding("UTF-8")
+    self.firstname = s
   end 
 
   def get_ldap_displayname
-      tempname = Devise::LdapAdapter.get_ldap_param(self.username,"displayname")
-      self.displayname = tempname.force_encoding("UTF-8") if !tempname == nil
+    s = Devise::LdapAdapter.get_ldap_param(self.username,"displayname")
+    s = s.to_s.force_encoding("UTF-8")
+    self.displayname = s
   end 
 
   def get_ldap_email

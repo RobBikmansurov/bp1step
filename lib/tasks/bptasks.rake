@@ -33,7 +33,7 @@ namespace :bp1step do
 		i += 1
   		email = entry["mail"].first				# это обязательные параметры + к ним левые уникальные password и reset_password_token
   		username = entry["sAMAccountName"].first.downcase
-  		#puts "#{username}" if debug_flag
+  		#puts "#{username} #{email}" if debug_flag
   		uac = entry["userAccountControl"].first.to_i	# второй бит = 1 означает отключенного пользователя в AD
 		if uac & 2 == 0	# пользователь не заблокирован
 		    usr = User.find_or_create_by_username :username => username, :email => email, :password => email
@@ -61,12 +61,12 @@ namespace :bp1step do
 				end
 		    	s1 = entry["department"].first.to_s.force_encoding("UTF-8")
 				if !(usr.department.to_s == s1)	# подразделение
-					puts "#{usr.department} = #{s1}: #{usr.department == s1}" if debug_flag
+					puts "#{usr.id}: #{usr.department} = #{s1}: #{usr.department == s1}" if debug_flag
 					usr.update_attribute(:department, s1)
 				end
 		    	s2 = entry["title"].first.to_s.force_encoding("UTF-8")
-				if !(usr.position == s2)	# должность
-					puts "#{usr.position} = #{s2}: #{usr.position == s2}" if debug_flag
+				if !(usr.position.to_s == s2)	# должность
+					puts "#{usr.id}: #{usr.position} = #{s2}: #{usr.position == s2}" if debug_flag
 					usr.update_attribute(:position, s2)
 				end
 				if !(usr.phone == entry["telephonenumber"].first)	# телефон
@@ -118,9 +118,9 @@ namespace :bp1step do
   desc "Check document files in eplace location"
   task :check_document_files  => :environment do 		# проверка наличия файлов документов в каталоге
     # TODO добавить конфиги для константы "files"
-    # TODO добавить mailer - отправлять письмо ответственному за документ об отсутствии файла документа
     nn = 1
     nf = 0
+    u = User.find(97)
     Document.all.each do |d|
       fname = d.eplace
       if !fname.nil?   # если указано имя файла документа
@@ -130,6 +130,10 @@ namespace :bp1step do
           else
             nf += 1
             puts "##{d.id} \t- file not found: \t#{File.basename(fname)}"
+            if !d.owner_id.nil?
+              u = User.find(d.owner_id)
+            end
+            DocumentMailer.file_not_found_email(d, u).deliver
           end
         end
       end
