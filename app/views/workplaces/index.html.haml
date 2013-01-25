@@ -37,7 +37,7 @@
             = workplace.users.count - 1
       -else
         %td
-      %td= workplace.location
+      %td= link_to workplace.location, workplaces_path + '?location=' + workplace.location
       - if can? :destroy, workplace
         %td
           = link_to 'Удалить', workplace, confirm: 'Действительно хотите удалить?', :method => :delete 
