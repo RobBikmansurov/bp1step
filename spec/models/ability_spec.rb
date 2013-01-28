@@ -52,7 +52,11 @@ describe Ability do
 
   let(:auth_user) { Ability.new(user) }
   context "authorized user" do
+<<<<<<< HEAD
     let(:user) {FactoryGirl.create(:auth_user)}
+=======
+    let(:user) {FactoryGirl.create(:user)}
+>>>>>>> 086df5a327335da5566b17afb98876d827e34abc
     
     #it{ should be_able_to(:show, User) }
     it "can view document" do
