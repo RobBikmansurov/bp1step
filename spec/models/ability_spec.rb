@@ -4,6 +4,7 @@ require 'factory_girl'
 
 describe Ability do
   let(:guest) { Ability.new(user) }
+  #let(:guest) { FactoryGirl.create(:user) }
   let(:any_document) { Document.new() }
   let(:paid_article) { Bapp.new() }
 
@@ -51,16 +52,8 @@ describe Ability do
 
   let(:auth_user) { Ability.new(user) }
   context "authorized user" do
-    let(:user) do
-      user = User.new()
-      user.username = 'test_name'
-      user.password = 'test_password'
-      user.email = 'test@example.com'
-      create(:role)
-      #user.roles.create()
-      #user = Ability.new(user)
-    end
-
+    let(:user) {FactoryGirl.create(:user)}
+    
     #it{ should be_able_to(:show, User) }
     it "can view document" do
       auth_user.can?(:view_document, Document).should be_true
