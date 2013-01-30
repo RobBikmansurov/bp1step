@@ -3,68 +3,49 @@ require "spec_helper"
 require 'factory_girl'
 
 describe Ability do
-  let(:guest) { Ability.new(user) }
-  #let(:guest) { FactoryGirl.create(:user) }
-  let(:any_document) { Document.new() }
-  let(:paid_article) { Bapp.new() }
-
-  context "guest user" do   # незарегистрированный пользователь
-    let(:user) { nil }
-    it "can :read any Objects" do
-      guest.can?(:read, Bapp).should be_true
-      guest.can?(:read, Bproce).should be_true
-      guest.can?(:read, BproceBapp).should be_true
-      guest.can?(:read, BproceWorkplace).should be_true
-      guest.can?(:read, BusinessRole).should be_true
-      guest.can?(:read, Directive).should be_true
-      guest.can?(:read, Document).should be_true
-      guest.can?(:read, Role).should be_true
-      guest.can?(:read, User).should be_true
-      guest.can?(:read, UserBusinessRole).should be_true
-      guest.can?(:read, UserWorkplace).should be_true
-      guest.can?(:read, Workplace).should be_true
+  context "unauthorized user or user without roles" do   # незарегистрированный пользователь
+    user = FactoryGirl.build(:user)
+    ability = Ability.new(user)
+    [Bapp, Bproce, BproceBapp, BusinessRole, Directive, Document, Role, Workplace].each do |model|
+      it "can :read '#{model.to_s}' but can't :manage them" do
+        ability.should be_able_to(:read, model.new)
+        ability.should_not be_able_to(:manage, FactoryGirl.create(model.to_s.underscore.to_sym))
+      end
     end
-    it "cannot :manage any Objects" do
-      guest.can?(:manage, Bapp).should be_false
-      guest.can?(:manage, Bproce).should be_false
-      guest.can?(:manage, BproceBapp).should be_false
-      guest.can?(:manage, BproceWorkplace).should be_false
-      guest.can?(:manage, BusinessRole).should be_false
-      guest.can?(:manage, Directive).should be_false
-      guest.can?(:manage, Document).should be_false
-      guest.can?(:manage, Role).should be_false
-      guest.can?(:manage, User).should be_false
-      guest.can?(:manage, UserBusinessRole).should be_false
-      guest.can?(:manage, UserWorkplace).should be_false
-      guest.can?(:manage, Workplace).should be_false
+    it "can't :show User" do
+      ability.can?(:show, User).should be_false # не видит подробностей о пользователе
+      ability.can?(:index, User).should be_true # видит список пользователей
     end
-    it "cannot :show User" do
-      guest.can?(:show, User).should be_false # не видит подробностей о пользователе
-      guest.can?(:index, User).should be_true
+    it "can't assign Roles" do
+      ability.can?(:assign_roles, User).should be_false
     end
-    it "can't assign roles" do
-      guest.can?(:assign_roles, User).should be_false
-    end
-    it "can't view document" do
-      guest.can?(:view_document, Document).should be_false
+    it "can't view Document" do
+      ability.can?(:view_document, Document).should be_false  # не может просмотреть файл документа
     end
   end
 
-  let(:auth_user) { Ability.new(user) }
-  context "authorized user" do
-<<<<<<< HEAD
-    let(:user) {FactoryGirl.create(:auth_user)}
-=======
-    let(:user) {FactoryGirl.create(:user)}
->>>>>>> 086df5a327335da5566b17afb98876d827e34abc
-    
-    #it{ should be_able_to(:show, User) }
-    it "can view document" do
-      auth_user.can?(:view_document, Document).should be_true
+  context "authorized user with role :user" do   # зарегистрированный пользователь
+    user = FactoryGirl.build(:user)
+    role = FactoryGirl.build(:role)
+    role.name = :user
+    user_role = UserRole.new
+    user_role.user_id = user.id
+    user_role.role_id = role.id
+    user_role.save
+
+    puts user.roles.count
+
+    it "has roles" do
+      user.roles.count.should == 0
+    end
+
+    ability = Ability.new(user)
+
+    it "can view Document" do
+      ability.can?(:view_document, Document).should be_true  # может просмотреть файл документа
     end
     it "can :show User" do
-      auth_user.can?(:show, User).should be_true # видит подробностей о пользователе
-      auth_user.can?(:index, User).should be_true
+      ability.should be_able_to(:read, User)
     end
 
   end
