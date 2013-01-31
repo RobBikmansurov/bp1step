@@ -25,27 +25,29 @@ describe Ability do
   end
 
   context "authorized user with role :user" do   # зарегистрированный пользователь
-    user = FactoryGirl.build(:user)
-    role = FactoryGirl.build(:role)
+    user = FactoryGirl.create(:user)
+    role = FactoryGirl.create(:role)
     role.name = :user
     user_role = UserRole.new
     user_role.user_id = user.id
     user_role.role_id = role.id
     user_role.save
 
-    puts user.roles.count
+    puts user.roles.first.name
 
     it "has roles" do
-      user.roles.count.should == 0
+      user.roles.count.should == 1
     end
 
     ability = Ability.new(user)
 
     it "can view Document" do
       ability.can?(:view_document, Document).should be_true  # может просмотреть файл документа
+      #ability.should be_able_to(:view_document, Document)   # может просмотреть файл документа
     end
     it "can :show User" do
       ability.should be_able_to(:read, User)
+      #ability.can?(:show, User).should be_true # видит подробностей о пользователе
     end
 
   end
