@@ -18,10 +18,10 @@
     %th= sortable "phone", "Телефон"
     %th Должность
     %th Офис
-    -if can? :manage, @users
+    -if can? :manage, @users.first
       %th Login (ip)
       %th Last login
-    - if can? :destroy, @users
+    - if can? :destroy, @users.first
       %th Роли доступа
   
 
