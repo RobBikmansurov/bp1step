@@ -1,19 +1,23 @@
 a {
-  padding: 3px 5px 3px;
+  padding: 2px 5px 2px;
 }
 a:hover {
-  border-radius: 1em;
   color: #fff;
-  background-color: #000;
+  background-color: #336699;
+  border-radius: 5px;
 }
 .nav {
   display: block;
-  margin: 0 10px 0 0;
+  white-space: nowrap;
+  margin: 0 5px 0 0;
   position: relative;
-  left: 0;
   font-weight: bold;
+  text-decoration: none;
+  color: #ddd;
+  line-height: 22px;
+  text-transform: uppercase;
 }
-.nav > li {
+.nav li {
   display: block;
   float: left;
 }
@@ -22,11 +26,11 @@ a:hover {
   text-decoration: none;
 }
 .nav a:hover {
+  border-radius: 0em;
   color: #fff;
   background-color: #000;
-  border-radius: 1em;
 }
-#menu {background: #ccc;}
+#menu {background: #FFCC99;}
 th {
   background: #ddd;
 }
