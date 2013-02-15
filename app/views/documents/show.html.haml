@@ -1,22 +1,17 @@
 -title "Внутренний документ банка"
-%h2
-  = @document.name 
+%h2= @document.name 
 %h3 Описание
 = @document.description
 %h3
   утвердил
-  %b
-    = @document.approveorgan
+  %b= @document.approveorgan
   от
-  %b
-    = @document.approved
+  %b= @document.approved
 %h3
   уровень документа:
-  %b
-    = link_to @document.dlevel, documents_path + '?dlevel=' + @document.dlevel.to_s
+  %b= link_to @document.dlevel, documents_path + '?dlevel=' + @document.dlevel.to_s
   раздел документооборота:
-  %b
-    = link_to @document.part, documents_path + '?part=' + @document.part
+  %b= link_to @document.part, documents_path + '?part=' + @document.part
 
 -if @document.bproce
   %h3
@@ -31,7 +26,7 @@
     = link_to User.find(@document.responsible).displayname, user_path(@document.responsible)
   -else
     %b
-      не задан
+    не задан
 
 -#= @document.inspect
 %hr
@@ -44,8 +39,7 @@
 %h3 Место хранения
 %li
   оригинал:
-  %b
-    = link_to @document.place, documents_path + '?place=' + @document.place
+  %b= link_to @document.place, documents_path + '?place=' + @document.place
 
 %li
   электронный документ:
@@ -64,8 +58,5 @@
 
 %p
 -if can? :update, Document
-  .button
-    = link_to 'Edit', edit_document_path(@document)
-.button
-  -#= link_to 'Back', documents_path
-  = link_to 'Back', :back
+  .button= link_to 'Edit', edit_document_path(@document)
+.button= link_to 'Back', :back
