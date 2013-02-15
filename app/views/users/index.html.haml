@@ -10,6 +10,11 @@
       [ 
       = params[:search]
       ]
+    -else
+      -if params[:office].present?
+        [
+        =params[:office]
+        ]
 
 %table
   %tr
@@ -17,7 +22,7 @@
     %th= sortable "email", "Почта"
     %th= sortable "phone", "Телефон"
     %th Должность
-    %th Офис
+    %th= sortable "office", "Офис"
     -if can? :manage, @users.first
       %th Login (ip)
       %th Last login
@@ -35,7 +40,10 @@
       %td= mail_to user.email, user.email, :subject => "BP1Step"
       %td= user.phone
       %td= user.position
-      %td= user.office
+      -if user.office
+        %td= link_to user.office, users_path + '?office=' + user.office
+      -else
+        %td
       -if can? :manage, user
         %td
           = user.current_sign_in_at

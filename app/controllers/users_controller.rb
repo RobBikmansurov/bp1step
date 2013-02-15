@@ -9,7 +9,11 @@ class UsersController < ApplicationController
       @role = Role.find_by_name(params[:role])
       @users = @role.users.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
     else
-      @users = User.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      if params[:office].present?
+        @users = User.where(:office => params[:office]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      else
+        @users = User.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      end
     end
   end
 
