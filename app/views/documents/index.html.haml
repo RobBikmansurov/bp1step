@@ -23,10 +23,11 @@
   %tr
     %th 
     %th= sortable "name", "Наименование"
-    %th= sortable "description", "Описание"
+    -#%th= sortable "description", "Описание"
     -#    %th Имя файла
     -#%th authority
     %th= sortable "status", "Статус"
+    %th= sortable "approved", "От"
     %th Место
     -#%th responsible
     - if can? :destroy, Document
@@ -38,7 +39,7 @@
       %td= link_to document.name, document_path(document)
       -#      %td= document.filename
       %td= document.status
-      %td= document.approved 
+      %td= document.approved.strftime('%d.%m.%Y') if document.approved
       %td= document.place 
       - if can? :destroy, document
         %td

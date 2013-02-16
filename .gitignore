@@ -8,6 +8,7 @@ config/
 *.0
 *.rar
 Gemfile~
+Gemfile.lock
 test
 *.swp
 *.haml~
