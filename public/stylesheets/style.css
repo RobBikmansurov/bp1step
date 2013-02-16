@@ -88,4 +88,21 @@ a.button:active,
   box-shadow:#5a5a5a 0px 3px 5px inset;
 }
 
+logo {
+  position  : relative;
+  width   : 100%; /* for IE 6 */
+}
+
+logo_text {
+  position: absolute;
+  top: 29px;
+  left: 0;
+  width: 100%;
+}
+logo_text span {
+  color: #fff;
+  font-size: 10px;
+  line-height: 20px;
+  background: rgba(0, 0, 0, 0.3);
+}
 
