@@ -7,7 +7,7 @@ class Directive < ActiveRecord::Base
   has_many :document_directive, :dependent => :destroy
 
   def shortname
-    return title + " " + number + " " + approval.to_s
+    return title + " " + number + " " + approval.strftime("%d.%m.%Y")
   end
 
   def self.search(search)

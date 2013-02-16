@@ -46,11 +46,11 @@
         %td
       -if can? :manage, user
         %td
-          = user.current_sign_in_at
+          = user.current_sign_in_at.to_s(:ru_datetime)
           (
           = user.current_sign_in_ip
           )
-        %td= user.last_sign_in_at
+        %td= user.last_sign_in_at.to_s(:ru_datetime)
       - if can? :destroy, user
         %td
           -user.roles.each do |role|

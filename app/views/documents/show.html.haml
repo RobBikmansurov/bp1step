@@ -3,10 +3,12 @@
 %h3 Описание
 = @document.description
 %h3
-  утвердил
-  %b= @document.approveorgan
-  от
-  %b= @document.approved
+  -if @document.approveorgan
+    утвердил
+    %b= @document.approveorgan
+  -if @document.approved
+    от
+    %b= @document.approved.strftime('%d.%m.%Y')
 %h3
   уровень документа:
   %b= link_to @document.dlevel, documents_path + '?dlevel=' + @document.dlevel.to_s

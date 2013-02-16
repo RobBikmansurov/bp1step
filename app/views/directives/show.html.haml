@@ -6,7 +6,7 @@
     №
     = @directive.number
     от 
-    = @directive.approval
+    = @directive.approval.strftime('%d.%m.%Y') if @directive.approval
 %h3
   = @directive.name
 -if !@directive.note.empty?

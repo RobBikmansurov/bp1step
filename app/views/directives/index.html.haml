@@ -31,7 +31,7 @@
   - @directives.each do |directive|
     %tr
       %td= link_to directive.number, directive
-      %td= directive.approval
+      %td= directive.approval.strftime('%d.%m.%Y')
       %td
         = directive.title
         = directive.body
