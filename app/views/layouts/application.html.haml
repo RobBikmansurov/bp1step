@@ -22,7 +22,7 @@
             %span Бизнес-процессы - первый шаг
         #search.span-8
           %form.inline{:method => "get"}
-            %input{:name => "search", :type => "text", :value => params[:search]}
+            %input{:name => "search", :type => "search", :value => params[:search], :placeholder => "искать"}
           %sup введите подстроку поиска с учетом регистра
         #users.span-9.last
           - if user_signed_in?
@@ -43,12 +43,12 @@
           %ul.nav{:style => "float:right"}
             %li Настройки
             %li= link_to "Справка", '/about'
-      %hr/
+      %hr
       #main.span-24.last
         - flash.each do |name, msg|
           = content_tag :div, msg, :id => "flash_#{name}"
         = yield
-      %hr/
+      %hr
       #footer.span-24.last
         %p
           &copy;
