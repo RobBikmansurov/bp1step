@@ -33,7 +33,7 @@ describe Ability do
     user_role.role_id = role.id
     user_role.save
 
-    puts user.roles.first.name
+    #puts user.roles.first.name
 
     it "has roles" do
       user.roles.count.should == 1

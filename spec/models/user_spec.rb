@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe User do
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryGirl.build(:user)
+    puts @user.username
+    puts @user.email
   end
   it "should be valid" do
     @user.should be_valid
