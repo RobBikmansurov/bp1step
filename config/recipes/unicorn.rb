@@ -1,7 +1,7 @@
-set_default(:unicorn_user) { user }
-set_default(:unicorn_pid) { "#{current_path}/tmp/pids/unicorn.pid" }
+set_default(:unicorn_user)   { user }
+set_default(:unicorn_pid)    { "#{current_path}/tmp/pids/unicorn.pid" }
 set_default(:unicorn_config) { "#{application}/config/unicorn.rb" }
-set_default(:unicorn_log) { "log/unicorn.log" }
+set_default(:unicorn_log)    { "log/unicorn.log" }
 set_default(:unicorn_workers, 2)
 
 namespace :unicorn do

@@ -15,6 +15,8 @@ TIMEOUT=${TIMEOUT-60}
 APP_ROOT=<%= current_path %>
 PID=<%= unicorn_pid %>
 CMD="cd <%= current_path %>; bundle exec unicorn -D -c <%= unicorn_config %> -E production"
+#CMD="/home/rubydev/.rvm/gems/ruby-1.9.3-p385@bp1step/bin/unicorn -D -c $APP_ROOT/config/unicorn.rb -E production"
+
 AS_USER=<%= unicorn_user %>
 set -u
 

@@ -13,12 +13,12 @@ set eventqueue
 #     using tlsv1
 #     with timeout 30 seconds
 
-set alert ryan@railscasts.com
+set alert robb@bankperm.ru
 
-set httpd port 2812
-    allow admin:"secret"
+set httpd port 2812 and
+    allow admin:admin
 
-check system blog_server
+check system bp1step
   if loadavg(5min) > 2 for 2 cycles then alert
   if memory > 75% for 2 cycles then alert
   if cpu(user) > 75% for 2 cycles then alert

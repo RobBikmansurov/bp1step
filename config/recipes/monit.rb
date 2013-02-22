@@ -9,7 +9,7 @@ namespace :monit do
   task :setup do
     monit_config "monitrc", "/etc/monit/monitrc"
     nginx
-    postgresql
+    #postgresql
     unicorn
     syntax
     reload
@@ -17,7 +17,7 @@ namespace :monit do
   after "deploy:setup", "monit:setup"
   
   task(:nginx, roles: :web) { monit_config "nginx" }
-  task(:postgresql, roles: :db) { monit_config "postgresql" }
+  #task(:postgresql, roles: :db) { monit_config "postgresql" }
   task(:unicorn, roles: :app) { monit_config "unicorn" }
 
   %w[start stop restart syntax reload].each do |command|
