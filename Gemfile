@@ -8,6 +8,7 @@ gem "cancan"
 gem 'will_paginate'
 gem 'haml-rails'
 gem 'jquery-rails'
+gem 'rails3-jquery-autocomplete'
 gem 'awesome_nested_set'
 gem 'simple_form'
 gem 'rb-readline'

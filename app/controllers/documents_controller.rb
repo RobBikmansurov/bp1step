@@ -6,6 +6,8 @@ class DocumentsController < ApplicationController
   helper_method :sort_column, :sort_direction
   before_filter :get_document, :except => [:index, :print, :view]
 
+  #autocomplete :user, :displayname
+
   def index
     if params[:directive_id].present? # документы относящиеся к директиве
       @directive = Directive.find(params[:directive_id])

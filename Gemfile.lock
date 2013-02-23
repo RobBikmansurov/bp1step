@@ -124,6 +124,8 @@ GEM
       activesupport (= 3.2.12)
       bundler (~> 1.0)
       railties (= 3.2.12)
+    rails3-jquery-autocomplete (1.0.11)
+      rails (~> 3.0)
     railties (3.2.12)
       actionpack (= 3.2.12)
       activesupport (= 3.2.12)
@@ -206,6 +208,7 @@ DEPENDENCIES
   newrelic_rpm
   odf-report
   rails
+  rails3-jquery-autocomplete
   rb-readline
   rspec-rails
   rvm-capistrano
