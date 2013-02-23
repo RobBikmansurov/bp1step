@@ -16,7 +16,9 @@ BPDoc::Application.routes.draw do
   resources :bproces do
     resources :bapps
   end
-
+  resources :users do
+    get :autocomplete, :on => :collection
+  end
   match '/bproceses' => 'bproces#list', :via => :get  # получение полного списка процессов
   match '/bproces/:id/card' => 'bproces#card', :via => :get  # карточка процесса
   

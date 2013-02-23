@@ -3,9 +3,14 @@
   = f.input :name
   = f.input :dlevel, :collection => 1..4, :as => :radio_buttons, :hint => 'Уровень документа: Политики - Положения - Регламенты - Свидетельства'
   = f.input :description, :as => :text
+  
   = f.input :responsible, :collection => User.all(:order => 'displayname'), :include_blank => true, :prompt => 'Ответственный', :label_method => :displayname, :label => 'Ответственный за документ'
+  
+  = f.input :owner_id, data: {autocomplete_source: autocomplete_users_path}, :label => 'Владелец'
 
-  -#.field
+  -#= f.input :owner_id, data: {autocomplete_source: autocomplete_users}, :prompt => 'Владелец'
+  
+    -#.field
     -#= f.label 'Имя файла'
     -#      -form_for @document do |ff|
   -#= f.association :status_id, Category.all

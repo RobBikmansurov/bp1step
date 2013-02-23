@@ -29,6 +29,10 @@
   -else
     %b
     не задан
+%h3
+  Владелец:
+  -if @document.owner_id?
+    = link_to User.find(@document.owner_id).displayname, user_path(@document.responsible)
 
 -#= @document.inspect
 %hr

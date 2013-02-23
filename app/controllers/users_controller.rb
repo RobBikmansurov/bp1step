@@ -2,7 +2,7 @@
 class UsersController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
-  before_filter :get_user, :except => :index
+  before_filter :get_user, :except => [:index, :autocomplete]
 
   def index
     if params[:role].present?
@@ -15,6 +15,11 @@ class UsersController < ApplicationController
         @users = User.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
       end
     end
+  end
+
+  def autocomplete
+    @users = User.all
+    render json: @users.map(&:displayname)
   end
 
   def show
