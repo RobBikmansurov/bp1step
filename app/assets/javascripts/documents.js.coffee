@@ -2,4 +2,5 @@
 // All this logic will automatically be available in application.js.jQuery ->
 jQuery ->
   $('#document_owner_id').autocomplete
-   source: $('#document_owner_id').data('autocomplete-source')
+    source: ['four', 'feeft', 'foo']
+//  source: $('#document_owner_id').data('autocomplete-source')

@@ -32,7 +32,7 @@
 %h3
   Владелец:
   -if @document.owner_id?
-    = link_to User.find(@document.owner_id).displayname, user_path(@document.responsible)
+    = link_to @document.owner_name, user_path(@document.owner_id)
 
 -#= @document.inspect
 %hr
