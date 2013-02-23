@@ -10,13 +10,24 @@ class Document < ActiveRecord::Base
 
   # документ относится к процессу
   belongs_to :bproce
-  has_many :user, :through => :document_user
+  belongs_to :user
+  belongs_to :owner, :class_name => 'User'
+  #has_many :user, :through => :owner_id
   has_many :directive, :through => :document_directive
   has_many :document_directive, :dependent => :destroy
 
   attr_protected :uploaded_file # чтобы не было ошибки при массовом сохранении из params
 
   before_save :file_name_sanityze # удалим из имени файла коды пробелов и заменим обратные слэши на прямые
+
+  def owner_name
+    owner.try(:displayname)
+  end
+
+  def owner_name=(name)
+    self.owner = User.find_by_displayname(name) if name.present?
+  end
+
 
   def file_name_sanityze
     if !self.eplace.to_s.empty?  # если имя файла не пустое

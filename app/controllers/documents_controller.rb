@@ -45,8 +45,9 @@ class DocumentsController < ApplicationController
   end
 
   def update
-    user_id = @document.owner_id
+    #user_id = @document.owner_id
     uploaded_file = params[:document][:uploaded_file] # информация о загруженном файле
+    logger.debug "owner_id= #{@document.owner_id}"
     #if !uploaded_file.nil?
     #  logger.debug "uploaded_file = #{uploaded_file.inspect}"
     #  logger.debug "headers = #{uploaded_file.headers}"
