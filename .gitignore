@@ -22,3 +22,4 @@ db.auth.off
 db.auth.on
 *.sublime*
 files/*
+.sass-cache/*
