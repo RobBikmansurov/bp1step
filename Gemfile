@@ -8,6 +8,9 @@ gem "cancan"
 gem 'will_paginate'
 gem 'haml-rails'
 gem 'jquery-rails'
+gem 'execjs'
+gem 'therubyracer'
+
 gem 'rails3-jquery-autocomplete'
 gem 'awesome_nested_set'
 gem 'simple_form'
@@ -16,7 +19,7 @@ gem 'odf-report'
 group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
-
+  gem 'jquery-ui-rails'
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer'
 

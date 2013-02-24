@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   end
 
   def autocomplete
-    @users = User.all
+    @users = User.order(:displayname).where("displayname like ?", "%#{params[:term]}%")
     render json: @users.map(&:displayname)
   end
 
