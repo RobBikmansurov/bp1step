@@ -16,7 +16,7 @@ BPDoc::Application.routes.draw do
   resources :bproces do
     resources :bapps
   end
-  resources :users do
+  resources :users, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
   match '/bproceses' => 'bproces#list', :via => :get  # получение полного списка процессов
@@ -24,11 +24,6 @@ BPDoc::Application.routes.draw do
   
   match '/about' => 'pages#about', :via => :get
   get 'pages/about'
-  #devise_for :users do
-  #devise_scope :users do
-  #  get '/users/sign_in' => 'devise/sessions#new'
-  #  get '/users/sign_out' => 'devise/sessions#destroy'
-  #end
   devise_for :users
   devise_scope :users do
     get "sign_in", :to => "devise/sessions#new"

@@ -7,9 +7,7 @@ gem "devise_ldap_authenticatable"
 gem "cancan"
 gem 'will_paginate'
 gem 'haml-rails'
-gem 'jquery-rails'
 gem 'execjs'
-gem 'therubyracer'
 
 gem 'rails3-jquery-autocomplete'
 gem 'awesome_nested_set'
@@ -19,11 +17,10 @@ gem 'odf-report'
 group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
+  gem 'jquery-rails'
   gem 'jquery-ui-rails'
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer'
-
-  #gem 'uglifier', '>= 1.0.3'
+  gem 'therubyracer'
+  gem 'uglifier', '>= 1.3.0'
 end
 group :test do
   gem 'rspec-rails'

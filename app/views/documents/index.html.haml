@@ -43,7 +43,7 @@
       %td= document.place 
       - if can? :destroy, document
         %td
-          = link_to 'Удалить', document, confirm: 'Действительно хотите удалить?', :method => :delete 
+          = link_to 'Удалить', document, confirm: 'Действительно хотите удалить?', :method => 'delete'
 
 .apple_pagination
   = will_paginate @documents 
