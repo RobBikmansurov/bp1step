@@ -6,9 +6,9 @@
   
   = f.input :responsible, :collection => User.all(:order => 'displayname'), :include_blank => true, :prompt => 'Ответственный', :label_method => :displayname, :label => 'Ответственный за документ'
   
-  = f.input :owner_name, data: {autocomplete_source: autocomplete_users_path}, :label => 'Владелец', :size => '25'
-  -#= f.hidden_field :owner_id
+  = f.input :owner_name, url: {autocomplete_source: autocomplete_users_path}, :label => 'Владелец', :size => '25', :as => :autocomplete
 
+  -#form.input :brand_name, :url => autocomplete_brand_name_products_path, :as => :autocomplete
   -#= f.input :owner_id, data: {autocomplete_source: autocomplete_users}, :prompt => 'Владелец1'
   
     -#.field
