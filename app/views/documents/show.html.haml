@@ -33,6 +33,9 @@
   Владелец:
   -if @document.owner_id?
     = link_to @document.owner_name, user_path(@document.owner_id)
+  -else
+    %b
+    не задан
 
 -#= @document.inspect
 %hr
