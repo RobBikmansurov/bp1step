@@ -64,8 +64,8 @@ describe Document do
     it "belongs_to :bproce" do
       should belong_to(:bproce) # документ принадлежит одному процессу
     end
-    it "has_many :user" do
-      should have_many(:user) # у документа может быть ответственный
+    it "belongs_to :owner" do
+      should belong_to(:owner).class_name(:User) # у документа может быть ответственный
     end
     it "has_many :directive, :through => :document_directive" do
       should have_many(:directive).through(:document_directive) # на основании директивы может быть несколько документов
