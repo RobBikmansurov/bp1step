@@ -12,7 +12,6 @@ class Document < ActiveRecord::Base
   belongs_to :bproce
   belongs_to :user
   belongs_to :owner, :class_name => 'User'
-  #has_many :user, :through => :owner_id
   has_many :directive, :through => :document_directive
   has_many :document_directive, :dependent => :destroy
 
@@ -23,11 +22,9 @@ class Document < ActiveRecord::Base
   def owner_name
     owner.try(:displayname)
   end
-
   def owner_name=(name)
     self.owner = User.find_by_displayname(name) if name.present?
   end
-
 
   def file_name_sanityze
     if !self.eplace.to_s.empty?  # если имя файла не пустое
