@@ -7,12 +7,22 @@
       = params[:place]
       ]
   -else
-    %h1
-      Каталог Документов
-      -if params[:search].present?
-        [ 
-        = params[:search]
-        ]
+    -if params[:dlevel]
+      %h2
+        Список Документов уровня
+        = params[:dlevel]
+    -else
+      -if params[:part]
+        %h2
+          Список Документов раздела
+          = params[:part]
+      -else
+        %h1
+          Каталог Документов
+          -if params[:search].present?
+            [ 
+            = params[:search]
+            ]
 -else
   -title "Список внутренних документов банка"
   %h2
