@@ -21,7 +21,7 @@
 
 %table
   %tr
-    %th 
+    %th
     %th= sortable "name", "Наименование"
     -#%th= sortable "description", "Описание"
     -#    %th Имя файла
@@ -30,20 +30,23 @@
     %th= sortable "approved", "От"
     %th Оригинал
     -#%th responsible
-    - if can? :destroy, Document
+    -if can? :destroy, Document
       %th
     
   - @documents.each do |document|
     %tr
       %td= document.part
-      %td= link_to document.name, document_path(document)
+      %td
+        -if can? :view_document, document
+          = link_to image_tag('action_go.gif', :alt => 'См.'), document_path(document)+'.pdf'
+        = link_to document.name, document_path(document)
       -#      %td= document.filename
       %td= document.status
       %td= document.approved.strftime('%d.%m.%Y') if document.approved
       %td= document.place 
       - if can? :destroy, document
         %td
-          = link_to 'Удалить', document, confirm: 'Действительно хотите удалить?', :method => 'delete'
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), document, confirm: document.name + "\nДействительно хотите удалить?", :method => 'delete'
 
 .apple_pagination
   = will_paginate @documents 

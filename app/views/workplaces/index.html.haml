@@ -40,7 +40,8 @@
       %td= link_to workplace.location, workplaces_path + '?location=' + workplace.location
       - if can? :destroy, workplace
         %td
-          = link_to 'Удалить', workplace, confirm: 'Действительно хотите удалить?', :method => :delete 
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), workplace, confirm: workplace.designation + "\nДействительно хотите удалить?", :method => 'delete'
+
 
 -if ! params[:all].present? # если список всех мест - отключить постраничый вывод
   .apple_pagination
