@@ -88,7 +88,7 @@ private
   def print
     report = ODFReport::Report.new("reports/documents.odt") do |r|
       nn = 0  # порядковый номер строки
-      r.add_field "REPORT_DATE", Date.today
+      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
       r.add_table("TABLE_01", @documents, :header => true) do |t|
         t.add_column(:nn) do |ca|
           nn += 1
@@ -96,7 +96,12 @@ private
         end
         t.add_column(:name)
         t.add_column(:organ, :approveorgan)
-        t.add_column(:approved)
+        t.add_column(:approved) do |document|   # дата утверждения в нормальном формате
+          if document.approved
+            "#{document.approved.strftime('%d.%m.%Y')}"
+          end
+        end
+
         t.add_column(:responsible) do |document|  # владелец документа, если задан
           if document.responsible
             u=User.find(document.responsible)
