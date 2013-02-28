@@ -47,7 +47,7 @@ class Document < ActiveRecord::Base
 
   def self.search(search)
     if search  
-      where('name LIKE ? or description LIKE ?', "%#{search}%", "%#{search}%")
+      where('name LIKE ? or description LIKE ? or id LIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
     else  
       scoped
     end  
