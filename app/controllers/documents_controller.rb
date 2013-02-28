@@ -103,9 +103,10 @@ private
         end
 
         t.add_column(:responsible) do |document|  # владелец документа, если задан
-          if document.responsible
-            u=User.find(document.responsible)
-            "#{u.displayname}"
+          if document.owner_id
+            #u=User.find(document.owner_id)
+            #{}"#{u.displayname}"
+            "#{document.owner.displayname}"
           end
         end
 
