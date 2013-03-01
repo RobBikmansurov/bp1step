@@ -25,7 +25,20 @@ class DocumentsController < ApplicationController
             if params[:part].present? #  список документов раздела документооборота
               @documents = Document.where(:part => params[:part]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
             else
-              @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+              if params[:status].present? #  список документов статуса
+                ss = params[:status]
+                @documents = Document.where(:status => ss).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+              else
+                if params[:place].present? #  список документов, находящихся в одном месте
+                  if params[:place].size == 0
+                    @documents = Document.where("place = ''").order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                  else
+                    @documents = Document.where(:place => params[:place]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                  end
+                else
+                  @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                end
+              end
             end
           end
         end
@@ -88,7 +101,7 @@ private
   def print
     report = ODFReport::Report.new("reports/documents.odt") do |r|
       nn = 0  # порядковый номер строки
-      r.add_field "REPORT_DATE", Date.today
+      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
       r.add_table("TABLE_01", @documents, :header => true) do |t|
         t.add_column(:nn) do |ca|
           nn += 1
@@ -96,11 +109,17 @@ private
         end
         t.add_column(:name)
         t.add_column(:organ, :approveorgan)
-        t.add_column(:approved)
+        t.add_column(:approved) do |document|   # дата утверждения в нормальном формате
+          if document.approved
+            "#{document.approved.strftime('%d.%m.%Y')}"
+          end
+        end
+
         t.add_column(:responsible) do |document|  # владелец документа, если задан
-          if document.responsible
-            u=User.find(document.responsible)
-            "#{u.displayname}"
+          if document.owner_id
+            #u=User.find(document.owner_id)
+            #{}"#{u.displayname}"
+            "#{document.owner.displayname}"
           end
         end
 

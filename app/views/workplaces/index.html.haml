@@ -57,3 +57,11 @@
       = link_to 'Добавить Рабочее место', new_workplace_path + '?location=' + params[:location]
     -else
       = link_to 'Добавить Рабочее место', new_workplace_path
+%p
+%br
+Местоположение:
+- Workplace.group(:location).each do |wp|
+  -if wp.location.to_s.empty?
+    = link_to 'пусто', workplaces_path + '?location='
+  -else
+    = link_to wp.location, workplaces_path + '?location=' + wp.location.to_s

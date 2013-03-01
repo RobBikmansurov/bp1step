@@ -12,7 +12,11 @@ class BappsController < ApplicationController
       if params[:all].present?
         @bapps = Bapp.all
       else
-        @bapps = Bapp.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        if params[:apptype].present?
+          @bapps = Bapp.searchtype(params[:apptype]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        else
+          @bapps = Bapp.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        end
       end
     end
     respond_to do |format|

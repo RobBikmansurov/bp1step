@@ -16,4 +16,12 @@ class Bapp < ActiveRecord::Base
       scoped
     end
   end
+  def self.searchtype(search)
+   if search
+      where('apptype LIKE ?', "%#{search}%")
+    else
+      scoped
+    end
+  end
+
 end
