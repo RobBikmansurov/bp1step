@@ -40,10 +40,24 @@
         %td
           = link_to image_tag('action_stop.gif', :alt => 'Удалить'), directive, confirm: directive.shortname + "\nДействительно хотите удалить?", :method => 'delete'
 
-
 .apple_pagination
   = will_paginate @directives
 
 - if can? :create, Directive
   .button
     = link_to "Добавить новую директиву", new_directive_path
+%p
+%br
+Тип директивы:
+- Directive.group(:title).each do |directive|
+  -if directive.title.to_s.empty?
+    = link_to 'пусто', directives_path + '?title='
+  -else
+    = link_to directive.title, directives_path + '?title=' + directive.title.to_s
+%br
+Принявший орган:
+- Directive.group(:body).each do |directive|
+  -if directive.body.to_s.empty?
+    = link_to 'пусто', directives_path + '?body='
+  -else
+    = link_to directive.body, directives_path + '?body=' + directive.body.to_s
