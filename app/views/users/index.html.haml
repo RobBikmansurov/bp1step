@@ -59,3 +59,18 @@
 .apple_pagination
   = will_paginate @users 
 
+%p
+%br
+Каб.:
+- User.group(:office).each do |user|
+  -if user.office.to_s.empty?
+    = link_to 'пусто', users_path + '?office='
+  -else
+    = link_to user.office, users_path + '?office=' + user.office.to_s
+-#%br
+  Роли:
+  - User.group(:role).each do |user|
+    -if user.role.to_s.empty?
+      = link_to 'пусто', users_path + '?role='
+    -else
+      = link_to user.role, users_path + '?role=' + user.role.to_s

@@ -25,7 +25,20 @@ class DocumentsController < ApplicationController
             if params[:part].present? #  список документов раздела документооборота
               @documents = Document.where(:part => params[:part]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
             else
-              @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+              if params[:status].present? #  список документов статуса
+                ss = params[:status]
+                @documents = Document.where(:status => ss).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+              else
+                if params[:place].present? #  список документов, находящихся в одном месте
+                  if params[:place].size == 0
+                    @documents = Document.where("place = ''").order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                  else
+                    @documents = Document.where(:place => params[:place]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                  end
+                else
+                  @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                end
+              end
             end
           end
         end
