@@ -5,6 +5,8 @@
 Рабочих мест #{Workplace.count}
 Приложений #{Bapp.count}
 Документов #{Document.count}
+-if can? :show, User.first
+  Пользователей #{User.count}
 
 %h2 Легенда
 =link_to "Процесс", bproces_path

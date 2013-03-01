@@ -26,7 +26,7 @@ ru:
         parent_id: Родительский процесс
         user_id: Владелец процесса
       directive:
-        title: Тип документа
+        title: Тип директивы
         number: Номер
         name: Наименование
         approval: Дата утверждения
@@ -51,6 +51,7 @@ ru:
         name: Обозначение
         description: Назначение роли
         bproce_id: Процесс
+        features: Особенности
       staff:
         fullname: Фамилия Имя Отчество
         position: Должность

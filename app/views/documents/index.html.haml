@@ -17,12 +17,17 @@
           Список Документов раздела
           = params[:part]
       -else
-        %h1
-          Каталог Документов
-          -if params[:search].present?
-            [ 
-            = params[:search]
-            ]
+        -if params[:status]
+          %h2
+            Список Документов в статусе
+            = params[:status]
+        -else
+          %h1
+            Каталог Документов
+            -if params[:search].present?
+              [ 
+              = params[:search]
+              ]
 -else
   -title "Список внутренних документов банка"
   %h2
@@ -47,8 +52,10 @@
     %tr
       %td= document.part
       %td
-        -if can? :view_document, document
-          = link_to image_tag('action_go.gif', :alt => 'См.'), document_path(document)+'.pdf'
+        -if !document.file_name.nil?
+          -if can? :view_document, document
+            -if File.exist?("files/" + document.file_name) && !document.file_name.empty?
+              = link_to image_tag('action_go.gif', :alt => 'См.'), document_path(document)+'.pdf'
         = link_to document.name, document_path(document)
       -#      %td= document.filename
       %td= document.status
@@ -68,3 +75,25 @@
     = link_to 'ODT', documents_path(@document)+'.odt'
   .button
     = link_to 'Добавить новый документ', new_document_path 
+%p
+%br
+Статус:
+- Document.group(:status).each do |d|
+  -if d.status.to_s.empty?
+    = link_to 'пусто', documents_path + '?status='
+  -else
+    = link_to d.status, documents_path + '?status=' + d.status.to_s
+%br
+Уровень:
+- Document.group(:dlevel).each do |d|
+  -if d.dlevel.to_s.empty?
+    пусто
+  -else
+    = link_to d.dlevel, documents_path + '?dlevel=' + d.dlevel.to_s
+%br
+Оригинал:
+- Document.group(:place).each do |d|
+  -if d.place.to_s.empty?
+    = link_to 'пусто', documents_path + '?place='
+  -else
+    = link_to d.place, documents_path + '?place=' + d.place.to_s

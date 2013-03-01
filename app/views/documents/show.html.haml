@@ -52,8 +52,8 @@
           %br
         = File.basename(@document.file_name)
       %br
-        - if File.exist?("files/" + @document.file_name)
-          - if can? :view_document, @document
+        - if can? :view_document, @document
+          - if File.exist?("files/" + @document.file_name)
             = link_to 'Смотреть', document_path(@document)+'.pdf'
         - else
           Файл отсутствует!
