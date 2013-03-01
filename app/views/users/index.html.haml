@@ -56,8 +56,9 @@
           -user.roles.each do |role|
             = role.description
 
-.apple_pagination
-  = will_paginate @users 
+-if !params[:all].present?
+  .apple_pagination
+    = will_paginate @users 
 
 %p
 %br
