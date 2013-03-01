@@ -12,7 +12,11 @@ class UsersController < ApplicationController
       if params[:office].present?
         @users = User.where(:office => params[:office]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
       else
-        @users = User.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        if params[:all].present?
+          @users = User.order(sort_column + ' ' + sort_direction)
+        else
+          @users = User.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        end
       end
     end
   end
