@@ -1,0 +1,8 @@
+-title "Действия"
+-@activities.each do |activity|
+  %br
+  =activity.created_at.strftime('%d.%m.%Y %H:%M:%S')
+  =link_to activity.owner.displayname, activity.owner if activity.owner
+  =activity.trackable_type + ' #' + activity.trackable_id.to_s
+  =activity.key
+  -#=activity.inspect
