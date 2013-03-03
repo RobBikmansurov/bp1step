@@ -1,5 +1,6 @@
 # coding: utf-8
 class DocumentsController < ApplicationController
+  include PublicActivity::StoreController 
   respond_to :odt, :only => :index
   respond_to :pdf, :only => :show
   respond_to :html, :xml, :json

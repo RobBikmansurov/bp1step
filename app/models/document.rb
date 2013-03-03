@@ -8,6 +8,10 @@ class Document < ActiveRecord::Base
   validates :bproce_id, :presence => true # документ относится к процессу
   validates :dlevel, :numericality => {:less_than => 5, :greater_than => 0}
 
+  include PublicActivity::Model
+  tracked owner: Proc.new{ |controller, model| controller.current_user }
+
+
   # документ относится к процессу
   belongs_to :bproce
   belongs_to :user

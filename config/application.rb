@@ -44,9 +44,6 @@ module BPDoc
     ##config.action_view.javascript_expansions[:defaults] = %w(jquery-1.6.1.min jquery-ujs/src/rails)
     config.assets.enabled = true
 
-    # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '1.0'
-
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
 
