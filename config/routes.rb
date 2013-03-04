@@ -16,6 +16,7 @@ BPDoc::Application.routes.draw do
   resources :bproces do
     resources :bapps
   end
+  resources :activities
   resources :users, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end

@@ -14,6 +14,8 @@ gem 'awesome_nested_set'
 gem 'simple_form'
 gem 'rb-readline'
 gem 'odf-report'
+gem 'public_activity'
+
 group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
