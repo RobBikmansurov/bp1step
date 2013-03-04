@@ -11,7 +11,6 @@ class Document < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: Proc.new{ |controller, model| controller.current_user }
 
-
   # документ относится к процессу
   belongs_to :bproce
   belongs_to :user

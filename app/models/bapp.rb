@@ -2,6 +2,9 @@ class Bapp < ActiveRecord::Base
   validates :name, :uniqueness => true,
             :length => {:minimum => 4, :maximum => 50}
   validates :description, :presence => true
+  
+  include PublicActivity::Model
+  tracked owner: Proc.new{ |controller, model| controller.current_user }
 
   has_many :bproce_bapps
   has_many :bproces, :through => :bproce_bapps

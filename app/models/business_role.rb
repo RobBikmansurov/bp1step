@@ -5,6 +5,9 @@ class BusinessRole < ActiveRecord::Base
                           :length => {:minimum => 8}
   validates :bproce_id, :presence => true
 
+  include PublicActivity::Model
+  tracked owner: Proc.new{ |controller, model| controller.current_user }
+
   # бизнес-роль участвует в процессе
   belongs_to :bproce
   # бизнес-роль может исполняться многими пользователями
