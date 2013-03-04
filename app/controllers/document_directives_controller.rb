@@ -59,8 +59,8 @@ class DocumentDirectivesController < ApplicationController
   end
 
   def destroy
-    -#@document_directive = DocumentDirective.find(params[:id])
-    -#logger.debug "@document_directive = #{@document_directive.inspect}"
+    #@document_directive = DocumentDirective.find(params[:id])
+    #logger.debug "@document_directive = #{@document_directive.inspect}"
     @document_directive.destroy
     respond_to do |format|
       format.html { redirect_to @document, notice: 'Document directive was successfully deleted.' }
