@@ -7,6 +7,9 @@
 Документов #{Document.count}
 -if can? :show, User.first
   Пользователей #{User.count}
+-if can? :manage, User.first
+  =link_to "Действий", activities_path
+  #{PublicActivity::Activity.count}
 
 %h2 Легенда
 =link_to "Процесс", bproces_path

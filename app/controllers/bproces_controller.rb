@@ -59,12 +59,7 @@ class BprocesController < ApplicationController
       @document.save if !@document.nil?
     end
     flash[:notice] = "Successfully updated Bproce." if @bproce.update_attributes(params[:bproce])
-    if !@bproce.save # there was an error!
-      flash[:bproce] = @bproce
-      redirect_to :action => :edit
-    end
-    #redirect_to :action => :index  # пойдем сразу на список Процессов
-    redirect_to :action => :show  # пойдем сразу на список Процессов
+    respond_with(@bproce)
   end
 
   def destroy

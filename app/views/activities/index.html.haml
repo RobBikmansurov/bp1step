@@ -1,8 +1,9 @@
--title "Действия"
+-title "Действия пользователей"
 -@activities.each do |activity|
   %br
   =activity.created_at.strftime('%d.%m.%Y %H:%M:%S')
   =link_to activity.owner.displayname, activity.owner if activity.owner
-  =activity.trackable_type + ' #' + activity.trackable_id.to_s
-  =activity.key
-  -#=activity.inspect
+  =render_activity(activity)
+
+.apple_pagination
+  = will_paginate @activities

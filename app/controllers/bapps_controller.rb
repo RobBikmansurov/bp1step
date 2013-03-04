@@ -45,13 +45,7 @@ class BappsController < ApplicationController
 
   def update
     flash[:notice] = "Successfully updated bapp."  if @bapp.update_attributes(params[:bapp])
-    if !@bapp.save # there was an error!
-      flash[:bapp] = @bapp
-      redirect_to :action => :edit
-    end
-    #redirect_to :action => :edit
-    redirect_to :action => :index  # пойдем сразу на список Приложений
-    #respond_with(@bapp)
+    respond_with(@bapp)
   end
 
   def destroy

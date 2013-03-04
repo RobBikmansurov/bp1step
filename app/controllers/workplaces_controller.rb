@@ -45,12 +45,7 @@ class WorkplacesController < ApplicationController
 
   def update
     flash[:notice] = "Successfully updated workplace."  if @workplace.update_attributes(params[:workplace])
-    if !@workplace.save # there was an error!
-      flash[:workplace] = @workplace
-      redirect_to :action => :edit
-    else
-      respond_with(@workplace)
-    end
+    respond_with(@workplace)
   end
 
   def destroy

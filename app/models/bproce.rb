@@ -5,6 +5,9 @@ class Bproce < ActiveRecord::Base
                    :length => {:minimum => 10, :maximum => 250}
   validates :fullname, :length => {:minimum => 10, :maximum => 250}
 
+  include PublicActivity::Model
+  tracked owner: Proc.new{ |controller, model| controller.current_user }
+
   acts_as_nested_set
   has_many :documents
   has_many :business_roles

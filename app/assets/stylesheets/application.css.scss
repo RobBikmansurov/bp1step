@@ -5,3 +5,111 @@
  *= require_self
  *= require_tree . 
 */
+a {
+  padding: 2px 5px 2px;
+}
+a:hover {
+  color: #fff;
+  background-color: #336699;
+  border-radius: 5px;
+}
+.nav {
+  display: block;
+  white-space: nowrap;
+  margin: 0 5px 0 0;
+  position: relative;
+  font-weight: bold;
+  text-decoration: none;
+  color: #ddd;
+  line-height: 22px;
+  text-transform: uppercase;
+}
+.nav li {
+  display: block;
+  float: left;
+}
+.nav a {
+  padding: 7px 10px 7px;
+  text-decoration: none;
+}
+.nav a:hover {
+  border-radius: 0em;
+  color: #fff;
+  background-color: #000;
+}
+#menu {background: #FFCC99;}
+th {
+  background: #ddd;
+}
+th .current {  
+  padding-right: 12px;  
+  background-repeat: no-repeat;  
+  background-position: right center;  
+}  
+th .asc {   
+  background-image: url(/images/up_arrow.gif);   
+}  
+  
+th .desc {   
+  background-image: url(/images/down_arrow.gif);   
+}
+a.button,
+.button {
+  border:1px solid #9a9a9a;
+  text-align:center; 
+  text-decoration:none;
+  -webkit-border-radius:3px;
+  -moz-border-radius:3px;
+  border-radius:3px;
+  -webkit-box-shadow:rgba(0, 0, 0, 0.64) 0px 1px 2px;
+  -moz-box-shadow:rgba(0, 0, 0, 0.64) 0px 1px 2px;
+  box-shadow:rgba(0, 0, 0, 0.64) 0px 1px 2px;
+  background:#ffffff;
+  background:-webkit-gradient(linear, 0 0, 0 bottom, from(#ffffff), to(#e2e2e2));
+  background:-webkit-linear-gradient(#ffffff, #e2e2e2);
+  background:-moz-linear-gradient(#ffffff, #e2e2e2);
+  background:-ms-linear-gradient(#ffffff, #e2e2e2);
+  background:-o-linear-gradient(#ffffff, #e2e2e2);
+  background:linear-gradient(#ffffff, #e2e2e2);
+  color:#484848;
+  font-size:12px;
+  padding:3px 14px;
+  font-family:verdana, sans-serif;
+  display:inline-block;
+}
+a.button:hover,
+.button:hover {
+  border:1px solid #5a5a5a;
+  background:-webkit-gradient(linear, 0 0, 0 bottom, from(#e2e2e2), to(#ffffff));
+  background:-webkit-linear-gradient(#e2e2e2, #ffffff);
+  background:-moz-linear-gradient(#e2e2e2, #ffffff);
+  background:-ms-linear-gradient(#e2e2e2, #ffffff);
+  background:-o-linear-gradient(#e2e2e2, #ffffff);
+  background:linear-gradient(#e2e2e2, #ffffff);
+}
+a.button:active,
+.button:active {
+  color:#666;
+  -webkit-box-shadow:#5a5a5a 0px 3px 5px inset;
+  -moz-box-shadow:#5a5a5a 0px 3px 5px inset;
+  box-shadow:#5a5a5a 0px 3px 5px inset;
+}
+
+logo {
+  position  : relative;
+  width   : 100%; /* for IE 6 */
+}
+
+logo_text {
+  position: absolute;
+  top: 29px;
+  left: 0;
+  width: 100%;
+}
+logo_text span {
+  color: #fff;
+  font-size: 10px;
+  line-height: 20px;
+  background: rgba(0, 0, 0, 0.3);
+}
+

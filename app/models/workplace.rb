@@ -8,6 +8,8 @@ class Workplace < ActiveRecord::Base
   has_many :user_workplace    # пользователи рабочего миеста
   has_many :users, :through => :user_workplace
 
+  include PublicActivity::Model
+  tracked owner: Proc.new{ |controller, model| controller.current_user }
 
   accepts_nested_attributes_for :bproce_workplaces, :allow_destroy => true 
   accepts_nested_attributes_for :bproces
