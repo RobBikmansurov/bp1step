@@ -14,7 +14,7 @@ class DocumentsController < ApplicationController
       @documents = @directive.document.paginate(:per_page => 10, :page => params[:page])
     else
       if params[:all].present?
-        @documents = Document.all
+        @documents = Document.order(:part, :name).all
       else
         if params[:place].present?  # список документов по месту хранения
           @documents = Document.where(:place => params[:place]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
