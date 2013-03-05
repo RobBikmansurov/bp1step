@@ -91,6 +91,13 @@
   -else
     = link_to d.dlevel, documents_path + '?dlevel=' + d.dlevel.to_s
 %br
+Раздел:
+- Document.group(:part).each do |d|
+  -if d.dlevel.to_s.empty?
+    пусто
+  -else
+    = link_to d.part, documents_path + '?part=' + d.part.to_s
+%br
 Оригинал:
 - Document.group(:place).each do |d|
   -if d.place.to_s.empty?
