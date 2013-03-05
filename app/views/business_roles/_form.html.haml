@@ -2,7 +2,7 @@
   = f.error_notification
   = f.input :name
   = f.input :description, :as => :text
-  = f.association :bproce, :label => 'Участвует в процессе', :include_blank => false, :prompt => 'Выберите процесс, где Роль участвует'
+  = f.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Участвует в процессе', :include_blank => false, :prompt => 'Выберите процесс, в котором участвует Роль'
   -if current_user.role? :admin
     = f.input :features, :as => :text
   = f.error :base
