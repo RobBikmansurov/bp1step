@@ -80,6 +80,8 @@ class DocumentsController < ApplicationController
 
   def new
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
+    @document.owner_id = current_user.id if current_user  # владелец документа - пользователь
+    @document.bproce_id = 5 # по умолчанию - процесс НеЗнаю
     respond_with(@document)
   end
 
