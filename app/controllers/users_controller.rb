@@ -29,7 +29,7 @@ class UsersController < ApplicationController
   def show
     @uroles = @usr.user_business_role   # исполняет роли
     @uworkplaces = @usr.user_workplace 	# рабочие места пользователя
-    @documents = Document.find_all_by_owner_id(@usr)
+    @documents = Document.order(:name).find_all_by_owner_id(@usr)
     respond_with()
   end
 
