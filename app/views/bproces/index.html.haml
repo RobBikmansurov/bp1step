@@ -35,10 +35,9 @@
           = ' : '
           = bproce.depth
 
-.apple_pagination
-  -#.page_info
-    -#    = page_entries_info @brpoces
-  = will_paginate @bproces 
+-if !params[:all].present?
+  .apple_pagination
+    = will_paginate @bproces 
 
 - if can? :create, @bproces.first
   .button

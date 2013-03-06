@@ -25,8 +25,9 @@
         %td
           = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bapp, confirm: bapp.name + "\nДействительно хотите удалить?", :method => 'delete'
 
-.apple_pagination
-  = will_paginate @bapps 
+-if !params[:all].present?
+  .apple_pagination
+    = will_paginate @bapps 
 
 - if can? :destroy, Bapp
   .button
