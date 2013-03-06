@@ -39,11 +39,14 @@ ru:
         dlevel: Уровень
         status: Статус
         part: Раздел
-        place: Место хранения оригинала
+        place: Оригинал
         eplace: Электронный документ
         approved: Дата утверждения
         approveorgan: Орган
         bproce_id: Процесс
+      document_directive:
+        document_id: Документ
+        directive_id: Директива
       profile:
         name: Отображаемое имя
         phone: Телефон
