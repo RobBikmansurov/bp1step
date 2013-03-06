@@ -102,13 +102,24 @@ private
 
   def print
     report = ODFReport::Report.new("reports/documents.odt") do |r|
-      nn = 0  # порядковый номер строки
+      nn = 0  # порядковый номер документа
+      nnp = 0
+      first_part = 0  # номер раздела для сброса номера документа в разделе
       r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
       r.add_table("TABLE_01", @documents, :header => true) do |t|
         t.add_column(:nn) do |ca|
           nn += 1
           "#{nn}."
         end
+        t.add_column(:nnp) do |document|
+          if first_part != document.part
+            nnp = 0   # порядковый номер документа в разделе
+            first_part = document.part
+          end
+          nnp += 1
+          "#{nnp} "
+        end
+        t.add_column(:part)
         t.add_column(:name)
         t.add_column(:organ, :approveorgan)
         t.add_column(:approved) do |document|   # дата утверждения в нормальном формате
