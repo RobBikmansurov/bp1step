@@ -1,10 +1,11 @@
 -title "Внутренний документ банка"
 %h2= @document.name 
-%h3 Описание
+%h3 Описание:
 = @document.description
 %h3
+  -if @document.status
+    ='"' + @document.status + '"'
   -if @document.approveorgan
-    утвердил
     %b= @document.approveorgan
   -if @document.approved
     от
@@ -17,7 +18,7 @@
 
 -if @document.bproce
   %h3
-    Относится к процессу
+    Относится к процессу:
     = link_to @document.bproce.name, bproce_path(@document.bproce)
 -else
   %h3 Процесс не назначен

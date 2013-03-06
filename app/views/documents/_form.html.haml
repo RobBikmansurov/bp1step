@@ -1,21 +1,20 @@
 = simple_form_for(@document) do |f|
   = f.error_notification
   = f.input :name
-  = f.input :dlevel, :collection => 1..4, :as => :radio_buttons, :hint => 'Уровень документа: Политики - Положения - Регламенты - Свидетельства'
+  = f.input :dlevel, :collection => 1..4, :as => :radio_buttons, :hint => 'Политики, Стратегии(1) - Положения, Описания(2) - Регламенты, Инструкции(3) - Свидетельства: Акты, Протоколы, Журналы(4)'
+  -#= f.input :dlevel, :collection => %w[1Политики 2Положения 3Регламенты 4Свидетельства], :as => :radio_buttons, :hint => 'Уровень документа: Политики - Положения - Регламенты - Свидетельства'
   = f.input :description, :as => :text
   
-  -#= f.input :responsible, :collection => User.all(:order => 'displayname'), :include_blank => true, :prompt => 'Ответственный', :label_method => :displayname, :label => 'Ответственный за документ'
-  -#= f.input :responsible_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Ответственный за документ'
   = f.input :owner_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Ответственный за документ'
   
   -#= f.association :status_id, Category.all
-  -#= f.input :status, :collection => %w[Проект Согласование Утвержден], :prompt => 'Статус документа'
-  = f.input :approveorgan, :collection => %w[СоветДиректоров Правление ПредседательПравления], :prompt => 'Уполномоченный орган'
+  = f.input :status, :collection => %w[Утвержден Проект Согласование НеДействует], :prompt => 'Статус документа'
+  = f.input :approveorgan, :collection => %w[ПредседательПравления Правление СоветДиректоров ОбщееСобрание], :prompt => 'Уполномоченный орган'
   = f.input :approved, :as => :string, :order => [:day, :month, :year], :discard_day => true
-  = f.input :part, :collection => 1..11, :prompt => "Раздел Документооборота"
+  = f.input :part, :collection => 1..14, :as => :radio_buttons, :prompt => 'Раздел Документооборота', :hint => 'выберите раздел документооборота'
   %p
-  = f.input :place, :hint => 'Место хранения оригиналов на бумаге'
-  = f.input :eplace, :as => :text, :hint => 'Место хранения электронного документа'
+  = f.input :place, :hint => 'Место хранения оригиналов на бумаге (кратко: отдел, папка)'
+  = f.input :eplace, :as => :text, :hint => 'Место хранения электронного документа (полный путь к файлу в папке //cluster/docs/)'
   -#= f.input :uploaded_file, :as => :file, :hint => 'Место хранения электронного документа'  # нет в полученном объекте информации о полном пути - только имя файла и ссылка на /tmp
   -# покажем список процессов, отсортированный по наименованиям
   = f.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Процесс', :hint => 'Выберите Процесс, к которому относится документ', :prompt => 'Процесс документа'
