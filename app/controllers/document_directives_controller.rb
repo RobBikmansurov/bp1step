@@ -8,7 +8,7 @@ class DocumentDirectivesController < ApplicationController
 
   def show
     #respond_with(@document_directive)
-    redirect_to :back
+    redirect_to :back   # сделан возврат,т.к не смог по-другому реализовать возврат в документ после добавления диретктивы
   end
 
   # GET /document_directives/new
@@ -31,7 +31,6 @@ class DocumentDirectivesController < ApplicationController
   # POST /document_directives.json
   def create
     @document_directive = DocumentDirective.new(params[:document_directive])
-
     respond_to do |format|
       if @document_directive.save
         format.html { redirect_to @document_directive, notice: 'Document directive was successfully created.' }
@@ -52,7 +51,7 @@ class DocumentDirectivesController < ApplicationController
         format.html { redirect_to @document_directive, notice: 'Document directive was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: "edit" }
+        format.html { render action: "show" }
         format.json { render json: @document_directive.errors, status: :unprocessable_entity }
       end
     end
