@@ -24,7 +24,7 @@
     %th Должность
     %th= sortable "office", "Офис"
     -if can? :manage, @users.first
-      %th Login (ip)
+      %th Login
       %th Last login
     - if can? :destroy, @users.first
       %th Роли доступа
@@ -45,11 +45,7 @@
       -else
         %td
       -if can? :manage, user
-        %td
-          = user.current_sign_in_at.to_s(:ru_datetime) if !user.current_sign_in_at.nil?
-          (
-          = user.current_sign_in_ip
-          )
+        %td= user.current_sign_in_at.to_s(:ru_datetime) if !user.current_sign_in_at.nil?
         %td= user.last_sign_in_at.to_s(:ru_datetime) if !user.last_sign_in_at.nil?
       - if can? :destroy, user
         %td
