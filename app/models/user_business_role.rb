@@ -1,4 +1,7 @@
 class UserBusinessRole < ActiveRecord::Base
+  include PublicActivity::Model
+  tracked owner: Proc.new{ |controller, model| controller.current_user }
+
   validates :user_id, :presence => true
   validates :business_role_id, :presence => true
   belongs_to :user
