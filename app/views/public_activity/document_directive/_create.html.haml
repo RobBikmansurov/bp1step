@@ -1,7 +1,9 @@
-связь документ - директива
+связал документ - директива
 -if activity.trackable
-  = '(#' + activity.trackable.id.to_s + ')'
-  = link_to activity.trackable.document_id.to_s + '-' + activity.trackable.directive_id.to_s, activity.trackable
+  = '(#' + activity.trackable.id.to_s + '):'
+  = link_to '#' + activity.trackable.document_id.to_s, documents_path + '/' + activity.trackable.document_id.to_s
+  <->
+  = link_to '#' + activity.trackable.directive_id.to_s, directives_path + '/' + activity.trackable.directive_id.to_s
 -else
   \#
   = activity.trackable_id
