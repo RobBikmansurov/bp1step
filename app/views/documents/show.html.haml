@@ -14,7 +14,7 @@
   уровень документа:
   %b= link_to @document.dlevel, documents_path + '?dlevel=' + @document.dlevel.to_s
   раздел документооборота:
-  %b= link_to @document.part, documents_path + '?part=' + @document.part
+  %b= link_to @document.part, documents_path + '?part=' + @document.part.to_s
 
 -if @document.bproce
   %h3
