@@ -24,9 +24,12 @@
           %logo_text
             %span Бизнес-процессы - первый шаг
         #search.span-8
-          %form.inline{:method => "get"}
-            %input{:name => "search", :type => "search", :value => params[:search], :placeholder => "искать"}
-          %sup введите подстроку поиска с учетом регистра
+          -if params[:controller] == 'pages' or params[:controller] == 'activities'
+            &nbsp;
+          -else
+            %form.inline{:method => "get"}
+              %input{:name => "search", :type => "search", :value => params[:search], :placeholder => "искать"}
+            %sup введите подстроку поиска с учетом регистра
         #users.span-9.last
           - if user_signed_in?
             = link_to current_user.displayname, user_path(current_user)
