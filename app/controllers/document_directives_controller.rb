@@ -11,8 +11,6 @@ class DocumentDirectivesController < ApplicationController
     redirect_to :back   # сделан возврат,т.к не смог по-другому реализовать возврат в документ после добавления диретктивы
   end
 
-  # GET /document_directives/new
-  # GET /document_directives/new.json
   def new
     @document_directive = DocumentDirective.new
 
@@ -22,13 +20,10 @@ class DocumentDirectivesController < ApplicationController
     end
   end
 
-  # GET /document_directives/1/edit
   def edit
     @document_directive = DocumentDirective.find(params[:id])
   end
 
-  # POST /document_directives
-  # POST /document_directives.json
   def create
     @document_directive = DocumentDirective.new(params[:document_directive])
     respond_to do |format|
@@ -42,8 +37,6 @@ class DocumentDirectivesController < ApplicationController
     end
   end
 
-  # PUT /document_directives/1
-  # PUT /document_directives/1.json
   def update
     @document_directive = DocumentDirective.find(params[:id])
     respond_to do |format|
@@ -60,6 +53,9 @@ class DocumentDirectivesController < ApplicationController
   def destroy
     #@document_directive = DocumentDirective.find(params[:id])
     #logger.debug "@document_directive = #{@document_directive.inspect}"
+    #logger.debug params
+    @directive = Directive.find(@document_directive.directive_id) # запомнили директиву, для которой удаляется связь с документом
+    @document = Document.find(@document_directive.document_id)    # запомнили документ, для которого удаляется связь с директивой
     @document_directive.destroy
     respond_to do |format|
       format.html { redirect_to @document, notice: 'Document directive was successfully deleted.' }
