@@ -13,6 +13,19 @@ class Directive < ActiveRecord::Base
     return title + " " + number + " " + approval.strftime("%d.%m.%Y")
   end
 
+  def directive_name
+    #self.try(:shortname + '  #' + :id)
+    return title + " " + number + " " + approval.strftime("%d.%m.%Y") + "   #" + id.to_s
+  end
+  def directive_name=(name)
+    if name.present?
+      i = name.rindex('#')
+      if i.to_i > 0
+        self.directive_id = name.slice(i + 1, 5).to_i
+      end
+    end
+  end
+
   def self.search(search)
     if search
       where('number LIKE ? or name LIKE ? or title LIKE ? or body LIKE ?', "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%")

@@ -41,14 +41,12 @@
           -if can? :update, @document
             %td
               =link_to image_tag('action_stop.gif', :alt => 'Удалить'), @document.document_directive.find_by_directive_id(directive), confirm: directive.name + "\nДействительно хотите удалить директиву?", :method => 'delete'
-
-%p
--if @document_directive != nil
   = simple_form_for(@document_directive) do |dd|
     = dd.error_notification
     = dd.hidden_field :document_id
-    = dd.input :directive_id, :collection => Directive.all(:order => 'name'), :include_blank => true, :prompt => 'Добавить Директиву', :label_method => :shortname
-    -#= dd.association :document, :include_blank => true, :prompt => 'Добавить внутренний документ банка'
+    -#= dd.input :directive_name, data: {autocomplete_source: autocomplete_directives_path}, :as => :autocomplete, :label => 'Добавить Директиву'
+
+    = dd.input :directive_id, :collection => Directive.order(:title, :number).all, :include_blank => true, :prompt => 'Добавить Директиву', :label_method => :shortname
     = dd.error :base
     -if can? :update, @document
       = dd.button :submit, 'Добавить Директиву'
