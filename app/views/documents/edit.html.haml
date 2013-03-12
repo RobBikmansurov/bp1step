@@ -2,9 +2,10 @@
 %h1 Документ
 
 = render 'form'
+= render 'form_directive'
 
 .button
-  = link_to 'XML', document_path(@document)+'.xml'
+  = link_to 'XML', document_path(@document, :format => :xml)
 .button
   = link_to 'Show', document_path(@document)
 .button
