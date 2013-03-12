@@ -2,7 +2,7 @@ class DirectivesController < ApplicationController
   respond_to :html
   respond_to :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
-  before_filter :get_directive, :except => :index
+  before_filter :get_directive, :except => [:index, :autocomplete]
 
   def index
     if params[:title].present?
@@ -18,6 +18,12 @@ class DirectivesController < ApplicationController
 
   def show
     respond_with(@directive)
+  end
+
+  def autocomplete
+    @directives = Directive.order(:number).where("number like ? or name like ?", "%#{params[:term]}%", "%#{params[:term]}%")
+    #render json: @directives, :only => [:id, :title, :number, :shortname, :approval]
+    render json: @directives.map(&:directive_name)
   end
 
   def new

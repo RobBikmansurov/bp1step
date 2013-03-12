@@ -3,7 +3,8 @@
   = f.input :title
   = f.input :body
   = f.input :number
-  = f.input :approval
+  = f.input :approval, :as => :date,
+              :start_year => 2000, :end_year => Date.today.year + 1
   = f.input :name, :as => :text
   = f.input :annotation, :as => :text
   = f.input :note
