@@ -16,10 +16,18 @@ class Bproce < ActiveRecord::Base
   has_many :bproce_workplaces, :dependent => :destroy
   has_many :workplaces, :through => :bproce_workplaces
   belongs_to :bproce
-  belongs_to :user #, :class_name => "User"
+  #belongs_to :owner, :class_name => 'User'  # владелец процесса
+  belongs_to :user
   #accepts_nested_attributes_for :business_roles
   #has_and_belongs_to_many :workplaces
-  
+
+  def user_name
+    user.try(:displayname)
+  end
+  def user_name=(name)
+    self.user_id = User.find_by_displayname(name).id if name.present?
+  end
+
   def self.search(search)
     if search
       where('shortname LIKE ? or name LIKE ? or fullname LIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
