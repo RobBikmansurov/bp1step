@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Directive do
   before(:each) do
     @directive = create(:directive)
+    stub(current_user: FactroryGirl.create(:user))
   end
 
   context "validates" do

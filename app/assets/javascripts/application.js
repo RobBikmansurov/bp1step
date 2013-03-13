@@ -8,3 +8,15 @@
 //= require jquery_ujs
 //= require_tree .
 //= require autocomplete-rails
+//= datepicker.translate.js
+$(function (){
+  $('.datepicker').datepicker({
+  	changeMonth: true,
+    changeYear: true,
+    yearRange: "-15:+0",
+    dateFormat: "dd.mm.yy",
+    autoSize: true,
+    dayNamesMin: ['ВС', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'СБ'],
+    monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+    firstDay: 1});
+});

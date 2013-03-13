@@ -48,8 +48,7 @@ class DirectivesController < ApplicationController
   end
 
   def destroy
-    @directive.destroy
-    flash[:notice] = "Successfully destroyed directive." if @directive.update_attributes(params[:directive])
+    flash[:notice] = "Successfully destroyed directive." if @directive.destroy
     respond_with(@directive)
   end
 
