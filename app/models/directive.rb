@@ -1,4 +1,5 @@
 class Directive < ActiveRecord::Base
+  validates :approval, :presence => true
   validates :number, :presence => true
   validates :name, :presence => true, :length => {:minimum => 10}
   validates :body, :length => {:minimum => 2, :maximum => 100}	# орган, утвердивший документ
@@ -10,7 +11,11 @@ class Directive < ActiveRecord::Base
   has_many :document_directive, :dependent => :destroy
 
   def shortname
-    return title + " " + number + " " + approval.strftime("%d.%m.%Y")
+    if approval
+      return title + " " + number + " " + approval.strftime("%d.%m.%Y")
+    else
+      return title + " " + number
+    end
   end
 
   def directive_name
