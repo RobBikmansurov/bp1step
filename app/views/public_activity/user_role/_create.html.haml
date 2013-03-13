@@ -1,0 +1,10 @@
+назначил роль доступа
+-if activity.trackable
+  = '(#' + activity.trackable.id.to_s + '):'
+  =link_to '#' + activity.trackable.user.displayname, user_path(activity.trackable.user)
+  \->
+  = activity.trackable.role.description
+-else
+  \#
+  = activity.trackable_id
+  уже удален
