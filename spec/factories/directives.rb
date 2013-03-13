@@ -7,5 +7,6 @@ FactoryGirl.define do
     note 'directive_note'
     body 'directive_body'
     annotation 'directive_annotation'
+    approval Time.now
   end
 end

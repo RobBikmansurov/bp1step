@@ -3,8 +3,10 @@
   = f.input :title
   = f.input :body
   = f.input :number
-  = f.input :approval, :as => :string, :order => [:day, :month, :year], :discard_day => true
-
+  -if @directive.approval
+    = f.input :approval, :as => :string, :input_html => {:class=>'datepicker', :value => @directive.approval.strftime("%d.%m.%Y")}
+  -else
+    = f.input :approval, :as => :string, :input_html => {:class=>'datepicker'}
   = f.input :name, :as => :text
   = f.input :annotation, :as => :text
   = f.input :note
@@ -24,11 +26,4 @@
             %td
               =link_to image_tag('action_stop.gif', :alt => 'Удалить'), @directive.document_directive.find_by_document_id(document), confirm: document.name + "\nДействительно хотите удалить документ?", :method => 'delete'
   %p
-  = simple_form_for(@document_directive) do |dd|
-    = dd.error_notification
-    = dd.hidden_field :directive_id
-    = dd.input :document_id, :collection => Document.all(:order => 'name'), :prompt => 'Добавить внутренний документ банка', :label_method => :shortname
-    -#= dd.association :document, :include_blank => true, :prompt => 'Добавить внутренний документ банка'
-    = dd.error :base
-    -if can? :update, @directive
-      = dd.button :submit, 'Добавить Внутренний документ банка'
+ 

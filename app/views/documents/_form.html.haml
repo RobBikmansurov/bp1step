@@ -10,7 +10,10 @@
   -#= f.association :status_id, Category.all
   = f.input :status, :collection => %w[Утвержден Проект Согласование НеДействует], :prompt => 'Статус документа', :input_html => { :value => 'Утвержден'}
   = f.input :approveorgan, :collection => %w[ПредседательПравления Правление СоветДиректоров ОбщееСобрание], :prompt => 'Уполномоченный орган'
-  = f.input :approved, :as => :string, :order => [:day, :month, :year], :discard_day => true
+  -if @document.approved
+    = f.input :approved, :as => :string, :input_html =>{:class=>'datepicker', :value => @document.approved.strftime("%d.%m.%Y")}
+  -else
+    = f.input :approved, :as => :string, :input_html =>{:class=>'datepicker'}
   = f.input :part, :collection => 1..14, :as => :radio_buttons, :prompt => 'Раздел Документооборота', :hint => 'выберите раздел документооборота'
   %p
   = f.input :place, :hint => 'Место хранения оригиналов на бумаге (кратко: отдел, папка)'
@@ -24,7 +27,7 @@
     = link_to @document.bproce.name, edit_bproce_path(@document.bproce)
   = f.error :base
 
-  - if can? :update, @document
+  -if can? :update, @document
     %p
     = f.button :submit
 

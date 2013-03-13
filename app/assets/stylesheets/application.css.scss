@@ -113,3 +113,14 @@ logo_text span {
   background: rgba(0, 0, 0, 0.3);
 }
 
+.ui-datepicker td {
+    border: 1px solid #DDD;
+    padding: 0;
+}
+
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+    border: solid #FFF;
+    border-width: 1px 0 0 1px;
+}
