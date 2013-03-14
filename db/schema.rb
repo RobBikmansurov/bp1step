@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130304030054) do
+ActiveRecord::Schema.define(:version => 20130314094248) do
 
   create_table "activities", :force => true do |t|
     t.integer  "trackable_id"
@@ -127,6 +127,7 @@ ActiveRecord::Schema.define(:version => 20130304030054) do
     t.integer  "dlevel"
     t.integer  "owner_id"
     t.integer  "responsible"
+    t.string   "note"
   end
 
   add_index "documents", ["id"], :name => "index_documents_on_id", :unique => true

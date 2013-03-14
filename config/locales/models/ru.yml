@@ -43,6 +43,7 @@ ru:
         eplace: Электронный документ
         approved: Дата утверждения
         approveorgan: Орган
+        note: Примечание
         bproce_id: Процесс
       document_directive:
         document_id: Документ
