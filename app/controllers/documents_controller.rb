@@ -117,10 +117,11 @@ private
             first_part = document.part
           end
           nnp += 1
-          "#{nnp} "
+          "#{nnp}"
         end
         t.add_column(:part)
         t.add_column(:name)
+        t.add_column(:dlevel, :id)
         t.add_column(:organ, :approveorgan)
         t.add_column(:approved) do |document|   # дата утверждения в нормальном формате
           if document.approved
@@ -130,17 +131,9 @@ private
 
         t.add_column(:responsible) do |document|  # владелец документа, если задан
           if document.owner_id
-            #u=User.find(document.owner_id)
-            #{}"#{u.displayname}"
             "#{document.owner.displayname}"
           end
         end
-
-        #t.add_column(:responsible) do |ca|
-          #u = User.find(@documents[responsible]).displayname
-          #"#{u}"
-        #end
-        #t.add_column(:eplace, @docs.name)
         t.add_column(:place)
       end
       r.add_field "USER_POSITION", current_user.position
