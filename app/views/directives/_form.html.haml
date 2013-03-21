@@ -24,6 +24,6 @@
           %td= link_to document.name, document_path(document)
           -if can? :update, @directive
             %td
-              =link_to image_tag('action_stop.gif', :alt => 'Удалить'), @directive.document_directive.find_by_document_id(document), confirm: document.name + "\nДействительно хотите удалить документ?", :method => 'delete'
+              =link_to image_tag('action_stop.gif', :alt => 'Удалить'), @directive.document_directive.find_by_document_id(document), confirm: document.name + "\nДействительно хотите удалить ссылку на документ?", :method => 'delete'
   %p
  
