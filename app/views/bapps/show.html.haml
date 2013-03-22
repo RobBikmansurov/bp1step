@@ -14,8 +14,19 @@
     не определено
   -else
     = @bapp.purpose
+
+-if @bapp.version_app
+  Версия
+  = @bapp.version_app
+= @bapp.directory_app
+= @bapp.distribution_app
+= @bapp.executable_file
+= @bapp.licence
+= @bapp.source_app
+= @bapp.note
+
 %h3
-  Участвует в процессах
+  Участвует в процессах:
 
 -if @bapp.id? # новая запись еще нигде не используется
   %table

@@ -18,6 +18,13 @@ ru:
         description: Описание
         purpose: Назначение
         bproce_id: Процесс
+        version_app: Версия
+        directory_app: Каталог
+        distribution_app: Дистрибутив
+        executable_file: Исполняемый файл
+        licence: Лицензия
+        source_app: Источник
+        note: Примечание
       bproce:
         name: Наименование
         shortname: Обозначение
