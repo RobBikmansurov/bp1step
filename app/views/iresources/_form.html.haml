@@ -1,0 +1,15 @@
+= simple_form_for(@iresource) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :level
+    = f.input :label
+    = f.input :location
+    = f.input :volume
+    = f.input :note
+    = f.input :access_read
+    = f.input :access_write
+    = f.input :access_other
+    -#= f.association :users
+  - if can? :update, @iresource
+    = f.button :submit

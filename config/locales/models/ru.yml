@@ -5,6 +5,7 @@ ru:
       bproce: Процесс
       document: Документ
       directive: Директива
+      iresource: Информационный ресурс
       role: Роль
       staff: Сотрудник
       workplace: Рабочее место
@@ -55,6 +56,15 @@ ru:
       document_directive:
         document_id: Документ
         directive_id: Директива
+      iresource:
+        level: Уровень
+        label: Метка
+        location: Местоположение
+        volume: Объем
+        note: Примечание
+        access_read: Права чтения
+        access_write: Права записи
+        access_other: Права
       profile:
         name: Отображаемое имя
         phone: Телефон

@@ -34,7 +34,7 @@ end
 
 group :production do
   gem 'unicorn'   # Use unicorn as the web server
-  gem 'newrelic_rpm'
+  #gem 'newrelic_rpm'
 end
 
 

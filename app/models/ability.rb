@@ -15,7 +15,7 @@ class Ability
       end
       if user.has_role? :admin
         can :assign_roles, User   # администратор может изменять роли доступа пользователям
-        can :manage, [User, Workplace, Bapp]
+        can :manage, [User, Workplace, Bapp, Iresource]
       end
       if user.has_role? :analitic
         can :assign_roles, User   # администратор может изменять роли доступа пользователям

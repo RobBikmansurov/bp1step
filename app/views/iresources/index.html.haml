@@ -1,0 +1,48 @@
+-title "Информационные ресурсы"
+%h2
+  Каталог Информационных ресурсов
+  -if params[:level].present?
+    [ 
+    = params[:level]
+    ]
+  -else
+    -if params[:search].present?
+      [ 
+      = params[:search]
+      ]
+
+%table
+  %tr
+    %th= sortable "label", "Метка"
+    %th Location
+    %th Объем, GB
+    %th Чтение
+    %th Запись
+    - if can? :destroy, Iresource
+      %th
+  - @iresources.each do |iresource|
+    %tr
+      %td= link_to iresource.label, iresource
+      %td= iresource.location
+      %td= iresource.volume
+      %td= iresource.access_read
+      %td= iresource.access_write
+      - if can? :destroy, Iresource
+        %td
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), iresource, confirm: iresource.label + "\nДействительно хотите удалить?", :method => 'delete'
+
+-if !params[:all].present?
+  .apple_pagination
+    = will_paginate @iresources
+
+- if can? :create, Iresource
+  .button
+    = link_to "Добавить новый ресурс", new_iresource_path
+%p
+%br
+Уровень:
+- Iresource.group(:level).each do |iresource|
+  -if iresource.level.to_s.empty?
+    = link_to 'пусто', iresources_path + '?level='
+  -else
+    = link_to iresource.level, iresources_path + '?level=' + iresource.level.to_s

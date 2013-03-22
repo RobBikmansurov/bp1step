@@ -1,4 +1,7 @@
 BPDoc::Application.routes.draw do
+  resources :iresources
+
+
   resources :document_directives
   resources :directives do
     resources :documents  # документы на основании директивы

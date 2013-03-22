@@ -1,0 +1,8 @@
+создал инф.ресурс
+-if activity.trackable
+  = '(#' + activity.trackable.id.to_s + ')'
+  = link_to activity.trackable.label, activity.trackable
+-else
+  \#
+  = activity.trackable_id
+  который уже удален
