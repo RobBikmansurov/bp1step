@@ -1,0 +1,2 @@
+module IresourceHelper
+end

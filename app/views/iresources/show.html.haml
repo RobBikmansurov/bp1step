@@ -1,0 +1,34 @@
+-title "Информационный ресурс"
+%h1 Изменить Информационный ресурс
+
+%p
+  %b Level:
+  = @iresource.level
+%p
+  %b Label:
+  = @iresource.label
+%p
+  %b Location:
+  = @iresource.location
+%p
+  %b Volume:
+  = @iresource.volume
+%p
+  %b Note:
+  = @iresource.note
+%p
+  %b Access read:
+  = @iresource.access_read
+%p
+  %b Access write:
+  = @iresource.access_write
+%p
+  %b Access other:
+  = @iresource.access_other
+%p
+  %b Users:
+  = @iresource.users
+%p
+-if can? :update, Iresource
+  .button= link_to 'Edit', edit_iresource_path(@iresource)
+.button= link_to 'Back', iresources_path

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130322063252) do
+ActiveRecord::Schema.define(:version => 20130322101759) do
 
   create_table "activities", :force => true do |t|
     t.integer  "trackable_id"
@@ -138,6 +138,23 @@ ActiveRecord::Schema.define(:version => 20130322063252) do
   end
 
   add_index "documents", ["id"], :name => "index_documents_on_id", :unique => true
+
+  create_table "iresources", :force => true do |t|
+    t.string   "level"
+    t.string   "label"
+    t.string   "location"
+    t.integer  "volume"
+    t.text     "note"
+    t.string   "access_read"
+    t.string   "access_write"
+    t.string   "access_other"
+    t.integer  "users_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "iresources", ["label"], :name => "index_iresources_on_label", :unique => true
+  add_index "iresources", ["users_id"], :name => "index_iresources_on_users_id"
 
   create_table "roles", :force => true do |t|
     t.string   "name"
