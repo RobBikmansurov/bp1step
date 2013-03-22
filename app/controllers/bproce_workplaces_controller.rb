@@ -13,8 +13,7 @@ class BproceWorkplacesController < ApplicationController
   
   def destroy
     @bproce_workplace = BproceWorkplace.find(params[:id])
-    @bproce_workplace.destroy
-    flash[:notice] = "Successfully destroyed bproce_workplace." if @bproce_workplace.save
+    flash[:notice] = "Successfully destroyed bproce_workplace." if @bproce_workplace.destroy
     respond_with(@bproce_workplace.workplace)
   end
 
