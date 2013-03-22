@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130314094248) do
+ActiveRecord::Schema.define(:version => 20130322063252) do
 
   create_table "activities", :force => true do |t|
     t.integer  "trackable_id"
@@ -37,6 +37,13 @@ ActiveRecord::Schema.define(:version => 20130314094248) do
     t.datetime "updated_at"
     t.text     "purpose"
     t.string   "apptype"
+    t.string   "version_app"
+    t.string   "directory_app"
+    t.string   "distribution_app"
+    t.string   "executable_file"
+    t.string   "licence"
+    t.string   "source_app"
+    t.text     "note"
   end
 
   create_table "bproce_bapps", :force => true do |t|

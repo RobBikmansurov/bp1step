@@ -4,7 +4,14 @@
   = f.input :apptype
   = f.input :description, :as => :text
   = f.input :purpose, :as => :text
-  = f.error :base
+  = f.input :version_app
+  = f.input :directory_app
+  = f.input :distribution_app
+  = f.input :executable_file
+  = f.input :licence
+  = f.input :source_app
+  = f.input :note, :as => :text
+  -#= f.error :base
   - if can? :update, @bapp
     = f.button :submit
   %p
