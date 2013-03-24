@@ -8,13 +8,18 @@
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 
+PublicActivity.enabled = false
 # access roles
-["admin", "analitic", "owner", "autor", "user"].each do |name|
-  Role.create!(:name => name, :description => name + ' role')
+["admin", "analitic", "owner", "author", "user", "writer"].each do |name|
+  Role.create!(:name => name, :description => name + '_role')
 end
+puts "roles created"
 
 # users
-#user1 = User.create(:displayname => 'Иванов И.И.', :username => 'ivanov', :email => 'ivanov@example.com', :password => 'topsecret')
+user1 = User.create(:displayname => 'Иванов И.И.', :username => 'ivanov', :email => 'ivanov@example.com', :password => 'ivanov')
+user2 = User.create(:displayname => 'Петров П.П.', :username => 'petrov', :email => 'petrov@example.com', :password => 'petrov')
+user3 = User.create(:displayname => 'Администратор', :username => 'admin1', :email => 'admin1@example.com', :password => 'admin1')
+puts "users created"
 
 # applications
 ['Office', 'Notepad', "Excel", 'Word', 'Powerpoint'].each do |name |
@@ -24,6 +29,7 @@ end
 				:purpose => 'редактирование ' + name)
 end
 ap1 = Bapp.create(:name => '1С:Бухгалтерия', :description => '1С:Бухгалтерия. Учет основных средств', :apptype => 'бух')
+puts "applications created"
 
 # workplaces
 wp1 = Workplace.create(:name => 'РМ УИТ Начальник', :description => "начальник УИТ", :designation => 'РМУИТНачальник', :location => '100')
@@ -31,9 +37,12 @@ wp2 = Workplace.create(:name => 'Главный бухгалтер', :descriptio
 ["Кассир", "Бухгалтер", "Контролер", "Юрист", "Экономист"].each do |name|
 	3.times do |n|
 		n += 1
-		Workplace.create(:name => 'РМ ' + name,
-						 :description => 'рабочее место' + name,
+		Workplace.create(:name => 'РМ ' + name + n.to_s,
+						 :description => 'рабочее место' + name + n.to_s,
 						 :designation => name + n.to_s,
 						 :location => n.to_s + '01')
   	end
 end
+puts "workplaces created"
+
+PublicActivity.enabled = true
