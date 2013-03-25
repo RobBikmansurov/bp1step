@@ -6,8 +6,16 @@ class Iresource < ActiveRecord::Base
                     :length => {:minimum => 3, :maximum => 20}
   validates :location, :length => {:minimum => 3, :maximum => 255}
 
-  belongs_to :users
-  attr_accessible :access_other, :access_read, :access_write, :label, :level, :location, :note, :volume
+  belongs_to :user
+  has_many :bproce_iresources
+  has_many :bproces, :through => :bproce_iresources
+
+  def owner_name
+    user.try(:displayname)
+  end
+  def owner_name=(name)
+    self.user = User.find_by_displayname(name) if name.present?
+  end
 
   def self.search(search)
    if search

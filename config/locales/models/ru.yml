@@ -59,7 +59,8 @@ ru:
       iresource:
         level: Уровень
         label: Метка
-        location: Местоположение
+        location: Путь
+        alocation: Местоположение
         volume: Объем
         note: Примечание
         access_read: Права чтения
