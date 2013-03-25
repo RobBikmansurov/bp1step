@@ -24,10 +24,12 @@ class IresourcesController < ApplicationController
   end
 
   def new
+    @bproce_iresource = BproceIresource.new
     respond_with(@iresource)
   end
 
   def edit
+    @bproce_iresource = BproceIresource.new(:iresource_id => @iresource.id) # заготовка для новой связи с процессом
     @iresource = Iresource.find(params[:id])
   end
 

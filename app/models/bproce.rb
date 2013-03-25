@@ -15,6 +15,8 @@ class Bproce < ActiveRecord::Base
   has_many :bapps, :through => :bproce_bapps
   has_many :bproce_workplaces, :dependent => :destroy
   has_many :workplaces, :through => :bproce_workplaces
+  has_many :bproce_iresource, :dependent => :destroy
+  has_many :iresource, :through => :bproce_iresource
   belongs_to :bproce
   #belongs_to :owner, :class_name => 'User'  # владелец процесса
   belongs_to :user

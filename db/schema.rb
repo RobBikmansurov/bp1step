@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130322101759) do
+ActiveRecord::Schema.define(:version => 20130325095908) do
 
   create_table "activities", :force => true do |t|
     t.integer  "trackable_id"
@@ -53,6 +53,16 @@ ActiveRecord::Schema.define(:version => 20130322101759) do
     t.datetime "updated_at"
     t.text     "apurpose"
   end
+
+  create_table "bproce_iresources", :force => true do |t|
+    t.integer  "bproce_id"
+    t.integer  "iresource_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "bproce_iresources", ["bproce_id"], :name => "index_bproce_iresources_on_bproce_id"
+  add_index "bproce_iresources", ["iresource_id"], :name => "index_bproce_iresources_on_iresource_id"
 
   create_table "bproce_workplaces", :force => true do |t|
     t.integer  "bproce_id"
@@ -143,18 +153,19 @@ ActiveRecord::Schema.define(:version => 20130322101759) do
     t.string   "level"
     t.string   "label"
     t.string   "location"
+    t.string   "alocation"
     t.integer  "volume"
     t.text     "note"
     t.string   "access_read"
     t.string   "access_write"
     t.string   "access_other"
-    t.integer  "users_id"
+    t.integer  "user_id"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end
 
   add_index "iresources", ["label"], :name => "index_iresources_on_label", :unique => true
-  add_index "iresources", ["users_id"], :name => "index_iresources_on_users_id"
+  add_index "iresources", ["user_id"], :name => "index_iresources_on_user_id"
 
   create_table "roles", :force => true do |t|
     t.string   "name"

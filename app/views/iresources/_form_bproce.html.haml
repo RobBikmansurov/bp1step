@@ -1,0 +1,7 @@
+= simple_form_for(@bproce_iresource) do |ff|
+  = ff.error_notification
+  = ff.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Процесс', :prompt => 'Выберите процесс, где используется Ресурс'
+  = ff.hidden_field :iresource_id
+  = ff.error :base
+  = ff.button :submit, 'Связать с процессом'
+

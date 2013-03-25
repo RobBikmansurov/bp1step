@@ -1,33 +1,46 @@
 -title "Информационный ресурс"
-%h1 Изменить Информационный ресурс
+%h1 Информационный ресурс
 
-%p
-  %b Level:
-  = @iresource.level
-%p
-  %b Label:
-  = @iresource.label
-%p
-  %b Location:
+%h3
+  [
+  %b
+    = @iresource.label
+  ]:
+%h3
   = @iresource.location
-%p
-  %b Volume:
+-if @iresource.alocation
+  %h3
+    = @iresource.alocation
+%h5
+  = @iresource.level
+
+%h3
+  Объем, GB
   = @iresource.volume
-%p
-  %b Note:
+%h3
+  Примечание:
   = @iresource.note
-%p
-  %b Access read:
+
+%h3
+  Группы прав доступа
+%h4
+  %b Чтение:
   = @iresource.access_read
-%p
-  %b Access write:
+%h4
+  %b Запись:
   = @iresource.access_write
-%p
-  %b Access other:
+%h4
+  %b Другие:
   = @iresource.access_other
-%p
-  %b Users:
-  = @iresource.users
+%h3
+  Владелец:
+  -if @iresource.user
+    = link_to @iresource.user.displayname, user_path(@iresource.user)
+-if @iresource.bproces.count > 0
+  %h3 Процессы, в которых используется:
+  -@iresource.bproces.each do |bp|
+    = link_to bp.name, bproce_path(bp)
+
 %p
 -if can? :update, Iresource
   .button= link_to 'Edit', edit_iresource_path(@iresource)
