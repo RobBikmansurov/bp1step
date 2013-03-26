@@ -10,6 +10,7 @@ class CreateIresources < ActiveRecord::Migration
       t.string :access_read
       t.string :access_write
       t.string :access_other
+      t.string :risk_category
       t.references :user
 
       t.timestamps

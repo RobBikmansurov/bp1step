@@ -1,6 +1,6 @@
--title "Информационные ресурсы"
+-title "Ресурсы"
 %h2
-  Каталог Информационных ресурсов
+  Каталог Ресурсов
   -if params[:level].present?
     [ 
     = params[:level]
@@ -10,23 +10,35 @@
       [ 
       = params[:search]
       ]
+    -else
+      -if params[:risk].present?
+        категория риска:
+        [ 
+        = params[:risk]
+        ]
 
 %table
   %tr
+    %th Тип
     %th= sortable "label", "Метка"
-    %th Location
+    %th URI
     %th Объем, GB
-    %th Чтение
-    %th Запись
+    %th Права доступа
+    %th Категория
     - if can? :destroy, Iresource
       %th
   - @iresources.each do |iresource|
     %tr
+      %td= iresource.level
       %td= link_to iresource.label, iresource
       %td= iresource.location
       %td= iresource.volume
-      %td= iresource.access_read
-      %td= iresource.access_write
+      %td
+        = iresource.access_read
+        = iresource.access_write
+        = iresource.access_other
+      %td=iresource.risk_category
+
       - if can? :destroy, Iresource
         %td
           = link_to image_tag('action_stop.gif', :alt => 'Удалить'), iresource, confirm: iresource.label + "\nДействительно хотите удалить?", :method => 'delete'
@@ -34,15 +46,26 @@
 -if !params[:all].present?
   .apple_pagination
     = will_paginate @iresources
+%p
+- if can? :destroy, Iresource
+  .button
+    = link_to 'Каталог', iresources_path + '.pdf?all=1'
 
 - if can? :create, Iresource
   .button
     = link_to "Добавить новый ресурс", new_iresource_path
 %p
 %br
-Уровень:
+Тип:
 - Iresource.group(:level).each do |iresource|
   -if iresource.level.to_s.empty?
     = link_to 'пусто', iresources_path + '?level='
   -else
     = link_to iresource.level, iresources_path + '?level=' + iresource.level.to_s
+%br
+Категория риска:
+- Iresource.group(:risk_category).each do |iresource|
+  -if iresource.risk_category.to_s.empty?
+    = link_to 'пусто', iresources_path + '?risk='
+  -else
+    = link_to iresource.risk_category, iresources_path + '?risk=' + iresource.risk_category.to_s

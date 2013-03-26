@@ -10,6 +10,7 @@
     = f.input :access_read
     = f.input :access_write
     = f.input :access_other
+    = f.input :risk_category
     = f.input :owner_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Ответственный за ресурс'
   - if can? :update, @iresource
     = f.button :submit
