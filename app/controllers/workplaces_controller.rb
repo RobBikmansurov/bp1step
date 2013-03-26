@@ -76,7 +76,7 @@ private
   def print
     report = ODFReport::Report.new("reports/workplaces.odt") do |r|
       nn = 0
-      r.add_field "REPORT_DATE", Date.today
+      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
       r.add_table("TABLE_01", @workplaces, :header=>true) do |t|
       t.add_column(:nn) do |ca|
           nn += 1
