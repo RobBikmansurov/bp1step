@@ -49,8 +49,7 @@ class BappsController < ApplicationController
   end
 
   def destroy
-    @bapp.destroy
-    flash[:notice] = "Successfully destroyed bapp." if @bapp.save
+    flash[:notice] = "Successfully destroyed bapp." if @bapp.destroy
     respond_with(@bapp)
   end
 
