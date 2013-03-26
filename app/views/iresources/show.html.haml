@@ -1,7 +1,8 @@
--title "Информационный ресурс"
-%h1 Информационный ресурс
+-title "Ресурс"
+%h1 Ресурс
 
 %h3
+  = @iresource.level
   [
   %b
     = @iresource.label
@@ -11,12 +12,11 @@
 -if @iresource.alocation
   %h3
     = @iresource.alocation
-%h5
-  = @iresource.level
 
 %h3
-  Объем, GB
+  Объем:
   = @iresource.volume
+  GB
 %h3
   Примечание:
   = @iresource.note
@@ -32,6 +32,10 @@
 %h4
   %b Другие:
   = @iresource.access_other
+%h4
+  Категория риска:
+  %b
+    =@iresource.risk_category
 %h3
   Владелец:
   -if @iresource.user

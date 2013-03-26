@@ -10,11 +10,16 @@ class IresourcesController < ApplicationController
       if params[:level].present?
         @iresources = Iresource.where(:level => params[:level]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
       else
-        @iresources = Iresource.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        if params[:risk].present?
+          @iresources = Iresource.where(:risk_category => params[:risk]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        else
+          @iresources = Iresource.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        end
       end
     end
     respond_to do |format|
       format.html
+      format.pdf { print }
       format.json { render json: @iresources }
     end
   end
@@ -74,6 +79,34 @@ class IresourcesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def print
+    report = ODFReport::Report.new("reports/iresources.odt") do |r|
+      nn = 0
+      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
+      r.add_table("TABLE_01", @iresources, :header=>true) do |t|
+      t.add_column(:nn) do |ca|
+          nn += 1
+          "#{nn}."
+        end
+        t.add_column(:label)
+        t.add_column(:location)
+        t.add_column(:access_read)
+        t.add_column(:access_write)
+        t.add_column(:access_other)
+        t.add_column(:risk_category)
+        t.add_column(:note)
+      end
+      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    report_file_name = report.generate
+    send_file(report_file_name,
+      :type => 'application/msword',
+      :filename => "resources.odt",
+      :disposition => 'inline' )
+  end
+
 
 private
   def sort_column
