@@ -14,9 +14,16 @@ class BproceIresourcesController < ApplicationController
     end
   end
 
+  def destroy
+  	@bproce_iresource = BproceIresource.find(params[:id])
+  	@iresource = @bproce_iresource.iresource
+  	flash[:notice] = "Successfully destroyed bproce_iresource." if @bproce_iresource.destroy
+    respond_with(@iresource)
+  end
+
   def show
-  	@bi = BproceIresource.find(params[:id])
-  	@iresource = @bi.iresource
+  	@bproce_iresource = BproceIresource.find(params[:id])
+  	@iresource = @bproce_iresource.iresource
   	#respond_with(@iresource = @bi.iresource)
 
   	redirect_to @iresource

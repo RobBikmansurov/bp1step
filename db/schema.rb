@@ -159,9 +159,10 @@ ActiveRecord::Schema.define(:version => 20130325095908) do
     t.string   "access_read"
     t.string   "access_write"
     t.string   "access_other"
+    t.string   "risk_category"
     t.integer  "user_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   add_index "iresources", ["label"], :name => "index_iresources_on_label", :unique => true
