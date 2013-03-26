@@ -116,7 +116,7 @@ private
   # печать карточки процесса
   def print_card
     report = ODFReport::Report.new("reports/bp-card.odt") do |r|
-      r.add_field "REPORT_DATE", Date.today
+      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
       r.add_field :id, @bproce.id
       r.add_field :shortname, @bproce.shortname
       r.add_field :name, @bproce.name
@@ -205,9 +205,21 @@ private
         end
       end
 
+      ir = 0 # порядковый номер строки для информационных ресурсов
+      @iresources = @bproce.iresource
+      r.add_table("IRESOURCES", @iresources, :header=>true, :skip_if_empty => true) do |t|
+        if @iresources.count > 0  # если инф.ресурсов нет - пустая таблица не будет выведена
+          t.add_column(:ir) do |nn| # порядковый номер строки таблицы
+            ir += 1
+          end
+          t.add_column(:label)
+          t.add_column(:location)
+          t.add_column(:note)
+        end
+      end
+
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
-      r.add_field "REPORT_DATE", Date.today
     end
     report_file_name = report.generate
     send_file(report_file_name,
