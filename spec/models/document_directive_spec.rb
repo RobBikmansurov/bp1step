@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+PublicActivity.enabled = false
+
 describe DocumentDirective do
   before(:each) do
     @document_directive = DocumentDirective.create(:document_id => 1, :directive_id => 1)

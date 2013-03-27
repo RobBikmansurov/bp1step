@@ -59,3 +59,4 @@ group :development do
   gem 'rvm-capistrano'
   gem 'capistrano-deploy', :require => false
 end
+

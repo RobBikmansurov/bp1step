@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+PublicActivity.enabled = false
+
 describe Document do
   before(:each) do
     @doc = create(:document)
