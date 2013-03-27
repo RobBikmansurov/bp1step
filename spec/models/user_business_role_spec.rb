@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+PublicActivity.enabled = false
+
 describe UserBusinessRole do
   before(:each) do
     @ur = UserBusinessRole.new

@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+PublicActivity.enabled = false
+
 describe BproceBapp do
   before(:each) do
     @bpbap = create(:bproce_bapp)

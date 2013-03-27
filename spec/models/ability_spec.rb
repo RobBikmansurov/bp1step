@@ -1,6 +1,7 @@
 require "cancan/matchers"
 require "spec_helper"
-require 'factory_girl'
+
+PublicActivity.enabled = false
 
 describe Ability do
   context "unauthorized user or user without roles" do   # незарегистрированный пользователь
@@ -25,8 +26,8 @@ describe Ability do
   end
 
   context "authorized user with role :user" do   # зарегистрированный пользователь
-    user = FactoryGirl.create(:user)
-    role = FactoryGirl.create(:role)
+    user = FactoryGirl.build(:user)
+    role = FactoryGirl.build(:role)
     role.name = :user
     user_role = UserRole.new
     user_role.user_id = user.id

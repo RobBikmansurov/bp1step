@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+PublicActivity.enabled = false
+
 describe UserWorkplace do
   before(:each) do
     @uw = UserWorkplace.new

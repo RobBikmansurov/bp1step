@@ -1,4 +1,7 @@
 require 'spec_helper'
+
+PublicActivity.enabled = false
+
 describe Bproce do
     before(:each) do
     @bp = create(:bproce)
