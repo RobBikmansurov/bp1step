@@ -18,6 +18,7 @@ namespace :monit do
   after "deploy:setup", "monit:setup"
   
   task(:nginx, roles: :web) { monit_config "nginx" }
+  task(:files, roles: :web) { monit_config "files" }
   #task(:postgresql, roles: :db) { monit_config "postgresql" }
   task(:unicorn, roles: :app) { monit_config "unicorn" }
 
