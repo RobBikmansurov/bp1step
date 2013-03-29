@@ -7,6 +7,7 @@ namespace :bp1step do
   															# не умеет удалять пользователей User, удаленных в LDAP
     require 'rubygems'
     require 'net/ldap'
+    PublicActivity.enabled = false
     LDAP_CONFIG = YAML.load_file(Devise.ldap_config)	# считаем конфиги доступа к LDAP
     ldap = Net::LDAP.new :host => LDAP_CONFIG["development"]["host"],
         :port => LDAP_CONFIG["development"]["port"],
