@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
   has_many :user_roles, :dependent => :destroy  # роли доступа пользователя
   has_many :roles, :through => :user_roles
   has_many :bproce
+  has_many :documents
+  has_many :iresource
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
