@@ -21,16 +21,18 @@
 %table
   %tr
     %th ФИО
-    %th период
-    %th примечание
-  - @business_role.user_business_role.each do |user_business_role|
+    %th Период
+    %th Основание
+    %th Процесс
+  - @business_role.user_business_role.each do |business_role|
     %tr
-      %td= link_to user_business_role.user.displayname, user_business_role.user
+      %td= link_to business_role.user.displayname, business_role.user
       %td
-        = user_business_role.date_from
+        = business_role.date_from.strftime("%d.%m.%Y")
         \-
-        = user_business_role.date_to
-      %td= user_business_role.note
+        = business_role.date_to.strftime("%d.%m.%Y")
+      %td= business_role.note
+      %td= link_to Bproce.find(business_role.business_role.bproce).shortname, bproce_path(business_role.business_role.bproce)
 
 %p
 - if can? :update, @business_role
