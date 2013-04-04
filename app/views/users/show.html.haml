@@ -11,14 +11,15 @@
   |
   = @usr.phone
   |
-  - if @usr.roles.count > 0
+  -if @usr.roles.count
     %b роли доступа:
     - @usr.roles.each do |role|
-      -if current_user.role? :admin
-        = link_to role.description, users_path + '?role=' + role.name
-      -else
-        = role.description
-      \/
+      -if current_user
+        -if current_user.role? :admin
+          = link_to role.description, users_path + '?role=' + role.name
+        -else
+          = role.description
+        \/
 
 %h2 Рабочие места:
 %table
@@ -36,15 +37,15 @@
       %td= user_workplace.workplace.name
       %td= user_workplace.note
       %td
-        = user_workplace.date_from
+        = user_workplace.date_from.strftime("%d.%m.%Y")
         \-
-        = user_workplace.date_to
+        = user_workplace.date_to.strftime("%d.%m.%Y")
 
 - if @usr.bproce.count > 0
   %h3 Владелец процессов:
   - @usr.bproce.each do |bproce|
     = link_to bproce.name, bproce_path(bproce)
-- if @uroles.count > 0
+- if @usr.roles.count > 0
   %h2
     = @usr.displayname
     исполняет роли:
@@ -61,8 +62,8 @@
           -#= business_role.inspect
           = link_to business_role.business_role.name, business_role_path(business_role.business_role)
         %td= business_role.note
-        %td= business_role.date_from
-        %td= business_role.date_to
+        %td= business_role.date_from.strftime("%d.%m.%Y")
+        %td= business_role.date_to.strftime("%d.%m.%Y")
         %td= link_to Bproce.find(business_role.business_role.bproce).shortname, bproce_path(business_role.business_role.bproce)
 
 - if @documents.count > 0
