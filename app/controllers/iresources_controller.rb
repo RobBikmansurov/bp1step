@@ -91,6 +91,7 @@ class IresourcesController < ApplicationController
         end
         t.add_column(:label)
         t.add_column(:location)
+        t.add_column(:alocation)
         t.add_column(:access_read)
         t.add_column(:access_write)
         t.add_column(:access_other)
