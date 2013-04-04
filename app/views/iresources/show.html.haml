@@ -4,18 +4,19 @@
 %h3
   = @iresource.level
   [
-  %b
-    = @iresource.label
+  %b= @iresource.label
   ]:
 %h3
-  = @iresource.location
+  URI:
+  %b= @iresource.location
 -if @iresource.alocation
   %h3
-    = @iresource.alocation
+    URL:
+    %b= @iresource.alocation
 
 %h3
   Объем:
-  = @iresource.volume
+  %b= @iresource.volume
   GB
 %h3
   Примечание:

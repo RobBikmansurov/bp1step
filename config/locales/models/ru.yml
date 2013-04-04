@@ -59,8 +59,8 @@ ru:
       iresource:
         level: Тип
         label: Метка
-        location: Путь/URI
-        alocation: Местоположение
+        location: URI
+        alocation: URL
         volume: Объем, GB
         note: Примечание
         access_read: Права чтения
@@ -81,6 +81,10 @@ ru:
       bproce_bapp:
         apurpose: Назначение в процессе
       user_business_role:
+        note: Примечание
+        date_from: Дата начала
+        date_to: Дата окончания
+      user_workplace:
         note: Примечание
         date_from: Дата начала
         date_to: Дата окончания
