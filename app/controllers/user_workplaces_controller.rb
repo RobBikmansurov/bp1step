@@ -17,4 +17,11 @@ class UserWorkplacesController < ApplicationController
     respond_with(@user_workplace)
   end
 
+  def destroy
+    @user_workplace = UserWorkplace.find(params[:id])   # нашли удаляемую связь
+    @workplace = Workplace.find(@user_workplace.workplace_id) # запомнили рабочее место для этой удаляемой связи
+    @user_workplace.destroy   # удалили связь
+    respond_with(@workplace)  # вернулись в рабочее место
+  end
+
 end

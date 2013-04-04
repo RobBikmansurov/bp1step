@@ -5,23 +5,28 @@
 - @workplace.user_workplace.each do |user_workplace|
   = link_to user_workplace.user.displayname, user_workplace.user
   (
-  = user_workplace.date_from
-  = user_workplace.date_to
+  - if user_workplace.date_from
+    = user_workplace.date_from.strftime("%d.%m.%Y") # период
+  - if user_workplace.date_to
+    \-
+    = user_workplace.date_to.strftime("%d.%m.%Y")
+  -if user_workplace.note                         # примечание если есть (обычно - номер приказа/распоряжения)
+    [
+    = user_workplace.note
+    ]
   )
+  = link_to image_tag('action_stop.gif', :alt => 'Удалить'), user_workplace, confirm: "Удалить исполнителя " + user_workplace.user.displayname + "\n с рабочего места " + user_workplace.workplace.designation + "?", :method => 'delete'
+
 %p
-= simple_form_for(@user_workplace) do |uw|
-  = uw.error_notification
-  = uw.hidden_field :workplace_id
-  
-  = uw.input :user_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Исполнитель', :prompt => 'Исполнитель на рабочем месте'
-  
-  = uw.input :date_from, :as => :date,
-              :start_year => 1990, :end_year => Date.today.year + 1
-  = uw.input :date_to, :as => :date, :required => false, 
-              :start_year => Date.today.year, :end_year => Date.today.year + 1
-  = uw.input :note
-  = uw.error :base
-  -if can? :update, @workplace
+-if can? :update, @workplace
+  = simple_form_for(@user_workplace) do |uw|
+    = uw.error_notification
+    = uw.hidden_field :workplace_id
+    = uw.input :user_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Исполнитель', :prompt => 'Исполнитель на рабочем месте'
+    = uw.input :date_from, :as => :string, :input_html =>{:class=>'datepicker', :value => Date.today.strftime("%d.%m.%Y")}
+    = uw.input :date_to, :as => :string, :input_html =>{:class=>'datepicker', :value => Date.today.change(:month => 12, :day => 31).strftime("%d.%m.%Y")}
+    = uw.input :note
+    = uw.error :base
     = uw.button :submit, 'Добавить Исполнителя'
 
 %p

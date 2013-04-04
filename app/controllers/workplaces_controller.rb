@@ -22,7 +22,11 @@ class WorkplacesController < ApplicationController
   end
 
   def show
-    respond_with(@workplace = Workplace.find(params[:id]))
+    if @workplace
+      respond_with(@workplace)
+    else
+      redirect_to workplaces_path, :notice => 'Record not found: id=' + params[:id]
+    end
   end
 
   def new
@@ -69,7 +73,7 @@ private
     #@workplaces = @workplaces.find(:all, :include => :users)
       render :index # покажем список найденного
     else
-      @workplace = params[:id].present? ? Workplace.find(params[:id]) : Workplace.new
+      @workplace = params[:id].present? ? Workplace.find_by_id(params[:id]) : Workplace.new
     end
   end
 
