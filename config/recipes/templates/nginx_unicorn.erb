@@ -16,17 +16,11 @@ server {
     break;
   }
 
-  location ^~ /assets/ {
-    gzip_static on;
-    expires max;
-    add_header Cache-Control public;
-  }
-
   try_files $uri/index.html $uri @unicorn;
   location @unicorn {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header Host $http_host;
-    proxy_set_header Client-IP $remote_addr;        # для правильного отображения ip-адреса
+    proxy_set_header Client-IP $remote_addr;        # для правильного отображения ip-адреса в логе production.log
     proxy_redirect off;
     proxy_pass http://unicorn;
   }
