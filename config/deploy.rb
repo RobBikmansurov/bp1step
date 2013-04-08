@@ -36,25 +36,13 @@ set :keep_releases, 2 	# количество каталогов релизов,
 
 set :maintenance_template_path, File.expand_path("../recipes/templates/maintenance.html.erb", __FILE__)
 
-
 # if you want to clean up old releases on each deploy uncomment this:
 after "deploy:restart", "deploy:cleanup"
 after "deploy", "rvm:trust_rvmrc"
 after "deploy:update_code",     "deploy:create_symlink"
 
-
 # Create uploads directory and link
-
 namespace :deploy do
-  task :restart do
-    run "if [ -f #{unicorn_pid} ] && [ -e /proc/$(cat #{unicorn_pid}) ]; then kill -USR2 `cat #{unicorn_pid}`; else cd #{deploy_to}/current && bundle exec unicorn_rails -c #{unicorn_conf} -E #{rails_env} -D; fi"
-  end
-  task :start do
-    run "bundle exec unicorn_rails -c #{unicorn_conf} -E #{rails_env} -D"
-  end
-  task :stop do
-    run "if [ -f #{unicorn_pid} ] && [ -e /proc/$(cat #{unicorn_pid}) ]; then kill -QUIT `cat #{unicorn_pid}`; fi"
-  end
   task :create_symlink do
     #run "cp #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     # run "ln -s #{shared_path}/db/sphinx #{release_path}/db/sphinx"
