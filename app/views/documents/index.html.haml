@@ -56,7 +56,7 @@
           -if can? :view_document, document
             -if File.exist?("files/" + document.file_name) && !document.file_name.empty?
               = link_to image_tag('action_go.gif', :alt => 'См.'), document_path(document)+'.pdf'
-        = link_to document.name, document_path(document)
+        = link_to truncate(document.name, :length => 150, :omission => ' ...'), document_path(document)
       -#      %td= document.filename
       %td= document.status
       %td= document.approved.strftime('%d.%m.%Y') if document.approved

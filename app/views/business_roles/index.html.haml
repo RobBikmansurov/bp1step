@@ -20,7 +20,7 @@
       %td= link_to ro.name, ro
       %td
         = link_to ro.bproce.shortname, bproce_path(ro.bproce_id) if !ro.bproce.nil?
-      %td= ro.description
+      %td= truncate(ro.description, :length => 120, :omission => ' ...')
       -if ro.users.first
         %td
           = link_to ro.users.first.displayname, ro.users.first
