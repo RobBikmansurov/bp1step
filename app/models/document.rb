@@ -9,7 +9,7 @@ class Document < ActiveRecord::Base
   validates :dlevel, :numericality => {:less_than => 5, :greater_than => 0}
 
   include PublicActivity::Model
-  tracked owner: Proc.new{ |controller, model| controller.current_user }
+  tracked owner: Proc.new { |controller, model| controller.current_user }
 
   # документ относится к процессу
   belongs_to :bproce
@@ -20,18 +20,20 @@ class Document < ActiveRecord::Base
 
   attr_protected :uploaded_file # чтобы не было ошибки при массовом сохранении из params
 
-  before_save :file_name_sanityze # удалим из имени файла коды пробелов и заменим обратные слэши на прямые
+  # удалим из имени файла коды пробелов и заменим обратные слэши на прямые
+  before_save :file_name_sanityze
 
   def owner_name
     owner.try(:displayname)
   end
+
   def owner_name=(name)
     self.owner = User.find_by_displayname(name) if name.present?
   end
 
   def file_name_sanityze
     if !self.eplace.to_s.empty?  # если имя файла не пустое
-      fname = self.eplace[(self.eplace.index("_1_Норма")-1)..-1]  # обрежем начало - путь шары
+      fname = self.eplace[(self.eplace.index('_1_Норма') - 1).. - 1]  # обрежем начало - путь шары
       fname = fname.gsub(/%20/, ' ')  # заменим %20 на пробел
       fname = fname.gsub('\\', '/')   # заменим обратные слэши Windows на нормальные
       fname = fname.gsub('__Внут', '_1_Внут')
@@ -49,10 +51,11 @@ class Document < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search  
-      where('name LIKE ? or description LIKE ? or id LIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
-    else  
+    if search
+      where('name LIKE ? or description LIKE ? or id LIKE ?',
+            '%#{search}%', '%#{search}%', '%#{search}%')
+    else
       scoped
-    end  
+    end
   end
 end

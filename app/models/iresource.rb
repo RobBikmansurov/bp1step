@@ -1,6 +1,6 @@
 class Iresource < ActiveRecord::Base
   include PublicActivity::Model
-  tracked owner: Proc.new{ |controller, model| controller.current_user }
+  tracked owner: Proc.new { |controller, model| controller.current_user }
 
   validates :label, :uniqueness => true,
                     :length => {:minimum => 3, :maximum => 20}
@@ -13,12 +13,13 @@ class Iresource < ActiveRecord::Base
   def owner_name
     user.try(:displayname)
   end
+
   def owner_name=(name)
     self.user = User.find_by_displayname(name) if name.present?
   end
 
   def self.search(search)
-   if search
+    if search
       where('label LIKE ? or location LIKE ?', "%#{search}%", "%#{search}%")
     else
       scoped
