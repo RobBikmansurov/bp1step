@@ -1,4 +1,4 @@
--title "Внутренний документ банка"
+-title "Документ " + truncate(@document.name, length: 30)
 %h2= @document.name 
 %h3 Описание:
 = @document.description

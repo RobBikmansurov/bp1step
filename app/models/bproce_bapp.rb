@@ -6,7 +6,7 @@ class BproceBapp < ActiveRecord::Base
   belongs_to :bapp
 
   def self.search(search)
-   if search
+    if search
       where('name LIKE ? or description LIKE ?', "%#{search}%", "%#{search}%")
     else
       scoped
