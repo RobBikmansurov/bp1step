@@ -6,7 +6,7 @@ class BusinessRole < ActiveRecord::Base
   validates :bproce_id, :presence => true
 
   include PublicActivity::Model
-  tracked owner: Proc.new{ |controller, model| controller.current_user }
+  tracked owner: Proc.new { |controller, model| controller.current_user }
 
   # бизнес-роль участвует в процессе
   belongs_to :bproce
