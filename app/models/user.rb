@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   has_many :user_business_role  # бизнес-роли пользователя
   has_many :business_roles, :through => :user_business_role
   has_many :user_workplace # рабочие места пользователя
-  has_many :workplaces, :through => :user_workplace
+  has_many :workplaces, :through => :user_workplace, :dependent => :destroy
   has_many :user_roles, :dependent => :destroy  # роли доступа пользователя
   has_many :roles, :through => :user_roles
   has_many :bproce

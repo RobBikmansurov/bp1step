@@ -42,8 +42,7 @@ class BusinessRolesController < ApplicationController
   end
 
   def destroy
-    @business_role.destroy
-    flash[:notice] = "Successfully destroyed business_role." if @business_role.save
+    flash[:notice] = "Successfully destroyed business_role." if @business_role.destroy
     respond_with(@business_role)
   end
 
