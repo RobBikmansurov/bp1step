@@ -53,8 +53,7 @@ class WorkplacesController < ApplicationController
   end
 
   def destroy
-    @workplace.destroy
-    flash[:notice] = "Successfully destroyed workplace."  if @workplace.save
+    flash[:notice] = "Successfully destroyed workplace."  if @workplace.destroy
     respond_with(@workplace)
   end
 

@@ -63,8 +63,7 @@ class BprocesController < ApplicationController
   end
 
   def destroy
-    @bproce.destroy
-    flash[:notice] = "Successfully destroyed Bproce." if @bproce.destroyed?
+    flash[:notice] = "Successfully destroyed Bproce." if @bproce.destroy
     redirect_to :action => :index
   end
 
