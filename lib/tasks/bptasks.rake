@@ -7,7 +7,10 @@ namespace :bp1step do
   															# не умеет удалять пользователей User, удаленных в LDAP
     require 'rubygems'
     require 'net/ldap'
-    PublicActivity.enabled = false
+
+    PublicActivity.enabled = false	# отключить протоколирование изменений
+    logger = Logger.new('log/bp1step.log')	# протокол работы
+
     LDAP_CONFIG = YAML.load_file(Devise.ldap_config)	# считаем конфиги доступа к LDAP
     ldap = Net::LDAP.new :host => LDAP_CONFIG["development"]["host"],
         :port => LDAP_CONFIG["development"]["port"],
@@ -34,62 +37,62 @@ namespace :bp1step do
 		i += 1
   		email = entry["mail"].first				# это обязательные параметры + к ним левые уникальные password и reset_password_token
   		username = entry["sAMAccountName"].first.downcase
-  		#puts "#{username} #{email}" if debug_flag
+  		#logger.info "#{username} #{email}" if debug_flag
   		uac = entry["userAccountControl"].first.to_i	# второй бит = 1 означает отключенного пользователя в AD
 		if uac & 2 == 0	# пользователь не заблокирован
 		    usr = User.find_or_create_by_username :username => username, :email => email, :password => email
 		    if usr.new_record?
 				if email.to_s.empty?	# пропустим с пустым email
-					puts "#{i}!#{new_users}. #{entry.sAMAccountName} #{entry.dn} \t- email is NULL!"
+					logger.info "#{i}!#{new_users}. #{entry.sAMAccountName} #{entry.dn} \t- email is NULL!"
 				else
 		    		new_users += 1
 		    		usr1 = User.find_by_email(email.to_s)	# поищем по e-mail
 		    		if usr1.nil?
-					    puts "+ #{entry["sn"].first} \t[#{username}] \t"
+					    logger.info "+ #{entry["sn"].first} \t[#{username}] \t"
 		        		usr.save
-						puts "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} #{entry.dn}"
-		        		puts usr.errors
+						logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} #{entry.dn}"
+		        		logger.info usr.errors
 		        	else
-						puts "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} = #{usr1.username}"
-						puts "    уже есть пользователь с таким e-mail, #id= #{usr1.id}"
+						logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} = #{usr1.username}"
+						logger.info "    уже есть пользователь с таким e-mail, #id= #{usr1.id}"
 		        	end
 		        end
 		    else	# проверим - не изменилось ли ключевые реквизиты у этого пользователя в AD
 				if !(usr.email == email)	# e-mail
-					puts "#{usr.email} = #{email}: #{usr.email == email}" if debug_flag
+					logger.info "#{usr.email} = #{email}: #{usr.email == email}" if debug_flag
 					usr.update_attribute(:email, email)
 					usr.email = email
 				end
 		    	s1 = entry["department"].first.to_s.force_encoding("UTF-8")
 				if !(usr.department.to_s == s1)	# подразделение
-					puts "#{usr.id}: #{usr.department} = #{s1}: #{usr.department == s1}" if debug_flag
+					logger.info "#{usr.id}: #{usr.department} = #{s1}: #{usr.department == s1}" if debug_flag
 					usr.update_attribute(:department, s1)
 				end
 		    	s2 = entry["title"].first.to_s.force_encoding("UTF-8")
 				if !(usr.position.to_s == s2)	# должность
-					puts "#{usr.id}: #{usr.position} = #{s2}: #{usr.position == s2}" if debug_flag
+					logger.info "#{usr.id}: #{usr.position} = #{s2}: #{usr.position == s2}" if debug_flag
 					usr.update_attribute(:position, s2)
 				end
 				if !(usr.phone == entry["telephonenumber"].first)	# телефон
-					#puts "#{usr.phone} = #{entry['telephonenumber'].first}: #{usr.phone == entry['telephonenumber'].first}" if debug_flag
+					#logger.info "#{usr.phone} = #{entry['telephonenumber'].first}: #{usr.phone == entry['telephonenumber'].first}" if debug_flag
 					usr.update_attribute(:phone, entry["telephonenumber"].first)
 				end
 				if !(usr.office == entry["physicaldeliveryofficename"].first)	# офис
 					usr.update_attribute(:office, entry["physicaldeliveryofficename"].first)
-					#puts "#{usr.office} = #{entry['physicaldeliveryofficename'].first}: #{usr.office == entry['physicaldeliveryofficename'].first}" if debug_flag
+					#logger.info "#{usr.office} = #{entry['physicaldeliveryofficename'].first}: #{usr.office == entry['physicaldeliveryofficename'].first}" if debug_flag
 				end
-			    puts "#{entry["sn"].first} \t[#{username}] \t #{usr.changed}" if usr.changed?
+			    logger.info "#{entry["sn"].first} \t[#{username}] \t #{usr.changed}" if usr.changed?
 		    end
 	  	else	# пользователь заблокирован в AD
 		    usr = User.find_by_username(username) 	# поищем в БД
 		    if !usr.nil?
 		    	disabled_users += 1
 		    	#usr.delete	# надо бы удалить, но вдруг на него есть ссылки
-		    	puts "#{i}!#{disabled_users}. #{entry.sAMAccountName} #{entry.dn} \t- disabled user!"
+		    	logger.info "#{i}!#{disabled_users}. #{entry.sAMAccountName} #{entry.dn} \t- disabled user!"
 		    end
 	  	end
 	end
-	puts "LDAP users total: #{i}, add: #{new_users}, disable: #{disabled_users} users"
+	logger.info "LDAP users total: #{i}, add: #{new_users}, disable: #{disabled_users} users"
 
 	i, disabled_users = 0, 0
 	User.all.each do |user|			# проверим: все ли пользователи есть в LDAP
@@ -104,13 +107,13 @@ namespace :bp1step do
 		    	# если нет связи с ролями, рабочими местами, процессами
 		    	if user.workplaces.count == 0 and user.roles.count == 0 and user.bproce_ids.count == 0
 			    	user.delete	# удалим
-			    	puts "#{i}!#{disabled_users}. #{entry.sAMAccountName} #{entry.dn} \t- DELETE user!"
+			    	logger.info "#{i}!#{disabled_users}. #{entry.sAMAccountName} #{entry.dn} \t- DELETE user!"
 			    end
 			end
 		end
-		puts "#{i} #{user.displayname} - not found in LDAP!" if i == 0
+		logger.info "#{i} #{user.displayname} - not found in LDAP!" if i == 0
 	end
-	puts "  DB users total: #{i}, not found in LDAP: #{not_found_users}, disable: #{disabled_users} users"
+	logger.info "  DB users total: #{i}, not found in LDAP: #{not_found_users}, disable: #{disabled_users} users"
 	p ldap.get_operation_result
   end
 
@@ -119,6 +122,9 @@ namespace :bp1step do
   desc "Check document files in eplace location"
   task :check_document_files  => :environment do 		# проверка наличия файлов документов в каталоге
     # TODO добавить конфиги для константы "files"
+
+    logger = Logger.new('log/bp1step.log')	# протокол работы
+
     nn = 1
     nf = 0
     u = User.find(97)
@@ -130,7 +136,7 @@ namespace :bp1step do
           if File.exist?(fname)
           else
             nf += 1
-            puts "##{d.id} \t- file not found: \t#{File.basename(fname)}"
+            logger.info "##{d.id} \t- file not found: \t#{File.basename(fname)}"
             if !d.owner_id.nil?
               u = User.find(d.owner_id)
             end
@@ -140,10 +146,8 @@ namespace :bp1step do
       end
       nn += 1
 	end
-    puts "All: #{nn} docs, but #{nf} files not found"
+    logger.info "All: #{nn} docs, but #{nf} files not found"
   end
-
-
 
 
   desc "Create documents from files"
@@ -151,6 +155,9 @@ namespace :bp1step do
     # TODO добавить конфиги для константы "files"
     # TODO добавить mailer - отправлять письмо ответственному за документ об отсутствии файла документа
     require 'find'
+
+    logger = Logger.new('log/bp1step.log')	# протокол работы
+
     nn = 1
     nf = 0
     pathfrom = 'files/_1_Нормативные документы банка/__Внутренние документы Банка_действующие/'
@@ -160,10 +167,10 @@ namespace :bp1step do
   		if not File.stat(f).directory?
   			nf += 1
   			fname = f[pathfrom.size..-1]
-  			puts "#{nf} #{fname}"
+  			logger.info '#{nf} #{fname}'
   		end
 	end
-    puts "All: #{nn} docs, but #{nf} files not found"
+    logger.info 'All: #{nn} docs, but #{nf} files not found'
   end
 
 
