@@ -18,7 +18,7 @@ class Workplace < ActiveRecord::Base
   def self.search(search)
     if search
       where('designation LIKE ? or name LIKE ? or description LIKE ?',
-            '%#{search}%", "%#{search}%", "%#{search}%')
+            "%#{search}%", "%#{search}%", "%#{search}%")
     else
       scoped
     end
