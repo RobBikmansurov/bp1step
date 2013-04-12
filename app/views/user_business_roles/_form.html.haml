@@ -5,10 +5,8 @@
     = ubr.input :user_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Исполнитель', :prompt => 'Исполнитель в процессе'
 
   -#= ubr.association :user, :collection => User.all(:order => 'displayname'), :include_blank => true, :prompt => 'Исполнитель в процессе', :label_method => :displayname, :label => 'Исполнитель'
-  = ubr.input :date_from, :as => :date,
-              :start_year => 2000, :end_year => Date.today.year + 1
-  = ubr.input :date_to, :as => :date, :required => false, 
-              :start_year => Date.today.year, :end_year => Date.today.year + 1
+  = ubr.input :date_from, :as => :string, :input_html =>{:class=>'datepicker', :value => Date.today.strftime("%d.%m.%Y")}
+  = ubr.input :date_to, :as => :string, :input_html =>{:class=>'datepicker', :value => Date.today.change(:month => 12, :day => 31).strftime("%d.%m.%Y")}
   = ubr.input :note
   = ubr.error :base
   -if can? :update, @business_role

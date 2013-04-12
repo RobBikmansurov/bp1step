@@ -11,7 +11,7 @@ class BusinessRole < ActiveRecord::Base
   # бизнес-роль участвует в процессе
   belongs_to :bproce
   # бизнес-роль может исполняться многими пользователями
-  has_many :user_business_role  # пользователь может иметь много ролей
+  has_many :user_business_role, :dependent => :destroy  # пользователь может иметь много ролей
   has_many :users, :through => :user_business_role
 
   # бизнес-роль может исполняется на нескольких рабочих местах

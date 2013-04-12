@@ -2,10 +2,8 @@
   = ubr.error_notification
   = ubr.hidden_field :workplace_id
   = ubr.association :user, :collection => User.all(:order => 'displayname'), :include_blank => true, :prompt => 'Работник', :label_method => :displayname, :label => 'Находится на этом месте'
-  = ubr.input :date_from, :as => :date,
-              :start_year => 2010, :end_year => Date.today.year + 1
-  = ubr.input :date_to, :as => :date, :required => false, 
-              :start_year => Date.today.year, :end_year => Date.today.year + 1
+  = ubr.input :date_from, :as => :string, :input_html =>{:class=>'datepicker', :value => Date.today.strftime("%d.%m.%Y")}
+  = ubr.input :date_to, :as => :string, :input_html =>{:class=>'datepicker', :value => Date.today.change(:month => 12, :day => 31).strftime("%d.%m.%Y")}
   = ubr.input :note
   = ubr.error :base
   -if can? :update, @workplace
