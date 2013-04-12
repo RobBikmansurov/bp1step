@@ -1,6 +1,7 @@
 class Ability
   include CanCan::Ability
-  
+  # FIXME разобраться с тестированием Ability в rspec
+
   def initialize(user)
     user ||= User.new   # guest user (not logged in)
 
@@ -21,10 +22,10 @@ class Ability
         can :assign_roles, User   # администратор может изменять роли доступа пользователям
         can :manage, [Bproce, BusinessRole, Document]
       end
-      if user.has_role? :author
-        can :manage, [Directive, Document]
-      end
+
+      can :manage, [Directive, Document] if user.has_role? :author
+
     end
-  
-  end         
+
+  end
 end

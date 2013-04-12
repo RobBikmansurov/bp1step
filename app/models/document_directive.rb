@@ -5,8 +5,8 @@ class DocumentDirective < ActiveRecord::Base
   #validates [:document_id, :directive_id], :unique => true
 
   include PublicActivity::Model
-  tracked owner: Proc.new{ |controller, model| controller.current_user }
-  
+  tracked owner: Proc.new { |controller, model| controller.current_user }
+
   belongs_to :directive
   belongs_to :document
 end

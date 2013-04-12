@@ -1,8 +1,8 @@
 FactoryGirl.define do
   factory :user_role do
+    sequence(:id) { |n| "#{n}" }
     user_id = FactoryGirl.build(:user)
     role_id = FactoryGirl.build(:role)
-    name 'user'
-    description 'user_role_description'
+    note 'user_role'
   end
 end

@@ -1,9 +1,7 @@
 FactoryGirl.define do
   factory :role do
-    #name 'test_role_name'
-    sequence :name do |n|
-      "name#{n}_test"
-  	end
+    sequence(:id) { |n| "#{n}" }
+    name      { "name#{id}" }
     description 'test_role_description'
   end
 
