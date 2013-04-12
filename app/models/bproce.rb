@@ -1,18 +1,18 @@
 class Bproce < ActiveRecord::Base
+  include PublicActivity::Model
+  tracked owner: Proc.new { |controller, model| controller.current_user }
+
   validates :shortname, :uniqueness => true,
                         :length => {:minimum => 1, :maximum => 50}
   validates :name, :uniqueness => true,
                    :length => {:minimum => 10, :maximum => 250}
   validates :fullname, :length => {:minimum => 10, :maximum => 250}
 
-  include PublicActivity::Model
-  tracked owner: Proc.new { |controller, model| controller.current_user }
-
   acts_as_nested_set
   has_many :documents
-  has_many :business_roles
+  has_many :business_roles, :dependent => :destroy
   has_many :bproce_bapps, :dependent => :destroy
-  has_many :bapps, :through => :bproce_bapps
+  has_many :bapps, :through => :bproce_bapps, :dependent => :destroy
   has_many :bproce_workplaces, :dependent => :destroy
   has_many :workplaces, :through => :bproce_workplaces
   has_many :bproce_iresource, :dependent => :destroy
