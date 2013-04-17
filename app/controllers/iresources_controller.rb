@@ -1,5 +1,5 @@
 class IresourcesController < ApplicationController
-  respond_to :html
+  #respond_to :html
   helper_method :sort_column, :sort_direction
   before_filter :get_iresource, :except => [:index]
 
@@ -20,7 +20,7 @@ class IresourcesController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf { print }
-      format.json { render json: @iresources }
+      format.json { render json: @iresources, except: [:created_at, :updated_at] }
     end
   end
 
