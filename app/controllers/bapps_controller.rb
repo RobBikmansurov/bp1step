@@ -5,9 +5,9 @@ class BappsController < ApplicationController
   before_filter :get_bapp, :except => [:index, :print]
 
   def index
-    if params[:bproce_id].present?
-      @bp = Bproce.find(params[:bproce_id])
-      @bapps = @bp.bapps.paginate(:per_page => 10, :page => params[:page])
+    if params[:bproce_id].present?  # это приложения выбранного процесса
+      @bp = Bproce.find(params[:bproce_id]) # информация о процессе
+      @bproce_bapps = @bp.bproce_bapps.paginate(:per_page => 10, :page => params[:page])
     else
       if params[:all].present?
         @bapps = Bapp.all

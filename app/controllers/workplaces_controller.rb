@@ -18,6 +18,7 @@ class WorkplacesController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf { print }
+      format.json { render json: @workplaces, except: [:description, :name, :created_at, :updated_at] }
     end
   end
 

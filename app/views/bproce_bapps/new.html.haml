@@ -1,7 +1,12 @@
 -title "Приложение процесса"
+%h3
+  используется в процессе
+  =@bproce_bapp.inspect
+  -#= link_to @bproce_bapp.bproce.name, bproce_path(@bproce_bapp.bproce)
 %h2
   Назначение:
 = render 'form'
+= debug params
 
 %p
 - if can? :update, @bproce_bapp
