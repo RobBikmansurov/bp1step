@@ -11,6 +11,7 @@ class Ability
     else  #зарегистрированные пользователи хотя бы с одной ролью могут:
       can :view_document, Document  # просматривать файл с документом
       can :read, User   # видеть подробности о других пользователях
+
       if user.has_role? :user
         can :view_document, Document  # просматривать файл с документом
       end
@@ -20,7 +21,7 @@ class Ability
       end
       if user.has_role? :analitic
         can :assign_roles, User   # администратор может изменять роли доступа пользователям
-        can :manage, [Bproce, BusinessRole, Document]
+        can :manage, [Bproce, BusinessRole, Document, BproceBapp]
       end
 
       can :manage, [Directive, Document] if user.has_role? :author
