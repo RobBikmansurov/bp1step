@@ -1,5 +1,5 @@
 -title "Каталог Приложений"
--if @bproce == nil
+-if @bp.nil?
   %h1
     Каталог Приложений
     -if params[:search].present?
@@ -7,35 +7,55 @@
       = params[:search]
       ]
 -else
-  %h1
+  %h2
     Приложения процесса
-    -#= @bproce.name
+    = link_to @bp.name, bproce_path(@bp)
 %table
   %tr
     %th= sortable "name", "Наименование"
     %th= sortable "description", "Описание"
+    -if !@bp.nil?
+      %th Назначение в процессе
     - if can? :destroy, Bapp
       %th
   
-  -@bapps.each do |bapp|
-    %tr
-      %td= link_to bapp.name, bapp
-      %td= bapp.description
-      - if can? :destroy, bapp
-        %td
-          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bapp, confirm: bapp.name + "\nДействительно хотите удалить?", :method => 'delete'
+  -if @bp.nil?
+    -@bapps.each do |bapp|
+      %tr
+        %td= link_to bapp.name, bapp
+        %td= bapp.description
+        -if can? :destroy, bapp
+          %td
+            = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bapp, confirm: bapp.name + "\nДействительно хотите удалить?", :method => 'delete'
+  -else
+    -@bproce_bapps.each do |ba|
+      %tr
+        %td= link_to ba.bapp.name, ba.bapp
+        %td= ba.bapp.description
+        %td= ba.apurpose
+        - if can? :destroy, ba.bapp
+          %td
+            = link_to image_tag('action_stop.gif', :alt => 'Удалить'), ba, confirm: 'Приложение: ' + ba.bapp.name + "\nДействительно хотите исключить его из процесса?", :method => 'delete'
 
 -if !params[:all].present?
   .apple_pagination
-    = will_paginate @bapps 
+    -if @bp.nil?
+      = will_paginate @bapps
+    -else
+      = will_paginate @bproce_bapps
 
-- if can? :destroy, Bapp
-  .button
-    = link_to 'Каталог', bapps_path + '.pdf?all=1'
-  .button
-    = link_to 'ODT', bapps_path + '.pdf'
-  .button
-    = link_to "Добавить новое приложение" , new_bapp_path
+-if @bp.nil?
+  - if can? :destroy, Bapp
+    .button
+      = link_to 'Каталог', bapps_path + '.pdf?all=1'
+    .button
+      = link_to 'ODT', bapps_path + '.pdf'
+    .button
+      = link_to "Добавить новое приложение" , new_bapp_path
+-else
+  - if can? :destroy, Bapp
+    .button
+      = link_to "Добавить новое приложение в процесс" , new_bproce_bapp_path
 
 %p
 %br
