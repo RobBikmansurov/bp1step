@@ -19,7 +19,7 @@
     %tr
       %td= document.part
       %td= link_to document.name, document_path(document)
-      %td= document.description
+      %td= format_content(document.description)
       -#      %td= document.filename
       %td= document.status
       %td= document.approved 
