@@ -4,9 +4,6 @@ class BproceBappsController < ApplicationController
   before_filter :get_bproce_bapp, :except => :index
 
   def new
-    if params[:BB].present?
-      @bproce = Bproce.find(params[:BB])
-    end
   end
 
   def create
@@ -57,6 +54,7 @@ private
   end
 
   def get_bproce_bapp
+    @bproce = Bproce.find(params[:bproce_id]) if params[:bproce_id].present?
     @bproce_bapp = params[:id].present? ? BproceBapp.find(params[:id]) : BproceBapp.new(params[:bproce_bapp])
   end
   

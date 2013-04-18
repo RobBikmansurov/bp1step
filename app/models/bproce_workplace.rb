@@ -7,4 +7,14 @@ class BproceWorkplace < ActiveRecord::Base
 
   belongs_to :bproce
   belongs_to :workplace
+
+  def workplace_designation
+    workplace.try(:designation)
+  end
+
+  def workplace_designation=(name)
+    self.workplace_id = Workplace.find_by_designation(name).id if name.present?
+  end
+
+
 end

@@ -32,7 +32,7 @@ class BprocesController < ApplicationController
   end
 
   def new
-    respond_with(@bproce)
+    #respond_with(@bproce)
   end
 
   def edit
@@ -40,6 +40,7 @@ class BprocesController < ApplicationController
     @document = Document.new(:bproce_id => @bproce.id)  # заготовка для нового документа
     @subproce = Bproce.new(:parent_id => @bproce.id)  # заготовка для подпроцесса
     @bproce_bapp = BproceBapp.new(:bproce_id => @bproce.id)  # заготовка для нового приложения
+    @bproce_workplace = BproceWorkplace.new(:bproce_id => @bproce.id)  # заготовка для нового рабочего места
     #@user = User.find_or_initialize(@bproce.user_id)
   end
 

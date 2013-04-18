@@ -58,6 +58,11 @@ class WorkplacesController < ApplicationController
     respond_with(@workplace)
   end
 
+  def autocomplete
+    @workplaces = Workplace.order(:designation).where("designation like ? or name like ?", "%#{params[:term]}%", "%#{params[:term]}%")
+    render json: @workplaces.map(&:designation)
+  end
+
 private
   def sort_column
     params[:sort] || "designation"
