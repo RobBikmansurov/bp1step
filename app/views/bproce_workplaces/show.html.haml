@@ -8,7 +8,6 @@
     %thНаименование
     %thОписание
     %th Исполнитель
-    %th Тип?
     %thМестоположение
     -#%th
     
@@ -25,7 +24,6 @@
             = workplace.users.count - 1
       -else
         %td
-      %td= workplace.typical
-      %td= workplace.location
+      %td= link_to workplace.location, workplaces_path + '?location=' + workplace.location
       -#%td= link_to 'Удалить', workplace, confirm: 'Действительно хотите удалить?', :method => :delete 
 
