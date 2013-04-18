@@ -7,6 +7,9 @@ BPDoc::Application.routes.draw do
     resources :documents  # документы на основании директивы
     get :autocomplete, :on => :collection
   end
+  resources :workplaces, :only => :autocomlete do
+    get :autocomplete, :on => :collection
+  end
   resources :roles
   resources :business_roles
   resources :categories
