@@ -49,6 +49,8 @@ class WorkplacesController < ApplicationController
   end
 
   def update
+    @bproce_workplace = BproceWorkplace.new(:workplace_id => @workplace.id)
+    @user_workplace = UserWorkplace.new(:workplace_id => @workplace.id)
     flash[:notice] = "Successfully updated workplace."  if @workplace.update_attributes(params[:workplace])
     respond_with(@workplace)
   end
