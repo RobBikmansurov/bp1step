@@ -1,4 +1,5 @@
-%h1Каталог Документов
+-title "Каталог Документов процесса " + @bp.shortname
+%h1Каталог Документов процесса
 -#= form_tag documents_path, :method => 'get' do
   = hidden_field_tag :direction, params[:direction]
   = hidden_field_tag :sort, params[:sort]

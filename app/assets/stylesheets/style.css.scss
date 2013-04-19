@@ -1,3 +1,12 @@
+body {font-size:75%;color:#222;
+  background-color: whitesmoke;
+  font-family: Arial, Helvetica, sans-serif;}
+.container {width:950px;
+  margin:1em auto;
+  background: white;
+  padding: 1em 2em 1em 2em;
+  box-shadow: 2px 2px 8px #aaa;}
+h1,h2,h3,h4,h5 {margin:0.5em 0 0.5em 0;}
 a {
   padding: 2px 5px 2px;
 }
@@ -21,15 +30,22 @@ a:hover {
   display: block;
   float: left;
 }
-.nav a {
+.nav li a {
   padding: 7px 10px 7px;
   text-decoration: none;
 }
-.nav a:hover {
+.nav li a:hover {
   border-radius: 0em;
   color: #fff;
   background-color: #000;
 }
+
+.nav li.current a{
+  padding: 7px 10px 7px;
+  color: #fff;
+  background-color: #993300;
+}
+
 #menu {background: #FFCC99;}
 th {
   background: #ddd;
