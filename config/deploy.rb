@@ -10,8 +10,8 @@ load "config/recipes/monit"
 server 'vrdev.ad.bankperm.ru', :app, :web, :db, :primary => true
 
 # http and https proxy
-default_environment['http_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
-default_environment['https_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
+#default_environment['http_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
+#default_environment['https_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
 
 set :application, "bp1step"
 set :user, 'rubydev'
@@ -38,8 +38,8 @@ set :maintenance_template_path, File.expand_path("../recipes/templates/maintenan
 
 # if you want to clean up old releases on each deploy uncomment this:
 after "deploy:restart", "deploy:cleanup"
-after "deploy", "rvm:trust_rvmrc"
-after "deploy:update_code",     "deploy:create_symlink"
+#after "deploy:update_code", "rvm:trust_rvmrc"
+after "deploy:update_code", "deploy:create_symlink"
 
 # Create uploads directory and link
 namespace :deploy do
@@ -57,7 +57,8 @@ namespace :deploy do
 end
 
 namespace :rvm do
+  desc 'Trust rvmrc file'
   task :trust_rvmrc do
-    run "rvm rvmrc trust #{release_path}"
+    run "rvm rvmrc trust #{current_release}"
   end
 end
