@@ -44,6 +44,7 @@ class BappsController < ApplicationController
   end
 
   def update
+    @bproce_bapp = BproceBapp.new(:bapp_id => @bapp.id)
     flash[:notice] = "Successfully updated bapp."  if @bapp.update_attributes(params[:bapp])
     respond_with(@bapp)
   end

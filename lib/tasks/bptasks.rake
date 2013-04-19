@@ -10,6 +10,7 @@ namespace :bp1step do
 
     PublicActivity.enabled = false	# отключить протоколирование изменений
     logger = Logger.new('log/bp1step.log')	# протокол работы
+    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :sync_active_directory_users'
 
     LDAP_CONFIG = YAML.load_file(Devise.ldap_config)	# считаем конфиги доступа к LDAP
     ldap = Net::LDAP.new :host => LDAP_CONFIG["development"]["host"],
@@ -124,6 +125,7 @@ namespace :bp1step do
     # TODO добавить конфиги для константы "files"
 
     logger = Logger.new('log/bp1step.log')	# протокол работы
+    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_document_files'
 
     nn = 1
     nf = 0
@@ -136,11 +138,11 @@ namespace :bp1step do
           if File.exist?(fname)
           else
             nf += 1
-            logger.info "##{d.id} \t- file not found: \t#{File.basename(fname)}"
             if !d.owner_id.nil?
-              u = User.find(d.owner_id)
+              #u = User.find(d.owner_id)
             end
-            DocumentMailer.file_not_found_email(d, u).deliver
+            logger.info "##{d.id} \t#{u.email} \tnot found: #{File.basename(fname)}"
+            #DocumentMailer.file_not_found_email(d, u).deliver
           end
         end
       end
@@ -157,6 +159,7 @@ namespace :bp1step do
     require 'find'
 
     logger = Logger.new('log/bp1step.log')	# протокол работы
+    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :create_documents_from_files'
 
     nn = 1
     nf = 0

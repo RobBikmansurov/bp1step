@@ -1,18 +1,19 @@
 = simple_form_for(@iresource) do |f|
   = f.error_notification
-  .form-inputs
-    = f.input :level
-    = f.input :label
-    = f.input :location
-    = f.input :alocation
-    = f.input :volume
-    = f.input :note
-    = f.input :access_read
-    = f.input :access_write
-    = f.input :access_other
-    = f.input :risk_category
-    = f.input :owner_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Ответственный за ресурс'
+  = f.input :level
+  = f.input :label
+  = f.input :location
+  = f.input :alocation
+  = f.input :volume
+  = f.input :note
+  = f.input :access_read
+  = f.input :access_write
+  = f.input :access_other
+  = f.input :risk_category
+  = f.input :owner_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Ответственный за ресурс'
+  = f.error :base
   - if can? :update, @iresource
+    %p
     = f.button :submit
 
 %p

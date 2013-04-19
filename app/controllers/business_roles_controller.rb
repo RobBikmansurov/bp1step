@@ -37,6 +37,7 @@ class BusinessRolesController < ApplicationController
   end
 
   def update
+    @user_business_role = UserBusinessRole.new(:business_role_id => @business_role.id)
     flash[:notice] = "Successfully updated role." if @business_role.update_attributes(params[:business_role])
     respond_with(@business_role)
   end

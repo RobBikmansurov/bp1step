@@ -55,8 +55,7 @@ class IresourcesController < ApplicationController
   # PUT /iresources/1
   # PUT /iresources/1.json
   def update
-    @iresource = Iresource.find(params[:id])
-
+    @bproce_iresource = BproceIresource.new(:iresource_id => @iresource.id) # заготовка для новой связи с процессом
     respond_to do |format|
       if @iresource.update_attributes(params[:iresource])
         format.html { redirect_to @iresource, notice: 'Iresource was successfully updated.' }
