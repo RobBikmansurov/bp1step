@@ -39,17 +39,17 @@
             = link_to "Войти", new_user_session_path
         #menu.span-24.last
           %ul.nav
-            %li= link_to "Процессы", bproces_path + 'es'
-            %li= link_to "Роли", business_roles_path
-            %li= link_to "Места", workplaces_path
-            %li= link_to "Приложения", bapps_path
-            %li= link_to "Ресурсы", iresources_path
-            %li= link_to "Документы", documents_path
-            %li= link_to "Директивы", directives_path
-            %li= link_to "Сотрудники", users_path
+            =nav_link "Процессы", bproces_path + 'es'
+            =nav_link "Роли", business_roles_path
+            =nav_link "Места", workplaces_path
+            =nav_link "Приложения", bapps_path
+            =nav_link "Ресурсы", iresources_path
+            =nav_link "Документы", documents_path
+            =nav_link "Директивы", directives_path
+            =nav_link "Сотрудники", users_path
           %ul.nav{:style => "float:right"}
             %li Настройки
-            %li= link_to "Справка", '/about'
+            = nav_link "Справка", '/about'
       %hr
       #main.span-24.last
         - flash.each do |name, msg|

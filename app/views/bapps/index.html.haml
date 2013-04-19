@@ -30,12 +30,16 @@
   -else
     -@bproce_bapps.each do |ba|
       %tr
-        %td= link_to ba.bapp.name, ba.bapp
-        %td= ba.bapp.description
-        %td= ba.apurpose
-        - if can? :destroy, ba.bapp
-          %td
-            = link_to image_tag('action_stop.gif', :alt => 'Удалить'), ba, confirm: 'Приложение: ' + ba.bapp.name + "\nДействительно хотите исключить его из процесса?", :method => 'delete'
+        -if ba.bapp
+          %td= link_to ba.bapp.name, ba.bapp
+          %td= ba.bapp.description
+          %td= ba.apurpose
+          - if can? :destroy, ba.bapp
+            %td
+              = link_to image_tag('action_stop.gif', :alt => 'Удалить'), ba, confirm: 'Приложение: ' + ba.bapp.name + "\nДействительно хотите исключить его из процесса?", :method => 'delete'
+        -else
+          %td{:colspan => 3}
+            =ba.inspect
 
 -if !params[:all].present?
   .apple_pagination
