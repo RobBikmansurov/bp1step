@@ -1,5 +1,5 @@
 class IresourcesController < ApplicationController
-  #respond_to :html
+  respond_to :html
   helper_method :sort_column, :sort_direction
   before_filter :get_iresource, :except => [:index]
 
