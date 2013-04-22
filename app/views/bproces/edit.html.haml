@@ -40,39 +40,25 @@
           = r.error :base
           -if can? :update, @bproce
             = r.button :submit, 'Добавить Документ'
-  %table
-    %tr
-      %th
-        - if @bproce.bapps.empty?
-          В процессе пока не используются
-          =link_to "Приложения", bapps_path
-        - else
-          В процессе используются
-          =link_to 'Приложения:', bproce_bapp_path(@bproce)
-        %br
 
-      %th
-        - if @bproce.workplaces.empty?
-          В процессе пока не участвуют
-          =link_to "Рабочие Места", workplaces_path
-        - else
-          В процессе участвуют
-          =link_to 'Рабочие Места:', bproce_workplace_path(@bproce)
-    %tr
-      %td
-        -@bproce.bapps.each do |ba|
-          = link_to ba.name, bapp_path(ba)
-          %br
-        -#= simple_form_for(@bproce_bapp) do |r|
-          = r.error_notification
-          -#= r.association :bapp, :label => 'Приложение', :hint => 'Выберите приложение'
-          = r.hidden_field :bproce_id
-          = r.error :base
-          -if can? :update, @bproce
-            = r.button :submit, 'Добавить Приложение'
-
-      %td
-        = render 'workplaces'
+%h4
+  - if @bproce.bapps.empty?
+    В процессе пока не используются
+    =link_to "Приложения", bapps_path
+  - else
+    В процессе используются
+    =link_to 'Приложения:', bproce_bapp_path(@bproce)
+%br
+= render 'bapps'
+%h4
+  - if @bproce.workplaces.empty?
+    В процессе пока не участвуют
+    =link_to "Рабочие Места", workplaces_path
+  - else
+    В процессе участвуют
+    =link_to 'Рабочие Места:', bproce_workplace_path(@bproce)
+%br
+= render 'workplaces'
 
 .button
   = link_to 'Show', @bproce

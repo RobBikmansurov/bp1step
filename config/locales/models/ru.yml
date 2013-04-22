@@ -3,8 +3,8 @@ ru:
     models:
       bapp: Приложение
       bproce: Процесс
-      bproce_bapp: Приложения Процесса
-      bproce_workplace: Рабочие места Процесса
+      bproce_bapp: Приложение Процесса
+      bproce_workplace: Рабочее места Процесса
       business_role: Роль
       document: Документ
       directive: Директива

@@ -5,12 +5,8 @@
   = f.input :name
   = f.input :fullname
   = f.input :goal
-
   = f.input :user_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Владелец процесса', :prompt => 'Владелец процесса'
-
-  -#= f.association :user, :collection => User.all(:order => 'displayname'), :include_blank => true, :prompt => 'Владелец процесса', :label_method => :displayname, :label => 'Владелец процесса'
-  = f.label 'Родительский процесс'
-  = f.select :parent_id, nested_set_options(Bproce, @bproce) {|i| "#{'-' * i.level} #{i.name}" }, :prompt => 'Выберите родительский процесс из списка'
+  = f.association :parent, :collection => Bproce.all(:order => 'name'), :label => 'Родительский процесс', :include_blank => false, :prompt => 'Выберите родительский процесс из списка'
   = f.error :base
   %p
   -if can? :update, @bproce
