@@ -1,14 +1,16 @@
 .simple_form {
   div.input {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     clear: both;
   }
   label {
     float: left;
-    width: 100px;
+    width: 110px;
     text-align: right;
     margin: 0.5em;
   }
+  box-shadow: 2px 2px 4px #aaa;
+  background: white;
 }
 
 div.boolean, .simple_form input[type='submit'] {
