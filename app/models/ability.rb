@@ -20,8 +20,10 @@ class Ability
         can :manage, [User, Workplace, Bapp, Iresource]
       end
       if user.has_role? :analitic
-        can :assign_roles, User   # администратор может изменять роли доступа пользователям
         can :manage, [Bproce, BusinessRole, Document, BproceBapp]
+      end
+      if user.has_role? :security
+        can :assign_roles, User   # администратор доступа может изменять роли доступа пользователям
       end
 
       can :manage, [Directive, Document] if user.has_role? :author
