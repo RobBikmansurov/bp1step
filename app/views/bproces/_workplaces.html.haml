@@ -1,7 +1,15 @@
--@bproce.bproce_workplaces.each do | bpwp |	#  список рабочих мест процесса
-  -#= bpwp.inspect
-  = link_to bpwp.workplace.designation, workplace_path(bpwp.workplace)
-  = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bpwp, confirm: "Действительно хотите исключить [" + bpwp.workplace.designation + "] из процесса:\n" + @bproce.name + "?", :method => 'delete'
+- if @bproce.workplaces.empty?
+  %h3
+    В процессе пока не участвуют
+    =link_to "Рабочие Места", workplaces_path
+- else
+  %h3
+    В процессе участвуют
+    =link_to 'Рабочие Места:', bproce_workplace_path(@bproce)
+  -@bproce.bproce_workplaces.each do | bpwp |	#  список рабочих мест процесса
+    -#= bpwp.inspect
+    = link_to bpwp.workplace.designation, workplace_path(bpwp.workplace)
+    = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bpwp, confirm: "Действительно хотите исключить [" + bpwp.workplace.designation + "] из процесса:\n" + @bproce.name + "?", :method => 'delete'
 
 = simple_form_for(@bproce_workplace) do | bproce_workplace |
   = bproce_workplace.error_notification
@@ -10,4 +18,3 @@
   = bproce_workplace.error :base
   -if can? :update, @bproce
     = bproce_workplace.button :submit
-
