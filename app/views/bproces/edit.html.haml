@@ -3,61 +3,9 @@
 = render 'form'
 
 %p
--# не показывать для нового процесса связанные с ним объекты - их еще нет
--if @bproce.id?
-  %table
-    %tr
-      %th
-        В процессе участвуют
-        =link_to 'Роли:', bproce_business_role_path(@bproce)
-      %th
-        Процесс описывают
-        =link_to 'Документы:', bproce_document_path(@bproce)
-    %tr
-      %td
-        -@bproce.business_roles.find_with_associations.each do |business_role|
-          = link_to business_role.name, business_role_path(business_role)
-          -if can? :destroy, business_role
-            = link_to 'Destroy', business_role, :confirm => 'Are you sure?', :method => :delete
-          %br
-        = simple_form_for(@business_role) do |r|
-          = r.error_notification
-          = r.input :name
-          = r.input :description
-          = r.hidden_field :bproce_id
-          = r.error :base
-          -if can? :update, @bproce
-            = r.button :submit, 'Добавить Роль'
-      %td
-        -@bproce.documents.find_with_associations.each do |doc|
-          = link_to doc.name, document_path(doc)
-          = ' ' + doc.approved.to_s
-          %br
-        = simple_form_for(@document) do |r|
-          = r.error_notification
-          = r.input :name
-          = r.hidden_field :bproce_id
-          = r.error :base
-          -if can? :update, @bproce
-            = r.button :submit, 'Добавить Документ'
-
-%h4
-  - if @bproce.bapps.empty?
-    В процессе пока не используются
-    =link_to "Приложения", bapps_path
-  - else
-    В процессе используются
-    =link_to 'Приложения:', bproce_bapp_path(@bproce)
-%br
+= render 'business_roles'
+= render 'documents'
 = render 'bapps'
-%h4
-  - if @bproce.workplaces.empty?
-    В процессе пока не участвуют
-    =link_to "Рабочие Места", workplaces_path
-  - else
-    В процессе участвуют
-    =link_to 'Рабочие Места:', bproce_workplace_path(@bproce)
-%br
 = render 'workplaces'
 
 .button
