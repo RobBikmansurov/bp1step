@@ -1,0 +1,10 @@
+-if activity.trackable
+  = 'обновил связь (#' + activity.trackable.id.to_s + '): приложения ['
+  = link_to activity.trackable.bapp.name, bapp_path(activity.trackable.bapp)
+  ] с процессом
+  = link_to activity.trackable.bproce.name, bproce_path(activity.trackable.bproce)
+-else
+  связь приложения с процессом
+  \#
+  = activity.trackable_id
+  уже удалена
