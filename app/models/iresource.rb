@@ -1,10 +1,12 @@
 class Iresource < ActiveRecord::Base
+  validates :label, :presence => true,
+                    :uniqueness => true,
+                    :length => {:minimum => 3, :maximum => 20}
+  validates :location, :presence => true,
+                    :length => {:minimum => 3, :maximum => 255}
+
   include PublicActivity::Model
   tracked owner: Proc.new { |controller, model| controller.current_user }
-
-  validates :label, :uniqueness => true,
-                    :length => {:minimum => 3, :maximum => 20}
-  validates :location, :length => {:minimum => 3, :maximum => 255}
 
   belongs_to :user
   has_many :bproce_iresources

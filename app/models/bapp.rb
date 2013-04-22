@@ -2,7 +2,8 @@ class Bapp < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: Proc.new { |controller, model| controller.current_user }
 
-  validates :name, :uniqueness => true,
+  validates :name, :presence => true,
+            :uniqueness => true,
             :length => {:minimum => 4, :maximum => 50}
   validates :description, :presence => true
 
