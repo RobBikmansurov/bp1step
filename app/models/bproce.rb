@@ -2,9 +2,11 @@ class Bproce < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: Proc.new { |controller, model| controller.current_user }
 
-  validates :shortname, :uniqueness => true,
+  validates :shortname, :presence => true,
+                        :uniqueness => true,
                         :length => {:minimum => 1, :maximum => 50}
-  validates :name, :uniqueness => true,
+  validates :name, :presence => true,
+                   :uniqueness => true,
                    :length => {:minimum => 10, :maximum => 250}
   validates :fullname, :length => {:minimum => 10, :maximum => 250}
 

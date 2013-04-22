@@ -40,11 +40,11 @@
     %br
 
 %h3 Место хранения
-%li
+%h4
   оригинал:
   %b= link_to @document.place, documents_path + '?place=' + @document.place
 
-%li
+%h4
   электронный документ:
   -if !@document.eplace.nil?
     -if !@document.eplace.empty?

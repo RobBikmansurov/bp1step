@@ -1,6 +1,7 @@
 class Role < ActiveRecord::Base
   validates :name, :uniqueness => true,
-                   :presence => true, :length => {:minimum => 4}
+                   :presence => true,
+                   :length => {:minimum => 4}
   validates :description, :presence => true
 
   has_many :user_roles
