@@ -3,6 +3,9 @@ ru:
     models:
       bapp: Приложение
       bproce: Процесс
+      bproce_bapp: Приложения Процесса
+      bproce_workplace: Рабочие места Процесса
+      business_role: Роль
       document: Документ
       directive: Директива
       iresource: Ресурс
@@ -10,8 +13,7 @@ ru:
       staff: Сотрудник
       workplace: Рабочее место
       user: Пользователь
-      bproce_bapp: Приложения Процесса
-      bproce_workplace: Рабочие места Процесса
+      user_business_role: Исполнитель
     attributes:
       bapp:
         name: Название
