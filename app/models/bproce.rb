@@ -20,10 +20,7 @@ class Bproce < ActiveRecord::Base
   has_many :bproce_iresource, :dependent => :destroy
   has_many :iresource, :through => :bproce_iresource
   belongs_to :bproce
-  #belongs_to :owner, :class_name => 'User'  # владелец процесса
-  belongs_to :user
-  #accepts_nested_attributes_for :business_roles
-  #has_and_belongs_to_many :workplaces
+  belongs_to :user  # владелец процессв
 
   def user_name
     user.try(:displayname)

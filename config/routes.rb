@@ -10,6 +10,9 @@ BPDoc::Application.routes.draw do
   resources :workplaces, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
+  resources :bapps, :only => :autocomlete do
+    get :autocomplete, :on => :collection
+  end
   resources :roles
   resources :business_roles
   resources :categories
