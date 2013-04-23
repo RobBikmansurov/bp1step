@@ -1,0 +1,21 @@
+- if @bproce.iresource.empty?
+  %h3
+    В процессе пока не используются
+    =link_to "Ресурсы", iresources_path
+- else
+  %h3
+    В процессе используются
+    -#=link_to 'Ресурсы:', iresource_path(@bproce)
+    =link_to 'Ресурсы:', iresources_path
+  -@bproce.bproce_iresource.each do | bpres |  #  список ресурсов процесса
+    = link_to bpres.iresource.label, iresource_path(bpres.iresource)
+    = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bpres, confirm: "Действительно хотите исключить [" + bpres.iresource.label + "] из процесса:\n" + @bproce.name + "?", :method => 'delete'
+
+= simple_form_for(@bproce_iresource) do | bproce_res |
+  = bproce_res.error_notification
+  = bproce_res.hidden_field :bproce_id
+  = bproce_res.input :iresource_label, data: {autocomplete_source: autocomplete_iresources_path}, :as => :autocomplete, :label => 'Ресурс', :prompt => 'Ресурс'
+  -#= bproce_resource.input :apurpose
+  = bproce_res.error :base
+  -if can? :update, @bproce
+    = bproce_res.button :submit

@@ -4,7 +4,8 @@ ru:
       bapp: Приложение
       bproce: Процесс
       bproce_bapp: Приложение Процесса
-      bproce_workplace: Рабочее места Процесса
+      bproce_workplace: Рабочее место Процесса
+      bproce_iresource: Ресурс Процесса
       business_role: Роль
       document: Документ
       directive: Директива

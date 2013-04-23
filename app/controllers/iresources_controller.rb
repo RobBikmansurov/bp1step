@@ -1,5 +1,6 @@
 class IresourcesController < ApplicationController
   respond_to :html
+  respond_to :pdf, :odf, :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
   before_filter :get_iresource, :except => [:index]
 
@@ -40,7 +41,6 @@ class IresourcesController < ApplicationController
 
   def create
     @iresource = Iresource.new(params[:iresource])
-
     respond_to do |format|
       if @iresource.save
         format.html { redirect_to @iresource, notice: 'Iresource was successfully created.' }
@@ -52,8 +52,6 @@ class IresourcesController < ApplicationController
     end
   end
 
-  # PUT /iresources/1
-  # PUT /iresources/1.json
   def update
     @bproce_iresource = BproceIresource.new(:iresource_id => @iresource.id) # заготовка для новой связи с процессом
     respond_to do |format|
@@ -67,16 +65,17 @@ class IresourcesController < ApplicationController
     end
   end
 
-  # DELETE /iresources/1
-  # DELETE /iresources/1.json
   def destroy
-    @iresource = Iresource.find(params[:id])
-    @iresource.destroy
-
+    flash[:notice] = "Successfully destroyed iresource." if @iresource.destroy
     respond_to do |format|
       format.html { redirect_to iresources_url }
       format.json { head :no_content }
     end
+  end
+
+  def autocomplete
+    @iresources = Iresource.order(:label).where("label like ? or location like ?", "%#{params[:term]}%", "%#{params[:term]}%")
+    render json: @iresources.map(&:label)
   end
 
   def print

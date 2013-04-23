@@ -41,6 +41,7 @@ class BprocesController < ApplicationController
     @subproce = Bproce.new(:parent_id => @bproce.id)  # заготовка для подпроцесса
     @bproce_bapp = BproceBapp.new(:bproce_id => @bproce.id)  # заготовка для нового приложения
     @bproce_workplace = BproceWorkplace.new(:bproce_id => @bproce.id)  # заготовка для нового рабочего места
+    @bproce_iresource = BproceIresource.new(:bproce_id => @bproce.id)  # заготовка для нового ресурса
     #@user = User.find_or_initialize(@bproce.user_id)
   end
 

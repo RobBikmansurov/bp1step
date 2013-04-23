@@ -1,16 +1,19 @@
 BPDoc::Application.routes.draw do
-  resources :iresources
-
-
   resources :document_directives
   resources :directives do
     resources :documents  # документы на основании директивы
     get :autocomplete, :on => :collection
   end
-  resources :workplaces, :only => :autocomlete do
+  resources :bapps, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
-  resources :bapps, :only => :autocomlete do
+  resources :iresources, :only => :autocomlete do
+    get :autocomplete, :on => :collection
+  end
+  resources :users, :only => :autocomlete do
+    get :autocomplete, :on => :collection
+  end
+  resources :workplaces, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
   resources :roles
@@ -27,10 +30,8 @@ BPDoc::Application.routes.draw do
   resources :bproces do
     resources :bapps
   end
+  resources :iresources
   resources :activities
-  resources :users, :only => :autocomlete do
-    get :autocomplete, :on => :collection
-  end
   match '/bproceses' => 'bproces#list', :via => :get  # получение полного списка процессов
   match '/bproces/:id/card' => 'bproces#card', :via => :get  # карточка процесса
   
