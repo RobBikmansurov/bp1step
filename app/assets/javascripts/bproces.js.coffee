@@ -5,3 +5,5 @@ jQuery ->
     source: "/workplaces/autocomplete"
   $("#bproce_bapp_bapp_name").autocomplete
     source: "/bapps/autocomplete"
+  $("#bproce_iresource_iresource_label").autocomplete
+    source: "/iresources/autocomplete"
