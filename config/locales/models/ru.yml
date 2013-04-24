@@ -12,6 +12,7 @@ ru:
       iresource: Ресурс
       role: Роль
       staff: Сотрудник
+      term: Термин
       workplace: Рабочее место
       user: Пользователь
       user_business_role: Исполнитель
@@ -81,6 +82,12 @@ ru:
       staff:
         fullname: Фамилия Имя Отчество
         position: Должность
+      term:
+        name: Название
+        shortname: Краткое название
+        description: Описание
+        note: Примечание
+        source: Источник
       bproce_bapp:
         apurpose: Назначение в процессе
       user_business_role:

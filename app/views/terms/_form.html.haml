@@ -1,0 +1,12 @@
+= simple_form_for(@term) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :shortname
+    = f.input :name
+    = f.input :description
+    = f.input :note
+    = f.input :source
+
+  .form-actions
+    = f.button :submit

@@ -17,10 +17,13 @@ class Ability
       end
       if user.has_role? :admin
         can :assign_roles, User   # администратор может изменять роли доступа пользователям
-        can :manage, [User, Workplace, Bapp, Iresource]
+        can :manage, [User, Workplace, Bapp, Iresource, Term]
+      end
+      if user.has_role? :owner  # владелец процесса
+        can :manage, [Term]
       end
       if user.has_role? :analitic
-        can :manage, [Bproce, BusinessRole, Document, BproceBapp]
+        can :manage, [Bproce, BusinessRole, Document, BproceBapp, Term]
       end
       if user.has_role? :security
         can :assign_roles, User   # администратор доступа может изменять роли доступа пользователям

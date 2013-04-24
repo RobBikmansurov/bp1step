@@ -46,10 +46,11 @@
             =nav_link "Ресурсы", iresources_path
             =nav_link "Документы", documents_path
             =nav_link "Директивы", directives_path
+            =nav_link 'Термины', terms_path
             =nav_link "Сотрудники", users_path
           %ul.nav{:style => "float:right"}
-            %li Настройки
-            = nav_link "Справка", '/about'
+            -#%li Настройки
+            = nav_link "?", '/about'
       %hr
       #main.span-24.last
         - flash.each do |name, msg|
