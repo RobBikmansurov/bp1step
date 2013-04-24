@@ -2,7 +2,7 @@ class BprocesController < ApplicationController
   respond_to :html
   respond_to :pdf, :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
-  before_filter :get_bproce, :except => [:index, :list, :print, :print_card]
+  before_filter :get_bproce, :except => [:index, :list, :print]
 
   def list
     @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction)
@@ -31,6 +31,13 @@ class BprocesController < ApplicationController
     end
   end
 
+  def doc
+    respond_to do |format|
+      format.html { print_doc }
+      format.pdf { print_doc }
+    end
+  end
+
   def new
     #respond_with(@bproce)
   end
@@ -42,7 +49,6 @@ class BprocesController < ApplicationController
     @bproce_bapp = BproceBapp.new(:bproce_id => @bproce.id)  # заготовка для нового приложения
     @bproce_workplace = BproceWorkplace.new(:bproce_id => @bproce.id)  # заготовка для нового рабочего места
     @bproce_iresource = BproceIresource.new(:bproce_id => @bproce.id)  # заготовка для нового ресурса
-    #@user = User.find_or_initialize(@bproce.user_id)
   end
 
   def create
@@ -147,77 +153,11 @@ private
           end
         end
       end
-
-      nn = 0 # порядковый номер строки для документов
-      r.add_table("TABLE_DOCS", @bproce.documents, :header => true, :skip_if_empty => true) do |t|
-        if @bproce.documents.count > 0  # если документов нет - пустая таблица не будет выведена
-          t.add_column(:nn) do |ca| # порядковый номер строки таблицы
-            nn += 1
-          end
-          t.add_column(:nd) do |document|
-            ndoc = document.name
-          end
-          t.add_column(:approved)
-          t.add_column(:responsible) do |document|  # владелец документа, если задан
-            if document.responsible
-              u=User.find(document.responsible)
-              "#{u.displayname}"
-            end
-          end
-        end
-      end
-
-      rr = 0 # порядковый номер строки для ролей
-      @roles = @bproce.business_roles
-      r.add_table("TABLE_ROLES", @roles, :header=>true, :skip_if_empty => true) do |t|
-        if @roles.count > 0  # если ролей нет - пустая таблица не будет выведена
-          t.add_column(:rr) do |nn| # порядковый номер строки таблицы
-            rr += 1
-          end
-          t.add_column(:nr, :name)
-          t.add_column(:description)
-        end
-      end
-
-      ww = 0 # порядковый номер строки для рабочих мест
-      @workplaces = @bproce.workplaces
-      r.add_table("TABLE_PLACES", @workplaces, :header=>true, :skip_if_empty => true) do |t|
-        if @workplaces.count > 0  # если рабочих мест нет - пустая таблица не будет выведена
-          t.add_column(:ww) do |nn| # порядковый номер строки таблицы
-            ww += 1
-          end
-          t.add_column(:nw, :name)
-          t.add_column(:designation)
-          t.add_column(:loca, :location)
-          t.add_column(:description)
-        end
-      end
-
-      pp = 0 # порядковый номер строки для приложений
-      @bapps = @bproce.bapps
-      r.add_table("TABLE_BAPPS", @bapps, :header=>true, :skip_if_empty => true) do |t|
-        if @bapps.count > 0  # если приложений нет - пустая таблица не будет выведена
-          t.add_column(:pp) do |nn| # порядковый номер строки таблицы
-            pp += 1
-          end
-          t.add_column(:na, :name)
-          t.add_column(:description)
-          t.add_column(:purpose)
-        end
-      end
-
-      ir = 0 # порядковый номер строки для информационных ресурсов
-      @iresources = @bproce.iresource
-      r.add_table("IRESOURCES", @iresources, :header=>true, :skip_if_empty => true) do |t|
-        if @iresources.count > 0  # если инф.ресурсов нет - пустая таблица не будет выведена
-          t.add_column(:ir) do |nn| # порядковый номер строки таблицы
-            ir += 1
-          end
-          t.add_column(:label)
-          t.add_column(:location)
-          t.add_column(:note)
-        end
-      end
+      report_docs(@bproce, r, false) # сформировать таблицу документов процесса
+      report_roles(@bproce, r, true) # сформировать таблицу ролей
+      report_workplaces(@bproce, r, true) # сформировать таблицу рабочих мест
+      report_bapps(@bproce, r, true) # сформировать таблицу приложений процесса
+      report_iresources(@bproce, r, true) # сформировать таблицу ресурсов процесса
 
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
@@ -228,5 +168,137 @@ private
       :filename => "card.odt",
       :disposition => 'inline' )
   end
+
+  # заготовка описания процесса
+  def print_doc
+    report = ODFReport::Report.new("reports/bp-doc.odt") do |r|
+      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
+      r.add_field :id, @bproce.id
+      r.add_field :shortname, @bproce.shortname
+      r.add_field :name, @bproce.name
+      r.add_field :fullname, @bproce.fullname
+      r.add_field :goal, @bproce.goal
+      if @bproce.parent_id
+        r.add_field :parent, @bproce.parent.name
+      else
+        r.add_field :parent, "-"
+      end
+      if @bproce.user_id  # владелец процесса
+        r.add_field :owner, @bproce.user.displayname
+      else
+        r.add_field :owner, "-"
+      end
+      sp = 0 # порядковый номер строки для подпроцессов
+      subs = Bproce.where("lft>? and rgt<?", @bproce.lft, @bproce.rgt).order("lft")  # все подпроцессы процесса
+      r.add_table("SUBPROC", subs, :header => false, :skip_if_empty => true) do |t|
+        if subs.count > 0  # если документов нет - пустая таблица не будет выведена
+          t.add_column(:sp) do |ca| # порядковый номер строки таблицы
+            sp += 1
+          end
+          t.add_column(:spname) do |sub|
+            spname = '__' * (sub.depth - @bproce.depth) + sub.name
+            #spname = sub.name
+          end
+        end
+      end
+      
+      report_docs(@bproce, r, false) # сформировать таблицу документов процесса
+      report_roles(@bproce, r, false) # сформировать таблицу ролей
+      report_workplaces(@bproce, r, false) # сформировать таблицу рабочих мест
+      report_bapps(@bproce, r, false) # сформировать таблицу приложений процесса
+      report_iresources(@bproce, r, false) # сформировать таблицу ресурсов процесса
+
+
+      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    report_file_name = report.generate
+    send_file(report_file_name,
+      :type => 'application/msword',
+      :filename => "process.odt",
+      :disposition => 'inline' )
+  end
+
+  def report_roles(bproce, r, header)
+    rr = 0 # порядковый номер строки для ролей
+    @roles = bproce.business_roles
+    r.add_table("TABLE_ROLES", @roles, :header => header, :skip_if_empty => true) do |t|
+      if @roles.count > 0  # если ролей нет - пустая таблица не будет выведена
+        t.add_column(:rr) do |nn| # порядковый номер строки таблицы
+          rr += 1
+        end
+        t.add_column(:nr, :name)
+        t.add_column(:description)
+      end
+    end
+  end
+
+  def report_workplaces(bproce, r, header)
+    ww = 0 # порядковый номер строки для рабочих мест
+    @workplaces = bproce.workplaces
+    r.add_table("TABLE_PLACES", @workplaces, :header => header, :skip_if_empty => true) do |t|
+      if @workplaces.count > 0  # если рабочих мест нет - пустая таблица не будет выведена
+        t.add_column(:ww) do |nn| # порядковый номер строки таблицы
+          ww += 1
+        end
+        t.add_column(:nw, :name)
+        t.add_column(:designation)
+        t.add_column(:loca, :location)
+        t.add_column(:description)
+      end
+    end
+  end
+
+  def report_docs(bproce, r, header)
+    nn = 0 # порядковый номер строки для документов
+    r.add_table("TABLE_DOCS", bproce.documents, :header => header, :skip_if_empty => true) do |t|
+      if bproce.documents.count > 0  # если документов нет - пустая таблица не будет выведена
+        t.add_column(:nn) do |ca| # порядковый номер строки таблицы
+          nn += 1
+        end
+        t.add_column(:nd) do |document|
+          ndoc = document.name
+        end
+        t.add_column(:approved)
+        t.add_column(:responsible) do |document|  # владелец документа, если задан
+          if document.responsible
+            u=User.find(document.responsible)
+            "#{u.displayname}"
+          end
+        end
+      end
+    end
+  end
+
+  def report_bapps(bproce, r, header) # сформировать таблицу приложений процесса
+    pp = 0 # порядковый номер строки для приложений
+    @bapps = bproce.bapps
+    r.add_table("TABLE_BAPPS", @bapps, :header => header, :skip_if_empty => true) do |t|
+      if @bapps.count > 0  # если приложений нет - пустая таблица не будет выведена
+        t.add_column(:pp) do |nn| # порядковый номер строки таблицы
+          pp += 1
+        end
+        t.add_column(:na, :name)
+        t.add_column(:description)
+        t.add_column(:purpose)
+      end
+    end
+  end
+
+  def report_iresources(bproce, r, header) # сформировать таблицу ресурсов процесса
+    ir = 0 # порядковый номер строки для информационных ресурсов
+    @iresources = bproce.iresource
+    r.add_table("IRESOURCES", @iresources, :header => header, :skip_if_empty => true) do |t|
+      if @iresources.count > 0  # если инф.ресурсов нет - пустая таблица не будет выведена
+        t.add_column(:ir) do |nn| # порядковый номер строки таблицы
+          ir += 1
+        end
+        t.add_column(:label)
+        t.add_column(:location)
+        t.add_column(:note)
+      end
+    end
+  end
+
 
 end

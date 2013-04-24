@@ -78,4 +78,6 @@
   = link_to 'Back', bproces_path
 -if can? :update, @bproce
   .button
-    = link_to 'Card', bproce_path(@bproce) + '/card'
+    = link_to 'Карточка', bproce_path(@bproce) + '/card'
+  .button
+    = link_to 'Описание', bproce_path(@bproce) + '/doc'
