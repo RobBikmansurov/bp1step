@@ -1,0 +1,39 @@
+-title "Термины, определения" 
+%h1
+  Термины, определения
+  -if params[:search].present?
+    [ 
+    = params[:search]
+    ]
+
+%table
+  %tr
+    %th= sortable "shortname", "Сокращение"
+    %th= sortable "name", "Наименование"
+    %th= sortable "description", "Описание"
+    %th= sortable "note", "Примечание"
+    %th= sortable "source", "Источник"
+    %th
+    - if can? :destroy, Term
+      %th
+
+  - @terms.each do |term|
+    %tr
+      %td= term.shortname
+      %td= link_to term.name, term
+      %td= term.description
+      %td= term.note
+      %td= term.source
+      - if can? :destroy, term
+        %td
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), term, confirm: 'Термин ' + term.name + "\nДействительно хотите удалить?", :method => 'delete'
+
+-if ! params[:all].present? # если список всех терминов - отключить постраничый вывод
+  .apple_pagination
+    = will_paginate @terms 
+
+- if can? :destroy, Term
+  -#.button
+    = link_to 'Каталог', terms_path + '.pdf?all=1'
+  .button
+    = link_to 'Добавить Термин', new_term_path

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130325095908) do
+ActiveRecord::Schema.define(:version => 20130423111111) do
 
   create_table "activities", :force => true do |t|
     t.integer  "trackable_id"
@@ -176,6 +176,19 @@ ActiveRecord::Schema.define(:version => 20130325095908) do
   end
 
   add_index "roles", ["name"], :name => "index_roles_on_name", :unique => true
+
+  create_table "terms", :force => true do |t|
+    t.string   "shortname"
+    t.string   "name"
+    t.text     "description"
+    t.text     "note"
+    t.text     "source"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "terms", ["name"], :name => "index_terms_on_name", :unique => true
+  add_index "terms", ["shortname"], :name => "index_terms_on_shortname", :unique => true
 
   create_table "user_business_roles", :force => true do |t|
     t.date     "date_from"
