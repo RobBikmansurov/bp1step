@@ -24,3 +24,4 @@ db.auth.on
 *.sublime*
 files/*
 .sass-cache/*
+mount-bp1step
