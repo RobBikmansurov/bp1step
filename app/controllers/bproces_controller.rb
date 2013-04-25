@@ -29,11 +29,11 @@ class BprocesController < ApplicationController
   end
 
   def card
-    respond_to print_card # карточка процесса
+    print_card # карточка процесса
   end
 
   def doc
-    respond_to print_doc  # заготовка описания процесса
+    print_doc  # заготовка описания процесса
   end
 
   def new
@@ -153,7 +153,7 @@ private
           end
         end
       end
-      report_docs(@bproce, r, false) # сформировать таблицу документов процесса
+      report_docs(@bproce.documents, r, false) # сформировать таблицу документов процесса
       report_roles(@bproce, r, true) # сформировать таблицу ролей
       report_workplaces(@bproce, r, true) # сформировать таблицу рабочих мест
       report_bapps(@bproce, r, true) # сформировать таблицу приложений процесса
@@ -203,7 +203,7 @@ private
         end
       end
       
-      report_docs(@bproce, r, false) # сформировать таблицу документов процесса
+      report_docs(@bproce.documents, r, false) # сформировать таблицу документов процесса
       report_roles(@bproce, r, false) # сформировать таблицу ролей
       report_workplaces(@bproce, r, false) # сформировать таблицу рабочих мест
       report_bapps(@bproce, r, false) # сформировать таблицу приложений процесса
@@ -278,22 +278,24 @@ private
     end
   end
 
-  def report_docs(bproce, r, header)
+  def report_docs(documents, r, header)
     nn = 0 # порядковый номер строки для документов
-    r.add_table("TABLE_DOCS", bproce.documents, :header => header, :skip_if_empty => true) do |t|
-      if bproce.documents.count > 0  # если документов нет - пустая таблица не будет выведена
+    r.add_table("TABLE_DOCS", documents, :header => header, :skip_if_empty => true) do |t|
+      if documents.count > 0  # если документов нет - пустая таблица не будет выведена
         t.add_column(:nn) do |ca| # порядковый номер строки таблицы
           nn += 1
         end
         t.add_column(:nd) do |document|
           ndoc = document.name
         end
-        t.add_column(:approved)
-        t.add_column(:responsible) do |document|  # владелец документа, если задан
-          if document.responsible
-            u=User.find(document.responsible)
-            "#{u.displayname}"
-          end
+        t.add_column(:owner_doc) do |document|
+          owner_doc = document.owner.displayname
+        end
+        t.add_column(:approved) do |document|
+          da = document.approved.strftime('%d.%m.%Y')
+        end
+        t.add_column(:idd) do |document|
+          di = document.id.to_s
         end
       end
     end
