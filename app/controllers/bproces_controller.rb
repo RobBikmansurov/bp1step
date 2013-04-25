@@ -1,11 +1,15 @@
 class BprocesController < ApplicationController
   respond_to :html
-  respond_to :pdf, :xml, :json, :only => :index
+  respond_to :pdf, :xml, :json, :only => [:index, :list]
   helper_method :sort_column, :sort_direction
-  before_filter :get_bproce, :except => [:index, :list, :print]
+  before_filter :get_bproce, :except => [:index, :list]
 
-  def list
-    @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction)
+  def list  # плоский список процессов без дерева
+    @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).find(:all, :include => :user)
+    respond_to do |format|
+      format.html
+      format.pdf { print_list }
+    end
   end
   
   def index
@@ -25,17 +29,11 @@ class BprocesController < ApplicationController
   end
 
   def card
-    respond_to do |format|
-      format.html { print_card }
-      format.pdf { print_card }
-    end
+    respond_to print_card # карточка процесса
   end
 
   def doc
-    respond_to do |format|
-      format.html { print_doc }
-      format.pdf { print_doc }
-    end
+    respond_to print_doc  # заготовка описания процесса
   end
 
   def new
@@ -95,6 +93,7 @@ private
 
   def print
     report = ODFReport::Report.new("reports/bprocess.odt") do |r|
+      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
       nn = 0 # порядковый номер строки
       r.add_table("TABLE_01", @bproces, :header=>true) do |t|
         t.add_column(:nn) do |ca| # порядковый номер строки таблицы
@@ -220,6 +219,34 @@ private
       :filename => "process.odt",
       :disposition => 'inline' )
   end
+
+  def print_list
+    report = ODFReport::Report.new("reports/bp-list.odt") do |r|
+      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
+      nn = 0 # порядковый номер строки
+      r.add_table("TABLE_01", @bproces, :header=>true) do |t|
+        t.add_column(:nn) do |ca| # порядковый номер строки таблицы
+          nn += 1
+          "#{nn}."
+        end
+        t.add_column(:owner) do |bproce|  # владелец процесса, если задан
+          if bproce.user_id
+            bproce.user.displayname
+          end
+        end
+        t.add_column(:name)
+        t.add_column(:fullname)
+      end
+      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    report_file_name = report.generate
+    send_file(report_file_name,
+      :type => 'application/msword',
+      :filename => "process_list.odt",
+      :disposition => 'inline' )
+  end
+
 
   def report_roles(bproce, r, header)
     rr = 0 # порядковый номер строки для ролей

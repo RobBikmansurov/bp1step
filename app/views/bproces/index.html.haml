@@ -41,8 +41,8 @@
 
 - if can? :create, @bproces.first
   .button
-    = link_to 'Каталог', bproces_path(@document)+'.pdf?all=1'
+    = link_to 'Каталог', bproces_path+'.pdf?all=1'
   .button
-    = link_to 'ODT', bproces_path(@document)+'.pdf'
+    = link_to 'ODT', bproces_path+'.pdf'
   .button
     = link_to "Добавить новый процесс" , new_bproce_path

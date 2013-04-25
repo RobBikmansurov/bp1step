@@ -5,7 +5,7 @@
   %tr
     %th= sortable "shortname", "Обозначение"
     %th= sortable "name", "Наименование"
-    -#%th= sortable "fullname", "Полное наименование"
+    %th Владелец
     - if can? :destroy, Bproce
       %th
 
@@ -16,9 +16,9 @@
         -#= link_to "-" * (bproce.depth) + bproce.shortname, edit_bproce_path(bproce)
       
       %td= link_to bproce.name, bproce_path(bproce)
-      
-      -#%td= bproce.fullname
-      -#%td= link_to 'Show', bproce
+      %td
+        -if bproce.user
+          =link_to bproce.user.displayname, user_path(bproce.user)
       - if can? :destroy, bproce
         %td
           = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce, confirm: 'Процесс ' + bproce.name + "\nДействительно хотите удалить?", :method => 'delete'
@@ -30,5 +30,9 @@
           = bproce.depth
 
 - if can? :create, @bproces.first
+  .button
+    = link_to 'Каталог', bproces_path + '.pdf?all=1'
+  .button
+    = link_to 'Список', bproces_path + 'es.pdf'
   .button
     = link_to "Добавить новый процесс" , new_bproce_path
