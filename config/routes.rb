@@ -27,7 +27,7 @@ BPDoc::Application.routes.draw do
   end
   resources :business_roles
   resources :categories
-  resources :documents, :bapps, :workplaces
+  resources :documents, :bapps
   resources :iresources
   resources :roles
   resources :terms
@@ -37,6 +37,8 @@ BPDoc::Application.routes.draw do
   match '/bproceses' => 'bproces#list', :via => :get  # получение полного списка процессов
   match '/bproces/:id/card' => 'bproces#card', :via => :get  # карточка процесса
   match '/bproces/:id/doc' => 'bproces#doc', :via => :get  # заготовка описания процесса
+  match '/workplaces/switch' => 'workplaces#switch', :via => :get  # подключения рабочих мест
+  resources :workplaces
   
   match '/about' => 'pages#about', :via => :get
   get 'pages/about'
