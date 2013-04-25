@@ -129,6 +129,7 @@ private
       r.add_field :name, @bproce.name
       r.add_field :fullname, @bproce.fullname
       r.add_field :goal, @bproce.goal
+      r.add_field :description, @bproce.description
       if @bproce.parent_id
         r.add_field :parent, @bproce.parent.name
       else
@@ -178,6 +179,7 @@ private
       r.add_field :name, @bproce.name
       r.add_field :fullname, @bproce.fullname
       r.add_field :goal, @bproce.goal
+      r.add_field :description, @bproce.description
       if @bproce.parent_id
         r.add_field :parent, @bproce.parent.name
       else
