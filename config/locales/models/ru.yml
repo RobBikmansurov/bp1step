@@ -101,7 +101,7 @@ ru:
         date_to: Дата окончания
       workplace:
         designation: Обозначение
-        name: Название
+        name: имя ПК
         location: Местоположение
         description: Описание
         typical: Типовое рабочее место

@@ -4,11 +4,19 @@
   %b
     = @workplace.designation
   ]:
-  = @workplace.name
+- if can? :manage, Workplace
+  %h3
+    = @workplace.name
+    -if !@workplace.switch.to_s.empty?
+      = link_to @workplace.switch, workplaces_path + '?switch=' + @workplace.switch.to_s
+      \:
+      = @workplace.port
+
 %h3 Описание
 = @workplace.description
 - if @workplace.typical
   Типовое рабочее место
+  = @workplace.name
 %h3
   Местоположение:
   = link_to @workplace.location, workplaces_path + '?location=' + @workplace.location
