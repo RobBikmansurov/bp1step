@@ -35,6 +35,7 @@ ru:
         shortname: Обозначение
         fullname: Полное наименование
         goal: Цель процесса
+        description: Краткое описание
         parent_id: Родительский процесс
         user_id: Владелец процесса
       directive:
