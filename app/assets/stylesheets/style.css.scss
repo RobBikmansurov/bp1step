@@ -52,7 +52,10 @@ a:hover {
   background-color: #993300;
 }
 
-#menu {background: #FFCC99;}
+#menu {
+  background: #FFCC99;
+  box-shadow: 2px 2px 4px #aaa;
+}
 th {
   background: #ddd;
 }

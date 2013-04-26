@@ -51,7 +51,6 @@
           %ul.nav{:style => "float:right"}
             -#%li Настройки
             = nav_link "?", '/about'
-      %hr
       #main.span-24.last
         - flash.each do |name, msg|
           = content_tag :div, msg, :id => "flash_#{name}"
