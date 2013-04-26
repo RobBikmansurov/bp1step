@@ -289,10 +289,10 @@ private
           ndoc = document.name
         end
         t.add_column(:owner_doc) do |document|
-          owner_doc = document.owner.displayname
+          owner_doc = document.owner.displayname if document.owner
         end
         t.add_column(:approved) do |document|
-          da = document.approved.strftime('%d.%m.%Y')
+          da = document.approved.strftime('%d.%m.%Y') if document.approved
         end
         t.add_column(:idd) do |document|
           di = document.id.to_s
