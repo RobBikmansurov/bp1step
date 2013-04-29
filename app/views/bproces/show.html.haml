@@ -12,7 +12,11 @@
 %h3 Подпроцессы:
 - Bproce.where("lft>? and rgt<?", @bproce.lft, @bproce.rgt).order("lft").each do |bp|
   = "——" * (bp.depth - @bproce.depth)
-  = bp.depth
+  -#= bp.depth
+  - if bp.shortname
+    [
+    =bp.shortname
+    ]
   = link_to bp.name, bproce_path(bp)
   %br
 %h3
