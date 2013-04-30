@@ -1,4 +1,6 @@
 class BprocesController < ApplicationController
+  include TheSortableTreeController::Rebuild
+
   respond_to :html
   respond_to :pdf, :xml, :json, :only => [:index, :list]
   helper_method :sort_column, :sort_direction
@@ -71,6 +73,10 @@ class BprocesController < ApplicationController
   def destroy
     flash[:notice] = "Successfully destroyed Bproce." if @bproce.destroy
     redirect_to :action => :index
+  end
+
+  def manage
+    @bproces = Bproce.nested_set.roots.select('id, shortname, name as title, parent_id').all
   end
 
 private

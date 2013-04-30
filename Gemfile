@@ -11,6 +11,7 @@ gem 'execjs'
 
 gem 'rails3-jquery-autocomplete'
 gem 'awesome_nested_set'
+gem "the_sortable_tree"
 gem 'simple_form'
 gem 'rb-readline'
 gem 'odf-report'
