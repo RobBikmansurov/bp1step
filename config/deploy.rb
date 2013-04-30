@@ -10,8 +10,8 @@ load "config/recipes/monit"
 server 'vrdev.ad.bankperm.ru', :app, :web, :db, :primary => true
 
 # http and https proxy
-#default_environment['http_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
-#default_environment['https_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
+default_environment['http_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
+default_environment['https_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
 
 set :application, "bp1step"
 set :user, 'rubydev'
@@ -47,10 +47,12 @@ namespace :deploy do
     #run "cp #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     # run "ln -s #{shared_path}/db/sphinx #{release_path}/db/sphinx"
     # run "ln -s #{shared_path}/config/unicorn.rb #{release_path}/config/unicorn.rb"
-    run "rm -rf #{deploy_to}/current/db"
-    run "ln -s -- #{deploy_to}/db #{deploy_to}/current/db"
-    run "rm -rf #{deploy_to}/current/files"
-    run "ln -s -- #{deploy_to}/files #{deploy_to}/current/files"
+    run "rm -rf #{deploy_to}/current"
+    run "ln -s -- #{release_path}/ #{deploy_to}/current"
+    run "cd #{deploy_to} && rm -rf current/db"
+    run "cd #{deploy_to} && ln -s -- db/ current/db"
+    run "cd #{deploy_to} && rm -rf current/files"
+    run "cd #{deploy_to} && ln -s -- files/ current/files"
     run "cp #{deploy_to}/config/ldap.yml #{deploy_to}/current/config/ldap.yml"
   end
 
@@ -59,6 +61,6 @@ end
 namespace :rvm do
   desc 'Trust rvmrc file'
   task :trust_rvmrc do
-    run "rvm rvmrc trust #{current_release}"
+    run "rvm rvmrc trust #{release_path}"
   end
 end

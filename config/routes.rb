@@ -24,6 +24,10 @@ BPDoc::Application.routes.draw do
   resources :bproce_bapps, :only => [:new, :create, :destroy, :show, :edit, :update]
   resources :bproces do
     resources :bapps
+    collection do
+      get :manage
+      post :rebuild
+    end
   end
   resources :business_roles
   resources :categories

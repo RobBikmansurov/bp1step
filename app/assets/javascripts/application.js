@@ -9,6 +9,8 @@
 //= require_tree .
 //= require autocomplete-rails
 //= datepicker.translate.js
+//= require jquery.ui.nestedSortable
+//= require sortable_tree/initializer
 $(function (){
   $('.datepicker').datepicker({
   	changeMonth: true,

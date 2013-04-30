@@ -13,6 +13,8 @@
     -#= stylesheet_link_tag 'autocomplete'
     = stylesheet_link_tag    "application"
     = javascript_include_tag "application"
+    = yield :css
+    = yield :js
 
     = csrf_meta_tag
     = yield(:head)
