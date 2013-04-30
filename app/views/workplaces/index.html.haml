@@ -21,7 +21,7 @@
     %th= sortable "designation", "Обозначение"
     - if can? :manage, Workplace
       %th= sortable "name", "Имя ПК"
-      %th= sortable "switch", 'switch:port'
+      %th= sortable "switch,port", 'switch:port'
     %th= sortable "description", "Описание"
     %th Исполнитель
     %th= sortable "location", "Каб."
