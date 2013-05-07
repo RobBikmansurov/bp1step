@@ -16,7 +16,9 @@
     %th= sortable "description", "Описание"
     -if !@bp.nil?
       %th Назначение в процессе
-    - if can? :destroy, Bapp
+    -if can? :destroy, Bapp
+      %th
+    -if can? :manage, Bapp
       %th
   
   -if @bp.nil?
@@ -24,9 +26,10 @@
       %tr
         %td= link_to bapp.name, bapp
         %td= bapp.description
+        - if can? :manage, bapp
+          %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_bapp_path(bapp)
         -if can? :destroy, bapp
-          %td
-            = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bapp, confirm: bapp.name + "\nДействительно хотите удалить?", :method => 'delete'
+          %td= link_to image_tag('action_stop.gif', :alt => 'Удалить'), bapp, confirm: bapp.name + "\nДействительно хотите удалить?", :method => 'delete'
   -else
     -@bproce_bapps.each do |ba|
       %tr
@@ -34,9 +37,10 @@
           %td= link_to ba.bapp.name, ba.bapp
           %td= ba.bapp.description
           %td= ba.apurpose
+          - if can? :manage, ba.bapp
+            %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_bapp_path(ba)
           - if can? :destroy, ba.bapp
-            %td
-              = link_to image_tag('action_stop.gif', :alt => 'Удалить'), ba, confirm: 'Приложение: ' + ba.bapp.name + "\nДействительно хотите исключить его из процесса?", :method => 'delete'
+            %td= link_to image_tag('action_stop.gif', :alt => 'Удалить'), ba, confirm: 'Приложение: ' + ba.bapp.name + "\nДействительно хотите исключить его из процесса?", :method => 'delete'
         -else
           %td{:colspan => 3}
             =ba.inspect
