@@ -12,7 +12,9 @@
     %th= sortable "bproce_id", "Процесс"
     %th= sortable "description", "Назначение"
     %th Исполнитель
-    - if can? :destroy, BusinessRole
+    -if can? :manage, BusinessRole
+      %th
+    -if can? :destroy, BusinessRole
       %th
 
   -@broles.each do |ro|
@@ -29,9 +31,10 @@
             = ro.users.count - 1
       -else
         %td
+      - if can? :manage, ro
+        %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_business_role_path(ro)
       - if can? :destroy, ro
-        %td
-          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), ro, confirm: ro.name + "\nДействительно хотите удалить?", :method => 'delete'
+        %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), ro, confirm: ro.name + "\nДействительно хотите удалить?", :method => 'delete'
 
 
 .apple_pagination
