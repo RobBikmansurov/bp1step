@@ -17,7 +17,7 @@ ru:
       unauthenticated: 'You need to sign in or sign up before continuing.'
       unconfirmed: 'You have to confirm your account before continuing.'
       locked: 'Your account is locked.'
-      invalid: 'Неверные email или пароль.'
+      invalid: 'Неверные имя или email или пароль.'
       invalid_token: 'Invalid authentication token.'
       timeout: 'Your session expired, please sign in again to continue.'
       inactive: 'Ваш account не был активирован.'
