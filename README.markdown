@@ -1,4 +1,4 @@
-# Business Processes First Step (BP1Step)
+Business Processes First Step (BP1Step)
 ---
 Business processes documentation organization and generation, the 1st step of introduction of the processes approach in the small business
 
@@ -11,6 +11,7 @@ Business processes documentation organization and generation, the 1st step of in
 Язык: русский
 
 Автор: [Rob Bkmansurov](robb@mail.ru)
+
 ---
 Все понимают, что надо внедрять процессный подход в организации, фирме.
 Но часто не знают с чего начать, пробуют перебирать различные сложные системы, рисовать диаграммы потоков работ и данных, упираются в сложность инструментов и бросают это важное дело.
