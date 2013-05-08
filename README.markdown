@@ -50,17 +50,22 @@ Business processes documentation organization and generation, the 1st step of in
 *  Исполнитель - просмотр информации по исполняемым ролям, участию в процессах, комментирование документов процесса
 
 ##Getting Started#
-git clone
+>git clone
+
 Настройте доступ к БД, в тестовом примере используется SQLite3
-bundle install
-rake db:setup
-rails s
+
+>bundle install
+
+>rake db:setup
+
+>rails s
 
 Далее в браузере http://localhost:3000
 
 ##Testing#
 Пока есть тесты только для моделей
-rspec spec/models/
+
+>rspec spec/models/
 
 ##License#
 MIT?
