@@ -55,9 +55,7 @@ Business processes documentation organization and generation, the 1st step of in
 Настройте доступ к БД, в тестовом примере используется SQLite3
 
 >bundle install
-
 >rake db:setup
-
 >rails s
 
 Далее в браузере http://localhost:3000
