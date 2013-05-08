@@ -6,43 +6,16 @@
     = params[:search]
     ]
 
-%table
-  %tr
-    %th= sortable "shortname", "Обозначение"
-    %th= sortable "name", "Наименование"
-    -#%th= sortable "fullname", "Полное наименование"
-    - if can? :destroy, Bproce
-      %th
-      %th= 'Tree.debug'
-
-  -@bproces.each do |bproce|
-    %tr
-      %td
-        = "——" * (bproce.depth) + bproce.shortname
-        -#= link_to "-" * (bproce.depth) + bproce.shortname, edit_bproce_path(bproce)
-      
-      %td= link_to bproce.name, bproce_path(bproce)
-      
-      -#%td= bproce.fullname
-      -#%td= link_to 'Show', bproce
-      - if can? :destroy, bproce
-        %td
-          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce, confirm: 'Процесс ' + bproce.name + "\nДействительно хотите удалить?", :method => 'delete'
-        %td
-          = bproce.lft
-          = ' - '         
-          = bproce.rgt
-          = ' : '
-          = bproce.depth
-
--if !params[:all].present?
-  .apple_pagination
-    = will_paginate @bproces 
+-if @bproces.count > 0
+  -#%ol.tree= just_tree @bproces
+  -#= sortable_tree @bproces
+  %ol.sortable_tree{ :data => { max_levels: 0, :rebuild_url => rebuild_bproces_url } }
+    = sortable_tree @bproces
 
 - if can? :create, @bproces.first
   .button
     = link_to 'Каталог', bproces_path+'.pdf?all=1'
-  .button
+  -#.button
     = link_to 'ODT', bproces_path+'.pdf'
   .button
     = link_to "Добавить новый процесс" , new_bproce_path

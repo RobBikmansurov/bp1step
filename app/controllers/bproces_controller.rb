@@ -18,7 +18,8 @@ class BprocesController < ApplicationController
     if params[:all].present?
       @bproces = Bproce.order(sort_column + ' ' + sort_direction)
     else
-      @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      #@bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      @bproces = Bproce.nested_set.search(params[:search]).select('id, shortname, name as title, parent_id').all
     end
     respond_to do |format|
       format.html
@@ -76,7 +77,8 @@ class BprocesController < ApplicationController
   end
 
   def manage
-    @bproces = Bproce.nested_set.roots.select('id, shortname, name as title, parent_id').all
+    @bproces = Bproce.nested_set.select('id, shortname, name as title, parent_id').all
+    #@bproces = Bproce.nested_set.roots.select('id, shortname, name as title, parent_id').all
   end
 
 private
@@ -90,7 +92,8 @@ private
 
   def get_bproce
     if params[:search].present? # это поиск
-      @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      #@bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      @bproces = Bproce.search(params[:search]).nested_set.select('id, shortname, name as title, parent_id').all
       render :index # покажем список найденного
     else
       @bproce = params[:id].present? ? Bproce.find(params[:id]) : Bproce.new
