@@ -11,7 +11,6 @@
 %p
   %b Note:
   = @document_directive.note
-
-= link_to 'Edit', edit_document_directive_path(@document_directive)
-\|
-= link_to 'Back', document_directives_path
+%p
+= link_to 'Edit', edit_document_directive_path(@document_directive), :class => 'button'
+= link_to 'Back', document_directives_path, :class => 'button'

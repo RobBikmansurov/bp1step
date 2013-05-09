@@ -6,11 +6,9 @@
 %h2
   Назначение:
 = render 'form'
-= debug params
+-#= debug params
 
 %p
 - if can? :update, @bproce_bapp
-  .button
-    = link_to 'Show', @bproce_bapp
-.button
-  = link_to 'Back', bproce_bapps_path
+  = link_to 'Show', @bproce_bapp, :class => 'button'
+= link_to 'Back', bproce_bapps_path, :class => 'button'

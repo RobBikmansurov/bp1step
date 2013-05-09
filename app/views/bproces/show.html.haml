@@ -81,12 +81,8 @@
 
 %p
 -if can? :update, @bproce
-  .button
-    = link_to 'Edit', edit_bproce_path(@bproce)
-.button
-  = link_to 'Back', bproces_path
+  = link_to 'Edit', edit_bproce_path(@bproce), :class => 'button'
+= link_to 'Back', bproces_path, :class => 'button'
 -if can? :update, @bproce
-  .button
-    = link_to 'Карточка', bproce_path(@bproce) + '/card'
-  .button
-    = link_to 'Описание', bproce_path(@bproce) + '/doc'
+  = link_to 'Карточка', bproce_path(@bproce) + '/card', :class => 'button'
+  = link_to 'Описание', bproce_path(@bproce) + '/doc', :class => 'button'

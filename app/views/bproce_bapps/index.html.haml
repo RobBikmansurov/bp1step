@@ -32,11 +32,10 @@
 .apple_pagination
   = will_paginate @bproce_bapp 
 
-= debug.params
-
+-#= debug.params
+%p
 - if can? :destroy, BproceBapp
-  .button
-    -if @bproce = nil
-      = link_to "Добавить новое приложение" , new_bapp_path
-    -else
-      = link_to "Добавить новое приложение в процесс" , new_bproce_bapp_path + '?bproce_id=' + @bproce.id
+  -if @bproce = nil
+    = link_to "Добавить новое приложение" , new_bapp_path, :class => 'button'
+  -else
+    = link_to "Добавить новое приложение в процесс" , new_bproce_bapp_path + '?bproce_id=' + @bproce.id, :class => 'button'

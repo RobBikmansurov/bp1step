@@ -5,11 +5,8 @@
 -#= sortable_tree @bproces
 %ol.sortable_tree{ :data => { max_levels: 0, :rebuild_url => rebuild_bproces_url } }
   = sortable_tree @bproces
-
+%p
 - if can? :create, @bproces.first
-  .button
-    = link_to 'Каталог', bproces_path + '.pdf?all=1'
-  .button
-    = link_to 'Список', bproces_path + 'es.pdf'
-  .button
-    = link_to "Добавить новый процесс" , new_bproce_path
+  = link_to 'Каталог', bproces_path + '.pdf?all=1', :class => 'button'
+  = link_to 'Список', bproces_path + 'es.pdf', :class => 'button'
+  = link_to "Добавить новый процесс" , new_bproce_path, :class => 'button'

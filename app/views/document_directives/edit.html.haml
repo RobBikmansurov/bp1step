@@ -1,7 +1,5 @@
 %h1 Editing document_directive
-
 = render 'form'
-
-= link_to 'Show', @document_directive
-\|
-= link_to 'Back', document_directives_path
+%p
+= link_to 'Show', @document_directive, :class => 'button'
+= link_to 'Back', document_directives_path, :class => 'button'

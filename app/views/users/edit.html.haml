@@ -1,3 +1,5 @@
+-title @usr.displayname + ' роли доступа'
+
 %h1 
   %b
     = @usr.displayname
@@ -35,10 +37,5 @@
     = u.button :submit, 'Сохранить роли доступа'
 
 %p
-.button
-  = link_to 'Show', @usr
-.button
-  = link_to 'Back', users_path 
-
-
-
+= link_to 'Show', @usr, :class => 'button'
+= link_to 'Back', users_path, :class => 'button'

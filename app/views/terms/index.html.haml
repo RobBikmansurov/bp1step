@@ -33,7 +33,5 @@
     = will_paginate @terms 
 
 - if can? :destroy, Term
-  -#.button
-    = link_to 'Каталог', terms_path + '.pdf?all=1'
-  .button
-    = link_to 'Добавить Термин', new_term_path
+  -#= link_to 'Каталог', terms_path + '.pdf?all=1', :class => 'button'
+  = link_to 'Добавить Термин', new_term_path, :class => 'button'

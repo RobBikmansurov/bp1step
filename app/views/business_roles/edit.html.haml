@@ -23,7 +23,5 @@
 = render 'user_business_roles/form'
 
 %p
-.button
-  = link_to 'Show', @business_role
-.button
-  = link_to 'Back', business_roles_path 
+= link_to 'Show', @business_role, :class => 'button'
+= link_to 'Back', business_roles_path, :class => 'button'

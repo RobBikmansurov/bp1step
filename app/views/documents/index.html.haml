@@ -67,14 +67,11 @@
 -if !params[:all].present?
   .apple_pagination
     = will_paginate @documents 
- 
+%p
 - if can? :create, Document
-  .button
-    = link_to 'Каталог', documents_path(@document)+'.odt?all=1'
-  .button
-    = link_to 'ODT', documents_path(@document)+'.odt'
-  .button
-    = link_to 'Добавить новый документ', new_document_path 
+  = link_to 'Каталог', documents_path(@document)+'.odt?all=1', :class => 'button'
+  = link_to 'ODT', documents_path(@document)+'.odt', :class => 'button'
+  = link_to 'Добавить новый документ', new_document_path, :class => 'button'
 %p
 %br
 Статус:
