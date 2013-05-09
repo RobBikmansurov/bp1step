@@ -3,7 +3,5 @@
 = render 'form'
 
 %p
-.button
-  = link_to 'Show', @term
-.button
-  = link_to 'Back', terms_path
+= link_to 'Show', @term, :class => 'button'
+= link_to 'Back', terms_path, :class => 'button'

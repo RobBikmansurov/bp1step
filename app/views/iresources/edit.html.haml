@@ -2,6 +2,6 @@
 %h1 Ресурс
 = render 'form'
 = render 'form_bproce'
-
-.button= link_to 'Show', @iresource
-.button= link_to 'Back', iresources_path
+%p
+= link_to 'Show', @iresource, :class => 'button'
+= link_to 'Back', iresources_path, :class => 'button'

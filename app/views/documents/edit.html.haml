@@ -3,12 +3,9 @@
 
 = render 'form'
 = render 'form_directive'
-
-.button
-  = link_to 'XML', document_path(@document, :format => :xml)
-.button
-  = link_to 'Show', document_path(@document)
-.button
-  = link_to 'Back', documents_path
+%p
+= link_to 'XML', document_path(@document, :format => :xml), :class => 'button'
+= link_to 'Show', document_path(@document), :class => 'button'
+= link_to 'Back', documents_path, :class => 'button'
 
 

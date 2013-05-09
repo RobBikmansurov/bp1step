@@ -6,7 +6,5 @@
 = @role.description 
 
 %p
-.button
-  = link_to 'Edit', edit_role_path(@role)
-.button
-  = link_to 'Back', roles_path
+= link_to 'Edit', edit_role_path(@role), :class => 'button'
+= link_to 'Back', roles_path, :class => 'button'

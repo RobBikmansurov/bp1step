@@ -25,7 +25,9 @@
     %th= sortable "description", "Описание"
     %th Исполнитель
     %th= sortable "location", "Каб."
-    - if can? :destroy, Workplace or can? :modify, Workplace
+    -if can? :modify, Workplace
+      %th
+    -if can? :destroy, Workplace
       %th
     
   - @workplaces.each do |workplace|
@@ -47,9 +49,11 @@
       -else
         %td
       %td= link_to workplace.location, workplaces_path + '?location=' + workplace.location
-      - if can? :destroy, workplace or can? :modify, workplace
+      - if can? :modify, workplace
         %td
           = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_workplace_path(workplace) if can? :modify, workplace
+      - if can? :destroy, workplace
+        %td
           = link_to image_tag('action_stop.gif', :alt => 'Удалить'), workplace, confirm: 'Рабочее место: ' + workplace.designation + "\nДействительно хотите удалить?", :method => 'delete' if can? :destroy, workplace
 
 
@@ -58,17 +62,13 @@
     = will_paginate @workplaces 
 
 - if can? :destroy, Workplace
-  .button
-    = link_to 'Каталог', workplaces_path + '.pdf?all=1'
-  .button
-    = link_to 'ODT', workplaces_path + '.pdf'
-  .button
-    = link_to 'Подключения', workplaces_path + '/switch'
-  .button
-    -if params[:location].present?
-      = link_to 'Добавить Рабочее место', new_workplace_path + '?location=' + params[:location]
-    -else
-      = link_to 'Добавить Рабочее место', new_workplace_path
+  = link_to 'Каталог', workplaces_path + '.pdf?all=1', :class => 'button'
+  = link_to 'ODT', workplaces_path + '.pdf', :class => 'button'
+  = link_to 'Подключения', workplaces_path + '/switch', :class => 'button'
+  -if params[:location].present?
+    = link_to 'Добавить Рабочее место', new_workplace_path + '?location=' + params[:location], :class => 'button'
+  -else
+    = link_to 'Добавить Рабочее место', new_workplace_path, :class => 'button'
 %p
 %br
 Местоположение:

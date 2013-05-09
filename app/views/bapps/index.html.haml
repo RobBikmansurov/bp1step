@@ -54,16 +54,12 @@
 
 -if @bp.nil?
   - if can? :destroy, Bapp
-    .button
-      = link_to 'Каталог', bapps_path + '.pdf?all=1'
-    .button
-      = link_to 'ODT', bapps_path + '.pdf'
-    .button
-      = link_to "Добавить новое приложение" , new_bapp_path
+    = link_to 'Каталог', bapps_path + '.pdf?all=1', :class => 'button'
+    = link_to 'ODT', bapps_path + '.pdf', :class => 'button'
+    = link_to "Добавить новое приложение" , new_bapp_path, :class => 'button'
 -else
   - if can? :destroy, Bapp
-    .button
-      = link_to "Добавить новое приложение в процесс" , new_bproce_bapp_path
+    = link_to "Добавить новое приложение в процесс" , new_bproce_bapp_path, :class => 'button'
 
 %p
 %br

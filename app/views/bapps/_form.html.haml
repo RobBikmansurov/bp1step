@@ -12,9 +12,8 @@
   = f.input :source_app
   = f.input :note, :as => :text
   -#= f.error :base
-  - if can? :update, @bapp
+  -if can? :update, @bapp
     = f.button :submit
-  %p
   %p
 -# не показывать для нового приложения связанные с ним процессы - их еще нет
 -if @bapp.id?

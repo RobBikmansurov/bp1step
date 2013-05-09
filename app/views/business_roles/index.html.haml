@@ -41,11 +41,8 @@
   -#.page_info
     -#    = page_entries_info @business_roles
   = will_paginate @broles 
-
+%p
 - if can? :destroy, BusinessRole
-  .button
-    = link_to 'Каталог', business_roles_path + '.odt?all=1'
-  .button
-    = link_to 'ODT', business_roles_path + '.odt'
-  .button
-    = link_to "Добавить новую роль" , new_business_role_path
+  = link_to 'Каталог', business_roles_path + '.odt?all=1', :class => 'button'
+  = link_to 'ODT', business_roles_path + '.odt', :class => 'button'
+  = link_to "Добавить новую роль" , new_business_role_path, :class => 'button'

@@ -61,5 +61,5 @@
 
 %p
 -if can? :update, Document
-  .button= link_to 'Edit', edit_document_path(@document)
-.button= link_to 'Back', :back
+  = link_to 'Edit', edit_document_path(@document), :class => 'button'
+= link_to 'Back', :back, :class => 'button'

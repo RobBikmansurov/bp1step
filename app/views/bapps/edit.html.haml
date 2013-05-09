@@ -3,7 +3,5 @@
 = render 'form'
 %p
 - if can? :update, @bapp
-  .button
-    = link_to 'Show', @bapp
-.button
-  = link_to 'Back', bapps_path
+  = link_to 'Show', @bapp, :class => 'button'
+= link_to 'Back', bapps_path, :class => 'button'

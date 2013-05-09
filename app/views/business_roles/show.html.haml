@@ -36,7 +36,5 @@
 
 %p
 - if can? :update, @business_role
-  .button
-    = link_to 'Edit', edit_business_role_path(@business_role)
-.button
-  = link_to 'Back', business_roles_path
+  = link_to 'Edit', edit_business_role_path(@business_role), :class => 'button'
+= link_to 'Back', business_roles_path, :class => 'button'

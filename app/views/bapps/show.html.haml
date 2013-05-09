@@ -46,8 +46,5 @@
         %td
 %p
 - if can? :update, @bapp
-  .button
-    = link_to 'Edit', edit_bapp_path(@bapp) |
-
-.button
-  = link_to 'Back', bapps_path
+  = link_to 'Edit', edit_bapp_path(@bapp), :class => 'button'
+= link_to 'Back', bapps_path, :class => 'button'

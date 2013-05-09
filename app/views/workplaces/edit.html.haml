@@ -36,7 +36,5 @@
     = link_to 'Я нахожусь на этом рабочем месте!', new_user_workplace_path 
 
 %p
-.button
-  = link_to 'Show', @workplace
-.button
-  = link_to 'Back', workplaces_path
+= link_to 'Show', @workplace, :class => 'button'
+= link_to 'Back', workplaces_path, :class => 'button'

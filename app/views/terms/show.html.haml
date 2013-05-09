@@ -14,7 +14,5 @@
 
 %p
 - if can? :update, Term
-  .button
-    = link_to 'Edit', edit_term_path(@term)
-.button
-  = link_to 'Back', terms_path
+  = link_to 'Edit', edit_term_path(@term), :class => 'button'
+= link_to 'Back', terms_path, :class => 'button'

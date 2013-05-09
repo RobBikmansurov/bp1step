@@ -19,6 +19,5 @@
       %td= link_to 'Edit', edit_document_directive_path(document_directive)
       %td= link_to 'Destroy', document_directive, :confirm => 'Are you sure?', :method => :delete
 
-%br
-
-= link_to 'New Document directive', new_document_directive_path
+%p
+= link_to 'New Document directive', new_document_directive_path, :class => 'button'

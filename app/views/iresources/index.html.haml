@@ -25,7 +25,9 @@
     %th Объем, GB
     %th Права доступа
     %th Категория
-    - if can? :destroy, Iresource or can? :manage, Iresource
+    - if can? :manage, Iresource
+      %th
+    - if can? :destroy, Iresource
       %th
 
   - @iresources.each do |iresource|
@@ -40,9 +42,11 @@
         = iresource.access_other
       %td=iresource.risk_category
 
-      - if can? :destroy, Iresource or can? :manage, Iresource
+      - if can? :manage, Iresource
         %td
           = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_iresource_path(iresource) if can? :manage, iresource
+      - if can? :destroy, Iresource
+        %td
           = link_to image_tag('action_stop.gif', :alt => 'Удалить'), iresource, confirm: iresource.label + "\nДействительно хотите удалить?", :method => 'delete' if can? :destroy, iresource
 
 -if !params[:all].present?
@@ -50,12 +54,10 @@
     = will_paginate @iresources
 %p
 - if can? :destroy, Iresource
-  .button
-    = link_to 'Каталог', iresources_path + '.pdf?all=1'
+  = link_to 'Каталог', iresources_path + '.pdf?all=1', :class => 'button'
 
 - if can? :create, Iresource
-  .button
-    = link_to "Добавить новый ресурс", new_iresource_path
+  = link_to "Добавить новый ресурс", new_iresource_path, :class => 'button'
 %p
 %br
 Тип:

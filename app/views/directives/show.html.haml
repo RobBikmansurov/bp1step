@@ -25,7 +25,5 @@
 
 %p
 -if can? :update, @directive
-  .button
-    = link_to 'Edit', edit_directive_path(@directive) |
-.button
-  = link_to 'Back', directives_path
+  = link_to 'Edit', edit_directive_path(@directive), :class => 'button'
+= link_to 'Back', directives_path, :class => 'button'

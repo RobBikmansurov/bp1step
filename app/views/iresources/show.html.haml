@@ -48,5 +48,5 @@
 
 %p
 -if can? :update, Iresource
-  .button= link_to 'Edit', edit_iresource_path(@iresource)
-.button= link_to 'Back', iresources_path
+  = link_to 'Edit', edit_iresource_path(@iresource), :class => 'button'
+= link_to 'Back', iresources_path, :class => 'button'

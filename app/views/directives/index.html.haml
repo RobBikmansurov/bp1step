@@ -46,8 +46,7 @@
   = will_paginate @directives
 
 - if can? :create, Directive
-  .button
-    = link_to "Добавить новую директиву", new_directive_path
+  = link_to "Добавить новую директиву", new_directive_path, :class => 'button'
 %p
 %br
 Тип директивы:
