@@ -17,8 +17,8 @@
 = simple_form_for(@bproce_bapp) do | bproce_bapp |
   = bproce_bapp.error_notification
   = bproce_bapp.hidden_field :bproce_id
-  = bproce_bapp.input :bapp_name, data: {autocomplete_source: autocomplete_bapps_path}, :as => :autocomplete, :label => 'Приложение', :prompt => 'Приложение'
+  = bproce_bapp.input :bapp_name, data: {autocomplete_source: autocomplete_bapps_path}, :as => :autocomplete, :label => 'Приложение', :prompt => 'Приложение', :placeholder => 'найти приложение из списка'
   = bproce_bapp.input :apurpose
   = bproce_bapp.error :base
   -if can? :update, @bproce
-    = bproce_bapp.button :submit
+    = bproce_bapp.button :submit, 'Связать Приложение и Процесс'
