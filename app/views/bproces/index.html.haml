@@ -5,7 +5,9 @@
     [ 
     = params[:search]
     ]
-
+  -else
+    -if params[:tag].present?
+      = ':' + params[:tag].to_s
 -if @bproces.count > 0
   -#%ol.tree= just_tree @bproces
   -#= sortable_tree @bproces
@@ -16,3 +18,7 @@
   = link_to 'Каталог', bproces_path+'.pdf?all=1', :class => 'button'
   = link_to 'ODT', bproces_path+'.pdf', :class => 'button'
   = link_to "Добавить новый процесс" , new_bproce_path, :class => 'button'
+
+%p
+  = tag_cloud(Bproce.tag_counts, %w(s m link_to)) do |tag, css_class|
+    = raw link_to tag.name, tag_path(tag.name), class: css_class

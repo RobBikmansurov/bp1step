@@ -22,6 +22,7 @@ BPDoc::Application.routes.draw do
   resources :bproce_business_roles, :only => [:show]
   resources :bproce_iresources  #, :only => [:show]
   resources :bproce_bapps, :only => [:new, :create, :destroy, :show, :edit, :update]
+  get 'tags/:tag', to: 'bproces#index', as: :tag
   resources :bproces do
     resources :bapps
     collection do
