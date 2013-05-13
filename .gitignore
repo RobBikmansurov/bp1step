@@ -25,3 +25,4 @@ db.auth.on
 files/*
 .sass-cache/*
 mount-bp1step
+.rvmrc
