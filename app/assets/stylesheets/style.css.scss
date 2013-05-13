@@ -44,12 +44,14 @@ a:hover {
   border-radius: 0px;
   color: #fff;
   background-color: #000;
+  background:linear-gradient(#000, #e2e2e2);
 }
 
 .nav li.current a{
   padding: 5px 7px 5px;
   color: #fff;
   background-color: #993300;
+  background:linear-gradient(#993300, #e2e2e2);
 }
 
 #menu {
