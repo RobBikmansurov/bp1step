@@ -1,8 +1,10 @@
 назначил исполнителю рабочее место
 -if activity.trackable
-  = '(#' + activity.trackable.id.to_s + '):'
-  =link_to activity.trackable.user.displayname, user_path(activity.trackable.user)
-  \->
+  = '(#' + activity.trackable.id.to_s + '): #'
+  = activity.trackable.user.id
+  = link_to activity.trackable.user.displayname, user_path(activity.trackable.user)
+  \-> #
+  = activity.trackable.workplace.id
   = link_to activity.trackable.workplace.designation, workplace_path(activity.trackable.workplace)
 -else
   \#
