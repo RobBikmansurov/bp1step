@@ -16,6 +16,7 @@ gem 'simple_form'
 gem 'rb-readline'
 gem 'odf-report'
 gem 'public_activity'
+gem 'acts-as-taggable-on'
 
 group :assets do
   gem 'sass-rails'
