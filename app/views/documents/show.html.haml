@@ -45,20 +45,19 @@
   %b= link_to @document.place, documents_path + '?place=' + @document.place
 
 %h4
-  электронный документ:
-  -if !@document.eplace.nil?
-    -if !@document.eplace.empty?
-      %b
-        -#= File.dirname(@document.file_name) + '/' # выведем путь и имя файла в разных строках
-          %br
-        = File.basename(@document.file_name)
+  Электронный документ:
+  -if @document.document_file_file_name
+    %b
+      =@document.document_file_file_name
+    - if can? :view_document, @document
       %br
-        - if can? :view_document, @document
-          - if File.exist?("files/" + @document.file_name)
-            = link_to 'Смотреть', document_path(@document)+'.pdf'
-        - else
-          Файл отсутствует!
-
+      - if File.exist?(@document.document_file.path)
+        = link_to 'Смотреть', @document.document_file.url
+      - else
+        файл отсутствует - 
+        = @document.document_file.path
+  -else
+    файл не загружен
 %p
 -if can? :update, Document
   = link_to 'Edit', edit_document_path(@document), :class => 'button'
