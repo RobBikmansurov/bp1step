@@ -40,6 +40,8 @@
   -else
     %b
       не задан
+Tags: 
+= raw @bproce.tag_list.map { |t| link_to t, tag_path(t) }.join(', ')
 
 %hr
 - if @bproce.business_roles.count > 0

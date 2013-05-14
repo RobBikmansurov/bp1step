@@ -49,5 +49,9 @@ module BPDoc
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+
+    ActsAsTaggableOn.strict_case_match = true
+    ActsAsTaggableOn.force_lowercase = true
+
   end
 end

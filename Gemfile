@@ -17,6 +17,7 @@ gem 'rb-readline'
 gem 'odf-report'
 gem 'public_activity'
 gem 'paperclip'
+gem 'acts-as-taggable-on'
 
 group :assets do
   gem 'sass-rails'
