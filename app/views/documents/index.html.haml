@@ -52,10 +52,10 @@
     %tr
       %td= document.part
       %td
-        -if !document.file_name.nil?
+        -if document.document_file_file_name
           -if can? :view_document, document
-            -if File.exist?("files/" + document.file_name) && !document.file_name.empty?
-              = link_to image_tag('action_go.gif', :alt => 'См.'), document_path(document)+'.pdf'
+            - if File.exist?(document.document_file.path)
+              = link_to image_tag('action_go.gif', :alt => 'См.'), document.document_file.url
         = link_to format_content(document.name), document_path(document)
       -#      %td= document.filename
       %td= document.status

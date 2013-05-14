@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130425060217) do
+ActiveRecord::Schema.define(:version => 20130514104829) do
 
   create_table "activities", :force => true do |t|
     t.integer  "trackable_id"
@@ -146,6 +146,11 @@ ActiveRecord::Schema.define(:version => 20130425060217) do
     t.integer  "owner_id"
     t.integer  "responsible"
     t.string   "note"
+    t.string   "document_file_file_name"
+    t.string   "document_file_content_type"
+    t.integer  "document_file_file_size"
+    t.datetime "document_file_updated_at"
+    t.string   "document_file_fingerprint"
   end
 
   add_index "documents", ["id"], :name => "index_documents_on_id", :unique => true

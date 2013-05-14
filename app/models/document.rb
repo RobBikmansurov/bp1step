@@ -4,6 +4,15 @@ class Document < ActiveRecord::Base
   # TODO добавить конфиги для константы "_1_Норма" - начало пути шары для удаления OS-чувствительного маппинга шар (Windows - I:\, Linux - smb://)
   # STATUSES = %w[Проект Согласование Утвержден]
   # validates_inclusion_of :status, in: STATUSES
+  attr_accessible :document_file
+  has_attached_file :document_file,
+    :url  => "/store/:id.:basename.:extension",
+    :path => ":rails_root/public/store/:id.:basename.:extension",
+    :hash_secret => "BankPerm"
+
+  #validates_attachment :document_file, :content_type => ["application/pdf", "application/odf", "application/msword", "plain/text"]
+  #validates_attachment :document_file, :content_type => { :content_type => "application/pdf" }
+
   validates :name, :length => {:minimum => 10, :maximum => 200}
   validates :bproce_id, :presence => true # документ относится к процессу
   validates :dlevel, :numericality => {:less_than => 5, :greater_than => 0}

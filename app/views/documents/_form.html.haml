@@ -1,4 +1,4 @@
-= simple_form_for(@document) do |f|
+= simple_form_for(@document, :html => { :multipart => true }) do |f|
   = f.error_notification
   = f.input :name
   = f.input :dlevel, :collection => 1..4, :as => :radio_buttons, :hint => 'Политики, Стратегии(1) - Положения, Описания(2) - Регламенты, Инструкции(3) - Свидетельства: Акты, Протоколы, Журналы(4)'
@@ -17,7 +17,7 @@
   = f.input :part, :collection => 1..14, :as => :radio_buttons, :prompt => 'Раздел Документооборота', :hint => 'выберите раздел документооборота'
   %p
   = f.input :place, :hint => 'Место хранения оригиналов на бумаге (кратко: отдел папка)'
-  = f.input :eplace, :as => :text, :hint => 'Полное имя файла документа (полный путь и имя файла в папке //cluster/docs/)'
+  = f.input :document_file, hint: 'Выберите файл с документом для загрузки'
   = f.input :note
   -#= f.input :uploaded_file, :as => :file, :hint => 'Место хранения электронного документа'  # нет в полученном объекте информации о полном пути - только имя файла и ссылка на /tmp
   -# покажем список процессов, отсортированный по наименованиям

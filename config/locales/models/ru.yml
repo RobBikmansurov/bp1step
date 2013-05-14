@@ -54,6 +54,7 @@ ru:
         part: Раздел
         place: Оригинал
         eplace: Электронный документ
+        document_file: Электронный документ
         approved: Дата утверждения
         approveorgan: Орган
         note: Примечание
