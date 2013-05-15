@@ -19,10 +19,11 @@ class BprocesController < ApplicationController
       @bproces = Bproce.order(sort_column + ' ' + sort_direction)
     else
       if params[:tag].present?
-        @bproces = Bproce.tagged_with(params[:tag]).search(params[:search]).select('bproces.id, shortname, name as title, parent_id')
+        #@bproces = Bproce.tagged_with(params[:tag]).nested_set.search(params[:search]).select('bproces.id, shortname, name as title, parent_id').all
+        @bproces = Bproce.tagged_with(params[:tag]).nested_set.search(params[:search])
       else
         #@bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
-        @bproces = Bproce.nested_set.search(params[:search]).select('id, shortname, name as title, parent_id').all
+        @bproces = Bproce.nested_set.search(params[:search])
       end
     end
     respond_to do |format|

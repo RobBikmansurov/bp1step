@@ -8,17 +8,37 @@
   -else
     -if params[:tag].present?
       = ':' + params[:tag].to_s
--if @bproces.count > 0
-  -#%ol.tree= just_tree @bproces
-  -#= sortable_tree @bproces
-  %ol.sortable_tree{ :data => { max_levels: 0, :rebuild_url => rebuild_bproces_url } }
-    = sortable_tree @bproces
+%table
+  %tr
+    %th= sortable "shortname", "Обозначение"
+    %th= sortable "name", "Наименование"
+    %th Владелец
+    - if can? :destroy, Bproce
+      %th
+
+  -@bproces.each do |bproce|
+    %tr
+      %td
+        = '——' * (bproce.depth) + '[' + bproce.shortname + ']'
+        -#= link_to "-" * (bproce.depth) + bproce.shortname, edit_bproce_path(bproce)
+      %td= link_to bproce.name, bproce_path(bproce)
+      %td
+        -if bproce.user
+          =link_to bproce.user.displayname, user_path(bproce.user)
+      - if can? :destroy, bproce
+        %td
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce, confirm: 'Процесс ' + bproce.name + "\nДействительно хотите удалить?", :method => 'delete'
+        -#%td
+          = bproce.lft
+          = ' - '         
+          = bproce.rgt
+          = ' : '
+          = bproce.depth
 %p
 - if can? :create, @bproces.first
   = link_to 'Каталог', bproces_path+'.pdf?all=1', :class => 'button'
   = link_to 'ODT', bproces_path+'.pdf', :class => 'button'
   = link_to "Добавить новый процесс" , new_bproce_path, :class => 'button'
-
 %p
-  = tag_cloud(Bproce.tag_counts, %w(s m link_to)) do |tag, css_class|
-    = raw link_to tag.name, tag_path(tag.name), class: css_class
+Теги:
+= raw Bproce.all_tags.map { |t| link_to t, tag_path(t.name), class: 'tags' }.join('&nbsp; ')
