@@ -32,3 +32,7 @@
   = link_to 'Каталог', bproces_path + '.pdf?all=1', :class => 'button'
   = link_to 'Список', bproces_path + 'es.pdf', :class => 'button'
   = link_to "Добавить новый процесс" , new_bproce_path, :class => 'button'
+
+%p
+Теги:
+= raw Bproce.all_tags.map { |t| link_to t, tag_path(t.name), class: 'tags' }.join(' &nbsp;')

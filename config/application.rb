@@ -51,7 +51,5 @@ module BPDoc
     config.filter_parameters += [:password]
 
     ActsAsTaggableOn.strict_case_match = true
-    ActsAsTaggableOn.force_lowercase = true
-
   end
 end
