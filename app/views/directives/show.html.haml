@@ -1,7 +1,7 @@
 -title 'Директива ' + @directive.shortname
 %h2
-  = link_to @directive.title, directives_path + '?title=' + @directive.title
-  = link_to @directive.body, directives_path + '?body=' + @directive.body
+  = link_to @directive.title, directives_path + '?title=' + @directive.title, class: 'groups'
+  = link_to @directive.body, directives_path + '?body=' + @directive.body, class: 'groups'
   %b
     №
     = @directive.number

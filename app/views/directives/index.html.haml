@@ -54,11 +54,11 @@
   -if directive.title.to_s.empty?
     = link_to 'пусто', directives_path + '?title='
   -else
-    = link_to directive.title, directives_path + '?title=' + directive.title.to_s
+    = link_to directive.title, directives_path + '?title=' + directive.title.to_s, class: 'groups'
 %br
 Принявший орган:
 - Directive.group(:body).each do |directive|
   -if directive.body.to_s.empty?
     = link_to 'пусто', directives_path + '?body='
   -else
-    = link_to directive.body, directives_path + '?body=' + directive.body.to_s
+    = link_to directive.body, directives_path + '?body=' + directive.body.to_s, class: 'groups'

@@ -8,7 +8,7 @@
   %h3
     = @workplace.name
     -if !@workplace.switch.to_s.empty?
-      = link_to @workplace.switch, workplaces_path + '?switch=' + @workplace.switch.to_s
+      = link_to @workplace.switch, workplaces_path + '?switch=' + @workplace.switch.to_s, class: 'groups'
       \:
       = @workplace.port
 
@@ -19,7 +19,7 @@
   = @workplace.name
 %h3
   Местоположение:
-  = link_to @workplace.location, workplaces_path + '?location=' + @workplace.location
+  = link_to @workplace.location, workplaces_path + '?location=' + @workplace.location, class: 'groups'
 
 -if @workplace.bproce_workplaces.count > 0
   %h2
