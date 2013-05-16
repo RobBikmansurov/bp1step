@@ -49,15 +49,32 @@
   -if @document.document_file_file_name
     %b
       =@document.document_file_file_name
+    %br
+    размер:
+    =@document.document_file_file_size
+    | загружен:
+    =@document.document_file_updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    | MD5:
+    =@document.document_file_fingerprint
     - if can? :view_document, @document
       %br
       - if File.exist?(@document.document_file.path)
-        = link_to 'Смотреть', @document.document_file.url
+        смотреть:
+        = link_to image_tag('action_go.gif', :alt => 'См.'), @document.document_file.url, class: 'button-img'
+        редактировать:
+        удалить:
       - else
         файл отсутствует - 
         = @document.document_file.path
-  -else
+
+  -else #оставим для совместимости с предыдущей схемой хранения документов
     файл не загружен
+    -if !@document.file_name.nil?
+      -if can? :view_document, @document
+        -if File.exist?("files/" + @document.file_name) && !@document.file_name.empty?
+          есть старая информация - 
+          = link_to image_tag('ico_text.gif', :alt => 'См.'), document_path(@document)+'.pdf'
+
 %p
 -if can? :update, Document
   = link_to 'Edit', edit_document_path(@document), :class => 'button'
