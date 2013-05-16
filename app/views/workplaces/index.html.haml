@@ -51,10 +51,10 @@
       %td= link_to workplace.location, workplaces_path + '?location=' + workplace.location
       - if can? :modify, workplace
         %td
-          = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_workplace_path(workplace) if can? :modify, workplace
+          = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_workplace_path(workplace), class: 'button-img'
       - if can? :destroy, workplace
         %td
-          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), workplace, confirm: 'Рабочее место: ' + workplace.designation + "\nДействительно хотите удалить?", :method => 'delete' if can? :destroy, workplace
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), workplace, confirm: 'Рабочее место: ' + workplace.designation + "\nДействительно хотите удалить?", :method => 'delete', class: 'button-img'
 
 
 -if ! params[:all].present? # если список всех мест - отключить постраничый вывод

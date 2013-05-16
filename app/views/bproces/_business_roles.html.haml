@@ -5,7 +5,7 @@
 -@bproce.business_roles.find_with_associations.each do |business_role|
   = link_to business_role.name, business_role_path(business_role)
   -if can? :destroy, business_role
-    = link_to image_tag('action_stop.gif', :alt => 'Удалить'), business_role, confirm: "Действительно хотите исключить [" + business_role.name + "] из процесса:\n" + @bproce.name + "?", :method => 'delete'
+    = link_to image_tag('action_stop.gif', :alt => 'Удалить'), business_role, confirm: "Действительно хотите исключить [" + business_role.name + "] из процесса:\n" + @bproce.name + "?", :method => 'delete', class: 'button-img'
 
 = simple_form_for(@business_role) do |r|
   = r.error_notification

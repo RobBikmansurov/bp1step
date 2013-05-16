@@ -27,9 +27,9 @@
         %td= link_to bapp.name, bapp
         %td= bapp.description
         - if can? :manage, bapp
-          %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_bapp_path(bapp)
+          %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_bapp_path(bapp), class: 'button-img'
         -if can? :destroy, bapp
-          %td= link_to image_tag('action_stop.gif', :alt => 'Удалить'), bapp, confirm: bapp.name + "\nДействительно хотите удалить?", :method => 'delete'
+          %td= link_to image_tag('action_stop.gif', :alt => 'Удалить'), bapp, confirm: bapp.name + "\nДействительно хотите удалить?", :method => 'delete', class: 'button-img'
   -else
     -@bproce_bapps.each do |ba|
       %tr
@@ -38,9 +38,9 @@
           %td= ba.bapp.description
           %td= ba.apurpose
           - if can? :manage, ba.bapp
-            %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_bapp_path(ba)
+            %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_bapp_path(ba), class: 'button-img'
           - if can? :destroy, ba.bapp
-            %td= link_to image_tag('action_stop.gif', :alt => 'Удалить'), ba, confirm: 'Приложение: ' + ba.bapp.name + "\nДействительно хотите исключить его из процесса?", :method => 'delete'
+            %td= link_to image_tag('action_stop.gif', :alt => 'Удалить'), ba, confirm: 'Приложение: ' + ba.bapp.name + "\nДействительно хотите исключить его из процесса?", :method => 'delete', class: 'button-img'
         -else
           %td{:colspan => 3}
             =ba.inspect

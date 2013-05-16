@@ -30,10 +30,7 @@
           = link_to bp.apurpose, bproce_bapp_path(bp)
         %td
           - if can? :update, @bapp
-            = link_to 'Destroy', bp, :confirm => 'Are you sure?', :method => :delete
-        %td
-          - if can? :update, @bapp
-            = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bp, confirm: "Действительно хотите исключить [" + bp.bapp.name + "] из процесса:\n" + bp.bproce.name + "?", :method => 'delete'
+            = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bp, confirm: "Действительно хотите исключить [" + bp.bapp.name + "] из процесса:\n" + bp.bproce.name + "?", :method => 'delete', class: 'button-img'
 
   = simple_form_for(@bproce_bapp) do |ff|
     = ff.error_notification

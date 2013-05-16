@@ -9,7 +9,7 @@
     =link_to 'Ресурсы:', iresources_path
   -@bproce.bproce_iresource.each do | bpres |  #  список ресурсов процесса
     = link_to bpres.iresource.label, iresource_path(bpres.iresource)
-    = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bpres, confirm: "Действительно хотите исключить [" + bpres.iresource.label + "] из процесса:\n" + @bproce.name + "?", :method => 'delete'
+    = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bpres, confirm: "Действительно хотите исключить [" + bpres.iresource.label + "] из процесса:\n" + @bproce.name + "?", :method => 'delete', class: 'button-img'
 
 = simple_form_for(@bproce_iresource) do | bproce_res |
   = bproce_res.error_notification

@@ -18,7 +18,7 @@
       %td= user_business_role.note
       - if can? :destroy, @business_role
         %td
-          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), user_business_role, confirm: user_business_role.business_role.name + "\nДействительно хотите удалить?", :method => 'delete'
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), user_business_role, confirm: user_business_role.business_role.name + "\nДействительно хотите удалить?", :method => 'delete', class: 'button-img'
 
 = render 'user_business_roles/form'
 

@@ -55,7 +55,7 @@
         -if document.document_file_file_name
           -if can? :view_document, document
             - if File.exist?(document.document_file.path)
-              = link_to image_tag('action_go.gif', :alt => 'См.'), document.document_file.url
+              = link_to image_tag('action_go.gif', :alt => 'См.'), document.document_file.url, class: 'button-img'
         = link_to format_content(document.name), document_path(document)
       -#      %td= document.filename
       %td= document.status
@@ -63,7 +63,7 @@
       %td= document.place 
       - if can? :destroy, document
         %td
-          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), document, confirm: document.name + "\nДействительно хотите удалить?", :method => 'delete'
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), document, confirm: document.name + "\nДействительно хотите удалить?", :method => 'delete', class: 'button-img'
 -if !params[:all].present?
   .apple_pagination
     = will_paginate @documents 
