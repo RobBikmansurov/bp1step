@@ -48,7 +48,7 @@
             = workplace.users.count - 1
       -else
         %td
-      %td= link_to workplace.location, workplaces_path + '?location=' + workplace.location
+      %td= link_to workplace.location, workplaces_path + '?location=' + workplace.location, class: 'groups'
       - if can? :modify, workplace
         %td
           = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_workplace_path(workplace), class: 'button-img'
@@ -76,7 +76,7 @@
   -if wp.location.to_s.empty?
     = link_to 'пусто', workplaces_path + '?location='
   -else
-    = link_to wp.location, workplaces_path + '?location=' + wp.location.to_s
+    = link_to wp.location, workplaces_path + '?location=' + wp.location.to_s, class: 'groups'
 - if can? :manage, Workplace
   %br
   Сетевое подключение:
@@ -84,4 +84,4 @@
     -if wp.switch.to_s.empty?
       = link_to 'пусто', workplaces_path + '?switch='
     -else
-      = link_to wp.switch, workplaces_path + '?switch=' + wp.switch.to_s
+      = link_to wp.switch, workplaces_path + '?switch=' + wp.switch.to_s, class: 'groups'

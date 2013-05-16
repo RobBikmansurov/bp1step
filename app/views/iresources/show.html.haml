@@ -2,7 +2,8 @@
 %h1 Ресурс
 
 %h3
-  = @iresource.level
+  -if @iresource.level?
+    = link_to @iresource.level, iresources_path + '?level=' + @iresource.level.to_s, class: 'groups'
   [
   %b= @iresource.label
   ]:
@@ -36,7 +37,8 @@
 %h4
   Категория риска:
   %b
-    =@iresource.risk_category
+  -if @iresource.risk_category?
+    = link_to @iresource.risk_category, iresources_path + '?risk=' + @iresource.risk_category.to_s, class: 'groups'
 %h3
   Владелец:
   -if @iresource.user

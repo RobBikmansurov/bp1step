@@ -32,7 +32,9 @@
 
   - @iresources.each do |iresource|
     %tr
-      %td= iresource.level
+      %td
+        -if iresource.level?
+          = link_to iresource.level, iresources_path + '?level=' + iresource.level.to_s, class: 'groups'
       %td= link_to iresource.label, iresource
       %td= iresource.location
       %td= iresource.volume
@@ -40,8 +42,9 @@
         = iresource.access_read
         = iresource.access_write
         = iresource.access_other
-      %td=iresource.risk_category
-
+      %td
+        -if iresource.risk_category?
+          = link_to iresource.risk_category, iresources_path + '?risk=' + iresource.risk_category.to_s, class: 'groups'
       - if can? :manage, Iresource
         %td
           = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_iresource_path(iresource), class: 'button-img'
@@ -65,11 +68,11 @@
   -if iresource.level.to_s.empty?
     = link_to 'пусто', iresources_path + '?level='
   -else
-    = link_to iresource.level, iresources_path + '?level=' + iresource.level.to_s
+    = link_to iresource.level, iresources_path + '?level=' + iresource.level.to_s, class: 'groups'
 %br
 Категория риска:
 - Iresource.group(:risk_category).each do |iresource|
   -if iresource.risk_category.to_s.empty?
     = link_to 'пусто', iresources_path + '?risk='
   -else
-    = link_to iresource.risk_category, iresources_path + '?risk=' + iresource.risk_category.to_s
+    = link_to iresource.risk_category, iresources_path + '?risk=' + iresource.risk_category.to_s, class: 'groups'
