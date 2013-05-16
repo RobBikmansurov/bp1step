@@ -22,7 +22,7 @@
     .container
       #header.span-24.last
         %logo.span-7
-          =image_tag "logo.png", :alt => "Home"
+          =link_to image_tag("logo.png", :alt => "Home"), '/', class: 'button-img'
           %logo_text
             %span Бизнес-процессы - первый шаг
         #search.span-8

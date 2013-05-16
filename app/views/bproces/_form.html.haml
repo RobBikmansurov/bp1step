@@ -8,7 +8,8 @@
   = f.input :description
   = f.input :user_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Владелец процесса', :prompt => 'Владелец процесса'
   = f.association :parent, :collection => Bproce.all(:order => 'name'), :label => 'Родительский процесс', :include_blank => false, :prompt => 'Выберите родительский процесс из списка'
-  = f.input :tag_list, :label => 'Теги (через запятую)'
+  -if can? :manage_tag, @bproce
+    = f.input :tag_list, :label => 'Теги (через запятую)'
   = f.error :base
   %p
   -if can? :update, @bproce
