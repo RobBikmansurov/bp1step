@@ -20,12 +20,16 @@ describe Document do
       @docs1.name = "test_name"
       @docs1.bproce_id = 1
       @docs1.dlevel = 1
+      @docs1.part = 1
+      @docs1.place = 1
       @docs1.should_not be_valid
       @docs1.save
       @docs2 = Document.new
       @docs2.name = "test_name2"
       @docs2.bproce_id = 1
       @docs2.dlevel = 1
+      @docs2.part = 1
+      @docs2.place = 1
       @docs2.should be_valid
       @docs2.save
     end
@@ -51,6 +55,7 @@ describe Document do
       @doc.dlevel = 5
       @doc.should_not be_valid
     end
+
     it "" do  #validates :bproce_id, :presence => true # документ относится к процессу
     end
 

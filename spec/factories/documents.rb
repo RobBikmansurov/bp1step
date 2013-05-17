@@ -4,5 +4,7 @@ FactoryGirl.define do
     name 'document_name'
     bproce_id 1
     dlevel 1
+    place 'office1'
+    part 1
   end
 end
