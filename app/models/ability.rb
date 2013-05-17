@@ -15,16 +15,21 @@ class Ability
       if user.has_role? :user
         can :view_document, Document  # просматривать файл с документом
       end
-      if user.has_role? :admin
-        can :assign_roles, User   # администратор может изменять роли доступа пользователям
-        can :manage, [User, Workplace, Bapp, Iresource, Term]
-        can :manage_tag, [Bproce] # может редактировать теги процессов
+      if user.has_role? :author
+        can :view_document, Document  # просматривать файл с документом
+        can :edit_document, [Document]  # может брать исходник документа
       end
       if user.has_role? :owner  # владелец процесса
         can :manage, [Term]
       end
       if user.has_role? :analitic
         can :manage, [Bproce, Bapp, BusinessRole, Document, BproceBapp, Term]
+        can :manage_tag, [Bproce] # может редактировать теги процессов
+        can :edit_document, [Document]  # может брать исходник документа
+      end
+      if user.has_role? :admin
+        can :assign_roles, User   # администратор может изменять роли доступа пользователям
+        can :manage, [User, Workplace, Bapp, Iresource, Term]
         can :manage_tag, [Bproce] # может редактировать теги процессов
       end
       if user.has_role? :security
