@@ -12,9 +12,9 @@
     %b= @document.approved.strftime('%d.%m.%Y')
 %h3
   уровень документа:
-  %b= link_to @document.dlevel, documents_path + '?dlevel=' + @document.dlevel.to_s
+  %b= link_to @document.dlevel, documents_path + '?dlevel=' + @document.dlevel.to_s, class: 'groups'
   раздел документооборота:
-  %b= link_to @document.part, documents_path + '?part=' + @document.part.to_s
+  %b= link_to @document.part, documents_path + '?part=' + @document.part.to_s, class: 'groups'
 
 -if @document.bproce
   %h3
@@ -42,7 +42,7 @@
 %h3 Место хранения
 %h4
   оригинал:
-  %b= link_to @document.place, documents_path + '?place=' + @document.place
+  %b= link_to @document.place, documents_path + '?place=' + @document.place, class: 'groups'
 
 %h4
   Электронный документ:

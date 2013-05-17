@@ -68,4 +68,4 @@
   -if bapp.apptype.to_s.empty?
     = link_to 'пусто', bapps_path + '?apptype='
   -else
-    = link_to bapp.apptype, bapps_path + '?apptype=' + bapp.apptype.to_s
+    = link_to bapp.apptype, bapps_path + '?apptype=' + bapp.apptype.to_s, class: 'groups'
