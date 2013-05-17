@@ -16,6 +16,8 @@ class Document < ActiveRecord::Base
   validates :name, :length => {:minimum => 10, :maximum => 200}
   validates :bproce_id, :presence => true # документ относится к процессу
   validates :dlevel, :numericality => {:less_than => 5, :greater_than => 0}
+  validates :place, :presence => true   # документ должен иметь место хранения
+  validates :part, :presence => true   # документ должен иметь раздел документооборота
 
   include PublicActivity::Model
   tracked owner: Proc.new { |controller, model| controller.current_user }

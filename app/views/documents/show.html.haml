@@ -56,12 +56,16 @@
     =@document.document_file_updated_at.strftime('%d.%m.%Y %H:%M:%S')
     | MD5:
     =@document.document_file_fingerprint
+    -fname = File.basename(@document.document_file.path, File.extname(@document.document_file_file_name))
+    %br=fname
+    %br=@document.document_file.path
     - if can? :view_document, @document
       %br
       - if File.exist?(@document.document_file.path)
         смотреть:
         = link_to image_tag('action_go.gif', :alt => 'См.'), @document.document_file.url, class: 'button-img'
         редактировать:
+        = link_to image_tag('ico_text.gif', :alt => 'См.'), @document.document_file.url, class: 'button-img'
         удалить:
       - else
         файл отсутствует - 
