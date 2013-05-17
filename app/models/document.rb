@@ -6,9 +6,9 @@ class Document < ActiveRecord::Base
   # validates_inclusion_of :status, in: STATUSES
   attr_accessible :document_file
   has_attached_file :document_file,
-    :url  => "/store/:id.:basename.:extension",
-    :path => ":rails_root/public/store/:id.:basename.:extension",
-    :hash_secret => "BankPerm"
+    :url  => "/store/:id.:ymd.:basename.:extension",
+    :path => ":rails_root/public/store/:id.:ymd.:basename.:extension",
+    :hash_secret => "BankPermBP1Step"
 
   #validates_attachment :document_file, :content_type => ["application/pdf", "application/odf", "application/msword", "plain/text"]
   #validates_attachment :document_file, :content_type => { :content_type => "application/pdf" }
@@ -68,4 +68,11 @@ class Document < ActiveRecord::Base
       scoped
     end
   end
+
+  private
+  # интерполяция для paperclip - вернуть дату последней загрузки файла документа в формате ГГГГММДД
+  Paperclip.interpolates :ymd do |attachment, style|
+    attachment.instance_read(:updated_at).strftime('%Y%m%d')
+  end
+
 end

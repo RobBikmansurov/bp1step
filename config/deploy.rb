@@ -49,6 +49,8 @@ namespace :deploy do
     # run "ln -s #{shared_path}/config/unicorn.rb #{release_path}/config/unicorn.rb"
     run "rm -rf #{deploy_to}/current"
     run "ln -s -- #{release_path}/ #{deploy_to}/current"
+    run "cd #{deploy_to} && rm -rf #{deploy_to}/current/store"
+    run "cd #{deploy_to} && ln -s -- #{deploy_to}/shared/store/ #{deploy_to}/current/public/store"
     run "cd #{deploy_to} && rm -rf current/db"
     run "cd #{deploy_to} && ln -s -- db/ current/db"
     run "cd #{deploy_to} && rm -rf current/files"
