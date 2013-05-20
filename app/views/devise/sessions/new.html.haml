@@ -5,5 +5,5 @@
   -else
     = f.input :email, :required => true, :autofocus => true
   = f.input :password, :label => 'пароль', hint: 'Ваш пароль для входа в сеть'
-  = f.input :remember_me, :label => 'запомнить меня на этом компьютере',  :as => :boolean if devise_mapping.rememberable?
+  = f.input :remember_me, :label => 'запомнить меня на этом компьютере', as: :boolean, :boolean_style => :inline if devise_mapping.rememberable?
   = f.button :submit, "Войти"

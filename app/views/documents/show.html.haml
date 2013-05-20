@@ -78,8 +78,6 @@
         - if can? :edit_document, @document
           взять на редактирование:
           = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), @document.document_file.url, class: 'button-img'
-          \|
-          удалить:
 
       - else
         файл отсутствует - 
