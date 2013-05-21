@@ -23,7 +23,6 @@
     -#= f.input :document_file_file_name, disabled: true, :label => '&nbsp;'
     -#= f.input :document_file_file_size, disabled: true, :label => '&nbsp;'
     -#= f.input :document_file_updated_at, disabled: true, :label => '&nbsp;'
-    -delete_file = false
     = f.input :document_file, hint: 'заменить файл ' + @document.document_file_file_name + '  (' + @document.document_file_file_size.to_s + ' от ' + @document.document_file_updated_at.strftime("%d.%m.%Y %H:%M:%S)") 
     = f.input :delete_file, as: :boolean, label: 'Удалить файл', hint: 'удалить файл ' + @document.document_file_file_name, :boolean_style => :inline
   -else

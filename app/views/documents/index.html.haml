@@ -52,12 +52,12 @@
     %tr
       %td= document.part
       %td
-        -if document.document_file_file_name
+        -if document.document_file_file_name  #  если есть файл документа, загруженный через paperclip
           -if can? :view_document, document
-            - if File.exist?(document.document_file.path)
-              = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), document.document_file.url, class: 'button-img'
+            - if File.exist?(document.pdf_path)
+              = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), document.pdf_url, class: 'button-img'
         -else
-          -if !document.file_name.nil?
+          -if !document.file_name.nil?    # если есть ссылка на документ в старом формате
             -if can? :view_document, document
               -if File.exist?("files/" + document.file_name) && !document.file_name.empty?
                 = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Смотреть'), document_path(document)+'.pdf'
