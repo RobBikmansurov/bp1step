@@ -9,8 +9,13 @@ class Document < ActiveRecord::Base
   before_validation { document_file.clear if delete_file == '1' }
   has_attached_file :document_file,
     :url  => "/store/:id.:ymd.:basename.:extension",
+    :styles => { :pdf => "pdf" }, 
     :path => ":rails_root/public/store/:id.:ymd.:basename.:extension",
-    :hash_secret => "BankPermBP1Step"
+    :hash_secret => "BankPermBP1Step",
+    :processors => [:convert_to_pdf]
+
+  #after_document_file_post_process :copy_to_pdf
+  after_post_process :copy_to_pdf
 
   #validates_attachment :document_file, :content_type => ["application/pdf", "application/odf", "application/msword", "plain/text"]
   #validates_attachment :document_file, :content_type => { :content_type => "application/pdf" }
@@ -34,7 +39,8 @@ class Document < ActiveRecord::Base
   attr_protected :uploaded_file # чтобы не было ошибки при массовом сохранении из params
 
   # удалим из имени файла коды пробелов и заменим обратные слэши на прямые
-  before_save :file_name_sanityze
+  before_save [:file_name_sanityze]
+  after_save :copy_to_pdf
 
   def owner_name
     owner.try(:displayname)
@@ -59,6 +65,28 @@ class Document < ActiveRecord::Base
     return self.eplace
   end
 
+  def pdf_path
+    if self.document_file
+      extention = File.extname(self.document_file.path)
+      if extention != ".pdf"
+        pdf_path = self.document_file.path[0, self.document_file.path.length - extention.length] + '.pdf'  # путь к файлу PDF для просмотра
+      else
+        pdf_path = self.document_file.path
+      end
+    end
+  end
+
+  def pdf_url
+    if self.document_file
+      extention = File.extname(self.document_file.path)
+      if extention != ".pdf"
+        pdf_url = self.document_file.url.gsub(extention, ".pdf")  # url файла PDF для просмотра
+      else
+        pdf_url = self.document_file.url
+      end
+    end
+  end
+
   def shortname
     return name.split(//u)[0..50].join
   end
@@ -72,9 +100,25 @@ class Document < ActiveRecord::Base
   end
 
   private
+
   # интерполяция для paperclip - вернуть дату последней загрузки файла документа в формате ГГГГММДД
   Paperclip.interpolates :ymd do |attachment, style|
     attachment.instance_read(:updated_at).strftime('%Y%m%d')
+  end
+  
+  def copy_to_pdf
+    puts '-------copy_to_pdf: '
+    puts document_file
+    if valid?
+      if delete_file == '1' # файл удаляется
+      else
+        if File.exist?(document_file.path)
+          Paperclip.run('unoconv', "-f pdf #{self.document_file.path}")
+        else
+          puts "****** нету "
+        end
+      end
+    end
   end
 
 end

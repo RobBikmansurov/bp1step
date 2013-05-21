@@ -60,20 +60,13 @@
 
     -# автору документа разрешить взять исходник
     -# кому можно - смотреть PDF
-    -extention = File.extname(@document.document_file.path)
-    -pdf_path = @document.document_file.path
-    -pdf_url = @document.document_file.url
-    -if extention != ".pdf"
-      -pdf_path = @document.document_file.path[0, @document.document_file.path.length - extention.length] + '.pdf'  # путь к файлу PDF для просмотра
-      -pdf_url = @document.document_file.url.gsub(extention, ".pdf")  # url файла PDF для просмотра
-
 
     - if can? :view_document, @document
       %br
       - if File.exist?(@document.document_file.path)  # есть исходный файл документа
-        - if File.exist?(pdf_path)  # есть PDF для просмотра
+        - if File.exist?(@document.pdf_path)  # есть PDF для просмотра
           смотреть:
-          = link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), pdf_url, class: 'button-img'
+          = link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), @document.pdf_url, class: 'button-img'
         \|
         - if can? :edit_document, @document
           взять на редактирование:
@@ -86,10 +79,10 @@
 
   -else #оставим для совместимости с предыдущей схемой хранения документов
     файл не загружен
-    -if !@document.file_name.nil?
+    -if !@document.eplace.nil?
       -if can? :view_document, @document
         -if File.exist?("files/" + @document.file_name) && !@document.file_name.empty?
-          есть старая информация - 
+          есть файл в старом хранилище - 
           = link_to image_tag('ico_text.gif', :alt => 'См.'), document_path(@document)+'.pdf'
 
 %p

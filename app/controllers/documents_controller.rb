@@ -58,14 +58,6 @@ class DocumentsController < ApplicationController
   end
 
   def update
-    #user_id = @document.owner_id
-    #uploaded_file = params[:document][:document_file] # информация о загруженном файле
-    #logger.debug "owner_id= #{@document.owner_id}"
-    #if !uploaded_file.nil?
-    #  logger.debug "uploaded_file = #{uploaded_file.inspect}"
-    #  logger.debug "headers = #{uploaded_file.headers}"
-    #  params[:document][:eplace] = uploaded_file.original_filename
-    #end
     flash[:notice] = "Successfully updated document."  if @document.update_attributes(params[:document])
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
     respond_with(@document)
