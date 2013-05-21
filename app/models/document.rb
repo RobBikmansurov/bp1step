@@ -107,15 +107,15 @@ class Document < ActiveRecord::Base
   end
   
   def copy_to_pdf
-    puts '-------copy_to_pdf: '
-    puts document_file
     if valid?
       if delete_file == '1' # файл удаляется
       else
-        if File.exist?(document_file.path)
-          Paperclip.run('unoconv', "-f pdf #{self.document_file.path}")
-        else
-          puts "****** нету "
+        if self.document_file_file_name?
+          if File.exist?(document_file.path)
+            Paperclip.run('unoconv', "-f pdf #{self.document_file.path}")
+          else
+            puts "****** file not found " + self.document_file_file_name.to_s
+          end
         end
       end
     end
