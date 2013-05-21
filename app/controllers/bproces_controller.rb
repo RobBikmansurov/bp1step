@@ -168,7 +168,7 @@ private
         end
       end
       report_docs(@bproce.documents, r, false) # сформировать таблицу документов процесса
-      report_roles(@bproce, r, true) # сформировать таблицу ролей
+      report_roles(@bproce.business_roles, r, true) # сформировать таблицу ролей
       report_workplaces(@bproce, r, true) # сформировать таблицу рабочих мест
       report_bapps(@bproce, r, true) # сформировать таблицу приложений процесса
       report_iresources(@bproce, r, true) # сформировать таблицу ресурсов процесса
@@ -218,7 +218,7 @@ private
       end
       
       report_docs(@bproce.documents, r, false) # сформировать таблицу документов процесса
-      report_roles(@bproce, r, false) # сформировать таблицу ролей
+      report_roles(@bproce.business_roles, r, false) # сформировать таблицу ролей
       report_workplaces(@bproce, r, false) # сформировать таблицу рабочих мест
       report_bapps(@bproce, r, false) # сформировать таблицу приложений процесса
       report_iresources(@bproce, r, false) # сформировать таблицу ресурсов процесса
@@ -262,16 +262,15 @@ private
   end
 
 
-  def report_roles(bproce, r, header)
+  def report_roles(roles, r, header)
     rr = 0 # порядковый номер строки для ролей
-    @roles = bproce.business_roles
-    r.add_table("TABLE_ROLES", @roles, :header => header, :skip_if_empty => true) do |t|
-      if @roles.count > 0  # если ролей нет - пустая таблица не будет выведена
+    r.add_table("TABLE_ROLES", roles, :header => header, :skip_if_empty => true) do |t|
+      if roles.count > 0  # если ролей нет - пустая таблица не будет выведена
         t.add_column(:rr) do |nn| # порядковый номер строки таблицы
           rr += 1
         end
         t.add_column(:nr, :name)
-        t.add_column(:description)
+        t.add_column(:rdescription, :description)
       end
     end
   end
@@ -287,7 +286,7 @@ private
         t.add_column(:nw, :name)
         t.add_column(:designation)
         t.add_column(:loca, :location)
-        t.add_column(:description)
+        t.add_column(:wdescription,:description)
       end
     end
   end
@@ -324,7 +323,7 @@ private
           pp += 1
         end
         t.add_column(:na, :name)
-        t.add_column(:description)
+        t.add_column(:adescription, :description)
         t.add_column(:purpose)
       end
     end
