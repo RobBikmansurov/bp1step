@@ -316,15 +316,19 @@ private
 
   def report_bapps(bproce, r, header) # сформировать таблицу приложений процесса
     pp = 0 # порядковый номер строки для приложений
-    @bapps = bproce.bapps
+    @bapps = bproce.bproce_bapps
     r.add_table("TABLE_BAPPS", @bapps, :header => header, :skip_if_empty => true) do |t|
       if @bapps.count > 0  # если приложений нет - пустая таблица не будет выведена
         t.add_column(:pp) do |nn| # порядковый номер строки таблицы
           pp += 1
         end
-        t.add_column(:na, :name)
-        t.add_column(:adescription, :description)
-        t.add_column(:purpose)
+        t.add_column(:na) do |ba| # наименование прилоджения
+          na = ba.bapp.name
+        end
+        t.add_column(:adescription) do |ba|
+          ades = ba.bapp.description
+        end
+        t.add_column(:apurpose)
       end
     end
   end
