@@ -22,7 +22,7 @@ class Iresource < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('label LIKE ? or location LIKE ?', "%#{search}%", "%#{search}%")
+      where('label LIKE ? or location LIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search}")
     else
       scoped
     end

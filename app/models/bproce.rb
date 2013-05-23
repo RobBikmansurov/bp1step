@@ -35,8 +35,8 @@ class Bproce < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('shortname LIKE ? or name LIKE ? or fullname LIKE ?',
-            "%#{search}%", "%#{search}%", "%#{search}%")
+      where('shortname LIKE ? or name LIKE ? or fullname LIKE ? or id = ?',
+            "%#{search}%", "%#{search}%", "%#{search}%", "#{search}")
     else
       scoped
     end

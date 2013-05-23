@@ -15,7 +15,7 @@ class Bapp < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('name LIKE ? or description LIKE ?', "%#{search}%", "%#{search}%")
+      where('name LIKE ? or description LIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search}")
     else
       scoped
     end
