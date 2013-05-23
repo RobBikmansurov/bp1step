@@ -59,8 +59,8 @@ class User < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('username LIKE ? or displayname LIKE ? or firstname LIKE ?',
-            "%#{search}%", "%#{search}%", "%#{search}%")
+      where('username LIKE ? or displayname LIKE ? or firstname LIKE ? or id = ?',
+            "%#{search}%", "%#{search}%", "%#{search}%", "#{search}")
     else
       scoped
     end

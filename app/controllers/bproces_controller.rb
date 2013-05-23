@@ -20,10 +20,10 @@ class BprocesController < ApplicationController
     else
       if params[:tag].present?
         #@bproces = Bproce.tagged_with(params[:tag]).nested_set.search(params[:search]).select('bproces.id, shortname, name as title, parent_id').all
-        @bproces = Bproce.tagged_with(params[:tag]).nested_set.search(params[:search])
+        @bproces = Bproce.tagged_with(params[:tag]).search(params[:search])
       else
         #@bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
-        @bproces = Bproce.nested_set.search(params[:search])
+        @bproces = Bproce.search(params[:search])
       end
     end
     respond_to do |format|
@@ -98,7 +98,7 @@ private
   def get_bproce
     if params[:search].present? # это поиск
       #@bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
-      @bproces = Bproce.search(params[:search]).nested_set.select('id, shortname, name as title, parent_id').all
+      @bproces = Bproce.search(params[:search])
       render :index # покажем список найденного
     else
       @bproce = params[:id].present? ? Bproce.find(params[:id]) : Bproce.new
