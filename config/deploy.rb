@@ -49,12 +49,12 @@ namespace :deploy do
     # run "ln -s #{shared_path}/config/unicorn.rb #{release_path}/config/unicorn.rb"
     run "rm -rf #{deploy_to}/current"
     run "ln -s -- #{release_path}/ #{deploy_to}/current"
-    run "cd #{deploy_to} && rm -rf #{deploy_to}/current/public/store"
-    run "cd #{deploy_to} && ln -s -- #{deploy_to}/shared/store/ #{deploy_to}/current/public/store"
-    run "cd #{deploy_to} && rm -rf current/db"
-    run "cd #{deploy_to} && ln -s -- db/ current/db"
-    run "cd #{deploy_to} && rm -rf current/files"
-    run "cd #{deploy_to} && ln -s -- files/ current/files"
+    run "rm -rf #{deploy_to}/current/public/store"
+    run "ln -s -- #{deploy_to}/shared/store/ #{deploy_to}/current/public/store"
+    run "rm -rf #{deploy_to}/current/db"
+    run "ln -s -- #{deploy_to}/db/ #{deploy_to}/current/db"
+    run "rm -rf #{deploy_to}/current/files"
+    run "ln -s -- #{deploy_to}/files/ #{deploy_to}/current/files"
     run "cp #{deploy_to}/config/ldap.yml #{deploy_to}/current/config/ldap.yml"
   end
 
