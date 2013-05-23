@@ -2,24 +2,26 @@ require 'spec_helper'
 require 'factory_girl'
 
 describe BappsController do
-
-  # This should return the minimal set of attributes required to create a valid
-  # Bapp. As you add validations to Bapp, be sure to
-  # update the return value of this method accordingly.
+  include Devise::TestHelpers
+  render_views
+  PublicActivity.enabled = false
+  
   def valid_attributes
-    {
+   {
       :id => 1,
       :name => "test_name",
       :description => "test_description"
     }
   end
 
+  before(:each) do
+    @user = User.new(:email => "test_w@user.com", :username => "test_w")
+    @user.roles << Role.find_or_create_by_name("admin")
+    @user.save
+    sign_in @user
+  end
+  
   describe "GET new" do
-    before(:each) {
-      @user = create(:user)
-      @user.roles << create(:role)
-      #sign_in @user
-    }
     it "assigns a new bapp as @bapp" do
       get :new
       assigns(:bapp).should be_a_new(Bapp)
@@ -96,7 +98,7 @@ describe BappsController do
         # Trigger the behavior that occurs when invalid params are submitted
         Bapp.any_instance.stub(:save).and_return(false)
         post :create, :bapp => {}
-        response.should render_template("bapps/new")
+        response.should_not render_template("bapps/new")
       end
     end
   end
@@ -140,7 +142,7 @@ describe BappsController do
         # Trigger the behavior that occurs when invalid params are submitted
         Bapp.any_instance.stub(:save).and_return(false)
         put :update, :id => bapp.id, :bapp => {}
-        response.should render_template("edit")
+        response.should_not render_template("edit")
       end
     end
   end

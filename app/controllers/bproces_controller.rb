@@ -323,10 +323,10 @@ private
           pp += 1
         end
         t.add_column(:na) do |ba| # наименование прилоджения
-          na = ba.bapp.name
+          na = ba.bapp.name if ba.bapp
         end
         t.add_column(:adescription) do |ba|
-          ades = ba.bapp.description
+          ades = ba.bapp.description if ba.bapp
         end
         t.add_column(:apurpose)
       end
