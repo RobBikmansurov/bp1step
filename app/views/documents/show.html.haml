@@ -1,4 +1,7 @@
 -title "Документ " + truncate(@document.name, length: 30)
+.id_
+  \#
+  = @document.id
 %h2= @document.name 
 %h3 Описание:
 = @document.description
