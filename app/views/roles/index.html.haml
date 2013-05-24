@@ -1,27 +1,33 @@
--title "Каталог Ролей"
-%h1 Каталог Ролей
+-title "Роли доступа" 
+%h1
+  Роли доступа
+  -if params[:search].present?
+    [ 
+    = params[:search]
+    ]
 
 %table
   %tr
-    %th= sortable "name", "Роль"
-    %th= sortable "bproce_id", "Процесс"
-    %th= sortable "description", "Назначение"
+    %th= sortable "id", "#"
+    %th= sortable "name", "Наименование"
+    %th= sortable "description", "Описание"
     %th
-    %th
-  
+    - if can? :destroy, Role
+      %th
 
-  -@roles.each do |ro|
+  - @roles.each do |role|
     %tr
-      %td= link_to ro.name, edit_role_path(ro)
-      %td
-        = link_to ro.bproce.name, edit_bproce_path(ro.bproce_id) if !ro.bproce.nil?
-      %td= ro.description
-      %td= link_to 'Show', ro
-      %td
-        = link_to 'Destroy', ro, :confirm => 'Are you sure?', :method => :delete
-.apple_pagination
-  -#.page_info
-    -#    = page_entries_info @roles
-  = will_paginate @roles 
+      %td= role.id
+      %td= link_to role.name, role
+      %td= role.description
+      - if can? :destroy, role
+        %td
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), term, confirm: 'Роль доступа ' + term.name + "\nДействительно хотите удалить?", :method => 'delete', class: 'button-img'
 
-= link_to "Добавить новую роль" , new_role_path, :class => 'button'
+-if ! params[:all].present? # если список всех терминов - отключить постраничый вывод
+  .apple_pagination
+    = will_paginate @roles 
+
+- if can? :manage, Role
+  -#= link_to 'Каталог', terms_path + '.pdf?all=1', :class => 'button'
+  = link_to 'Добавить Роль доступа', new_role_path, :class => 'button'

@@ -10,6 +10,6 @@ require 'spec_helper'
 #     end
 #   end
 # end
-describe BproceRolesHelper do
-  pending "add some examples to (or delete) #{__FILE__}"
-end
+#describe BproceRolesHelper do
+#  pending "add some examples to (or delete) #{__FILE__}"
+#end

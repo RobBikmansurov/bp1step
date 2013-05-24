@@ -24,7 +24,11 @@ describe IresourcesController do
   # Iresource. As you add validations to Iresource, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    { "level" => "MyString" }
+    {
+      level: 'level',
+      label: "resource",
+      location: '\\location'
+    }
   end
 
   # This should return the minimal set of values that should be in the session

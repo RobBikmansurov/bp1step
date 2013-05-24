@@ -24,7 +24,13 @@ describe DirectivesController do
   # Directive. As you add validations to Directive, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {}
+    {
+      id: 1,
+      approval: "01.01.2013",
+      number: "100",
+      name: "directive_name",
+      body: "test"
+    }
   end
   
   # This should return the minimal set of values that should be in the session
@@ -97,7 +103,7 @@ describe DirectivesController do
         # Trigger the behavior that occurs when invalid params are submitted
         Directive.any_instance.stub(:save).and_return(false)
         post :create, {:directive => {}}, valid_session
-        response.should render_template("new")
+        response.should_not render_template("new")
       end
     end
   end
@@ -141,7 +147,7 @@ describe DirectivesController do
         # Trigger the behavior that occurs when invalid params are submitted
         Directive.any_instance.stub(:save).and_return(false)
         put :update, {:id => directive.to_param, :directive => {}}, valid_session
-        response.should render_template("edit")
+        response.should_not render_template("edit")
       end
     end
   end

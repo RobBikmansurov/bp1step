@@ -6,11 +6,11 @@ class BusinessRolesController < ApplicationController
 
   def index
     if params[:all].present?
-      @broles = BusinessRole.order(sort_column + ' ' + sort_direction)
+      @business_roles = BusinessRole.order(sort_column + ' ' + sort_direction)
     else
-      @broles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      @business_roles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
     end
-    @broles = @broles.find(:all, :include => :users)
+    @business_roles = @business_roles.find(:all, :include => :users)
     respond_to do |format|
       format.html
       format.odt { print }

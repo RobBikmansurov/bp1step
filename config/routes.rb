@@ -22,8 +22,6 @@ BPDoc::Application.routes.draw do
   resources :bproce_business_roles, :only => [:show]
   resources :bproce_iresources  #, :only => [:show]
   resources :bproce_bapps, :only => [:new, :create, :destroy, :show, :edit, :update]
-  get 'tags/:tag', to: 'bproces#index', as: :tag
-  get 'tags', to: 'bproces#index'
   resources :bproces do
     resources :bapps
     collection do
@@ -31,11 +29,13 @@ BPDoc::Application.routes.draw do
       post :rebuild
     end
   end
+  get 'tags/:tag', to: 'bproces#index', as: :tag
+  get 'tags', to: 'bproces#index'
   resources :business_roles
   resources :categories
   resources :documents, :bapps
   resources :iresources
-  resources :roles
+  resources :roles, only: [:index, :show]
   resources :terms
   resources :user_workplaces
   resources :user_business_roles, :only => [:new, :create, :destroy]
