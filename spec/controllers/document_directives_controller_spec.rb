@@ -19,12 +19,16 @@ require 'spec_helper'
 # that an instance is receiving a specific message.
 
 describe DocumentDirectivesController do
-
+  
   # This should return the minimal set of attributes required to create a valid
   # DocumentDirective. As you add validations to DocumentDirective, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {}
+    {
+      id: 1,
+      directive_id: 1,
+      document_id: 2
+    }
   end
   
   # This should return the minimal set of values that should be in the session
