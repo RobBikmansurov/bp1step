@@ -4,6 +4,6 @@ class AddEplaceToDocuments < ActiveRecord::Migration
     add_column :documents, :approveorgan, :string
     add_column :documents, :dlevel, :integer
 
+    add_index :documents, :id,                :unique => true
   end
-  add_index :documents, :id,                :unique => true
 end

@@ -6,6 +6,6 @@ class AddAttachmentDocumentFileToDocuments < ActiveRecord::Migration
   end
 
   def self.down
-    drop_attached_file :documents, :document_file
+    remove_attachment :documents, :document_file
   end
 end
