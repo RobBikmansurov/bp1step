@@ -31,5 +31,9 @@ describe DocumentDirectivesController do
       delete("/document_directives/1").should route_to("document_directives#destroy", :id => "1")
     end
 
+    it "routes to documents for directive" do
+      get("/directives/1/documents").should route_to("documents#index", directive_id: "1" )
+    end
+
   end
 end
