@@ -11,5 +11,8 @@ require 'spec_helper'
 #   end
 # end
 describe DocumentDirectivesHelper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "#format_content" do
+    it "truncate long string" do
+    end
+  end
 end
