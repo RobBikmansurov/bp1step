@@ -20,7 +20,7 @@ BPDoc::Application.routes.draw do
   resources :bproce_workplaces, :only => [:new, :create, :destroy, :show]
   resources :bproce_documents, :only => [:show]
   resources :bproce_business_roles, :only => [:show]
-  resources :bproce_iresources  #, :only => [:show]
+  resources :bproce_iresources, :only => [:new, :create, :destroy, :show, :edit, :update]
   resources :bproce_bapps, :only => [:new, :create, :destroy, :show, :edit, :update]
   resources :bproces do
     resources :bapps

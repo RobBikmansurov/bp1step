@@ -46,10 +46,27 @@
   Владелец:
   -if @iresource.user
     = link_to @iresource.user.displayname, user_path(@iresource.user)
+
 -if @iresource.bproces.count > 0
   %h3 Процессы, в которых используется:
-  -@iresource.bproces.each do |bp|
-    = link_to bp.name, bproce_path(bp)
+  %table
+    %tr
+      %th Процесс:
+      %th Назначение ресурса в процессе
+      %th
+    -@iresource.bproce_iresources.each do |bproce_iresource|
+      %tr
+        %td
+          = link_to bproce_iresource.bproce.name, bproce_path(bproce_iresource.bproce)
+        %td
+          -if bproce_iresource.rpurpose.blank?
+            = link_to 'не определено', edit_bproce_iresource_path(bproce_iresource)
+          -else
+            = link_to bproce_iresource.rpurpose, bproce_iresource_path(bproce_iresource)
+        %td
+
+
+
 
 %p
 -if can? :update, Iresource

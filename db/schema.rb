@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130514104829) do
+ActiveRecord::Schema.define(:version => 20130524122022) do
 
   create_table "bapps", :force => true do |t|
     t.string   "name"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(:version => 20130514104829) do
     t.integer  "iresource_id"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+    t.text     "rpurpose"
   end
 
   add_index "bproce_iresources", ["bproce_id"], :name => "index_bproce_iresources_on_bproce_id"
