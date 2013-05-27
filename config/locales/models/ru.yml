@@ -38,6 +38,10 @@ ru:
         description: Краткое описание
         parent_id: Родительский процесс
         user_id: Владелец процесса
+      bproce_bapp:
+        apurpose: Назначение в процессе
+      bproce_iresource:
+        rpurpose: Назначение в процессе
       directive:
         title: Тип директивы
         number: Номер
@@ -90,8 +94,6 @@ ru:
         description: Описание
         note: Примечание
         source: Источник
-      bproce_bapp:
-        apurpose: Назначение в процессе
       user_business_role:
         note: Примечание
         date_from: Дата начала
