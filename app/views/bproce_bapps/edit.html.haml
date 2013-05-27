@@ -2,6 +2,9 @@
 %h3
   Приложение
   = link_to @bproce_bapp.bapp.name, bapp_path(@bproce_bapp.bapp)
+%h4
+  Описание:
+  = @bproce_bapp.bapp.description
 %h3
   используется в процессе
   = link_to @bproce_bapp.bproce.name, bproce_path(@bproce_bapp.bproce)
