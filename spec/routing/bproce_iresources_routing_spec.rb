@@ -3,10 +3,6 @@ require "spec_helper"
 describe BproceIresourcesController do
   describe "routing" do
 
-    it "routes to #index" do
-      get("/bproce_iresources").should route_to("bproce_iresources#index")
-    end
-
     it "routes to #new" do
       get("/bproce_iresources/new").should route_to("bproce_iresources#new")
     end
