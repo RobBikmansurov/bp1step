@@ -335,15 +335,25 @@ private
 
   def report_iresources(bproce, r, header) # сформировать таблицу ресурсов процесса
     ir = 0 # порядковый номер строки для информационных ресурсов
-    @iresources = bproce.iresource
+    @iresources = bproce.bproce_iresource
     r.add_table("IRESOURCES", @iresources, :header => header, :skip_if_empty => true) do |t|
       if @iresources.count > 0  # если инф.ресурсов нет - пустая таблица не будет выведена
         t.add_column(:ir) do |nn| # порядковый номер строки таблицы
           ir += 1
         end
-        t.add_column(:label)
-        t.add_column(:location)
-        t.add_column(:note)
+        t.add_column(:label) do |ir|
+          lab = ir.iresource.label
+        end
+        t.add_column(:location) do |ir|
+          loc =  ir.iresource.location
+        end
+        t.add_column(:alocation) do |ir|
+          loc =  ir.iresource.alocation
+        end
+        t.add_column(:note) do |ir|
+          note = ir.iresource.note
+        end
+        t.add_column(:rpurpose)
       end
     end
   end
