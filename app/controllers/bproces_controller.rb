@@ -16,14 +16,15 @@ class BprocesController < ApplicationController
   
   def index
     if params[:all].present?
-      @bproces = Bproce.order(sort_column + ' ' + sort_direction)
+      #@bproces = Bproce.order(sort_column + ' ' + sort_direction)
+      @bproces = Bproce.nested_set
     else
       if params[:tag].present?
         #@bproces = Bproce.tagged_with(params[:tag]).nested_set.search(params[:search]).select('bproces.id, shortname, name as title, parent_id').all
-        @bproces = Bproce.tagged_with(params[:tag]).search(params[:search])
+        @bproces = Bproce.nested_set.tagged_with(params[:tag]).search(params[:search])
       else
         #@bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
-        @bproces = Bproce.search(params[:search])
+        @bproces = Bproce.nested_set.search(params[:search])
       end
     end
     respond_to do |format|
