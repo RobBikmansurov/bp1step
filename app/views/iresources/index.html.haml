@@ -21,8 +21,8 @@
   %tr
     %th Тип
     %th= sortable "label", "Метка"
-    %th URI
-    %th Объем, GB
+    %th= sortable "location", "URI"
+    %th= sortable "volume", "Объем, GB"
     %th Права доступа
     %th Категория
     - if can? :manage, Iresource
