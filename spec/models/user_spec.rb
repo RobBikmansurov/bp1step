@@ -6,6 +6,12 @@ describe User do
   before(:each) do
     @user = FactoryGirl.build(:user)
   end
+  context 'mass assignment' do
+    it { should allow_mass_assignment_of(:username) }
+    it { should allow_mass_assignment_of(:email) }
+  end
+
+
   it "should be valid" do
     @user.should be_valid
   end
