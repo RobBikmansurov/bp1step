@@ -21,6 +21,8 @@
     =bp.shortname
     ]
   = link_to bp.name, bproce_path(bp)
+  -if bp.user
+    = link_to bp.user.displayname, user_path(bp.user)
   %br
 %h3
   %b
