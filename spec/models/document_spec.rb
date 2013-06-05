@@ -10,6 +10,7 @@ describe Document do
     it { should validate_presence_of(:bproce_id) }
     it { should validate_presence_of(:place) }
     it { should validate_presence_of(:part) }
+    it { should validate_presence_of(:owner_id) }
 
 
    it "it not valid if dlevel < 1 or > 4" do #validates :dlevel, :numericality => {:less_than => 5, :greater_than => 0}

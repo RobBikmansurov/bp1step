@@ -6,5 +6,6 @@ FactoryGirl.define do
     dlevel 1
     place 'office1'
     part 1
+    owner_id 1
   end
 end
