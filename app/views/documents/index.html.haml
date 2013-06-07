@@ -36,7 +36,7 @@
 
 %table
   %tr
-    %th
+    %th #
     %th= sortable "name", "Наименование"
     -#%th= sortable "description", "Описание"
     -#    %th Имя файла
@@ -50,7 +50,7 @@
     
   - @documents.each do |document|
     %tr
-      %td= document.part
+      %td= document.id
       %td
         -if document.document_file_file_name  #  если есть файл документа, загруженный через paperclip
           -if can? :view_document, document
