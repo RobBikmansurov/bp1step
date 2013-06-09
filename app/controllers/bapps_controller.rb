@@ -21,7 +21,7 @@ class BappsController < ApplicationController
     end
     respond_to do |format|
       format.html
-      format.pdf { print }
+      format.odt { list }
     end
   end
   
@@ -77,7 +77,7 @@ private
     end
   end
 
-  def print
+  def list
     report = ODFReport::Report.new("reports/bapps.odt") do |r|
       nn = 0
       r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')

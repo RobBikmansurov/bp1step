@@ -1,6 +1,6 @@
 class WorkplacesController < ApplicationController
   respond_to :html
-  respond_to :pdf, :xml, :json, :only => [:index, :switch]
+  respond_to :pdf, :odt, :xml, :json, :only => [:index, :switch]
   helper_method :sort_column, :sort_direction
   before_filter :get_workplace, :except => [:index, :switch]
   #load_and_authorize_resource
@@ -21,7 +21,7 @@ class WorkplacesController < ApplicationController
     end
     respond_to do |format|
       format.html
-      format.pdf { print }
+      format.odt { print }
       format.json { render json: @workplaces, except: [:description, :name, :created_at, :updated_at] }
     end
   end

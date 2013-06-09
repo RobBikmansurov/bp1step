@@ -69,7 +69,7 @@ private
     report = ODFReport::Report.new("reports/broles.odt") do |r|
       nn = 0
       r.add_field "REPORT_DATE", Date.today
-      r.add_table("TABLE_01", @broles, :header=>true) do |t|
+      r.add_table("TABLE_01", @business_roles, :header=>true) do |t|
         t.add_column(:nn) do |ca|
           nn += 1
           "#{nn}."
