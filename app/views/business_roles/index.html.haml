@@ -44,5 +44,8 @@
 %p
 - if can? :destroy, BusinessRole
   = link_to 'Каталог', business_roles_path + '.odt?all=1', :class => 'button'
-  = link_to 'ODT', business_roles_path + '.odt', :class => 'button'
+  -if request.query_string
+    = link_to 'Список', business_roles_path + '.odt?' + request.query_string, :class => 'button'
+  -else
+    = link_to 'Список', business_roles_path + '.odt', :class => 'button'
   = link_to "Добавить новую роль" , new_business_role_path, :class => 'button'

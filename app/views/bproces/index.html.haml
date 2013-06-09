@@ -45,7 +45,9 @@
 %p
 - if can? :create, @bproces.first
   = link_to 'Каталог', bproces_path+'.pdf?all=1', :class => 'button'
-  = link_to 'ODT', bproces_path+'.pdf', :class => 'button'
+  - format = '.pdf'
+  - format << '?' + request.query_string if request.query_string
+  = link_to 'Список', bproces_path + format, :class => 'button'
   = link_to "Добавить новый процесс" , new_bproce_path, :class => 'button'
 %p
 Теги:
