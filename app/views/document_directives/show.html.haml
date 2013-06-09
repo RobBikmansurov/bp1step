@@ -1,16 +1,9 @@
-%p#notice= notice
-
-= @document_directive.inspect
-
 %p
-  %b Document:
-  = @document_directive.document.shortname
+-#= @document_directive.inspect
+= render 'show'
 %p
-  %b Directive:
-  -#= @document_directive.directive.shortname
-%p
-  %b Note:
+  %b Примечание:
   = @document_directive.note
 %p
 = link_to 'Edit', edit_document_directive_path(@document_directive), :class => 'button'
-= link_to 'Back', document_directives_path, :class => 'button'
+-#= link_to 'Back', document_directives_path, :class => 'button'

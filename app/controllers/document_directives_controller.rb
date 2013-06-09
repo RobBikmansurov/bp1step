@@ -3,7 +3,7 @@ class DocumentDirectivesController < ApplicationController
   before_filter :get_document_directive, :except => :index
 
   def index
-    @document_directives = DocumentDirective.all
+    @document_directives = DocumentDirective.paginate(:per_page => 10, :page => params[:page])
   end
 
   def show
