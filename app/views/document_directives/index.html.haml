@@ -1,4 +1,4 @@
-%h1 Listing document_directives
+%h1 Список соответствия Документов и Директив
 
 %table
   %tr
@@ -17,7 +17,9 @@
       %td= document_directive.note
       %td= link_to 'Show', document_directive
       %td= link_to 'Edit', edit_document_directive_path(document_directive)
-      %td= link_to 'Destroy', document_directive, :confirm => 'Are you sure?', :method => :delete
+
+.apple_pagination
+  = will_paginate @directives
 
 %p
 = link_to 'New Document directive', new_document_directive_path, :class => 'button'
