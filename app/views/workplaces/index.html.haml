@@ -62,8 +62,13 @@
     = will_paginate @workplaces 
 
 - if can? :destroy, Workplace
-  = link_to 'Каталог', workplaces_path + '.pdf?all=1', :class => 'button'
-  = link_to 'ODT', workplaces_path + '.pdf', :class => 'button'
+  = link_to 'Каталог', workplaces_path + '.odt?all=1', :class => 'button'
+
+  -if request.query_string
+    = link_to 'Список', workplaces_path + '.odt?' + request.query_string, :class => 'button'
+  -else
+    = link_to 'Список', workplaces_path + '.odt', :class => 'button'
+
   = link_to 'Подключения', workplaces_path + '/switch', :class => 'button'
   -if params[:location].present?
     = link_to 'Добавить Рабочее место', new_workplace_path + '?location=' + params[:location], :class => 'button'
