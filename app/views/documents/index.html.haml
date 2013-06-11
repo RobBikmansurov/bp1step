@@ -75,7 +75,10 @@
 %p
 - if can? :create, Document
   = link_to 'Каталог', documents_path(@document)+'.odt?all=1', :class => 'button'
-  = link_to 'ODT', documents_path(@document)+'.odt', :class => 'button'
+  -if request.query_string
+    = link_to 'Список', documents_path(@document) + '.odt?' + request.query_string, :class => 'button'
+  -else
+    = link_to 'Список', documents_path(@document) + '.odt', :class => 'button'
   = link_to 'Добавить новый документ', new_document_path, :class => 'button'
 %p
 %br

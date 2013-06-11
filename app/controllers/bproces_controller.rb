@@ -120,8 +120,11 @@ private
             bproce.user.displayname
           end
         end
-        t.add_column(:name)
+        t.add_column(:name) do |bp|   # уровень вложенности процессов вместо наименования
+          name = '..' * (bp.depth)
+        end
         t.add_column(:fullname)
+        t.add_column(:id)
         t.add_column(:goal)
       end
       r.add_field "USER_POSITION", current_user.position
