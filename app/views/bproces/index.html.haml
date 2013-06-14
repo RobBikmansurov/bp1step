@@ -9,6 +9,10 @@
     -if params[:tag].present?
       %sup
         = params[:tag]
+    -else
+      -if params[:user].present?
+        владелец
+        = link_to @user.displayname, user_path(@user)
 %table
   %tr
     %th= "[Обозначение] Наименование процесса"
