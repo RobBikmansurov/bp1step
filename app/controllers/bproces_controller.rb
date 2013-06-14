@@ -23,8 +23,13 @@ class BprocesController < ApplicationController
         #@bproces = Bproce.tagged_with(params[:tag]).nested_set.search(params[:search]).select('bproces.id, shortname, name as title, parent_id').all
         @bproces = Bproce.nested_set.tagged_with(params[:tag]).search(params[:search])
       else
-        #@bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
-        @bproces = Bproce.nested_set.search(params[:search])
+        if params[:user].present? #  список процессов пользователя
+          @user = User.find(params[:user])
+          @bproces = Bproce.nested_set.where(:user_id => params[:user])
+        else
+          #@bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+          @bproces = Bproce.nested_set.search(params[:search])
+        end
       end
     end
     respond_to do |format|
