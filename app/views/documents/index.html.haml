@@ -22,12 +22,17 @@
             Список Документов в статусе
             = params[:status]
         -else
-          %h1
-            Каталог Документов
-            -if params[:search].present?
-              [ 
-              = params[:search]
-              ]
+          -if params[:user]
+            %h2
+              Документы владельца
+              = link_to @user.displayname, user_path(@user)
+          -else
+            %h1
+              Каталог Документов
+              -if params[:search].present?
+                [ 
+                = params[:search]
+                ]
 -else
   -title "Список внутренних документов банка"
   %h2
