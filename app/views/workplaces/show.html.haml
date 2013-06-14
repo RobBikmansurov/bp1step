@@ -43,6 +43,12 @@
     = user_workplace.date_to
     )
 
+.info_
+  создан
+  = @workplace.created_at.strftime('%d.%m.%Y %H:%M:%S') if @workplace.created_at
+  %br
+  изменен
+  = @workplace.updated_at.strftime('%d.%m.%Y %H:%M:%S') if @workplace.updated_at
 %p
 - if can? :update, Workplace
   = link_to 'Edit', edit_workplace_path(@workplace), :class => 'button'

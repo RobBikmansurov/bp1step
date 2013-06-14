@@ -159,3 +159,12 @@ a.groups:hover {
   background-color: #000;
   border-radius: 3px;
 }
+
+.info_ {
+  position:relative;
+  text-align: right;
+  top:0.5em;
+  float:right;
+  z-index: 999;
+  color: #999;
+}

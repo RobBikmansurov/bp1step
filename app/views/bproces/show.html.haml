@@ -85,8 +85,13 @@
     В процессе используются Ресурсы:
   -@bproce.iresource.order(:label).each do |iresource|
     = link_to iresource.label, iresource_path(iresource)
-
 %p
+.info_
+  создан
+  = @bproce.created_at.strftime('%d.%m.%Y %H:%M:%S') if @bproce.created_at
+  %br
+  изменен
+  = @bproce.updated_at.strftime('%d.%m.%Y %H:%M:%S') if @bproce.updated_at
 -if can? :update, @bproce
   = link_to 'Edit', edit_bproce_path(@bproce), :class => 'button'
 = link_to 'Back', bproces_path, :class => 'button'
