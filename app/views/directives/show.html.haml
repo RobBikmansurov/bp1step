@@ -21,7 +21,17 @@
     На основании этой директивы разработаны следующие
     = link_to "внутренние документы банка:", directive_documents_path(@directive)
   - @directive.document.each do |document|
-    %li= link_to document.name, document_path(document)
+    %li
+      = link_to document.name, document_path(document)
+      = document.status
+      = document.approved.strftime('%d.%m.%Y') if document.approved
+
+.info_
+  создан
+  = @directive.created_at.strftime('%d.%m.%Y %H:%M:%S')
+  %br
+  изменен
+  = @directive.updated_at.strftime('%d.%m.%Y %H:%M:%S')
 
 %p
 -if can? :update, @directive

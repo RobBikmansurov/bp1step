@@ -60,6 +60,13 @@
           -else
             = link_to bp.apurpose, bproce_bapp_path(bp)
         %td
+.info_
+  создан
+  = @bapp.created_at.strftime('%d.%m.%Y %H:%M:%S')
+  %br
+  изменен
+  = @bapp.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+
 %p
 - if can? :update, @bapp
   = link_to 'Edit', edit_bapp_path(@bapp), :class => 'button'
