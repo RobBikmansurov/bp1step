@@ -38,7 +38,7 @@
   %b Другие:
   = @iresource.access_other
 %h4
-  Категория риска:
+  Категория ресурса:
   %b
   -if @iresource.risk_category?
     = link_to @iresource.risk_category, iresources_path + '?risk=' + @iresource.risk_category.to_s, class: 'groups'
