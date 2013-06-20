@@ -26,9 +26,12 @@
       -if ro.users.first
         %td
           = link_to ro.users.first.displayname, ro.users.first
-          -if ro.users.count > 1
-            +
-            = ro.users.count - 1
+          -if ro.users.count == 2
+            = link_to ro.users.last.displayname, ro.users.last
+          -else
+            -if ro.users.count > 2
+              +
+              = ro.users.count - 1
       -else
         %td
       - if can? :manage, ro
