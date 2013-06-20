@@ -17,6 +17,7 @@ BPDoc::Application.routes.draw do
     get :autocomplete, :on => :collection
   end
   resources :activities
+  resources :bapps
   resources :bproce_workplaces, :only => [:new, :create, :destroy, :show]
   resources :bproce_documents, :only => [:show]
   resources :bproce_business_roles, :only => [:show]
@@ -29,11 +30,13 @@ BPDoc::Application.routes.draw do
       post :rebuild
     end
   end
-  get 'tags/:tag', to: 'bproces#index', as: :tag
-  get 'tags', to: 'bproces#index'
+  get 'bproces/tags/:tag', to: 'bproces#index', as: :tag
+  get 'bapps/tags/:tag', to: 'bapps#index', as: :tag
+  #get 'tags/:tag', to: 'bproces#index', as: :tag
+  #get 'tags', to: 'bproces#index'
   resources :business_roles
   resources :categories
-  resources :documents, :bapps
+  resources :documents
   resources :iresources
   resources :roles, only: [:index, :show]
   resources :terms
