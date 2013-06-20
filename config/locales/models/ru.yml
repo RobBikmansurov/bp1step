@@ -76,7 +76,7 @@ ru:
         access_read: Права чтения
         access_write: Права записи
         access_other: Права
-        risk_category: Категория риска
+        risk_category: Категория ресурса
       profile:
         name: Отображаемое имя
         phone: Телефон
