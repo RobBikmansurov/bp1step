@@ -46,7 +46,7 @@
     %b
       не задан
 Теги процесса:
-= raw @bproce.tag_list.map { |t| link_to t, tag_path(t), class: 'tags' }.join('&nbsp; ')
+= raw @bproce.tag_list.map { |t| link_to t, bproces_path + '/tags/' + t, class: 'tags' }.join('&nbsp; ')
 
 %hr
 - if @bproce.business_roles.count > 0
