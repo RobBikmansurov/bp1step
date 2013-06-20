@@ -6,6 +6,10 @@
       [ 
       = params[:search]
       ]
+    -else
+      -if params[:tag].present?
+        %sup
+          = params[:tag]
 -else
   %h2
     Приложения процесса
@@ -25,7 +29,10 @@
     -@bapps.each do |bapp|
       %tr
         %td= link_to bapp.name, bapp
-        %td= bapp.description
+        %td
+          = bapp.description
+          -if can? :manage_tag, bapp
+            %sup= bapp.tag_list
         - if can? :manage, bapp
           %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_bapp_path(bapp), class: 'button-img'
         -if can? :destroy, bapp
@@ -72,3 +79,6 @@
     = link_to 'пусто', bapps_path + '?apptype='
   -else
     = link_to bapp.apptype, bapps_path + '?apptype=' + bapp.apptype.to_s, class: 'groups'
+%p
+Теги:
+= raw Bapp.all_tags.map { |t| link_to t.name, tag_path(:tag => t.name), class: 'tags' }.join('&nbsp; ')

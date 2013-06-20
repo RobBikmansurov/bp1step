@@ -11,7 +11,9 @@
   = f.input :licence
   = f.input :source_app
   = f.input :note, :as => :text
-  -#= f.error :base
+  -if can? :manage_tag, @bapp
+    = f.input :tag_list, :label => 'Теги (через запятую)'
+  = f.error :base
   -if can? :update, @bapp
     = f.button :submit
   %p

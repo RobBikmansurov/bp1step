@@ -55,4 +55,4 @@
   = link_to "Добавить новый процесс" , new_bproce_path, :class => 'button'
 %p
 Теги:
-= raw Bproce.all_tags.map { |t| link_to t, tag_path(t.name), class: 'tags' }.join('&nbsp; ')
+= raw Bproce.all_tags.map { |t| link_to t.name, bproces_path + '/tags/' + t.name, class: 'tags' }.join('&nbsp; ')

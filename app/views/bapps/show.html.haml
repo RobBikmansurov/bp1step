@@ -60,6 +60,13 @@
           -else
             = link_to bp.apurpose, bproce_bapp_path(bp)
         %td
+
+Теги приложения:
+= raw @bapp.tag_list.map { |t| link_to t, tag_path(t), class: 'tags' }.join('&nbsp; ')
+-#if @bapp.tags.any?
+  - @bapp.tags.each do |tag|
+    = link_to tag.name, tag_path(:tag => tag.name)
+
 .info_
   создан
   = @bapp.created_at.strftime('%d.%m.%Y %H:%M:%S')

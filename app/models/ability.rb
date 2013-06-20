@@ -31,7 +31,7 @@ class Ability
       if user.has_role? :admin
         can :assign_roles, User   # администратор может изменять роли доступа пользователям
         can :manage, [User, Workplace, Bapp, Iresource, Term]
-        can :manage_tag, [Bproce] # может редактировать теги процессов
+        can :manage_tag, [Bproce, Bapp] # может редактировать теги процессов, приложений
       end
       if user.has_role? :security
         can :assign_roles, User   # администратор доступа может изменять роли доступа пользователям
