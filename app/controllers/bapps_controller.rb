@@ -28,14 +28,6 @@ class BappsController < ApplicationController
       format.odt { list }
     end
   end
-
-  def tag
-    @bapps = Bapp.tagged_with(params[:tag]).search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
-    respond_to do |format|
-      format.html
-      format.odt { list }
-    end
-  end
   
   def new
     respond_with(@bapp)

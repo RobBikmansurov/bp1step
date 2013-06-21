@@ -12,7 +12,7 @@
       ]
     -else
       -if params[:risk].present?
-        категория риска:
+        категория ресурса:
         [ 
         = params[:risk]
         ]
@@ -70,7 +70,7 @@
   -else
     = link_to iresource.level, iresources_path + '?level=' + iresource.level.to_s, class: 'groups'
 %br
-Категория риска:
+Категория ресурса:
 - Iresource.group(:risk_category).each do |iresource|
   -if iresource.risk_category.to_s.empty?
     = link_to 'пусто', iresources_path + '?risk='
