@@ -10,7 +10,7 @@ Business processes documentation organization and generation, the 1st step of in
 
 Язык: русский
 
-Автор: [Rob Bikmansurov](robb@mail.ru)
+Автор: [Rob Bikmansurov](mailto:robb@mail.ru)
 
 Сайт: [bp1step.ru] (http://bp1step.ru)
 
@@ -79,4 +79,4 @@ MIT?
 
 
 
- [Rob Bikmansurov](robb@mail.ru)
+ [Rob Bikmansurov](mailto:robb@mail.ru)
