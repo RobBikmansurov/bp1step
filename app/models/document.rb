@@ -6,6 +6,10 @@ class Document < ActiveRecord::Base
   # validates_inclusion_of :status, in: STATUSES
   attr_accessible :document_file
   attr_accessor :delete_file
+
+  acts_as_taggable
+  #acts_as_taggable_on :category
+
   before_validation { document_file.clear if delete_file == '1' }
   has_attached_file :document_file,
     :url  => "/store/:id.:ymd.:basename.:extension",

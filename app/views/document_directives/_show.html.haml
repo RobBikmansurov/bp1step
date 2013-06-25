@@ -1,0 +1,10 @@
+%p
+  %b Документ:
+  = link_to @document_directive.document.name, @document_directive.document
+  ( #
+  =@document_directive.document.id
+  )
+%p
+  разработан на основании 
+  %b Директивы:
+  = link_to @document_directive.directive.shortname, @document_directive.directive

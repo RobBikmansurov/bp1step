@@ -40,7 +40,11 @@ class DocumentsController < ApplicationController
                     @user = User.find(params[:user])
                     @documents = Document.where(:owner_id => params[:user]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
                   else
-                    @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                    if params[:tag].present?
+                      @documents = Document.tagged_with(params[:tag]).search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                    else
+                      @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                    end
                   end
                 end
               end
