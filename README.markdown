@@ -11,7 +11,9 @@ Business processes documentation organization and generation, the 1st step of in
 Язык: русский
 
 Автор: [Rob Bikmansurov](robb@mail.ru)
-Сайт: [bp1step.ru] (bp1step.ru)
+
+Сайт: [bp1step.ru] (http://bp1step.ru)
+
 ---
 Все понимают, что надо внедрять процессный подход в организации, фирме.
 Но часто не знают с чего начать, пробуют перебирать различные сложные системы, рисовать диаграммы потоков работ и данных, упираются в сложность инструментов и бросают это важное дело.
@@ -77,4 +79,4 @@ MIT?
 
 
 
- [Rob Bkmansurov](robb@mail.ru)
+ [Rob Bikmansurov](robb@mail.ru)
