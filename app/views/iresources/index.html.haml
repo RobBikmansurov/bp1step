@@ -65,14 +65,10 @@
 %br
 Тип:
 - Iresource.group(:level).each do |iresource|
-  -if iresource.level.to_s.empty?
-    = link_to 'пусто', iresources_path + '?level='
-  -else
+  -if !iresource.level.to_s.empty?
     = link_to iresource.level, iresources_path + '?level=' + iresource.level.to_s, class: 'groups'
 %br
 Категория ресурса:
 - Iresource.group(:risk_category).each do |iresource|
-  -if iresource.risk_category.to_s.empty?
-    = link_to 'пусто', iresources_path + '?risk='
-  -else
+  -if !iresource.risk_category.to_s.empty?
     = link_to iresource.risk_category, iresources_path + '?risk=' + iresource.risk_category.to_s, class: 'groups'

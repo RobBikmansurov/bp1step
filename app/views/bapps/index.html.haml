@@ -75,9 +75,7 @@
 %br
 Тип:
 - Bapp.group(:apptype).each do |bapp|
-  -if bapp.apptype.to_s.empty?
-    = link_to 'пусто', bapps_path + '?apptype='
-  -else
+  -if !bapp.apptype.to_s.empty?
     = link_to bapp.apptype, bapps_path + '?apptype=' + bapp.apptype.to_s, class: 'groups'
 %p
 Теги:
