@@ -91,11 +91,8 @@
           есть файл в старом хранилище - 
           = link_to image_tag('ico_text.gif', :alt => 'См.'), document_path(@document)+'.pdf'
 
-Категория ресурса:
-= raw @document.tags.map { |t| link_to t, tag_path(t), class: 'tags' }.join('&nbsp; ')
--#if @document.tags.any?
-  - @document.tags.each do |tag|
-    = link_to tag.name, documents_path + '/tags/' + tag)
+Теги документа:
+= raw @document.tags.map { |t| link_to t, documents_path + '/tags/' + t.name, class: 'tags' }.join('&nbsp; ')
 
 .info_
   создан
