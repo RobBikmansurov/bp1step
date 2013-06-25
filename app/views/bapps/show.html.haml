@@ -62,7 +62,7 @@
         %td
 
 Теги приложения:
-= raw @bapp.tag_list.map { |t| link_to t, tag_path(t), class: 'tags' }.join('&nbsp; ')
+= raw @bapp.tag_list.map { |t| link_to t, bapps_path + '/tags/' + t, class: 'tags' }.join('&nbsp; ')
 -#if @bapp.tags.any?
   - @bapp.tags.each do |tag|
     = link_to tag.name, tag_path(:tag => tag.name)

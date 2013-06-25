@@ -32,6 +32,7 @@ BPDoc::Application.routes.draw do
   end
   get 'bproces/tags/:tag', to: 'bproces#index', as: :tag
   get 'bapps/tags/:tag', to: 'bapps#index', as: :tag
+  get 'documents/tags/:tag', to: 'documents#index', as: :tag
   #get 'tags/:tag', to: 'bproces#index', as: :tag
   #get 'tags', to: 'bproces#index'
   resources :business_roles

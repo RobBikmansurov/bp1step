@@ -33,6 +33,10 @@
                 [ 
                 = params[:search]
                 ]
+              -else
+                -if params[:tag].present?
+                  %sup
+                    = params[:tag]
 -else
   -title "Список внутренних документов банка"
   %h2
@@ -67,6 +71,9 @@
               -if File.exist?("files/" + document.file_name) && !document.file_name.empty?
                 = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Смотреть'), document_path(document)+'.pdf'
         = link_to format_content(document.name), document_path(document)
+        -if can? :manage_tag, document
+          %sup= document.tag_list
+
       -#      %td= document.filename
       %td= document.status
       %td= document.approved.strftime('%d.%m.%Y') if document.approved
@@ -114,3 +121,6 @@
     = link_to 'пусто', documents_path + '?place='
   -else
     = link_to d.place, documents_path + '?place=' + d.place.to_s, class: 'groups'
+%p
+Теги:
+= raw Document.all_tags.map { |t| link_to t.name, documents_path + '/tags/' + t.name, class: 'tags' }.join('&nbsp; ')
