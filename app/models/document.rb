@@ -117,7 +117,7 @@ class Document < ActiveRecord::Base
       else
         if self.document_file_file_name?
           if File.exist?(document_file.path)
-            Paperclip.run('unoconv', "-f pdf #{self.document_file.path}")
+            Paperclip.run('unoconv', "-f pdf #{self.document_file.path}") if File.extname(self.document_file.path) != ".pdf"
           else
             puts "****** file not found " + self.document_file_file_name.to_s
           end
