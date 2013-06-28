@@ -3,9 +3,6 @@ class BproceBappsController < ApplicationController
   helper_method :sort_column, :sort_direction
   before_filter :get_bproce_bapp, :except => :index
 
-  def new
-  end
-
   def create
     if @bproce_bapp.save
       flash[:notice] = "Successfully created bproce_bapp."

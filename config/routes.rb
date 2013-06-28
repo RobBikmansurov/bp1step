@@ -22,7 +22,7 @@ BPDoc::Application.routes.draw do
   resources :bproce_documents, :only => [:show]
   resources :bproce_business_roles, :only => [:show]
   resources :bproce_iresources, :only => [:new, :create, :destroy, :show, :edit, :update]
-  resources :bproce_bapps, :only => [:new, :create, :destroy, :show, :edit, :update]
+  resources :bproce_bapps, :only => [:create, :destroy, :show, :edit, :update]
   resources :bproces do
     resources :bapps
     collection do
