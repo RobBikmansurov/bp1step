@@ -42,7 +42,8 @@ describe DocumentsController do
       bproce_id: 1,
       dlevel: 1,
       place: 'office1',
-      part: 1
+      part: 1,
+      owner_id: 1
     }
   end
 
