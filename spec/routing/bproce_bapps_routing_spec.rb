@@ -3,10 +3,6 @@ require "spec_helper"
 describe BproceBappsController do
   describe "routing" do
 
-    it "routes to #new" do
-      get("/bproce_bapps/new").should route_to("bproce_bapps#new")
-    end
-
     it "routes to #show" do
       get("/bproce_bapps/1").should route_to("bproce_bapps#show", :id => "1")
     end
