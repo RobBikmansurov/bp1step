@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "workplaces/show.html.erb" do
+describe "workplaces/show.html.haml" do
   before(:each) do
     @workplace = assign(:workplace, stub_model(Workplace,
       :designation => "Designation",
