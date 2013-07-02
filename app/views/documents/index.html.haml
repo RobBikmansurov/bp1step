@@ -110,16 +110,6 @@
     = link_to d.part, documents_path + '?part=' + d.part.to_s, class: 'groups'
 %br
 Оригинал:
-%select{:name => "dropdown"}
-  - Document.group(:place).each do |d|
-    -if !d.place.to_s.empty?
-      %option= h d.place
-      -#, documents_path + '?place=' + d.place.to_s
-%p
-
-  -# for say_text in @available_says
-    %option= h say_text
-
 - Document.group(:place).each do |d|
   -if !d.place.to_s.empty?
     = link_to d.place, documents_path + '?place=' + d.place.to_s, class: 'groups', title: place_title(d.place)
