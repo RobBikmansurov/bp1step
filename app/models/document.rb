@@ -1,7 +1,6 @@
 # encoding: utf-8
 class Document < ActiveRecord::Base
   # FIXME разобраться со статусами на русском
-  # TODO добавить конфиги для константы "_1_Норма" - начало пути шары для удаления OS-чувствительного маппинга шар (Windows - I:\, Linux - smb://)
   # STATUSES = %w[Проект Согласование Утвержден]
   # validates_inclusion_of :status, in: STATUSES
   attr_accessible :document_file
