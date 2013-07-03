@@ -3,10 +3,6 @@ require "spec_helper"
 describe BproceWorkplacesController do
   describe "routing" do
 
-    it "routes to #new" do
-      get("/bproce_workplaces/new").should route_to("bproce_workplaces#new")
-    end
-
     it "routes to #show" do
       get("/bproce_workplaces/1").should route_to("bproce_workplaces#show", :id => "1")
     end
