@@ -31,5 +31,18 @@ describe BappsController do
       delete("/bapps/1").should route_to("bapps#destroy", :id => "1")
     end
 
+    describe "routing to bapps" do
+      it "routes /bapps to bapps#index" do
+        expect(:get => "/bapps").to route_to(
+        :controller => "bapps",
+        :action => "index"
+        )
+      end
+
+      it "does not expose a list of profiles" do
+        expect(:get => "/bapps").to be_routable
+      end
+    end
+
   end
 end

@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :bapp do
-    name 'test_name'
-    description 'test_description'
+    sequence(:name) { |n| "name#{n}" }
+    description { "name#{id}_desscription" }
   end
 end

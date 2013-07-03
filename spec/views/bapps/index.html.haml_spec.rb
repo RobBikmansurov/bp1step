@@ -1,5 +1,20 @@
 require 'spec_helper'
 
+describe "bapps/index" do
+  it "displays all the bapps" do
+    assign(:bapps, [
+      stub_model(Bapp, :name => "slicer"),
+      stub_model(Bapp, :name => "dicer")
+    ])
+    assign(:sort_columns, 'name')
+    render
+  
+    expect(rendered).to match /slicer/
+    expect(rendered).to match /dicer/
+  end
+end
+
+
 describe "bapps/index.html.haml" do
   before(:each) do
     assign(:bapps, [
