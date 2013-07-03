@@ -4,6 +4,7 @@ describe BproceWorkplacesController do
 
   def valid_attributes
     {
+      id: 1,
       bproce_id: 1,
       workplace_id: 1
     }
@@ -17,13 +18,15 @@ describe BproceWorkplacesController do
     {}
   end
 
-  #  resources :bproce_workplaces, :only => [:new, :create, :destroy, :show]
+  #  resources :bproce_workplaces, :only => [:create, :destroy, :show]
 
   describe "GET show" do
     it "assigns the requested bproce_workplace as @bproce_workplace" do
       bproce_workplace = BproceWorkplace.create! valid_attributes
-      get :show, {:id => bproce_workplace.to_param}, valid_session
-      assigns(:bproce_workplace).should eq(@workplace)
+      bproce_workplace.bproce_id = @bproce.id
+      bproce_workplace.workplace_id = @workplace.id
+      get :show, {:id => 1.to_param}, valid_session
+      expect(assigns(:workplaces)).to eq(@bproce.workplaces)
     end
   end
 
@@ -51,15 +54,8 @@ describe BproceWorkplacesController do
       it "assigns a newly created but unsaved bproce_workplace as @bproce_workplace" do
         # Trigger the behavior that occurs when invalid params are submitted
         BproceWorkplace.any_instance.stub(:save).and_return(false)
-        post :create, {:bproce_workplace => {  }}, valid_session
+        post :create, {:bproce_workplace => {bproce_id: 1, workplace_id: 1}}, valid_session
         assigns(:bproce_workplace).should be_a_new(BproceWorkplace)
-      end
-
-      it "re-renders the 'new' template" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        BproceWorkplace.any_instance.stub(:save).and_return(false)
-        post :create, {:bproce_workplace => {  }}, valid_session
-        response.should render_template("new")
       end
     end
   end

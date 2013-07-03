@@ -4,27 +4,6 @@ describe UsersController do
 
   include Devise::TestHelpers
 
-  before (:each) do
-    @user = build(:user)
-    #stub_authentication @user
-  end
-
-  describe "GET 'index'" do
-    it "should be successful" do
-      get 'index'
-      response.should be_success
-    end
-  end
-
-  describe "GET 'show'" do
-    it "should be successful" do
-      get 'show', :id => @user.id
-      response.should be_success
-      assigns[:user].should == @user
-    end
-  end
-
-
   def valid_attributes
     {
       id: 1,
@@ -39,18 +18,26 @@ describe UsersController do
     {}
   end
 
+  before (:each) do
+    #@user = create(:user)
+    #stub_authentication @user
+  end
+
+  #resources :users, :only => [:index, :show, :edit, :update]
+
   describe "GET index" do
     it "assigns all users as @users" do
+      user = User.create! valid_attributes
       get :index, {}, valid_session
-      assigns(:user).should eq(user)
+      assigns(:users).should eq(user)
     end
   end
 
   describe "GET show" do
     it "assigns the requested user as @user" do
-      user = create(:user)
-      get :show, {:id => user.to_param}, valid_session
-      assigns(:user).should eq(user)
+      @user
+      get :show, {:id => @user.to_param}, valid_session
+      assigns(:user).should eq(@user)
     end
   end
 

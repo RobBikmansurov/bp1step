@@ -18,7 +18,7 @@ BPDoc::Application.routes.draw do
   end
   resources :activities
   resources :bapps
-  resources :bproce_workplaces, :only => [:new, :create, :destroy, :show]
+  resources :bproce_workplaces, :only => [:create, :destroy, :show]
   resources :bproce_documents, :only => [:show]
   resources :bproce_business_roles, :only => [:show]
   resources :bproce_iresources, :only => [:new, :create, :destroy, :show, :edit, :update]
