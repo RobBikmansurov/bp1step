@@ -1,10 +1,6 @@
 class BproceWorkplacesController < ApplicationController
   respond_to :html, :json
 
-  def new
-    @bproce_workplace = BproceWorkplace.new
-  end
-
   def create
     @bproce_workplace = BproceWorkplace.create(params[:bproce_workplace])
     flash[:notice] = "Successfully created bproce_workplace." if @bproce_workplace.save
@@ -18,8 +14,13 @@ class BproceWorkplacesController < ApplicationController
   end
 
   def show
-    @bp = Bproce.find(params[:id])
-    respond_with(@workplaces = @bp.workplaces)
+    @bproce = Bproce.find(params[:id])
+    respond_with(@workplaces = @bproce.workplaces)
+  end
+
+  def index
+    @bproce = Bproce.find(params[:id])
+    respond_with(@workplaces = @bproce.workplaces)
   end
 
 end

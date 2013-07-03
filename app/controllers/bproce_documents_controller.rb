@@ -2,7 +2,7 @@ class BproceDocumentsController < ApplicationController
   respond_to :html, :xml, :json
   
   def show
-  	@bp = Bproce.find(params[:id])
-  	respond_with(@documents = @bp.documents)
+  	@bproce = Bproce.find(params[:id])
+  	respond_with(@documents = @bproce.documents)
   end
 end

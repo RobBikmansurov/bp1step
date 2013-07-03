@@ -1,7 +1,7 @@
--title "Документы процесса " + @bp.shortname
+-title "Документы процесса " + @bproce.shortname
 %h2
   Документы процесса
-  = link_to @bp.name, bproce_path(@bp)
+  = link_to @bproce.name, bproce_path(@bproce)
 
 -#= form_tag documents_path, :method => 'get' do
 %table
