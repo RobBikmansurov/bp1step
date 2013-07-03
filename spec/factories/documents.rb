@@ -7,5 +7,7 @@ FactoryGirl.define do
     place 'office1'
     part 1
     owner_id 1
+    created_at Time.now
+    updated_at Time.now
   end
 end

@@ -63,7 +63,6 @@ class BappsController < ApplicationController
     render json: @bapps.map(&:name)
   end
 
-private
   def sort_column
     params[:sort] || "name"
   end
@@ -72,6 +71,7 @@ private
     params[:direction] || "asc"
   end
   
+private
   def get_bapp
     if params[:search].present? # это поиск
       @bapps = Bapp.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])

@@ -41,6 +41,24 @@ describe BappsController do
       get :index
       assigns(:bapps).should eq([bapp])
     end
+
+    it "responds successfully with an HTTP 200 status code" do
+      get :index
+      expect(response).to be_success
+      expect(response.status).to eq(200)
+    end
+
+    it "renders the index template" do
+      get :index
+      expect(response).to render_template("index")
+    end
+
+    it "loads all of the bapps into @bapps" do
+      bapp1, bapp2 = create(:bapp), create(:bapp)
+      get :index
+      expect(assigns(:bapps)).to match_array([bapp1, bapp2])
+    end
+
   end
 
   describe "GET show" do

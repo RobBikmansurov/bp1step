@@ -8,5 +8,7 @@ FactoryGirl.define do
     body 'directive_body'
     annotation 'directive_annotation'
     approval Time.now
+    created_at Time.now
+    updated_at Time.now
   end
 end
