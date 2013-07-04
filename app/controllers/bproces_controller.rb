@@ -174,6 +174,9 @@ private
             spname = '__' * (sub.depth - @bproce.depth) + sub.name
             #spname = sub.name
           end
+          t.add_column(:spowner) do |sp|
+            spowner = sp.user.displayname if sp.user_id
+          end
         end
       end
       report_docs(@bproce.documents, r, false) # сформировать таблицу документов процесса
