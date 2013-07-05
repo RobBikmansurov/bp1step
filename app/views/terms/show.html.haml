@@ -12,6 +12,13 @@
 %h4 Источник:
 = @term.source
 
+.info_
+  создан
+  = @term.created_at.strftime('%d.%m.%Y %H:%M:%S')
+  %br
+  изменен
+  = @term.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+
 %p
 - if can? :update, Term
   = link_to 'Edit', edit_term_path(@term), :class => 'button'
