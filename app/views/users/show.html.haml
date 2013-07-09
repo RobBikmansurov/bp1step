@@ -44,12 +44,6 @@
           \-
           = user_workplace.date_to.strftime("%d.%m.%Y")
 
-- if @usr.bproce.count > 0
-  %h3
-    Владелец
-    = link_to 'процессов:', bproces_path + '?user=' + @usr.id.to_s
-  - @usr.bproce.each do |bproce|
-    = link_to bproce.name, bproce_path(bproce)
 - if @usr.roles.count > 0
   %h2
     = @usr.displayname
@@ -69,6 +63,12 @@
           = business_role.date_to.strftime("%d.%m.%Y")
         %td= business_role.note
         %td= link_to Bproce.find(business_role.business_role.bproce).shortname, bproce_path(business_role.business_role.bproce)
+- if @usr.bproce.count > 0
+  %h3
+    Владелец
+    = link_to 'процессов:', bproces_path + '?user=' + @usr.id.to_s
+  - @usr.bproce.each do |bproce|
+    = link_to bproce.name, bproce_path(bproce)
 
 - if @documents.count > 0
   %h3
@@ -77,6 +77,11 @@
     = link_to 'внутренние документы:', documents_path + '?user=' + @usr.id.to_s
   - @documents.each do |doc|
     %li= link_to doc.name, document_path(doc)
+  %h3
+    Владелец
+    = link_to 'ресурсов', iresources_path + '?user=' + @usr.id.to_s
+
+
 %p
 -if current_user != nil
   -if current_user.role? :admin

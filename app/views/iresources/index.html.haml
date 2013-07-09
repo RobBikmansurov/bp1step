@@ -16,6 +16,12 @@
         [ 
         = params[:risk]
         ]
+      -else
+        -if params[:user]
+          %h2
+            владельца
+            = link_to @user.displayname, user_path(@user)
+        -else
 
 %table
   %tr

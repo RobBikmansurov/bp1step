@@ -14,7 +14,12 @@ class IresourcesController < ApplicationController
         if params[:risk].present?
           @iresources = Iresource.where(:risk_category => params[:risk]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
         else
-          @iresources = Iresource.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+          if params[:user].present? #  список ресурсов пользователя
+            @user = User.find(params[:user])
+            @iresources = Iresource.where(:user_id => params[:user]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+          else
+            @iresources = Iresource.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+          end
         end
       end
     end
