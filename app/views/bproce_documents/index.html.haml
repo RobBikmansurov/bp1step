@@ -9,7 +9,7 @@
 
 %table
   %tr
-    %th 
+    %th#
     %th= sortable "name", "Наименование"
     %th= sortable "description", "Описание"
     -#    %th Имя файла
@@ -22,7 +22,7 @@
     
   - @documents.each do |document|
     %tr
-      %td= document.part
+      %td= document.id
       %td= link_to document.name, document_path(document)
       %td= format_content(document.description)
       -#      %td= document.filename
