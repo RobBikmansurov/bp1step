@@ -1,5 +1,31 @@
 require 'spec_helper'
 
+describe "bapps/index.html.haml" do
+  before(:each) do
+    assign(:bapp,mock_model(Bapp))
+    @ability = Object.new
+    @ability.extend(CanCan::Ability)
+    controller.stub(:current_ability) { @ability }
+  end
+
+  context "authorized user" do
+    it "can see the table header" do
+      @ability.can :destroy, Bapp
+      render
+      rendered.should have_selector('th:contains("Options")')
+    end
+  end
+
+  context "unauthorized user" do
+    it "cannot see the table header" do
+      render
+      rendered.should_not have_selector('th:contains("Options")')
+    end
+  end
+end
+
+
+
 describe "bapps/index" do
   it "displays all the bapps" do
     assign(:bapps, [

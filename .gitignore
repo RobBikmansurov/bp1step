@@ -10,7 +10,6 @@ config/
 *.zip
 Gemfile~
 Gemfile.lock
-test
 *.swp
 *.haml~
 *.rb~
