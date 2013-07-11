@@ -4,10 +4,19 @@ require "spec_helper"
 PublicActivity.enabled = false
 
 describe Ability do
-  before do
-    @role = Role.new(name: :user, description: 'user') # создать роль по умолчанию
+  before (:all) do
+    UserRole.all.each do |r|
+      r.destroy
+    end
+    Role.all.each do |r|
+      r.destroy
+    end
+    User.all.each do |r|
+      r.destroy
+    end
+    @role = Role.create(name: 'user', description: 'user') # создать роль по умолчанию
     @role.save
-    @user = FactoryGirl.create(:user)
+    @user = User.first
   end
 
   context "unauthorized user or user without roles" do   # незарегистрированный пользователь
@@ -32,6 +41,17 @@ describe Ability do
   end
 
   context "authorized user with role :user" do   # зарегистрированный пользователь с ролью Пользователь
+    if Role.count == 0
+      role = FactoryGirl.create(:role)
+    else
+      role = Role.first
+    end
+    role.name = :user
+    role.save
+    @user = FactoryGirl.create(:user)
+    @user.roles << Role.find_by_name(role.name)
+    puts @user.inspect
+    puts @user.roles.inspect
     it "has roles" do
       @user.roles.count.should == 1
     end
@@ -49,11 +69,13 @@ describe Ability do
   end
 
   context "authorized user with role :author" do   # Писатель, владелец документа
-    role = FactoryGirl.create(:role, name: :author)
-    puts role.inspect
-    #role.name = :author
+    role = Role.first
+    role.name = :user
     role.save
-
+    @user = FactoryGirl.create(:user)
+    role.name = :author
+    role.save
+    @user.roles << Role.find_by_name(role.name)
     it "has roles" do
       @user.roles.count.should == 1
     end
@@ -72,8 +94,12 @@ describe Ability do
 
   context "authorized user with role :owner" do   # Владелец процесса
     role = Role.first
+    role.name = :user
+    role.save
+    @user = FactoryGirl.create(:user)
     role.name = :owner
     role.save
+    @user.roles << Role.find_by_name(role.name)
 
     it "has roles" do
       @user.roles.count.should == 1
@@ -93,8 +119,12 @@ describe Ability do
 
   context "authorized user with role :analitic" do   # Бизнес-аналитик
     role = Role.first
+    role.name = :user
+    role.save
+    @user = FactoryGirl.create(:user)
     role.name = :analitic
     role.save
+    @user.roles << Role.find_by_name(role.name)
 
     it "has roles" do
       @user.roles.count.should == 1
@@ -114,8 +144,12 @@ describe Ability do
 
   context "authorized user with role :admin" do   # Администратор
     role = Role.first
+    role.name = :user
+    role.save
+    @user = FactoryGirl.create(:user)
     role.name = :admin
     role.save
+    @user.roles << Role.find_by_name(role.name)
 
     it "has roles" do
       @user.roles.count.should == 1
