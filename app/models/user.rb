@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
   # аутентификация - через LDAP
   devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
 
-  before_create :create_role
+  before_create :default_role
 
   # Setup accessible (or protected) attributes for your model
   #attr_accessible :email, :password, :password_confirmation, :remember_me
@@ -35,26 +35,28 @@ class User < ActiveRecord::Base
   end
 
   def get_ldap_lastname
-    s = Devise::LdapAdapter.get_ldap_param(self.username, 'sn')
-    s = s.to_s.force_encoding('UTF-8')
-    self.lastname = s
+    if ENV["RAILS_ENV"] != 'test'
+      s = Devise::LdapAdapter.get_ldap_param(self.username, 'sn')
+      self.lastname = s.to_s.force_encoding('UTF-8')
+    end
   end
 
   def get_ldap_firstname
-    s = Devise::LdapAdapter.get_ldap_param(self.username, 'givenname')
-    s = s.to_s.force_encoding('UTF-8')
-    self.firstname = s
+    if ENV["RAILS_ENV"] != 'test'
+      s = Devise::LdapAdapter.get_ldap_param(self.username, 'givenname')
+      self.firstname = s.to_s.force_encoding('UTF-8')
+    end
   end
 
   def get_ldap_displayname
-    s = Devise::LdapAdapter.get_ldap_param(self.username, 'displayname')
-    s = s.to_s.force_encoding('UTF-8')
-    self.displayname = s
+    if ENV["RAILS_ENV"] != 'test'
+      s = Devise::LdapAdapter.get_ldap_param(self.username, 'displayname')
+      self.displayname = s.to_s.force_encoding('UTF-8')
+    end
   end
 
   def get_ldap_email
-      tempmail = Devise::LdapAdapter.get_ldap_param(self.username, 'mail')
-      self.email = tempmail
+    self.email = Devise::LdapAdapter.get_ldap_param(self.username, 'mail')  if ENV["RAILS_ENV"] != 'test'
   end
 
   def self.search(search)
@@ -71,7 +73,7 @@ class User < ActiveRecord::Base
   end
 
   private
-    def create_role
-      self.roles << Role.find_by_name(:user)  if ENV['RAILS_ENV'] != 'test'
+    def default_role
+      self.roles << Role.find_by_name(:user)  # if ENV['"RAILS_ENV"'] != :test
     end
 end

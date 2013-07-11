@@ -22,6 +22,7 @@ class Ability
       if user.has_role? :owner  # владелец процесса
         can :manage, [Term]
         can :manage, [BproceBapp, BproceIresource]
+        can :update, Bproce, :user_id => user.id  # процесс владельца
       end
       if user.has_role? :analitic
         can :manage, [Bproce, Bapp, BusinessRole, Document, BproceBapp, Term]
