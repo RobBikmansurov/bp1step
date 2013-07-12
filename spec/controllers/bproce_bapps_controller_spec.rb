@@ -112,8 +112,12 @@ describe BproceBappsController do
   describe "DELETE destroy" do
     it "destroys the requested bproce_bapp" do
       bproce_bapp = BproceBapp.create! valid_attributes
+      bproce = create(:bproce)
+      bapp = create(:bapp)
+      bproce_bapp.bproce_id = bproce.id
+      bproce_bapp.bapp_id = bapp.id
       expect {
-        delete :destroy, {:id => bproce_bapp.to_param}, valid_session
+        delete :destroy, {:id => bproce_bapp.to_param, :bproce_id => bproce.to_param}, valid_session
       }.to change(BproceBapp, :count).by(-1)
     end
 
