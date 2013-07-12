@@ -3,6 +3,9 @@ require 'spec_helper'
 PublicActivity.enabled = false
 
 describe Role do
+  before (:all)do
+    Role.all.each { |r| r.destroy }
+  end
   before(:each) do
     @role = FactoryGirl.create(:role)
   end
