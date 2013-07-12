@@ -9,7 +9,6 @@ describe "Приложения" do
       response.status.should be(200)
       expect(response.body).to include("Наименование</a>")
       expect(response.body).to include("Описание</a>")
-      expect(response.body).to include("Список")
       expect(response.body).to include("Тип")
       expect(response.body).to include("Теги")
       expect(response.body).to include("<div class='apple_pagination'>")
