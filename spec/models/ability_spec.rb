@@ -5,27 +5,25 @@ PublicActivity.enabled = false
 
 describe Ability do
   before (:all) do
-    UserRole.all.each do |r|
-      r.destroy
+    [UserRole, Role, User].each do | model |
+      model.all.each { |r| r.destroy }
     end
-    Role.all.each do |r|
-      r.destroy
-    end
-    User.all.each do |r|
-      r.destroy
-    end
-    @role = Role.create(name: 'user', description: 'user') # создать роль по умолчанию
+  end
+  before (:each) do
+    @role = Role.create(name: 'user', description: 'default role') # создать роль по умолчанию
     @role.save
-    @user = User.first
+    @user = FactoryGirl.create(:user) # создать пользователя с ролью по умолчанию
   end
 
   context "unauthorized user or user without roles" do   # незарегистрированный пользователь
     ability = Ability.new(@user)
-    [Bapp, Bproce, BproceBapp, BusinessRole, Directive, Document, Role, Workplace].each do |model|
+    [Bapp, Bproce, BproceBapp, BusinessRole, Directive, Document, Role, Workplace, Iresource, Term, User].each do |model|
       it "can :read '#{model.to_s}' but can't :manage them" do
         ability.should be_able_to(:read, model.new)
-        #ability.should_not be_able_to(:manage, FactoryGirl.create(model.to_s.underscore.to_sym))
         ability.should_not be_able_to(:manage, model.new)
+        ability.should_not be_able_to(:create, model.new)
+        ability.should_not be_able_to(:update, model.new)
+        ability.should_not be_able_to(:destroy, model.new)
       end
     end
     it "can't :show User" do
@@ -50,9 +48,7 @@ describe Ability do
     role.save
     @user = FactoryGirl.create(:user)
     @user.roles << Role.find_by_name(role.name)
-    puts @user.inspect
-    puts @user.roles.inspect
-    it "has roles" do
+    it "has role" do
       @user.roles.count.should == 1
     end
 
@@ -82,6 +78,15 @@ describe Ability do
 
     ability = Ability.new(@user)
 
+    [Directive, Document, Term].each do |model|
+      it "can :manage '#{model.to_s}'" do
+        ability.should be_able_to(:manage, model.new)
+        ability.should be_able_to(:create, model.new)
+        ability.should be_able_to(:update, model.new)
+        ability.should be_able_to(:destroy, model.new)
+      end
+    end
+
     it "can view Document" do
       ability.can?(:view_document, Document).should be_true  # может просмотреть файл документа
       ability.should be_able_to(:view_document, Document)   # может просмотреть файл документа
@@ -106,6 +111,21 @@ describe Ability do
     end
 
     ability = Ability.new(@user)
+
+    [Directive, Document, Term, BproceBapp, BproceIresource].each do |model|
+      it "can :manage '#{model.to_s}'" do
+        ability.should be_able_to(:create, model.new)
+        ability.should be_able_to(:update, model.new)
+        ability.should be_able_to(:destroy, model.new)
+      end
+    end
+
+    it "can :manage Bproce" do
+      @bproce = FactoryGirl.create(:bproce)
+      @bproce.user_id = @user.id
+      user = @user
+      #ability.should be_able_to(:update, @bproce, :user_id => @user.id)
+    end
 
     it "can view Document" do
       ability.can?(:view_document, Document).should be_true  # может просмотреть файл документа
