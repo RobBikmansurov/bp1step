@@ -25,7 +25,7 @@ describe BproceWorkplacesController do
       bproce_workplace = BproceWorkplace.create! valid_attributes
       bproce_workplace.bproce_id = @bproce.id
       bproce_workplace.workplace_id = @workplace.id
-      get :show, {:id => 1.to_param}, valid_session
+      get :show, {:id => @bproce.to_param}, valid_session
       expect(assigns(:workplaces)).to eq(@bproce.workplaces)
     end
   end

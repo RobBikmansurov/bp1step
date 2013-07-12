@@ -17,12 +17,12 @@ class BproceBappsController < ApplicationController
   end
   
   def destroy
+    bapp = @bproce_bapp.bapp
     flash[:notice] = "Successfully destroyed bproce_bapp." if @bproce_bapp.destroy
-    logger.debug "params = #{params.inspect}"
-    if @bproce_bapp.bproce_id
-      respond_with(@bproce_bapp.bproce)
+    if !@bproce.blank?
+      respond_with(@bproce)
     else
-      respond_with(@bproce_bapp.bapp)
+      respond_with(bapp)
     end
   end
 
