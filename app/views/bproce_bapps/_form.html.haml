@@ -1,5 +1,7 @@
 = simple_form_for(@bproce_bapp) do |f|
   = f.error_notification
+  = f.hidden_field :bproce_id
+  = f.hidden_field :bapp_id
   = f.input :apurpose, :as => :text
   = f.error :base
   - if can? :update, @bproce_bapp

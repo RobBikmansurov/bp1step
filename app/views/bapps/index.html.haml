@@ -62,11 +62,11 @@
 -if @bp.nil?
   - if can? :destroy, Bapp
     = link_to 'Каталог', bapps_path + '.odt?all=1', :class => 'button'
-  -if request.query_string
-    = link_to 'Список', bapps_path + '.odt?' + request.query_string, :class => 'button'
-  -else
-    = link_to 'Список', bapps_path + '.odt', :class => 'button'
-  - if can? :update, Bapp
+  - if can? :manage, Bapp
+    -if request.query_string
+      = link_to 'Список', bapps_path + '.odt?' + request.query_string, :class => 'button'
+    -else
+      = link_to 'Список', bapps_path + '.odt', :class => 'button'
     = link_to "Добавить новое приложение" , new_bapp_path, :class => 'button'
 -else
   - if can? :destroy, Bapp
