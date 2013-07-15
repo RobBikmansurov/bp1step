@@ -4,7 +4,7 @@ class BprocesController < ApplicationController
   respond_to :html
   respond_to :pdf, :xml, :json, :only => [:index, :list]
   helper_method :sort_column, :sort_direction
-  before_filter :get_bproce, :except => [:index, :list]
+  before_filter :get_bproce, :except => [:index, :list, :manage]
 
   def list  # плоский список процессов без дерева
     @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).find(:all, :include => :user)
@@ -48,6 +48,10 @@ class BprocesController < ApplicationController
 
   def doc
     print_doc  # заготовка описания процесса
+  end
+
+  def order   # распоряжение о назначении исполнителей на роли в процессе
+    print_order
   end
 
   def new
@@ -273,6 +277,52 @@ private
       :disposition => 'inline' )
   end
 
+  # распоряжение о назачении на роли в процессе
+  def print_order
+    @business_roles = @bproce.business_roles.order(:name)
+    @users = @business_roles.last.users
+    report = ODFReport::Report.new("reports/bp-order.odt") do |r|
+      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
+      r.add_field :id, @bproce.id
+      r.add_field :shortname, @bproce.shortname
+      #r.add_field :name, @bproce.name
+      r.add_field :fullname, @bproce.fullname
+      if @bproce.parent_id
+        r.add_field :parent, @bproce.parent.name
+      else
+        r.add_field :parent, "-"
+      end
+      if @bproce.user_id  # владелец процесса
+        r.add_field :owner, @bproce.user.displayname
+      else
+        r.add_field :owner, "-"
+      end
+      rr = 0 # порядковый номер строки для ролей
+      r.add_section("ROLES", @business_roles) do |s|
+        s.add_field(:rr) do |nn| # порядковый номер строки таблицы
+          rr += 1
+        end
+        s.add_field(:nr, :name)
+        s.add_field(:rdescription, :description)
+        nn = 0
+        s.add_table("TABLE_USERS", :users, :header => false, :skip_if_empty => true) do |u|
+          u.add_column(:nn) do |n1| # порядковый номер строки таблицы
+            nn += 1
+          end
+          u.add_column(:displayname)
+          u.add_column(:position)
+        end
+      end
+
+      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    report_file_name = report.generate
+    send_file(report_file_name,
+      :type => 'application/msword',
+      :filename => "order.odt",
+      :disposition => 'inline' )
+  end
 
   def report_roles(roles, r, header)
     rr = 0 # порядковый номер строки для ролей

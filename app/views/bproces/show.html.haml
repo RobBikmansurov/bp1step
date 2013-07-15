@@ -98,3 +98,5 @@
 -if can? :update, @bproce
   = link_to 'Карточка', bproce_path(@bproce) + '/card', :class => 'button'
   = link_to 'Описание', bproce_path(@bproce) + '/doc', :class => 'button'
+  -#= link_to 'Распоряжение', order_bproces(@bproce), :class => 'button'
+  = link_to 'Распоряжение', bproce_path(@bproce) + '/order', class: :button
