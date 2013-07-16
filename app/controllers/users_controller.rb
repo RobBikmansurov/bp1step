@@ -50,7 +50,44 @@ class UsersController < ApplicationController
     #redirect_to :action => :edit
   end
 
+  def order   # распоряжение о назначении исполнителей на роли в процессе
+    print_order
+  end
+
 private
+
+  # распоряжение о назачении на роли в процессе
+  def print_order
+    @business_roles = @usr.business_roles.includes(:bproce).order(:name)
+    report = ODFReport::Report.new("reports/user-order.odt") do |r|
+      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
+      r.add_field "ORDERNUM", Date.today.strftime('%Y%m%d-с') + @usr.id.to_s
+      r.add_field :displayname, @usr.displayname
+      r.add_field :position, @usr.position
+      rr = 0
+      r.add_table("ROLES", @business_roles, :header => false, :skip_if_empty => true) do |t|
+        t.add_column(:rr) do |n1| # порядковый номер строки таблицы
+          rr += 1
+        end
+        t.add_column(:nr, :name)
+        t.add_column(:rdescription, :description)
+        t.add_column(:process_name) do |bp|
+          bp.bproce.name
+        end
+        t.add_column(:process_id) do |bp|
+          bp.bproce.id
+        end
+      end
+      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    report_file_name = report.generate
+    send_file(report_file_name,
+      :type => 'application/msword',
+      :filename => "order.odt",
+      :disposition => 'inline' )
+  end
+
   def sort_column
     params[:sort] || "displayname"
   end
