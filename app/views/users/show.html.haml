@@ -87,3 +87,6 @@
   -if current_user.role? :admin
     = link_to 'Edit', edit_user_path(@usr), :class => 'button'
 = link_to 'Back', users_path, :class => 'button'
+-if can? :update, Bproce
+  = link_to 'Распоряжение', user_path(@usr) + '/order', class: :button
+
