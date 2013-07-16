@@ -34,6 +34,9 @@ describe BprocesController do
     it "routes to #card" do
       get("/bproces/1/card").should route_to("bproces#card", :id => "1")
     end
+    it "routes to #order" do
+      get("/bproces/1/order").should route_to("bproces#order", :id => "1")
+    end
 
   end
 end
