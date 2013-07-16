@@ -65,7 +65,11 @@ BPDoc::Application.routes.draw do
     get "sign_out", :to => "devise/sessions#destroy"
     get "sign_up", :to => "devise/registrations#new"
   end
-  resources :users, :only => [:index, :show, :edit, :update]
+  resources :users, :only => [:index, :show, :edit, :update] do
+    member do
+      get :order  # распоряжение о назначении исполнителя на роли в процессах
+    end
+  end
   root :to => "home#index"
 
 end
