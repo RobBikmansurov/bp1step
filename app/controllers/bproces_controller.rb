@@ -1,3 +1,4 @@
+# coding: utf-8
 class BprocesController < ApplicationController
   include TheSortableTreeController::Rebuild
 
@@ -280,22 +281,24 @@ private
   # распоряжение о назачении на роли в процессе
   def print_order
     @business_roles = @bproce.business_roles.order(:name)
-    @users = @business_roles.last.users
     report = ODFReport::Report.new("reports/bp-order.odt") do |r|
       r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
-      r.add_field :id, @bproce.id
-      r.add_field :shortname, @bproce.shortname
+      r.add_field "ORDERNUM", Date.today.strftime('%Y%m%d-п') + @bproce.id.to_s
+      r.add_field :id, @bproce.id.to_s
+      #r.add_field :shortname, @bproce.shortname
       #r.add_field :name, @bproce.name
       r.add_field :fullname, @bproce.fullname
       if @bproce.parent_id
         r.add_field :parent, @bproce.parent.name
+        r.add_field :parent_id, @bproce.parent_id.to_s
       else
-        r.add_field :parent, "-"
+        r.add_field :parent, '-'
+        r.add_field :parent_id, '-'
       end
       if @bproce.user_id  # владелец процесса
         r.add_field :owner, @bproce.user.displayname
       else
-        r.add_field :owner, "-"
+        r.add_field :owner, '-'
       end
       rr = 0 # порядковый номер строки для ролей
       r.add_section("ROLES", @business_roles) do |s|

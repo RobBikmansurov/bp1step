@@ -21,3 +21,5 @@
             = ro.users.count - 1
       -else
         %td
+-if can? :update, @bp
+  = link_to 'Распоряжение', bproce_path(@bp) + '/order', class: :button
