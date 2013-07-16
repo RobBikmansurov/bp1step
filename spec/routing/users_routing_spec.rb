@@ -18,6 +18,9 @@ describe UsersController do
     it "routes to #update" do
       put("/users/1").should route_to("users#update", :id => "1")
     end
+    it "routes to #order" do
+      get("/users/1/order").should route_to("users#order", :id => "1")
+    end
 
   end
 end
