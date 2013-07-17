@@ -121,7 +121,7 @@ namespace :bp1step do
 
 
   desc "Check document files in eplace location"
-  task :check_document_files  => :environment do 		# проверка наличия файлов документов в каталоге
+  task :check_document_files_eplace  => :environment do 		# проверка наличия файлов документов в каталоге
     # TODO добавить конфиги для константы "files"
 
     logger = Logger.new('log/bp1step.log')	# протокол работы
@@ -151,6 +151,30 @@ namespace :bp1step do
     logger.info "All: #{nn} docs, but #{nf} files not found"
   end
 
+  desc "Check document_file for documents with level 1-3 "
+  task :check_document_files  => :environment do 		# проверка наличия файла документа для документов уровня 1-3 (кроме 4 - Свидетельства)
+    logger = Logger.new('log/bp1step.log')  # протокол работы
+    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_document_files'
+  	documents_count = 1
+    documents_not_file = 0
+    u = User.find(97) # пользователь по умолчанию
+    Document.where('dlevel < 2').each do |document|	# все документы кроме Свидетельств
+      if !document.document_file_file_name
+        documents_not_file += 1
+        if document.owner_id
+          mail_to = document.owner
+        else
+          mail_to = u
+        end
+        mail_to = u   # DEBUG dlevel <2 - только документы 1 уровня
+        DocumentMailer.file_not_found_email(document, mail_to).deliver	# рассылка об отсутствии файла документа
+      end
+
+      documents_count += 1
+    end
+  	logger.info "All: #{documents_count} docs, but #{documents_not_file} hasn't files"
+  end
+  
 
   desc "Create documents from files"
   task :create_documents_from_files  => :environment do 		# создание новых документов из файов в каталоге
@@ -166,7 +190,7 @@ namespace :bp1step do
     pathfrom = 'files/_1_Нормативные документы банка/__Внутренние документы Банка_действующие/'
     d = Dir.new(pathfrom)
 
-	Find.find( pathfrom ) do |f|	# обход всех файлов в каталогах с джокументами
+	  Find.find( pathfrom ) do |f|	# обход всех файлов в каталогах с джокументами
   		if not File.stat(f).directory?
   			nf += 1
   			fname = f[pathfrom.size..-1]
@@ -176,5 +200,14 @@ namespace :bp1step do
     logger.info 'All: #{nn} docs, but #{nf} files not found'
   end
 
+  desc "Email testing"
+  task :test_email  => :environment do 		# тестирование отправки email в production
+    logger = Logger.new('log/bp1step.log')  # протокол работы
+    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :test_email'
+  	u = User.find(97) # пользователь по умолчанию
+  	document = Document.last
+    mail_to = u   # DEBUG dlevel <2 - только документы 1 уровня
+    DocumentMailer.file_not_found_email(document, mail_to).deliver	# рассылка об отсутствии файла документа
+  end
 
 end
