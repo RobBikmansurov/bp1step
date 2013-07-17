@@ -55,11 +55,11 @@ namespace :deploy do
     run "ln -s -- #{deploy_to}/db/ #{deploy_to}/current/db"
     run "rm -rf #{deploy_to}/current/files"
     run "ln -s -- #{deploy_to}/files/ #{deploy_to}/current/files"
-    run "rm -rf #{deploy_to}/current/lib"
-    run "ln -s -- #{deploy_to}/lib/ #{deploy_to}/current/lib"
-    run "rm -rf #{deploy_to}/current/config"
-    run "ln -s -- #{deploy_to}/lib/ #{deploy_to}/current/config"
-    #run "cp #{deploy_to}/config/ldap.yml #{deploy_to}/current/config/ldap.yml"
+    run "rm -rf #{deploy_to}/lib"
+    run "ln -s -- #{deploy_to}/current/lib/ #{deploy_to}/lib"
+    #run "rm -rf #{deploy_to}/config"
+    #run "ln -s -- #{deploy_to}/current/config/ #{deploy_to}/config"
+    run "cp #{deploy_to}/config/ldap.yml #{deploy_to}/current/config/ldap.yml"
   end
 
 end
