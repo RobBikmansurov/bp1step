@@ -159,7 +159,7 @@ namespace :bp1step do
   	documents_count = 1
     documents_not_file = 0
     u = User.find(97) # пользователь по умолчанию
-    Document.where('dlevel < 1').each do |document|	# все документы кроме Свидетельств
+    Document.where('dlevel < 2').each do |document|	# все документы кроме Свидетельств
       if !document.document_file_file_name
         documents_not_file += 1
         if document.owner_id
