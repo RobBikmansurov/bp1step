@@ -153,6 +153,7 @@ namespace :bp1step do
 
   desc "Check document_file for documents with level 1-3 "
   task :check_document_files  => :environment do 		# проверка наличия файла документа для документов уровня 1-3 (кроме 4 - Свидетельства)
+  	# TODO контролировать все уровни документов кроме 4
     logger = Logger.new('log/bp1step.log')  # протокол работы
     logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_document_files'
   	documents_count = 1
@@ -166,10 +167,9 @@ namespace :bp1step do
         else
           mail_to = u
         end
-        mail_to = u   # DEBUG dlevel <2 - только документы 1 уровня
+        #mail_to = u   # DEBUG dlevel <2 - только документы 1 уровня
         DocumentMailer.file_not_found_email(document, mail_to).deliver	# рассылка об отсутствии файла документа
       end
-
       documents_count += 1
     end
   	logger.info "All: #{documents_count} docs, but #{documents_not_file} hasn't files"
@@ -178,8 +178,6 @@ namespace :bp1step do
 
   desc "Create documents from files"
   task :create_documents_from_files  => :environment do 		# создание новых документов из файов в каталоге
-    # TODO добавить конфиги для константы "files"
-    # TODO добавить mailer - отправлять письмо ответственному за документ об отсутствии файла документа
     require 'find'
 
     logger = Logger.new('log/bp1step.log')	# протокол работы
