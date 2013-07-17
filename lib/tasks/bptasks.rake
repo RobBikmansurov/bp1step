@@ -159,7 +159,7 @@ namespace :bp1step do
   	documents_count = 1
     documents_not_file = 0
     u = User.find(97) # пользователь по умолчанию
-    Document.where('dlevel < 2').each do |document|	# все документы кроме Свидетельств
+    Document.where('dlevel < 1').each do |document|	# все документы кроме Свидетельств
       if !document.document_file_file_name
         documents_not_file += 1
         if document.owner_id
@@ -207,5 +207,27 @@ namespace :bp1step do
     mail_to = u   # DEBUG dlevel <2 - только документы 1 уровня
     DocumentMailer.file_not_found_email(document, mail_to).deliver	# рассылка об отсутствии файла документа
   end
+
+  desc 'Check_bproces_roles'
+  task :check_bproces_roles => :environment do 	# рассылка о процессах, в которых не выделены роли
+    logger = Logger.new('log/bp1step.log')	# протокол работы
+    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_bproces_roles'
+    processes_count = 0
+    processes_without_roles = 0
+    u = User.find(97) # пользователь по умолчанию
+    Bproce.all.each do |bproce|	# все процессы
+      if Bproce.where("lft>? and rgt<?", bproce.lft, bproce.rgt).count == 0	# если это конечный процесс - без подпроцессов
+      	if bproce.business_roles.count == 0
+          processes_without_roles += 1
+          mail_to = u # DEBUG
+          mail_to = bproce.user if bproce.user   # владелец процесса
+          BproceMailer.process_without_roles(bproce, mail_to).deliver
+      	end
+      end
+      processes_count += 1
+    end
+    logger.info "      Processes: #{processes_count}, but #{processes_without_roles} hasn't roles"
+  end
+
 
 end
