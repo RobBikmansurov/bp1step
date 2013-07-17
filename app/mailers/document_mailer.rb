@@ -1,9 +1,10 @@
+# coding: utf-8
 class DocumentMailer < ActionMailer::Base
-  default from: "robb@bankperm.ru"
+  default from: "BP1Step <bp1step@bankperm.ru>"
 
-  def file_not_found_email(document, user)
+  def file_not_found_email(document, user)		# рассылка об отстутствии файла документа
     @doc = document
     @user = user
-    mail(:to => user.email, :subject => "bp1step: document file not found!")
+    mail(:to => user.email, :subject => "BP1Step: отсутствует файл документа")
   end
 end
