@@ -52,7 +52,7 @@ namespace :deploy do
     run "rm -rf #{deploy_to}/current/public/store"
     run "ln -s -- #{deploy_to}/shared/store/ #{deploy_to}/current/public/store"
     run "rm -rf #{deploy_to}/current/db"
-    run "ln -s -- #{deploy_to}/db/ #{deploy_tl o}/current/db"
+    run "ln -s -- #{deploy_to}/db/ #{deploy_to}/current/db"
     run "rm -rf #{deploy_to}/current/files"
     run "ln -s -- #{deploy_to}/files/ #{deploy_to}/current/files"
     run "rm -rf #{deploy_to}/current/lib"
