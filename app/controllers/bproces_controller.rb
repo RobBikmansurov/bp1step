@@ -301,17 +301,14 @@ private
         r.add_field :owner, '-'
       end
       rr = 0 # порядковый номер строки для ролей
+      nn = 0
       r.add_section("ROLES", @business_roles) do |s|
         s.add_field(:rr) do |nn| # порядковый номер строки таблицы
           rr += 1
         end
         s.add_field(:nr, :name)
         s.add_field(:rdescription, :description)
-        nn = 0
         s.add_table("TABLE_USERS", :users, :header => false, :skip_if_empty => true) do |u|
-          u.add_column(:nn) do |n1| # порядковый номер строки таблицы
-            nn += 1
-          end
           u.add_column(:displayname)
           u.add_column(:position)
         end
