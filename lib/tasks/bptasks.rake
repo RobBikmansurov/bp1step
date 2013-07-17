@@ -203,9 +203,11 @@ namespace :bp1step do
     logger = Logger.new('log/bp1step.log')  # протокол работы
     logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :test_email'
   	u = User.find(97) # пользователь по умолчанию
-  	document = Document.last
     mail_to = u   # DEBUG dlevel <2 - только документы 1 уровня
+    document = Document.last
     DocumentMailer.file_not_found_email(document, mail_to).deliver	# рассылка об отсутствии файла документа
+    bproce = Bproce.last
+    BproceMailer.process_without_roles(bproce, mail_to).deliver
   end
 
   desc 'Check_bproces_roles'
