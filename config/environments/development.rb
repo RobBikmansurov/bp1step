@@ -29,9 +29,9 @@ BPDoc::Application.configure do
     :address              => "mail.ad.bankperm.ru",
     :port                 => 25,
     :domain               => 'ad.bankperm.ru',
-    :user_name            => 'bp1step',
-    :password             => 'password',
-    :authentication       => 'plain',
+    #:user_name            => 'bp1step',
+    #:password             => 'password',
+    #:authentication       => 'plain',
     :enable_starttls_auto => true  }
 
   # Do not compress assets
