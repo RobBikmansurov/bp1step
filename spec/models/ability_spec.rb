@@ -112,7 +112,7 @@ describe Ability do
 
     ability = Ability.new(@user)
 
-    [Directive, Document, Term, BproceBapp, BproceIresource].each do |model|
+    [Directive, Document, Term, BproceBapp, BproceIresource, BusinessRole].each do |model|
       it "can :manage '#{model.to_s}'" do
         ability.should be_able_to(:create, model.new)
         ability.should be_able_to(:update, model.new)
