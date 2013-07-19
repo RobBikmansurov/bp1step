@@ -231,5 +231,25 @@ namespace :bp1step do
     logger.info "      Processes: #{processes_count}, but #{processes_without_roles} hasn't roles"
   end
 
+  desc 'Check bproces_owner access roles'
+  task :check_bproces_owners => :environment do  # рассылка о владельцах процессов, не имеющих необходимых ролей доступа
+    logger = Logger.new('log/bp1step.log')  # протокол работы
+    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_bproces_owners'
+    owners_count = 0
+    users_without_roles = 0
+    u = User.find(97) # пользователь по умолчанию
+    Bproce.group(:user_id).all.each do |bproce| # все владельцы процессов
+      if bproce.user_id  # есть владелец процесса?
+        @user = bproce.user
+        if !@user.has_role? :owner
+          users_without_roles += 1
+          logger.info "      #{@user.displayname} hasn't roles :owner"
+        end
+        owners_count += 1
+      end
+    end
+    logger.info "      Process owners: #{owners_count}, but #{users_without_roles} hasn't roles :owner"
+  end
+
 
 end
