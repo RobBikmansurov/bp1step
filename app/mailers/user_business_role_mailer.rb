@@ -13,6 +13,6 @@ class UserBusinessRoleMailer < ActionMailer::Base
     @user_business_role = user_business_role
     @bproce = user_business_role.business_role.bproce
     @user = user_business_role.user
-    mail(:to => @user.email, :subject => "BP1Step: удален исполнитель в процессе  ##{@bproce.id.to_s}")
+    mail(:to => @user.email, :subject => "BP1Step: удален исполнитель в процессе ##{@bproce.id.to_s}")
   end
 end
