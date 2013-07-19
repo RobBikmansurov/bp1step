@@ -26,6 +26,7 @@ class Ability
         can :manage, [Directive, Document, Term]
         can :manage, [BproceBapp, BproceIresource]
         can :update, Bproce, :user_id => user.id  # процесс владельца
+        can :manage, BusinessRole  # роли в процессе владельца
       end
 
       if user.has_role? :analitic
