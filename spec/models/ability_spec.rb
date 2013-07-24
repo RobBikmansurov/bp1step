@@ -36,6 +36,10 @@ describe Ability do
     it "can't view Document" do
       ability.can?(:view_document, Document).should be_false  # не может просмотреть файл документа
     end
+    it "can't view Document place" do
+      ability.can?(:edit_document_place, Document).should be_false  # не может изменит место хранения документа
+    end
+
   end
 
   context "authorized user with role :user" do   # зарегистрированный пользователь с ролью Пользователь
@@ -78,7 +82,7 @@ describe Ability do
 
     ability = Ability.new(@user)
 
-    [Directive, Document, Term].each do |model|
+    [Directive, Term].each do |model|
       it "can :manage '#{model.to_s}'" do
         ability.should be_able_to(:manage, model.new)
         ability.should be_able_to(:create, model.new)
@@ -86,14 +90,45 @@ describe Ability do
         ability.should be_able_to(:destroy, model.new)
       end
     end
+    it "can :manage Document" do
+      ability.should be_able_to(:create, Document)
+      @document = FactoryGirl.create(:document)
+      @document.owner_id = @user.id
+      @document.save
+      ability.should be_able_to(:update, Document, @document)
+      ability.should be_able_to(:destroy, Document)
+    end
 
     it "can view Document" do
       ability.can?(:view_document, Document).should be_true  # может просмотреть файл документа
       ability.should be_able_to(:view_document, Document)   # может просмотреть файл документа
     end
+    it "can't view Document place" do
+      ability.can?(:edit_document_place, Document).should be_false  # не может изменит место хранения документа
+    end
     it "can :show User" do
       ability.should be_able_to(:read, User)
       ability.can?(:show, User).should be_true # видит подробностей о пользователе
+    end
+  end
+
+  context "authorized user with role :keeper" do   # Владелец процесса
+    role = Role.first
+    role.name = :user
+    role.save
+    @user = FactoryGirl.create(:user)
+    role.name = :keeper
+    role.save
+    @user.roles << Role.find_by_name(role.name)
+
+    it "has roles" do
+      @user.roles.count.should == 1
+    end
+
+    ability = Ability.new(@user)
+    it "can edit Document place" do
+      ability.can?(:edit_document_place, Document).should be_true  # может изменит место хранения документа
+      ability.should be_able_to(:edit_document_place, Document)
     end
   end
 
@@ -112,11 +147,17 @@ describe Ability do
 
     ability = Ability.new(@user)
 
-    [Directive, Document, Term, BproceBapp, BproceIresource, BusinessRole].each do |model|
+    [Directive, Term, BproceBapp, BproceIresource, BusinessRole].each do |model|
       it "can :manage '#{model.to_s}'" do
         ability.should be_able_to(:create, model.new)
         ability.should be_able_to(:update, model.new)
         ability.should be_able_to(:destroy, model.new)
+      end
+    end
+    [Document].each do |model|
+      it "can :manage '#{model.to_s}'" do
+        ability.should be_able_to(:create, model.new)
+        ability.should be_able_to(:update, model.new)
       end
     end
 

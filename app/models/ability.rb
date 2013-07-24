@@ -9,21 +9,28 @@ class Ability
       can :read, :all #for guest without roles
       cannot :show, User
     else  #зарегистрированные пользователи хотя бы с одной ролью могут:
-      can :view_document, Document  # просматривать файл с документом
       can :read, User   # видеть подробности о других пользователях
 
       if user.has_role? :user
-        can :view_document, Document  # просматривать файл с документом
+        can :view_document, Document  # просматривать файл с документомu.
       end
 
       if user.has_role? :author
-        can :manage, [Directive, Document, Term]
+        can :create, Document
+        can [:update, :destroy], Document, :owner_id => user.id  # документ владельца
+        can :manage, [Directive, Term]
         can :view_document, Document  # просматривать файл с документом
         can :edit_document, [Document]  # может брать исходник документа
       end
+      if user.has_role? :keeper
+        can :edit_document_place, Document  # может изменять место хранения документа
+      else
+        cannot :edit_document_place, Document
+      end
 
       if user.has_role? :owner  # владелец процесса
-        can :manage, [Directive, Document, Term]
+        can [:update, :create], Document
+        can :manage, [Directive, Term]
         can :manage, [BproceBapp, BproceIresource]
         can :update, Bproce, :user_id => user.id  # процесс владельца
         can :manage, BusinessRole  # роли в процессе владельца
@@ -44,7 +51,6 @@ class Ability
       if user.has_role? :security
         can :assign_roles, User   # администратор доступа может изменять роли доступа пользователям
       end
-
     end
 
   end
