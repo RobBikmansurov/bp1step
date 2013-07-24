@@ -337,7 +337,7 @@ private
     end
   end
 
-  def report_workplaces(bproce, r, header)
+  def report_workplaces(bproce, r, header, users = false)
     ww = 0 # порядковый номер строки для рабочих мест
     @workplaces = bproce.workplaces
     r.add_table("TABLE_PLACES", @workplaces, :header => header, :skip_if_empty => true) do |t|

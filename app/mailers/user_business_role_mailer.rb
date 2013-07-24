@@ -6,13 +6,13 @@ class UserBusinessRoleMailer < ActionMailer::Base
     @user_business_role = user_business_role
     @bproce = user_business_role.business_role.bproce
     @user = user_business_role.user
-    mail(:to => @user.email, :subject => "BP1Step: добавлен исполнитель в процесс ##{@bproce.id.to_s}")
+    mail(:to => @user.email, :subject => "BP1Step: Вы - исполнитель в процессе ##{@bproce.id.to_s}")
   end
 
   def user_delete_role(user_business_role)		# рассылка об удалении исполнителя из роли в процессе
     @user_business_role = user_business_role
     @bproce = user_business_role.business_role.bproce
     @user = user_business_role.user
-    mail(:to => @user.email, :subject => "BP1Step: удален исполнитель в процессе ##{@bproce.id.to_s}")
+    mail(:to => @user.email, :subject => "BP1Step: удален исполнитель из процесса ##{@bproce.id.to_s}")
   end
 end
