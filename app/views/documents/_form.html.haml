@@ -32,7 +32,7 @@
   -# не показывать для нового процесса связанные с ним объекты - их еще нет
   -if @document.bproce
     Перейти к процессу:
-    = link_to @document.bproce.name, edit_bproce_path(@document.bproce)
+    = link_to @document.bproce.name, bproce_path(@document.bproce)
   %p
   -if can? :manage_tag, @document
     = f.input :tag_list, :label => 'Теги (через запятую)'
