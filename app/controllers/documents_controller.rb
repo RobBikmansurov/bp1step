@@ -61,6 +61,7 @@ class DocumentsController < ApplicationController
   end
 
   def edit
+    #authorize! :edit_document_place, @user if params[:user][:edit_document_place]
     @document_directives = DocumentDirective.find_all_by_document_id(@document) # все связи документа с директивами
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
     respond_with(@document)
