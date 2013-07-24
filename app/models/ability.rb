@@ -37,7 +37,8 @@ class Ability
       end
 
       if user.has_role? :analitic
-        can :manage, [Bproce, Bapp, BusinessRole, Document, BproceBapp, Term]
+        can [:update, :create], Document
+        can :manage, [Bproce, Bapp, BusinessRole, BproceBapp, Term]
         can :manage_tag, [Bproce] # может редактировать теги процессов
         can :edit_document, [Document]  # может брать исходник документа
       end
