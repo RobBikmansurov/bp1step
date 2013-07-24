@@ -69,7 +69,7 @@
   - Role.order(:description).all.each do |r|
     %tr
       %td
-        -if current_user and current_user.role? :admin
+        -if can? :assign_roles, User
           = link_to r.description, users_path + '?role=' + r.name
         -else
           = r.description
