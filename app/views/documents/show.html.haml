@@ -16,8 +16,6 @@
 %h3
   уровень документа:
   %b= link_to @document.dlevel, documents_path + '?dlevel=' + @document.dlevel.to_s, class: 'groups', title: dlevel_title(@document.dlevel)
-  раздел документооборота:
-  %b= link_to @document.part, documents_path + '?part=' + @document.part.to_s, class: 'groups'
 
 -if @document.bproce
   %h3
