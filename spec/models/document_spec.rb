@@ -9,7 +9,7 @@ describe Document do
     #it { should ensure_inclusion_of(:dlevel).in_range(1..4) }
     it { should validate_presence_of(:bproce_id) }
     it { should validate_presence_of(:place) }
-    it { should validate_presence_of(:part) }
+    #it { should validate_presence_of(:part) }
     it { should validate_presence_of(:owner_id) }
 
 
