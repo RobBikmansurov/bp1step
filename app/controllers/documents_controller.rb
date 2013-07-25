@@ -84,6 +84,7 @@ class DocumentsController < ApplicationController
   def new
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
     @document.owner_id = current_user.id if current_user  # владелец документа - пользователь
+    @document.place = '?!'  # место хранения не определено
     respond_with(@document)
   end
 
@@ -94,7 +95,7 @@ class DocumentsController < ApplicationController
   end
 
   def destroy
-    @document.destroy
+    flash[:notice] = "Successfully destroyed Document." if @document.destroy
     respond_to do |format|
       format.html { redirect_to documents_url }
     end

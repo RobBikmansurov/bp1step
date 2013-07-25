@@ -27,7 +27,6 @@ class Document < ActiveRecord::Base
   validates :bproce_id, :presence => true # документ относится к процессу
   validates :dlevel, :numericality => {:less_than => 5, :greater_than => 0}
   validates :place, :presence => true   # документ должен иметь место хранения
-  validates :part, :presence => true    # документ должен иметь раздел документооборота
   validates :owner_id, presence: true   # должен иметь ответственного
 
   include PublicActivity::Model
