@@ -45,7 +45,7 @@
 %h3 Место хранения
 %h4
   оригинал:
-  %b= link_to @document.place, documents_path + '?place=' + @document.place, class: 'groups', title: place_title(@document.place)
+  %b= link_to @document.place, documents_path + '?place=' + @document.place, class: 'groups', title: place_title(@document.place) if !@document.place.blank?
 
 %h4
   Электронный документ:

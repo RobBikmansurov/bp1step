@@ -25,6 +25,8 @@
     %th= sortable "approval", "От"
     %th Орган
     %th Наименование
+    - if can? :manage, Directive
+      %th
     - if can? :destroy, Directive
       %th
 
@@ -38,6 +40,9 @@
         = directive.title
         = directive.body
       %td= format_content(directive.name)
+      - if can? :manage, Directive
+        %td
+          = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_directive_path(directive), class: 'button-img'
       - if can? :destroy, Directive
         %td
           = link_to image_tag('action_stop.gif', :alt => 'Удалить'), directive, confirm: directive.shortname + "\nДействительно хотите удалить?", :method => 'delete', class: 'button-img'
