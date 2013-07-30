@@ -19,9 +19,10 @@
   -if can? :edit_document_place, Document
     = f.input :place, :hint => 'Место хранения оригиналов на бумаге (кратко: отдел папка)'
   -else
-    -if !@document.place.blank?
-      Место хранения оригиналов на бумаге:
-      %b= link_to @document.place, documents_path + '?place=' + @document.place, class: 'groups', title: place_title(@document.place)
+    - @document.place = '!?' if @document.place.blank?
+    =  f.hidden_field :place
+    Место хранения оригиналов на бумаге:
+    %b= link_to @document.place, documents_path + '?place=' + @document.place, class: 'groups', title: place_title(@document.place)
 
   -if @document.document_file_file_name
     = f.input :document_file, hint: 'заменить файл ' + @document.document_file_file_name + '  (' + @document.document_file_file_size.to_s + ' от ' + @document.document_file_updated_at.strftime("%d.%m.%Y %H:%M:%S)") 
