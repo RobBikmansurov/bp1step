@@ -44,25 +44,8 @@
           \-
           = user_workplace.date_to.strftime("%d.%m.%Y")
 
-- if @usr.roles.count > 0
-  %h2
-    = @usr.displayname
-    исполняет роли:
-  %table
-    %tr
-      %th Роль
-      %th Период
-      %th Основание
-      %th Процесс
-    - @uroles.each do |business_role|
-      %tr
-        %td= link_to business_role.business_role.name, business_role_path(business_role.business_role)
-        %td
-          = business_role.date_from.strftime("%d.%m.%Y")
-          \-
-          = business_role.date_to.strftime("%d.%m.%Y")
-        %td= business_role.note
-        %td= link_to Bproce.find(business_role.business_role.bproce).shortname, bproce_path(business_role.business_role.bproce)
+= render 'user_busines_roles'
+
 - if @usr.bproce.count > 0
   %h3
     Владелец
