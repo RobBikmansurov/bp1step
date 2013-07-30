@@ -36,9 +36,9 @@ BPDoc::Application.routes.draw do
       get :card   # карточка процесса
     end
   end
-  get 'bproces/tags/:tag', to: 'bproces#index', as: :tag
-  get 'bapps/tags/:tag', to: 'bapps#index', as: :tag
-  get 'documents/tags/:tag', to: 'documents#index', as: :tag
+  get 'bproces/tags/:tag', to: 'bproces#index', as: :tag_bproces
+  get 'bapps/tags/:tag', to: 'bapps#index', as: :tag_bapps
+  get 'documents/tags/:tag', to: 'documents#index', as: :tag_documents
   #get 'tags/:tag', to: 'bproces#index', as: :tag
   #get 'tags', to: 'bproces#index'
   resources :business_roles

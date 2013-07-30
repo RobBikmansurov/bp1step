@@ -80,4 +80,4 @@
     = link_to bapp.apptype, bapps_path + '?apptype=' + bapp.apptype.to_s, class: 'groups'
 %p
 Теги:
-= raw Bapp.all_tags.map { |t| link_to t.name, bapps_path + '/tags/' + t.name, class: 'tags' }.join('&nbsp; ')
+= raw Bapp.all_tags.map { |t| link_to t.name, tag_bapps_path(t.name), class: 'tags' }.join('&nbsp; ')
