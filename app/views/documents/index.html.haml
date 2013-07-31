@@ -9,8 +9,9 @@
   -else
     -if params[:dlevel]
       %h2
-        Список Документов уровня
         = params[:dlevel]
+        \:
+        =dlevel_title(@documents.first.dlevel)
     -else
       -if params[:part]
         %h2

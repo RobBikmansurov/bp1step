@@ -10,6 +10,10 @@
       -if params[:tag].present?
         %sup
           = params[:tag]
+      -else
+        -if params[:apptype].present?
+          %sub
+            = params[:apptype]
 -else
   %h2
     Приложения процесса

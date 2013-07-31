@@ -12,10 +12,8 @@
       ]
     -else
       -if params[:risk].present?
-        категория ресурса:
-        [ 
-        = params[:risk]
-        ]
+        %sup
+          = params[:risk]
       -else
         -if params[:user]
           %h2
