@@ -15,11 +15,10 @@ h1,h2,h3,h4,h5 {
   background-color: #eee;
   margin:0.5em 0 0.5em 0;}
 
-
 a {
   color: #000;
   &:visited {
-    color: #666;
+    color: #0B243B;
   }
   &:hover {
     color: #fff;
@@ -65,20 +64,18 @@ a {
   box-shadow: 2px 2px 4px #aaa;
 }
 th {
-  background: #ddd;
+  background: #D8D8D8;
 }
 th .current {  
   padding-right: 12px;  
   background-repeat: no-repeat;  
   background-position: right center;  
 }  
-th .asc {   
-  background-image: url(/images/up_arrow.gif);   
-}  
-  
-th .desc {   
-  background-image: url(/images/down_arrow.gif);   
-}
+th .asc { background-image: url(/images/up_arrow.gif); }  
+th .desc { background-image: url(/images/down_arrow.gif); }
+
+tbody tr:nth-child(even) td, tbody tr.even td {background: #DCE6EA;}
+
 a.button,
 .button {
   border:1px solid #9a9a9a;
@@ -137,6 +134,14 @@ logo_text span {
 a.tags:hover {
   color: #FFCC99;
   background-color: #993300;
+}
+
+#tag_cloud {
+  width: 400px;
+  line-height: 1.6em;
+  .s { font-size: 0.8em; }
+  .m { font-size: 1.2em; }
+  .l { font-size: 1.8em; }
 }
 
 .groups, a.groups {
