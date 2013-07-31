@@ -1,5 +1,6 @@
 class UserBusinessRolesController < ApplicationController
   respond_to :html, :xml, :json
+  before_filter :authenticate_user!, :only => [:new, :create]
   
   def show
   	#@u = User.find(params[:id])

@@ -1,5 +1,6 @@
 class UserWorkplacesController < ApplicationController
   respond_to :html, :xml, :json
+  before_filter :authenticate_user!, :only => [:new, :create, :destroy]
   
   def show
   	#@uw = User.find(params[:id])

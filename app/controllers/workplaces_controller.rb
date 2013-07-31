@@ -2,6 +2,7 @@ class WorkplacesController < ApplicationController
   respond_to :html
   respond_to :pdf, :odt, :xml, :json, :only => [:index, :switch]
   helper_method :sort_column, :sort_direction
+  before_filter :authenticate_user!, :only => [:edit, :update, :new, :create]
   before_filter :get_workplace, :except => [:index, :switch]
   #load_and_authorize_resource
 

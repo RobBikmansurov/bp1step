@@ -12,5 +12,8 @@ class ApplicationController < ActionController::Base
     flash[:error] = "Access"#exception.message
     redirect_to root_url
   end
-
+  
+  def not_found
+    raise ActionController::RoutingError.new('Not Found')
+  end
 end

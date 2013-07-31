@@ -6,6 +6,7 @@ class BprocesController < ApplicationController
   respond_to :pdf, :xml, :json, :only => [:index, :list]
   helper_method :sort_column, :sort_direction
   before_filter :get_bproce, :except => [:index, :list, :manage]
+  before_filter :authenticate_user!, :only => [:edit, :new, :create, :update]
 
   def list  # плоский список процессов без дерева
     @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).find(:all, :include => :user)

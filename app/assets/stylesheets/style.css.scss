@@ -118,10 +118,6 @@ logo_text span {
   line-height: 20px;
   background: rgba(0, 0, 0, 0.3);
 }
-#flash_notice {
-  color: #336633;
-  background-color: #CCFFCC;
-}
 
 .tags, a.tags {
   color: #996633;
@@ -189,8 +185,19 @@ ul {
     list-style: none;
 }
 
-.field_with_errors {
+.field_with_errors, #flash_alert {
   padding: 2px;
-  background-color: red;
+  background-color: #F6CECE;
   display: table;
+}
+#flash_alert {
+  padding: 2px;
+  color: red;
+  background-color: #F6CECE;
+  display: block;
+}
+#flash_notice {
+  padding: 2px;
+  color: #336633;
+  background-color: #CCFFCC;
 }

@@ -2,6 +2,7 @@ class BusinessRolesController < ApplicationController
   respond_to :html
   respond_to :odt, :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
+  before_filter :authenticate_user!, :only => [:edit, :new, :create, :update]
   before_filter :get_business_role, :except => [:index, :print]
 
   def index

@@ -1,5 +1,6 @@
 class BproceWorkplacesController < ApplicationController
   respond_to :html, :json
+  before_filter :authenticate_user!, :only => [:create, :destroy]
 
   def create
     @bproce_workplace = BproceWorkplace.create(params[:bproce_workplace])

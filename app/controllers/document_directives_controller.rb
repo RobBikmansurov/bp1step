@@ -1,5 +1,6 @@
 class DocumentDirectivesController < ApplicationController
   respond_to :html
+  before_filter :authenticate_user!, :only => [:edit, :new, :create, :update]
   before_filter :get_document_directive, :except => :index
 
   def index
