@@ -2,6 +2,7 @@
 class UsersController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
+  before_filter :authenticate_user!, :only => [:edit, :update, :order]
   before_filter :get_user, :except => [:index, :autocomplete]
 
   def index

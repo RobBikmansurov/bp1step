@@ -1,5 +1,6 @@
 class BproceIresourcesController < ApplicationController
   respond_to :html, :xml, :json
+  before_filter :authenticate_user!, :only => [:edit, :create]
   before_filter :get_bproce_iresource, :except => :index
   
   def create

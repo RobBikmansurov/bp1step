@@ -1,6 +1,7 @@
 class BproceBappsController < ApplicationController
   respond_to :html, :json
   helper_method :sort_column, :sort_direction
+  before_filter :authenticate_user!, :only => [:edit, :new]
   before_filter :get_bproce_bapp, :except => :index
 
   def create
