@@ -16,11 +16,15 @@ Gemfile.lock
 *.yml~
 *.erb~
 *.css~
+*.png
 app/models/user.rb.db_auth
 db.auth.off
 db.auth.on
 *.sublime*
 files/*
+public/*
+bp1step.store/*
+store/*
 .sass-cache/*
 mount-bp1step
 .rvmrc

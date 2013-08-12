@@ -63,6 +63,8 @@ class DocumentsController < ApplicationController
     #authorize! :edit_document_place, @user if params[:user][:edit_document_place]
     @document_directives = DocumentDirective.find_all_by_document_id(@document) # все связи документа с директивами
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
+    @document_bproces = BproceDocument.find_all_by_document_id(@document)  # все ссылки на документ из процессов
+    @document_bproce = @document.bproce_documents.new # заготовка для новой связи с процессом
     respond_with(@document)
   end
 
@@ -82,6 +84,7 @@ class DocumentsController < ApplicationController
 
   def new
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
+    @document_bproce = @document.document_bproce.new # заготовка для новой связи с процессом
     @document.owner_id = current_user.id if current_user  # владелец документа - пользователь
     @document.place = '?!'  # место хранения не определено
     respond_with(@document)

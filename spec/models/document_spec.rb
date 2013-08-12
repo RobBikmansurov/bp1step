@@ -31,7 +31,8 @@ describe Document do
   end
  
   context "associations" do
-    it { should belong_to(:bproce) }
+    #it { should belong_to(:bproce) }
+    it { should have_many(:bproce_documents).dependent(:destroy) }
     it { should belong_to(:owner).class_name(:User) }
     it { should have_many(:directive).through(:document_directive) }
     it { should have_many(:document_directive).dependent(:destroy) }

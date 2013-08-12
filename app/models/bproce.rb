@@ -14,7 +14,9 @@ class Bproce < ActiveRecord::Base
   validates :fullname, :length => {:minimum => 10, :maximum => 250}
 
   acts_as_nested_set
-  has_many :documents
+  #has_many :documents
+  has_many :documents, through: :bproce_documents
+  has_many :bproce_documents, dependent: :destroy 
   has_many :business_roles, :dependent => :destroy
   has_many :bproce_bapps, :dependent => :destroy
   has_many :bapps, :through => :bproce_bapps, :dependent => :destroy

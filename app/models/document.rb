@@ -38,6 +38,8 @@ class Document < ActiveRecord::Base
   belongs_to :owner, :class_name => 'User'
   has_many :directive, :through => :document_directive
   has_many :document_directive, :dependent => :destroy
+  has_many :bproce, through: :bproce_documents
+  has_many :bproce_documents, dependent: :destroy 
 
   attr_protected :uploaded_file # чтобы не было ошибки при массовом сохранении из params
 
