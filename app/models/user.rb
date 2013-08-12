@@ -74,6 +74,6 @@ class User < ActiveRecord::Base
 
   private
     def default_role
-      self.roles << Role.find_by_name(:user)  # if ENV['"RAILS_ENV"'] != :test
+      self.roles << Role.find_by_name('user')  # if ENV['"RAILS_ENV"'] != :test
     end
 end

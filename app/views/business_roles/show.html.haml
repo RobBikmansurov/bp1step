@@ -29,7 +29,12 @@
     %th Процесс
   - @business_role.user_business_role.each do |business_role|
     %tr
-      %td= link_to business_role.user.displayname, business_role.user
+      %td
+        -if business_role.user
+          = link_to business_role.user.displayname, business_role.user
+        -else
+          удалить ссылку
+          = business_role.inspect
       %td
         = business_role.date_from.strftime("%d.%m.%Y")
         \-
