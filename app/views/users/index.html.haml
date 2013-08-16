@@ -45,8 +45,9 @@
       -else
         %td
       -if can? :manage, user
-        %td= user.current_sign_in_at.to_s(:ru_datetime) if !user.current_sign_in_at.nil?
-        %td= user.last_sign_in_at.to_s(:ru_datetime) if !user.last_sign_in_at.nil?
+        %td= user.current_sign_in_at.strftime("%d.%m.%y %H:%M:%S") if !user.current_sign_in_at.nil?
+        -#%td= user.current_sign_in_at.to_s(:ru_datetime) if !user.current_sign_in_at.nil?
+        %td= user.last_sign_in_at.strftime("%d.%m.%y %H:%M:%S") if !user.last_sign_in_at.nil?
       - if can? :assign_roles, user
         %td
           = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_user_path(user), class: 'button-img'
