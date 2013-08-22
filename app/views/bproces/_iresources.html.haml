@@ -12,7 +12,7 @@
     (
     = bpres.rpurpose 
     )
-    = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bpres, confirm: "Действительно хотите исключить [" + bpres.iresource.label + "] из процесса:\n" + @bproce.name + "?", :method => 'delete', class: 'button-img'
+    = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bpres, data: { confirm: "Действительно хотите исключить [" + bpres.iresource.label + "] из процесса:\n" + @bproce.name + "?" }, :method => 'delete', class: 'button-img'
 
 = simple_form_for(@bproce_iresource) do | bproce_res |
   = bproce_res.error_notification

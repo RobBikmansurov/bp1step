@@ -37,7 +37,7 @@
       - if can? :manage, ro
         %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_business_role_path(ro), class: 'button-img'
       - if can? :destroy, ro
-        %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), ro, confirm: ro.name + "\nДействительно хотите удалить?", :method => 'delete', class: 'button-img'
+        %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), ro, data: { confirm: 'Роль"' + ro.name + "\"\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
 
 
 .apple_pagination

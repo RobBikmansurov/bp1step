@@ -9,7 +9,7 @@
   -@bproce.bproce_workplaces.each do | bpwp |	#  список рабочих мест процесса
     -if bpwp.workplace
       = link_to bpwp.workplace.designation, workplace_path(bpwp.workplace)
-      = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bpwp, confirm: "Действительно хотите исключить [" + bpwp.workplace.designation + "] из процесса:\n" + @bproce.name + "?", :method => 'delete', class: 'button-img'
+      = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bpwp, data: { confirm: "Действительно хотите исключить [" + bpwp.workplace.designation + "] из процесса:\n" + @bproce.name + "?" }, :method => 'delete', class: 'button-img'
     -else
       = bpwp.workplace.inspect
 

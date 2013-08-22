@@ -10,7 +10,7 @@
   -@bproce.bproce_bapps.each do | bpba |  #  список приложений процесса
     -if bpba.bapp
       = link_to bpba.bapp.name, bapp_path(bpba.bapp)
-      = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bpba, confirm: "Действительно хотите исключить [" + bpba.bapp.name + "] из процесса:\n" + @bproce.name + "?", :method => 'delete', class: 'button-img'
+      = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bpba, data: { confirm: "Действительно хотите исключить [" + bpba.bapp.name + "] из процесса:\n" + @bproce.name + "?" }, :method => 'delete', class: 'button-img'
     -else
       = bpba.inspect
 

@@ -8,7 +8,7 @@
     )
     -if can? :update, @document
       %td
-        =link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce_document, confirm: bproce_document.purpose + "\n" + bproce_document.bproce.name + "\nДействительно хотите удалить связь с процессом?", :method => 'delete', class: 'button-img'
+        =link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce_document, data: { confirm: bproce_document.purpose + "\n" + bproce_document.bproce.name + "\nДействительно хотите удалить связь с процессом?" }, :method => 'delete', class: 'button-img'
 
 
 = simple_form_for(@document_bproce) do |bp|
