@@ -45,7 +45,7 @@
           = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_directive_path(directive), class: 'button-img'
       - if can? :destroy, Directive
         %td
-          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), directive, confirm: directive.shortname + "\nДействительно хотите удалить?", :method => 'delete', class: 'button-img'
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), directive, data: { confirm: 'Директива "' + directive.shortname + "\"\nДействительно хотите удалить?"}, :method => 'delete', class: 'button-img'
 
 .apple_pagination
   = will_paginate @directives

@@ -22,9 +22,9 @@
       %td= role.description
       - if can? :destroy, role
         %td
-          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), term, confirm: 'Роль доступа ' + term.name + "\nДействительно хотите удалить?", :method => 'delete', class: 'button-img'
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), role, data: { confirm: 'Роль доступа ' + role.name + "\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
 
--if ! params[:all].present? # если список всех терминов - отключить постраничый вывод
+-if ! params[:all].present?
   .apple_pagination
     = will_paginate @roles 
 

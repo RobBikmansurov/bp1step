@@ -28,4 +28,4 @@
         %td
           = link_to ires.bproce.name, bproce_path(ires.bproce)
         %td
-          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), ires, confirm: "Действительно хотите исключить [" + ires.iresource.label + "] из процесса:\n" + ires.bproce.name + "?", :method => 'delete', class: 'button-img'
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), ires, data: { confirm: "Действительно хотите исключить [" + ires.iresource.label + "] из процесса:\n" + ires.bproce.name + "?" }, :method => 'delete', class: 'button-img'

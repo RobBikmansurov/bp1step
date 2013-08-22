@@ -27,7 +27,7 @@
           = link_to bb.apurpose, bproce_bapp_path(bb)
       -if can? :destroy, bb
         %td
-          = link_to 'Destroy', bb, :confirm => 'Are you sure?', :method => :delete
+          = link_to 'Destroy', bb, data: { confirm: 'Are you sure?'}, :method => :delete
 
 .apple_pagination
   = will_paginate @bproce_bapp 
