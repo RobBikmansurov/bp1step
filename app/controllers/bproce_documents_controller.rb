@@ -1,7 +1,7 @@
 class BproceDocumentsController < ApplicationController
   respond_to :html, :xml, :json
   before_filter :authenticate_user!, :only => [:edit, :new, :destroy]
-  before_filter :get_bproce_document, :except => :index
+  before_filter :get_bproce_document, :except => [ :index, :show ]
   
   def create
     #@bproce_document = BproceDocument.create(params[:bproce_document])
@@ -11,7 +11,7 @@ class BproceDocumentsController < ApplicationController
 
   def show
   	@bproce = Bproce.find(params[:id])
-  	respond_with(@documents = @bproce.documents)
+  	respond_with(@bproce_documents = @bproce.bproce_documents)
   end
 
   def destroy
@@ -22,6 +22,15 @@ class BproceDocumentsController < ApplicationController
     else
       respond_with(document)
     end
+  end
+
+  def edit
+    respond_with(@bproce_document)
+  end
+
+  def update
+    flash[:notice] = "Successfully updated bproce_document." if @bproce_document.update_attributes(params[:bproce_document])
+    respond_with(@bproce_document)
   end
 
 
