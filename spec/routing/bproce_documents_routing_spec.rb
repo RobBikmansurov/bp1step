@@ -19,5 +19,13 @@ describe BproceDocumentsController do
       expect(get: "/bproce_documents").to_not be_routable
     end
 
+    it "routes to #edit" do
+      get("/bproce_documents/1/edit").should route_to("bproce_documents#edit", :id => "1")
+    end
+
+    it "routes to #update" do
+      put("/bproce_documents/1").should route_to("bproce_documents#update", :id => "1")
+    end
+
   end
 end

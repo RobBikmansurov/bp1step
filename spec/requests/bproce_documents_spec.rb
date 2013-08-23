@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "BproceDocuments" do
   before(:each) do
-    @bp = create(:bproce)
+    @bp = create(:bproce_document)
   end
 
   describe "GET /bproce_document/1" do

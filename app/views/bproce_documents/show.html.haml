@@ -6,22 +6,17 @@
 -#= form_tag documents_path, :method => 'get' do
 %table
   %tr
-    %th 
+    %th #
     %th Наименование
-    %th Описание
-    -#    %th Имя файла
-    -#%th authority
+    %th Назначение / Описание
     %th Статус
     %th Дата
-    -#%th responsible
-    %th Место
     
-  - @documents.each do |document|
+  - @bproce_documents.each do |bproce_document|
     %tr
-      %td= document.id
-      %td= link_to document.name, document_path(document)
-      %td= format_content(document.description)
-      -#      %td= document.filename
-      %td= document.status
-      %td= document.approved 
-      %td= document.place
+      %td= bproce_document.document.id
+      %td= link_to bproce_document.document.name, document_path(bproce_document.document)
+      -#%td= format_content(document.description)
+      %td= link_to bproce_document.purpose, edit_bproce_document_path(bproce_document)
+      %td= bproce_document.document.status
+      %td= bproce_document.document.approved 
