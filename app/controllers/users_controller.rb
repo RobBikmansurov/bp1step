@@ -20,6 +20,9 @@ class UsersController < ApplicationController
         end
       end
     end
+    respond_to do |format|
+      format.html
+    end
   end
 
   def autocomplete
