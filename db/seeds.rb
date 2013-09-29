@@ -58,4 +58,8 @@ wp2 = Workplace.create(:name => 'Главный бухгалтер', :descriptio
 end
 puts "workplaces created"
 
+# terms
+term1 = Term.create(:name => 'электронная подпись', :shortname => 'ЭП', :description => 'электронная подпись')
+puts 'terms created' 
+
 PublicActivity.enabled = true
