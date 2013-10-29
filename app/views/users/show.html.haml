@@ -1,8 +1,8 @@
 -title 'Сотрудник ' + @usr.displayname
-%h1 
+%h1{style: ('text-decoration: line-through;' if !@usr.active)} 
   %b
     = @usr.displayname
-  = @usr.position  
+  = @usr.position
 %h4
   = @usr.department
   |
