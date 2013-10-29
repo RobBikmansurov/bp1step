@@ -11,12 +11,12 @@ class UsersController < ApplicationController
       @users = @role.users.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
     else
       if params[:office].present?
-        @users = User.where(:office => params[:office]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        @users = User.active.where(:office => params[:office]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
       else
         if params[:all].present?
-          @users = User.order(sort_column + ' ' + sort_direction)
+          @users = User.active.order(sort_column + ' ' + sort_direction)
         else
-          @users = User.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+          @users = User.active.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
         end
       end
     end
@@ -26,7 +26,7 @@ class UsersController < ApplicationController
   end
 
   def autocomplete
-    @users = User.order(:displayname).where("displayname like ?", "%#{params[:term]}%")
+    @users = User.active.order(:displayname).where("displayname like ?", "%#{params[:term]}%")
     render json: @users.map(&:displayname)
   end
 
