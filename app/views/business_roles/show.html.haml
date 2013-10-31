@@ -29,10 +29,11 @@
     %th Процесс
   - @business_role.user_business_role.each do |business_role|
     %tr
-      %td
-        -if business_role.user
+      -if business_role.user
+        %td{style: ('text-decoration: line-through;' if !business_role.user.active)} 
           = link_to business_role.user.displayname, business_role.user
-        -else
+      -else
+        %td
           удалить ссылку
           = business_role.inspect
       %td
