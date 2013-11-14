@@ -16,7 +16,13 @@ class BproceDocumentsController < ApplicationController
 
   def destroy
     document = @bproce_document.document
-    flash[:notice] = "Successfully destroyed bproce_document." if @bproce_document.destroy
+    logger.debug "document = #{document.inspect}"
+    logger.debug "@bproce_document = #{@bproce_document.inspect}"
+    if document.bproce_documents.count > 1
+      flash[:notice] = "Successfully destroyed bproce_document." if @bproce_document.destroy
+    else
+      flash[:notice] = "Error destroyed bproce_document."
+    end
     if !@bproce.blank?
       respond_with(@bproce)
     else
@@ -39,8 +45,6 @@ private
   def get_bproce_document
     @bproce = Bproce.find(params[:bproce_id]) if params[:bproce_id].present?
     @document = Document.find(params[:document_id]) if params[:document_id].present?
-    logger.debug "bproce = #{@bproce.inspect}"
-    logger.debug "document = #{@document.inspect}"
     @bproce_document = params[:id].present? ? BproceDocument.find(params[:id]) : BproceDocument.new(params[:bproce_document])
   end
 
