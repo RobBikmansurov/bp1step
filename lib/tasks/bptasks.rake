@@ -35,68 +35,68 @@ namespace :bp1step do
 
     i, new_users, upd_users, not_found_users, disabled_users = 0, 0, 0, 0, 0  # счетчики
     ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do |entry|
-      i += 1
-      email = entry["mail"].first       # это обязательные параметры + к ним левые уникальные password и reset_password_token
-      username = entry["sAMAccountName"].first.downcase
-      #logger.info "#{username} #{email}" if debug_flag
-      uac = entry["userAccountControl"].first.to_i  # второй бит = 1 означает отключенного пользователя в AD
-      if uac & 2 == 0 # пользователь не заблокирован
-          usr = User.find_or_create_by_username :username => username, :email => email, :password => email
-          if usr.new_record?
-            if email.to_s.empty?  # пропустим с пустым email
-              logger.info "#{i}!#{new_users}. #{entry.sAMAccountName} #{entry.dn} \t- email is NULL!"
+    i += 1
+    email = entry["mail"].first       # это обязательные параметры + к ним левые уникальные password и reset_password_token
+    username = entry["sAMAccountName"].first.downcase
+    #logger.info "#{username} #{email}" if debug_flag
+    uac = entry["userAccountControl"].first.to_i  # второй бит = 1 означает отключенного пользователя в AD
+    if uac & 2 == 0 # пользователь не заблокирован
+        usr = User.find_or_create_by_username :username => username, :email => email, :password => email
+        if usr.new_record?
+          if email.to_s.empty?  # пропустим с пустым email
+            logger.info "#{i}!#{new_users}. #{entry.sAMAccountName} #{entry.dn} \t- email is NULL!"
+          else
+            new_users += 1
+            usr1 = User.find_by_email(email.to_s) # поищем по e-mail
+            if usr1.nil?
+              logger.info "+ #{entry["sn"].first} \t[#{username}] \t"
+              usr.save
+              logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} #{entry.dn}"
+              logger.info usr.errors
             else
-              new_users += 1
-              usr1 = User.find_by_email(email.to_s) # поищем по e-mail
-              if usr1.nil?
-                logger.info "+ #{entry["sn"].first} \t[#{username}] \t"
-                usr.save
-                logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} #{entry.dn}"
-                logger.info usr.errors
-              else
-                logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} = #{usr1.username}"
-                logger.info "    уже есть пользователь с таким e-mail, #id= #{usr1.id}"
-              end
+              logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} = #{usr1.username}"
+              logger.info "    уже есть пользователь с таким e-mail, #id= #{usr1.id}"
             end
-          else  # проверим - не изменилось ли ключевые реквизиты у этого пользователя в AD
-            if !(usr.email == email)  # e-mail
-              logger.info "#{usr.email} = #{email}: #{usr.email == email}" if debug_flag
-              usr.update_attribute(:email, email)
-              usr.email = email
-            end
-            s1 = entry["department"].first.to_s.force_encoding("UTF-8")
-            if !(usr.department.to_s == s1) # подразделение
-              logger.info "#{usr.id}: #{usr.department} = #{s1}: #{usr.department == s1}" if debug_flag
-              usr.update_attribute(:department, s1)
-            end
-            s2 = entry["title"].first.to_s.force_encoding("UTF-8")
-            if !(usr.position.to_s == s2) # должность
-              logger.info "#{usr.id}: #{usr.position} = #{s2}: #{usr.position == s2}" if debug_flag
-              usr.update_attribute(:position, s2)
-            end
-            if !(usr.phone == entry["telephonenumber"].first) # телефон
-              #logger.info "#{usr.phone} = #{entry['telephonenumber'].first}: #{usr.phone == entry['telephonenumber'].first}" if debug_flag
-              usr.update_attribute(:phone, entry["telephonenumber"].first)
-            end
-            if !(usr.office == entry["physicaldeliveryofficename"].first) # офис
-              usr.update_attribute(:office, entry["physicaldeliveryofficename"].first)
-              #logger.info "#{usr.office} = #{entry['physicaldeliveryofficename'].first}: #{usr.office == entry['physicaldeliveryofficename'].first}" if debug_flag
-            end
-            logger.info "#{entry["sn"].first} \t[#{username}] \t #{usr.changed}" if usr.changed?
           end
-        else  # пользователь заблокирован в AD
-          usr = User.find_by_username(username)   # поищем в БД
-          if !usr.nil?
-            disabled_users += 1
-            #usr.delete # надо бы удалить, но вдруг на него есть ссылки
-            logger.info "#{i}!#{disabled_users}. #{entry.sAMAccountName} #{entry.dn} \t- disabled user!"
+        else  # проверим - не изменилось ли ключевые реквизиты у этого пользователя в AD
+          if !(usr.email == email)  # e-mail
+            logger.info "#{usr.email} = #{email}: #{usr.email == email}" if debug_flag
+            usr.update_attribute(:email, email)
+            usr.email = email
           end
+          s1 = entry["department"].first.to_s.force_encoding("UTF-8")
+          if !(usr.department.to_s == s1) # подразделение
+            logger.info "#{usr.id}: #{usr.department} = #{s1}: #{usr.department == s1}" if debug_flag
+            usr.update_attribute(:department, s1)
+          end
+          s2 = entry["title"].first.to_s.force_encoding("UTF-8")
+          if !(usr.position.to_s == s2) # должность
+            logger.info "#{usr.id}: #{usr.position} = #{s2}: #{usr.position == s2}" if debug_flag
+            usr.update_attribute(:position, s2)
+          end
+          if !(usr.phone == entry["telephonenumber"].first) # телефон
+            #logger.info "#{usr.phone} = #{entry['telephonenumber'].first}: #{usr.phone == entry['telephonenumber'].first}" if debug_flag
+            usr.update_attribute(:phone, entry["telephonenumber"].first)
+          end
+          if !(usr.office == entry["physicaldeliveryofficename"].first) # офис
+            usr.update_attribute(:office, entry["physicaldeliveryofficename"].first)
+            #logger.info "#{usr.office} = #{entry['physicaldeliveryofficename'].first}: #{usr.office == entry['physicaldeliveryofficename'].first}" if debug_flag
+          end
+          logger.info "#{entry["sn"].first} \t[#{username}] \t #{usr.changed}" if usr.changed?
+        end
+      else  # пользователь заблокирован в AD
+        usr = User.find_by_username(username)   # поищем в БД
+        if !usr.nil?
+          disabled_users += 1
+          usr.update_attribute(:active, false)
+          logger.info "#{i}!#{disabled_users}. #{entry.sAMAccountName} #{entry.dn} \t- disabled user!"
         end
       end
-      logger.info "LDAP users total: #{i}, add: #{new_users}, disable: #{disabled_users} users"
+    end
+    logger.info "LDAP users total: #{i}, add: #{new_users}, disable: #{disabled_users} users"
 
-      i, disabled_users = 0, 0
-      User.all.each do |user|     # проверим: все ли пользователи есть в LDAP
+    i, disabled_users = 0, 0
+    User.all.each do |user|     # проверим: все ли пользователи есть в LDAP
       i += 1
       filter = Net::LDAP::Filter.eq("sAMAccountName", user.username)
       exist_user = 0
@@ -249,6 +249,22 @@ end
       end
     end
     logger.info "      Process owners: #{owners_count}, but #{users_without_roles} hasn't roles :owner"
+  end
+
+  desc 'Migrate document.bproce_id to BproceDocuments: document can related to many bprocesses'
+  task :migrate_bproce_id_to_bprocedocument => :environment do  # перенос ссылок на процесс из документа Document.bproce_id в BproceDocument
+    logger = Logger.new('log/bp1step.log')  # протокол работы
+    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :bproce_id_to_bprocedocument'
+    document_count = 0
+    bproce_count = 0
+    Document.all.each do |document| # все документы
+      document_count += 1
+      if document.bproce_id  # есть процесса?
+        BproceDocument.create(bproce_id: document.bproce_id, document_id: document.id, purpose: 'основной')
+        bproce_count += 1
+      end
+    end
+    logger.info "      Migrates #{bproce_count} processes from #{document_count} documents"
   end
 
 
