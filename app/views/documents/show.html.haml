@@ -17,12 +17,6 @@
   уровень документа:
   %b= link_to @document.dlevel, documents_path + '?dlevel=' + @document.dlevel.to_s, class: 'groups', title: dlevel_title(@document.dlevel)
 
--if @document.bproce
-  %h3
-    Относится к процессу:
-    = link_to @document.bproce.name, bproce_path(@document.bproce)
--else
-  %h3 Процесс не назначен!
 - if !@document.bproce.blank?  # есть ссылки из документа на другие процессы?
   %h3 Относится к следующим процессам:
   - @document.bproce_documents.each do |bproce_document|
@@ -30,6 +24,8 @@
     (
     = bproce_document.purpose
     )
+-else
+  %h3 Процесс не назначен!
 
 %p
 %h3

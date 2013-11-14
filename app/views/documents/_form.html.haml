@@ -29,13 +29,7 @@
     = f.input :delete_file, as: :boolean, label: 'Удалить файл', hint: 'удалить файл ' + @document.document_file_file_name, :boolean_style => :inline
   -else
     = f.input :document_file, hint: 'Выберите файл с документом для загрузки'
-  -# покажем список процессов, отсортированный по наименованиям
-  = f.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Процесс', :hint => 'Выберите Процесс, к которому относится документ', :prompt => 'Процесс документа'
-  -# не показывать для нового процесса связанные с ним объекты - их еще нет
-  -if @document.bproce
-    Перейти к процессу:
-    = link_to @document.bproce.name, bproce_path(@document.bproce)
-  %p
+    %p
   -if can? :manage_tag, @document
     = f.input :tag_list, :label => 'Теги (через запятую)'
   = f.error :base
