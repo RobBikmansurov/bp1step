@@ -24,7 +24,7 @@ class Document < ActiveRecord::Base
   #validates_attachment :document_file, :content_type => { :content_type => "application/pdf" }
 
   validates :name, :length => {:minimum => 10, :maximum => 200}
-  validates :bproce_id, :presence => true # документ относится к процессу
+  #validates :bproce_id, :presence => true # документ относится к процессу
   validates :dlevel, :numericality => {:less_than => 5, :greater_than => 0}
   validates :place, :presence => true   # документ должен иметь место хранения
   validates :owner_id, presence: true   # должен иметь ответственного

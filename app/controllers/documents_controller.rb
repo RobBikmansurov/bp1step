@@ -84,7 +84,7 @@ class DocumentsController < ApplicationController
 
   def new
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
-    @document_bproce = @document.document_bproce.new # заготовка для новой связи с процессом
+    #@document_bproce = @document.bproce_documents.new # заготовка для новой связи с процессом
     @document.owner_id = current_user.id if current_user  # владелец документа - пользователь
     @document.place = '?!'  # место хранения не определено
     respond_with(@document)
