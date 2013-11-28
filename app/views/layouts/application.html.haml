@@ -30,7 +30,7 @@
             &nbsp;
           -else
             %form.inline{:method => "get"}
-              %input{:name => "search", :type => "search", :value => params[:search], :placeholder => "искать", required: :true}
+              %input{:name => "search", :type => "search", :value => params[:search], :placeholder => "искать #{yield (:search)}", required: :true}
               -#%button{type: 'submit'} Искать
             %sup введите подстроку поиска с учетом регистра
             

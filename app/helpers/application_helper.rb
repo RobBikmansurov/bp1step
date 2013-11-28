@@ -6,8 +6,12 @@ module ApplicationHelper
     link_to title, params.merge(:sort => column, :direction => direction, :page => nil), {:class => css_class}  
   end  
 
-  def title(page_title)  
+  def title(page_title)
     content_for(:title) { page_title }  
+  end  
+
+  def search(search_title)
+    content_for(:search) { search_title }  
   end  
 
   def resource_name
