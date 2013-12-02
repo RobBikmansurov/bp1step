@@ -9,7 +9,9 @@ class BusinessRolesController < ApplicationController
     if params[:all].present?
       @business_roles = BusinessRole.order(sort_column + ' ' + sort_direction)
     else
-      @business_roles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      @business_roles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).page(params[:page])
+      #@business_roles = BusinessRole.page(params[:page]).search(params[:search])
+      #@business_roles = BusinessRole.paginate(:per_page => 10, :page => params[:page])
     end
     @business_roles = @business_roles.find(:all, :include => :users)
     respond_to do |format|

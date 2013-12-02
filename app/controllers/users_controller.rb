@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   def index
     if params[:role].present?
       @role = Role.find_by_name(params[:role])
-      @users = @role.users.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      @users = @role.users.search(params[:search]).order(sort_column + ' ' + sort_direction).page(:page => params[:page])
     else
       if params[:office].present?
         @users = User.active.where(:office => params[:office]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
@@ -16,7 +16,8 @@ class UsersController < ApplicationController
         if params[:all].present?
           @users = User.active.order(sort_column + ' ' + sort_direction)
         else
-          @users = User.active.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+          @users = User.page(params[:page]).active.search(params[:search]).order(sort_column + ' ' + sort_direction)
+          #@users, @alphaParams = User.all.alpha_paginate(params[:letter]){|user| user.lastname}
         end
       end
     end

@@ -44,7 +44,7 @@
 .apple_pagination
   -#.page_info
     -#    = page_entries_info @business_roles
-  = will_paginate @broles 
+  = will_paginate @business_roles 
 %p
 - if can? :destroy, BusinessRole
   = link_to 'Каталог', business_roles_path + '.odt?all=1', :class => 'button'
