@@ -24,7 +24,7 @@ class Iresource < ActiveRecord::Base
     if search
       where('label LIKE ? or location LIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search}")
     else
-      scoped
+      where(nil)
     end
   end
 

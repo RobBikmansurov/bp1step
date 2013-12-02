@@ -35,7 +35,7 @@ class Directive < ActiveRecord::Base
       where('number LIKE ? or name LIKE ? or title LIKE ? or body LIKE ?',
             "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%")
     else
-      scoped
+      where(nil)
     end
   end
 

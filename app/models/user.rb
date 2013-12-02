@@ -1,6 +1,7 @@
 # coding: utf-8
 class User < ActiveRecord::Base
-  scope :active, where(:active => true)
+  scope :active, -> { where(active: true) }
+
   validates :username, :presence => true, :uniqueness => true
   validates :email, :presence => true, :uniqueness => true
   
@@ -11,18 +12,19 @@ class User < ActiveRecord::Base
   has_many :user_roles, :dependent => :destroy  # роли доступа пользователя
   has_many :roles, :through => :user_roles
   has_many :bproce
+  has_many :iresource
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   # аутентификация - через БД
-  #devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
   # аутентификация - через LDAP
-  devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  #devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
    
   before_create :create_role
 
   attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :firstname, :lastname, :displayname, :role_ids
-  before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
+  #before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
 
   def has_role?(role_sym)
     roles.any? { |r| r.name.underscore.to_sym == role_sym }
@@ -32,7 +34,7 @@ class User < ActiveRecord::Base
       #Rails::logger.info("### Getting the users last name")
       tempname = Devise::LdapAdapter.get_ldap_param(self.username,"sn").to_s
       tempname = tempname.force_encoding("UTF-8")
-      #puts "\tLDAP returned lastname of " + tempname
+      #puts "\tLDAP returned lastname of " + 
       self.lastname = tempname
   end 
 
@@ -75,6 +77,6 @@ class User < ActiveRecord::Base
 
   private
     def create_role
-      self.roles << Role.find_by_name(:user)  if ENV["RAILS_ENV"] != 'test' 
+      self.roles << Role.find_by_name(:user)#  if ENV["RAILS_ENV"] != 'test' 
     end
 end

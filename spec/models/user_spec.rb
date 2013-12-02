@@ -3,8 +3,9 @@ require 'spec_helper'
 PublicActivity.enabled = false
 
 describe User do
-  before do
-    @role = FactoryGirl.create(:role) # создать роль по умолчанию
+  before(:all) do
+    Role.all.each { |r| r.destroy }
+    @role = FactoryGirl.create(:role)
     @role.name = 'user'
     @role.save
   end
@@ -27,7 +28,7 @@ describe User do
     it { should have_many(:user_business_role) }   # бизнес-роли пользователя
     it { should have_many(:business_roles).through(:user_business_role) }
     it { should have_many(:user_workplace) }        # рабочие места пользователя
-    it { should have_many(:workplaces).through(:user_workplace).dependent(:destroy) }
+    it { should have_many(:workplaces).through(:user_workplace) }
     it { should have_many(:user_roles).dependent(:destroy) }  # роли доступа пользователя
     it { should have_many(:roles).through(:user_roles) }
     it { should have_many(:bproce) }
@@ -58,9 +59,7 @@ describe User do
   end
 
   it 'should have default role' do
-    user = FactoryGirl.create(:user)
-    user.reload
-    user.roles.count.should > 0
+    @user.roles.count.should > 0
   end
 
 

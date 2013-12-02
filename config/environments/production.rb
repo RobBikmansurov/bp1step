@@ -65,4 +65,6 @@ BPDoc::Application.configure do
   config.active_support.deprecation = :notify
   Paperclip.options[:command_path] = "/usr/bin/"
 
+  config.eager_load = false
+
 end
