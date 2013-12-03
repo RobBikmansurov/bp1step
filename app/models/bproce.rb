@@ -40,7 +40,7 @@ class Bproce < ActiveRecord::Base
       where('shortname LIKE ? or name LIKE ? or fullname LIKE ? or id = ? COLLATE NOCASE',
             "%#{search}%", "%#{search}%", "%#{search}%", "#{search}")
     else
-      scoped
+      where(nil)
     end
   end
 

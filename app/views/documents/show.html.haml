@@ -20,7 +20,7 @@
 
 - if !@document.bproce.blank?  # есть ссылки из документа на другие процессы?
   %h3 Относится к следующим процессам:
-  - @document.bproce_documents.each do |bproce_document|
+  - @document.bproce_document.each do |bproce_document|
     = link_to bproce_document.bproce.name, bproce_path(bproce_document.bproce)
     (
     = bproce_document.purpose

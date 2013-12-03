@@ -12,7 +12,7 @@ class Term < ActiveRecord::Base
     if search
       where('shortname LIKE ? or name LIKE ? or description LIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
     else
-      scoped
+      where(nil)
     end
   end
 end

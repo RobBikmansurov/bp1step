@@ -9,7 +9,7 @@ class Workplace < ActiveRecord::Base
   has_many :bproce_workplaces
   has_many :bproces, through: :bproce_workplaces
   has_many :user_workplace    # пользователи рабочего миеста
-  has_many :users, through: :user_workplace, dependent: :destroy
+  has_many :users, through: :user_workplace
 
   accepts_nested_attributes_for :bproce_workplaces, :allow_destroy => true
   accepts_nested_attributes_for :bproces
@@ -20,7 +20,7 @@ class Workplace < ActiveRecord::Base
       where('designation LIKE ? or name LIKE ? or description LIKE ? or id = ?',
             "%#{search}%", "%#{search}%", "%#{search}%", "#{search}")
     else
-      scoped
+      where(nil)
     end
   end
 

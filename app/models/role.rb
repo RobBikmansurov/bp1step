@@ -11,7 +11,7 @@ class Role < ActiveRecord::Base
     if search
       where('name LIKE ? or description LIKE ?', "%#{search}%", "%#{search}%")
     else
-      scoped
+      where(nil)
     end
   end
 

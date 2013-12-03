@@ -19,7 +19,7 @@ class Bapp < ActiveRecord::Base
     if search
       where('name LIKE ? or description LIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search}")
     else
-      scoped
+      where(nil)
     end
   end
 
@@ -27,7 +27,7 @@ class Bapp < ActiveRecord::Base
     if search
       where('apptype LIKE ? COLLATE NOCASE', "%#{search}%")
     else
-      scoped
+      where(nil)
     end
   end
 
