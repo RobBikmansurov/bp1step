@@ -65,6 +65,11 @@ describe BappsController do
     it "assigns the requested bapp as @bapp" do
       bapp = Bapp.create! valid_attributes
       get :show, :id => bapp.id
+      response.should render_template(:show)
+      assigns(:bapp).should eq(bapp)
+    end
+    it "renders 404 page if bapp is not found" do
+      get :show, :id => 0
       assigns(:bapp).should eq(bapp)
     end
   end

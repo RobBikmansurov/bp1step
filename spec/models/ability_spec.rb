@@ -8,6 +8,9 @@ describe Ability do
     [UserRole, Role, User].each do | model |
       model.all.each { |r| r.destroy }
     end
+    @role = FactoryGirl.create(:role)
+    @role.name = 'user'
+    @role.save
   end
   before (:each) do
     @role = Role.create(name: 'user', description: 'default role') # создать роль по умолчанию

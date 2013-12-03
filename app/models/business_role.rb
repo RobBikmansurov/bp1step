@@ -7,6 +7,7 @@ class BusinessRole < ActiveRecord::Base
 
   include PublicActivity::Model
   tracked owner: Proc.new { |controller, model| controller.current_user }
+  self.per_page = 10
 
   # бизнес-роль участвует в процессе
   belongs_to :bproce
@@ -17,12 +18,16 @@ class BusinessRole < ActiveRecord::Base
   # бизнес-роль может исполняется на нескольких рабочих местах
   #has_and_belongs_to_many :workplaces
 
+  def self.search(search, page)
+    paginate :page => page,
+           :conditions => ['name LIKE ? or description LIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search}"]
+  end
 
   def self.search(search)
     if search
       where('name LIKE ? or description LIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search}")
     else
-      scoped
+      where(nil)
     end
   end
 end
