@@ -1,61 +1,62 @@
-# Additional translations at http://github.com/plataformatec/devise/wiki/I18n
+# Русский перевод для https://github.com/plataformatec/devise/tree/v1.4.7
+# Другие переводы на http://github.com/plataformatec/devise/wiki/I18n
 
 ru:
   errors:
     messages:
-      expired: "has expired, please request a new one"
-      not_found: "на найден"
-      already_confirmed: "was already confirmed, please try signing in"
-      not_locked: "не был заблокирован"
+      expired: "устарела. Пожалуйста, запросите новую"
+      not_found: "не найдена"
+      already_confirmed: "уже подтверждена. Пожалуйста, попробуйте войти в систему"
+      not_locked: "не заблокирована"
       not_saved:
-        one: "1 error prohibited this %{resource} from being saved:"
-        other: "%{count} errors prohibited this %{resource} from being saved:"
+        one: "%{resource}: сохранение не удалось из-за %{count} ошибки"
+        few: "%{resource}: сохранение не удалось из-за %{count} ошибок"
+        many: "%{resource}: сохранение не удалось из-за %{count} ошибок"
+        other: "%{resource}: сохранение не удалось из-за %{count} ошибки"
 
   devise:
     failure:
-      already_authenticated: 'You are already signed in.'
-      unauthenticated: 'Для продолжения необходимо войти в систему.'
-      unconfirmed: 'You have to confirm your account before continuing.'
-      locked: 'Ваш аккаунт заблокирован.'
-      invalid: 'Неверные имя или email или пароль.'
-      invalid_token: 'Invalid authentication token.'
-      timeout: 'Your session expired, please sign in again to continue.'
-      inactive: 'Ваш account не был активирован.'
-    user:
-      signed_in: 'Успешная регистрация.'
-      signed_out: 'Завершение сеанса.'
+      not_found_in_database: "Неверный e-mail или пароль."
+      already_authenticated: "Вы уже вошли в систему."
+      unauthenticated: "Вам необходимо войти в систему или зарегистрироваться."
+      unconfirmed: "Вы должны подтвердить вашу учётную запись."
+      locked: "Ваша учётная запись заблокирована."
+      invalid: "Неверный адрес e-mail или пароль."
+      invalid_token: "Неверный ключ аутентификации."
+      timeout: "Ваш сеанс закончился. Пожалуйста, войдите в систему снова."
+      inactive: "Ваша учётная запись ещё не активирована."
     sessions:
-      signed_in: 'Успешная регистрация.'
-      signed_out: 'Завершение сеанса.'
+      signed_in: "Вход в систему выполнен."
+      signed_out: "Выход из системы выполнен."
     passwords:
-      send_instructions: 'You will receive an email with instructions about how to reset your password in a few minutes.'
-      updated: 'Your password was changed successfully. You are now signed in.'
-      updated_not_active: 'Your password was changed successfully.'
-      send_paranoid_instructions: "If your e-mail exists on our database, you will receive a password recovery link on your e-mail"
+      send_instructions: "В течение нескольких минут вы получите письмо с инструкциями по восстановлению вашего пароля."
+      updated: "Ваш пароль изменён. Теперь вы вошли в систему."
+      updated_not_active: 'Ваш пароль изменен.'
+      send_paranoid_instructions: "Если ваш адрес e-mail есть в нашей базе данных, то в течение нескольких минут вы получите письмо с инструкциями по восстановлению вашего пароля."
     confirmations:
-      send_instructions: 'Через несколько минут Вы получите по электронной почте инструкции для подтверждения регистрации.'
-      send_paranoid_instructions: 'If your e-mail exists on our database, you will receive an email with instructions about how to confirm your account in a few minutes.'
-      confirmed: 'Your account was successfully confirmed. You are now signed in.'
+      send_instructions: "В течение нескольких минут вы получите письмо с инструкциями по подтверждению вашей учётной записи."
+      send_paranoid_instructions: "Если ваш адрес e-mail есть в нашей базе данных, то в течение нескольких минут вы получите письмо с инструкциями по подтверждению вашей учётной записи."
+      confirmed: "Ваша учётная запись подтверждена. Теперь вы вошли в систему."
     registrations:
-      signed_up: 'Ура! Вы успешно зарегистрированы.'
-      inactive_signed_up: 'You have signed up successfully. However, we could not sign you in because your account is %{reason}.'
-      updated: 'You updated your account successfully.'
-      destroyed: 'Bye! Your account was successfully cancelled. We hope to see you again soon.'
+      signed_up: "Добро пожаловать! Вы успешно зарегистрировались."
+      inactive_signed_up: "Добро пожаловать! Вы успешно зарегистрировались. Но пока вы не можете войти в систему, т.к. ваша учётная запись %{reason}."
+      updated: "Ваша учётная запись изменена."
+      destroyed: "До свидания! Ваша учётная запись удалена. Надеемся снова увидеть вас."
       reasons:
-        inactive: 'inactive'
-        unconfirmed: 'unconfirmed'
-        locked: 'locked'
+        inactive: 'неактивна'
+        unconfirmed: 'не подтверждена'
+        locked: 'заблокирована'
     unlocks:
-      send_instructions: 'You will receive an email with instructions about how to unlock your account in a few minutes.'
-      unlocked: 'Your account was successfully unlocked. You are now signed in.'
-      send_paranoid_instructions: 'If your account exists, you will receive an email with instructions about how to unlock it in a few minutes.'
+      send_instructions: "В течение нескольких минут вы получите письмо с инструкциями по разблокировке вашей учётной записи."
+      unlocked: "Ваша учётная запись разблокирована. Теперь вы вошли в систему."
+      send_paranoid_instructions: "Если ваша учётная запись существует, то в течение нескольких минут вы получите письмо с инструкциями по её разблокировке."
     omniauth_callbacks:
-      success: 'Successfully authorized from %{kind} account.'
-      failure: 'Could not authorize you from %{kind} because "%{reason}".'
+      success: "Вход в систему выполнен с учётной записью из %{kind}."
+      failure: "Вы не можете войти в систему с учётной записью из %{kind}, т.к. \"%{reason}\"."
     mailer:
       confirmation_instructions:
-        subject: 'Confirmation instructions'
+        subject: "Инструкции по подтверждению учётной записи"
       reset_password_instructions:
-        subject: 'Reset password instructions'
+        subject: "Инструкции по восстановлению пароля"
       unlock_instructions:
-        subject: 'Unlock Instructions'
+        subject: "Инструкции по разблокировке учётной записи"
