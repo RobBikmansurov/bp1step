@@ -16,7 +16,7 @@ describe BappsController do
 
   before(:each) do
     @user = User.new(:email => "test_w@user.com", :username => "test_w")
-    @user.roles << Role.find_or_create_by_name("admin")
+    @user.roles << Role.find_or_create_by(name: 'admin')
     @user.save
     sign_in @user
   end
@@ -37,9 +37,9 @@ describe BappsController do
 
   describe "GET index" do
     it "assigns all bapps as @bapps" do
-      bapp = Bapp.create! valid_attributes
+      bapp = Bapp.create
       get :index
-      assigns(:bapps).should eq([bapp])
+      expect(assigns(:bapps)).to render_template("index")
     end
 
     it "responds successfully with an HTTP 200 status code" do

@@ -2,7 +2,7 @@
   Процесс описывают
   =link_to 'Документы:', bproce_document_path(@bproce)
 
--@bproce.documents.find_with_associations.each do |doc|
+-@bproce.documents.each do |doc|
   = link_to doc.name, document_path(doc)
   = ' ' + doc.approved.to_s
   %br
