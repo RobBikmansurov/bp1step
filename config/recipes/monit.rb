@@ -19,7 +19,7 @@ namespace :monit do
   
   task(:nginx, roles: :web) { monit_config "nginx" }
   task(:files, roles: :web) { monit_config "files" }
-  task(:files, roles: :web) { monit_config "store" }
+  task(:store, roles: :web) { monit_config "store" }
   #task(:postgresql, roles: :db) { monit_config "postgresql" }
   task(:unicorn, roles: :app) { monit_config "unicorn" }
 
