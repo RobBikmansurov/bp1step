@@ -31,7 +31,7 @@ describe DocumentsController do
 
   before(:each) do
     @user = User.new(:email => "test_w@user.com", :username => "test_w")
-    @user.roles << Role.find_or_create_by_name("admin")
+    @user.roles << Role.find_or_create_by(name: "admin")
     @user.save
     sign_in @user
   end
