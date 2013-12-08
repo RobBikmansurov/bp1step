@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
   has_many :user_roles, :dependent => :destroy  # роли доступа пользователя
   has_many :roles, :through => :user_roles
   has_many :bproce
+  has_many :iresource
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
@@ -33,7 +34,7 @@ class User < ActiveRecord::Base
       #Rails::logger.info("### Getting the users last name")
       tempname = Devise::LdapAdapter.get_ldap_param(self.username,"sn").to_s
       tempname = tempname.force_encoding("UTF-8")
-      #puts "\tLDAP returned lastname of " + 
+      #puts "\tLDAP returned lastname of " + tempname
       self.lastname = tempname
   end 
 
@@ -76,6 +77,6 @@ class User < ActiveRecord::Base
 
   private
     def create_role
-      self.roles << Role.find_by_name(:user)  #if ENV["RAILS_ENV"] != 'test' 
+      self.roles << Role.find_by_name(:user)  #  if ENV["RAILS_ENV"] != 'test' 
     end
 end

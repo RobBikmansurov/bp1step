@@ -36,7 +36,7 @@ describe WorkplacesController do
 
   before(:each) do
     @user = User.new(:email => "test@user.com", :username => "test123")
-    @user.roles << Role.find_or_create_by_name("admin")
+    @user.roles << Role.find_or_create_by(name: "admin")
     @request.env["devise.mapping"] = Devise.mappings[:user]
     @user.save
     sign_in @user
