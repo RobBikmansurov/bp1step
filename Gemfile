@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 ruby '2.0.0'
-gem 'rails'#, '4.0.1'
+gem 'rails', '4.0.1'
 
 gem 'will_paginate', '~> 3.0'
 gem 'sass-rails', '~> 4.0.0'
@@ -15,20 +15,20 @@ gem 'unicorn'
 gem 'newrelic_rpm'
 
 
-gem "devise", ">= 3.0"
+gem "devise", git: "https://github.com/plataformatec/devise"
 gem "devise_ldap_authenticatable"
 gem "cancan"
 gem 'alphabetical_paginate'
 gem 'haml-rails'
 gem 'execjs'
 
-gem 'rails3-jquery-autocomplete', git: 'https://github.com/francisd/rails3-jquery-autocomplete'
+gem 'rails3-jquery-autocomplete'#, git: 'https://github.com/francisd/rails3-jquery-autocomplete'
 gem 'awesome_nested_set', :git => 'git://github.com/collectiveidea/awesome_nested_set'
 gem "the_sortable_tree", ">= 2.4.0"
 gem 'simple_form'
 #gem 'rb-readline'
 gem 'odf-report'
-gem 'public_activity', github: 'pokonski/public_activity'
+gem 'public_activity'
 gem 'paperclip'
 gem 'acts-as-taggable-on'
 gem 'protected_attributes'
@@ -42,7 +42,7 @@ group :test do
 end
 
 group :development do
-  gem 'pg'
+  #gem 'pg'
   gem 'thin'
   #gem 'quiet_assets'
   #gem 'rails_best_practices'

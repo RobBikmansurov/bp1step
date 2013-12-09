@@ -7,7 +7,7 @@ load "config/recipes/unicorn"
 
 load "config/recipes/monit"
 
-server 'vrdev.ad.bankperm.ru', :app, :web, :db, :primary => true
+server 'vrdev1.ad.bankperm.ru', :app, :web, :db, :primary => true
 
 # http and https proxy
 default_environment['http_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
