@@ -41,8 +41,10 @@ namespace :bp1step do
     #logger.info "#{username} #{email}" if debug_flag
     uac = entry["userAccountControl"].first.to_i  # второй бит = 1 означает отключенного пользователя в AD
     if uac & 2 == 0 # пользователь не заблокирован
-        usr = User.find_or_create_by_username :username => username, :email => email, :password => email
+        usr = User.find_or_create_by(username: username)
         if usr.new_record?
+          #usr.email = email
+          #usr.password = email
           if email.to_s.empty?  # пропустим с пустым email
             logger.info "#{i}!#{new_users}. #{entry.sAMAccountName} #{entry.dn} \t- email is NULL!"
           else
@@ -60,7 +62,7 @@ namespace :bp1step do
           end
         else  # проверим - не изменилось ли ключевые реквизиты у этого пользователя в AD
           if !(usr.email == email)  # e-mail
-            logger.info "#{usr.email} = #{email}: #{usr.email == email}" if debug_flag
+            logger.info "#{usr.email} == #{email}: #{usr.email == email}" if debug_flag
             usr.update_attribute(:email, email)
             usr.email = email
           end
@@ -265,6 +267,22 @@ end
       end
     end
     logger.info "      Migrates #{bproce_count} processes from #{document_count} documents"
+  end
+
+  desc 'Each documents must have link to bproces'
+  task :check_bproce_document_for_all_documents => :environment do  # проверить наличие процесса для каждого документа
+    logger = Logger.new('log/bp1step.log')  # протокол работы
+    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_bproce_document_for_all_documents'
+    document_count = 0
+    wo_bproce_count = 0
+    Document.all.each do |document| # все документы
+      document_count += 1
+      if document.bproce_documents.count < 1  # есть процесса?
+        puts document.id, document.owner.displayname
+        wo_bproce_count += 1
+      end
+    end
+    logger.info "      #{wo_bproce_count} dcouments without processes from #{document_count} documents"
   end
 
 

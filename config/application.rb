@@ -46,5 +46,6 @@ module BPDoc
     ActsAsTaggableOn.strict_case_match = true
     WillPaginate.per_page = 10
     config.secret_key_base = 'bp1stepapplication'
+    I18n.enforce_available_locales = false
   end
 end
