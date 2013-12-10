@@ -13,6 +13,8 @@ class Workplace < ActiveRecord::Base
 
   accepts_nested_attributes_for :bproce_workplaces, :allow_destroy => true
   accepts_nested_attributes_for :bproces
+
+  attr_accessible :designation, :name, :switch, :port, :description, :typical, :location
   #has_many :bapps
 
   def self.search(search)

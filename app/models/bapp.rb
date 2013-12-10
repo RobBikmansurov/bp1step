@@ -13,7 +13,8 @@ class Bapp < ActiveRecord::Base
   has_many :bproces, :through => :bproce_bapps
   accepts_nested_attributes_for :bproce_bapps, :allow_destroy => true
   accepts_nested_attributes_for :bproces
-  #has_many :workplaces
+
+  attr_accessible :name, :description
 
   def self.search(search)
     if search

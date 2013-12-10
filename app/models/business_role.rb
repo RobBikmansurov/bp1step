@@ -15,6 +15,9 @@ class BusinessRole < ActiveRecord::Base
   has_many :user_business_role, :dependent => :destroy  # пользователь может иметь много ролей
   has_many :users, :through => :user_business_role
 
+  attr_accessible :name, :description, :bproce_id, :features
+
+
   # бизнес-роль может исполняется на нескольких рабочих местах
   #has_and_belongs_to_many :workplaces
 

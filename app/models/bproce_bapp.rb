@@ -9,6 +9,8 @@ class BproceBapp < ActiveRecord::Base
   belongs_to :bproce
   belongs_to :bapp
 
+  attr_accessible :bproce_id, :bapp_id, :apurpose
+
   def bapp_name
     bapp.try(:designation)
   end
@@ -21,7 +23,7 @@ class BproceBapp < ActiveRecord::Base
     if search
       where('name LIKE ? or description LIKE ?', "%#{search}%", "%#{search}%")
     else
-      scoped
+      where(nil)
     end
   end
 

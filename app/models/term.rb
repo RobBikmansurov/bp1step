@@ -1,12 +1,14 @@
 class Term < ActiveRecord::Base
+  include PublicActivity::Model
+  tracked owner: Proc.new { |controller, model| controller.current_user }
+
   validates :shortname, :uniqueness => true,
                     	:length => {:maximum => 20}
   validates :name, :presence => true, 
                     :length => {:minimum => 3, :maximum => 200}
   validates :description, :presence => true
 
-  include PublicActivity::Model
-  tracked owner: Proc.new { |controller, model| controller.current_user }
+  attr_accessible :name, :shortname, :description
 
   def self.search(search)
     if search
