@@ -2,6 +2,8 @@ class UserWorkplace < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: Proc.new { |controller, model| controller.current_user }
 
+  attr_accessible :workplace_id
+
   validates :user_id, :presence => true
   validates :workplace_id, :presence => true
 

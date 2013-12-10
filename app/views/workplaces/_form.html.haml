@@ -26,7 +26,7 @@
 -if @bproce_workplace
   = simple_form_for(@bproce_workplace) do |ff|
     = ff.error_notification
-    = ff.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Процесс', :prompt => 'Выберите процесс, где используется Рабочее место'
+    = ff.association :bproce, :collection => Bproce.order('name'), :label => 'Процесс', :prompt => 'Выберите процесс, где используется Рабочее место'
     = ff.hidden_field :workplace_id
     = ff.error :base
     = ff.button :submit, 'Связать с процессом'
