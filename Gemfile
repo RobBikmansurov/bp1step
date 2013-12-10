@@ -43,7 +43,7 @@ end
 
 group :development do
   #gem 'pg'
-  gem 'thin'
+  #gem 'thin'
   #gem 'quiet_assets'
   #gem 'rails_best_practices'
   #gem 'rack-mini-profiler'
