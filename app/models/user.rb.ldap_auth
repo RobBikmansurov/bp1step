@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
 
   def get_ldap_lastname
       #Rails::logger.info("### Getting the users last name")
-      tempname = Devise::LdapAdapter.get_ldap_param(self.username,"sn").to_s
+      tempname = Devise::LDAP::Adapter.get_ldap_param(self.username,"sn").to_s
       tempname = tempname.force_encoding("UTF-8")
       #puts "\tLDAP returned lastname of " + tempname
       self.lastname = tempname
@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
 
   def get_ldap_firstname
       #Rails::logger.info("### Getting the users first name")
-      tempname = Devise::LdapAdapter.get_ldap_param(self.username,"givenname").to_s
+      tempname = Devise::LDAP::Adapter.get_ldap_param(self.username,"givenname").to_s
       tempname = tempname.force_encoding("UTF-8")
       #puts "\tLDAP returned firstname of " + tempname
       self.firstname = tempname
@@ -48,13 +48,14 @@ class User < ActiveRecord::Base
 
   def get_ldap_displayname
       #Rails::logger.info("### Getting the users display name")
-      tempname = Devise::LdapAdapter.get_ldap_param(self.username,"displayname").to_s
+      tempname = Devise::LDAP::Adapter.get_ldap_param(self.username,"displayname").to_s
       self.displayname = tempname.force_encoding("UTF-8")
   end 
 
   def get_ldap_email
       #Rails::logger.info("### Getting the users email address")
-      tempmail = Devise::LdapAdapter.get_ldap_param(self.username,"mail").to_s
+      tempmail = Devise::LDAP::Adapter.get_ldap_param(self.username, "mail").first.to_s
+      logger.info "User.rb #{self.email} == #{tempmail}"
       self.email = tempmail
   end
 
