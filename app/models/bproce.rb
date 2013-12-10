@@ -27,6 +27,8 @@ class Bproce < ActiveRecord::Base
   belongs_to :bproce
   belongs_to :user  # владелец процессв
 
+  attr_accessible :shortname, :name, :fullname, :goal, :description, :user_name, :parent_id, :tag_list
+
   def user_name
     user.try(:displayname)
   end

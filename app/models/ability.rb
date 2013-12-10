@@ -1,6 +1,5 @@
 class Ability
   include CanCan::Ability
-  # FIXME разобраться с тестированием Ability в rspec
 
   def initialize(user)
     user ||= User.new   # guest user (not logged in)

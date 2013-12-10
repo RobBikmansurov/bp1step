@@ -12,6 +12,8 @@ class Iresource < ActiveRecord::Base
   has_many :bproce_iresources
   has_many :bproces, :through => :bproce_iresources
 
+  attr_accessible :label, :location
+
   def owner_name
     user.try(:displayname)
   end
