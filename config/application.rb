@@ -31,6 +31,7 @@ module BPDoc
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
     config.i18n.default_locale = :ru
+    config.i18n.enforce_available_locales = true
 
     # JavaScript files you want as :defaults (application.js is always included).
     #config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
@@ -46,6 +47,5 @@ module BPDoc
     ActsAsTaggableOn.strict_case_match = true
     WillPaginate.per_page = 10
     config.secret_key_base = 'bp1stepapplication'
-    #I18n.enforce_available_locales = false
   end
 end
