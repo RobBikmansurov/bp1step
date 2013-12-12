@@ -15,15 +15,15 @@ gem 'unicorn'
 gem 'newrelic_rpm'
 
 
-gem "devise", git: "https://github.com/plataformatec/devise"
+gem "devise"#, git: "https://github.com/plataformatec/devise"
 gem "devise_ldap_authenticatable"
 gem "cancan"
 gem 'alphabetical_paginate'
 gem 'haml-rails'
 gem 'execjs'
 
-gem 'rails3-jquery-autocomplete', git: 'https://github.com/francisd/rails3-jquery-autocomplete'
-gem 'awesome_nested_set', :git => 'git://github.com/collectiveidea/awesome_nested_set'
+gem 'rails3-jquery-autocomplete'#, git: 'https://github.com/francisd/rails3-jquery-autocomplete'
+gem 'awesome_nested_set'#, :git => 'git://github.com/collectiveidea/awesome_nested_set'
 gem "the_sortable_tree", ">= 2.4.0"
 gem 'simple_form'
 #gem 'rb-readline'
