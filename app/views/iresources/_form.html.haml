@@ -10,7 +10,9 @@
   = f.input :access_write
   = f.input :access_other
   = f.input :risk_category
-  = f.input :owner_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Ответственный за ресурс'
+  = f.label 'Исполнитель'
+  = f.autocomplete_field :owner_name, autocomplete_users_path
+  -#= f.input :owner_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Ответственный за ресурс'
   = f.error :base
   - if can? :update, @iresource
     %p
