@@ -17,7 +17,8 @@
 = simple_form_for(@bproce_iresource) do | bproce_res |
   = bproce_res.error_notification
   = bproce_res.hidden_field :bproce_id
-  = bproce_res.input :iresource_label, data: {autocomplete_source: autocomplete_iresources_path}, :as => :autocomplete, :label => 'Ресурс', :prompt => 'Ресурс', :placeholder => 'найти ресурс из списка'
+  = bproce_res.label 'Ресурс'
+  = bproce_res.autocomplete_field :iresource_label, autocomplete_iresources_path 
   = bproce_res.input :rpurpose
   = bproce_res.error :base
   -if can? :update, @bproce

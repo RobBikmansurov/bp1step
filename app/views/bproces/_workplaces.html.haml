@@ -17,7 +17,10 @@
 = simple_form_for(@bproce_workplace) do | bproce_workplace |
   = bproce_workplace.error_notification
   = bproce_workplace.hidden_field :bproce_id
-  = bproce_workplace.input :workplace_designation, data: {autocomplete_source: autocomplete_workplaces_path}, :as => :autocomplete, :label => 'Рабочее место', :prompt => 'Рабочее место', :placeholder => 'найти рабочее место из списка'
+  -#= bproce_workplace.input :workplace_designation, data: {autocomplete_source: autocomplete_workplaces_path}, :as => :autocomplete, :label => 'Рабочее место', :prompt => 'Рабочее место', :placeholder => 'найти рабочее место из списка'
+  = bproce_workplace.label 'Рабочее место'
+  = bproce_workplace.autocomplete_field :workplace_designation, autocomplete_workplaces_path 
+
   = bproce_workplace.error :base
   -if can? :update, @bproce
     = bproce_workplace.button :submit, 'Связать Рабочее место и Процесс'
