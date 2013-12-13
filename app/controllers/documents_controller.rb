@@ -61,10 +61,11 @@ class DocumentsController < ApplicationController
 
   def edit
     #authorize! :edit_document_place, @user if params[:user][:edit_document_place]
-    @document_directives = DocumentDirective.find_all_by_document_id(@document) # все связи документа с директивами
+    @document_directives = DocumentDirective.where(:document_id => @document.id) # все связи документа с директивами
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
-    @document_bproces = BproceDocument.find_all_by_document_id(@document)  # все ссылки на документ из процессов
-    @document_bproce = @document.bproce_documents.new # заготовка для новой связи с процессом
+    #@document_bproces = BproceDocument.where(:document_id => @document.id)  # все ссылки на документ из процессов
+    @document_bproces = @document.bproce_document.load
+    @document_bproce = @document.bproce_document.new # заготовка для новой связи с процессом
     respond_with(@document)
   end
 

@@ -24,7 +24,11 @@
   = simple_form_for(@user_workplace) do |uw|
     = uw.error_notification
     = uw.hidden_field :workplace_id
-    = uw.input :user_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Исполнитель', :prompt => 'Исполнитель на рабочем месте'
+    -#= uw.input :user_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Исполнитель', :prompt => 'Исполнитель на рабочем месте'
+
+    = uw.label 'Исполнитель'
+    = uw.autocomplete_field :user_name, autocomplete_users_path
+
     = uw.input :date_from, :as => :string, :input_html =>{:class=>'datepicker', :value => Date.today.strftime("%d.%m.%Y")}
     = uw.input :date_to, :as => :string, :input_html =>{:class=>'datepicker', :value => Date.today.change(:month => 12, :day => 31).strftime("%d.%m.%Y")}
     = uw.input :note
