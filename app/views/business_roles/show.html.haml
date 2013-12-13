@@ -41,7 +41,10 @@
         = business_role.date_from.strftime("%d.%m.%Y")
         \-
         = business_role.date_to.strftime("%d.%m.%Y")
-      %td= business_role.note
+      -if can? :update, @business_role
+        %td= link_to ' ' + business_role.note, edit_user_business_role_path(business_role)
+      -else
+        %td=business_role.note
       %td= link_to Bproce.find(business_role.business_role.bproce).shortname, bproce_path(business_role.business_role.bproce)
 .info_
   создан
