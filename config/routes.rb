@@ -48,7 +48,7 @@ BPDoc::Application.routes.draw do
   resources :roles, only: [:index, :show]
   resources :terms
   resources :user_workplaces
-  resources :user_business_roles, :only => [:new, :create, :destroy]
+  resources :user_business_roles, :only => [:new, :create, :destroy, :edit, :update, :show]
 
   #match '/bproceses' => 'bproces#list', :via => :get  # получение полного списка процессов
   match '/bprocess' => 'bproces#manage', :via => :get  # получение полного списка процессов
