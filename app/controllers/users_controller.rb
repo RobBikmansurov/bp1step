@@ -7,8 +7,8 @@ class UsersController < ApplicationController
 
   def index
     if params[:role].present?
-      @role = Role.find_by_name(params[:role])
-      @users = @role.users.search(params[:search]).order(sort_column + ' ' + sort_direction).page(:page => params[:page])
+      @role = Role.find_by(:name => params[:role])
+      @users = @role.users.page(params[:page]).active.search(params[:search]).order(sort_column + ' ' + sort_direction)
     else
       if params[:office].present?
         @users = User.active.where(:office => params[:office]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
