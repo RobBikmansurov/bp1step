@@ -3,6 +3,9 @@ source 'https://rubygems.org'
 ruby '2.0.0'
 gem 'rails', '4.0.1'
 
+#gem 'yaml_db', :git => 'git://github.com/ludicast/yaml_db.git'  # для переноса sqlite3 -> pg
+gem 'yaml_db', github: 'jetthoughts/yaml_db', ref: 'fb4b6bd7e12de3cffa93e0a298a1e5253d7e92ba'
+
 gem 'will_paginate', '~> 3.0'
 gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
@@ -35,32 +38,24 @@ gem 'protected_attributes'
 
 
 group :test do
+  gem 'sqlite3'
   gem 'factory_girl_rails'
   gem 'capybara'
   gem 'shoulda-matchers'
   gem 'webrat'
+  gem 'rspec-rails'
 end
 
 group :development do
-  #gem 'pg'
-  #gem 'thin'
-  #gem 'quiet_assets'
-  #gem 'rails_best_practices'
-  #gem 'rack-mini-profiler'
-  #gem 'bullet'
-  #gem 'better_errors'
+  gem 'pg'
+  #gem 'sqlite3'
   gem 'capistrano'  # Deploy with Capistrano
   gem 'rvm-capistrano'
   gem 'capistrano-deploy', :require => false
-end
-
-group :development, :test do
   gem 'rspec-rails'
-  #gem 'pry'
-  gem 'sqlite3'
 end
 
 group :production do
   gem 'sqlite3'
-  #gem 'newrelic_rpm'
+  #gem pg
 end
