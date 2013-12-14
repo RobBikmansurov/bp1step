@@ -26,16 +26,11 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.datetime "updated_at",     null: false
   end
 
-  add_index "activities", ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type"
-  add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type"
-  add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type"
-
   create_table "bapps", force: true do |t|
     t.string   "name"
-    t.string   "type"
     t.string   "description"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "purpose"
     t.string   "apptype"
     t.string   "version_app"
@@ -50,8 +45,8 @@ ActiveRecord::Schema.define(version: 20131029154413) do
   create_table "bproce_bapps", force: true do |t|
     t.integer  "bproce_id"
     t.integer  "bapp_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "apurpose"
   end
 
@@ -80,16 +75,16 @@ ActiveRecord::Schema.define(version: 20131029154413) do
   create_table "bproce_workplaces", force: true do |t|
     t.integer  "bproce_id"
     t.integer  "workplace_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "bproces", force: true do |t|
     t.string   "shortname"
     t.string   "name"
     t.string   "fullname"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "goal"
     t.integer  "parent_id"
     t.integer  "lft"
@@ -109,6 +104,15 @@ ActiveRecord::Schema.define(version: 20131029154413) do
   end
 
   add_index "business_roles", ["bproce_id"], name: "index_business_roles_on_bproce_id"
+
+  create_table "categories", force: true do |t|
+    t.string   "cat_table"
+    t.string   "cat_type"
+    t.string   "cat_name"
+    t.integer  "sortorder"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "directives", force: true do |t|
     t.string   "title"
@@ -137,17 +141,17 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.string   "filename"
     t.string   "description"
     t.string   "status"
-    t.integer  "status_id"
-    t.integer  "owner_id"
     t.string   "part"
     t.date     "approved"
     t.string   "place"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "status_id"
     t.integer  "bproce_id"
     t.string   "eplace"
     t.string   "approveorgan"
     t.integer  "dlevel"
+    t.integer  "owner_id"
     t.integer  "responsible"
     t.string   "note"
     t.string   "document_file_file_name"
@@ -181,7 +185,6 @@ ActiveRecord::Schema.define(version: 20131029154413) do
   create_table "roles", force: true do |t|
     t.string   "name"
     t.string   "description"
-    t.integer  "bproce_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "note"
@@ -259,18 +262,18 @@ ActiveRecord::Schema.define(version: 20131029154413) do
   add_index "user_workplaces", ["workplace_id"], name: "index_user_workplaces_on_workplace_id"
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "",   null: false
-    t.string   "encrypted_password",     default: "",   null: false
+    t.string   "email",                              default: "",   null: false
+    t.string   "encrypted_password",     limit: 128, default: "",   null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0
+    t.integer  "sign_in_count",                      default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "firstname"
     t.string   "lastname"
     t.string   "username"
@@ -280,7 +283,7 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.string   "office"
     t.string   "phone"
     t.string   "remember_token"
-    t.boolean  "active",                 default: true
+    t.boolean  "active",                             default: true
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
@@ -292,8 +295,8 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.string   "description"
     t.boolean  "typical"
     t.string   "location"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "switch"
     t.integer  "port"
   end

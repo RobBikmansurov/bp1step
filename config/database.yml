@@ -1,20 +1,22 @@
 # SQLite version 3.x
 #   gem install sqlite3
-development:
+development_sqlite3:
+#development:
   adapter: sqlite3
   database: db/development.sqlite3
   pool: 5
   timeout: 5000
 
 # gem install pg
-development_pg:
+#development_pg:
+development:
   adapter: postgresql
   encoding: unicode
   database: bp1step
-  host:     localhost
+  host:     *******
   pool: 5
   username: bp1step
-  password: bp1step
+  password: *******
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
