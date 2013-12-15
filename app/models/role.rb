@@ -11,7 +11,7 @@ class Role < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('name LIKE ? or description LIKE ?', "%#{search}%", "%#{search}%")
+      where('name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%")
     else
       where(nil)
     end

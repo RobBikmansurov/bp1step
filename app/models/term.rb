@@ -12,7 +12,7 @@ class Term < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('shortname LIKE ? or name LIKE ? or description LIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
+      where('shortname ILIKE ? or name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
     else
       where(nil)
     end

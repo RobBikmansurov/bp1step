@@ -18,7 +18,7 @@ class Bapp < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('name LIKE ? or description LIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search}")
+      where('name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search.to_i}")
     else
       where(nil)
     end
@@ -26,7 +26,7 @@ class Bapp < ActiveRecord::Base
 
   def self.searchtype(search)
     if search
-      where('apptype LIKE ? ', "%#{search}%")
+      where('apptype ILIKE ? ', "%#{search}%")
     else
       where(nil)
     end
