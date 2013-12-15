@@ -78,7 +78,7 @@
 %p
 %br
 Местоположение:
-- Workplace.group(:location).each do |wp|
+- Workplace.select("location, count(id) as count").group(:location).each do |wp|
   -if wp.location.to_s.empty?
     = link_to 'пусто', workplaces_path + '?location='
   -else
@@ -86,7 +86,7 @@
 - if can? :manage, Workplace
   %br
   Сетевое подключение:
-  - Workplace.group(:switch).each do |wp|
+  - Workplace.select("switch, count(id) as count").group(:switch).each do |wp|
     -if wp.switch.to_s.empty?
       = link_to 'пусто', workplaces_path + '?switch='
     -else

@@ -97,17 +97,17 @@
 %p
 %br
 Статус:
-- Document.group(:status).each do |d|
+- Document.select("status, count(id) as count").group(:status).order(:status).each do |d|
   -if !d.status.to_s.empty?
     = link_to d.status, documents_path + '?status=' + d.status.to_s, class: 'groups'
 %br
 Уровень:
-- Document.group(:dlevel).each do |d|
+- Document.select("dlevel, count(id) as count").group(:dlevel).order(:dlevel).each do |d|
   -if !d.dlevel.to_s.empty?
     = link_to d.dlevel, documents_path + '?dlevel=' + d.dlevel.to_s, class: 'groups', title: dlevel_title(d.dlevel)
 %br
 Оригинал:
-- Document.group(:place).each do |d|
+- Document.select("place, count(id) as count").group(:place).order(:place).each do |d|
   -if !d.place.to_s.empty?
     = link_to d.place, documents_path + '?place=' + d.place.to_s, class: 'groups', title: place_title(d.place)
 %p
