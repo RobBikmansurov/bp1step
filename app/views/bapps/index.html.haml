@@ -80,7 +80,7 @@
 %p
 %br
 Тип:
-- Bapp.group(:apptype).each do |bapp|
+- Bapp.select("apptype, count(id) as count").group(:apptype).order(:apptype).each do |bapp|
   -if !bapp.apptype.to_s.empty?
     = link_to bapp.apptype, bapps_path + '?apptype=' + bapp.apptype.to_s, class: 'groups'
 %p

@@ -26,7 +26,7 @@ class Bapp < ActiveRecord::Base
 
   def self.searchtype(search)
     if search
-      where('apptype LIKE ? COLLATE NOCASE', "%#{search}%")
+      where('apptype LIKE ? ', "%#{search}%")
     else
       where(nil)
     end
