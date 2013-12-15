@@ -98,7 +98,7 @@ class Document < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('name LIKE ? or description LIKE ? or id = ? COLLATE NOCASE', "%#{search}%", "%#{search}%", "#{search}")
+      where('name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search.to_i}")
     else
       where(nil)
     end

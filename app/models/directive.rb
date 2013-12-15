@@ -34,7 +34,7 @@ class Directive < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('number LIKE ? or name LIKE ? or title LIKE ? or body LIKE ?',
+      where('number ILIKE ? or name ILIKE ? or title ILIKE ? or body ILIKE ?',
             "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%")
     else
       where(nil)

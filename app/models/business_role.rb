@@ -23,12 +23,12 @@ class BusinessRole < ActiveRecord::Base
 
   def self.search(search, page)
     paginate :page => page,
-           :conditions => ['name LIKE ? or description LIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search}"]
+           :conditions => ['name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search.to_i}"]
   end
 
   def self.search(search)
     if search
-      where('name LIKE ? or description LIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search}")
+      where('name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search.to_i}")
     else
       where(nil)
     end

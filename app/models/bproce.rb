@@ -39,8 +39,8 @@ class Bproce < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('shortname LIKE ? or name LIKE ? or fullname LIKE ? or id = ? COLLATE NOCASE',
-            "%#{search}%", "%#{search}%", "%#{search}%", "#{search}")
+      where('shortname ILIKE ? or name ILIKE ? or fullname ILIKE ? or id = ?',
+            "%#{search}%", "%#{search}%", "%#{search}%", "#{search.to_i}")
     else
       where(nil)
     end
