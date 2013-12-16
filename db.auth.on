@@ -1,0 +1,3 @@
+cp app/models/user.rb.db_auth app/models/user.rb
+cp config/initializers/devise.rb.db_auth config/initializers/devise.rb
+
