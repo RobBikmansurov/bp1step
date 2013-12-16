@@ -3,8 +3,7 @@ source 'https://rubygems.org'
 ruby '2.0.0'
 gem 'rails', '4.0.1'
 
-#gem 'yaml_db', :git => 'git://github.com/ludicast/yaml_db.git'  # для переноса sqlite3 -> pg
-gem 'yaml_db', github: 'jetthoughts/yaml_db', ref: 'fb4b6bd7e12de3cffa93e0a298a1e5253d7e92ba'
+#gem 'yaml_db', github: 'jetthoughts/yaml_db', ref: 'fb4b6bd7e12de3cffa93e0a298a1e5253d7e92ba'
 
 gem 'will_paginate', '~> 3.0'
 gem 'sass-rails', '~> 4.0.0'
