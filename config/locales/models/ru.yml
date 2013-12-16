@@ -1,0 +1,113 @@
+ru:
+  activerecord:
+    models:
+      bapp: Приложение
+      bproce: Процесс
+      bproce_bapp: Приложение Процесса
+      bproce_document: Документ Процесса
+      bproce_workplace: Рабочее место Процесса
+      bproce_iresource: Ресурс Процесса
+      business_role: Роль
+      document: Документ
+      directive: Директива
+      iresource: Ресурс
+      role: Роль
+      staff: Сотрудник
+      term: Термин
+      workplace: Рабочее место
+      user: Пользователь
+      user_business_role: Исполнитель
+    attributes:
+      bapp:
+        name: Название
+        apptype: Тип приложения
+        description: Описание
+        purpose: Назначение
+        bproce_id: Процесс
+        version_app: Версия
+        directory_app: Каталог
+        distribution_app: Дистрибутив
+        executable_file: Исполняемый файл
+        licence: Лицензия
+        source_app: Источник
+        note: Примечание
+      bproce:
+        name: Наименование
+        shortname: Обозначение
+        fullname: Полное наименование
+        goal: Цель процесса
+        description: Краткое описание
+        parent_id: Родительский процесс
+        user_id: Владелец процесса
+      bproce_bapp:
+        apurpose: Назначение в процессе
+      bproce_document:
+        purpose: Назначение в процессе
+      bproce_iresource:
+        rpurpose: Назначение в процессе
+      directive:
+        title: Тип директивы
+        number: Номер
+        name: Наименование
+        approval: Дата утверждения
+        body: Принявший орган
+        note: Примечание
+        annotation: Аннотация
+      document:
+        description: Описание
+        name: Наименование
+        dlevel: Уровень
+        status: Статус
+        part: Раздел
+        place: Оригинал
+        eplace: Электронный документ
+        document_file: Электронный документ
+        approved: Дата утверждения
+        approveorgan: Орган
+        note: Примечание
+        bproce_id: Процесс
+      document_directive:
+        document_id: Документ
+        directive_id: Директива
+      iresource:
+        level: Тип
+        label: Метка
+        location: URI
+        alocation: URL
+        volume: Объем, GB
+        note: Примечание
+        access_read: Права чтения
+        access_write: Права записи
+        access_other: Права
+        risk_category: Категория ресурса
+      profile:
+        name: Отображаемое имя
+        phone: Телефон
+      business_role:
+        name: Обозначение
+        description: Назначение роли
+        bproce_id: Процесс
+        features: Особенности
+      staff:
+        fullname: Фамилия Имя Отчество
+        position: Должность
+      term:
+        name: Название
+        shortname: Краткое название
+        description: Описание
+        note: Примечание
+        source: Источник
+      user_business_role:
+        note: Примечание
+        date_from: Дата начала
+        date_to: Дата окончания
+      user_workplace:
+        note: Примечание
+        date_from: Дата начала
+        date_to: Дата окончания
+      workplace:
+        designation: Обозначение
+        name: имя ПК
+        location: Местоположение
+        description: Описание
+        typical: Типовое рабочее место
