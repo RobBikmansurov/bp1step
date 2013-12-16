@@ -59,8 +59,9 @@ namespace :deploy do
     run "rm -rf #{deploy_to}/lib"
     run "ln -s -- #{deploy_to}/current/lib/ #{deploy_to}/lib"
     #run "rm -rf #{deploy_to}/config"
-    #run "ln -s -- #{deploy_to}/current/config/ #{deploy_to}/config"
+    # скоипруем конфигурационые файлы с секретами
     run "cp #{deploy_to}/config/ldap.yml #{deploy_to}/current/config/ldap.yml"
+    run "cp #{deploy_to}/config/database.yml #{deploy_to}/current/config/database.yml"
   end
 
 end
