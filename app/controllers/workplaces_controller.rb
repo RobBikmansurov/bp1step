@@ -71,7 +71,7 @@ class WorkplacesController < ApplicationController
   end
 
   def autocomplete
-    @workplaces = Workplace.order(:designation).where("designation like ? or name like ?", "%#{params[:term]}%", "%#{params[:term]}%")
+    @workplaces = Workplace.order(:designation).where("designation ilike ? or name ilike ?", "%#{params[:term]}%", "%#{params[:term]}%")
     render json: @workplaces.map(&:designation)
   end
 
