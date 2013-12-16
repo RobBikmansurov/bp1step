@@ -13,10 +13,10 @@ development:
   adapter: postgresql
   encoding: unicode
   database: bp1step
-  host:     *******
+  host:     localhost
   pool: 5
   username: bp1step
-  password: *******
+  password: bp1step-password
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -28,7 +28,10 @@ test:
   timeout: 5000
 
 production:
-  adapter: sqlite3
-  database: db/production.sqlite3
-  pool: 10
-  timeout: 5000
+  adapter: postgresql
+  encoding: unicode
+  database: bp1step
+  host:     localhost
+  pool: 5
+  username: bp1step
+  password: bp1step-password
