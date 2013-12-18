@@ -13,9 +13,11 @@
 
 ActiveRecord::Schema.define(version: 20131029154413) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "bapps", force: true do |t|
     t.string   "name"
-    t.string   "type"
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -42,23 +44,23 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.integer  "bproce_id"
     t.integer  "document_id"
     t.string   "purpose"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
-  add_index "bproce_documents", ["bproce_id"], name: "index_bproce_documents_on_bproce_id"
-  add_index "bproce_documents", ["document_id"], name: "index_bproce_documents_on_document_id"
+  add_index "bproce_documents", ["bproce_id"], name: "index_bproce_documents_on_bproce_id", using: :btree
+  add_index "bproce_documents", ["document_id"], name: "index_bproce_documents_on_document_id", using: :btree
 
   create_table "bproce_iresources", force: true do |t|
     t.integer  "bproce_id"
     t.integer  "iresource_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.text     "rpurpose"
   end
 
-  add_index "bproce_iresources", ["bproce_id"], name: "index_bproce_iresources_on_bproce_id"
-  add_index "bproce_iresources", ["iresource_id"], name: "index_bproce_iresources_on_iresource_id"
+  add_index "bproce_iresources", ["bproce_id"], name: "index_bproce_iresources_on_bproce_id", using: :btree
+  add_index "bproce_iresources", ["iresource_id"], name: "index_bproce_iresources_on_iresource_id", using: :btree
 
   create_table "bproce_workplaces", force: true do |t|
     t.integer  "bproce_id"
@@ -86,12 +88,21 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.string   "name"
     t.string   "description"
     t.integer  "bproce_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.text     "features"
   end
 
-  add_index "business_roles", ["bproce_id"], name: "index_business_roles_on_bproce_id"
+  add_index "business_roles", ["bproce_id"], name: "index_business_roles_on_bproce_id", using: :btree
+
+  create_table "categories", force: true do |t|
+    t.string   "cat_table"
+    t.string   "cat_type"
+    t.string   "cat_name"
+    t.integer  "sortorder"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "directives", force: true do |t|
     t.string   "title"
@@ -100,8 +111,8 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.string   "name"
     t.string   "note"
     t.string   "body"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text     "annotation"
   end
 
@@ -109,28 +120,28 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.integer  "document_id"
     t.integer  "directive_id"
     t.string   "note"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
-  add_index "document_directives", ["document_id", "directive_id"], name: "index_document_directives_on_document_id_and_directive_id", unique: true
+  add_index "document_directives", ["document_id", "directive_id"], name: "index_document_directives_on_document_id_and_directive_id", unique: true, using: :btree
 
   create_table "documents", force: true do |t|
     t.string   "name"
     t.string   "filename"
     t.string   "description"
     t.string   "status"
-    t.integer  "status_id"
-    t.integer  "owner_id"
     t.string   "part"
     t.date     "approved"
     t.string   "place"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "status_id"
     t.integer  "bproce_id"
     t.string   "eplace"
     t.string   "approveorgan"
     t.integer  "dlevel"
+    t.integer  "owner_id"
     t.integer  "responsible"
     t.string   "note"
     t.string   "document_file_file_name"
@@ -140,7 +151,7 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.string   "document_file_fingerprint"
   end
 
-  add_index "documents", ["id"], name: "index_documents_on_id", unique: true
+  add_index "documents", ["id"], name: "index_documents_on_id", unique: true, using: :btree
 
   create_table "iresources", force: true do |t|
     t.string   "level"
@@ -154,23 +165,22 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.string   "access_other"
     t.string   "risk_category"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
-  add_index "iresources", ["label"], name: "index_iresources_on_label", unique: true
-  add_index "iresources", ["user_id"], name: "index_iresources_on_user_id"
+  add_index "iresources", ["label"], name: "index_iresources_on_label", unique: true, using: :btree
+  add_index "iresources", ["user_id"], name: "index_iresources_on_user_id", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"
     t.string   "description"
-    t.integer  "bproce_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.string   "note"
   end
 
-  add_index "roles", ["name"], name: "index_roles_on_name", unique: true
+  add_index "roles", ["name"], name: "index_roles_on_name", unique: true, using: :btree
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"
@@ -182,8 +192,8 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.datetime "created_at"
   end
 
-  add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id"
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
+  add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id", using: :btree
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
 
   create_table "tags", force: true do |t|
     t.string "name"
@@ -195,12 +205,12 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.text     "description"
     t.text     "note"
     t.text     "source"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
-  add_index "terms", ["name"], name: "index_terms_on_name", unique: true
-  add_index "terms", ["shortname"], name: "index_terms_on_shortname", unique: true
+  add_index "terms", ["name"], name: "index_terms_on_name", unique: true, using: :btree
+  add_index "terms", ["shortname"], name: "index_terms_on_shortname", unique: true, using: :btree
 
   create_table "user_business_roles", force: true do |t|
     t.date     "date_from"
@@ -208,12 +218,12 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.string   "note"
     t.integer  "user_id",          null: false
     t.integer  "business_role_id", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
-  add_index "user_business_roles", ["business_role_id"], name: "index_user_business_roles_on_business_role_id"
-  add_index "user_business_roles", ["user_id"], name: "index_user_business_roles_on_user_id"
+  add_index "user_business_roles", ["business_role_id"], name: "index_user_business_roles_on_business_role_id", using: :btree
+  add_index "user_business_roles", ["user_id"], name: "index_user_business_roles_on_user_id", using: :btree
 
   create_table "user_roles", force: true do |t|
     t.date     "date_from"
@@ -221,12 +231,12 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.string   "note"
     t.integer  "user_id"
     t.integer  "role_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  add_index "user_roles", ["role_id"], name: "index_user_roles_on_role_id"
-  add_index "user_roles", ["user_id"], name: "index_user_roles_on_user_id"
+  add_index "user_roles", ["role_id"], name: "index_user_roles_on_role_id", using: :btree
+  add_index "user_roles", ["user_id"], name: "index_user_roles_on_user_id", using: :btree
 
   create_table "user_workplaces", force: true do |t|
     t.date     "date_from"
@@ -234,20 +244,20 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.string   "note"
     t.integer  "user_id"
     t.integer  "workplace_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
-  add_index "user_workplaces", ["user_id"], name: "index_user_workplaces_on_user_id"
-  add_index "user_workplaces", ["workplace_id"], name: "index_user_workplaces_on_workplace_id"
+  add_index "user_workplaces", ["user_id"], name: "index_user_workplaces_on_user_id", using: :btree
+  add_index "user_workplaces", ["workplace_id"], name: "index_user_workplaces_on_workplace_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "",   null: false
-    t.string   "encrypted_password",     default: "",   null: false
+    t.string   "email",                              default: "",   null: false
+    t.string   "encrypted_password",     limit: 128, default: "",   null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0
+    t.integer  "sign_in_count",                      default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -263,11 +273,11 @@ ActiveRecord::Schema.define(version: 20131029154413) do
     t.string   "office"
     t.string   "phone"
     t.string   "remember_token"
-    t.boolean  "active",                 default: true
+    t.boolean  "active",                             default: true
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "workplaces", force: true do |t|
     t.string   "designation"
