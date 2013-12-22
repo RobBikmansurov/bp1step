@@ -4,74 +4,96 @@
   %b
     = @usr.displayname
   = @usr.position
-%h4
-  = @usr.department
-  |
-  = @usr.office
-  |
-  = mail_to @usr.email, @usr.email, :subject => "BP1Step:"
-  |
-  = @usr.phone
-  |
-  -if @usr.roles.count
-    %b роли доступа:
-    - @usr.roles.each do |role|
-      -if current_user
-        -if current_user.role? :admin
-          = link_to role.description, users_path + '?role=' + role.name
-        -else
-          = role.description
-        \/
 
-%h2 Рабочие места:
-%table
-  %tr
-    %th Рабочее место
-    %th Расположение
-    %th Описание
-    %th
-    %th
+#tabs
+  %ul
+    %li
+      %a{:href => "#Places"}
+        %span Рабочие места
+    %li
+      %a{:href => "#Roles"}
+        %span Роли
+    %li
+      %a{:href => "#Processes"}
+        %span Процессы
+    %li
+      %a{:href => "#Documents"}
+        %span Документы
+    %li
+      %a{:href => "#Resources"}
+        %span Ресурсы
 
-  -@uworkplaces.each do |user_workplace|
-    %tr
-      %td= link_to user_workplace.workplace.designation, workplace_path(user_workplace.workplace)
-      %td= user_workplace.workplace.location
-      %td= user_workplace.workplace.name
-      %td= user_workplace.note
-      %td
-        -if user_workplace.date_from
-          = user_workplace.date_from.strftime("%d.%m.%Y")
-        -if user_workplace.date_to
-          \-
-          = user_workplace.date_to.strftime("%d.%m.%Y")
+  #Places
+    %h4
+      = @usr.department
+      |
+      = @usr.office
+      |
+      = mail_to @usr.email, @usr.email, :subject => "BP1Step:"
+      |
+      = @usr.phone
+      -if @usr.roles.count
+        %b роли доступа:
+        - @usr.roles.each do |role|
+          -if current_user
+            -if current_user.role? :admin
+              = link_to role.description, users_path + '?role=' + role.name
+            -else
+              = role.description
+            \/
+    %h2 Рабочие места:
+    %table
+      %tr
+        %th Рабочее место
+        %th Расположение
+        %th Описание
+        %th
+        %th
 
-= render 'user_busines_roles'
+      -@uworkplaces.each do |user_workplace|
+        %tr
+          %td= link_to user_workplace.workplace.designation, workplace_path(user_workplace.workplace)
+          %td= user_workplace.workplace.location
+          %td= user_workplace.workplace.name
+          %td= user_workplace.note
+          %td
+            -if user_workplace.date_from
+              = user_workplace.date_from.strftime("%d.%m.%Y")
+            -if user_workplace.date_to
+              \-
+              = user_workplace.date_to.strftime("%d.%m.%Y")
 
-- if @usr.bproce.count > 0
-  %h3
-    Владелец
-    = link_to 'процессов:', bproces_path + '?user=' + @usr.id.to_s
+  #Roles
+    = render 'user_busines_roles'
 
-  - @usr.bproce.each do |bproce|
-    = "——" * (bproce.depth)
-    - if bproce.shortname
-      [
-      =bproce.shortname
-      ]
-    = link_to bproce.name, bproce_path(bproce)
-    %br
+  #Processes
+    - if @usr.bproce.count > 0
+      %h3
+        Владелец
+        = link_to 'процессов:', bproces_path + '?user=' + @usr.id.to_s
 
-- if @documents.count > 0
-  %h3
-    = @usr.displayname
-    отвечает за 
-    = link_to 'внутренние документы:', documents_path + '?user=' + @usr.id.to_s
-  - @documents.each do |doc|
-    %li= link_to doc.name, document_path(doc)
-  %h3
-    Владелец
-    = link_to 'ресурсов', iresources_path + '?user=' + @usr.id.to_s
+      - @usr.bproce.each do |bproce|
+        = "——" * (bproce.depth)
+        - if bproce.shortname
+          [
+          =bproce.shortname
+          ]
+        = link_to bproce.name, bproce_path(bproce)
+        %br
 
+  #Documents
+    - if @documents.count > 0
+      %h3
+        = @usr.displayname
+        отвечает за 
+        = link_to 'внутренние документы:', documents_path + '?user=' + @usr.id.to_s
+      - @documents.each do |doc|
+        %li= link_to doc.name, document_path(doc)
+  
+  #Resources
+    %h3
+      Владелец
+      = link_to 'ресурсов', iresources_path + '?user=' + @usr.id.to_s
 
 %p
 -if can? :assign_roles, User
