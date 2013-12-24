@@ -1,0 +1,25 @@
+set daemon 30
+
+set logfile /var/log/monit.log
+set idfile /var/lib/monit/id
+set statefile /var/lib/monit/state
+
+set eventqueue
+    basedir /var/lib/monit/events
+    slots 100
+
+set mailserver mail.ad.bankperm.ru
+set mail-format { from:monit@vrdev.ad.bankperm.ru }
+
+set alert robb@bankperm.ru
+
+set httpd port 2812 and
+    allow admin:admin
+    allow 192.168.1.0/255.255.255.0
+
+check system bp1step
+  if loadavg(5min) > 2 for 2 cycles then alert
+  if memory > 75% for 2 cycles then alert
+  if cpu(user) > 75% for 2 cycles then alert
+
+include /etc/monit/conf.d/*
