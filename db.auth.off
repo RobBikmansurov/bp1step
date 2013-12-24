@@ -1,2 +1,0 @@
-git checkout app/models/user.rb
-git checkout config/initializers/devise.rb
