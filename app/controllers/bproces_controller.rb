@@ -40,6 +40,11 @@ class BprocesController < ApplicationController
     end
   end
 
+  def autocomplete
+    @bprocess = Bproce.order(:name).where("name ilike ?", "%#{params[:term]}%")
+    render json: @bprocess.map(&:name)
+  end
+
   def show
     respond_with(@bproce)
   end
