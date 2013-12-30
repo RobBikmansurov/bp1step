@@ -5,3 +5,4 @@ jQuery ->
       #optional if want to do something based on tab selection
       whichSelected = $("#tabs").tabs('option', 'selected')
       #do something
+  $("html, body").animate({scrollTop:$("#area_3").offset().top}, 'fast');
