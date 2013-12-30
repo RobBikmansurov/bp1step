@@ -2,9 +2,16 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
+if defined?(Bundler)
+  # If you precompile assets before deploying to production, use this line
+  # Bundler.require(*Rails.groups(:assets => %w(development test)))
+  # If you want your assets lazily compiled in production, use this line
+  Bundler.require(:default, :assets, Rails.env)
+end
+
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
-Bundler.require(:default, Rails.env) if defined?(Bundler)
+#Bundler.require(:default, Rails.env) if defined?(Bundler)
 
 module BPDoc
   class Application < Rails::Application
@@ -31,7 +38,7 @@ module BPDoc
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
     config.i18n.default_locale = :ru
-    #config.i18n.enforce_available_locales = false
+    config.i18n.locale = :ru
 
     # JavaScript files you want as :defaults (application.js is always included).
     #config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
@@ -45,7 +52,5 @@ module BPDoc
     config.filter_parameters += [:password]
 
     ActsAsTaggableOn.strict_case_match = true
-    WillPaginate.per_page = 10
-    config.secret_key_base = 'bp1stepapplication'
   end
 end
