@@ -5,7 +5,7 @@ class BprocesController < ApplicationController
   respond_to :html
   respond_to :pdf, :xml, :json, :only => [:index, :list]
   helper_method :sort_column, :sort_direction
-  before_filter :get_bproce, :except => [:index, :list, :manage]
+  before_filter :get_bproce, :except => [:index, :list, :manage, :autocomplete]
   before_filter :authenticate_user!, :only => [:edit, :new, :create, :update]
 
   def list  # плоский список процессов без дерева
@@ -38,6 +38,11 @@ class BprocesController < ApplicationController
       format.html
       format.pdf { print }
     end
+  end
+
+  def autocomplete
+    @bproces = Bproce.order(:name).where("name ilike ?", "%#{params[:term]}%")
+    render json: @bproces.map(&:name)
   end
 
   def show

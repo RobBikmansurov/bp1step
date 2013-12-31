@@ -7,6 +7,9 @@ BPDoc::Application.routes.draw do
   resources :bapps, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
+  resources :bproces, :only => :autocomlete do
+    get :autocomplete, :on => :collection
+  end
   resources :iresources, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
