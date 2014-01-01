@@ -17,7 +17,7 @@ gem 'unicorn'
 gem 'newrelic_rpm'
 
 
-gem "devise"#, git: "https://github.com/plataformatec/devise"
+gem "devise", "~> 3.2.2"#, git: "https://github.com/plataformatec/devise"
 gem "devise_ldap_authenticatable"
 gem "cancan"
 gem 'alphabetical_paginate'
