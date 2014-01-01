@@ -64,7 +64,7 @@ class DocumentsController < ApplicationController
     @document_directives = DocumentDirective.where(:document_id => @document.id) # все связи документа с директивами
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
     #@document_bproces = BproceDocument.where(:document_id => @document.id)  # все ссылки на документ из процессов
-    @document_bproces = @document.bproce_document.load
+    @document_bproces = @document.bproce_document.all
     @document_bproce = @document.bproce_document.new # заготовка для новой связи с процессом
     respond_with(@document)
   end

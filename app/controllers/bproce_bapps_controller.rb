@@ -2,9 +2,12 @@ class BproceBappsController < ApplicationController
   respond_to :html, :json
   helper_method :sort_column, :sort_direction
   before_filter :authenticate_user!, :only => [:edit, :new]
-  before_filter :get_bproce_bapp, :except => :index
+  before_filter :get_bproce_bapp, :except => [:index, :create]
 
   def create
+    bproce_bapp = logger.debug "params = #{params[:bproce_bapp_bproce_id]}"
+    @bproce = Bproce.find_by_name(params[:bproce_id_bproce_id])
+    @bproce_bapp = BproceBapp.new(params[:bproce_bapp])
     if @bproce_bapp.save
       flash[:notice] = "Successfully created bproce_bapp."
       redirect_to(@bproce_bapp.bapp)

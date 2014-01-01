@@ -54,7 +54,10 @@
     -@bapp.bproce_bapps.each do |bp|
       %tr
         %td
-          = link_to bp.bproce.name, bproce_path(bp.bproce_id)
+          -if bp.bproce_id
+            = link_to bp.bproce.name, bproce_path(bp.bproce_id)
+          -else
+            = bp.inspect
         %td
           -if bp.apurpose.blank?
             = link_to 'не определено', edit_bproce_bapp_path(bp)

@@ -11,7 +11,8 @@
         %td
           =link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce_document, data: { confirm: bproce_document.purpose.to_s + "\n" + bproce_document.bproce.name + "\nДействительно хотите удалить связь с процессом?" }, :method => 'delete', class: 'button-img'
     - else
-      = bproce_document.bproce.inspect  # !исправлено на vrdev
+      = bproce_document.inspect  # !исправлено на vrdev
+      = @document_bproces.inspect
 
 
 
@@ -20,7 +21,9 @@
   = bp.hidden_field :document_id
   -#= dd.input :directive_name, data: {autocomplete_source: autocomplete_directives_path}, :as => :autocomplete, :label => 'Добавить Директиву'
   -#= bp.input :directive_id, :collection => Directive.order(:title, :number).all, :include_blank => true, :prompt => 'Добавить Директиву', :label_method => :shortname
-  = bp.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Процесс', :hint => 'Выберите Процесс, к которому относится часть документа', :prompt => 'Дополнительный Процесс документа'
+  = bp.label 'Процесс'
+  = bp.autocomplete_field :bproce_id, autocomplete_bproces_path, :id_elements => '#bproce_id', :placeholder => 'подстрока в наименовании', :data => { :no_matches_label => '333' }
+  -#= bp.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Процесс', :hint => 'Выберите Процесс, к которому относится часть документа', :prompt => 'Дополнительный Процесс документа'
   = bp.input :purpose
   = bp.error :base
   -if can? :update, @document
