@@ -19,6 +19,14 @@ class BproceBapp < ActiveRecord::Base
     self.bapp_id = Bapp.find_by_name(name).id if name.present?
   end
 
+  def bproce_name
+    bproce.try(:name)
+  end
+
+  def bproce_name=(name)
+    self.bproce_id = Bproce.find_by_name(name).id if name.present?
+  end
+
   def self.search(search)
     if search
       where('name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%")
