@@ -39,6 +39,8 @@ module BPDoc
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
     config.i18n.default_locale = :ru
     config.i18n.locale = :ru
+    #config.i18n.enforce_available_locales = false
+    I18n.config.enforce_available_locales = false
 
     # JavaScript files you want as :defaults (application.js is always included).
     #config.action_view.javascript_expansions[:defaults] = %w(jquery rails)

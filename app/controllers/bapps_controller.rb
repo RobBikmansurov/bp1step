@@ -4,7 +4,7 @@ class BappsController < ApplicationController
   helper_method :sort_column, :sort_direction
   before_filter :get_bapp, :except => [:index, :print]
   before_filter :authenticate_user!, :only => [:edit, :new]
-  autocomplete :bproce, :name
+  autocomplete :bproce, :name, :extra_data => [:id]
 
   def index
     if params[:bproce_id].present?  # это приложения выбранного процесса

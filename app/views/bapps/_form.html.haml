@@ -37,8 +37,9 @@
   = simple_form_for(@bproce_bapp) do |ff|
     = ff.error_notification
     = ff.hidden_field :bapp_id
+    = ff.hidden_field :bproce_id
     = ff.label 'Процесс'
-    = ff.autocomplete_field :bproce_id, autocomplete_bproces_path, :id_elements => '#bproce_id', :placeholder => 'подстрока в наименовании', :data => { :no_matches_label => '333' }
+    = ff.autocomplete_field :bproce_name, autocomplete_bproces_path, :id_elements => '#bproce_bapp_bproce_id', :placeholder => 'подстрока в наименовании', :data => { :no_matches_label => '333' }
     -##= ff.autocomplete_field :bproce_id, autocomplete_brand_name_products_path, :id_element => '#some_element'
     -#= ff.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Процесс', :hint => 'Выберите процесс', :prompt => 'Выберите процесс, где Приложение используется'
     = ff.input :apurpose, :hint => 'Укажите назначение приложения в выбранном процессе'
