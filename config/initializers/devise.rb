@@ -1,10 +1,20 @@
-# Use this hook to configure devise mailer, warden hooks and so forth.
-# Many of these configuration options can be set straight in your model.
+# Use this hook to configure devise mailer, warden hooks and so forth. The first
+# four configuration values can also be set straight in your models.
 Devise.setup do |config|
+  # ==> LDAP Configuration 
+  config.ldap_logger = true
+  config.ldap_create_user = true
+  # config.ldap_update_password = true
+  config.ldap_config = "#{Rails.root}/config/ldap.yml"
+  config.ldap_check_group_membership = false
+  config.ldap_check_attributes = false
+  config.ldap_use_admin_to_bind = true
+  # config.ldap_ad_group_check = false
+  
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class with default "from" parameter.
-  config.mailer_sender = "please-change-me-at-config-initializers-devise@example.com"
+  config.mailer_sender = "robb@bankperm.ru"
 
   # Configure the class responsible to send e-mails.
   # config.mailer = "Devise::Mailer"
@@ -24,6 +34,7 @@ Devise.setup do |config|
   # You can also supply a hash where the value is a boolean determining whether
   # or not authentication should be aborted when the value is not present.
   # config.authentication_keys = [ :email ]
+  config.authentication_keys = [ :username ]
 
   # Configure parameters from the request object used for authentication. Each entry
   # given should be a request method and it will automatically be passed to the
@@ -35,7 +46,7 @@ Devise.setup do |config|
   # Configure which authentication keys should be case-insensitive.
   # These keys will be downcased upon creating or modifying a user and when used
   # to authenticate or find a user. Default is :email.
-  config.case_insensitive_keys = [ :email ]
+  config.case_insensitive_keys = [ :email, :username ]
 
   # Configure which authentication keys should have whitespace stripped.
   # These keys will have whitespace before and after removed upon creating or
@@ -69,14 +80,8 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 10
 
   # Setup a pepper to generate the encrypted password.
-  # config.pepper = "db9179324e7b75daf58694b1af65f25ad0451898c6a6286927740f4801a634f4c4e2802d477dcb83ffadb4d76df2a0c2004d3b87384ab789bf391a5ed9c2472a"
-  
-  # The secret key used by Devise. Devise uses this key to generate
-  # random tokens. Changing this key will render invalid all existing
-  # confirmation, reset password and unlock tokens in the database.
-  config.secret_key = '2710f15f11771d6692a3015d7e3dba2cb05539c1f72i6u345df5433hg535kj5x56v6er56if2566c63c2ad670d6859e536b40d87e6543b115609f0464bdd99502abbe241c4'
+  # config.pepper = "859f17946c6eea79fef8e150de6a7c35f9343b034d1f4fadf417fe4187eb1be380cb6a327debc6c6d497c7f61a01c729e81df441b4a6967d405715d978f4c1f5"
 
-  config.secret_key = '9fbd3de751bd3662d0a2742dbac99ea9177ec95f6b596507b89e53ec2c4c4713cb9c8d0b5f569ff718291cc9f42a6efc85b343451612595d4f72ab9beae3d0c2'
   # ==> Configuration for :confirmable
   # A period that the user is allowed to access the website even without
   # confirming his account. For instance, if set to 2.days, the user will be
@@ -97,6 +102,7 @@ Devise.setup do |config|
 
   # If true, extends the user's remember period when remembered via cookie.
   # config.extend_remember_period = false
+
 
   # Options to be passed to the created cookie. For instance, you can set
   # :secure => true in order to force SSL only cookies.
@@ -205,7 +211,10 @@ Devise.setup do |config|
   # change the failure app, you can configure them inside the config.warden block.
   #
   # config.warden do |manager|
+  #   manager.failure_app   = AnotherApp
   #   manager.intercept_401 = false
   #   manager.default_strategies(:scope => :user).unshift :some_external_strategy
   # end
+  config.secret_key = '186a29cf7da10d41a18614636606772e7601be9c35042781cc383fdaa5949bc57a1c5c9a001b92a9596e5414ce0c7f4ecb9521112f48a8d440dd16d71cb5df01'
+
 end
