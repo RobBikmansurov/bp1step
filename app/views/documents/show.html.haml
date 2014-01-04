@@ -16,7 +16,7 @@
     %b= @document.approved.strftime('%d.%m.%Y')
 %h3
   уровень документа:
-  %b= link_to @document.dlevel, documents_path + '?dlevel=' + @document.dlevel.to_s, class: 'groups', title: dlevel_title(@document.dlevel)
+  %b= link_to @document.dlevel.to_s + ': ' + dlevel_title(@document.dlevel), documents_path + '?dlevel=' + @document.dlevel.to_s, class: 'groups'
 
 - if !@document.bproce.blank?  # есть ссылки из документа на другие процессы?
   %h3 Относится к следующим процессам:
