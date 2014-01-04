@@ -1,69 +1,26 @@
-- if user_signed_in?
-  %h1
-    = link_to current_user.displayname, user_path(current_user)
-  %h4
-    = current_user.position
-    |
-    = current_user.email
-    |
-    = current_user.phone
-    |
-    - if current_user.roles.count > 0
-      %b роли доступа:
-      - current_user.roles.each do |role|
-        = role.description
-        \/
-  %table
-    %tr
-      %th Рабочее место
-      %th Расположение
-      %th Описание
-      %th Основание
-      %th
-    -current_user.user_workplace.each do |user_workplace|
-      %tr
-        %td= link_to user_workplace.workplace.designation, workplace_path(user_workplace.workplace)
-        %td= user_workplace.workplace.location
-        %td= user_workplace.workplace.name
-        %td= user_workplace.note
-        %td
-          = user_workplace.date_from
-          = user_workplace.date_to
+%h1 Бизнес-процессы: Первый шаг
+%p
+Чтобы получить доступ, Вам необходимо
+= link_to "войти", new_user_session_path
+в приложение.
+%hr
+%h3
+  = link_to "Процессы:", bproces_path
+  = Bproce.count
+%h3
+  = link_to "Роли:", business_roles_path
+  = BusinessRole.count
+%h3
+  = link_to "Рабочие места:", workplaces_path
+  = Workplace.count
+%h3
+  = link_to "Приложения:", bapps_path
+  = Bapp.count
+%h3
+  = link_to "Документы:", documents_path
+  = Document.count
+%h3
+  = link_to "Сотрудники:", users_path
+  = User.count
 
-  =render 'users/user_busines_roles'
-
-  - if current_user.bproce.count > 0
-    %h3
-      Владелец
-      = link_to 'процессов', bproces_path + '?user=' + current_user.id.to_s
-  %h3
-    Владелец
-    = link_to 'внутренних документов', documents_path + '?user=' + current_user.id.to_s
-  %h3
-    Владелец
-    = link_to 'ресурсов', iresources_path + '?user=' + current_user.id.to_s
-
-- else
-  %h1 Бизнес-процессы: Первый шаг
-  %p
-  %hr
-  %h3
-    = link_to "Процессы:", bproces_path
-    = Bproce.count
-  %h3
-    = link_to "Роли:", business_roles_path
-    = BusinessRole.count
-  %h3
-    = link_to "Рабочие места:", workplaces_path
-    = Workplace.count
-  %h3
-    = link_to "Приложения:", bapps_path
-    = Bapp.count
-  %h3
-    = link_to "Документы:", documents_path
-    = Document.count
-  %h3
-    = link_to "Сотрудники:", users_path
-    = User.count
-
-  %p
+%p
