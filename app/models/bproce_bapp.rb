@@ -9,7 +9,7 @@ class BproceBapp < ActiveRecord::Base
   belongs_to :bproce
   belongs_to :bapp
 
-  attr_accessible :bproce_id, :bapp_id, :apurpose
+  attr_accessible :bproce_id, :bapp_id, :apurpose, :bproce_name
 
   def bapp_name
     bapp.try(:designation)
