@@ -62,9 +62,11 @@
     Процесс описывают
     =link_to 'Документы:', bproce_document_path(@bproce)
   -@bproce.documents.order(:name).each do |doc|
-    = link_to doc.name, document_path(doc)
-    -if doc.approved
-      = ' ' + doc.approved.strftime('%d.%m.%Y')
+    -if doc.status == 'Утвержден' or doc.status == 'Согласование'
+      = link_to doc.name, document_path(doc)
+      = doc.status
+      -if doc.approved
+        = ' ' + doc.approved.strftime('%d.%m.%Y')
     -#= ' ' + doc.owner.displayname
 
 -if @bproce.workplaces.count > 0
