@@ -2,7 +2,11 @@
 %p
 Чтобы получить доступ, Вам необходимо
 = link_to "войти", new_user_session_path
-в приложение.
+в приложение. Доступ будет предоставлен в соответствии с Вашими ролями и правами.
+%br
+Дополнительную информацию Вы сможете получить на 
+=link_to "этой", "/about"
+странице.
 %hr
 %h3
   = link_to "Процессы:", bproces_path
@@ -17,8 +21,17 @@
   = link_to "Приложения:", bapps_path
   = Bapp.count
 %h3
+  = link_to "Ресурсы:", iresources_path
+  = Iresource.count
+%h3
   = link_to "Документы:", documents_path
   = Document.count
+%h3
+  = link_to "Директивы:", directives_path
+  = Directive.count
+%h3
+  = link_to "Термины:", terms_path
+  = Term.count
 %h3
   = link_to "Сотрудники:", users_path
   = User.count
