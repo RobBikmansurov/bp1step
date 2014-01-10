@@ -42,11 +42,9 @@ group :test do
   gem 'capybara'
   gem 'shoulda-matchers'
   gem 'webrat'
-  gem 'rspec-rails'
 end
 
 group :development do
-  gem 'pg'
   #gem 'sqlite3'
   gem 'capistrano'  # Deploy with Capistrano
   gem 'rvm-capistrano'
@@ -55,6 +53,5 @@ group :development do
 end
 
 group :production do
-  gem 'sqlite3'
-  #gem pg
+  gem 'pg'
 end
