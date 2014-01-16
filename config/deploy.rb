@@ -7,7 +7,7 @@ load "config/recipes/unicorn"
 
 load "config/recipes/monit"
 
-server 'vrdev1.ad.bankperm.ru', :app, :web, :db, :primary => true
+server 'vrdev.ad.bankperm.ru', :app, :web, :db, :primary => true
 
 # http and https proxy
 default_environment['http_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
@@ -59,7 +59,7 @@ namespace :deploy do
     run "rm -rf #{deploy_to}/lib"
     run "ln -s -- #{deploy_to}/current/lib/ #{deploy_to}/lib"
     #run "rm -rf #{deploy_to}/config"
-    # скоипруем конфигурационые файлы с секретами
+    # скопируем конфигурационые файлы с секретами
     run "cp #{deploy_to}/config/ldap.yml #{deploy_to}/current/config/ldap.yml"
     run "cp #{deploy_to}/config/database.yml #{deploy_to}/current/config/database.yml"
   end

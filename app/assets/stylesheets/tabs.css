@@ -16,7 +16,7 @@
     border: none; 
 } 
 #tabs .ui-tabs-nav .ui-state-active { 
-    background: transparent url(image/uiTabsArrow.png) no-repeat bottom center; 
+    background: transparent url(uiTabsArrow.png) no-repeat bottom center; 
     border: none; 
 } 
 #tabs .ui-tabs-nav .ui-state-default a { 
