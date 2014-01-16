@@ -1,0 +1,13 @@
+- if @usr.bproce.count > 0
+  %h3
+    Владелец
+    = link_to 'процессов:', bproces_path + '?user=' + @usr.id.to_s
+
+  - @usr.bproce.each do |bproce|
+    = "——" * (bproce.depth)
+    - if bproce.shortname
+      [
+      =bproce.shortname
+      ]
+    = link_to bproce.name, bproce_path(bproce)
+    %br

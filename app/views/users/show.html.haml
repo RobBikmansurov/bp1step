@@ -66,28 +66,10 @@
     = render 'user_busines_roles'
 
   #Processes
-    - if @usr.bproce.count > 0
-      %h3
-        Владелец
-        = link_to 'процессов:', bproces_path + '?user=' + @usr.id.to_s
-
-      - @usr.bproce.each do |bproce|
-        = "——" * (bproce.depth)
-        - if bproce.shortname
-          [
-          =bproce.shortname
-          ]
-        = link_to bproce.name, bproce_path(bproce)
-        %br
+    = render 'user_busines_processes'
 
   #Documents
-    - if @documents.count > 0
-      %h3
-        = @usr.displayname
-        отвечает за 
-        = link_to 'внутренние документы:', documents_path + '?user=' + @usr.id.to_s
-      - @documents.each do |doc|
-        %li= link_to doc.name, document_path(doc)
+    = render 'user_busines_documents'
   
   #Resources
     %h3
