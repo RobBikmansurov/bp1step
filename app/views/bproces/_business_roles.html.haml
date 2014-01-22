@@ -10,7 +10,7 @@
 = simple_form_for(@business_role) do |r|
   = r.error_notification
   = r.input :name
-  = r.input :description
+  = r.input :description, :as => :text
   = r.hidden_field :bproce_id
   = r.error :base
   -if can? :update, @bproce
