@@ -1,3 +1,3 @@
 jQuery ->
-  $("#bproce_name").autocomplete
+  $("#bproce_name1").autocomplete
     source: "/bproces/autocomplete"

@@ -3,7 +3,7 @@ class Document < ActiveRecord::Base
   # FIXME разобраться со статусами на русском
   # STATUSES = %w[Проект Согласование Утвержден]
   # validates_inclusion_of :status, in: STATUSES
-  attr_accessible :document_file
+  ##attr_accessible :document_file # paperclipe and Rails 4
   attr_accessor :delete_file
 
   acts_as_taggable

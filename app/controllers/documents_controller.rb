@@ -70,7 +70,7 @@ class DocumentsController < ApplicationController
   end
 
   def update
-    flash[:notice] = "Successfully updated document."  if @document.update_attributes(params[:document])
+    flash[:notice] = "Successfully updated document."  if @document.update_attributes(document_params)
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
     respond_with(@document)
   end
@@ -92,7 +92,7 @@ class DocumentsController < ApplicationController
   end
 
   def create
-    @document = Document.new(params[:document])
+    @document = Document.new(document_params)
     flash[:notice] = "Successfully created Document." if @document.save
     respond_with(@document)
   end
@@ -104,7 +104,11 @@ class DocumentsController < ApplicationController
     end
   end
 
-private  
+private
+
+  def document_params
+    params.require(:document).permit(:document_file)
+  end
 
   def print
     report = ODFReport::Report.new("reports/documents.odt") do |r|
