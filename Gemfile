@@ -14,9 +14,6 @@ gem 'jquery-ui-rails'
 gem 'therubyracer'
 gem 'unicorn'
 
-gem 'newrelic_rpm'
-
-
 gem "devise", "~> 3.2.2"#, git: "https://github.com/plataformatec/devise"
 gem "devise_ldap_authenticatable"
 gem "cancan"
@@ -25,7 +22,7 @@ gem 'haml-rails'
 gem 'execjs'
 
 gem 'rails3-jquery-autocomplete'#, git: 'https://github.com/francisd/rails3-jquery-autocomplete'
-gem 'awesome_nested_set'#, :git => 'git://github.com/collectiveidea/awesome_nested_set'
+gem 'awesome_nested_set', :git => 'git://github.com/collectiveidea/awesome_nested_set'
 gem "the_sortable_tree", ">= 2.4.0"
 gem 'simple_form'
 #gem 'rb-readline'
