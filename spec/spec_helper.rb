@@ -3,6 +3,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'factory_girl'
+require "paperclip/matchers"
 include Devise::TestHelpers
 PublicActivity.enabled = false
 
@@ -32,4 +33,6 @@ RSpec.configure do |config|
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = false
   config.include FactoryGirl::Syntax::Methods
+  config.include Paperclip::Shoulda::Matchers
+
 end

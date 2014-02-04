@@ -68,7 +68,7 @@ class User < ActiveRecord::Base
    if search
       where('username ILIKE ? or displayname ILIKE ?', "%#{search}%", "%#{search}%")
     else
-      scoped
+      where(nil)
     end
   end
   
