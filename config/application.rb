@@ -54,5 +54,8 @@ module BPDoc
     config.filter_parameters += [:password]
 
     ActsAsTaggableOn.strict_case_match = true
+
+    Paperclip.options[:log] = true
+
   end
 end
