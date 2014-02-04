@@ -3,13 +3,11 @@ class Document < ActiveRecord::Base
   # FIXME разобраться со статусами на русском
   # STATUSES = %w[Проект Согласование Утвержден]
   # validates_inclusion_of :status, in: STATUSES
-  ##attr_accessible :document_file # paperclipe and Rails 4
-  attr_accessor :delete_file
 
   acts_as_taggable
   #acts_as_taggable_on :category
 
-  before_validation { document_file.clear if delete_file == '1' }
+  #before_validation { document_file.clear if delete_file == '1' }
   has_attached_file :document_file,
     :url  => "/store/:id.:ymd.:basename.:extension",
     :styles => { :pdf => "pdf" }, 
@@ -33,7 +31,7 @@ class Document < ActiveRecord::Base
   tracked owner: Proc.new { |controller, model| controller.current_user }
 
   # документ относится к процессу
-  belongs_to :bproce
+  #belongs_to :bproce
   belongs_to :user
   belongs_to :owner, :class_name => 'User'
   has_many :directive, :through => :document_directive
@@ -41,10 +39,11 @@ class Document < ActiveRecord::Base
   has_many :bproce, through: :bproce_document
   has_many :bproce_document, dependent: :destroy 
 
-  attr_protected :uploaded_file # чтобы не было ошибки при массовом сохранении из params
+  attr_accessible  :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :document_file, :file_delete
 
   # удалим из имени файла коды пробелов и заменим обратные слэши на прямые
   before_save [:file_name_sanityze]
+  before_save :destroy_file?
   after_save :copy_to_pdf
 
   def owner_name
@@ -104,16 +103,29 @@ class Document < ActiveRecord::Base
     end
   end
 
+  def file_delete
+    @file_delete ||= "0"
+  end
+
+  def file_delete=(value)
+    @file_delete = value
+  end
+
+
   private
 
   # интерполяция для paperclip - вернуть дату последней загрузки файла документа в формате ГГГГММДД
   Paperclip.interpolates :ymd do |attachment, style|
     attachment.instance_read(:updated_at).strftime('%Y%m%d')
   end
+
+  def destroy_file?
+    self.document_file = nil if @file_delete == "1"
+  end
   
   def copy_to_pdf
     if valid?
-      if delete_file == '1' # файл удаляется
+      if file_delete == '1' # файл удаляется
       else
         if self.document_file_file_name?
           if File.exist?(document_file.path)

@@ -63,14 +63,14 @@ class DocumentsController < ApplicationController
     #authorize! :edit_document_place, @user if params[:user][:edit_document_place]
     @document_directives = DocumentDirective.where(:document_id => @document.id) # все связи документа с директивами
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
-    #@document_bproces = BproceDocument.where(:document_id => @document.id)  # все ссылки на документ из процессов
-    @document_bproces = @document.bproce_document.all
+    @document_bproces = BproceDocument.where(:document_id => @document.id)  # все ссылки на документ из процессов
+    #@document_bproces = @document.bproce_document.all
     @document_bproce = @document.bproce_document.new # заготовка для новой связи с процессом
     respond_with(@document)
   end
 
   def update
-    flash[:notice] = "Successfully updated document."  if @document.update_attributes(document_params)
+    flash[:notice] = "Successfully updated document."  if @document.update(document_params)
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
     respond_with(@document)
   end
@@ -107,7 +107,7 @@ class DocumentsController < ApplicationController
 private
 
   def document_params
-    params.require(:document).permit(:document_file)
+    params.require(:document).permit(:id, :document_file, :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :file_delete)
   end
 
   def print

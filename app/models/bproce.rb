@@ -14,7 +14,8 @@ class Bproce < ActiveRecord::Base
   validates :fullname, :length => {:minimum => 10, :maximum => 250}
 
   acts_as_nested_set
-  #has_many :documents
+  attr_accessible :shortname, :name, :fullname, :goal, :description, :user_name, :parent_id, :tag_list
+
   has_many :documents, through: :bproce_documents
   has_many :bproce_documents, dependent: :destroy 
   has_many :business_roles, :dependent => :destroy
@@ -26,8 +27,6 @@ class Bproce < ActiveRecord::Base
   has_many :iresource, :through => :bproce_iresource
   belongs_to :bproce
   belongs_to :user  # владелец процессв
-
-  attr_accessible :shortname, :name, :fullname, :goal, :description, :user_name, :parent_id, :tag_list
 
   def user_name
     user.try(:displayname)

@@ -37,4 +37,12 @@ describe Document do
     it { should have_many(:directive).through(:document_directive) }
     it { should have_many(:document_directive).dependent(:destroy) }
   end  
+
+  context "have_attached_file" do
+    it { should have_attached_file(:document_file) }
+    it { should_not validate_attachment_presence(:document_file) }
+    it { should_not validate_attachment_size(:document_file).
+                less_than(2.megabytes) }
+  end
+  
 end
