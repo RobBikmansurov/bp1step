@@ -10,13 +10,14 @@ class Document < ActiveRecord::Base
   #before_validation { document_file.clear if delete_file == '1' }
   has_attached_file :document_file,
     :url  => "/store/:id.:ymd.:basename.:extension",
+    :presence  => false,
     :styles => { :pdf => "pdf" }, 
     :path => ":rails_root/public/store/:id.:ymd.:basename.:extension",
     :hash_secret => "BankPermBP1Step",
     :processors => [:convert_to_pdf]
-  validates :document_file, :attachment_presence => false
+  #validates :document_file, :attachment_presence => false
   do_not_validate_attachment_file_type :document_file
-  #validates_attachment_content_type :document_file, :content_type => ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png']
+  validates_attachment_content_type :document_file, :content_type => ['application/pdf', 'application/vnd.oasis.opendocument.text']
 
   #after_document_file_post_process :copy_to_pdf
   after_post_process :copy_to_pdf
@@ -106,8 +107,6 @@ class Document < ActiveRecord::Base
   end
 
   def destroy_file?
-    puts "\n\ndestroy_file?"
-    puts self.document_file.inspect
     self.document_file = nil if @file_delete == "1"
   end
   

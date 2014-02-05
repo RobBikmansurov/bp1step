@@ -5,7 +5,7 @@ class DocumentsController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
   before_filter :authenticate_user!, :only => [:edit, :new]
-  before_filter :get_document, :except => [:index, :print, :view]
+  before_filter :get_document, :except => [:index, :print, :view, :update, :create]
 
   def index
     if params[:directive_id].present? # документы относящиеся к директиве
@@ -70,7 +70,8 @@ class DocumentsController < ApplicationController
   end
 
   def update
-    flash[:notice] = "Successfully updated document."  if @document.update(document_params)
+    @document = Document.find(params[:id])
+    flash[:notice] = "Successfully updated document."  if @document.update_attributes(document_params)
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
     respond_with(@document)
   end
@@ -93,6 +94,7 @@ class DocumentsController < ApplicationController
 
   def create
     @document = Document.new(document_params)
+    puts @document.inspect
     flash[:notice] = "Successfully created Document." if @document.save
     respond_with(@document)
   end
@@ -107,7 +109,7 @@ class DocumentsController < ApplicationController
 private
 
   def document_params
-    params.require(:document).permit(:id, :document_file, :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :file_delete)
+    params.require(:document).permit(:document_file, :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :file_delete)
   end
 
   def print
