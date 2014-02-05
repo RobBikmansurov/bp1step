@@ -41,9 +41,7 @@ class Document < ActiveRecord::Base
 
   attr_accessible  :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :document_file, :file_delete
 
-  # удалим из имени файла коды пробелов и заменим обратные слэши на прямые
-  before_save [:file_name_sanityze]
-  before_save :destroy_file?
+  before_save :destroy_file?  # в не надо ли удалить файл документа?
   after_save :copy_to_pdf
 
   def owner_name
@@ -52,21 +50,6 @@ class Document < ActiveRecord::Base
 
   def owner_name=(name)
     self.owner = User.find_by_displayname(name) if name.present?
-  end
-
-  def file_name_sanityze
-    if !self.eplace.to_s.empty?  # если имя файла не пустое
-      fname = self.eplace[(self.eplace.index('_1_Норма') - 1).. - 1]  # обрежем начало - путь шары
-      fname = fname.gsub(/%20/, ' ')  # заменим %20 на пробел
-      fname = fname.gsub('\\', '/')   # заменим обратные слэши Windows на нормальные
-      fname = fname.gsub('__Внут', '_1_Внут')
-      self.eplace = fname
-    end
-  end
-
-  def file_name
-    file_name_sanityze
-    return self.eplace
   end
 
   def pdf_path
@@ -120,18 +103,22 @@ class Document < ActiveRecord::Base
   end
 
   def destroy_file?
+    puts "\n\ndestroy_file?"
+    puts self.document_file.inspect
     self.document_file = nil if @file_delete == "1"
   end
   
   def copy_to_pdf
     if valid?
-      if file_delete == '1' # файл удаляется
+      if @file_delete == '1' # файл удаляется
       else
-        if self.document_file_file_name?
-          if File.exist?(document_file.path)
+        if self.document_file_file_name?  # задано имя файла
+          puts "***model/document.rb:copy_to_pdf*** if " + document_file.path.to_s
+          if File.exist?(self.document_file.path)
+            puts "***model/document.rb*** convert_to_pdf" + self.document_file.path.to_s
             Paperclip.run('unoconv', "-f pdf #{self.document_file.path}") if File.extname(self.document_file.path) != ".pdf"
           else
-            puts "****** file not found " + self.document_file_file_name.to_s
+            puts "***model/document.rb*** file not found " + self.document_file.path.to_s
           end
         end
       end
