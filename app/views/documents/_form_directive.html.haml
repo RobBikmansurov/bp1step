@@ -14,7 +14,7 @@
   = dd.error_notification
   = dd.hidden_field :document_id
   -#= dd.input :directive_name, data: {autocomplete_source: autocomplete_directives_path}, :as => :autocomplete, :label => 'Добавить Директиву'
-  = dd.input :directive_id, :collection => Directive.order(:title, :number).all, :include_blank => true, :prompt => 'Добавить Директиву', :label_method => :shortname
+  = dd.input :directive_id, :collection => Directive.order(:title, :number).load, :include_blank => true, :prompt => 'Добавить Директиву', :label_method => :shortname
   = dd.error :base
   -if can? :update, @document
     = dd.button :submit, 'Добавить Директиву'
