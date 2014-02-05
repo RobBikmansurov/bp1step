@@ -86,14 +86,6 @@
         %b
           = @document.document_file_file_name
 
-  -else #оставим для совместимости с предыдущей схемой хранения документов
-    файл не загружен
-    -if !@document.eplace.nil?
-      -if can? :view_document, @document
-        -if File.exist?("files/" + @document.file_name) && !@document.file_name.empty?
-          есть файл в старом хранилище - 
-          = link_to image_tag('ico_text.gif', :alt => 'См.'), document_path(@document)+'.pdf'
-
 Теги документа:
 = raw @document.tags.map { |t| link_to t, tag_documents_path(t.name), class: 'tags' }.join('&nbsp; ')
 
