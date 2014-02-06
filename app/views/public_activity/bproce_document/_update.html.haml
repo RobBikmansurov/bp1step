@@ -1,0 +1,10 @@
+-if activity.trackable
+  = 'изменил связь (#' + activity.trackable.id.to_s + '): документа ['
+  = link_to activity.trackable.document.name, document_path(activity.trackable.document)
+  ] с процессом
+  = link_to activity.trackable.bproce.name, bproce_path(activity.trackable.bproce)
+-else
+  связь документа с процессом
+  \#
+  = activity.trackable_id
+  уже удалена
