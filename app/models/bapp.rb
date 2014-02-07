@@ -14,7 +14,7 @@ class Bapp < ActiveRecord::Base
   accepts_nested_attributes_for :bproce_bapps, :allow_destroy => true
   accepts_nested_attributes_for :bproces
 
-  attr_accessible :name, :description
+  attr_accessible :name, :description, :apptype, :purpose, :version_app, :directory_app, :distribution_app, :executable_file, :licence, :source_app, :note, :tag_list
 
   def self.search(search)
     if search
