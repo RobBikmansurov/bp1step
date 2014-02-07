@@ -16,7 +16,7 @@ class Document < ActiveRecord::Base
     :hash_secret => "BankPermBP1Step",
     :processors => [:convert_to_pdf]
   #validates :document_file, :attachment_presence => false
-  do_not_validate_attachment_file_type :document_file
+  ##do_not_validate_attachment_file_type :document_file
   validates_attachment_content_type :document_file, :content_type => ['application/pdf', 'application/vnd.oasis.opendocument.text']
 
   #after_document_file_post_process :copy_to_pdf
