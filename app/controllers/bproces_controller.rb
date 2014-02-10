@@ -165,8 +165,10 @@ private
       r.add_field :description, @bproce.description
       if @bproce.parent_id
         r.add_field :parent, @bproce.parent.name
+        r.add_field :parent_id, " #" + @bproce.parent_id.to_s
       else
         r.add_field :parent, "-"
+        r.add_field :parent_id, " "
       end
       if @bproce.user_id  # владелец процесса
         r.add_field :owner, @bproce.user.displayname
@@ -183,7 +185,6 @@ private
           end
           t.add_column(:spname) do |sub|
             spname = '__' * (sub.depth - @bproce.depth) + sub.name
-            #spname = sub.name
           end
           t.add_column(:spowner) do |sp|
             spowner = sp.user.displayname if sp.user_id
