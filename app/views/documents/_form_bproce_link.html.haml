@@ -15,18 +15,18 @@
       = @document_bproces.inspect
 
 
-
-= simple_form_for(@document_bproce) do |bp|
-  = bp.error_notification
-  = bp.hidden_field :document_id
-  = bp.hidden_field :bproce_id
-  -#= dd.input :directive_name, data: {autocomplete_source: autocomplete_directives_path}, :as => :autocomplete, :label => 'Добавить Директиву'
-  -#= bp.input :directive_id, :collection => Directive.order(:title, :number).all, :include_blank => true, :prompt => 'Добавить Директиву', :label_method => :shortname
-  = bp.label 'Процесс'
-  = bp.autocomplete_field :bproce_name, autocomplete_bproces_path, :id_elements => '#bproce_id', :placeholder => 'подстрока в наименовании', :data => { :no_matches_label => '333' }
+- if @document_bproce
+  = simple_form_for(@document_bproce) do |bp|
+    = bp.error_notification
+    = bp.hidden_field :document_id
+    = bp.hidden_field :bproce_id
+    -#= dd.input :directive_name, data: {autocomplete_source: autocomplete_directives_path}, :as => :autocomplete, :label => 'Добавить Директиву'
+    -#= bp.input :directive_id, :collection => Directive.order(:title, :number).all, :include_blank => true, :prompt => 'Добавить Директиву', :label_method => :shortname
+    = bp.label 'Процесс'
+    = bp.autocomplete_field :bproce_name, autocomplete_bproces_path, :id_elements => '#bproce_id', :placeholder => 'подстрока в наименовании', :data => { :no_matches_label => '333' }
  
-  -#= bp.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Процесс', :hint => 'Выберите Процесс, к которому относится часть документа', :prompt => 'Дополнительный Процесс документа'
-  = bp.input :purpose
-  = bp.error :base
-  -if can? :update, @document
-    = bp.button :submit, 'Добавить Процесс'
+    -#= bp.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Процесс', :hint => 'Выберите Процесс, к которому относится часть документа', :prompt => 'Дополнительный Процесс документа'
+    = bp.input :purpose
+    = bp.error :base
+    -if can? :update, @document
+      = bp.button :submit, 'Добавить Процесс'
