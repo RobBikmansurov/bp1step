@@ -1,11 +1,9 @@
-%p
-  %b Документ:
-  = link_to @document_directive.document.name, @document_directive.document
-  ( #
+.id_
+  \#
   =@document_directive.document.id
-  )
-=@document_directive.note
-%p
-  разработан на основании 
-  %b Директивы:
-  = link_to @document_directive.directive.shortname, @document_directive.directive
+%h2
+  Документ:
+  = link_to @document_directive.document.name, @document_directive.document
+%h3
+  разработан на основании:
+  = link_to @document_directive.directive.midname, @document_directive.directive
