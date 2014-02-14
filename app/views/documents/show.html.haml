@@ -43,8 +43,17 @@
 %hr
 -if @document.directive.count > 0
   %h4 Документ разработан на основе следующих руководящих документов:
-  - @document.directive.each do |directive|
-    = link_to directive.shortname, directive_path(directive)
+  - @document.document_directive.each do |document_directive|
+    -if document_directive.directive
+      = link_to document_directive.directive.midname, directive_path(document_directive.directive)
+    -else
+      = document_directive.inspect
+    (
+    -if can? :update, @document
+      %td= link_to document_directive.note.to_s, edit_document_directive_path(document_directive)
+    -else
+      %td= document_directive.note
+    )
     %br
 
 %h3 Место хранения

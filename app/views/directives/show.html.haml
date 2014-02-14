@@ -21,11 +21,17 @@
   %h4
     На основании этой директивы разработаны следующие
     = link_to "внутренние документы банка:", directive_documents_path(@directive)
-  - @directive.document.each do |document|
+  - @directive.document_directive.each do |document_directive|
     %li
-      = link_to document.name, document_path(document)
-      = document.status
-      = document.approved.strftime('%d.%m.%Y') if document.approved
+      = link_to document_directive.document.name, document_path(document_directive.document)
+      = document_directive.document.status
+      = document_directive.document.approved.strftime('%d.%m.%Y') if document_directive.document.approved
+      (
+      -if can? :update, @directive
+        %td= link_to document_directive.note.to_s, edit_document_directive_path(document_directive)
+      -else
+        %td= document_directive.note
+      )
 
 .info_
   создан

@@ -1,5 +1,8 @@
-%h1 New document_directive
+-title "Документ и Директива"
+-search "Документ" 
 
+= render 'show'
 = render 'form'
-
-= link_to 'Back', document_directives_path, :class => 'button'
+%p
+= link_to 'Show', @document_directive, :class => 'button'
+-#= link_to 'Back', documents_path, :class => 'button'

@@ -22,7 +22,7 @@ class DirectivesController < ApplicationController
   end
 
   def autocomplete
-    @directives = Directive.order(:number).where("number like ? or name like ?", "%#{params[:term]}%", "%#{params[:term]}%")
+    @directives = Directive.order(:number).where("number ilike ?", "%#{params[:term]}%")
     #render json: @directives, :only => [:id, :title, :number, :shortname, :approval]
     render json: @directives.map(&:directive_name)
   end

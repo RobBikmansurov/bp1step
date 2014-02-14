@@ -10,6 +10,18 @@ class DocumentDirective < ActiveRecord::Base
   belongs_to :directive
   belongs_to :document
 
-  attr_accessible :directive_id, :document_id
+  attr_accessible :directive_id, :document_id, :note, :directive_number
+
+  def directive_number
+    directive.try(:name)
+  end
+
+  def directive_number=(name)
+    if name.present?
+      i = name.rindex('#')  #  id директивы передадвали в конце наименования директивы - см. model/directive.rb: directive_name
+      self.directive_id = name.slice(i + 1, 5).to_i if i.to_i > 0
+    end
+  end
+
 
 end
