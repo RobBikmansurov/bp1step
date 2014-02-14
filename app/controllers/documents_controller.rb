@@ -60,6 +60,7 @@ class DocumentsController < ApplicationController
   end
 
   def edit
+    @document = Document.find(params[:id])
     #authorize! :edit_document_place, @user if params[:user][:edit_document_place]
     #@document_directives = DocumentDirective.where(:document_id => @document.id) # все связи документа с директивами
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
@@ -70,7 +71,7 @@ class DocumentsController < ApplicationController
   end
 
   def update
-    #@document = Document.find(params[:id])
+    @document = Document.find(params[:id])
     #flash[:notice] = "Successfully updated document."  if @document.update_attributes(document_params)
     flash[:notice] = "Successfully updated document."  if @document.update_attributes(document_params)
     #@document_directive = @document.document_directive.new # заготовка для новой связи с директивой

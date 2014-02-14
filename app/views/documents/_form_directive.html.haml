@@ -10,14 +10,15 @@
         -if can? :update, @document
           %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), document_directive, data: { confirm: document_directive.directive.midname + "\nДействительно хотите удалить ссылку на эту директиву?" }, :method => 'delete', class: 'button-img' if document_directive.directive
 
-= simple_form_for(@document_directive) do |dd|
-  = dd.error_notification
-  = dd.hidden_field :document_id
-  = dd.hidden_field :directive_id
-  = dd.label 'Директива'
-  = dd.autocomplete_field :directive_number, autocomplete_directives_path, :id_elements => '#directive_id', :placeholder => 'номер директивы', :data => { :no_matches_label => '333' }
-  = dd.input :note
-  = dd.error :base
-  %p
-  -if can? :update, @document
-    = dd.button :submit, 'Добавить Директиву'
+-if @document_directive
+  = simple_form_for(@document_directive) do |dd|
+    = dd.error_notification
+    = dd.hidden_field :document_id
+    = dd.hidden_field :directive_id
+    = dd.label 'Директива'
+    = dd.autocomplete_field :directive_number, autocomplete_directives_path, :id_elements => '#directive_id', :placeholder => 'номер директивы', :data => { :no_matches_label => '333' }
+    = dd.input :note
+    = dd.error :base
+    %p
+    -if can? :update, @document
+      = dd.button :submit, 'Добавить Директиву'
