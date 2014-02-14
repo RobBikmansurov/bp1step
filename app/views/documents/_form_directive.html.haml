@@ -1,6 +1,5 @@
 -if @document.id? # ну какие ссылки на директивы для нового документа
   %h3 Документ разработан на основании следующих директив:
-  %p
   %table
     - @document.document_directive.each do |document_directive|
       %tr
