@@ -9,14 +9,15 @@
       )
       -if can? :update, @document
         %td
-          =link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce_document, data: { confirm: bproce_document.purpose.to_s + "\n" + bproce_document.bproce.name + "\nДействительно хотите удалить связь с процессом?" }, :method => 'delete', class: 'button-img'
+          =bproce_document.inspect
+          -#=link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce_document, data: { confirm: bproce_document.purpose.to_s + "\n" + bproce_document.bproce.name + "\nДействительно хотите удалить связь с процессом?" }, :method => 'delete', class: 'button-img'
     - else
       = bproce_document.inspect  # !исправлено на vrdev
       = @document_bproces.inspect
 
+=@document_bproce.inspect
 
-
-= simple_form_for(@document_bproce) do |bp|
+-#= simple_form_for(@document_bproce) do |bp|
   = bp.error_notification
   = bp.hidden_field :document_id
   = bp.hidden_field :bproce_id

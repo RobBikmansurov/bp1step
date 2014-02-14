@@ -1,6 +1,6 @@
 %h3
   Процесс описывают
-  =link_to 'Документы:', bproce_document_path(@bproce)
+  =link_to 'Документы:', bproce_documents_path(@bproce)
 
 -@bproce.documents.each do |doc|
   = link_to doc.name, document_path(doc)
