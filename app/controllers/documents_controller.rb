@@ -42,7 +42,12 @@ class DocumentsController < ApplicationController
                     if params[:tag].present?
                       @documents = Document.tagged_with(params[:tag]).search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
                     else
-                      @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                      if params[:bproce_id].present?
+                        @bproce = Bproce.find(params[:bproce_id])
+                        @documents = @bproce.documents.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                      else
+                        @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                      end
                     end
                   end
                 end
@@ -64,7 +69,6 @@ class DocumentsController < ApplicationController
     @document_directives = DocumentDirective.where(:document_id => @document.id) # все связи документа с директивами
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
     @document_bproces = BproceDocument.where(:document_id => @document.id)  # все ссылки на документ из процессов
-    #@document_bproces = @document.bproce_document.all
     @document_bproce = @document.bproce_document.new # заготовка для новой связи с процессом
     respond_with(@document)
   end

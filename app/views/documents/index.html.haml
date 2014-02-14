@@ -29,16 +29,21 @@
               Документы владельца
               = link_to @user.displayname, user_path(@user)
           -else
-            %h1
-              Каталог Документов
-              -if params[:search].present?
-                [ 
-                = params[:search]
-                ]
-              -else
-                -if params[:tag].present?
-                  %sup
-                    = params[:tag]
+            -if @bproce
+              %h3
+                Документы процесса
+                = link_to @bproce.name, bproce_path(@bproce)
+            -else
+              %h1
+                Каталог Документов
+                -if params[:search].present?
+                  [ 
+                  = params[:search]
+                  ]
+                -else
+                  -if params[:tag].present?
+                    %sup
+                      = params[:tag]
 -else
   -title "Список внутренних документов банка"
   %h2

@@ -60,7 +60,7 @@
 -if @bproce.documents.count > 0
   %h4
     Процесс описывают
-    =link_to 'Документы:', bproce_document_path(@bproce)
+    =link_to 'Документы:', bproce_path(@bproce) + '/documents'
   -@bproce.documents.order(:name).each do |doc|
     -if doc.status == 'Утвержден' or doc.status == 'Согласование'
       = link_to doc.name, document_path(doc)

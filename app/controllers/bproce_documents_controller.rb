@@ -10,8 +10,9 @@ class BproceDocumentsController < ApplicationController
   end
 
   def show
-  	@bproce = Bproce.find(params[:id])
-  	respond_with(@bproce_documents = @bproce.bproce_documents)
+    @bproce_document = BproceDocument.find(params[:id])
+    @bproce = Bproce.find(@bproce_document.bproce_id)
+    respond_with(@bproce_documents = @bproce.bproce_documents)
   end
 
   def destroy
