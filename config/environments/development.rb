@@ -39,6 +39,8 @@ BPDoc::Application.configure do
 
   config.eager_load = false
 
+  I18n.enforce_available_locales = false
+
   Paperclip.options[:command_path] = "/usr/bin/"
 
 end

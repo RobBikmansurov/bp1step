@@ -19,9 +19,6 @@ BPDoc::Application.routes.draw do
   resources :workplaces, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
-  resources :bproces, :only => :autocomlete do
-    get :autocomplete, :on => :collection
-  end
   resources :activities
   resources :bapps
   resources :bproce_workplaces, :only => [:create, :destroy, :show]
