@@ -1,8 +1,7 @@
 = simple_form_for(@document_directive) do |f|
   = f.error_notification
+  = f.input :note
 
-  .form-inputs
-    = f.input :note
-
-  .form-actions
+  -if can? :update, @document_directive.document
+    %p
     = f.button :submit

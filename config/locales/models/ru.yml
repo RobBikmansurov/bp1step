@@ -69,6 +69,7 @@ ru:
       document_directive:
         document_id: Документ
         directive_id: Директива
+        note: Примечание
       iresource:
         level: Тип
         label: Метка

@@ -1,9 +1,19 @@
-%p
--#= @document_directive.inspect
+-title "Документ " + truncate(@document_directive.document.name, length: 30)
+-search 'Документ'
+
 = render 'show'
+
+%h3 Примечание:
+=@document_directive.note
+
+.info_
+  создан
+  = @document_directive.created_at.strftime('%d.%m.%Y %H:%M:%S')
+  %br
+  изменен
+  = @document_directive.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+
 %p
-  %b Примечание:
-  = @document_directive.note
-%p
-= link_to 'Edit', edit_document_directive_path(@document_directive), :class => 'button'
--#= link_to 'Back', document_directives_path, :class => 'button'
+-if can? :update, Document
+  = link_to 'Edit', edit_document_directive_path(@document_directive), :class => 'button'
+= link_to 'Back', :back, :class => 'button'

@@ -20,9 +20,17 @@ class Directive < ActiveRecord::Base
     end
   end
 
+  def midname
+    if approval
+      return title + ' ' + body + ' №' + number + ' ' + approval.strftime('%d.%m.%Y')
+    else
+      return title + ' ' + body + ' №' + number
+    end
+  end
+
   def directive_name
     #self.try(:shortname + '  #' + :id)
-    return title + ' ' + number + ' ' + approval.strftime('%d.%m.%Y') + '   #' + id.to_s
+    return self.midname + '   #' + id.to_s
   end
 
   def directive_name=(name)

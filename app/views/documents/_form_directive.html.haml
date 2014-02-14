@@ -1,20 +1,23 @@
 -if @document.id? # ну какие ссылки на директивы для нового документа
+  %h3 Документ разработан на основании следующих директив:
   %p
-  -if @document.directive.count > 0
-    %h4 Документ разработан на основании следующих директив:
-    %table
-      - @document.directive.each do |directive|
-        %tr
-          %td= link_to directive.shortname, directive_path(directive)
-          -if can? :update, @document
-            %td
-              =link_to image_tag('action_stop.gif', :alt => 'Удалить'), @document.document_directive.find_by_directive_id(directive), data: { confirm: directive.name + "\nДействительно хотите удалить связь с директивой?" }, :method => 'delete', class: 'button-img'
+  %table
+    - @document.document_directive.each do |document_directive|
+      %tr
+      -if document_directive.id
+        %td= link_to document_directive.directive.midname, directive_path(document_directive.directive)
+        %td= document_directive.note
+        -if can? :update, @document
+          %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), document_directive, data: { confirm: document_directive.directive.midname + "\nДействительно хотите удалить ссылку на эту директиву?" }, :method => 'delete', class: 'button-img' if document_directive.directive
 
 = simple_form_for(@document_directive) do |dd|
   = dd.error_notification
   = dd.hidden_field :document_id
-  -#= dd.input :directive_name, data: {autocomplete_source: autocomplete_directives_path}, :as => :autocomplete, :label => 'Добавить Директиву'
-  = dd.input :directive_id, :collection => Directive.order(:title, :number).load, :include_blank => true, :prompt => 'Добавить Директиву', :label_method => :shortname
+  = dd.hidden_field :directive_id
+  = dd.label 'Директива'
+  = dd.autocomplete_field :directive_number, autocomplete_directives_path, :id_elements => '#directive_id', :placeholder => 'номер директивы', :data => { :no_matches_label => '333' }
+  = dd.input :note
   = dd.error :base
+  %p
   -if can? :update, @document
     = dd.button :submit, 'Добавить Директиву'
