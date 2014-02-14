@@ -1,17 +1,8 @@
 -title "Документ процесса"
-.id_
-  \#
-  = @bproce_document.document.id
-%h2 Документ процесса
-%p
-Документ 
-= link_to @bproce_document.document.name, document_path(@bproce_document.document)
-%p
-в процессе
-= link_to @bproce_document.bproce.name, bproce_path(@bproce_document.bproce)
-%p
+-search "Документ" 
 
-= render 'form'
+=render 'show'
+=render 'form'
 
 %p
 -#= link_to 'Show', bproce_document_path(@bproce_document), :class => 'button'

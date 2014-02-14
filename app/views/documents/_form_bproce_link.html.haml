@@ -1,19 +1,14 @@
-%p
-- if @document_bproces
+-if @document.id? # ну какие ссылки на директивы для нового документа
   %h3 Относится к следующим процессам:
-  - @document_bproces.each do |bproce_document|
+  - @document.bproce_document.each do |bproce_document|
     - if bproce_document.bproce_id
       = link_to bproce_document.bproce.name, bproce_path(bproce_document.bproce)
       (
       = bproce_document.purpose
       )
       -if can? :update, @document
-        %td
-          =bproce_document.inspect
-          -#=link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce_document, data: { confirm: bproce_document.purpose.to_s + "\n" + bproce_document.bproce.name + "\nДействительно хотите удалить связь с процессом?" }, :method => 'delete', class: 'button-img'
-    - else
-      = bproce_document.inspect  # !исправлено на vrdev
-      = @document_bproces.inspect
+        -#=link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce_document, data: { confirm: bproce_document.purpose.to_s + "\n" + bproce_document.bproce.name + "\nДействительно хотите удалить связь с процессом?" }, :method => 'delete', class: 'button-img'
+        =link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce_document, data: { confirm: bproce_document.bproce.name + "\nДействительно хотите удалить документ из этого процесса?" }, :method => 'delete', class: 'button-img' if bproce_document.bproce
 
 - if @document_bproce
   = simple_form_for(@document_bproce) do |bp|
