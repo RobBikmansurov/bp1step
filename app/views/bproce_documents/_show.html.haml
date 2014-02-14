@@ -1,0 +1,9 @@
+.id_
+  \#
+  = @bproce_document.document.id
+%h3
+  Документ:
+  = link_to @bproce_document.document.name, document_path(@bproce_document.document)
+%h3
+  в процессе
+  = link_to @bproce_document.bproce.name, bproce_path(@bproce_document.bproce)
