@@ -7,7 +7,6 @@
       = bproce_document.purpose
       )
       -if can? :update, @document
-        -#=link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce_document, data: { confirm: bproce_document.purpose.to_s + "\n" + bproce_document.bproce.name + "\nДействительно хотите удалить связь с процессом?" }, :method => 'delete', class: 'button-img'
         =link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce_document, data: { confirm: bproce_document.bproce.name + "\nДействительно хотите удалить документ из этого процесса?" }, :method => 'delete', class: 'button-img' if bproce_document.bproce
 
 - if @document_bproce

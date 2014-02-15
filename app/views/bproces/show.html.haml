@@ -60,7 +60,11 @@
 -if @bproce.documents.count > 0
   %h4
     Процесс описывают
+<<<<<<< Updated upstream
     =link_to 'Документы:', bproce_path(@bproce) + '/documents'
+=======
+    =link_to 'Документы:', bproce_documents_path(@bproce)
+>>>>>>> Stashed changes
   -@bproce.documents.order(:name).each do |doc|
     -if doc.status == 'Утвержден' or doc.status == 'Согласование'
       = link_to doc.name, document_path(doc)

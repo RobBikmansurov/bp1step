@@ -68,7 +68,6 @@ class DocumentsController < ApplicationController
     #authorize! :edit_document_place, @user if params[:user][:edit_document_place]
     @document = Document.find(params[:id])
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
-    #@document_bproces = BproceDocument.where(:document_id => @document.id)  # все ссылки на документ из процессов
     @document_bproce = @document.bproce_document.new # заготовка для новой связи с процессом
     respond_with(@document)
   end
