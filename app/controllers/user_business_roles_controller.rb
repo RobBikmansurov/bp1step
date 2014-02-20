@@ -17,13 +17,21 @@ class UserBusinessRolesController < ApplicationController
     @user_business_role = UserBusinessRole.create(params[:user_business_role])
     @business_role = BusinessRole.find(@user_business_role.business_role_id)
     flash[:notice] = "Successfully created user_business_role." if @user_business_role.save
-    UserBusinessRoleMailer.user_create_role(@user_business_role, current_user).deliver    # оповестим нового исполнителя
+    begin
+      UserBusinessRoleMailer.user_create_role(@user_business_role, current_user).deliver    # оповестим нового исполнителя
+    rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+      flash[:alert] = "Error sending mail to #{@user_business_role.user.email}"
+    end
     respond_with(@business_role)
   end
 
   def destroy
-    UserBusinessRoleMailer.user_delete_role(@user_business_role, current_user).deliver    # оповестим бывшего исполнителя
     @user_business_role.destroy
+    begin
+      UserBusinessRoleMailer.user_delete_role(@user_business_role, current_user).deliver    # оповестим бывшего исполнителя
+    rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+      flash[:alert] = "Error sending mail to #{@user_business_role.user.email}"
+    end
     respond_with(@business_role)
   end
 

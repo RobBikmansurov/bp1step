@@ -22,7 +22,7 @@ class BproceDocumentsController < ApplicationController
     if document.bproce.count > 1
       flash[:notice] = "Successfully destroyed bproce_document." if @bproce_document.destroy
     else
-      flash[:notice] = "Error destroyed bproce_document."
+      flash[:alert] = "Error destroyed bproce_document."
     end
     if !@bproce.blank?
       respond_with(@bproce)
