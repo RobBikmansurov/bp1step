@@ -2,9 +2,23 @@
 # утилиты для поддержки работы BP1Step
 
 namespace :bp1step do
+
+  desc "Email testing"
+  task :test_email  => :environment do    # тестирование отправки email в production
+    logger = Logger.new('log/bp1step.log')  # протокол работы
+    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :test_email'
+    u = User.find(97) # пользователь по умолчанию
+    mail_to = u   # DEBUG dlevel <2 - только документы 1 уровня
+    document = Document.last
+    DocumentMailer.file_not_found_email(document, mail_to).deliver  # рассылка об отсутствии файла документа
+    bproce = Bproce.last
+    BproceMailer.process_without_roles(bproce, mail_to).deliver
+  end
+
+
   desc "Sync users from ActiveDirectory"
-  task :sync_active_directory_users  => :environment do   # синхронизация списка пользователей LDAP -> User
-                                # не умеет удалять пользователей User, удаленных в LDAP
+  # не умеет удалять пользователей User, удаленных в LDAP
+  task :sync_active_directory_users  => :environment do   # синхронизация списка пользователей LDAP -> User 
     require 'rubygems'
     require 'net/ldap'
 
@@ -14,13 +28,13 @@ namespace :bp1step do
 
     LDAP_CONFIG = YAML.load_file(Devise.ldap_config)  # считаем конфиги доступа к LDAP
     ldap = Net::LDAP.new :host => LDAP_CONFIG["development"]["host"],
-        :port => LDAP_CONFIG["development"]["port"],
-        :auth => {
-            :method => :simple,
-            :username => LDAP_CONFIG["development"]["admin_user"],
-            :password => LDAP_CONFIG["development"]["admin_password"]
+      :port => LDAP_CONFIG["development"]["port"],
+      :auth => {
+        :method => :simple,
+        :username => LDAP_CONFIG["development"]["admin_user"],
+        :password => LDAP_CONFIG["development"]["admin_password"]
       }
-    debug_flag = true # флаг отладки, если true - отладочная печать
+    debug_flag = false # флаг отладки, если true - отладочная печать
 
     #filter = Net::LDAP::Filter.eq(&(objectClass=person)(objectClass=user)(middleName=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))
     c1 = Net::LDAP::Filter.eq('objectCategory', 'Person')
@@ -35,12 +49,14 @@ namespace :bp1step do
 
     i, new_users, upd_users, not_found_users, disabled_users = 0, 0, 0, 0, 0  # счетчики
     ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do |entry|
-    i += 1
-    email = entry["mail"].first       # это обязательные параметры + к ним левые уникальные password и reset_password_token
-    username = entry["sAMAccountName"].first.downcase
-    #logger.info "#{username} #{email}" if debug_flag
-    uac = entry["userAccountControl"].first.to_i  # второй бит = 1 означает отключенного пользователя в AD
-    if uac & 2 == 0 # пользователь не заблокирован
+      i += 1
+      email = entry["mail"].first       # это обязательные параметры + к ним левые уникальные password и reset_password_token
+      username = entry["sAMAccountName"].first.downcase
+      uac = entry["userAccountControl"].first.to_i  # второй бит = 1 означает отключенного пользователя в AD
+      #logger.info "#{username} #{email} >> #{uac & 2}" if debug_flag
+      if uac & 2 == 0 # пользователь не заблокирован
+        s1 = entry["department"].first.to_s.force_encoding("UTF-8")
+        s2 = entry["title"].first.to_s.force_encoding("UTF-8")
         usr = User.find_or_create_by(username: username)
         if usr.new_record?
           #usr.email = email
@@ -52,9 +68,16 @@ namespace :bp1step do
             usr1 = User.find_by_email(email.to_s) # поищем по e-mail
             if usr1.nil?
               logger.info "+ #{entry["sn"].first} \t[#{username}] \t"
-              usr.save
+              #usr = User.new
+              usr.update_attribute(:username, username)
+              usr.update_attribute(:email, email)
+              usr.update_attribute(:department, s1)
+              usr.update_attribute(:position, s2)
+              usr.update_attribute(:phone, entry["telephonenumber"].first)
+              usr.update_attribute(:office, entry["physicaldeliveryofficename"].first)
+              usr.update_attribute(:password, email)
               logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} #{entry.dn}"
-              logger.info usr.errors
+              logger.info usr.errors if debug_flag
             else
               logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} = #{usr1.username}"
               logger.info "    уже есть пользователь с таким e-mail, #id= #{usr1.id}"
@@ -66,12 +89,10 @@ namespace :bp1step do
             usr.update_attribute(:email, email)
             usr.email = email
           end
-          s1 = entry["department"].first.to_s.force_encoding("UTF-8")
           if !(usr.department.to_s == s1) # подразделение
             logger.info "#{usr.id}: #{usr.department} = #{s1}: #{usr.department == s1}" if debug_flag
             usr.update_attribute(:department, s1)
           end
-          s2 = entry["title"].first.to_s.force_encoding("UTF-8")
           if !(usr.position.to_s == s2) # должность
             logger.info "#{usr.id}: #{usr.position} = #{s2}: #{usr.position == s2}" if debug_flag
             usr.update_attribute(:position, s2)
@@ -103,22 +124,35 @@ namespace :bp1step do
       filter = Net::LDAP::Filter.eq("sAMAccountName", user.username)
       exist_user = 0
       ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do | entry |
-      exist_user += 1
-      uac = entry["userAccountControl"].first.to_i
-      if uac & 2 > 0
-        disabled_users += 1
-        # если нет связи с ролями, рабочими местами, процессами
-        if user.workplaces.count == 0 and user.roles.count == 0 and user.bproce_ids.count == 0
-          user.delete # удалим
-          logger.info "#{i}!#{disabled_users}. #{entry.sAMAccountName} #{entry.dn} \t- DELETE user!"
+        exist_user += 1
+        uac = entry["userAccountControl"].first.to_i
+        if uac & 2 > 0  # имеющийся в БД пользователь заблокирован в AD
+          user.update_attribute(:active, false)
+          disabled_users += 1
+          # если нет связи с ролями, рабочими местами, процессами
+          if user.workplaces.count == 0 and user.business_roles.count == 0 and user.bproce_ids.count == 0
+            user.delete # удалим
+            logger.info "#{i}!#{disabled_users}. #{entry.sAMAccountName} #{entry.dn} \t- DELETE user!"
+          else
+            logger.info "#{i}!#{disabled_users}. #{entry.sAMAccountName} #{entry.dn}\t - need DELETE:"
+            s = ''
+            user.workplaces.each do | wp |
+              s = s + wp.name + '  '
+            end
+            logger.info "\t workplaces: #{s}" 
+            s = ''
+            user.business_roles.each do | brole |
+              s = s + brole.name + '  '
+            end
+            logger.info "\t business roles: #{s}" 
+          end
         end
       end
+      logger.info "#{i} #{user.displayname} - not found in LDAP!" if i == 0
     end
-    logger.info "#{i} #{user.displayname} - not found in LDAP!" if i == 0
+    logger.info "  DB users total: #{i}, not found in LDAP: #{not_found_users}, disable: #{disabled_users} users"
+    logger.info "  #{ldap.get_operation_result}" if debug_flag
   end
-  logger.info "  DB users total: #{i}, not found in LDAP: #{not_found_users}, disable: #{disabled_users} users"
-  logger.info "  #{ldap.get_operation_result}"
-end
 
 
 
@@ -149,9 +183,10 @@ end
         end
       end
       nn += 1
-  end
+    end
     logger.info "All: #{nn} docs, but #{nf} files not found"
   end
+
 
   desc "Check document_file for documents with level 1-3 "
   task :check_document_files  => :environment do    # проверка наличия файла документа для документов уровня 1-3 (кроме 4 - Свидетельства)
@@ -176,7 +211,7 @@ end
     end
     logger.info "All: #{documents_count} docs, but #{documents_not_file} hasn't files"
   end
-  
+
 
   desc "Create documents from files"
   task :create_documents_from_files  => :environment do     # создание новых документов из файов в каталоге
@@ -196,21 +231,10 @@ end
         fname = f[pathfrom.size..-1]
         logger.info '#{nf} #{fname}'
       end
-  end
+    end
     logger.info 'All: #{nn} docs, but #{nf} files not found'
   end
 
-  desc "Email testing"
-  task :test_email  => :environment do    # тестирование отправки email в production
-    logger = Logger.new('log/bp1step.log')  # протокол работы
-    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :test_email'
-    u = User.find(97) # пользователь по умолчанию
-    mail_to = u   # DEBUG dlevel <2 - только документы 1 уровня
-    document = Document.last
-    DocumentMailer.file_not_found_email(document, mail_to).deliver  # рассылка об отсутствии файла документа
-    bproce = Bproce.last
-    BproceMailer.process_without_roles(bproce, mail_to).deliver
-  end
 
   desc 'Check_bproces_roles'
   task :check_bproces_roles => :environment do  # рассылка о процессах, в которых не выделены роли
@@ -233,6 +257,7 @@ end
     logger.info "      Processes: #{processes_count}, but #{processes_without_roles} hasn't roles"
   end
 
+
   desc 'Check bproces_owner access roles'
   task :check_bproces_owners => :environment do  # рассылка о владельцах процессов, не имеющих необходимых ролей доступа
     logger = Logger.new('log/bp1step.log')  # протокол работы
@@ -253,6 +278,7 @@ end
     logger.info "      Process owners: #{owners_count}, but #{users_without_roles} hasn't roles :owner"
   end
 
+
   desc 'Migrate document.bproce_id to BproceDocuments: document can related to many bprocesses'
   task :migrate_bproce_id_to_bprocedocument => :environment do  # перенос ссылок на процесс из документа Document.bproce_id в BproceDocument
     logger = Logger.new('log/bp1step.log')  # протокол работы
@@ -268,6 +294,7 @@ end
     end
     logger.info "      Migrates #{bproce_count} processes from #{document_count} documents"
   end
+
 
   desc 'Each documents must have link to bproces'
   task :check_bproce_document_for_all_documents => :environment do  # проверить наличие процесса для каждого документа
