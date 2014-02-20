@@ -18,18 +18,20 @@
   уровень документа:
   %b= link_to @document.dlevel.to_s + ': ' + dlevel_title(@document.dlevel), documents_path + '?dlevel=' + @document.dlevel.to_s, class: 'groups'
 
+%p
 - if !@document.bproce.blank?  # есть ссылки из документа на другие процессы?
-  %h3 Относится к следующим процессам:
-  - @document.bproce_document.each do |bproce_document|
-    = link_to bproce_document.bproce.name, bproce_path(bproce_document.bproce)
-    -if can? :update, Document
-      (
-      = link_to bproce_document.purpose, edit_bproce_document_path(bproce_document)
-      )
-    -else
-      (
-      = bproce_document.purpose
-      )
+  %h3 
+    Процесс:
+    - @document.bproce_document.each do |bproce_document|
+      = link_to bproce_document.bproce.name, bproce_path(bproce_document.bproce)
+      -if can? :update, Document
+        (
+        = link_to bproce_document.purpose, edit_bproce_document_path(bproce_document)
+        )
+      -else
+        (
+        = bproce_document.purpose
+        )
 
 -else
   %h3 Процесс не назначен!
