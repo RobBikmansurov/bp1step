@@ -7,7 +7,8 @@ load "config/recipes/unicorn"
 
 load "config/recipes/monit"
 
-server 'vrdev.ad.bankperm.ru', :app, :web, :db, :primary => true
+server 'vrdev1.ad.bankperm.ru', :app, :web, :db, :primary => true
+set :serverFQDN, 'vrdev1.ad.bankperm.ru'
 
 # http and https proxy
 default_environment['http_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
@@ -17,7 +18,7 @@ set :application, "bp1step"
 set :user, 'rubydev'
 set :rails_env, "production"
 set :deploy_to, "/home/#{user}/#{application}"
-set :use_sudo, false
+set :use_sudo, true
 
 set :unicorn_conf, "#{deploy_to}/config/unicorn.rb"
 set :unicorn_pid, "#{deploy_to}/tmp/pids/unicorn.pid"
