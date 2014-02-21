@@ -9,7 +9,7 @@ set eventqueue
     slots 100
 
 set mailserver mail.ad.bankperm.ru
-set mail-format { from:monit@vrdev.ad.bankperm.ru }
+set mail-format { from:monit@<%= serverFQDN %> }
 
 set alert robb@bankperm.ru
 
