@@ -1,0 +1,9 @@
+= simple_form_for(@document, :html => { :multipart => true }) do |f|
+  = f.error_notification
+  -#= f.hidden_field :document_id
+  = f.input :document_file, hint: 'Выберите файл с документом для загрузки'
+
+  = f.error :base
+  -if can? :update, @document
+    %p
+    = f.button :submit, 'Сохранить файл'

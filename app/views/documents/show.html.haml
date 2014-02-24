@@ -70,8 +70,8 @@
   %b= link_to @document.place, documents_path + '?place=' + @document.place, class: 'groups', title: place_title(@document.place) if !@document.place.blank?
 
 %h4
-  Электронный документ:
   -if @document.document_file_file_name
+    Электронный документ:
     %b
       =@document.document_file_file_name
     %br
@@ -81,6 +81,12 @@
     =@document.document_file_updated_at.strftime('%d.%m.%Y %H:%M:%S')
     | MD5:
     =@document.document_file_fingerprint
+    - if File.exist?(@document.document_file.path)  # есть исходный файл документа
+      - if can? :edit_document, @document
+        |
+        = link_to 'Удалить', file_delete_document_path(@document), :remote => true
+        |
+        = link_to 'Заменить', file_create_document_path(@document), :remote => true
 
     -# автору документа показать все файлы документа
 
@@ -97,11 +103,16 @@
         - if can? :edit_document, @document
           взять на редактирование:
           = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), @document.document_file.url, class: 'button-img'
-
       - else
         файл отсутствует - 
         %b
           = @document.document_file_file_name
+  -else
+    - if can? :edit_document, @document
+      Электронный документ отсутствует! 
+      #update_file
+        = link_to 'Добавить', file_create_document_path(@document), :remote => true
+
 
 Теги документа:
 = raw @document.tags.map { |t| link_to t, tag_documents_path(t.name), class: 'tags' }.join('&nbsp; ')
