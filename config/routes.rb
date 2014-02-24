@@ -46,7 +46,10 @@ BPDoc::Application.routes.draw do
   #get 'tags', to: 'bproces#index'
   resources :business_roles
   resources :categories
-  resources :documents
+  resources :documents do
+    get :file_create, :on => :member
+    get :file_delete, :on => :member
+  end
   resources :iresources
   resources :roles, only: [:index, :show]
   resources :terms
