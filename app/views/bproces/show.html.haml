@@ -63,6 +63,10 @@
     =link_to 'Документы:', bproce_path(@bproce) + '/documents'
   -@bproce.documents.order(:name).each do |doc|
     -if doc.status == 'Утвержден' or doc.status == 'Согласование'
+      -if doc.document_file_file_name  #  если есть файл документа, загруженный через paperclip
+        -if can? :view_document, doc
+          - if File.exist?(doc.pdf_path)
+            = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), doc.pdf_url, class: 'button-img'
       = link_to doc.name, document_path(doc)
       = doc.status
       -if doc.approved
