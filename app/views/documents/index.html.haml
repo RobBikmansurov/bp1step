@@ -60,7 +60,8 @@
     %th= sortable "status", "Статус"
     %th= sortable "approved", "От"
     %th Оригинал
-    -#%th responsible
+    -if can? :update, Document
+      %th
     -if can? :destroy, Document
       %th
     
@@ -80,8 +81,11 @@
       %td= document.status
       %td= document.approved.strftime('%d.%m.%Y') if document.approved
       %td= document.place 
-      %td
-        - if can? :destroy, document
+      -if can? :update, document
+        %td
+          = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_document_path(document), class: 'button-img'
+      -if can? :destroy, document
+        %td
           = link_to image_tag('action_stop.gif', alt: 'Удалить', title: 'Удалить' ), document, data: { confirm: document.name + "\nДействительно хотите удалить документ?" }, :method => 'delete', class: 'button-img'
 -if !params[:all].present?
   .apple_pagination

@@ -81,15 +81,15 @@
     =@document.document_file_updated_at.strftime('%d.%m.%Y %H:%M:%S')
     | MD5:
     =@document.document_file_fingerprint
-    - if File.exist?(@document.document_file.path)  # есть исходный файл документа
-      - if can? :edit_document, @document
-        |
-        = link_to 'Удалить', file_delete_document_path(@document), :remote => true
-        |
+    -#- if File.exist?(@document.document_file.path)  # есть исходный файл документа
+    - if can? :edit_document, @document
+      |
+      = link_to 'Удалить', file_delete_document_path(@document), :remote => true
+      |
+      #update_file
         = link_to 'Заменить', file_create_document_path(@document), :remote => true
 
     -# автору документа показать все файлы документа
-
     -# автору документа разрешить взять исходник
     -# кому можно - смотреть PDF
 
@@ -111,7 +111,7 @@
     - if can? :edit_document, @document
       Электронный документ отсутствует! 
       #update_file
-        = link_to 'Добавить', file_create_document_path(@document), :remote => true
+        = link_to 'Добавить', file_create_document_path(@document), :remote => true   #, class: 'button'
 
 
 Теги документа:

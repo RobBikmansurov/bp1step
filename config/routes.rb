@@ -47,8 +47,11 @@ BPDoc::Application.routes.draw do
   resources :business_roles
   resources :categories
   resources :documents do
-    get :file_create, :on => :member
-    get :file_delete, :on => :member
+    member do
+      get :file_create
+      get :file_delete
+      patch :update_file
+    end
   end
   resources :iresources
   resources :roles, only: [:index, :show]

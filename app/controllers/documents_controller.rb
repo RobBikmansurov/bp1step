@@ -5,7 +5,7 @@ class DocumentsController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
   before_filter :authenticate_user!, :only => [:edit, :new]
-  before_filter :get_document, :except => [:index, :print, :view]
+  before_filter :get_document, :except => [:index, :print, :view, :create]
 
   def index
     if params[:directive_id].present? # документы относящиеся к директиве
@@ -24,7 +24,7 @@ class DocumentsController < ApplicationController
             if params[:part].present? #  список документов раздела документооборота
               @documents = Document.where(:part => params[:part]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
             else
-              if params[:status].present? #  список документов статуса
+              if params[:status].present? #  список документов, имеющих конкретый статус
                 ss = params[:status]
                 @documents = Document.where(:status => ss).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
               else
@@ -73,15 +73,17 @@ class DocumentsController < ApplicationController
   end
 
   def update
-    flash[:notice] = "Successfully updated Document's File."  if @document.update_attributes(document_file_params)
-    if params[:document_file].present?
-      logger.debug "headers = #{@document.inspect}"
-    else
-      flash[:notice] = "Successfully updated document."  if @document.update_attributes(document_params)
+    flash[:notice] = "Successfully updated document."  if @document.update_attributes(document_params)
+    respond_with(@document)
+  end
+
+  def update_file
+    d_file = params[:document][:document_file] if params[:document].present?
+    if !d_file.blank?
+      flash[:notice] = "Successfully updated Document's File."  if @document.update_attributes(document_file_params)
+    else      
+      flash[:alert] = "Empty Document's File."
     end
-    #flash[:notice] = "Successfully updated document."  if @document.update_attributes(document_params)
-    #@document = Document.find(params[:id])
-    #@document_directive = @document.document_directive.new # заготовка для новой связи с директивой
     respond_with(@document)
   end
 
@@ -121,7 +123,7 @@ class DocumentsController < ApplicationController
 
   def file_create
     render :file_create
-    flash[:notice] = "Successfully deleted Document's File." if @document.save
+    #flash[:notice] = "Successfully updated Document's File." if @document.save
   end
 
 private
@@ -131,7 +133,7 @@ private
   end
 
   def document_file_params
-    params.require(:document).permit(:id, :document_file)
+    params.require(:document).permit(:document_file)
   end
 
   def print
