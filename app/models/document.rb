@@ -49,7 +49,6 @@ class Document < ActiveRecord::Base
 
   attr_accessible  :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :document_file, :file_delete
 
-  before_save :destroy_file?  # в не надо ли удалить файл документа?
   after_save :copy_to_pdf
 
   def owner_name
@@ -94,15 +93,6 @@ class Document < ActiveRecord::Base
     end
   end
 
-  def file_delete
-    @file_delete ||= "0"
-  end
-
-  def file_delete=(value)
-    @file_delete = value
-  end
-
-
   private
 
   # интерполяция для paperclip - вернуть дату последней загрузки файла документа в формате ГГГГММДД
@@ -110,10 +100,6 @@ class Document < ActiveRecord::Base
     attachment.instance_read(:updated_at).strftime('%Y%m%d')
   end
 
-  def destroy_file?
-    self.document_file = nil if @file_delete == "1"
-  end
-  
   def copy_to_pdf
     if valid?
       if @file_delete == '1' # файл удаляется
