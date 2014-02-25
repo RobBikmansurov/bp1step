@@ -74,20 +74,17 @@
     Электронный документ:
     %b
       =@document.document_file_file_name
-    %br
-    размер:
-    =@document.document_file_file_size
-    | загружен:
-    =@document.document_file_updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    | MD5:
-    =@document.document_file_fingerprint
-    -#- if File.exist?(@document.document_file.path)  # есть исходный файл документа
     - if can? :edit_document, @document
-      |
-      = link_to 'Удалить', file_delete_document_path(@document), :remote => true
-      |
+      = link_to '| Удалить', file_delete_document_path(@document), :remote => true
+      %br
+      размер:
+      =@document.document_file_file_size
+      | загружен:
+      =@document.document_file_updated_at.strftime('%d.%m.%Y %H:%M:%S')
+      | MD5:
+      =@document.document_file_fingerprint
       #update_file
-        = link_to 'Заменить', file_create_document_path(@document), :remote => true
+        = link_to '| Заменить', file_create_document_path(@document), :remote => true, :class => :update_file
 
     -# автору документа показать все файлы документа
     -# автору документа разрешить взять исходник

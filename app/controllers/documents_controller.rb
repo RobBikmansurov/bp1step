@@ -82,7 +82,7 @@ class DocumentsController < ApplicationController
     if !d_file.blank?
       flash[:notice] = "Successfully updated Document's File."  if @document.update_attributes(document_file_params)
     else      
-      flash[:alert] = "Empty Document's File."
+      flash[:alert] = "Empty Document's File name."
     end
     respond_with(@document)
   end
