@@ -31,5 +31,15 @@ describe DocumentsController do
       delete("/documents/1").should route_to("documents#destroy", :id => "1")
     end
 
+    it "routes to #file_create" do
+      get("documents/1/file_create").should route_to("documents#file_create", id: '1')
+    end
+    it "routes to #file_delete" do
+      get("documents/1/file_delete").should route_to("documents#file_delete", id: '1')
+    end
+    it "routes to #update_file" do
+      patch("documents/1/update_file").should route_to("documents#update_file", id: '1')
+    end
+
   end
 end

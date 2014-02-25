@@ -16,14 +16,14 @@ class Document < ActiveRecord::Base
     :hash_secret => "BankPermBP1Step",
     :processors => [:convert_to_pdf]
   validates :document_file, :attachment_presence => false
-  ##do_not_validate_attachment_file_type :document_file
+  #do_not_validate_attachment_file_type :document_file  #paperclip >4.0
   validates_attachment_content_type :document_file, 
                                     :content_type => ['application/pdf', 'applications/vnd.pdf',
                                                       'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.spreadsheet',
                                                       'application/vnd.ms-excel', 'application/msword']
 
   #after_document_file_post_process :copy_to_pdf
-  after_post_process :copy_to_pdf
+  #after_post_process :copy_to_pdf
 
   #validates_attachment :document_file, :content_type => ["application/pdf", "application/odf", "application/msword", "plain/text"]
   #validates_attachment :document_file, :content_type => { :content_type => "application/pdf" }
