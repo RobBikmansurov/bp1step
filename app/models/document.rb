@@ -12,7 +12,7 @@ class Document < ActiveRecord::Base
     :url  => "/store/:id.:ymd.:basename.:extension",
     :presence  => false,
     :styles => { :pdf => "pdf" }, 
-    :path => ":rails_root/shared/store/:id.:ymd.:basename.:extension",
+    :path => ":rails_root/public/store/:id.:ymd.:basename.:extension",
     :hash_secret => "BankPermBP1Step",
     :processors => [:convert_to_pdf]
   validates :document_file, :attachment_presence => false
