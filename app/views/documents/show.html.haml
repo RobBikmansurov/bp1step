@@ -25,13 +25,9 @@
     - @document.bproce_document.each do |bproce_document|
       = link_to bproce_document.bproce.name, bproce_path(bproce_document.bproce)
       -if can? :update, Document
-        (
-        = link_to bproce_document.purpose, edit_bproce_document_path(bproce_document)
-        )
+        = link_to '( ' + bproce_document.purpose.to_s + ' )', edit_bproce_document_path(bproce_document)
       -else
-        (
-        = bproce_document.purpose
-        )
+        = '( ' + bproce_document.purpose.to_s + ' )'
 
 -else
   %h3 Процесс не назначен!
@@ -64,6 +60,7 @@
     )
     %br
 
+%p
 %h3 Место хранения
 %h4
   оригинал:
@@ -84,7 +81,7 @@
       | MD5:
       =@document.document_file_fingerprint
       #update_file
-        = link_to '| Заменить', file_create_document_path(@document), :remote => true, :class => :update_file
+      = link_to '| Заменить', file_create_document_path(@document), :remote => true
 
     -# автору документа показать все файлы документа
     -# автору документа разрешить взять исходник
