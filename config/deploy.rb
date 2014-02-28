@@ -4,11 +4,12 @@ require 'rvm/capistrano'
 load "config/recipes/base"
 load "config/recipes/nginx"
 load "config/recipes/unicorn"
-
 load "config/recipes/monit"
 
-server 'vrdev1.ad.bankperm.ru', :app, :web, :db, :primary => true
-set :serverFQDN, 'vrdev1.ad.bankperm.ru'
+#server 'vrdev1.ad.bankperm.ru', :app, :web, :db, :primary => true
+#set :serverFQDN, 'vrdev1.ad.bankperm.ru'
+server 'vrdev.ad.bankperm.ru', :app, :web, :db, :primary => true
+set :serverFQDN, 'vrdev.ad.bankperm.ru'
 
 # http and https proxy
 default_environment['http_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
@@ -34,7 +35,7 @@ set :deploy_via, :remote_cache # Указание на то, что стоит �
 default_run_options[:pty]        = true
 ssh_options[:forward_agent] = true
 
-set :keep_releases, 2 	# количество каталогов релизов, хранящихся на сервере
+set :keep_releases, 3 	# количество каталогов релизов, хранящихся на сервере
 
 set :maintenance_template_path, File.expand_path("../recipes/templates/maintenance.html.erb", __FILE__)
 
@@ -42,7 +43,6 @@ set :maintenance_template_path, File.expand_path("../recipes/templates/maintenan
 after "deploy:restart", "deploy:cleanup"
 #after "deploy:update_code", "rvm:trust_rvmrc"
 after "deploy:update_code", "deploy:create_symlink"
-
 # Create uploads directory and link
 namespace :deploy do
   task :create_symlink do
