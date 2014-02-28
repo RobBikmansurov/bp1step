@@ -38,9 +38,9 @@
           удалить ссылку
           = business_role.inspect
       %td
-        = business_role.date_from.strftime("%d.%m.%Y")
+        = business_role.date_from.strftime("%d.%m.%Y") if business_role.date_from
         \-
-        = business_role.date_to.strftime("%d.%m.%Y")
+        = business_role.date_to.strftime("%d.%m.%Y") if business_role.date_to
       -if can? :update, @business_role
         %td= link_to ' ' + business_role.note + ' ', edit_user_business_role_path(business_role)
       -else
