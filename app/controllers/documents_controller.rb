@@ -7,6 +7,8 @@ class DocumentsController < ApplicationController
   before_filter :authenticate_user!, :only => [:edit, :new]
   before_filter :get_document, :except => [:index, :print, :view, :create]
 
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+
   def index
     if params[:directive_id].present? # документы относящиеся к директиве
       @directive = Directive.find(params[:directive_id])
@@ -126,6 +128,10 @@ class DocumentsController < ApplicationController
     #flash[:notice] = "Successfully updated Document's File." if @document.save
   end
 
+  def directive_create
+    render :_form_directive
+  end
+
 private
 
   def document_params
@@ -202,11 +208,18 @@ private
       render :index # покажем список найденного
     else
       if params[:id].present?
-        @document = Document.find(params[:id]) || not_found
+        logger.debug "\n id= #{params[:id]}"
+        @document = Document.find(params[:id])
+        logger.debug "\n@document = #{@document.inspect}"
       else
         @document = Document.new
       end
     end
+  end
+
+  def record_not_found
+    flash[:alert] = "Неверный #id, Документ не найден."
+    redirect_to action: :index
   end
 
   def sort_column  
