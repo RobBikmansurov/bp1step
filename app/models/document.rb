@@ -20,7 +20,9 @@ class Document < ActiveRecord::Base
   validates_attachment_content_type :document_file, 
                                     :content_type => ['application/pdf', 'applications/vnd.pdf',
                                                       'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.spreadsheet',
-                                                      'application/vnd.ms-excel', 'application/msword']
+                                                      'application/vnd.ms-excel', 'application/msword',
+                                                      'application/doc', 'application/rtf',
+                                                      'application/octet-stream', 'application/force-download']
 
   #after_document_file_post_process :copy_to_pdf
   #after_post_process :copy_to_pdf
