@@ -1,6 +1,9 @@
 class WorkplacesController < ApplicationController
   respond_to :html
   respond_to :pdf, :odt, :xml, :json, :only => [:index, :switch]
+
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+
   helper_method :sort_column, :sort_direction
   before_filter :authenticate_user!, :only => [:edit, :update, :new, :create]
   before_filter :get_workplace, :except => [:index, :switch]
@@ -33,11 +36,7 @@ class WorkplacesController < ApplicationController
   end
 
   def show
-    if @workplace
-      respond_with(@workplace)
-    else
-      redirect_to workplaces_path, :notice => 'Record not found: id=' + params[:id]
-    end
+    respond_with(@workplace)
   end
 
   def new
@@ -90,8 +89,13 @@ private
     #@workplaces = @workplaces.find(:all, :include => :users)
       render :index # покажем список найденного
     else
-      @workplace = params[:id].present? ? Workplace.find_by_id(params[:id]) : Workplace.new
+      @workplace = params[:id].present? ? Workplace.find(params[:id]) : Workplace.new
     end
+  end
+
+  def record_not_found
+    flash[:alert] = "Требуемое рабочее место не найдено, #id= " + params[:id]
+    redirect_to action: :index
   end
 
   def print
