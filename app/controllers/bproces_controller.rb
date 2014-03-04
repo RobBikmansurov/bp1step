@@ -2,6 +2,8 @@
 class BprocesController < ApplicationController
   include TheSortableTreeController::Rebuild
 
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+
   respond_to :html
   respond_to :pdf, :xml, :json, :only => [:index, :list]
   helper_method :sort_column, :sort_direction
@@ -120,6 +122,11 @@ private
     else
       @bproce = params[:id].present? ? Bproce.find(params[:id]) : Bproce.new
     end
+  end
+
+  def record_not_found
+    flash[:alert] = "Требуемый Процесс не найден."
+    redirect_to action: :index
   end
 
   def print

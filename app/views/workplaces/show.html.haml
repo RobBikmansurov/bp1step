@@ -1,8 +1,8 @@
--title 'Рабочее место ' + @workplace.designation
+-title 'Рабочее место ' + @workplace.designation if @workplace
 -search "РабочееМесто" 
 .id_
   \#
-  = @workplace.id
+  = @workplace.id if @workplace
 %h2
   [
   %b
