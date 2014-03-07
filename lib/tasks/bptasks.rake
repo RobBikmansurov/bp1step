@@ -194,22 +194,59 @@ namespace :bp1step do
     logger = Logger.new('log/bp1step.log')  # протокол работы
     logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_document_files'
     documents_count = 1
-    documents_not_file = 0
+    documents_file_missing = 0
+    files_missing  = 0
+    processes_missing = 0
+    pdfs_missing  = 0
     u = User.find(97) # пользователь по умолчанию
-    Document.where('dlevel < 2').each do |document| # все документы кроме Свидетельств
-      if !document.document_file_file_name
-        documents_not_file += 1
-        if document.owner_id
-          mail_to = document.owner
-        else
-          mail_to = u
-        end
-        #mail_to = u   # DEBUG dlevel <2 - только документы 1 уровня
-        DocumentMailer.file_not_found_email(document, mail_to).deliver  # рассылка об отсутствии файла документа
-      end
+    Document.where('dlevel = 4').each do |document| # все документы типа Свидетельств должны иметь процесс
       documents_count += 1
+      if document.owner_id
+        mail_to = document.owner
+      else
+        mail_to = u
+      end
+      if document.bproce.count == 0
+        processes_missing += 1
+        logger.info "process missing ##{document.id}: \t #{mail_to.email}" 
+        DocumentMailer.process_is_missing_email(document, mail_to).deliver  # рассылка о необходимости указания процесса для документа
+      end
     end
-    logger.info "All: #{documents_count} docs, but #{documents_not_file} hasn't files"
+    Document.where('dlevel < 4').where(:status =>"Утвержден").each do |document| # все документы кроме Свидетельств
+      documents_count += 1
+      if document.owner_id
+        mail_to = document.owner
+      else
+        mail_to = u
+      end
+      if document.bproce.count == 0
+        processes_missing += 1
+        logger.info "process missing ##{document.id}: \t #{mail_to.email}" 
+        DocumentMailer.process_is_missing_email(document, mail_to).deliver  # рассылка о необходимости указания процесса для документа
+      end
+      if document.document_file_file_name 
+        if File.exist?(document.document_file.path)  # есть исходный файл документа
+          if File.size(document.document_file.path) == document.document_file_file_size
+            if !File.exist?(document.pdf_path)  # есть PDF для просмотра
+              Paperclip.run('unoconv', "-f pdf #{document.document_file.path}")
+              pdfs_missing += 1
+            end
+          else
+            logger.info "file is corrupted ##{document.id}: #{document.document_file_file_size} <> #{File.size(document.document_file.path)} \t #{mail_to.email}" 
+            DocumentMailer.file_is_corrupted_email(document, mail_to).deliver  # рассылка о необходимости новой загрузки файла документа
+          end
+        else
+          files_missing += 1
+          DocumentMailer.file_is_corrupted_email(document, mail_to).deliver  # рассылка о необходимости новой загрузки файла документа
+          logger.info "file is missing ##{document.id}: #{document.document_file_file_name} \t #{mail_to.email}"
+        end
+      else
+        documents_file_missing += 1
+        DocumentMailer.file_not_found_email(document, mail_to).deliver  # рассылка об отсутствии файла документа
+        logger.info "file name is missing ##{document.id}: #{document.name} \t #{mail_to.email}"
+      end
+    end
+    logger.info "All: #{documents_count} docs, #{documents_file_missing} file names missing, #{files_missing} files missing, #{pdfs_missing} pdfs missing, #{processes_missing} without processes"
   end
 
 
