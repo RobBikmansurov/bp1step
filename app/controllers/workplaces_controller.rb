@@ -8,6 +8,7 @@ class WorkplacesController < ApplicationController
   before_filter :authenticate_user!, :only => [:edit, :update, :new, :create]
   before_filter :get_workplace, :except => [:index, :switch]
   #load_and_authorize_resource
+  autocomplete :bproce, :name, :extra_data => [:id]
 
   def index
     if params[:all].present?

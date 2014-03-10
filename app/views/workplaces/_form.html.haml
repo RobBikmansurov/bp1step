@@ -22,13 +22,7 @@
           = link_to wp.bproce.name, bproce_path(wp.bproce_id)
         %td
           = link_to image_tag('action_stop.gif', :alt => 'Удалить'), wp, data: { confirm: "Действительно хотите исключить [" + @workplace.name + "] из процесса:\n" + wp.bproce.name + "?" }, :method => 'delete', class: 'button-img'
-
--if @bproce_workplace
-  = simple_form_for(@bproce_workplace) do |ff|
-    = ff.error_notification
-    = ff.association :bproce, :collection => Bproce.order('name'), :label => 'Процесс', :prompt => 'Выберите процесс, где используется Рабочее место'
-    = ff.hidden_field :workplace_id
-    = ff.error :base
-    = ff.button :submit, 'Связать с процессом'
+%p
+= render 'bproce'
 -#=debug params
 -#  =debug @bproce

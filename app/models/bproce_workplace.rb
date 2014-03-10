@@ -8,7 +8,7 @@ class BproceWorkplace < ActiveRecord::Base
   belongs_to :bproce
   belongs_to :workplace
 
-  attr_accessible :workplace_id, :bproce_id, :workplace_designation
+  attr_accessible :workplace_id, :bproce_name, :bproce_id, :workplace_designation
 
   def workplace_designation
     workplace.try(:designation)
@@ -18,5 +18,12 @@ class BproceWorkplace < ActiveRecord::Base
     self.workplace_id = Workplace.find_by_designation(name).id if name.present?
   end
 
+  def bproce_name
+    bproce.try(:name)
+  end
+
+  def bproce_name=(name)
+    self.bproce_id = Bproce.find_by_name(name).id if name.present?
+  end
 
 end
