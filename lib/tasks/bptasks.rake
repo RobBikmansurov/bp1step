@@ -155,7 +155,6 @@ namespace :bp1step do
   end
 
 
-
   desc "Check document files in eplace location"
   task :check_document_files_eplace  => :environment do     # проверка наличия файлов документов в каталоге
     # TODO добавить конфиги для константы "files"
@@ -236,9 +235,11 @@ namespace :bp1step do
             DocumentMailer.file_is_corrupted_email(document, mail_to).deliver  # рассылка о необходимости новой загрузки файла документа
           end
         else
-          files_missing += 1
-          DocumentMailer.file_is_corrupted_email(document, mail_to).deliver  # рассылка о необходимости новой загрузки файла документа
-          logger.info "file is missing ##{document.id}: #{document.document_file_file_name} \t #{mail_to.email}"
+          if !document.note.start_with?('ДСП')  #  если это не ДСП - должен быть файл
+            files_missing += 1
+            DocumentMailer.file_is_corrupted_email(document, mail_to).deliver  # рассылка о необходимости новой загрузки файла документа
+            logger.info "file is missing ##{document.id}: #{document.document_file_file_name} \t #{mail_to.email}"
+          end
         end
       else
         documents_file_missing += 1
