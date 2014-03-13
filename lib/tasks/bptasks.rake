@@ -192,16 +192,18 @@ namespace :bp1step do
     # TODO контролировать все уровни документов кроме 4
     logger = Logger.new('log/bp1step.log')  # протокол работы
     logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_document_files'
-    documents_count = 1
+    documents_count = 0
     documents_file_missing = 0
     files_missing  = 0
     processes_missing = 0
     pdfs_missing  = 0
+    DEBUG = false
     u = User.find(97) # пользователь по умолчанию
     Document.where('dlevel = 4').each do |document| # все документы типа Свидетельств должны иметь процесс
       documents_count += 1
       if document.owner_id
         mail_to = document.owner
+        mail_to = u if DEBUG
       else
         mail_to = u
       end
@@ -215,6 +217,7 @@ namespace :bp1step do
       documents_count += 1
       if document.owner_id
         mail_to = document.owner
+        mail_to = u if DEBUG
       else
         mail_to = u
       end
@@ -235,16 +238,16 @@ namespace :bp1step do
             DocumentMailer.file_is_corrupted_email(document, mail_to).deliver  # рассылка о необходимости новой загрузки файла документа
           end
         else
-          if !document.note.start_with?('ДСП')  #  если это не ДСП - должен быть файл
-            files_missing += 1
-            DocumentMailer.file_is_corrupted_email(document, mail_to).deliver  # рассылка о необходимости новой загрузки файла документа
-            logger.info "file is missing ##{document.id}: #{document.document_file_file_name} \t #{mail_to.email}"
-          end
+          files_missing += 1
+          DocumentMailer.file_is_corrupted_email(document, mail_to).deliver  # рассылка о необходимости новой загрузки файла документа
+          logger.info "file is missing ##{document.id}: #{document.document_file_file_name} \t #{mail_to.email}"
         end
       else
-        documents_file_missing += 1
-        DocumentMailer.file_not_found_email(document, mail_to).deliver  # рассылка об отсутствии файла документа
-        logger.info "file name is missing ##{document.id}: #{document.name} \t #{mail_to.email}"
+        if !document.note.start_with?('ДСП')  #  если это не ДСП - должен быть файл
+          documents_file_missing += 1
+          DocumentMailer.file_not_found_email(document, mail_to).deliver  # рассылка об отсутствии файла документа
+          logger.info "file name is missing ##{document.id}: #{document.name} \t #{mail_to.email}"
+        end
       end
     end
     logger.info "All: #{documents_count} docs, #{documents_file_missing} file names missing, #{files_missing} files missing, #{pdfs_missing} pdfs missing, #{processes_missing} without processes"
