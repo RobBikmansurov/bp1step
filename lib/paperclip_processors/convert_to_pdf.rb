@@ -3,28 +3,33 @@ module Paperclip
  
     def initialize file, options = {}, attachment = nil
       @file = file
-      puts "file=" + file.path.to_s
-      puts "options=" + options.to_s
-      puts "attachment=" + attachment.to_s
       @attachment = attachment
       @instance = options[:instance]
+      @format = options[:format]
       @current_format   = File.extname(@file.path)
       @basename         = File.basename(@file.path, @current_format)
+      puts "\n\n" + file.path
+      #puts attachment[]
+
     end
  
     def make
-       begin
-        parameters = []
-        parameters << "-f pdf"
-        parameters << @file.path.to_s
- 
-        parameters = parameters.flatten.compact.join(" ").strip.squeeze(" ")
-        puts parameters
-        #success = Paperclip.run("unoconv", parameters)
-      rescue PaperclipCommandLineError => e
-        raise PaperclipError, "There was an error processing the thumbnail for #{@basename}" if @whiny
+      #cmd = "-f pdf"
+      #dst = Tempfile.new(['temp_file', '.pdf'])
+      dst = Tempfile.new([@basename, 'pdf'].compact.join("."))
+      #dst = File.expand_path(@file.path) + '.pdf'
+      puts dst.inspect
+      #params = " -f pdf '#{fromfile}'"
+      params = "-f pdf #{File.expand_path(@file.path)}"
+      puts params
+      dst.binmode
+      begin
+        success = Paperclip.run('unoconv', params)
+      rescue
+        puts "error!" 
+        #raise PaperclipError, "There was an error processing the file contents for #{@basename} - #{e}" if @whiny
       end
-      @file
+      dst
     end
   end
 end
