@@ -208,9 +208,7 @@ private
       render :index # покажем список найденного
     else
       if params[:id].present?
-        logger.debug "\n id= #{params[:id]}"
         @document = Document.find(params[:id])
-        logger.debug "\n@document = #{@document.inspect}"
       else
         @document = Document.new
       end
