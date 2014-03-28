@@ -16,7 +16,7 @@ class Document < ActiveRecord::Base
     :hash_secret => "BankPermBP1Step",
     :processors => [:convert_to_pdf]
   validates :document_file, :attachment_presence => false
-  #do_not_validate_attachment_file_type :document_file  #paperclip >4.0
+  do_not_validate_attachment_file_type :document_file  #paperclip >4.0
   validates_attachment_content_type :document_file, 
                                     :content_type => ['application/pdf', 'applications/vnd.pdf',
                                                       'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.spreadsheet',
@@ -26,9 +26,6 @@ class Document < ActiveRecord::Base
 
   #after_document_file_post_process :copy_to_pdf
   #after_post_process :copy_to_pdf
-
-  #validates_attachment :document_file, :content_type => ["application/pdf", "application/odf", "application/msword", "plain/text"]
-  #validates_attachment :document_file, :content_type => { :content_type => "application/pdf" }
 
   validates :name, :length => {:minimum => 10, :maximum => 200}
   #validates :bproce_id, :presence => true # документ относится к процессу
@@ -51,7 +48,7 @@ class Document < ActiveRecord::Base
 
   attr_accessible  :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :document_file, :file_delete
 
-  after_save :copy_to_pdf
+  #after_save :copy_to_pdf
 
   def owner_name
     owner.try(:displayname)
