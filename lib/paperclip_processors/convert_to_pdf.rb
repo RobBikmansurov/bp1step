@@ -12,7 +12,7 @@ module Paperclip
       params = "-f pdf #{File.expand_path(@file.path)}"
       begin
         success = Paperclip.run('unoconv', params)
-        dst = File.open(File.expand_path(@file.path) + '.pdf')
+        #dst = File.open(File.expand_path(@file.path) + '.pdf')
       rescue
         raise PaperclipError, "There was an error processing the file contents for #{@basename} - #{e}"
       end
