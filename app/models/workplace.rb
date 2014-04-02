@@ -4,7 +4,7 @@ class Workplace < ActiveRecord::Base
 
   validates :designation, presence: true,
                           uniqueness: true,
-                          length: {minimum: 8, maximum: 50}
+                          length: {minimum: 5, maximum: 50}
 
   has_many :bproce_workplaces
   has_many :bproces, through: :bproce_workplaces
