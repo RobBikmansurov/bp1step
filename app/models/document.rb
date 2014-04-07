@@ -14,16 +14,15 @@ class Document < ActiveRecord::Base
     :styles => { :pdf => "pdf" }, 
     :path => ":rails_root/public/store/:id.:ymd.:basename.:extension",
     :hash_secret => "BankPermBP1Step",
-    :processors => [:convert_to_pdf]
+    :processors => [:convert_to_pdf, :test]
   validates :document_file, :attachment_presence => false
   do_not_validate_attachment_file_type :document_file  #paperclip >4.0
   validates_attachment_content_type :document_file, 
-                                    :content_type => ['application/pdf', 'applications/vnd.pdf',
+                                    :content_type => ['application/pdf', 'applications/vnd.pdf', 'binary/octet-stream',
                                                       'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.spreadsheet',
                                                       'application/vnd.ms-excel', 'application/msword',
                                                       'application/doc', 'application/rtf',
                                                       'application/octet-stream', 'application/force-download']
-
   #after_document_file_post_process :copy_to_pdf
   #after_post_process :copy_to_pdf
 
@@ -100,18 +99,12 @@ class Document < ActiveRecord::Base
   end
 
   def copy_to_pdf
-    if valid?
-      if @file_delete == '1' # файл удаляется
+    if self.document_file_file_name?  # задано имя файла
+      if File.exist?(self.document_file.path)
+        puts "***model/document.rb*** convert_to_pdf" + self.document_file.path.to_s
+        Paperclip.run('unoconv', "-f pdf #{self.document_file.path}") if File.extname(self.document_file.path) != ".pdf"
       else
-        if self.document_file_file_name?  # задано имя файла
-          puts "***model/document.rb:copy_to_pdf*** if " + document_file.path.to_s
-          if File.exist?(self.document_file.path)
-            puts "***model/document.rb*** convert_to_pdf" + self.document_file.path.to_s
-            Paperclip.run('unoconv', "-f pdf #{self.document_file.path}") if File.extname(self.document_file.path) != ".pdf"
-          else
-            puts "***model/document.rb*** file not found " + self.document_file.path.to_s
-          end
-        end
+        puts "***model/document.rb*** file not found " + self.document_file.path.to_s
       end
     end
   end
