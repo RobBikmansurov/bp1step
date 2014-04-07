@@ -95,8 +95,10 @@
           = link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), @document.pdf_url, class: 'button-img'
         \|
         - if can? :edit_document, @document
-          взять на редактирование:
-          = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), @document.document_file.url, class: 'button-img'
+          - if File.extname(@document.document_file.path) == '.pdf'
+          - else
+            взять на редактирование:
+            = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), @document.document_file.url, class: 'button-img'
       - else
         файл отсутствует - 
         %b
