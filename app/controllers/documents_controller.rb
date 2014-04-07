@@ -75,16 +75,16 @@ class DocumentsController < ApplicationController
   end
 
   def update
-    flash[:notice] = "Successfully updated document."  if @document.update_attributes(document_params)
+    flash[:notice] = "Документ успешно обновлен."  if @document.update_attributes(document_params)
     respond_with(@document)
   end
 
   def update_file
     d_file = params[:document][:document_file] if params[:document].present?
     if !d_file.blank?
-      flash[:notice] = "Successfully updated Document's File."  if @document.update_attributes(document_file_params)
+      flash[:notice] = 'Файл "' + d_file.original_filename  + '" загружен.' if @document.update_attributes(document_file_params)
     else      
-      flash[:alert] = "Empty Document's File name."
+      flash[:alert] = "Ошибка - имя файла не указано."
     end
     respond_with(@document)
   end
