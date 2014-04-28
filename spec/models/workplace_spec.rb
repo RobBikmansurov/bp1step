@@ -8,32 +8,10 @@ before(:each) do
   end
 
   context "validates" do
-    it "is valid with valid attributes: name, description, designation" do
-      @wp.should be_valid
-    end
-
-    it "is not valid without a designation" do #validates :designation, :presence => true, :uniqueness => true, :length => {:minimum => 8, :maximum => 50}
-      @wp.designation = nil
-      @wp.should_not be_valid
-    end
-    it "it require uniqueness designation" do
-      @wp1 = create(:workplace, designation: "WorkplaceDesignation1")
-      @wp1.should be_valid
-      @wp1.designation = 'WorkplaceDesignation'
-      @wp1.should_not be_valid
-      @wp2 = create(:workplace, designation: "WorkplaceDesignation2")
-      @wp2.should be_valid
-    end
-    it "is not valid if length of designation < 8 or > 50" do
-      @wp.designation = "1234567"
-      @wp.should_not be_valid
-      @wp.designation = "12345678"
-      @wp.should be_valid
-      @wp.designation = "maxlenght1maxlenght2maxlenght3maxlenght4maxlenght5_"
-      @wp.should_not be_valid
-      @wp.designation = "maxlenght1maxlenght2maxlenght3maxlenght4maxlenght5"
-      @wp.should be_valid
-    end
+    it { should validate_presence_of(:designation) }
+    it { should validate_uniqueness_of(:designation) }
+    it { should ensure_length_of(:designation).is_at_least(5).is_at_most(50) }
+    #it { should validate_presence_of(:description) }
   end
 
   context "associations" do
