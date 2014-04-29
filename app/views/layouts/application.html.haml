@@ -44,18 +44,28 @@
               = link_to "Войти", new_user_session_path
         #menu.span-24.last
           %ul.nav
-            =nav_link "Процессы", bproces_path
+            =content_tag(:li, :class => nav_current(bproces_path)) do
+              =link_to "Процессы", bproces_path
+              %ul.nav
+                =nav_link "Метрики", "#"
+                =nav_link "Метрики", "#"
             =nav_link "Роли", business_roles_path
             =nav_link "Места", workplaces_path
             =nav_link "Приложения", bapps_path
             =nav_link "Ресурсы", iresources_path
-            =nav_link "Документы", documents_path
+            =content_tag(:li, :class => nav_current(bproces_path)) do
+              =link_to "Документы", documents_path
+              %ul
+                =nav_link "Документы", "#"
+                =nav_link "Договоры", "#"
+                =nav_link "Директивы", directives_path
+                =nav_link 'Термины', terms_path
             =nav_link "Директивы", directives_path
             =nav_link 'Термины', terms_path
             =nav_link "Сотрудники", users_path
           %ul.nav{:style => "float:right"}
             -#%li Настройки
-            = nav_link "?", '/about'
+            =nav_link "?", '/about'
       #main.span-24.last
         - flash.each do |name, msg|
           = content_tag :div, msg, :id => "flash_#{name}"
