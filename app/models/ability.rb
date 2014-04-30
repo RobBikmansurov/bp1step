@@ -33,6 +33,7 @@ class Ability
         can :manage, [BproceBapp, BproceIresource]
         can :update, Bproce, :user_id => user.id  # процесс владельца
         can :manage, BusinessRole  # роли в процессе владельца
+        can :manage, Metric
       end
 
       if user.has_role? :analitic
@@ -40,6 +41,7 @@ class Ability
         can :manage, [Bproce, Bapp, BusinessRole, BproceBapp, Term]
         can :manage_tag, [Bproce] # может редактировать теги процессов
         can :edit_document, [Document]  # может брать исходник документа
+        can :manage, Metric
       end
 
       if user.has_role? :admin

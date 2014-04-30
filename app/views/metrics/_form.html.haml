@@ -1,0 +1,17 @@
+= simple_form_for(@metric) do |f|
+  = f.error_notification
+  = f.input :shortname
+  = f.input :name
+  = f.input :description, :as => :text
+  = f.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Участвует в процессе', :include_blank => false, :prompt => 'Выберите процесс, в котором участвует Роль'
+  -if @metric.bproce_id?
+    Перейти к процессу
+    = link_to @metric.bproce.name, bproce_path(@metric.bproce)
+  
+  = render 'bproce'
+
+  = f.error :base
+  -if can? :update, @metric
+    = f.button :submit
+
+
