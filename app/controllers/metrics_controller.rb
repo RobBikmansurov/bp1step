@@ -42,11 +42,12 @@ class MetricsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_metric
       @metric = Metric.find(params[:id])
+      @bproce = Bproce.find(params[:bproce_id]) if params[:bproce_id].present?
     end
 
     # Only allow a trusted parameter "white list" through.
     def metric_params
-      params.require(:metric).permit(:bproce_id, :name, :shortname, :description, :note, :depth)
+      params.require(:metric).permit(:bproce_id, :name, :shortname, :description, :note, :depth, :bproce_name)
     end
 
     def sort_column
