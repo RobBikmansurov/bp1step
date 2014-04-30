@@ -2,12 +2,18 @@
   = f.error_notification
   = f.input :name
   = f.input :description, :as => :text
-  = f.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Участвует в процессе', :include_blank => false, :prompt => 'Выберите процесс, в котором участвует Роль'
+  -#= f.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Участвует в процессе', :include_blank => false, :prompt => 'Выберите процесс, в котором участвует Роль'
+
   -if @business_role.bproce_id?
     Перейти к процессу
     = link_to @business_role.bproce.name, bproce_path(@business_role.bproce)
+  %br
+  = f.label 'Процесс'
+  = f.autocomplete_field :bproce_name, autocomplete_bproces_path, :id_elements => '#bproce_workplace_bproce_id', :placeholder => 'подстрока в наименовании', :data => { :no_matches_label => '333' }
+
   -if current_user.role? :admin
     = f.input :features, :as => :text
+
   = f.error :base
   -if can? :update, @business_role
     = f.button :submit
