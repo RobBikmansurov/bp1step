@@ -15,11 +15,19 @@ class BusinessRole < ActiveRecord::Base
   has_many :user_business_role, :dependent => :destroy  # пользователь может иметь много ролей
   has_many :users, :through => :user_business_role
 
-  attr_accessible :name, :description, :bproce_id, :features
+  attr_accessible :name, :description, :bproce_id, :bproce_name, :features
 
 
   # бизнес-роль может исполняется на нескольких рабочих местах
   #has_and_belongs_to_many :workplaces
+
+  def bproce_name
+    bproce.try(:name)
+  end
+
+  def bproce_name=(name)
+    self.bproce_id = Bproce.find_by_name(name).id if name.present?
+  end
 
   def self.search(search, page)
     paginate :page => page,
