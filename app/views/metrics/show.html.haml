@@ -1,0 +1,33 @@
+-title 'Метрика ' + @metric.name + '. ' + @metric.bproce.shortname if @metric.bproce
+-search "Метрику"
+.id_
+  \#
+  =@metric.id
+%h2
+  [
+  =@metric.shortname
+  ]
+  =@metric.name
+
+%h3
+  Метрика процесса
+  = link_to @metric.bproce.name, bproce_path(@metric.bproce) if @metric.bproce
+
+%h3 описание
+= @metric.description
+%h3 примечание
+= @metric.note
+%h3 уровень
+= @metric.depth
+
+.info_
+  создан
+  = @metric.created_at.strftime('%d.%m.%Y %H:%M:%S') if @metric.created_at
+  %br
+  изменен
+  = @metric.updated_at.strftime('%d.%m.%Y %H:%M:%S') if @metric.updated_at
+
+%p
+- if can? :update, @metric
+  = link_to 'Edit', edit_metric_path(@metric), :class => 'button'
+= link_to 'Back', metrics_path, :class => 'button'

@@ -1,0 +1,38 @@
+-title "Метрики процессов"
+-search "Метрику"
+%h1
+  Метрики процессов
+  -if params[:search].present?
+    [ 
+    = params[:search]
+    ]
+
+%table
+  %tr
+    %th"Метрика"
+    %th Процесс
+    %th Описание
+    %th Уровень
+    -if can? :manage, Metric
+      %th
+    -if can? :destroy, Metric
+      %th
+
+  - @metrics.each do |metric|
+    %tr
+      %td= link_to metric.name, metric
+      %td
+        = link_to metric.bproce.shortname, bproce_path(metric.bproce_id) if !metric.bproce.nil?
+      %td= truncate(metric.description, :length => 120, :omission => ' ...')
+      %td= metric.depth
+      - if can? :manage, metric
+        %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_metric_path(metric), class: 'button-img'
+      - if can? :destroy, metric
+        %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), metric, data: { confirm: 'Метрика"' + metric.name + "\"\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
+
+.apple_pagination
+  = will_paginate @metrics
+
+%p
+- if can? :destroy, Metric
+  = link_to "Добавить новую Метрику" , new_metric_path, :class => 'button'
