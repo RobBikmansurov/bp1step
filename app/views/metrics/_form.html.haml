@@ -3,14 +3,16 @@
   = f.input :shortname
   = f.input :name
   = f.input :description, :as => :text
-  = f.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Участвует в процессе', :include_blank => false, :prompt => 'Выберите процесс, в котором участвует Роль'
   -if @metric.bproce_id?
     Перейти к процессу
     = link_to @metric.bproce.name, bproce_path(@metric.bproce)
   
-  = render 'bproce'
-
+  %br
+  = f.label 'Процесс'
+  = f.autocomplete_field :bproce_name, autocomplete_bproces_path, :id_elements => '#bproce_workplace_bproce_id', :placeholder => 'подстрока в наименовании', :data => { :no_matches_label => '333' }
   = f.error :base
+
+  %p
   -if can? :update, @metric
     = f.button :submit
 

@@ -2,7 +2,7 @@
   = simple_form_for(@bproce_workplace) do |ff|
     = ff.error_notification
     = ff.hidden_field :bproce_id
-    = ff.hidden_field :workplace_id
+    = ff.hidden_field :metric_id
     = ff.label 'Процесс'
     = ff.autocomplete_field :bproce_name, autocomplete_bproces_path, :id_elements => '#bproce_workplace_bproce_id', :placeholder => 'подстрока в наименовании', :data => { :no_matches_label => '333' }
 
