@@ -1,11 +1,33 @@
 class MetricsController < ApplicationController
+  respond_to :html, :xml, :json
+  helper_method :sort_column, :sort_direction
   before_action :set_metric, only: [:show, :edit, :update, :destroy]
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @metrics = Metric.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end
 
   def show
+    graph_type = params[:type].presence || 'day'
+    current_period_date = Date.today
+    current_period_values = case graph_type
+             when 'month' then MetricValue.by_month_totals(@metric.id, current_period_date)
+             when 'week' then MetricValue.by_week_totals(@metric.id, current_period_date)
+             when 'day' then MetricValue.by_day_totals(@metric.id, current_period_date)
+             else {}
+             end
+    prev_period_date = Date.today - Date.today.day
+    prev_period_values = case graph_type
+             when 'month' then MetricValue.by_month_totals(@metric.id, prev_period_date)
+             when 'week' then MetricValue.by_week_totals(@metric.id, prev_period_date)
+             when 'day' then MetricValue.by_day_totals(@metric.id, prev_period_date)
+             else {}
+             end
+    values = MetricValue.where(:metric_id => @metric.id).group(:dtime).sum(:value)
+    @data = [{ name: 'Current', data: current_period_values },
+             { name: "Prev", data: prev_period_values } ]
+    respond_with @data
   end
 
   def new
@@ -51,7 +73,7 @@ class MetricsController < ApplicationController
     end
 
     def sort_column
-      params[:sort] || "name"
+      params[:sort] || "id"
     end
 
     def sort_direction

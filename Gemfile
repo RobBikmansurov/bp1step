@@ -30,7 +30,8 @@ gem 'public_activity'
 gem 'paperclip', "~> 4.1"
 gem 'acts-as-taggable-on'
 gem 'protected_attributes'
-
+gem 'chartkick'
+gem 'groupdate'
 
 group :test do
   gem 'sqlite3'

@@ -9,15 +9,24 @@
   ]
   =@metric.name
 
+= link_to 'Год', metric_path({type: :year})     #, remote: true
+= link_to 'Месяцы года', metric_path({type: :month})   #, remote: true
+= link_to 'Дни месяца', metric_path({type: :day})     #, remote: true
+
+= render partial: 'graph', locals: {data: @data}
+
+= @data.inspect
+
 %h3
   Метрика процесса
   = link_to @metric.bproce.name, bproce_path(@metric.bproce) if @metric.bproce
 
-%h3 описание
 = @metric.description
-%h3 примечание
-= @metric.note
-%h3 уровень
+-if @metric.note.presence
+  %br
+  = '[' + @metric.note.to_s + ']'
+%br
+Глубина данных:
 = @metric.depth
 
 .info_
@@ -31,3 +40,7 @@
 - if can? :update, @metric
   = link_to 'Edit', edit_metric_path(@metric), :class => 'button'
 = link_to 'Back', metrics_path, :class => 'button'
+
+-#= pie_chart({"Football" => 10, "Basketball" => 5})
+
+

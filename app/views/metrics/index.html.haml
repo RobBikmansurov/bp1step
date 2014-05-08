@@ -9,10 +9,10 @@
 
 %table
   %tr
-    %th"Метрика"
-    %th Процесс
+    %th=sortable "name", "Метрика"
+    %th=sortable  "bproce_id", "Процесс"
     %th Описание
-    %th Уровень
+    %th Глубина
     -if can? :manage, Metric
       %th
     -if can? :destroy, Metric
@@ -23,7 +23,7 @@
       %td= link_to metric.name, metric
       %td
         = link_to metric.bproce.shortname, bproce_path(metric.bproce_id) if !metric.bproce.nil?
-      %td= truncate(metric.description, :length => 120, :omission => ' ...')
+      %td= truncate(metric.description, :length => 180, :omission => ' ...')
       %td= metric.depth
       - if can? :manage, metric
         %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_metric_path(metric), class: 'button-img'

@@ -3,7 +3,7 @@ class CreateMetricValues < ActiveRecord::Migration
     create_table :metric_values do |t|
       t.references :metric, index: true
       t.datetime :dtime
-      t.text :value, limit: 20
+      t.integer :value
 
       t.timestamps
     end

@@ -81,6 +81,12 @@ ru:
         access_write: Права записи
         access_other: Права
         risk_category: Категория ресурса
+      metric:
+        name: Метрика
+        shortname: Обозначение
+        description: Описание
+        note: Примечание
+        depth: Глубина
       profile:
         name: Отображаемое имя
         phone: Телефон

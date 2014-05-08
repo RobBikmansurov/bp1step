@@ -3,7 +3,9 @@
   = f.input :shortname
   = f.input :name
   = f.input :description, :as => :text
+  = f.input :depth, :collection => 1..4, :as => :radio_buttons, :hint => 'Год(1) - Месяц(2) - День(3) - Час(4)'
   -if @metric.bproce_id?
+    %br
     Перейти к процессу
     = link_to @metric.bproce.name, bproce_path(@metric.bproce)
   
