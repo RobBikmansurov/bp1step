@@ -19,7 +19,7 @@ set :application, "bp1step"
 set :user, 'rubydev'
 set :rails_env, "production"
 set :deploy_to, "/home/#{user}/#{application}"
-set :use_sudo, true
+set :use_sudo, false
 
 set :unicorn_conf, "#{deploy_to}/config/unicorn.rb"
 set :unicorn_pid, "#{deploy_to}/tmp/pids/unicorn.pid"
@@ -35,7 +35,7 @@ set :deploy_via, :remote_cache # Указание на то, что стоит �
 default_run_options[:pty]        = true
 ssh_options[:forward_agent] = true
 
-set :keep_releases, 3 	# количество каталогов релизов, хранящихся на сервере
+set :keep_releases, 5 	# количество каталогов релизов, хранящихся на сервере
 
 set :maintenance_template_path, File.expand_path("../recipes/templates/maintenance.html.erb", __FILE__)
 
@@ -52,7 +52,7 @@ namespace :deploy do
     run "rm -rf #{deploy_to}/current"
     run "ln -s -- #{release_path}/ #{deploy_to}/current"
     run "rm -rf #{deploy_to}/current/public/store"
-    run "ln -s -- #{deploy_to}/shared/store/ #{deploy_to}/current/public/store"
+    run "ln -s -- #{deploy_to}/public/store/ #{deploy_to}/current/public/store" #    app/models/document.rb :path => ":rails_root/public/store/:id.:ymd.:basename.:extension",
     run "rm -rf #{deploy_to}/current/db"
     run "ln -s -- #{deploy_to}/db/ #{deploy_to}/current/db"
     run "rm -rf #{deploy_to}/current/files"

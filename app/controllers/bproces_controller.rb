@@ -48,6 +48,7 @@ class BprocesController < ApplicationController
   end
 
   def show
+    @metrics = Metric.where(:bproce_id => @bproce.id)  # метрики процесса
     respond_with(@bproce)
   end
 
@@ -118,7 +119,7 @@ private
     if params[:search].present? # это поиск
       #@bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
       @bproces = Bproce.search(params[:search])
-      render :index # покажем список найденного
+      #render :index # покажем список найденного
     else
       @bproce = params[:id].present? ? Bproce.find(params[:id]) : Bproce.new
     end

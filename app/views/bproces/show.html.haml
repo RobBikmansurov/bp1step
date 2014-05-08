@@ -50,6 +50,13 @@
 = raw @bproce.tag_list.map { |t| link_to t, bproces_path + '/tags/' + t, class: 'tags' }.join('&nbsp; ')
 
 %hr
+
+-if can? :update, @bproce   # разрешить смотреть метрики только владельцу проецесса и бизнес-аналитику
+  -if @metrics
+    %h4 Метрики процесса
+    -@metrics.each do | metric |
+      =link_to metric.name, metric
+
 - if @bproce.business_roles.count > 0
   %h4
     В процессе участвуют
