@@ -13,8 +13,8 @@ class Document < ActiveRecord::Base
     :presence  => false,
     :styles => { :pdf => "pdf" }, 
     :path => ":rails_root/public/store/:id.:ymd.:basename.:extension",
-    :hash_secret => "BankPermBP1Step",
-    :processors => [:convert_to_pdf, :test]
+    :processors => [:convert_to_pdf],
+    :hash_secret => "BankPermBP1Step"
   validates :document_file, :attachment_presence => false
   do_not_validate_attachment_file_type :document_file  #paperclip >4.0
   validates_attachment_content_type :document_file, 
@@ -23,7 +23,7 @@ class Document < ActiveRecord::Base
                                                       'application/vnd.ms-excel', 'application/msword',
                                                       'application/doc', 'application/rtf',
                                                       'application/octet-stream', 'application/force-download']
-  #after_document_file_post_process :copy_to_pdf
+  after_document_file_post_process :copy_to_pdf
   #after_post_process :copy_to_pdf
 
   validates :name, :length => {:minimum => 10, :maximum => 200}
@@ -46,8 +46,6 @@ class Document < ActiveRecord::Base
   has_many :bproce_document, dependent: :destroy 
 
   attr_accessible  :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :document_file, :file_delete
-
-  #after_save :copy_to_pdf
 
   def owner_name
     owner.try(:displayname)
