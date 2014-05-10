@@ -132,6 +132,10 @@ class DocumentsController < ApplicationController
     render :_form_directive
   end
 
+  def approval_sheet
+      approval_sheet_odt
+  end
+
 private
 
   def document_params
@@ -201,6 +205,46 @@ private
     end
     send_file(fname, :type => type, :filename => File.basename(@document.file_name), :disposition => 'inline' )
   end
+
+  def approval_sheet_odt
+    report = ODFReport::Report.new("reports/approval-sheet.odt") do |r|
+      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
+      r.add_field "REPORT_DATE1", (Date.today + 10.days).strftime('%d.%m.%Y')
+      r.add_field :id, @document.id
+      r.add_field :name, @document.name
+      r.add_field :description, @document.description
+      rr = 0
+      if !@document.bproce.blank?  # есть ссылки из документа на другие процессы?
+        r.add_field :bp, "Относится к процессам:"
+        r.add_table("BPROCS", @document.bproce_document.all, :header => false, :skip_if_empty => true) do |t|
+          t.add_column(:rr) do |n1| # порядковый номер строки таблицы
+            rr += 1
+          end
+          t.add_column(:process_name) do |bp|
+            bp.bproce.name
+          end
+          t.add_column(:process_id) do |bp|
+            bp.bproce.id
+          end
+          t.add_column(:process_owner) do |bp|
+            bp.bproce.user_name
+          end
+        end
+      else
+        r.add_field :bp, "Процесс не назначен!"
+      end
+      #r.add_field "ORDERNUM", Date.today.strftime('%Y%m%d-с') + @usr.id.to_s
+      #r.add_field :displayname, @usr.displayname
+      r.add_field :user_position, current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    report_file_name = report.generate
+    send_file(report_file_name,
+      :type => 'application/msword',
+      :filename => "approval-sheet.odt",
+      :disposition => 'inline' )
+  end
+
 
   def get_document
     if params[:search].present? # это поиск
