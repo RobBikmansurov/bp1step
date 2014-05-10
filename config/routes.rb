@@ -52,6 +52,7 @@ BPDoc::Application.routes.draw do
       get :file_create
       get :file_delete
       patch :update_file
+      get :approval_sheet # Лист согласования
     end
   end
   resources :iresources
