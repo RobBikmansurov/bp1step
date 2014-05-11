@@ -52,8 +52,8 @@
 %hr
 
 -if can? :update, @bproce   # разрешить смотреть метрики только владельцу проецесса и бизнес-аналитику
-  -if @metrics
-    %h4 Метрики процесса
+  -if @metrics.count > 0
+    %h4 Метрики процесса:
     -@metrics.each do | metric |
       =link_to metric.name, metric
 
