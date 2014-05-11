@@ -66,6 +66,7 @@ private
     @business_roles = @usr.business_roles.includes(:bproce).order(:name)
     report = ODFReport::Report.new("reports/user-order.odt") do |r|
       r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
+      r.add_field :id, @usr.id
       r.add_field "ORDERNUM", Date.today.strftime('%Y%m%d-с') + @usr.id.to_s
       r.add_field :displayname, @usr.displayname
       r.add_field :position, @usr.position
