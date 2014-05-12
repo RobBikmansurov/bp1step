@@ -1,0 +1,33 @@
+-title "Метрики процесса"
+-search "Метрику"
+%h2
+  Метрики процесса
+  = link_to @bproce.name, bproce_path
+  -if params[:search].present?
+    [ 
+    = params[:search]
+    ]
+
+%table
+  %tr
+    %th=sortable "name", "Метрика"
+    %th Описание
+    %th Глубина
+    -if can? :manage, Metric
+      %th
+    -if can? :destroy, Metric
+      %th
+
+  - @metrics.each do |metric|
+    %tr
+      %td= link_to metric.name, metric
+      %td= truncate(metric.description, :length => 180, :omission => ' ...')
+      %td= metric.depth
+      - if can? :manage, metric
+        %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_metric_path(metric), class: 'button-img'
+      - if can? :destroy, metric
+        %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), metric, data: { confirm: 'Метрика"' + metric.name + "\"\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
+
+%p
+- if can? :destroy, Metric
+  = link_to "Добавить новую Метрику" , newmetric_bproce_path(@bproce), :class => 'button'

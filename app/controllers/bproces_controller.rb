@@ -106,6 +106,17 @@ class BprocesController < ApplicationController
     #@bproces = Bproce.nested_set.roots.select('id, shortname, name as title, parent_id').all
   end
 
+  def metrics
+    @metrics = Metric.where(:bproce_id => @bproce.id)  # метрики процесса
+    respond_with(@bproce)
+  end
+
+  def newmetric
+    @metric = Metric.new
+    @metric.bproce_id = @bproce_id
+    @metric.depth = 3
+  end
+
 private
   def sort_column
     params[:sort] || "lft"
