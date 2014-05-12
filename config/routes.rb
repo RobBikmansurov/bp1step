@@ -37,6 +37,8 @@ BPDoc::Application.routes.draw do
       get :order  # распоряжение о назначении исполнителей в процесс
       get :doc    # описание процесса
       get :card   # карточка процесса
+      get :metrics  # метрики процесса
+      get :newmetric  # добавить новую метрик в процесс
     end
   end
   resources :metrics

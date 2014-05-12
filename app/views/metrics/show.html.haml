@@ -19,7 +19,11 @@
 = render partial: 'graph', locals: {data: @data}
 
 %h3
-  Метрика процесса
+  -if @metric.bproce
+    =link_to 'Метрика', bproce_path(@metric.bproce) + '/metrics' 
+  -else
+    =link_to 'Метрики', metrics_path
+  процесса
   = link_to @metric.bproce.name, bproce_path(@metric.bproce) if @metric.bproce
 
 = @metric.description
