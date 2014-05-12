@@ -199,6 +199,8 @@ private
           end
         end
       end
+      @metrics = Metric.where(:bproce_id => @bproce.id).order(:name)  # метрики процесса
+      report_metrics(@metrics, r, false) # сформировать список метрик процесса
       report_docs(@bproce.documents, r, false) # сформировать таблицу документов процесса
       report_roles(@bproce.business_roles, r, true) # сформировать таблицу ролей
       report_workplaces(@bproce, r, true) # сформировать таблицу рабочих мест
@@ -431,6 +433,29 @@ private
           note = ir.iresource.note
         end
         t.add_column(:rpurpose)
+      end
+    end
+  end
+
+  def report_metrics(metrics, r, header)
+    me = 0 # порядковый номер строки для метрики
+    r.add_table("TABLE_METRICS", metrics, :header => header, :skip_if_empty => true) do |t|
+      if metrics.count > 0  # если метрик нет - пустая таблица не будет выведена
+        r.add_field :metrics, "Метрики процесса:" 
+        t.add_column(:me) do |nme| # порядковый номер строки таблицы
+          me += 1
+        end
+        t.add_column(:men) do |metric|
+          n1 = metric.name
+        end
+        t.add_column(:med) do |metric|
+          n2 = metric.description.to_s
+        end
+        t.add_column(:idm) do |metric|
+          n3 = metric.id.to_s
+        end
+      else
+        r.add_field :metrics, ''
       end
     end
   end
