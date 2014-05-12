@@ -41,7 +41,11 @@ BPDoc::Application.routes.draw do
       get :newmetric  # добавить новую метрик в процесс
     end
   end
-  resources :metrics
+  resources :metrics do
+    member do
+      get :values
+    end
+  end
   get 'bproces/tags/:tag', to: 'bproces#index', as: :tag_bproces
   get 'bapps/tags/:tag', to: 'bapps#index', as: :tag_bapps
   get 'documents/tags/:tag', to: 'documents#index', as: :tag_documents

@@ -1,7 +1,7 @@
 class MetricsController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
-  before_action :set_metric, only: [:show, :edit, :update, :destroy]
+  before_action :set_metric, only: [:show, :edit, :update, :destroy, :values]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -22,12 +22,10 @@ class MetricsController < ApplicationController
              #end
     current_period_values = MetricValue.by_day_totals(@metric.id, current_period_date)
     @prev_period_date = current_period_date - current_period_date.day
-    logger.debug "prev_period_date = #{@prev_period_date}"
     @next_period_date = current_period_date.end_of_month + 1
     if @next_period_date == (Date.today.end_of_month + 1)
       @next_period_date = nil
     end
-    #logger.debug current_period_date.beginning_of_month
     values = MetricValue.where(:metric_id => @metric.id).group(:dtime).sum(:value)
     @data = [ { name: current_period_date.strftime('%b %Y'), data: current_period_values } ]
     respond_with @data
@@ -61,6 +59,24 @@ class MetricsController < ApplicationController
   def destroy
     @metric.destroy
     redirect_to metrics_url, notice: 'Metric was successfully destroyed.'
+  end
+
+  def values
+    current_period_date = Date.today
+    if params[:date].presence
+      current_period_date = params[:date].to_date
+    end
+    @prev_period_date = current_period_date - current_period_date.day
+    @next_period_date = current_period_date.end_of_month + 1
+    if @next_period_date == (Date.today.end_of_month + 1)
+      @next_period_date = nil
+    end
+    @values = MetricValue.where(:metric_id => @metric.id)
+    @datetime_format = case @metric.depth
+      when 1 then '%Y'
+      when 2 then '%b %Y'
+      else '%d %m %Y'
+    end
   end
 
   private

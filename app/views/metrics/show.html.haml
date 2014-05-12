@@ -44,8 +44,5 @@
 %p
 - if can? :update, @metric
   = link_to 'Edit', edit_metric_path(@metric), :class => 'button'
+  = link_to 'Values', metric_path(@metric) + '/values', :class => 'button'
 = link_to 'Back', metrics_path, :class => 'button'
-
--#= pie_chart({"Football" => 10, "Basketball" => 5})
-
-
