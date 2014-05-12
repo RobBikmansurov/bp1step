@@ -213,6 +213,8 @@ private
       r.add_field :id, @document.id
       r.add_field :name, @document.name
       r.add_field :description, @document.description
+      r.add_field :approve_organ, @document.approveorgan
+      r.add_field :document_owner, @document.owner_name
       rr = 0
       if !@document.bproce.blank?  # есть ссылки из документа на другие процессы?
         r.add_field :bp, "Относится к процессам:"

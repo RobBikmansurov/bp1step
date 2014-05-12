@@ -124,4 +124,6 @@
 -if can? :update, Document
   = link_to 'Edit', edit_document_path(@document), :class => 'button'
 = link_to 'Back', :back, :class => 'button'
-= link_to 'Лист согласования', approval_sheet_document_path(@document), :class => 'button' if can? :update, Document
+-if @document.status
+  -if @document.status == 'Проект' or @document.status == 'Согласование'
+    = link_to 'Лист согласования', approval_sheet_document_path(@document), :class => 'button' if can? :update, Document
