@@ -9,24 +9,27 @@ class MetricsController < ApplicationController
   end
 
   def show
-    graph_type = params[:type].presence || 'day'
     current_period_date = Date.today
-    current_period_values = case graph_type
-             when 'month' then MetricValue.by_month_totals(@metric.id, current_period_date)
-             when 'week' then MetricValue.by_week_totals(@metric.id, current_period_date)
-             when 'day' then MetricValue.by_day_totals(@metric.id, current_period_date)
-             else {}
-             end
-    prev_period_date = Date.today - Date.today.day
-    prev_period_values = case graph_type
-             when 'month' then MetricValue.by_month_totals(@metric.id, prev_period_date)
-             when 'week' then MetricValue.by_week_totals(@metric.id, prev_period_date)
-             when 'day' then MetricValue.by_day_totals(@metric.id, prev_period_date)
-             else {}
-             end
+    if params[:month].presence
+      current_period_date = params[:month].to_date
+    end
+    #graph_type = params[:mo].presence || 'day'
+    #current_period_values = case graph_type
+             #when 'month' then MetricValue.by_month_totals(@metric.id, current_period_date)
+             #when 'week' then MetricValue.by_week_totals(@metric.id, current_period_date)
+             #when 'day' then MetricValue.by_day_totals(@metric.id, current_period_date)
+             #else {}
+             #end
+    current_period_values = MetricValue.by_day_totals(@metric.id, current_period_date)
+    @prev_period_date = current_period_date - current_period_date.day
+    logger.debug "prev_period_date = #{@prev_period_date}"
+    @next_period_date = current_period_date.end_of_month + 1
+    if @next_period_date == (Date.today.end_of_month + 1)
+      @next_period_date = nil
+    end
+    #logger.debug current_period_date.beginning_of_month
     values = MetricValue.where(:metric_id => @metric.id).group(:dtime).sum(:value)
-    @data = [{ name: 'Current', data: current_period_values },
-             { name: "Prev", data: prev_period_values } ]
+    @data = [ { name: current_period_date.strftime('%b %Y'), data: current_period_values } ]
     respond_with @data
   end
 
