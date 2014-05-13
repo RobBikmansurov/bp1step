@@ -9,6 +9,7 @@
 
 = simple_form_for(@metric_value, :as => 'metric_value') do |f|
   = f.error_notification
+  = f.hidden_field :metric_id
   = f.input :dtime, :as => :string, :input_html =>{:class=>'datepicker'}
   = f.input :value
   %p
