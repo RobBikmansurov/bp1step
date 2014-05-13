@@ -37,7 +37,7 @@
   =value.value
   -#=link_to 'delete', edit_metric_value_path(value.id)
 
-  =link_to image_tag('action_stop.gif', :alt => 'Удалить'), value, data: { confirm: 'Значение за ' + value.dtime.strftime(@datetime_format) + "\"\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
+  =link_to image_tag('action_stop.gif', :alt => 'Удалить'), value, data: { confirm: 'Значение за ' + value.dtime.strftime(@datetime_format) + " = " + value.value.to_s + "\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
   %br
 
 .apple_pagination
