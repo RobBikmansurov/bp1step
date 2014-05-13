@@ -25,7 +25,7 @@ class MetricValuesController < ApplicationController
     @metric_value = MetricValue.new(metric_value_params)
 
     if @metric_value.save
-      redirect_to @metric_value, notice: 'Metric Value was successfully created.'
+      redirect_to metric_url(@metric_value.metric_id), notice: 'Metric Value was successfully created.'
     else
       render action: 'new'
     end
@@ -39,7 +39,7 @@ class MetricValuesController < ApplicationController
     end
 
     def metric_value_params
-      params.require(:metric_value).permit(:id, :dtime, :value)
+      params.require(:metric_value).permit(:id, :dtime, :value, :metric_id)
     end
 
 end
