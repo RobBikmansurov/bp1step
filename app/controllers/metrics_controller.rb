@@ -1,7 +1,7 @@
 class MetricsController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
-  before_action :set_metric, only: [:show, :edit, :update, :destroy, :values]
+  before_action :set_metric, only: [:show, :edit, :update, :destroy, :values, :new_value]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,9 +9,9 @@ class MetricsController < ApplicationController
   end
 
   def show
-    current_period_date = Date.today
-    if params[:month].presence
-      current_period_date = params[:month].to_date
+    @current_period_date = Date.today
+    if params[:date].presence
+      @current_period_date = params[:date].to_date
     end
     #graph_type = params[:mo].presence || 'day'
     #current_period_values = case graph_type
@@ -20,14 +20,14 @@ class MetricsController < ApplicationController
              #when 'day' then MetricValue.by_day_totals(@metric.id, current_period_date)
              #else {}
              #end
-    current_period_values = MetricValue.by_day_totals(@metric.id, current_period_date)
-    @prev_period_date = current_period_date - current_period_date.day
-    @next_period_date = current_period_date.end_of_month + 1
+    current_period_values = MetricValue.by_day_totals(@metric.id, @current_period_date)
+    @prev_period_date = @current_period_date - @current_period_date.day
+    @next_period_date = @current_period_date.end_of_month + 1
     if @next_period_date == (Date.today.end_of_month + 1)
       @next_period_date = nil
     end
-    values = MetricValue.where(:metric_id => @metric.id).group(:dtime).sum(:value)
-    @data = [ { name: current_period_date.strftime('%b %Y'), data: current_period_values } ]
+    #values = MetricValue.where(:metric_id => @metric.id).group(:dtime).sum(:value)
+    @data = [ { name: @current_period_date.strftime('%b %Y'), data: current_period_values } ]
     respond_with @data
   end
 
@@ -62,21 +62,31 @@ class MetricsController < ApplicationController
   end
 
   def values
-    current_period_date = Date.today
+    @current_period_date = Date.today
     if params[:date].presence
-      current_period_date = params[:date].to_date
+      @current_period_date = params[:date].to_date
     end
-    @prev_period_date = current_period_date - current_period_date.day
-    @next_period_date = current_period_date.end_of_month + 1
+    @prev_period_date = @current_period_date - @current_period_date.day
+    @next_period_date = @current_period_date.end_of_month + 1
     if @next_period_date == (Date.today.end_of_month + 1)
       @next_period_date = nil
     end
-    @values = MetricValue.where(:metric_id => @metric.id)
-    @datetime_format = case @metric.depth
+    @values = case @metric.depth  # список значений за выбранный период
+      when 1 then MetricValue.where(:metric_id => @metric.id).where(dtime: (@current_period_date.beginning_of_year..@current_period_date.end_of_year)).order(:dtime)
+      else MetricValue.where(:metric_id => @metric.id).where(dtime: (@current_period_date.beginning_of_month..@current_period_date.end_of_month)).order(:dtime)
+    end
+    @datetime_format = case @metric.depth  # формат отображения даты значений выбранного периода
       when 1 then '%Y'
       when 2 then '%b %Y'
       else '%d %m %Y'
     end
+  end
+
+  def new_value
+    @metric_value = MetricValue.new()  # заготовка для новго значения
+    @metric_value.metric_id = @metric.id
+    @metric_value.dtime = Date.today
+    render 'metric_values/new'
   end
 
   private
