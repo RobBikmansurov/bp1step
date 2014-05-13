@@ -18,14 +18,14 @@ class MetricValuesController < ApplicationController
 
   def destroy
     @metric_value.destroy
-    redirect_to metrics_url, notice: 'Metric value was successfully destroyed.'
+    redirect_to metric_url(@metric_value.metric_id) + '/values', notice: 'Metric value was successfully destroyed.'
   end
 
   def create
     @metric_value = MetricValue.new(metric_value_params)
 
     if @metric_value.save
-      redirect_to metric_url(@metric_value.metric_id), notice: 'Metric Value was successfully created.'
+      redirect_to metric_url(@metric_value.metric_id) + '/values', notice: 'Metric Value was successfully created.'
     else
       render action: 'new'
     end

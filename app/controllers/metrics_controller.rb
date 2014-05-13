@@ -20,12 +20,13 @@ class MetricsController < ApplicationController
              #when 'day' then MetricValue.by_day_totals(@metric.id, current_period_date)
              #else {}
              #end
-    #current_period_values = case @metric.id
-      #when 3 then MetricValue.by_day_totals(@metric.id, @current_period_date)
-      #when 2 then MetricValue.by_day_totals(@metric.id, @current_period_date)
-      #else MetricValue.by_month_totals(@metric.id, @current_period_date)
-    #end
-    current_period_values = MetricValue.by_day_totals(@metric.id, @current_period_date)
+    current_period_values = case @metric.depth
+      when 3 then MetricValue.by_day_totals(@metric.id, @current_period_date)
+      when 2 then MetricValue.by_month_totals(@metric.id, @current_period_date)
+      else MetricValue.by_year_totals(@metric.id, @current_period_date)
+    end
+    #current_period_values = MetricValue.by_day_totals(@metric.id, @current_period_date)
+    #current_period_values = MetricValue.by_month_totals(@metric.id, @current_period_date)
     @prev_period_date = @current_period_date - @current_period_date.day
     @next_period_date = @current_period_date.end_of_month + 1
     if @next_period_date == (Date.today.end_of_month + 1)
@@ -78,6 +79,7 @@ class MetricsController < ApplicationController
     end
     @values = case @metric.depth  # список значений за выбранный период
       when 1 then MetricValue.where(:metric_id => @metric.id).where(dtime: (@current_period_date.beginning_of_year..@current_period_date.end_of_year)).order(:dtime)
+      when 2 then MetricValue.where(:metric_id => @metric.id).where(dtime: (@current_period_date.beginning_of_year..@current_period_date.end_of_year)).order(:dtime)
       else MetricValue.where(:metric_id => @metric.id).where(dtime: (@current_period_date.beginning_of_month..@current_period_date.end_of_month)).order(:dtime)
     end
     @datetime_format = case @metric.depth  # формат отображения даты значений выбранного периода
