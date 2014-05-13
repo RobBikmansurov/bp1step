@@ -20,6 +20,11 @@ class MetricsController < ApplicationController
              #when 'day' then MetricValue.by_day_totals(@metric.id, current_period_date)
              #else {}
              #end
+    #current_period_values = case @metric.id
+      #when 3 then MetricValue.by_day_totals(@metric.id, @current_period_date)
+      #when 2 then MetricValue.by_day_totals(@metric.id, @current_period_date)
+      #else MetricValue.by_month_totals(@metric.id, @current_period_date)
+    #end
     current_period_values = MetricValue.by_day_totals(@metric.id, @current_period_date)
     @prev_period_date = @current_period_date - @current_period_date.day
     @next_period_date = @current_period_date.end_of_month + 1

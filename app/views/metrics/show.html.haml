@@ -13,10 +13,13 @@
 -#= link_to 'Месяцы года', metric_path({type: :month})   #, remote: true
 -#= link_to 'Дни месяца', metric_path({type: :day})     #, remote: true
 -#prev_period_date = Date.today - Date.today.day
-= link_to "< " + @prev_period_date.strftime('%b %Y'), metric_path({date: @prev_period_date.strftime('%Y-%m-01')}) if @prev_period_date
-= link_to @next_period_date.strftime('%b %Y') + ' >', metric_path({date: @next_period_date.strftime('%Y-%m-01')}) if @next_period_date
 
 = render partial: 'graph', locals: {data: @data}
+
+.apple_pagination
+  .pagination
+    = link_to "&#8592;&nbsp;".html_safe  + @prev_period_date.strftime('%b %Y'), metric_path({date: @prev_period_date.strftime('%Y-%m-01')}) if @prev_period_date
+    = link_to @next_period_date.strftime('%b %Y').html_safe + "&nbsp;&#8594;".html_safe , metric_path({date: @next_period_date.strftime('%Y-%m-01')}) if @next_period_date
 
 %h3
   -if @metric.bproce
@@ -32,7 +35,15 @@
   = '[' + @metric.note.to_s + ']'
 %br
 Глубина данных:
-= @metric.depth
+-if @metric.depth > 0
+  Год
+-if @metric.depth > 1
+  Месяц
+-if @metric.depth > 2
+  День
+-if @metric.depth > 3
+  Час
+
 
 .info_
   создан
