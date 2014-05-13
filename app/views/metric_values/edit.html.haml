@@ -1,0 +1,13 @@
+-title "Значение метрики"
+-search "Метрику"
+.id_
+  \#
+  =@metric_value.metric_id
+%h2
+  Значение метрики
+  = link_to @metric.name, @metric
+= render 'form'
+
+%p
+= link_to 'Show', @metric, :class => 'button'
+= link_to 'Back', :back, :class => 'button'

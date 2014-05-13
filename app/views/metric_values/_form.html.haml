@@ -1,0 +1,9 @@
+= simple_form_for(@metric_value) do |f|
+  = f.error_notification
+  = f.input :dtime, :as => :string, :input_html =>{:class=>'datepicker'}
+  = f.input :value
+  
+  %p
+  = f.button :submit
+
+

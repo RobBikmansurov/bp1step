@@ -13,8 +13,8 @@
 -#= link_to 'Месяцы года', metric_path({type: :month})   #, remote: true
 -#= link_to 'Дни месяца', metric_path({type: :day})     #, remote: true
 -#prev_period_date = Date.today - Date.today.day
-= link_to "< " + @prev_period_date.strftime('%b %Y'), metric_path({month: @prev_period_date.strftime('%Y-%m-01')}) if @prev_period_date
-= link_to @next_period_date.strftime('%b %Y') + ' >', metric_path({month: @next_period_date.strftime('%Y-%m-01')}) if @next_period_date
+= link_to "< " + @prev_period_date.strftime('%b %Y'), metric_path({date: @prev_period_date.strftime('%Y-%m-01')}) if @prev_period_date
+= link_to @next_period_date.strftime('%b %Y') + ' >', metric_path({date: @next_period_date.strftime('%Y-%m-01')}) if @next_period_date
 
 = render partial: 'graph', locals: {data: @data}
 
@@ -44,5 +44,5 @@
 %p
 - if can? :update, @metric
   = link_to 'Edit', edit_metric_path(@metric), :class => 'button'
-  = link_to 'Values', metric_path(@metric) + '/values', :class => 'button'
+  = link_to 'Values', metric_path(@metric) + '/values?' + 'date=' + @current_period_date.strftime('%Y-%m-01'), :class => 'button'
 = link_to 'Back', metrics_path, :class => 'button'
