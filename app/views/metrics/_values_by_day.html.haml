@@ -1,0 +1,18 @@
+%h3
+  Значения метрики за
+  -if @metric.depth <= 2
+    =@current_period_date.strftime('%Y')
+  -else
+    =@current_period_date.strftime('%b %Y')
+-@values.each do |value|
+  =link_to value.dtime.strftime(@datetime_format), edit_metric_value_path(value.id)
+  =value.value
+  -#=link_to 'delete', edit_metric_value_path(value.id)
+
+  =link_to image_tag('action_stop.gif', :alt => 'Удалить'), value, data: { confirm: 'Значение за ' + value.dtime.strftime(@datetime_format) + " = " + value.value.to_s + "\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
+  %br
+
+.apple_pagination
+  .pagination
+    = link_to "&#8592;&nbsp;".html_safe  + @prev_period_date.strftime('%b %Y'), metric_path(@metric) + '/values?' + 'date=' + @prev_period_date.strftime('%Y-%m-01'), :class => 'previous_page' if @prev_period_date
+    = link_to @next_period_date.strftime('%b %Y').html_safe + "&nbsp;&#8594;".html_safe ,  metric_path(@metric) + '/values?' + 'date=' + @next_period_date.strftime('%Y-%m-01'), :class => 'next_page' if @next_period_date
