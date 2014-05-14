@@ -9,9 +9,13 @@ class MetricsController < ApplicationController
   end
 
   def show
-    @current_period_date = Date.today
+    @current_period_date = Date.today # по умолчанию - текущий период
     if params[:date].presence
       @current_period_date = params[:date].to_date
+    end
+    @current_depth = @metric.depth - 1  # по умолчанию график с группировкой значений
+    if params[:depth].presence
+      @current_depth = params[:depth]
     end
     #graph_type = params[:mo].presence || 'day'
     #current_period_values = case graph_type
@@ -20,9 +24,9 @@ class MetricsController < ApplicationController
              #when 'day' then MetricValue.by_day_totals(@metric.id, current_period_date)
              #else {}
              #end
-    current_period_values = case @metric.depth
-      when 3 then MetricValue.by_day_totals(@metric.id, @current_period_date)
-      when 2 then MetricValue.by_month_totals(@metric.id, @current_period_date)
+    current_period_values = case @current_depth.to_i
+      when 2 then MetricValue.by_day_totals(@metric.id, @current_period_date)
+      when 1 then MetricValue.by_month_totals(@metric.id, @current_period_date)
       else MetricValue.by_year_totals(@metric.id, @current_period_date)
     end
     #current_period_values = MetricValue.by_day_totals(@metric.id, @current_period_date)

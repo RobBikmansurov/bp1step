@@ -36,14 +36,19 @@
 %br
 Глубина данных:
 -if @metric.depth > 0
-  Год
+  -if @current_depth = 1
+    = link_to 'Год', metric_path({date: @current_period_date.strftime('%Y-%m-01'), :depth => '1'})
+  -else
+    Год
 -if @metric.depth > 1
-  Месяц
+  -if !@current_depth = '2'
+    = link_to 'Месяц', metric_path({date: @current_period_date.strftime('%Y-%m-01'), :depth => '1'})
+  -else
+    Месяц
 -if @metric.depth > 2
   День
 -if @metric.depth > 3
   Час
-
 
 .info_
   создан
