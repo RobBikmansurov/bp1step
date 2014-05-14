@@ -41,7 +41,7 @@
   -else
     Год
 -if @metric.depth > 1
-  -if !@current_depth = '2'
+  -if @current_depth = '2'
     = link_to 'Месяц', metric_path({date: @current_period_date.strftime('%Y-%m-01'), :depth => '1'})
   -else
     Месяц
