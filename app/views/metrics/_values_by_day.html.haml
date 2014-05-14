@@ -1,16 +1,33 @@
 %h3
   Значения метрики за
-  -if @metric.depth <= 2
-    =@current_period_date.strftime('%Y')
-  -else
-    =@current_period_date.strftime('%b %Y')
--@values.each do |value|
-  =link_to value.dtime.strftime(@datetime_format), edit_metric_value_path(value.id)
-  =value.value
-  -#=link_to 'delete', edit_metric_value_path(value.id)
+  =@current_period_date.strftime('%b %Y')
 
-  =link_to image_tag('action_stop.gif', :alt => 'Удалить'), value, data: { confirm: 'Значение за ' + value.dtime.strftime(@datetime_format) + " = " + value.value.to_s + "\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
-  %br
+%table
+  %tr
+    %th=@current_period_date.strftime('%Y')
+    -(@current_period_date.beginning_of_month.day..@current_period_date.end_of_month.day).each do | d |
+      %th{ :style => "width:10%" }
+        =d
+  %tr
+    %td=@metric.shortname
+    -d = 1
+    -@values.each do |value|
+      -if value.dtime.day > d
+        -(d..value.dtime.day - 1).each do |dm|
+          %td
+            = link_to "+" , metric_path(@metric) + '/new_value'
+          -d = value.dtime.day
+      %td
+        =link_to value.dtime.strftime(@datetime_format), edit_metric_value_path(value.id)
+        =value.value
+        =link_to image_tag('action_stop.gif', :alt => 'Удалить'), value, data: { confirm: 'Значение за ' + value.dtime.strftime(@datetime_format) + " = " + value.value.to_s + "\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
+      -d = d + 1
+
+    -if d < @current_period_date.end_of_month.day
+      -(d..@current_period_date.end_of_month.day).each do |dm|
+        %td
+          = link_to "+" , metric_path(@metric) + '/new_value'
+
 
 .apple_pagination
   .pagination
