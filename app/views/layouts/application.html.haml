@@ -50,7 +50,9 @@
               =link_to "Процессы", bproces_path
               %ul.nav
                 =nav_link "Процессы", bproces_path
-                =nav_link "Метрики", metrics_path
+                - if user_signed_in?
+                  -if can? :manage, Metric
+                    =nav_link "Метрики", metrics_path
             =content_tag(:li, :class => nav_current(business_roles_path)) do
               =link_to "Ресурсы", business_roles_path
               %ul.nav
