@@ -49,9 +49,9 @@
             =content_tag(:li, :class => nav_current(bproces_path)) do
               =link_to "Процессы", bproces_path
               %ul.nav
-                =nav_link "Процессы", bproces_path
                 - if user_signed_in?
                   -if can? :manage, Metric
+                    =nav_link "Процессы", bproces_path
                     =nav_link "Метрики", metrics_path
             =content_tag(:li, :class => nav_current(business_roles_path)) do
               =link_to "Ресурсы", business_roles_path
@@ -64,7 +64,9 @@
               =link_to "Документы", documents_path
               %ul
                 =nav_link "Документы", documents_path
-                =nav_link "Договоры", "#"
+                - if user_signed_in?
+                  -if can? :manage, Metric
+                    =nav_link "Договоры", contracts_path
                 =nav_link "Директивы", directives_path
                 =nav_link 'Термины', terms_path
             =nav_link "Сотрудники", users_path

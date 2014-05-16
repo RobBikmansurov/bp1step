@@ -1,0 +1,14 @@
+-title "Договор №" + @contract.number
+-search "Договор" 
+.id_
+  \#
+  = @contract.id
+%h2 Договор
+
+= render 'form'
+-#= render 'form_bproce_link'
+
+%p
+-#= link_to 'XML', document_path(@document, :format => :xml), :class => 'button'
+= link_to 'Show', contract_path(@contract), :class => 'button'
+= link_to 'Back', contracts_path, :class => 'button'

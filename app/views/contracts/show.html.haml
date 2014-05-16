@@ -1,0 +1,39 @@
+-title 'Договор ' + @contract.shortname
+-search "Договор"
+.id_
+  \#
+  = @contract.id
+%h2
+  Договор №
+  %b=@contract.number
+  от
+  %b=@contract.date_begin.strftime('%d.%m.%Y')
+  =@contract.name
+%h3
+  Статус
+  %b= @contract.status
+%h3 Описание
+= @contract.description
+
+%h3 Краткое содержание
+= @contract.text
+%h3 Примечание
+= @contract.note
+
+%p
+
+%h3
+  Ответственный за договор:
+  = link_to @contract.owner_name, user_path(@contract.owner.id) if @contract.owner_id?
+
+.info_
+  создан
+  = @contract.created_at.strftime('%d.%m.%Y %H:%M:%S') if @contract.created_at
+  %br
+  изменен
+  = @contract.updated_at.strftime('%d.%m.%Y %H:%M:%S') if @contract.updated_at
+
+%p
+- if can? :update, @contract
+  = link_to 'Edit', edit_contract_path(@contract), :class => 'button'
+= link_to 'Back', contract_path, :class => 'button'
