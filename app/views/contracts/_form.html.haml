@@ -1,0 +1,15 @@
+= simple_form_for(@contract) do |f|
+  = f.error_notification
+
+  = f.input :number
+  = f.input :name
+  = f.label 'Ответственный за документ'
+  = f.autocomplete_field :owner_name, autocomplete_users_path
+  = f.input :status, :collection => %w[Утвержден Проект Согласование НеДействует], :prompt => 'Статус документа', :input_html => { :value => 'Утвержден'}
+  = f.input :date_begin, :as => :string, :input_html =>{:class=>'datepicker'}
+  = f.input :date_end, :as => :string, :input_html =>{:class=>'datepicker'}
+  = f.input :description
+  = f.input :text
+  = f.input :note
+
+  = f.button :submit

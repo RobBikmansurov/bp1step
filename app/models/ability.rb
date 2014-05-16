@@ -34,6 +34,7 @@ class Ability
         can :update, Bproce, :user_id => user.id  # процесс владельца
         can :manage, BusinessRole  # роли в процессе владельца
         can :manage, Metric
+        can :manage, Contract
       end
 
       if user.has_role? :analitic
