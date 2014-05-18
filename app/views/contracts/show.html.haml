@@ -33,7 +33,7 @@
     Процесс:
     - @contract.bproce_contract.each do |bproce_contract|
       = link_to bproce_contract.bproce.name, bproce_path(bproce_contract.bproce)
-      -if can? :update, contract
+      -if can? :update, Contract
         = link_to '( ' + bproce_contract.purpose.to_s + ' )', edit_bproce_contract_path(bproce_contract)
       -else
         = '( ' + bproce_contract.purpose.to_s + ' )'
