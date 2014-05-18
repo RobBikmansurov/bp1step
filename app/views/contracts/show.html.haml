@@ -27,6 +27,21 @@
   Ответственный за договор:
   = link_to @contract.owner_name, user_path(@contract.owner.id) if @contract.owner_id?
 
+%p
+- if !@contract.bproce.blank?  # есть ссылки из договора на процессы?
+  %h3 
+    Процесс:
+    - @contract.bproce_contract.each do |bproce_contract|
+      = link_to bproce_contract.bproce.name, bproce_path(bproce_contract.bproce)
+      -if can? :update, contract
+        = link_to '( ' + bproce_contract.purpose.to_s + ' )', edit_bproce_contract_path(bproce_contract)
+      -else
+        = '( ' + bproce_contract.purpose.to_s + ' )'
+
+-else
+  %h3 Процесс не назначен!
+
+
 .info_
   создан
   = @contract.created_at.strftime('%d.%m.%Y %H:%M:%S') if @contract.created_at

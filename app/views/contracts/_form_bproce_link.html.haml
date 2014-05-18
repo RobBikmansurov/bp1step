@@ -1,0 +1,21 @@
+-if @contract.id? # ну какие ссылки на процессы для нового договора
+  %h3 Относится к следующим процессам:
+  - @contract.bproce_contract.each do |bproce_contract|
+    - if bproce_contract.bproce_id
+      = link_to bproce_contract.bproce.name, bproce_path(bproce_contract.bproce)
+      (
+      = bproce_contract.purpose
+      )
+      -if can? :update, @contract
+        =link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce_contract, data: { confirm: bproce_contract.bproce.name + "\nДействительно хотите удалить договор из этого процесса?" }, :method => 'delete', class: 'button-img' if bproce_contract.bproce
+%br
+  = simple_form_for(@bproce_contract) do |ff|
+    = ff.error_notification
+    = ff.hidden_field :contract_id
+    = ff.hidden_field :bproce_id
+    = ff.label 'Процесс'
+    = ff.autocomplete_field :bproce_name, autocomplete_bproces_path, :id_elements => '#bproce_contract_bproce_id', :placeholder => 'подстрока в наименовании', :data => { :no_matches_label => '333' }
+    = ff.input :purpose, :hint => 'Укажите назначение Договора в выбранном процессе'
+    = ff.error :base
+    = ff.button :submit, 'Связать с процессом'
+-#=debug params

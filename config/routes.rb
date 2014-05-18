@@ -1,18 +1,12 @@
 BPDoc::Application.routes.draw do
-  resources :contracts do
-    member do
-      get :approval_sheet # Лист согласования
-    end
-  end
-  resources :document_directives
-  resources :directives do
-    resources :documents  # документы на основании директивы
-    get :autocomplete, :on => :collection
-  end
   resources :bapps, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
   resources :bproces, :only => :autocomlete do
+    get :autocomplete, :on => :collection
+  end
+  resources :directives do
+    resources :documents  # документы на основании директивы
     get :autocomplete, :on => :collection
   end
   resources :iresources, :only => :autocomlete do
@@ -26,11 +20,11 @@ BPDoc::Application.routes.draw do
   end
   resources :activities
   resources :bapps
-  resources :bproce_workplaces, :only => [:create, :destroy, :show]
+  resources :bproce_bapps, :only => [:create, :destroy, :show, :edit, :update]
   resources :bproce_documents, :except => :index
   resources :bproce_business_roles, :only => [:show]
   resources :bproce_iresources, :only => [:new, :create, :destroy, :show, :edit, :update]
-  resources :bproce_bapps, :only => [:create, :destroy, :show, :edit, :update]
+  resources :bproce_workplaces, :only => [:create, :destroy, :show]
   resources :bproces do
     resources :bapps, :documents
     collection do
@@ -46,6 +40,14 @@ BPDoc::Application.routes.draw do
       get :newmetric  # добавить новую метрику в процесс
     end
   end
+  resources :bproce_contracts, :except => :index
+  resources :contracts do
+    member do
+      get :approval_sheet # Лист согласования
+    end
+  end
+  resources :document_directives
+
   resources :metrics do
     member do
       get :values
@@ -59,7 +61,6 @@ BPDoc::Application.routes.draw do
   #get 'tags/:tag', to: 'bproces#index', as: :tag
   #get 'tags', to: 'bproces#index'
   resources :business_roles
-  resources :categories
   resources :documents do
     member do
       get :file_create
