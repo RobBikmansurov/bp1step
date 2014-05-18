@@ -3,9 +3,9 @@
 
   = f.input :number
   = f.input :name
-  = f.label 'Ответственный за документ'
+  = f.label 'Ответственный'
   = f.autocomplete_field :owner_name, autocomplete_users_path
-  = f.input :status, :collection => %w[Утвержден Проект Согласование НеДействует], :prompt => 'Статус документа', :input_html => { :value => 'Утвержден'}
+  = f.input :status, :collection => %w[Действует Согласование НеДействует], :prompt => 'Статус дооговора', :input_html => { :value => 'Согласование'}
   = f.input :date_begin, :as => :string, :input_html =>{:class=>'datepicker'}
   = f.input :date_end, :as => :string, :input_html =>{:class=>'datepicker'}
   = f.input :description

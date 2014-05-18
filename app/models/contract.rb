@@ -2,16 +2,16 @@ class Contract < ActiveRecord::Base
   validates :number, :presence => true,
                    :length => {:minimum => 1, :maximum => 20}
   validates :name, :presence => true,
-                   :length => {:minimum => 5, :maximum => 50}
+                   :length => {:minimum => 3, :maximum => 50}
   validates :description, :presence => true,
                           :length => {:minimum => 8, :maximum => 255}
-  #validates :owner_id, :presence => true
-
+  validates :status, :presence => true,
+                          :length => {:minimum => 5, :maximum => 15}
 
   belongs_to :owner_id
   belongs_to :user
   belongs_to :owner, :class_name => 'User'
-  has_many :bproce, through: :bproce_document
+  has_many :bproce, through: :bproce_contract
   has_many :bproce_contract, dependent: :destroy 
 
   attr_accessible  :owner_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note
