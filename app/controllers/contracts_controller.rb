@@ -1,6 +1,6 @@
 class ContractsController < ApplicationController
   helper_method :sort_column, :sort_direction
-  before_action :set_contract, only: [:show, :edit, :update, :destroy]
+  before_action :set_contract, only: [:show, :edit, :update, :destroy, :approval_sheet]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -15,7 +15,7 @@ class ContractsController < ApplicationController
   def new
     @contract = Contract.new
     @contract.date_begin = Date.today
-    @contract.status = "Проект"
+    @contract.status = "Согласование"
   end
 
   # GET /contracts/1/edit
@@ -48,7 +48,52 @@ class ContractsController < ApplicationController
     redirect_to contracts_url, notice: 'Contract was successfully destroyed.'
   end
 
+  def approval_sheet
+      approval_sheet_odt
+  end
+
   private
+
+  def approval_sheet_odt    # Лист согласования
+    report = ODFReport::Report.new("reports/approval-sheet-contract.odt") do |r|
+      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
+      r.add_field "REPORT_DATE1", (Date.today + 10.days).strftime('%d.%m.%Y')
+      r.add_field :id, @contract.id
+      r.add_field :number, @contract.number
+      r.add_field :name, @contract.name
+      r.add_field :description, @contract.description
+      r.add_field :owner, @contract.owner_name
+      rr = 0
+      if !@contract.bproce.blank?  # есть ссылки из документа на другие процессы?
+        r.add_field :bp, "Относится к процессам:"
+        r.add_table("BPROCS", @contract.bproce_contract.all, :header => false, :skip_if_empty => true) do |t|
+          t.add_column(:rr) do |n1| # порядковый номер строки таблицы
+            rr += 1
+          end
+          t.add_column(:process_name) do |bp|
+            bp.bproce.name
+          end
+          t.add_column(:process_id) do |bp|
+            bp.bproce.id
+          end
+          t.add_column(:process_owner) do |bp|
+            bp.bproce.user_name
+          end
+        end
+      else
+        r.add_field :bp, "Процесс не назначен!"
+      end
+      #r.add_field "ORDERNUM", Date.today.strftime('%Y%m%d-с') + @usr.id.to_s
+      #r.add_field :displayname, @usr.displayname
+      r.add_field :user_position, current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    report_file_name = report.generate
+    send_file(report_file_name,
+      :type => 'application/msword',
+      :filename => "approval-sheet.odt",
+      :disposition => 'inline' )
+  end
     # Use callbacks to share common setup or constraints between actions.
     def set_contract
       @contract = Contract.find(params[:id])

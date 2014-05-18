@@ -10,9 +10,9 @@
     %th= sortable "date_begin", "От"
     %th= sortable "status", "Статус"
     %th= sortable "status", "Контрагент"
-    -if can? :update, @contracts
+    -if can? :update, Contract
       %th
-    -if can? :destroy, @contracts
+    -if can? :destroy, Contract
       %th
     
   - @contracts.each do |contract|
@@ -20,8 +20,9 @@
       %td= contract.id
       %td
         = link_to contract.shortname, contract_path(contract)
-      %td= contract.status
       %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
+      %td= contract.status
+      %td
       -if can? :update, contract
         %td
           = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_contract_path(contract), class: 'button-img'

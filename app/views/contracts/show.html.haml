@@ -5,10 +5,11 @@
   = @contract.id
 %h2
   Договор №
-  %b=@contract.number
+  %b
+    =@contract.number
+    =@contract.name
   от
   %b=@contract.date_begin.strftime('%d.%m.%Y')
-  =@contract.name
 %h3
   Статус
   %b= @contract.status
@@ -37,3 +38,6 @@
 - if can? :update, @contract
   = link_to 'Edit', edit_contract_path(@contract), :class => 'button'
 = link_to 'Back', contract_path, :class => 'button'
+-if @contract.status
+  -if @contract.status == 'Проект' or @contract.status == 'Согласование'
+    = link_to 'Лист согласования', approval_sheet_contract_path(@contract), :class => 'button' if can? :update, Contract
