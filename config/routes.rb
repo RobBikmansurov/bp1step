@@ -1,5 +1,9 @@
 BPDoc::Application.routes.draw do
-  resources :contracts
+  resources :contracts do
+    member do
+      get :approval_sheet # Лист согласования
+    end
+  end
   resources :document_directives
   resources :directives do
     resources :documents  # документы на основании директивы
