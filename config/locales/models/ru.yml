@@ -45,6 +45,12 @@ ru:
         purpose: Назначение в процессе
       bproce_iresource:
         rpurpose: Назначение в процессе
+      contract:
+        number: Номер
+        name: Тема
+        status: Статус
+        date_begin: Дата начала
+        date_end: Дата завершения
       directive:
         title: Тип директивы
         number: Номер

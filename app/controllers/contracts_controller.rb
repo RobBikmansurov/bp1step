@@ -7,22 +7,19 @@ class ContractsController < ApplicationController
     @contracts = Contract.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end
 
-  # GET /contracts/1
   def show
   end
 
-  # GET /contracts/new
   def new
     @contract = Contract.new
     @contract.date_begin = Date.today
     @contract.status = "Согласование"
   end
 
-  # GET /contracts/1/edit
   def edit
+    @bproce_contract = @contract.bproce_contract.new # заготовка для новой связи с процессом
   end
 
-  # POST /contracts
   def create
     @contract = Contract.new(contract_params)
 
@@ -33,7 +30,6 @@ class ContractsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /contracts/1
   def update
     if @contract.update(contract_params)
       redirect_to @contract, notice: 'Contract was successfully updated.'
@@ -42,7 +38,6 @@ class ContractsController < ApplicationController
     end
   end
 
-  # DELETE /contracts/1
   def destroy
     @contract.destroy
     redirect_to contracts_url, notice: 'Contract was successfully destroyed.'
