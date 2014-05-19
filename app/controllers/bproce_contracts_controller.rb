@@ -27,9 +27,9 @@ class BproceContractsController < ApplicationController
   def destroy
     contract = @bproce_contract.contract
     if contract.bproce.count > 1
-      flash[:notice] = "Successfully destroyed bproce_contract." if @bproce_contract.destroy
+      flash[:notice] = "Доовор удален из процесса." if @bproce_contract.destroy
     else
-      flash[:alert] = "Error destroyed bproce_contract."
+      flash[:alert] = "Отмена удаления: Договор должен ссылаться хотя бы на один процесс."
     end
     if !@bproce.blank?
       respond_with(@bproce)
