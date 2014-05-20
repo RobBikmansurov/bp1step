@@ -1,18 +1,46 @@
+-title 'Контрагент ' + @agent.name
+-search "Контрагент"
+.id_
+  \#
+  = @agent.id
 %p#notice= notice
+%h2
+  Контрагент 
+  %b= @agent.name
+  -if !@agent.town.blank?
+    г.
+    %b= @agent.town
+%h3Адрес:
+= @agent.address
+%h3Контакты:
+= @agent.contacts
+
+-if @contracts.count > 0
+  %h3Договоры с контрагентом:
+  %table
+    %tr
+      %th #
+      %th Номер
+      %th От
+      %th Статус
+      
+    - @contracts.each do |contract|
+      %tr
+        %td= contract.id
+        %td
+          = link_to contract.shortname, contract_path(contract)
+        %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
+        %td= contract.status
+
+
+.info_
+  создан
+  = @agent.created_at.strftime('%d.%m.%Y %H:%M:%S')
+  %br
+  изменен
+  = @agent.updated_at.strftime('%d.%m.%Y %H:%M:%S')
 
 %p
-  %b Name:
-  = @agent.name
-%p
-  %b Town:
-  = @agent.town
-%p
-  %b Address:
-  = @agent.address
-%p
-  %b Contacts:
-  = @agent.contacts
-
-= link_to 'Edit', edit_agent_path(@agent)
-\|
-= link_to 'Back', agents_path
+-if can? :update, Agent
+  = link_to 'Edit', edit_agent_path(@agent), :class => 'button'
+= link_to 'Back', agents_path, :class => 'button'

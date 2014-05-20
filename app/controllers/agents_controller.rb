@@ -6,8 +6,8 @@ class AgentsController < ApplicationController
     @agents = Agent.all
   end
 
-  # GET /agents/1
   def show
+    @contracts = Contract.where(:agent_id => @agent.id).order(:date_begin)
   end
 
   # GET /agents/new

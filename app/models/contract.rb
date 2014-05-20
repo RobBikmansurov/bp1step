@@ -7,6 +7,7 @@ class Contract < ActiveRecord::Base
                           :length => {:minimum => 8, :maximum => 255}
   validates :status, :presence => true,
                           :length => {:minimum => 5, :maximum => 15}
+  #validates :owner_id, presence: :true
 
   belongs_to :owner_id
   belongs_to :agent
