@@ -9,7 +9,9 @@
   = f.input :date_begin, :as => :string, :input_html =>{:class=>'datepicker'}
   = f.input :date_end, :as => :string, :input_html =>{:class=>'datepicker'}
   = f.input :description
-  = f.input :text
+  -#= f.input :text
   = f.input :note
+  = f.input :condition
+  = f.input :check
 
   = f.button :submit

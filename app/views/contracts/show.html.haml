@@ -13,16 +13,21 @@
 %h3
   Статус
   %b= @contract.status
-%h3 Описание
+%h3 О чем (краткое описание)
 = @contract.description
+-#%h3 Краткое содержание
+-#= @contract.text
+-if !@contract.note.blank?
+  %h3 Примечание
+  = @contract.note
+-if !@contract.condition.blank?
+  %h3 Условие окончания/продления
+  = @contract.condition
+-if !@contract.check.blank?
+  %h3 Контроль исполнения
+  = @contract.check
 
-%h3 Краткое содержание
-= @contract.text
-%h3 Примечание
-= @contract.note
-
-%p
-
+%hr
 %h3
   Ответственный за договор:
   = link_to @contract.owner_name, user_path(@contract.owner.id) if @contract.owner_id?

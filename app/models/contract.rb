@@ -14,7 +14,7 @@ class Contract < ActiveRecord::Base
   has_many :bproce, through: :bproce_contract
   has_many :bproce_contract, dependent: :destroy 
 
-  attr_accessible  :owner_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note
+  attr_accessible  :owner_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check
 
 
   include PublicActivity::Model

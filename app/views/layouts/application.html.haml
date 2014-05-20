@@ -62,7 +62,7 @@
                 =nav_link "Инф.ресурсы", iresources_path
             =content_tag(:li, :class => nav_current(bproces_path)) do
               =link_to "Документы", documents_path
-              %ul
+              %ul.nav
                 =nav_link "Документы", documents_path
                 - if user_signed_in?
                   -if can? :manage, Metric
