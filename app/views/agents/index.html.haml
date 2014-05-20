@@ -12,11 +12,10 @@
 
   - @agents.each do |agent|
     %tr
-      %td= agent.name
+      %td= link_to agent.name, agent
       %td= agent.town
       %td= agent.address
       %td= agent.contacts
-      %td= link_to 'Show', agent
       %td= link_to 'Edit', edit_agent_path(agent)
       %td= link_to 'Destroy', agent, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
