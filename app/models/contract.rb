@@ -10,12 +10,13 @@ class Contract < ActiveRecord::Base
 
   belongs_to :owner_id
   belongs_to :agent
+  belongs_to :agent_id
   belongs_to :user
   belongs_to :owner, :class_name => 'User'
   has_many :bproce, through: :bproce_contract
   has_many :bproce_contract, dependent: :destroy 
 
-  attr_accessible  :owner_name, :agent_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check
+  attr_accessible  :owner_name, :agent_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :agent_id
 
 
   include PublicActivity::Model

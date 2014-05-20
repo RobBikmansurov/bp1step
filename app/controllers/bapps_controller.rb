@@ -61,7 +61,7 @@ class BappsController < ApplicationController
   end
 
   def autocomplete
-    @bapps = Bapp.order(:name).where("description like ? or name like ?", "%#{params[:term]}%", "%#{params[:term]}%")
+    @bapps = Bapp.order(:name).where("description ilike ? or name like ?", "%#{params[:term]}%", "%#{params[:term]}%")
     render json: @bapps.map(&:name)
   end
 

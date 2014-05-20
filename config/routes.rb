@@ -1,6 +1,4 @@
 BPDoc::Application.routes.draw do
-  resources :agents
-
   resources :agents, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
@@ -24,6 +22,7 @@ BPDoc::Application.routes.draw do
     get :autocomplete, :on => :collection
   end
   resources :activities
+  resources :agents
   resources :bapps
   resources :bproce_bapps, :only => [:create, :destroy, :show, :edit, :update]
   resources :bproce_documents, :except => :index
