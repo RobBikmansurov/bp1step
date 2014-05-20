@@ -51,6 +51,10 @@ ru:
         status: Статус
         date_begin: Дата начала
         date_end: Дата завершения
+        note: Примечания
+        description: О чем
+        condition: Условия окончания
+        check: Контроль исполнения
       directive:
         title: Тип директивы
         number: Номер
