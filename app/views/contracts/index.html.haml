@@ -1,7 +1,12 @@
 -search "Договор" 
 -title "Каталог Договоров"
 
-%h2 Список договоров
+%h2
+  Список договоров
+  -if params[:search].present?
+    [ 
+    = params[:search]
+    ]
 
 %table
   %tr

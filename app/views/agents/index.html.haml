@@ -1,0 +1,25 @@
+%h1 Listing agents
+
+%table
+  %tr
+    %th Name
+    %th Town
+    %th Address
+    %th Contacts
+    %th
+    %th
+    %th
+
+  - @agents.each do |agent|
+    %tr
+      %td= agent.name
+      %td= agent.town
+      %td= agent.address
+      %td= agent.contacts
+      %td= link_to 'Show', agent
+      %td= link_to 'Edit', edit_agent_path(agent)
+      %td= link_to 'Destroy', agent, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Agent', new_agent_path

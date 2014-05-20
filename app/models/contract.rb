@@ -9,17 +9,25 @@ class Contract < ActiveRecord::Base
                           :length => {:minimum => 5, :maximum => 15}
 
   belongs_to :owner_id
+  belongs_to :agent
   belongs_to :user
   belongs_to :owner, :class_name => 'User'
   has_many :bproce, through: :bproce_contract
   has_many :bproce_contract, dependent: :destroy 
 
-  attr_accessible  :owner_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check
+  attr_accessible  :owner_name, :agent_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check
 
 
   include PublicActivity::Model
   tracked owner: Proc.new { |controller, model| controller.current_user }
 
+  def agent_name
+    agent.try(:name)
+  end
+
+  def agent_name=(name)
+    self.agent = Agent.find_by_name(name) if name.present?
+  end
   def owner_name
     owner.try(:displayname)
   end
@@ -34,7 +42,7 @@ class Contract < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search.to_i}")
+      where('name ILIKE ? or number ILIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search.to_i}")
     else
       where(nil)
     end

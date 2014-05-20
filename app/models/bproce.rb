@@ -16,15 +16,16 @@ class Bproce < ActiveRecord::Base
   acts_as_nested_set
   attr_accessible :shortname, :name, :fullname, :goal, :description, :user_name, :parent_id, :tag_list, :tag_id, :context, :taggable
 
-  has_many :documents, through: :bproce_documents
-  has_many :bproce_documents, dependent: :destroy 
-  has_many :business_roles, :dependent => :destroy
-  has_many :bproce_bapps, :dependent => :destroy
   has_many :bapps, :through => :bproce_bapps, :dependent => :destroy
-  has_many :bproce_workplaces, :dependent => :destroy
-  has_many :workplaces, :through => :bproce_workplaces
+  has_many :bproce_bapps, :dependent => :destroy
+  has_many :bproce_documents, dependent: :destroy 
   has_many :bproce_iresource, :dependent => :destroy
+  has_many :bproce_workplaces, :dependent => :destroy
+  has_many :business_roles, :dependent => :destroy
+  has_many :contracts, through: :bproce_contract
+  has_many :documents, through: :bproce_documents
   has_many :iresource, :through => :bproce_iresource
+  has_many :workplaces, :through => :bproce_workplaces
   belongs_to :bproce
   belongs_to :user  # владелец процессв
 
