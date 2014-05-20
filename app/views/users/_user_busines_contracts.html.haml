@@ -1,0 +1,10 @@
+- if @contracts.count > 0
+  %h3
+    Отвечает за 
+    = link_to 'договоры:', contracts_path + '?user=' + @usr.id.to_s
+  %ol
+    - @contracts.each do |contract|
+      %li
+        = link_to contract.shortname, contract_path(contract)
+        = ' от ' + contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
+        = contract.status
