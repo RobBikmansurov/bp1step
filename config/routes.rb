@@ -1,4 +1,9 @@
 BPDoc::Application.routes.draw do
+  resources :agents
+
+  resources :agents, :only => :autocomlete do
+    get :autocomplete, :on => :collection
+  end
   resources :bapps, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
