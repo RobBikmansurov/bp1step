@@ -46,7 +46,7 @@ class AgentsController < ApplicationController
   end
 
   def autocomplete
-    @agents = Agent.order(:name).where("name like ?", "%#{params[:term]}%")
+    @agents = Agent.order(:name).where("name ilike ?", "%#{params[:term]}%")
     render json: @agents.map(&:name)
   end
 
