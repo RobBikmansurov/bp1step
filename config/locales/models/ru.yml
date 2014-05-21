@@ -1,6 +1,7 @@
 ru:
   activerecord:
     models:
+      agent: Контрагент
       bapp: Приложение
       bproce: Процесс
       bproce_bapp: Приложение Процесса
@@ -8,9 +9,12 @@ ru:
       bproce_workplace: Рабочее место Процесса
       bproce_iresource: Ресурс Процесса
       business_role: Роль
+      contract: Договор
       document: Документ
       directive: Директива
       iresource: Ресурс
+      metric: Метрика
+      metric_value: Значение метрики
       role: Роль
       staff: Сотрудник
       term: Термин
@@ -18,6 +22,11 @@ ru:
       user: Пользователь
       user_business_role: Исполнитель
     attributes:
+      agent:
+        name: Наименование
+        town: Город
+        address: Адрес
+        contacts: Контакты
       bapp:
         name: Название
         apptype: Тип приложения

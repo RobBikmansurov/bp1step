@@ -23,14 +23,15 @@ class Contract < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: Proc.new { |controller, model| controller.current_user }
 
-  def agent_name
+  def agent_name    # Контрагент
     agent.try(:name)
   end
 
   def agent_name=(name)
     self.agent = Agent.find_by_name(name) if name.present?
   end
-  def owner_name
+  
+  def owner_name    # ответственный за документ
     owner.try(:displayname)
   end
 
@@ -49,6 +50,5 @@ class Contract < ActiveRecord::Base
       where(nil)
     end
   end
-
 
 end

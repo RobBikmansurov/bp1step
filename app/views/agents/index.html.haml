@@ -1,24 +1,38 @@
-%h1 Listing agents
+-search "Контрагент" 
+-title "Список контрагентов"
+
+%h2
+  Список контрагентов
+  -if params[:search].present?
+    [ 
+    = params[:search]
+    ]
 
 %table
   %tr
-    %th Name
-    %th Town
-    %th Address
-    %th Contacts
-    %th
-    %th
-    %th
-
+    %th #
+    -#= sortable 'id', "#"
+    %th Наименование
+    -#= sortable 'name', "Наименование"
+    %th Контакты
+    -if can? :update, Agent
+      %th
+    -if can? :destroy, Agent
+      %th
   - @agents.each do |agent|
     %tr
+      %td= agent.id
       %td= link_to agent.name, agent
-      %td= agent.town
       %td= agent.address
       %td= agent.contacts
-      %td= link_to 'Edit', edit_agent_path(agent)
-      %td= link_to 'Destroy', agent, :method => :delete, :data => { :confirm => 'Are you sure?' }
+      - if can? :manage, agent
+        %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_agent_path(agent), class: 'button-img'
+      - if can? :destroy, agent
+        %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), agent, data: { confirm: 'Контрагент"' + agent.name + "\"\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
 
-%br
+.apple_pagination
+  = will_paginate @agents
 
-= link_to 'New Agent', new_agent_path
+%p
+- if can? :destroy, Agent
+  = link_to "Добавить Контрагента" , new_agent_path, :class => 'button'

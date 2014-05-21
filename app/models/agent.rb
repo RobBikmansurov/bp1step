@@ -14,7 +14,7 @@ class Agent < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('name ILIKE ? or number ILIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search.to_i}")
+      where('name ILIKE ? or contacts ILIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search.to_i}")
     else
       where(nil)
     end

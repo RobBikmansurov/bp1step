@@ -34,12 +34,12 @@ class Ability
         can :update, Bproce, :user_id => user.id  # процесс владельца
         can :manage, BusinessRole  # роли в процессе владельца
         can :manage, Metric
-        can :manage, Contract
+        can :manage, [Contract, Agent]
       end
 
       if user.has_role? :analitic
         can [:update, :create], Document
-        can :manage, [Bproce, Bapp, BusinessRole, BproceBapp, Term, Contract]
+        can :manage, [Bproce, Bapp, BusinessRole, BproceBapp, Term, Contract, Agent]
         can :manage_tag, [Bproce] # может редактировать теги процессов
         can :edit_document, [Document]  # может брать исходник документа
         can :manage, Metric

@@ -10,7 +10,7 @@
     =@contract.name
   от
   %b=@contract.date_begin.strftime('%d.%m.%Y')
-%h3= link_to @contract.agent.name, agent_path(@contract.agent.id) if @contract.agent_id?
+%h3= link_to @contract.agent.name, agent_path(@contract.agent.id) if @contract.agent
 %h3
   Статус
   %b= @contract.status

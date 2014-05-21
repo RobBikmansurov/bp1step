@@ -112,5 +112,4 @@ class ContractsController < ApplicationController
       params[:direction] || "asc"
     end
 
-
 end
