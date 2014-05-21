@@ -5,6 +5,7 @@ class Agent < ActiveRecord::Base
 
   validates :name, :presence => true,
                    :length => {:minimum => 3, :maximum => 255}
+  validates :town, :length => {:maximum => 30}
 
   attr_accessible  :name, :town, :address, :contacts, :agent_name
 
