@@ -11,9 +11,9 @@
 %table
   %tr
     %th #
-    -#= sortable 'id', "#"
+    -#= sortable "id", "#"
     %th Наименование
-    -#= sortable 'name', "Наименование"
+    %th Город
     %th Контакты
     -if can? :update, Agent
       %th
@@ -23,8 +23,8 @@
     %tr
       %td= agent.id
       %td= link_to agent.name, agent
-      %td= agent.address
-      %td= agent.contacts
+      %td= agent.town
+      %td=  truncate(agent.contacts, :length => 80, :omission => ' ...')
       - if can? :manage, agent
         %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_agent_path(agent), class: 'button-img'
       - if can? :destroy, agent
