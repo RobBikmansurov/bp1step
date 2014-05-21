@@ -58,6 +58,11 @@ class ContractsController < ApplicationController
       r.add_field :name, @contract.name
       r.add_field :description, @contract.description
       r.add_field :owner, @contract.owner_name
+      if !@contract.agent.town.blank?
+        r.add_field :agent, @contract.agent_name + ', г. ' + @contract.agent.town
+      else
+        r.add_field :agent, @contract.agent_name
+      end
       rr = 0
       if !@contract.bproce.blank?  # есть ссылки из документа на другие процессы?
         r.add_field :bp, "Относится к процессам:"
