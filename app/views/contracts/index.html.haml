@@ -27,7 +27,7 @@
         = link_to contract.shortname, contract_path(contract)
       %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
       %td= contract.status
-      %td= link_to contract.agent.name, agent_path(contract.agent.id) if contract.agent_id?
+      %td= link_to contract.agent.name, agent_path(contract.agent.id) if contract.agent
 
       -if can? :update, contract
         %td

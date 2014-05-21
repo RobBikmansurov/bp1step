@@ -3,7 +3,7 @@ class AgentsController < ApplicationController
 
   # GET /agents
   def index
-    @agents = Agent.all
+    @agents = Agent.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end
 
   def show
@@ -50,14 +50,6 @@ class AgentsController < ApplicationController
     render json: @agents.map(&:name)
   end
 
-  def sort_column
-    params[:sort] || "name"
-  end
-
-  def sort_direction
-    params[:direction] || "asc"
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_agent
@@ -68,4 +60,13 @@ class AgentsController < ApplicationController
     def agent_params
       params.require(:agent).permit(:name, :town, :address, :contacts)
     end
+
+    def sort_column
+      params[:sort] || "name"
+    end
+
+    def sort_direction
+      params[:direction] || "asc"
+    end
+
 end

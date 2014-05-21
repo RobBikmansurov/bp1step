@@ -3,7 +3,6 @@
 .id_
   \#
   = @agent.id
-%p#notice= notice
 %h2
   Контрагент 
   %b= @agent.name
@@ -31,7 +30,6 @@
           = link_to contract.shortname, contract_path(contract)
         %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
         %td= contract.status
-
 
 .info_
   создан

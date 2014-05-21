@@ -1,11 +1,10 @@
 = simple_form_for(@agent) do |f|
   = f.error_notification
+  = f.input :name
+  = f.input :town
+  = f.input :address
+  = f.input :contacts
 
-  .form-inputs
-    = f.input :name
-    = f.input :town
-    = f.input :address
-    = f.input :contacts
-
-  .form-actions
+  %p
+  -if can? :update, @agent
     = f.button :submit

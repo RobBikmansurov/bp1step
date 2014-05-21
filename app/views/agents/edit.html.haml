@@ -1,7 +1,11 @@
-%h1 Editing agent
-
+-title 'Контрагент ' + @agent.name
+-search "Контрагента"
+.id_
+  \#
+  = @agent.id
+%h1 Контрагент 
 = render 'form'
+%p
 
-= link_to 'Show', @agent
-\|
-= link_to 'Back', agents_path
+= link_to 'Show', @agent, :class => 'button'
+= link_to 'Back', agent_path, :class => 'button'
