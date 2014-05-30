@@ -9,7 +9,7 @@
   <p>в процессе <a href= <%=h bproce_url(@bproce) %>>#<%= @bproce.id.to_s %></a> - <b><%= @bproce.name.to_s %></b></p>
   <p><%= 'с ' + @user_business_role.date_from.strftime('%d.%m.%Y') if !@user_business_role.date_from.blank? %> <%= @user_business_role.note%></p>
   <br>
-  <p>Пожалуйста, ознакомьтесь с <a href=<%=h bproce_document_url(@bproce) %>>документами процесса</a></p>
+  <p>Пожалуйста, ознакомьтесь с <a href=<%=h bproce_documents_url(@bproce) %>>документами процесса</a></p>
   <hr>
   <p><%= @current_user.displayname %></p>
   <p>&copy; BP1Step. Каталог процессов и ресурсов</p>
