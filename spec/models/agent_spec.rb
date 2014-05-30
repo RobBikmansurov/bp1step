@@ -8,5 +8,6 @@ describe Agent do
 
   context "associations" do
     it { should have_many(:agent_contract).dependent(:destroy) }
-  end
+    it { should have_many(:contract).through(:agent_contract) }
+ end
 end
