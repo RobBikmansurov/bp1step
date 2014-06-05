@@ -11,9 +11,7 @@ class Document < ActiveRecord::Base
   has_attached_file :document_file,
     :url  => "/store/:id.:ymd.:basename.:extension",
     :presence  => false,
-    :styles => { :pdf => "pdf" }, 
     :path => ":rails_root/public/store/:id.:ymd.:basename.:extension",
-    :processors => [:convert_to_pdf],
     :hash_secret => "BankPermBP1Step"
   validates :document_file, :attachment_presence => false
   do_not_validate_attachment_file_type :document_file  #paperclip >4.0
@@ -23,8 +21,8 @@ class Document < ActiveRecord::Base
                                                       'application/vnd.ms-excel', 'application/msword',
                                                       'application/doc', 'application/rtf',
                                                       'application/octet-stream', 'application/force-download']
-  after_document_file_post_process :copy_to_pdf
-  #after_post_process :copy_to_pdf
+  #after_document_file_post_process :test
+  after_save :copy_to_pdf
 
   validates :name, :length => {:minimum => 10, :maximum => 200}
   #validates :bproce_id, :presence => true # документ относится к процессу
@@ -97,10 +95,14 @@ class Document < ActiveRecord::Base
   end
 
   def copy_to_pdf
-    if self.document_file_file_name?  # задано имя файла
-      if File.exist?(self.document_file.path)
-        puts "***model/document.rb*** convert_to_pdf" + self.document_file.path.to_s
-        Paperclip.run('unoconv', "-f pdf #{self.document_file.path}") if File.extname(self.document_file.path) != ".pdf"
+    if  self.document_file_file_name?  # задано имя файла
+      if File.exist?(document_file.path.to_s)
+        params = "-f pdf #{document_file.path.to_s}"
+        begin
+          success = Paperclip.run('unoconv', params)
+        rescue
+          puts  "error!"
+        end
       else
         puts "***model/document.rb*** file not found " + self.document_file.path.to_s
       end

@@ -1,6 +1,6 @@
 = simple_form_for(@document) do |f|
   = f.error_notification
-  = f.input :name
+  = f.input :name, :as => :text
   = f.input :dlevel, :collection => 1..4, :as => :radio_buttons, :hint => 'Политики, Стратегии(1) - Положения, Описания(2) - Регламенты, Инструкции(3) - Свидетельства: Акты, Протоколы, Журналы(4)'
   -#= f.input :dlevel, :collection => %w[1Политики 2Положения 3Регламенты 4Свидетельства], :as => :radio_buttons, :hint => 'Уровень документа: Политики - Положения - Регламенты - Свидетельства'
   = f.input :description, :as => :text
