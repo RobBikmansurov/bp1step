@@ -28,7 +28,7 @@
   #Places
     %h4
       = @usr.department
-      = link_to @usr.office, users_path + '?office=' + @usr.office, class: 'groups'
+      = link_to @usr.office.to_s, users_path + '?office=' + @usr.office.to_s, class: 'groups'
       = mail_to @usr.email, @usr.email, :subject => "BP1Step:"
       |
       = @usr.phone
