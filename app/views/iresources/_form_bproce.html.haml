@@ -1,7 +1,12 @@
 = simple_form_for(@bproce_iresource) do |ff|
   = ff.error_notification
-  = ff.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Процесс', :prompt => 'Выберите процесс, где используется Ресурс'
+  -#= ff.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Процесс', :prompt => 'Выберите процесс, где используется Ресурс'
   = ff.hidden_field :iresource_id
+  = ff.hidden_field :bproce_id
+  = ff.label 'Процесс'
+  = ff.autocomplete_field :bproce_name, autocomplete_bproces_path, :id_elements => '#iresource_bproce_id', :placeholder => 'подстрока в наименовании', :data => { :no_matches_label => '333' }
+  = ff.input :rpurpose, :as => :text
   = ff.error :base
+  %br
   = ff.button :submit, 'Связать с процессом'
 

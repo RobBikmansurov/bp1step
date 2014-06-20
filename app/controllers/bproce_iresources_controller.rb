@@ -4,7 +4,8 @@ class BproceIresourcesController < ApplicationController
   before_filter :get_bproce_iresource, :except => :index
   
   def create
-  	@bproce_iresource = BproceIresource.new(params[:bproce_iresource])
+    @bproce = Bproce.find_by_name(params[:bproce_iresource_bproce])
+    @bproce_iresource = BproceIresource.new(params[:bproce_iresource])
     respond_to do |format|
       if @bproce_iresource.save
         format.html { redirect_to @bproce_iresource, notice: 'BproceIresources was successfully created.' }
@@ -17,9 +18,11 @@ class BproceIresourcesController < ApplicationController
   end
 
   def destroy
-  	@iresource = @bproce_iresource.iresource
+    @iresource = @bproce_iresource.iresource
+    #@iresource = @bproce_iresource.iresource
   	flash[:notice] = "Successfully destroyed bproce_iresource." if @bproce_iresource.destroy
-    #respond_with(@iresource)
+    #respond_with(@bproce_iresource.bproce)  
+    respond_with(@bproce_iresource.iresource) # удаляем процесс из ресурса - поэтому возврат в ресурс
   end
 
   def show

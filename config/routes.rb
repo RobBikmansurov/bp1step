@@ -28,6 +28,7 @@ BPDoc::Application.routes.draw do
   resources :bproce_business_roles, :only => [:show]
   resources :bproce_iresources, :only => [:new, :create, :destroy, :show, :edit, :update]
   resources :bproce_workplaces, :only => [:create, :destroy, :show]
+  resources :bproce_documents, :except => :index
   resources :bproces do
     resources :bapps, :documents
     collection do
@@ -44,7 +45,6 @@ BPDoc::Application.routes.draw do
     end
   end
   resources :bproce_contracts, :except => :index
-  resources :bproce_documents, :except => :index
   resources :contracts do
     member do
       get :approval_sheet # Лист согласования
