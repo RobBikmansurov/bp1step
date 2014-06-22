@@ -35,7 +35,7 @@ class UsersController < ApplicationController
     @uroles = @usr.user_business_role   # исполняет роли
     @uworkplaces = @usr.user_workplace 	# рабочие места пользователя
     @documents = Document.order(:name).where(owner_id: @usr.id)
-    @contracts = Contract.order(:number).where(owner_id: @usr.id)
+    @contracts = Contract.order(:number).where(owner: @usr.id)
     respond_with()
   end
 
