@@ -30,8 +30,11 @@ user2.roles << Role.find_by_name(:author)
 user3 = User.create(:displayname => 'Администратор', :username => 'admin1', :email => 'admin1@example.com', :password => 'admin1')
 user3.roles << Role.find_by_name(:admin)
 user3.roles << Role.find_by_name(:security)
-user4 = User.create(:displayname => 'Сидоров С.С.', :username => 'petrov', :email => 'sidorov@example.com', :password => 'sidoriv')
+user4 = User.create(:displayname => 'Сидоров С.С.', :username => 'sidorov', :email => 'sidorov@example.com', :password => 'sidoriv')
 user4.roles << Role.find_by_name(:author)
+user5 = User.create(:displayname => 'Путин В.В.', :username => 'putin', :email => 'putin@example.com', :password => 'sidoriv')
+user5.roles << Role.find_by_name(:keeper)
+user5.roles << Role.find_by_name(:user)
 puts "users created"
 
 # applications
