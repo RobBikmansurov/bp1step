@@ -28,7 +28,7 @@ describe Bproce do
     it { should have_many(:bapps).through(:bproce_bapps).dependent(:destroy) }
     it { should have_many(:bproce_documents).dependent(:destroy) }
     it { should have_many(:bproce_documents).dependent(:destroy) }
-    it { should belong_to(:parent) }  # процесс может имет родительский процесс
+    it { should belong_to(:bproce) }  # процесс может имет родительский процесс
     it { should belong_to(:user) }  # владелец процессв
   end
 

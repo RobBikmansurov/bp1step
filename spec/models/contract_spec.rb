@@ -15,8 +15,8 @@ describe Contract do
   end
 
   context "associations" do
-    it { should belong_to(:owner) }
+    it { should belong_to(:parent).class_name('Contract') }
     it { should have_many(:bproce_contract).dependent(:destroy) }
-    it { should belong_to(:owner).class_name(:User) }
+    it { should belong_to(:owner).class_name('User') }
   end
 end
