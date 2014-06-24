@@ -1,6 +1,7 @@
 -# основные реквизиты Процесса
 = simple_form_for(@bproce) do |f|
   = f.error_notification
+  = f.hidden_field :parent_id
   = f.input :shortname
   = f.input :name
   = f.input :fullname, :as => :text
@@ -11,7 +12,11 @@
   = f.label 'Владелец процесса'
   = f.autocomplete_field :user_name, autocomplete_users_path  
   
-  = f.association :parent, :collection => Bproce.all(:order => 'name'), :label => 'Родительский процесс', :include_blank => false, :prompt => 'Выберите родительский процесс из списка'
+  -#= f.association :parent, :collection => Bproce.all(:order => 'name'), :label => 'Родительский процесс', :include_blank => false, :prompt => 'Выберите родительский процесс из списка'
+  %p
+  = f.label 'Родительский процесс'
+  = f.autocomplete_field :parent_name, autocomplete_bproces_path
+
   -if can? :manage_tag, @bproce
     = f.input :tag_list, :label => 'Теги (через запятую)'
   = f.error :base
