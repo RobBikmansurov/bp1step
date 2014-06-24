@@ -14,7 +14,7 @@ class Bproce < ActiveRecord::Base
   validates :fullname, :length => {:minimum => 10, :maximum => 250}
 
   acts_as_nested_set
-  attr_accessible :shortname, :name, :fullname, :goal, :description, :user_name, :parent_id, :tag_list, :tag_id, :context, :taggable
+  attr_accessible :shortname, :name, :fullname, :goal, :description, :user_name, :parent_id, :parent_name, :tag_list, :tag_id, :context, :taggable
 
   has_many :bapps, :through => :bproce_bapps, :dependent => :destroy
   has_many :bproce_bapps, :dependent => :destroy
@@ -26,8 +26,8 @@ class Bproce < ActiveRecord::Base
   has_many :documents, through: :bproce_documents
   has_many :iresource, :through => :bproce_iresource
   has_many :workplaces, :through => :bproce_workplaces
-  belongs_to :bproce
-  belongs_to :user  # владелец процессв
+  belongs_to :bproce, foreign_key: "parent_id"  # родительский процесс
+  belongs_to :user    # владелец процессв
 
   def user_name
     user.try(:displayname)
@@ -35,6 +35,14 @@ class Bproce < ActiveRecord::Base
 
   def user_name=(name)
     self.user_id = User.find_by_displayname(name).id if name.present?
+  end
+
+  def parent_name
+    bproce.try(:name)
+  end
+
+  def parent_name=(name)
+    self.parent_id = Bproce.find_by_name(name).id if name.present?
   end
 
   def self.search(search)
