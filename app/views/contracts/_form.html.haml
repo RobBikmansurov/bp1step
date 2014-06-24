@@ -5,12 +5,16 @@
   = f.input :name
   = f.label 'Ответственный'
   = f.autocomplete_field :owner_name, autocomplete_users_path
-  %br
+  %p
   = f.label 'Контрагент'
   = f.autocomplete_field :agent_name, autocomplete_agents_path
   = f.input :status, :collection => %w[Действует Согласование НеДействует], :prompt => 'Статус дооговора', :input_html => { :value => 'Согласование'}
   = f.input :date_begin, :as => :string, :input_html =>{:class=>'datepicker'}
   = f.input :date_end, :as => :string, :input_html =>{:class=>'datepicker'}
+  %p
+  = f.label 'Основной договор'
+  = f.autocomplete_field :parent_name, autocomplete_agents_path
+  %p
   = f.input :description
   -#= f.input :text
   = f.input :note
