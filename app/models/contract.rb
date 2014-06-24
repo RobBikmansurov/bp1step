@@ -1,4 +1,7 @@
 class Contract < ActiveRecord::Base
+  acts_as_taggable
+  acts_as_nested_set
+
   validates :number, :presence => true,
                    :length => {:minimum => 1, :maximum => 20}
   validates :name, :presence => true,
@@ -9,6 +12,7 @@ class Contract < ActiveRecord::Base
                           :length => {:minimum => 5, :maximum => 15}
   #validates :owner_id, presence: :true
 
+  belongs_to :contract, foreign_key: "parent_id"  # родительский договор
   belongs_to :owner_id
   belongs_to :agent
   belongs_to :agent_id
@@ -37,6 +41,14 @@ class Contract < ActiveRecord::Base
 
   def owner_name=(name)
     self.owner = User.find_by_displayname(name) if name.present?
+  end
+
+  def parent_name
+    contract.try(:shortname)
+  end
+
+  def parent_name=(name)
+    self.parent_id = Contract.find_by_number(name).id if name.present?
   end
 
   def shortname
