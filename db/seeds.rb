@@ -33,7 +33,7 @@ user3.roles << Role.find_by_name(:admin)
 user3.roles << Role.find_by_name(:security)
 user4 = User.create(:displayname => 'Сидоров С.С.', :username => 'sidorov', :email => 'sidorov@example.com', :password => 'sidorov')
 user4.roles << Role.find_by_name(:author)
-user5 = User.create(:displayname => 'Путин В.В.', :username => 'putin', :email => 'putin@example.com', :password => 'putin')
+user5 = User.create(displayname: 'Путин В.В.', username: 'putinx', email: 'putinx@example.com', password: 'putinx', department: 'Библиотека', position: 'Юрист', office: '201', phone: '2201')
 user5.roles << Role.find_by_name(:keeper)
 user5.roles << Role.find_by_name(:user)
 user6 = User.create(:displayname => 'Кудрин А.В.', :username => 'kudrin', :email => 'kudrin@example.com', :password => 'kudrin')
@@ -86,7 +86,7 @@ puts 'terms created'
 
 #processes
 bp1 = Bproce.create(name: 'Предоставление сервисов', shortname: 'B.4.1', 
-	fullname: 'Предоставление сервисов', user_id: '1')
+	fullname: 'Предоставление сервисов', user_id: 1)
 bp11 = Bproce.create(name: 'Управление уровнем сервисов', shortname: 'SLM', fullname: 'Управление уровнем сервисов', parent_id: bp1.id)
 bp12 = Bproce.create(name: 'Управление мощностями', shortname: 'CAP', fullname: 'Управление мощностями', parent_id: bp1.id)
 bp13 = Bproce.create(name: 'Управление непрерывностью', shortname: 'SCM', fullname: 'Управление непрерывностью', parent_id: bp1.id)
