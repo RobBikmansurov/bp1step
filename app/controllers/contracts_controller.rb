@@ -48,6 +48,11 @@ class ContractsController < ApplicationController
       approval_sheet_odt
   end
 
+  def autocomplete
+    @contracts = Contract.order(:number).where("name ilike ? or number ilike ?", "%#{params[:term]}%", "%#{params[:term]}%")
+    render json: @contracts.map(&:shortname)
+  end
+
   private
 
     def approval_sheet_odt    # Лист согласования
