@@ -48,7 +48,7 @@ class BprocesController < ApplicationController
   end
 
   def show
-    @metrics = Metric.where(:bproce_id => @bproce.id)  # метрики процесса
+    @metrics = Metric.where(:bproce_id => @bproce.id).order(:name)  # метрики процесса
     #@contracts = Contract.where(:bproce_id => @bproce.id)  # договоры процесса
     respond_with(@bproce)
   end
