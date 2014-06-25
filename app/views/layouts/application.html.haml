@@ -13,7 +13,8 @@
     -#= stylesheet_link_tag 'autocomplete'
     = stylesheet_link_tag    "application"
     = javascript_include_tag "application"
-    = javascript_include_tag "//www.google.com/jsapi", "chartkick"
+    - if params[:controller] == 'metrics'  # and params[:controller] == 'bproces'
+      = javascript_include_tag "//www.google.com/jsapi", "chartkick"
     -#= javascript_include_tag "jsapi", "chartkick"
     = yield :css
     = yield :js
