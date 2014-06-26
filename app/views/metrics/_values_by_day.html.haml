@@ -6,16 +6,17 @@
   %tr
     %th=@current_period_date.strftime('%Y')
     -(@current_period_date.beginning_of_month.day..@current_period_date.end_of_month.day).each do | d |
-      %th{ :style => "width:10%" }
+      %th{ :style => "width:3%" }
         =d
   %tr
     %td=@metric.shortname
     -d = 1
-    -@values.each do |value|
+    -dt = @current_period_date.beginning_of_month.strftime('%Y-%m-')   # начало даты для значений
+    -@values.each do |value|  # по всем имеющимся значениям метрики
       -if value.dtime.day > d
         -(d..value.dtime.day - 1).each do |dm|
           %td
-            = link_to "+" , metric_path(@metric) + '/new_value'
+            = link_to "+" , new_value_metric_path(@metric, dtime: dt + dm.to_s)
           -d = value.dtime.day
       %td
         =link_to value.value, edit_metric_value_path(value.id)
@@ -23,9 +24,9 @@
       -d = d + 1
 
     -if d < @current_period_date.end_of_month.day
-      -(d..@current_period_date.end_of_month.day).each do |dm|
+      -(d..@current_period_date.end_of_month.day).each do |dm|  # после послднего значения
         %td
-          = link_to "+" , metric_path(@metric) + '/new_value'
+          = link_to "+" , new_value_metric_path(@metric, dtime: dt + dm.to_s)
 
 
 .apple_pagination

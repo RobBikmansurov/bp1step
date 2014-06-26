@@ -96,7 +96,7 @@ class MetricsController < ApplicationController
   def new_value
     @metric_value = MetricValue.new()  # заготовка для новго значения
     @metric_value.metric_id = @metric.id
-    @metric_value.dtime = Date.today
+    @metric_value.dtime = params[:dtime] if params[:dtime].present?
     render 'metric_values/new'
   end
 
