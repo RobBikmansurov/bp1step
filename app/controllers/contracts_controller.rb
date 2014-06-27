@@ -3,6 +3,7 @@ class ContractsController < ApplicationController
   helper_method :sort_column, :sort_direction
   before_action :set_contract, only: [:show, :edit, :update, :destroy, :approval_sheet]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+  autocomplete :bproce, :name, :extra_data => [:id]
 
   def index
     @contracts = Contract.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
@@ -50,7 +51,7 @@ class ContractsController < ApplicationController
 
   def autocomplete
     @contracts = Contract.order(:number).where("name ilike ? or number ilike ?", "%#{params[:term]}%", "%#{params[:term]}%")
-    render json: @contracts.map(&:shortname)
+    render json: @contracts.map(&:autoname)
   end
 
   private
@@ -100,14 +101,13 @@ class ContractsController < ApplicationController
         :filename => "approval-sheet.odt",
         :disposition => 'inline' )
     end
-      # Use callbacks to share common setup or constraints between actions.
+
     def set_contract
       @contract = Contract.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
     def contract_params
-      params.require(:contract).permit(:owner_id, :owner_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :agent_id, :agent_name)
+      params.require(:contract).permit(:owner_id, :owner_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :agent_id, :agent_name, :parent_id, :parent_name)
     end
 
     def sort_column
@@ -117,5 +117,11 @@ class ContractsController < ApplicationController
     def sort_direction
       params[:direction] || "asc"
     end
+
+  def record_not_found
+    flash[:alert] = "Неверный #id, Договор не найден."
+    redirect_to action: :index
+  end
+
 
 end

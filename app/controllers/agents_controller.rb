@@ -1,7 +1,7 @@
 class AgentsController < ApplicationController
   before_action :set_agent, only: [:show, :edit, :update, :destroy]
+  autocomplete :bproce, :name, :extra_data => [:id]
 
-  # GET /agents
   def index
     @agents = Agent.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end
