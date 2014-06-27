@@ -3,7 +3,7 @@ class MetricValuesController < ApplicationController
 
   before_action :set_metric_value, only: [:edit, :update, :destroy]
 
-  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+  #rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def edit
   end
@@ -23,14 +23,13 @@ class MetricValuesController < ApplicationController
 
   def create
     @metric_value = MetricValue.new(metric_value_params)
-
+    @metric = Metric.find(@metric_value.metric_id)
     if @metric_value.save
       redirect_to metric_url(@metric_value.metric_id) + '/values', notice: 'Metric Value was successfully created.'
     else
       render action: 'new'
     end
   end
-
 
   private
     def set_metric_value
@@ -40,6 +39,11 @@ class MetricValuesController < ApplicationController
 
     def metric_value_params
       params.require(:metric_value).permit(:id, :dtime, :value, :metric_id)
+    end
+
+    def record_not_found
+      flash[:alert] = "Неверный #id, Метрика не найдена."
+      redirect_to action: :index
     end
 
 end

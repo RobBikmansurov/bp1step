@@ -1,21 +1,22 @@
 %h3
-  Значения метрики за
+  Значения метрики по месяцам за
   =@current_period_date.strftime('%Y')
-
 %table
   %tr
-    %th=@current_period_date.strftime('%Y')
-    -(@current_period_date.beginning_of_year.month..@current_period_date.end_of_year.month).each do | m |
-      %th{ :style => "width:7%" }
-        =m
+    %th
+    -mon = @current_period_date.beginning_of_year   # начало года
+    -(1..12).each do | m |
+      %th{ :style => "width:8%" }
+        = (mon + (m - 1).month).strftime('%b %y')
   %tr
     %td=@metric.shortname
     -m=1
+    -y=@current_period_date.strftime('%Y-')   # начало даты для значений
     -@values.each do |value|
       -if value.dtime.month > m
         -(m..value.dtime.month - 1).each do |mo|
           %td
-            = link_to "+" , metric_path(@metric) + '/new_value'
+            = link_to "+" , new_value_metric_path(@metric, dtime: y + mo.to_s + '-01')
           -m = value.dtime.month
       %td
         -#=link_to value.dtime.strftime(@datetime_format), edit_metric_value_path(value.id)
@@ -25,7 +26,7 @@
     -if m < 12
       -(m..12).each do |mo|
         %td
-          = link_to "+" , metric_path(@metric) + '/new_value'
+          = link_to "+" , new_value_metric_path(@metric, dtime: y + mo.to_s + '-01')
 
 .apple_pagination
   .pagination
