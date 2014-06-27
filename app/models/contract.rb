@@ -13,15 +13,16 @@ class Contract < ActiveRecord::Base
   #validates :owner_id, presence: :true
 
   belongs_to :contract, foreign_key: "parent_id"  # родительский договор
-  belongs_to :owner_id
-  belongs_to :agent
-  belongs_to :agent_id
   belongs_to :user
+  belongs_to :agent
   belongs_to :owner, :class_name => 'User'
+  belongs_to :parent, :class_name => 'Contract'
+  belongs_to :contract
+
   has_many :bproce, through: :bproce_contract
   has_many :bproce_contract, dependent: :destroy 
 
-  attr_accessible  :owner_name, :agent_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :agent_id, :parent_id, :parent_name
+  attr_accessible  :owner_name, :owner_id, :agent_name, :agent_id, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :parent_id, :parent_name
 
 
   include PublicActivity::Model
@@ -44,15 +45,21 @@ class Contract < ActiveRecord::Base
   end
 
   def parent_name
-    contract.try(:shortname)
+    parent.try(:autoname)
   end
 
   def parent_name=(name)
-    self.parent_id = Contract.find_by_number(name).id if name.present?
+    #self.parent = Contract.where(:number => name[/№.*\|/][2..-3]).first if name.present?
+    #self.parent = Contract.find_by_number(name[/№.*\|/][2..-3]) if name.present?
+    self.parent = Contract.find(8) if name.present?
   end
 
   def shortname
     return '№ ' + number.to_s + ' ' + name.split(//u)[0..50].join
+  end
+
+  def autoname
+    return '№ ' + number.to_s + ' | ' + name.split(//u)[0..50].join
   end
 
   def self.search(search)

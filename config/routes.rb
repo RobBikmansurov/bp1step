@@ -8,6 +8,9 @@ BPDoc::Application.routes.draw do
   resources :bproces, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
+  resources :contracts, :only => :autocomlete do
+    get :autocomplete, :on => :collection
+  end
   resources :directives do
     resources :documents  # документы на основании директивы
     get :autocomplete, :on => :collection
