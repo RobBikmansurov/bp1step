@@ -50,6 +50,8 @@ ru:
         user_id: Владелец процесса
       bproce_bapp:
         apurpose: Назначение в процессе
+      bproce_contract:
+        purpose: Назначение в процессе
       bproce_document:
         purpose: Назначение в процессе
       bproce_iresource:
@@ -106,6 +108,9 @@ ru:
         description: Описание
         note: Примечание
         depth: Глубина
+      metric_value:
+        dtime: Дата значения
+        value: Значение метрики
       profile:
         name: Отображаемое имя
         phone: Телефон
