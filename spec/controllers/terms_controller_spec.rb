@@ -3,30 +3,17 @@ require 'spec_helper'
 describe TermsController do
   render_views
 
-
-  # This should return the minimal set of attributes required to create a valid
-  # Term. As you add validations to Term, be sure to
-  # update the return value of this method accordingly.
-  def valid_attributes
-    {
-      shortname: "term",
-      name: "term_name",
-      description: "term_description"
-    }
-  end
+  let(:valid_attributes) { {  shortname: "term",
+                              name: "term_name",
+                              description: "term_description"
+ } }
+  let(:valid_session) { {} }
 
   before(:each) do
     @user = User.new(:email => "test_w@user.com", :username => "test_w")
-    @user.roles << Role.find_or_create_by(name: "admin")
+    @user.roles << Role.find_or_create_by(name: "admin", description: 'description')
     @user.save
     sign_in @user
-  end
-
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # TermsController. Be sure to keep this updated too.
-  def valid_session
-    {}
   end
 
   describe "GET index" do
