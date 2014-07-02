@@ -2,40 +2,22 @@ require 'spec_helper'
 require 'factory_girl'
 
 describe BappsController do
-  include Devise::TestHelpers
   render_views
   PublicActivity.enabled = false
   
-  def valid_attributes
-   {
-      :id => 1,
-      :name => "test_name",
-      :description => "test_description"
-    }
-  end
+  let(:valid_attributes) { { "name" => "MyString1", description: 'description1' } }
+  let(:valid_session) { {} }
 
   before(:each) do
     @user = User.new(:email => "test_w@user.com", :username => "test_w")
-    @user.roles << Role.find_or_create_by(name: 'admin')
+    #@user = FactoryGirl.create(:user)
+    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
+    #@request.env['devise.mapping'] = :user
+    #@user.confirm!
     @user.save
     sign_in @user
   end
   
-  describe "GET new" do
-    it "assigns a new bapp as @bapp" do
-      get :new
-      assigns(:bapp).should be_a_new(Bapp)
-      response.should render_template('bapps/new')
-      expect(assigns(:bapp)).to render_template('new')
-    end
-
-    it "asigns a new bapp as @bapps if User auth" do
-      get 'new'
-      assigns(:bapp).should be_a_new(Bapp)
-      response.should render_template('bapps/new')
-    end
-  end
-
   describe "GET index" do
     it "assigns all bapps as @bapps" do
       bapp = Bapp.create
@@ -64,9 +46,9 @@ describe BappsController do
 
   describe "GET show" do
     it "assigns the requested bapp as @bapp" do
-      bapp = Bapp.create
-      get :show, :id => bapp.id
-      response.should render_template(:show)
+      bapp = Bapp.create! valid_attributes
+      get :show, {:id => bapp.to_param}, valid_session
+      #response.should render_template(:show)
       assigns(:bapp).should eq(bapp)
     end
     it "renders 404 page if bapp is not found" do
@@ -77,15 +59,15 @@ describe BappsController do
 
   describe "GET new" do
     it "assigns a new bapp as @bapp" do
-      get :new
+      get :new, {}, valid_session
       assigns(:bapp).should be_a_new(Bapp)
     end
   end
 
   describe "GET edit" do
     it "assigns the requested bapp as @bapp" do
-      bapp = Bapp.create
-      get :edit, :id => bapp.id
+      bapp = Bapp.create! valid_attributes
+      get :edit, {:id => bapp.to_param}, valid_session
       assigns(:bapp).should eq(bapp)
     end
   end
@@ -171,18 +153,18 @@ describe BappsController do
     end
   end
 
-
   describe "DELETE destroy" do
     it "destroys the requested bapp" do
-      bapp = Bapp.create
-      delete :destroy, id: bapp.id
-      expect(assigns(:bapps)).to render_template("index")
+      bapp = Bapp.create! valid_attributes
+      expect {
+        delete :destroy, {id: bapp.to_param}, valid_session
+      }.to change(Bapp, :count).by(-1)
       #expect(Bapp.count).to eq(0)
     end
 
     it "redirects to the bapps list" do
-      bapp = Bapp.create
-      delete :destroy, :id => bapp.id
+      bapp = Bapp.create! valid_attributes
+      delete :destroy, {:id => bapp.to_param}, valid_session
       response.should redirect_to(bapps_url)
     end
   end
