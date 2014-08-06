@@ -17,6 +17,7 @@ class BusinessRole < ActiveRecord::Base
 
   attr_accessible :name, :description, :bproce_id, :bproce_name, :features
 
+  default_scope { order(:name) }
 
   # бизнес-роль может исполняется на нескольких рабочих местах
   #has_and_belongs_to_many :workplaces

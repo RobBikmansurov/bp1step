@@ -32,7 +32,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    @uroles = @usr.user_business_role   # исполняет роли
+    @uroles = @usr.user_business_role.includes(:business_role).order('business_roles.name')   # исполняет роли
     @uworkplaces = @usr.user_workplace 	# рабочие места пользователя
     @documents = Document.order(:name).where(owner_id: @usr.id)
     @contracts = Contract.order(:number).where(owner_id: @usr.id)
