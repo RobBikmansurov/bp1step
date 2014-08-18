@@ -13,11 +13,12 @@
   = f.input :status, :collection => %w[Действует Согласование НеДействует], :prompt => 'Статус дооговора', :input_html => { :value => 'Согласование'}
   = f.input :date_begin, :as => :string, :input_html =>{:class=>'datepicker'}
   = f.input :date_end, :as => :string, :input_html =>{:class=>'datepicker'}
-  -#
-    %p
-    = f.label 'Основной договор'
-    = f.hidden_field :parent_id
-    = f.autocomplete_field :parent_name, autocomplete_contracts_path
+  
+  %p
+  = f.label 'Основной договор'
+  = f.hidden_field :parent_id
+  = f.autocomplete_field :parent_name, autocomplete_contracts_path
+
   %p
   = f.input :description
   -#= f.input :text

@@ -11,6 +11,18 @@
   от
   %b=@contract.date_begin.strftime('%d.%m.%Y')
 %h3= link_to @contract.agent.name, agent_path(@contract.agent.id) if @contract.agent
+-if @contract.parent
+  %h3
+    к договору
+    = link_to @contract.parent.shortname, contract_path(@contract.parent.id)
+
+-if @subcontracts.count > 0
+  %h3 Субдоговоры и приложения:
+  - @subcontracts.each do |subcontract|
+    = "——" * (subcontract.depth - @contract.depth)
+    = link_to subcontract.shortname, contract_path(subcontract)
+    %br
+
 %h3
   Статус
   %b= @contract.status
