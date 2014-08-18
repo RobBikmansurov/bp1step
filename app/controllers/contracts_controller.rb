@@ -10,6 +10,7 @@ class ContractsController < ApplicationController
   end
 
   def show
+    @subcontracts = Contract.where("lft>? and rgt<?", @contract.lft, @contract.rgt).order("lft")
   end
 
   def new

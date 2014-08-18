@@ -12,7 +12,7 @@ class Contract < ActiveRecord::Base
                           :length => {:minimum => 5, :maximum => 15}
   #validates :owner_id, presence: :true
 
-  belongs_to :contract, foreign_key: "parent_id"  # родительский договор
+  #belongs_to :contract, foreign_key: "parent_id"  # родительский договор
   belongs_to :user
   belongs_to :agent
   belongs_to :owner, :class_name => 'User'
@@ -20,7 +20,8 @@ class Contract < ActiveRecord::Base
   belongs_to :contract
 
   has_many :bproce, through: :bproce_contract
-  has_many :bproce_contract, dependent: :destroy 
+  has_many :bproce_contract, dependent: :destroy
+  #has_many :children, :class => 'Contract', foreign_key: :parent_id
 
   attr_accessible  :owner_name, :owner_id, :agent_name, :agent_id, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :parent_id, :parent_name
 
@@ -49,9 +50,8 @@ class Contract < ActiveRecord::Base
   end
 
   def parent_name=(name)
-    #self.parent = Contract.where(:number => name[/№.*\|/][2..-3]).first if name.present?
+    self.parent = Contract.where(:number => name[/№.*\|/][2..-3]).first if name.present?
     #self.parent = Contract.find_by_number(name[/№.*\|/][2..-3]) if name.present?
-    self.parent = Contract.find(8) if name.present?
   end
 
   def shortname
