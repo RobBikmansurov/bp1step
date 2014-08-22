@@ -54,6 +54,17 @@
 -if @metric.depth > 3
   Час
 
+-if @metrics.count > 0
+  %h4
+    Другие метрики процесса
+    = link_to @metric.bproce.name, bproce_path(@metric.bproce) if @metric.bproce
+  - @metrics.each do |metr|
+    -if @metric.id != metr.id
+      -if @current_period_date
+        = link_to metr.name, metric_path(metr, {date: @current_period_date.strftime('%Y-%m-01')}) 
+      -else
+        = link_to metr.name, metric_path(metr) 
+
 .info_
   создан
   = @metric.created_at.strftime('%d.%m.%Y %H:%M:%S') if @metric.created_at
