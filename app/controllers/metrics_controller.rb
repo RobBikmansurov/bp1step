@@ -38,7 +38,7 @@ class MetricsController < ApplicationController
     end
     #values = MetricValue.where(:metric_id => @metric.id).group(:dtime).sum(:value)
     @data = [ { name: @current_period_date.strftime('%b %Y'), data: current_period_values } ]
-    @metrics = Metric.where(bproce_id: @metric.bproce)
+    @metrics = Metric.where(bproce_id: @metric.bproce).order(:name)
     respond_with @data
   end
 
