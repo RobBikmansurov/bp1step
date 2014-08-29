@@ -16,8 +16,7 @@
         = link_to @user.displayname, user_path(@user)
 %table
   %tr
-    %th= "[Обозначение] Наименование процесса"
-    %th Владелец
+    %th= "[Обозначение] Наименование процесса ... Владелец"
     - if can? :modify, Bproce
       %th
     - if can? :destroy, Bproce
@@ -31,8 +30,8 @@
         = link_to bproce.name, bproce_path(bproce)
         -if can? :manage_tag, bproce
           %sup= bproce.tag_list
-      %td
         -if bproce.user
+          = ' ... '
           %small= link_to bproce.user.displayname, user_path(bproce.user)
       - if can? :modify, bproce
         %td
