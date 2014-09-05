@@ -56,6 +56,11 @@ ru:
         purpose: Назначение в процессе
       bproce_iresource:
         rpurpose: Назначение в процессе
+      business_role:
+        name: Обозначение
+        description: Действия в процессе
+        bproce_id: Процесс
+        features: Особенности
       contract:
         number: Номер
         name: Тема
@@ -114,11 +119,6 @@ ru:
       profile:
         name: Отображаемое имя
         phone: Телефон
-      business_role:
-        name: Обозначение
-        description: Назначение роли
-        bproce_id: Процесс
-        features: Особенности
       staff:
         fullname: Фамилия Имя Отчество
         position: Должность
