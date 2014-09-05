@@ -3,11 +3,19 @@
     Исполняет роли:
   %table
     %tr
-      %th Роль
-      %th В процессе
-      %th Назначение
+      %th Роль [ процесс ]
+      %th
+        Действия в процессе,
+        %i основание 
     - @uroles.each do |business_role|
       %tr
-        %td= link_to business_role.business_role.name, business_role_path(business_role.business_role)
-        %td= link_to Bproce.find(business_role.business_role.bproce).name, bproce_path(business_role.business_role.bproce)
-        %td= business_role.note
+        %td
+          %b= link_to business_role.business_role.name, business_role_path(business_role.business_role)
+          [
+          = link_to business_role.business_role.bproce.shortname, bproce_path(business_role.business_role.bproce)
+          = '#' + business_role.business_role.bproce.id.to_s
+          ]
+        %td
+          = business_role.business_role.description
+          %br
+          %i= business_role.note
