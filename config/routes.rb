@@ -15,6 +15,9 @@ BPDoc::Application.routes.draw do
     resources :documents  # документы на основании директивы
     get :autocomplete, :on => :collection
   end
+  resources :documents do
+    get :autocomplete, :on => :collection
+  end
   resources :iresources, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
@@ -34,6 +37,7 @@ BPDoc::Application.routes.draw do
   resources :bproce_documents, :except => :index
   resources :bproces do
     resources :bapps, :documents
+    resources :business_roles, :only => [:new]
     collection do
       get :manage
       post :rebuild
@@ -48,12 +52,22 @@ BPDoc::Application.routes.draw do
     end
   end
   resources :bproce_contracts, :except => :index
+  resources :business_roles
   resources :contracts do
     member do
       get :approval_sheet # Лист согласования
     end
   end
+  resources :documents do
+    member do
+      get :file_create
+      get :file_delete
+      patch :update_file
+      get :approval_sheet # Лист согласования
+    end
+  end
   resources :document_directives
+  resources :iresources
 
   resources :metrics do
     member do
@@ -67,16 +81,6 @@ BPDoc::Application.routes.draw do
   get 'documents/tags/:tag', to: 'documents#index', as: :tag_documents
   #get 'tags/:tag', to: 'bproces#index', as: :tag
   #get 'tags', to: 'bproces#index'
-  resources :business_roles
-  resources :documents do
-    member do
-      get :file_create
-      get :file_delete
-      patch :update_file
-      get :approval_sheet # Лист согласования
-    end
-  end
-  resources :iresources
   resources :roles, only: [:index, :show]
   resources :terms
   resources :user_workplaces
