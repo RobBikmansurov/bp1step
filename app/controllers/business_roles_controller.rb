@@ -3,7 +3,7 @@ class BusinessRolesController < ApplicationController
   respond_to :odt, :xml, :json, :only => :index
   helper_method :sort_column, :sort_direction
   before_filter :authenticate_user!, :only => [:edit, :new, :create, :update]
-  before_filter :get_business_role, :except => [:index, :print]
+  before_filter :get_business_role, :except => [:index, :print, :new]
 
   def index
     if params[:all].present?
@@ -13,7 +13,8 @@ class BusinessRolesController < ApplicationController
       #@business_roles = BusinessRole.page(params[:page]).search(params[:search])
       #@business_roles = BusinessRole.paginate(:per_page => 10, :page => params[:page])
     end
-    @business_roles = @business_roles.find(:all, :include => :users)
+    #@business_roles = @business_roles.find(:all, :include => :users)
+    @business_roles = @business_roles.includes(:users)
     respond_to do |format|
       format.html
       format.odt { print }
@@ -21,11 +22,22 @@ class BusinessRolesController < ApplicationController
   end
   
   def new
+    @business_role = BusinessRole.new
+    if params[:bproce_id].present?
+      @bproce = Bproce.find(params[:bproce_id])
+      @business_role.bproce_id = @bproce.id
+    end
     respond_with(@business_role)
   end
 
   def create
     @business_role = BusinessRole.new(params[:business_role])
+    if params[:business_role][:bproce_name].present?
+      name = params[:business_role][:bproce_name]
+      @bproce = Bproce.where(:name => name).first
+      @business_role.bproce_id = @bproce.id
+    end
+
     flash[:notice] = "Successfully created role." if @business_role.save
     respond_with(@business_role)
   end

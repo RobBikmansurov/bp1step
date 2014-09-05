@@ -10,7 +10,7 @@
 %h3
   в процессе
   = link_to @business_role.bproce.name, bproce_path(@business_role.bproce) if @business_role.bproce
-%h3 Назначение
+%h3 Действия в процессе:
 = @business_role.description
 
 -if !current_user.nil?

@@ -1,5 +1,8 @@
 -title "Роли процесса " + @bp.shortname
-%h4= link_to @bp.name, bproce_path(@bp)
+.id_
+  \#
+  = @bp.id
+%h3= link_to @bp.name, bproce_path(@bp)
 %b
   Цель:
 -if @bp.goal.blank?
@@ -15,7 +18,7 @@
 %table
   %tr
     %th Роль
-    %th Назначение в процессе
+    %th Действия исполнителя в процессе
     %th Исполнитель
 
   -@business_roles.each do |ro|
@@ -32,4 +35,5 @@
         %td
 -if can? :update, @bp
   = link_to 'Распоряжение', bproce_path(@bp) + '/order', class: :button
-  = link_to "Добавить новую роль" , new_business_role_path, :class => 'button'
+  = link_to "Добавить новую роль в процесс" , new_bproce_business_role_path(@bp), :class => 'button'
+

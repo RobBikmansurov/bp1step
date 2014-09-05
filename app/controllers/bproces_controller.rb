@@ -43,14 +43,14 @@ class BprocesController < ApplicationController
   end
 
   def autocomplete
-    @bproces = Bproce.order(:name).where("name ilike ?", "%#{params[:term]}%")
+    @bproces = Bproce.order(:name).where("id = ? or name ilike ? or shortname ilike ? ", "#{params[:term].to_i}", "%#{params[:term]}%", "%#{params[:term]}%")
     render json: @bproces.map(&:name)
   end
 
   def show
-    @metrics = Metric.where(:bproce_id => @bproce.id).order(:name)  # метрики процесса
+    @metrics = Metric.where(:bproce_id => @bproce.id).order(:name) if @bproce # метрики процесса
     #@contracts = Contract.where(:bproce_id => @bproce.id)  # договоры процесса
-    respond_with(@bproce)
+    #respond_with(@bproce)
   end
 
   def card
