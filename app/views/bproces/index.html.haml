@@ -16,7 +16,10 @@
         = link_to @user.displayname, user_path(@user)
 %table
   %tr
-    %th= "[Обозначение] Наименование процесса ... Владелец"
+    %th
+      = "[Обозначение] Наименование процесса"
+      -if !params[:user].present?
+        %small ... Владелец
     - if can? :modify, Bproce
       %th
     - if can? :destroy, Bproce
@@ -30,9 +33,10 @@
         = link_to bproce.name, bproce_path(bproce)
         -if can? :manage_tag, bproce
           %sup= bproce.tag_list
-        -if bproce.user
-          = ' ... '
-          %small= link_to bproce.user.displayname, user_path(bproce.user)
+        -if !params[:user].present?
+          -if bproce.user
+            = ' ... '
+            %small= link_to bproce.user.displayname, user_path(bproce.user)
       - if can? :modify, bproce
         %td
           = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_bproce_path(bproce), class: 'button-img'
