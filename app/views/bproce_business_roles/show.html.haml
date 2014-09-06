@@ -2,17 +2,17 @@
 .id_
   \#
   = @bp.id
-%h3= link_to @bp.name, bproce_path(@bp)
+%h2
+  [
+  =@bp.shortname
+  ]
+  = link_to @bp.name, bproce_path(@bp)
 %b
   Цель:
 -if @bp.goal.blank?
   не задана
 -else
   = @bp.goal
--if !@bp.description.blank?
-  %br
-  %b Краткое описание:
-  = @bp.description
 %p
 %h3 Роли процесса:
 %table
@@ -36,4 +36,9 @@
 -if can? :update, @bp
   = link_to 'Распоряжение', bproce_path(@bp) + '/order', class: :button
   = link_to "Добавить новую роль в процесс" , new_bproce_business_role_path(@bp), :class => 'button'
+%p
+-if !@bp.description.blank?
+  %br
+  %b Краткое описание:
+  = @bp.description
 
