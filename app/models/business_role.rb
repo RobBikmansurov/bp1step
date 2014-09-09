@@ -2,7 +2,7 @@ class BusinessRole < ActiveRecord::Base
   validates :name, :presence => true,
                    :length => {:minimum => 5, :maximum => 50}
   validates :description, :presence => true,
-                          :length => {:minimum => 8, :maximum => 255}
+                          :length => {:minimum => 8}
   validates :bproce_id, :presence => true
 
   include PublicActivity::Model
