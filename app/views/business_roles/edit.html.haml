@@ -3,7 +3,15 @@
 .id_
   \#
   =@business_role.id
-%h1 Роль
+%h2 
+  Роль
+  [
+  =@business_role.name
+  ]
+-if @business_role.bproce_id?
+  %h3
+    в процессе
+    = link_to @business_role.bproce.name, bproce_business_role_path(@business_role.bproce)
 = render 'form'
 %p
 %table
