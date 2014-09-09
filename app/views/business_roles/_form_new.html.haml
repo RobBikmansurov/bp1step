@@ -1,8 +1,7 @@
 = simple_form_for(@business_role) do |f|
   = f.error_notification
   = f.input :name
-  = f.input :description #, :as => :text
-  -#= f.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Участвует в процессе', :include_blank => false, :prompt => 'Выберите процесс, в котором участвует Роль'
+  = f.input :description
 
   = f.label 'Процесс'
   -if @business_role.bproce_id?
