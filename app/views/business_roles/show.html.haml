@@ -5,7 +5,9 @@
   =@business_role.id
 %h2
   Роль
+  [
   =@business_role.name
+  ]
 %h3
   в процессе
   = link_to @business_role.bproce.name, bproce_business_role_path(@business_role.bproce) if @business_role.bproce
