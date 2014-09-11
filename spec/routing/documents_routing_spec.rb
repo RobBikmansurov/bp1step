@@ -41,5 +41,10 @@ describe DocumentsController do
       patch("documents/1/update_file").should route_to("documents#update_file", id: '1')
     end
 
+    it "routes to bproces documents" do
+      get("/bproces/1/documents").should route_to("documents#index", bproce_id: '1')
+    end
+
+
   end
 end

@@ -14,6 +14,12 @@
 %h3 Действия в процессе:
 = @business_role.description
 
+-if @business_role.bproce.business_roles.count > 1
+  %h4
+    Другие роли процесса:
+    - @business_role.bproce.business_roles.each do | role |
+      = link_to role.name, business_role_path(role)
+
 -if !current_user.nil?
   -if current_user.role? :admin
     %h3 Особенности настройки:
@@ -21,7 +27,9 @@
 
 %h3
   Исполнители роли
+  [
   =@business_role.name
+  ]
   \:
 %table
   %tr
