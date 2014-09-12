@@ -46,9 +46,9 @@
                       = params[:tag]
 -else
   -title "Список внутренних документов банка"
-  %h2
-    Список Документов, разработанных на основании 
-    =link_to @directive.number, directive_path(@directive)
+  %h3
+    Документы, разработанные на основании 
+    =link_to @directive.shortname, directive_path(@directive)
 
 %table
   %tr
@@ -86,7 +86,7 @@
           = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_document_path(document), class: 'button-img'
       -if can? :destroy, document
         %td
-          = link_to image_tag('action_stop.gif', alt: 'Удалить', title: 'Удалить' ), document, data: { confirm: document.name + "\nДействительно хотите удалить документ?" }, :method => 'delete', class: 'button-img'
+          = link_to image_tag('action_stop.gif', alt: 'Удалить', title: 'Удалить' ), document, data: { confirm: document.name + "\nДействительно хотите удалить документ #" + document.id.to_s + " ?" }, :method => 'delete', class: 'button-img'
 -if !params[:all].present?
   .apple_pagination
     = will_paginate @documents 

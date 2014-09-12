@@ -27,6 +27,8 @@ class DocumentDirectivesController < ApplicationController
 
   def create
     @document_directive = DocumentDirective.new(params[:document_directive])
+    puts '#create'
+    puts @document_directive.inspect
     respond_to do |format|
       if @document_directive.save
         format.html { redirect_to @document_directive, notice: 'Document directive was successfully created.' }
