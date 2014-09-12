@@ -44,6 +44,9 @@ describe DocumentsController do
     it "routes to bproces documents" do
       get("/bproces/1/documents").should route_to("documents#index", bproce_id: '1')
     end
+    it "routes to #clone document" do
+      get("/documents/1/clone").should route_to("documents#clone", id: '1')
+    end
 
 
   end
