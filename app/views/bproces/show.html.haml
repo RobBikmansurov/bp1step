@@ -38,7 +38,7 @@
     = @bproce.goal
 -if !@bproce.description.blank?
   %h4 Краткое описание:
-  = @bproce.description
+  = markdown(@bproce.description)
 %h3
   Владелец процесса:
   -if @bproce.user_id?

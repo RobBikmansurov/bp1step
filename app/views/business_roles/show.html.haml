@@ -12,7 +12,7 @@
   в процессе
   = link_to @business_role.bproce.name, bproce_business_role_path(@business_role.bproce) if @business_role.bproce
 %h3 Действия в процессе:
-= @business_role.description
+= markdown(@business_role.description)
 
 -if @business_role.bproce.business_roles.count > 1
   %h4
@@ -37,7 +37,7 @@
     %th Период
     %th Основание
     %th Процесс
-  - @business_role.user_business_role.each do |business_role|
+  - @business_role.user_business_role.order(:date_from).each do |business_role|
     %tr
       -if business_role.user
         %td{style: ('text-decoration: line-through;' if !business_role.user.active)} 
