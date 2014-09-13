@@ -64,6 +64,7 @@ BPDoc::Application.routes.draw do
       get :file_delete
       patch :update_file
       get :approval_sheet # Лист согласования
+      get :clone  # создать карточку похожего документа
     end
   end
   resources :document_directives

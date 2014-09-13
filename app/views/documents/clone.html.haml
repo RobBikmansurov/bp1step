@@ -1,0 +1,11 @@
+-title "Документ"
+-search "Документ" 
+.id_
+  \#
+  = @document.id if @document.id
+%h1
+  Новый документ
+  = @document.note
+= render 'form'
+= render 'show_bproce_link'
+= render 'show_directive'

@@ -66,6 +66,11 @@ class DocumentsController < ApplicationController
     end
   end
 
+  def autocomplete
+    @documents = Document.order(:name).where("name ilike ?", "%#{params[:term]}%")
+    render json: @documents.map(&:name)
+  end
+
   def edit
     #authorize! :edit_document_place, @user if params[:user][:edit_document_place]
     @document = Document.find(params[:id])
@@ -102,6 +107,35 @@ class DocumentsController < ApplicationController
     @document.owner_id = current_user.id if current_user  # владелец документа - пользователь
     @document.place = '?!'  # место хранения не определено
     respond_with(@document)
+  end
+
+  def clone
+    document = Document.find(params[:id])   # документ - прототип
+    @document = Document.new()
+    @document.name = document.name
+    @document.description = document.description
+    @document.dlevel = document.dlevel
+    @document.status = "Проект"
+    @document.approveorgan = document.approveorgan
+    @document.note = 'создан из #' + document.id.to_s
+    @document.owner_id = current_user.id if current_user  # владелец документа - пользователь
+    @document.place = '?!'  # место хранения не определено
+    if @document.save
+      flash[:notice] = "Successfully cloned Document." if @document.save
+      document.bproce_document.each do |bp|     # клонируем ссылки на процессы
+        bproce_document = BproceDocument.new(document_id: @document, bproce_id: bp)
+        bproce_document.document = @document
+        bproce_document.bproce = bp.bproce
+        bproce_document.purpose = bp.purpose
+        bproce_document.save
+      end
+      document.document_directive.each do |document_directive|    # клонируем ссылки на директивы
+        new_document_directive = DocumentDirective.new(document_id: @document.id, directive_id: document_directive.directive_id, note: document_directive.note)
+        puts
+        puts new_document_directive.inspect
+        new_document_directive.save
+      end
+    end
   end
 
   def create
