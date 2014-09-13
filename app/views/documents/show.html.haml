@@ -18,19 +18,7 @@
   уровень документа:
   %b= link_to @document.dlevel.to_s + ': ' + dlevel_title(@document.dlevel), documents_path + '?dlevel=' + @document.dlevel.to_s, class: 'groups'
 
-%p
-- if !@document.bproce.blank?  # есть ссылки из документа на другие процессы?
-  %h3 
-    Процесс:
-    - @document.bproce_document.each do |bproce_document|
-      = link_to bproce_document.bproce.name, bproce_path(bproce_document.bproce)
-      -if can? :update, Document
-        = link_to '( ' + bproce_document.purpose.to_s + ' )', edit_bproce_document_path(bproce_document)
-      -else
-        = '( ' + bproce_document.purpose.to_s + ' )'
-
--else
-  %h3 Процесс не назначен!
+= render 'show_bproce_link'
 
 %p
 %h3
@@ -44,31 +32,16 @@
 %h3 Примечание:
 = @document.note
 
-%hr
--if @document.directive.count > 0
-  %h4 Документ разработан на основе следующих руководящих документов:
-  - @document.document_directive.each do |document_directive|
-    -if document_directive.directive
-      = link_to document_directive.directive.midname, directive_path(document_directive.directive)
-    -else
-      = document_directive.inspect
-    (
-    -if can? :update, @document
-      %td= link_to document_directive.note.to_s, edit_document_directive_path(document_directive)
-    -else
-      %td= document_directive.note
-    )
-    %br
+= render 'show_directive'
 
 %p
-%h3 Место хранения
-%h4
-  оригинал:
+%h3
+  Место хранения оригинала:
   %b= link_to @document.place, documents_path + '?place=' + @document.place, class: 'groups', title: place_title(@document.place) if !@document.place.blank?
 
 %h4
   -if @document.document_file_file_name
-    Электронный документ:
+    электронный документ:
     %b
       =@document.document_file_file_name
     - if can? :edit_document, @document
@@ -121,9 +94,13 @@
   = @document.updated_at.strftime('%d.%m.%Y %H:%M:%S')
 
 %p
--if can? :update, Document
+-if can? :update, @document
   = link_to 'Edit', edit_document_path(@document), :class => 'button'
 = link_to 'Back', :back, :class => 'button'
 -if @document.status
   -if @document.status == 'Проект' or @document.status == 'Согласование'
     = link_to 'Лист согласования', approval_sheet_document_path(@document), :class => 'button' if can? :update, Document
+-if can? :destroy, @document
+  = link_to 'Clone', clone_document_path(@document), :class => 'button'
+-if can? :destroy, @document
+  = link_to 'Удалить', @document, data: { confirm: @document.name + "\nДействительно хотите удалить документ #" + @document.id.to_s + " ?" }, :method => 'delete', class: 'button'

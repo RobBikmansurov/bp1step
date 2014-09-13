@@ -14,7 +14,7 @@ class Directive < ActiveRecord::Base
 
   def shortname
     if approval
-      return title + ' ' + number + ' ' + approval.strftime('%d.%m.%Y')
+      return title + ' ' + number + ' от ' + approval.strftime('%d.%m.%Y')
     else
       return title + ' ' + number
     end

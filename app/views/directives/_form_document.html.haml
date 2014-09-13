@@ -21,8 +21,11 @@
   = simple_form_for(@document_directive) do |dd|
     = dd.error_notification
     = dd.hidden_field :directive_id
-    = dd.input :document_id, :collection => Document.order('name').load, :prompt => 'Добавить внутренний документ банка', :label_method => :shortname
-    -#= dd.association :document, :include_blank => true, :prompt => 'Добавить внутренний документ банка'
+    = dd.hidden_field :document_id
+    = dd.label 'Документ'
+    = dd.autocomplete_field :document_name, autocomplete_documents_path, :id_elements => '#document_directive_document_id', :placeholder => 'подстрока в наименовании'
+    
+    -#= dd.input :document_id, :collection => Document.order('name').load, :prompt => 'Добавить внутренний документ банка', :label_method => :shortname
     = dd.error :base
     -if can? :update, @directive
       = dd.button :submit, 'Добавить Внутренний документ банка'

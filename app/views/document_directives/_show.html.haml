@@ -1,9 +1,8 @@
 .id_
   \#
-  =@document_directive.document.id
+  =@document_directive.document.id if @document_directive.document
 %h3
   Документ:
-  = link_to @document_directive.document.name, @document_directive.document
-%h3
+  = link_to @document_directive.document.name, @document_directive.document if @document_directive.document
   разработан на основании:
   = link_to @document_directive.directive.midname, @document_directive.directive
