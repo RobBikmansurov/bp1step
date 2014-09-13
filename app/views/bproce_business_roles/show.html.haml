@@ -24,13 +24,16 @@
   -@business_roles.each do |ro|
     %tr
       %td= link_to ro.name, business_role_path(ro)
-      %td= ro.description
-      -if ro.users.first
+      %td= markdown(ro.description)
+      -if ro.users.count > 0
         %td
-          = link_to ro.users.first.displayname, ro.users.first
-          -if ro.users.count > 1
-            +
-            = ro.users.count - 1
+          - user_count = 0
+          - ro.users.order(:lastname).each do | user |
+            -user_count = user_count + 1
+            -if user_count < 8
+              = link_to user.displayname, user
+            -else
+              \+
       -else
         %td
 -if can? :update, @bp
@@ -40,5 +43,5 @@
 -if !@bp.description.blank?
   %br
   %b Краткое описание процесса:
-  = @bp.description
+  = markdown(@bp.description)
 

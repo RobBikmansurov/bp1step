@@ -26,6 +26,13 @@ module ApplicationHelper
     @devise_mapping ||= Devise.mappings[:user]
   end
 
+  def markdown(text)
+    #highlight(text, 'Юрист', highlighter: '<strong>\1</strong>')
+    simple_format(text, {}, {})
+    #text.gsub!(/\r\n?/, "\n")                     # \r\n and \r => \n
+    #text.gsub!(/([^\n]\n)(?=[^\n])/, '\1<br />')  # 1 newline   => br 
+  end
+
   def nav_link(link_text, link_path)
     content_tag(:li, :class => nav_current(link_path)) do
       link_to link_text, link_path
