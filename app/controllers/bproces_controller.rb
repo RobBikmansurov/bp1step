@@ -49,8 +49,8 @@ class BprocesController < ApplicationController
 
   def show
     @metrics = Metric.where(:bproce_id => @bproce.id).order(:name) if @bproce # метрики процесса
-    #@contracts = Contract.where(:bproce_id => @bproce.id)  # договоры процесса
-    #respond_with(@bproce)
+      #@contracts = Contract.where(:bproce_id => @bproce.id)  # договоры процесса
+    respond_with(@bproce)
   end
 
   def card
@@ -131,7 +131,7 @@ private
     if params[:search].present? # это поиск
       #@bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
       @bproces = Bproce.search(params[:search])
-      #render :index # покажем список найденного
+      render :index # покажем список найденного
     else
       @bproce = params[:id].present? ? Bproce.find(params[:id]) : Bproce.new
     end
