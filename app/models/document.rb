@@ -43,7 +43,7 @@ class Document < ActiveRecord::Base
   has_many :bproce, through: :bproce_document
   has_many :bproce_document, dependent: :destroy 
 
-  attr_accessible  :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :document_file, :file_delete
+  attr_accessible  :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :document_file, :file_delete, :bproce_id
 
   def owner_name
     owner.try(:displayname)

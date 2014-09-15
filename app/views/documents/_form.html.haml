@@ -2,10 +2,10 @@
   = f.error_notification
   = f.input :name, :as => :text
   = f.input :dlevel, :collection => 1..4, :as => :radio_buttons, :hint => 'Политики, Стратегии(1) - Положения, Описания(2) - Регламенты, Инструкции(3) - Свидетельства: Акты, Протоколы, Журналы(4)'
-  -#= f.input :dlevel, :collection => %w[1Политики 2Положения 3Регламенты 4Свидетельства], :as => :radio_buttons, :hint => 'Уровень документа: Политики - Положения - Регламенты - Свидетельства'
   = f.input :description, :as => :text
-  
-  -#= f.input :owner_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Ответственный за документ'
+
+  = f.hidden_field :bproce_id
+
   = f.label 'Ответственный за документ'
   = f.autocomplete_field :owner_name, autocomplete_users_path
 
@@ -38,3 +38,4 @@
 
 -#= @document_directives.inspect
 -#= @document.directive
+=@bproce.inspect
