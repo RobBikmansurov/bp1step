@@ -97,7 +97,11 @@
     = link_to 'Список', documents_path(@document) + '.odt?' + request.query_string, :class => 'button'
   -else
     = link_to 'Список', documents_path(@document) + '.odt', :class => 'button'
-  = link_to 'Добавить новый документ', new_document_path, :class => 'button'
+  -if @bproce
+    = link_to 'Новый документ процесса', new_document_bproce_path(@bproce), :class => 'button'
+  -else
+    = link_to 'Добавить новый документ', new_document_path, :class => 'button'
+
 %p
 %br
 Статус:

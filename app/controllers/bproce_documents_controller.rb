@@ -2,6 +2,15 @@ class BproceDocumentsController < ApplicationController
   respond_to :html, :xml, :json
   before_filter :authenticate_user!, :only => [:edit, :new, :destroy]
   before_filter :get_bproce_document, :except => [ :index, :show ]
+
+  def new
+    @bproce_document = BproceDocument.new
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @bproce_document }
+    end
+  end
   
   def create
     #@bproce_document = BproceDocument.create(params[:bproce_document])

@@ -5,7 +5,7 @@ class DocumentsController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
   before_filter :authenticate_user!, :only => [:edit, :new]
-  before_filter :get_document, :except => [:index, :print, :view, :create]
+  before_filter :get_document, :except => [:index, :print, :view, :create, :new]
 
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
@@ -103,10 +103,14 @@ class DocumentsController < ApplicationController
   end
 
   def new
-    @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
+    @document = Document.new
+    if params[:id].present?  # будем добавлять документ процесса
+      @bproce = Bproce.find(params[:id])
+      @document.bproce_id = @bproce.id
+    end
     @document.owner_id = current_user.id if current_user  # владелец документа - пользователь
     @document.place = '?!'  # место хранения не определено
-    respond_with(@document)
+    #respond_with(@document)
   end
 
   def clone
@@ -140,7 +144,16 @@ class DocumentsController < ApplicationController
 
   def create
     @document = Document.new(document_params)
-    flash[:notice] = "Successfully created Document." if @document.save
+    if @document.save
+      flash[:notice] = "Successfully created Document."
+      bproce = Bproce.find(@document.bproce_id) if @document.bproce_id  # добавляем документ из процесса?
+      if bproce
+        bproce_document = BproceDocument.new(document_id: @document, bproce_id: bproce) # привязали документ к процессу
+        bproce_document.document = @document
+        bproce_document.bproce = bproce
+        flash[:notice] = "Successfully created Document from Process #" + bproce.id.to_s  if bproce_document.save
+      end
+    end
     respond_with(@document)
   end
 
@@ -173,7 +186,7 @@ class DocumentsController < ApplicationController
 private
 
   def document_params
-    params.require(:document).permit(:name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :file_delete)
+    params.require(:document).permit(:name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :file_delete, :bproce_id)
   end
 
   def document_file_params
