@@ -36,8 +36,10 @@ BPDoc::Application.routes.draw do
   resources :bproce_workplaces, :only => [:create, :destroy, :show]
   resources :bproce_documents, :except => :index
   resources :bproces do
-    resources :bapps, :documents
+    resources :bapps
+    #resources :documents
     resources :business_roles, :only => [:new]
+    resources :documents, :only => [:new, :index]
     collection do
       get :manage
       post :rebuild
@@ -49,6 +51,7 @@ BPDoc::Application.routes.draw do
       get :card   # карточка процесса
       get :metrics  # метрики процесса
       get :newmetric  # добавить новую метрику в процесс
+      get :new_document, to: 'documents#new'
     end
   end
   resources :bproce_contracts, :except => :index
