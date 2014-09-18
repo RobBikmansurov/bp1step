@@ -10,7 +10,7 @@ class UserBusinessRolesController < ApplicationController
   end
 
   def new
-    @user_business_role = UserBusinessRole.new
+    @user_business_role = UserBusinessRole.new(date_from:  Date.today.strftime("%d.%m.%Y"), date_to: Date.today.change(:month => 12, :day => 31).strftime("%d.%m.%Y"))
   end
 
   def create
