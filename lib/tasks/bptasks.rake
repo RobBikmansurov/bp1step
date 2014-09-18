@@ -17,7 +17,7 @@ namespace :bp1step do
 
 
   desc "Sync users from ActiveDirectory"
-  # не умеет удалять пользователей User, удаленных в LDAP
+  # отбирает пользователей - членов группы rl_bp1step_users
   task :sync_active_directory_users  => :environment do   # синхронизация списка пользователей LDAP -> User 
     require 'rubygems'
     require 'net/ldap'
@@ -34,54 +34,54 @@ namespace :bp1step do
         :username => LDAP_CONFIG["development"]["admin_user"],
         :password => LDAP_CONFIG["development"]["admin_password"]
       }
-    debug_flag = false # флаг отладки, если true - отладочная печать
+    debug_flag = true # флаг отладки, если true - отладочная печать
 
-    #filter = Net::LDAP::Filter.eq(&(objectClass=person)(objectClass=user)(middleName=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))
-    c1 = Net::LDAP::Filter.eq('objectCategory', 'Person')
-    c2 = Net::LDAP::Filter.eq('objectClass', 'user')
-    c3 = Net::LDAP::Filter.eq('samAccountType', '805306368')
-    c4 = Net::LDAP::Filter.eq('title', '*')   # пользователи с должностью
-    c5 = Net::LDAP::Filter.eq('mail', '*')    # имеют e-mail
-    c6 = Net::LDAP::Filter.ne('userAccountControl', '2')  # не заблокированные (не отключенные) - 'userAccountControl:1.2.840.113556.1.4.803:', '2'
-    filter = c1 & c2 & c3 & c4 & c5 & c6  #выбрать только учетные записи пользователей, имеющих атрибут title и не заблокированных. 
+    filter = Net::LDAP::Filter.eq('memberOf', 'CN=rl_bp1step_users,OU=roles,DC=ad,DC=bankperm,DC=ru') # выбирать членов группы rl_bp1step_users
     treebase = LDAP_CONFIG["development"]["base"]
-    attrs = ["sn", "givenname", "MiddleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description", "userAccountControl"]
+    attrs = ["sn", "givenname", "middleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description", "userAccountControl"]
+
 
     i, new_users, upd_users, not_found_users, disabled_users = 0, 0, 0, 0, 0  # счетчики
     ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do |entry|
       i += 1
-      email = entry["mail"].first       # это обязательные параметры + к ним левые уникальные password и reset_password_token
       username = entry["sAMAccountName"].first.downcase
+      email = entry["mail"].first       # это обязательные параметры + к ним левые уникальные password и reset_password_token
+      #puts "#{i}. #{username}\t#{email}" if debug_flag
+      email = username + '@bankperm.ru' if email.to_s.empty?
       uac = entry["userAccountControl"].first.to_i  # второй бит = 1 означает отключенного пользователя в AD
-      #logger.info "#{username} #{email} >> #{uac & 2}" if debug_flag
-      if uac & 2 == 0 # пользователь не заблокирован
-        s1 = entry["department"].first.to_s.force_encoding("UTF-8")
-        s2 = entry["title"].first.to_s.force_encoding("UTF-8")
+      department = entry["department"].first.to_s.force_encoding("UTF-8")
+      position = entry["title"].first.to_s.force_encoding("UTF-8")
+      phone = entry["telephonenumber"].first
+      office = entry["physicaldeliveryofficename"].first
+      sn = entry["sn"].first
+      givenname = entry["givenname"].first
+      middlename = entry["middleName"].first
+      physicaldeliveryofficename = entry["physicaldeliveryofficename"].first
+      name = entry["name"].first
+      #logger.info "#{i}. #{username}\t#{email}\t#{sn} #{givenname} #{middlename}\t#{name}   >> #{uac & 2}" if debug_flag
+      #logger.info "#{i}. #{name}\t#{email}\t#{position} - #{department}" if debug_flag
+
+      if uac & 2 == 0  or !entry["mail"].first.to_s.empty?   # пользователь не заблокирован и имеет не пустой e-mail
         usr = User.find_or_create_by(username: username)
         if usr.new_record?
-          #usr.email = email
-          #usr.password = email
-          if email.to_s.empty?  # пропустим с пустым email
-            logger.info "#{i}!#{new_users}. #{entry.sAMAccountName} #{entry.dn} \t- email is NULL!"
+          logger.info "#{i}!#{new_users}. #{entry.sAMAccountName} #{entry.dn} \t- email is NULL!" if email.to_s.empty?
+          new_users += 1
+          usr1 = User.find_by_email(email.to_s) # поищем по e-mail
+          if usr1.nil?
+            logger.info "+ #{entry["sn"].first} \t[#{username}] \t"
+            #usr = User.new
+            usr.update_attribute(:username, username)
+            usr.update_attribute(:email, email)
+            usr.update_attribute(:department, department)
+            usr.update_attribute(:position, position)
+            usr.update_attribute(:phone, phone)
+            usr.update_attribute(:office, office)
+            usr.update_attribute(:password, email)
+            logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} #{entry.dn}"
+            logger.info usr.errors if debug_flag
           else
-            new_users += 1
-            usr1 = User.find_by_email(email.to_s) # поищем по e-mail
-            if usr1.nil?
-              logger.info "+ #{entry["sn"].first} \t[#{username}] \t"
-              #usr = User.new
-              usr.update_attribute(:username, username)
-              usr.update_attribute(:email, email)
-              usr.update_attribute(:department, s1)
-              usr.update_attribute(:position, s2)
-              usr.update_attribute(:phone, entry["telephonenumber"].first)
-              usr.update_attribute(:office, entry["physicaldeliveryofficename"].first)
-              usr.update_attribute(:password, email)
-              logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} #{entry.dn}"
-              logger.info usr.errors if debug_flag
-            else
-              logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} = #{usr1.username}"
-              logger.info "    уже есть пользователь с таким e-mail, #id= #{usr1.id}"
-            end
+            logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} = #{usr1.username}"
+            logger.info "    уже есть пользователь с таким e-mail, #id= #{usr1.id}"
           end
         else  # проверим - не изменилось ли ключевые реквизиты у этого пользователя в AD
           if !(usr.email == email)  # e-mail
@@ -89,22 +89,18 @@ namespace :bp1step do
             usr.update_attribute(:email, email)
             usr.email = email
           end
-          if !(usr.department.to_s == s1) # подразделение
-            logger.info "#{usr.id}: #{usr.department} = #{s1}: #{usr.department == s1}" if debug_flag
-            usr.update_attribute(:department, s1)
+          if !(usr.department.to_s == department) # подразделение
+            logger.info "#{usr.id}: #{usr.department} = #{department}: #{usr.department == department}" if debug_flag
+            usr.update_attribute(:department, department)
           end
-          if !(usr.position.to_s == s2) # должность
-            logger.info "#{usr.id}: #{usr.position} = #{s2}: #{usr.position == s2}" if debug_flag
-            usr.update_attribute(:position, s2)
+          if !(usr.position.to_s == position) # должность
+            logger.info "#{usr.id}: #{usr.position} = #{position}: #{usr.position == position}" if debug_flag
+            usr.update_attribute(:position, position)
           end
-          if !(usr.phone == entry["telephonenumber"].first) # телефон
-            #logger.info "#{usr.phone} = #{entry['telephonenumber'].first}: #{usr.phone == entry['telephonenumber'].first}" if debug_flag
-            usr.update_attribute(:phone, entry["telephonenumber"].first)
-          end
-          if !(usr.office == entry["physicaldeliveryofficename"].first) # офис
-            usr.update_attribute(:office, entry["physicaldeliveryofficename"].first)
-            #logger.info "#{usr.office} = #{entry['physicaldeliveryofficename'].first}: #{usr.office == entry['physicaldeliveryofficename'].first}" if debug_flag
-          end
+          usr.update_attribute(:phone, phone) if !(usr.phone ==phone) # телефон
+          usr.update_attribute(:office, office) if !(usr.office == office) # офис
+          usr.update_attribute(:middlename, middlename) if !(usr.middlename == middlename) # отчество
+
           logger.info "#{entry["sn"].first} \t[#{username}] \t #{usr.changed}" if usr.changed?
         end
       else  # пользователь заблокирован в AD
@@ -126,7 +122,7 @@ namespace :bp1step do
       ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do | entry |
         exist_user += 1
         uac = entry["userAccountControl"].first.to_i
-        if uac & 2 > 0  # имеющийся в БД пользователь заблокирован в AD
+        if uac & 2 > 0 or entry["mail"].first.to_s.empty? # имеющийся в БД пользователь заблокирован в AD или не имеет e-mail
           user.update_attribute(:active, false)
           disabled_users += 1
           # если нет связи с ролями, рабочими местами, процессами
@@ -353,5 +349,44 @@ namespace :bp1step do
     logger.info "      #{wo_bproce_count} dcouments without processes from #{document_count} documents"
   end
 
+  desc "List users from ActiveDirectory"
+  task :list_active_directory_users  => :environment do   # вывод списка пользователей LDAP для тестирования
+    require 'rubygems'
+    require 'net/ldap'
+
+    PublicActivity.enabled = false  # отключить протоколирование изменений
+
+    LDAP_CONFIG = YAML.load_file(Devise.ldap_config)  # считаем конфиги доступа к LDAP
+    ldap = Net::LDAP.new :host => LDAP_CONFIG["development"]["host"],
+      :port => LDAP_CONFIG["development"]["port"],
+      :auth => {
+        :method => :simple,
+        :username => LDAP_CONFIG["development"]["admin_user"],
+        :password => LDAP_CONFIG["development"]["admin_password"]
+      }
+    filter = Net::LDAP::Filter.eq('memberOf', 'CN=rl_bp1step_users,OU=roles,DC=ad,DC=bankperm,DC=ru') # выбирать членов группы rl_bp1step_users
+    treebase = LDAP_CONFIG["development"]["base"]
+    attrs = ["sn", "givenname", "middleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description", "userAccountControl"]
+
+    i = 0  # счетчики
+    ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do |entry|
+      i += 1
+      email = entry["mail"].first       # это обязательные параметры + к ним левые уникальные password и reset_password_token
+      username = entry["sAMAccountName"].first.downcase
+      uac = entry["userAccountControl"].first.to_i  # второй бит = 1 означает отключенного пользователя в AD
+      department = entry["department"].first.to_s.force_encoding("UTF-8")
+      position = entry["title"].first.to_s.force_encoding("UTF-8")
+      phone = entry["telephonenumber"].first
+      office = entry["physicaldeliveryofficename"].first
+      sn = entry["sn"].first
+      givenname = entry["givenname"].first
+      middlename = entry["middleName"].first
+      physicaldeliveryofficename = entry["physicaldeliveryofficename"].first
+      name = entry["name"].first
+
+      #puts "#{i}. #{username}\t#{email}\t#{sn} #{givenname} #{middlename}\t#{name}   >> #{uac & 2}"
+      puts "#{i}. #{name}\t#{email}\t#{position} - #{department}"
+    end
+  end
 
 end
