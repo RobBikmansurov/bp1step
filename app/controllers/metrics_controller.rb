@@ -92,6 +92,7 @@ class MetricsController < ApplicationController
       when 2 then '%b %Y'
       else '%d %m %Y'
     end
+    @metrics = Metric.where(bproce_id: @metric.bproce).order(:name)
   end
 
   def new_value
