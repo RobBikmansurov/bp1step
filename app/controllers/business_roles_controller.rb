@@ -47,8 +47,8 @@ class BusinessRolesController < ApplicationController
   end
 
   def edit
-    @user_business_role = UserBusinessRole.new(:business_role_id => @business_role.id)
-    respond_with(@business_role)
+    @user_business_role = UserBusinessRole.new(:business_role_id => @business_role.id, date_from:  Date.today.strftime("%d.%m.%Y"), date_to: Date.today.change(:month => 12, :day => 31).strftime("%d.%m.%Y"))
+    respond_with(@business_role, @user_business_role)
   end
 
   def update
