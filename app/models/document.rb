@@ -29,7 +29,7 @@ class Document < ActiveRecord::Base
   validates :dlevel, :numericality => {:less_than => 5, :greater_than => 0}
   validates :place, :presence => true   # документ должен иметь место хранения
   validates :owner_id, presence: true   # должен иметь ответственного
-  validates :description, :length => {:maximum => 255}  # описание - не длиннее 255 символов
+  #validates :description, :length => {:maximum => 255}  # описание - не длиннее 255 символов
 
   include PublicActivity::Model
   tracked owner: Proc.new { |controller, model| controller.current_user }
