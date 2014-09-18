@@ -7,11 +7,12 @@
   -if can? :destroy, business_role
     = link_to image_tag('action_stop.gif', :alt => 'Удалить'), business_role, data: { confirm: "Действительно хотите исключить [" + business_role.name + "] из процесса:\n" + @bproce.name + "?" }, :method => 'delete', class: 'button-img'
 
-= simple_form_for(@business_role) do |r|
-  = r.error_notification
-  = r.input :name
-  = r.input :description, :as => :text
-  = r.hidden_field :bproce_id
-  = r.error :base
-  -if can? :update, @bproce
-    = r.button :submit, 'Добавить Роль'
+-if @business_role
+  = simple_form_for(@business_role) do |r|
+    = r.error_notification
+    = r.input :name
+    = r.input :description, :as => :text
+    = r.hidden_field :bproce_id
+    = r.error :base
+    -if can? :update, @bproce
+      = r.button :submit, 'Добавить Роль'

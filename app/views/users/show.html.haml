@@ -2,7 +2,9 @@
 -search 'Человека'
 %h1{style: ('text-decoration: line-through;' if !@usr.active)} 
   %b
-    = @usr.displayname
+    = @usr.lastname
+  = @usr.firstname
+  = @usr.middlename.to_s + ','
   = @usr.position
 
 #tabs
@@ -32,6 +34,7 @@
       = mail_to @usr.email, @usr.email, :subject => "BP1Step:"
       |
       = @usr.phone
+    %h4
       -if @usr.roles.count
         %b роли доступа:
         - @usr.roles.each do |role|
