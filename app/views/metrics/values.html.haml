@@ -31,6 +31,17 @@
 -else
   = render 'values_by_day'
 
+-if @metrics.count > 0
+  %h4
+    Другие метрики процесса
+    = link_to @metric.bproce.name, bproce_path(@metric.bproce) if @metric.bproce
+  - @metrics.each do |metr|
+    -if @metric.id != metr.id
+      -if @current_period_date
+        = link_to metr.name, values_metric_path(metr, {date: @current_period_date.strftime('%Y-%m-01')}) 
+      -else
+        = link_to metr.name, values_metric_path(metr) 
+
 %p
 = link_to 'Show', @metric, :class => 'button'
 -#= link_to "Добавить новое значение Метрики" , metric_path(@metric) + '/new_value', :class => 'button'
