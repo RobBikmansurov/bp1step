@@ -5,7 +5,7 @@
   = @document.id
 %h2= @document.name 
 %h3 Описание:
-= @document.description
+= markdown(@document.description)
 %h3
   -if @document.status
     ='"' + @document.status + '"'
