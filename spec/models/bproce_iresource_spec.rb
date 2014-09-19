@@ -9,17 +9,17 @@ describe BproceIresource do
 
   context "validates" do
     it "is valid with valid attributes" do
-      @bproce_iresource.should be_valid
+      expect(@bproce_iresource).to be_valid
     end 
 
     it "should require bproce_id" do
-      @bproce_iresource.bproce_id = nil
-      @bproce_iresource.should_not be_valid
+      expect(@bproce_iresource.bproce_id).not_to be_nil
+      expect(@bproce_iresource).to be_valid
     end 
 
     it "should require iresource_id" do
-      @bproce_iresource.iresource_id = nil
-      @bproce_iresource.should_not be_valid
+      expect(@bproce_iresource.iresource_id).not_to be_nil
+      expect(@bproce_iresource).to be_valid
     end 
 
   end

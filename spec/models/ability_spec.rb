@@ -22,25 +22,25 @@ describe Ability do
     ability = Ability.new(@user)
     [Bapp, Bproce, BproceBapp, BusinessRole, Directive, Document, Role, Workplace, Iresource, Term, User].each do |model|
       it "can :read '#{model.to_s}' but can't :manage them" do
-        ability.should be_able_to(:read, model.new)
-        ability.should_not be_able_to(:manage, model.new)
-        ability.should_not be_able_to(:create, model.new)
-        ability.should_not be_able_to(:update, model.new)
-        ability.should_not be_able_to(:destroy, model.new)
+        expect(ability).to be_able_to(:read, model.new)
+        expect(ability).not_to be_able_to(:manage, model.new)
+        expect(ability).not_to be_able_to(:create, model.new)
+        expect(ability).not_to be_able_to(:update, model.new)
+        expect(ability).not_to be_able_to(:destroy, model.new)
       end
     end
     it "can't :show User" do
-      ability.can?(:show, User).should be_false # не видит подробностей о пользователе
-      ability.can?(:index, User).should be_true # видит список пользователей
+      expect(ability.can?(:show, User)).to be_falsey # не видит подробностей о пользователе
+      expect(ability.can?(:index, User)).to be_truthy # видит список пользователей
     end
     it "can't assign Roles" do
-      ability.can?(:assign_roles, User).should be_false
+      expect(ability.can?(:assign_roles, User)).to be_falsey
     end
     it "can't view Document" do
-      ability.can?(:view_document, Document).should be_false  # не может просмотреть файл документа
+      expect(ability.can?(:view_document, Document)).to be_falsey  # не может просмотреть файл документа
     end
     it "can't view Document place" do
-      ability.can?(:edit_document_place, Document).should be_false  # не может изменит место хранения документа
+      expect(ability.can?(:edit_document_place, Document)).to be_falsey  # не может изменит место хранения документа
     end
 
   end
@@ -56,18 +56,18 @@ describe Ability do
     @user = FactoryGirl.create(:user)
     @user.roles << Role.find_by_name(role.name)
     it "has role" do
-      @user.roles.count.should == 1
+      expect(@user.roles.count).to eq(1)
     end
 
     ability = Ability.new(@user)
 
     it "can view Document" do
-      ability.can?(:view_document, Document).should be_true  # может просмотреть файл документа
-      ability.should be_able_to(:view_document, Document)   # может просмотреть файл документа
+      #expect(ability.can?(:view_document, Document)).to be_truthy  # может просмотреть файл документа
+      expect(ability).to be_able_to(:view_document, Document)   # может просмотреть файл документа
     end
     it "can :show User" do
-      ability.should be_able_to(:read, User)
-      ability.can?(:show, User).should be_true # видит подробностей о пользователе
+      expect(ability).to be_able_to(:read, User)
+      expect(ability.can?(:show, User)).to be_truthy # видит подробностей о пользователе
     end
   end
 
@@ -80,38 +80,38 @@ describe Ability do
     role.save
     @user.roles << Role.find_by_name(role.name)
     it "has roles" do
-      @user.roles.count.should == 1
+      expect(@user.roles.count).to eq(1)
     end
 
     ability = Ability.new(@user)
 
     [Directive, Term].each do |model|
       it "can :manage '#{model.to_s}'" do
-        ability.should be_able_to(:manage, model.new)
-        ability.should be_able_to(:create, model.new)
-        ability.should be_able_to(:update, model.new)
-        ability.should be_able_to(:destroy, model.new)
+        expect(ability).to be_able_to(:manage, model.new)
+        expect(ability).to be_able_to(:create, model.new)
+        expect(ability).to be_able_to(:update, model.new)
+        expect(ability).to be_able_to(:destroy, model.new)
       end
     end
     it "can :manage Document" do
-      ability.should be_able_to(:create, Document)
+      expect(ability).to be_able_to(:create, Document)
       @document = FactoryGirl.create(:document)
       @document.owner_id = @user.id
       @document.save
-      ability.should be_able_to(:update, Document, @document)
-      ability.should be_able_to(:destroy, Document)
+      expect(ability).to be_able_to(:update, Document, @document)
+      expect(ability).to be_able_to(:destroy, Document)
     end
 
     it "can view Document" do
-      ability.can?(:view_document, Document).should be_true  # может просмотреть файл документа
-      ability.should be_able_to(:view_document, Document)   # может просмотреть файл документа
+      expect(ability.can?(:view_document, Document)).to be_truthy  # может просмотреть файл документа
+      expect(ability).to be_able_to(:view_document, Document)   # может просмотреть файл документа
     end
     it "can't view Document place" do
-      ability.can?(:edit_document_place, Document).should be_false  # не может изменит место хранения документа
+      expect(ability.can?(:edit_document_place, Document)).to be_falsey  # не может изменит место хранения документа
     end
     it "can :show User" do
-      ability.should be_able_to(:read, User)
-      ability.can?(:show, User).should be_true # видит подробностей о пользователе
+      expect(ability).to be_able_to(:read, User)
+      expect(ability.can?(:show, User)).to be_truthy # видит подробностей о пользователе
     end
   end
 
@@ -125,13 +125,13 @@ describe Ability do
     @user.roles << Role.find_by_name(role.name)
 
     it "has roles" do
-      @user.roles.count.should == 1
+      expect(@user.roles.count).to eq(1)
     end
 
     ability = Ability.new(@user)
     it "can edit Document place" do
-      ability.can?(:edit_document_place, Document).should be_true  # может изменит место хранения документа
-      ability.should be_able_to(:edit_document_place, Document)
+      expect(ability.can?(:edit_document_place, Document)).to be_truthy  # может изменит место хранения документа
+      expect(ability).to be_able_to(:edit_document_place, Document)
     end
   end
 
@@ -145,22 +145,22 @@ describe Ability do
     @user.roles << Role.find_by_name(role.name)
 
     it "has roles" do
-      @user.roles.count.should == 1
+      expect(@user.roles.count).to eq(1)
     end
 
     ability = Ability.new(@user)
 
     [Directive, Term, BproceBapp, BproceIresource, BusinessRole, Metric].each do |model|
       it "can :manage '#{model.to_s}'" do
-        ability.should be_able_to(:create, model.new)
-        ability.should be_able_to(:update, model.new)
-        ability.should be_able_to(:destroy, model.new)
+        expect(ability).to be_able_to(:create, model.new)
+        expect(ability).to be_able_to(:update, model.new)
+        expect(ability).to be_able_to(:destroy, model.new)
       end
     end
     [Document].each do |model|
       it "can :manage '#{model.to_s}'" do
-        ability.should be_able_to(:create, model.new)
-        ability.should be_able_to(:update, model.new)
+        expect(ability).to be_able_to(:create, model.new)
+        expect(ability).to be_able_to(:update, model.new)
       end
     end
 
@@ -168,16 +168,15 @@ describe Ability do
       @bproce = FactoryGirl.create(:bproce)
       @bproce.user_id = @user.id
       user = @user
-      #ability.should be_able_to(:update, @bproce, :user_id => @user.id)
     end
 
     it "can view Document" do
-      ability.can?(:view_document, Document).should be_true  # может просмотреть файл документа
-      ability.should be_able_to(:view_document, Document)   # может просмотреть файл документа
+      expect(ability.can?(:view_document, Document)).to be_truthy  # может просмотреть файл документа
+      expect(ability).to be_able_to(:view_document, Document)   # может просмотреть файл документа
     end
     it "can :show User" do
-      ability.should be_able_to(:read, User)
-      ability.can?(:show, User).should be_true # видит подробностей о пользователе
+      expect(ability).to be_able_to(:read, User)
+      expect(ability.can?(:show, User)).to be_truthy # видит подробностей о пользователе
     end
   end
 
@@ -191,18 +190,18 @@ describe Ability do
     @user.roles << Role.find_by_name(role.name)
 
     it "has roles" do
-      @user.roles.count.should == 1
+      expect(@user.roles.count).to eq(1)
     end
 
     ability = Ability.new(@user)
 
     it "can view Document" do
-      ability.can?(:view_document, Document).should be_true  # может просмотреть файл документа
-      ability.should be_able_to(:view_document, Document)   # может просмотреть файл документа
+      expect(ability.can?(:view_document, Document)).to be_truthy  # может просмотреть файл документа
+      expect(ability).to be_able_to(:view_document, Document)   # может просмотреть файл документа
     end
     it "can :show User" do
-      ability.should be_able_to(:read, User)
-      ability.can?(:show, User).should be_true # видит подробностей о пользователе
+      expect(ability).to be_able_to(:read, User)
+      expect(ability.can?(:show, User)).to be_truthy # видит подробностей о пользователе
     end
   end
 
@@ -216,18 +215,18 @@ describe Ability do
     @user.roles << Role.find_by_name(role.name)
 
     it "has roles" do
-      @user.roles.count.should == 1
+     expect(@user.roles.count).to eq(1)
     end
 
     ability = Ability.new(@user)
 
     it "can view Document" do
-      ability.can?(:view_document, Document).should be_true  # может просмотреть файл документа
-      ability.should be_able_to(:view_document, Document)   # может просмотреть файл документа
+      expect(ability.can?(:view_document, Document)).to be_truthy  # может просмотреть файл документа
+      expect(ability).to be_able_to(:view_document, Document)   # может просмотреть файл документа
     end
     it "can :show User" do
-      ability.should be_able_to(:read, User)
-      ability.can?(:show, User).should be_true # видит подробностей о пользователе
+      expect(ability).to be_able_to(:read, User)
+      expect(ability.can?(:show, User)).to be_truthy # видит подробностей о пользователе
     end
   end
 

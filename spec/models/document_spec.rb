@@ -16,15 +16,15 @@ describe Document do
    it "it not valid if dlevel < 1 or > 4" do #validates :dlevel, :numericality => {:less_than => 5, :greater_than => 0}
      @doc = create(:document)
      @doc.dlevel = nil
-     @doc.should_not be_valid
+     expect(@doc).not_to be_valid
      @doc.dlevel = 0
-     @doc.should_not be_valid
+     expect(@doc).not_to be_valid
      @doc.dlevel = 1
-     @doc.should be_valid
+     expect(@doc).to be_valid
      @doc.dlevel = 4
-     @doc.should be_valid
+     expect(@doc).to be_valid
      @doc.dlevel = 5
-     @doc.should_not be_valid
+     expect(@doc).not_to be_valid
    end
 
 

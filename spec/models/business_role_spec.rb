@@ -9,36 +9,36 @@ describe BusinessRole do
 
   context "validates" do
     it "is valid with valid attributes: name, description, bproce_id" do
-      @business_role.should be_valid
+      expect(@business_role).to be_valid
     end
     it "is not valid without a name" do #validates :name, :presence => true, :length => {:minimum => 5, :maximum => 50}
       @business_role.name = nil
-      @business_role.should_not be_valid
+      expect(@business_role).not_to be_valid
     end
     it "is not valid if length of name < 5 or > 50" do
       @business_role.name = "1234"
-      @business_role.should_not be_valid
+      expect(@business_role).not_to be_valid
       @business_role.name = '1234567890'
-      @business_role.should be_valid
+      expect(@business_role).to be_valid
       @business_role.name = "1234567890" * 5 + "1"
-      @business_role.should_not be_valid
+      expect(@business_role).not_to be_valid
       @business_role.name = "1234567890" * 5 
-      @business_role.should be_valid
+      expect(@business_role).to be_valid
     end
     it "is not valid without a description" do #validates :description, :presence => true, :length => {:minimum => 8}
       @business_role.description = nil
-      @business_role.should_not be_valid
+      expect(@business_role).not_to be_valid
     end
     it "is not valid if length of description < 8" do
       @business_role.description = "1234567"
-      @business_role.should_not be_valid
+      expect(@business_role).not_to be_valid
       @business_role.description = '12345678'
-      @business_role.should be_valid
+      expect(@business_role).to be_valid
     end
 
     it "is not valid without a bproce_id" do #validates :bproce_id, :presence => true
       @business_role.bproce_id = nil
-      @business_role.should_not be_valid
+      expect(@business_role).not_to be_valid
     end
   end
 

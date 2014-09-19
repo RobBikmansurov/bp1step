@@ -10,14 +10,14 @@ describe UserBusinessRole do
   end
 
   it "should be valid" do
-    @ur.should be_valid
+   expect(@ur).to be_valid
   end
   it "should require user_id" do
     @ur.user_id = nil
-    @ur.should_not be_valid
+    expect(@ur).not_to be_valid
   end
   it "should require business_role_id" do
     @ur.business_role_id = nil
-    @ur.should_not be_valid
+    expect(@ur).not_to be_valid
   end
 end
