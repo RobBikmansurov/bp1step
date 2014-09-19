@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
    
   before_create :create_role
 
-  attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :firstname, :lastname, :displayname, :role_ids
+  attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :firstname, :lastname, :displayname, :middlename, :role_ids
   before_save :update_from_ldap
 
   def has_role?(role_sym)
@@ -38,7 +38,7 @@ class User < ActiveRecord::Base
         self.lastname = tempname.force_encoding("UTF-8")
         tempname = Devise::LDAP::Adapter.get_ldap_param(self.username, "givenname").first.to_s
         self.firstname = tempname.force_encoding("UTF-8")
-        tempname = Devise::LDAP::Adapter.get_ldap_param(self.username, "displayname").first.to_s
+        tempname = Devise::LDAP::Adapter.get_ldap_param(self.username, "name").first.to_s
         self.displayname = tempname.force_encoding("UTF-8")
       end
     end
