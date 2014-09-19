@@ -18,7 +18,8 @@
   %h4
     Другие роли процесса:
     - @business_role.bproce.business_roles.each do | role |
-      = link_to role.name, business_role_path(role)
+      = link_to role.name, business_role_path(role) if @business_role.id != role.id
+
 
 -if !current_user.nil?
   -if current_user.role? :admin
@@ -42,6 +43,8 @@
       -if business_role.user
         %td{style: ('text-decoration: line-through;' if !business_role.user.active)} 
           = link_to business_role.user.displayname, business_role.user
+          = link_to business_role.user.office, users_path + '?office=' + business_role.user.office, class: 'groups' if business_role.user.office
+
       -else
         %td
           удалить ссылку
