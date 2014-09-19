@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'factory_girl'
 
 describe BappsController do
   render_views
