@@ -38,28 +38,28 @@ describe User do
 
 
   it "should be valid" do
-    @user.should be_valid
+    expect(@user).to be_valid
   end
   it "should require username" do
     @user.username = nil
-    @user.should_not be_valid
+    expect(@user).not_to be_valid
   end
   it "should require email" do
     @user.email = nil
-    @user.should_not be_valid
+    expect(@user).not_to be_valid
   end
   it "should require uniqueness username" do
     @user1 = build(:user)
-    @user1.should be_valid
+    expect(@user1).to be_valid
     @user1.username = @user.username
     @user1.valid?
   end
   it "should hasn't business_roles when new" do
-    @user.business_roles.count.should == 0
+    expect(@user.business_roles.count).to eq(0)
   end
 
   it 'should have default role' do
-    @user.roles.count.should > 0
+    expect(@user.roles.count).not_to eq(0)
   end
 
 

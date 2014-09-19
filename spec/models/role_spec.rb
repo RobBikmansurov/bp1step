@@ -24,31 +24,31 @@ describe Role do
 
   context "validates" do
     it "is valid with valid attributes: name, description" do
-      #@role.should be_valid
+      #expect(@role).to be_valid
     end
 
     it "is not valid without a name" do
       @role.name = nil
-      @role.should_not be_valid
+      expect(@role).not_to be_valid
     end
     it "it require uniqueness name" do
       @role1 = create(:role)
-      @role1.should be_valid
+      expect(@role1).to be_valid
       @role1.name = @role.name
-      @role1.should_not be_valid
+      expect(@role1).not_to be_valid
       @role2 = create(:role)
-      @role2.should be_valid
+      expect(@role2).to be_valid
     end
     it "is not valid if length of name < 4" do #validates :name, :presence => true, :length => {:minimum => 4}
       @role.name = "123"
-      @role.should_not be_valid
+      expect(@role).not_to be_valid
       @role.name = "1234"
-      @role.should be_valid
+      expect(@role).to be_valid
     end
 
     it "is not valid without a description" do #validates :description, :presence => true
       @role.description = nil
-      @role.should_not be_valid
+      expect(@role).not_to be_valid
     end
   end
 
