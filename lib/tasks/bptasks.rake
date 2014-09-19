@@ -34,7 +34,7 @@ namespace :bp1step do
         :username => LDAP_CONFIG["development"]["admin_user"],
         :password => LDAP_CONFIG["development"]["admin_password"]
       }
-    debug_flag = true # флаг отладки, если true - отладочная печать
+    debug_flag = false # флаг отладки, если true - отладочная печать
 
     filter = Net::LDAP::Filter.eq('memberOf', 'CN=rl_bp1step_users,OU=roles,DC=ad,DC=bankperm,DC=ru') # выбирать членов группы rl_bp1step_users
     treebase = LDAP_CONFIG["development"]["base"]
@@ -55,11 +55,14 @@ namespace :bp1step do
       office = entry["physicaldeliveryofficename"].first
       sn = entry["sn"].first
       givenname = entry["givenname"].first
-      middlename = entry["middleName"].first
+      firstname = entry["firstname"].first
+      middlename = entry["middlename"].first
+      lastname = entry["lastname"].first
+      displayname = entry["name"].first
       physicaldeliveryofficename = entry["physicaldeliveryofficename"].first
-      name = entry["name"].first
       #logger.info "#{i}. #{username}\t#{email}\t#{sn} #{givenname} #{middlename}\t#{name}   >> #{uac & 2}" if debug_flag
       #logger.info "#{i}. #{name}\t#{email}\t#{position} - #{department}" if debug_flag
+      #puts "#{i}. #{username}\t#{email}\t#{displayname}" if debug_flag
 
       if uac & 2 == 0  or !entry["mail"].first.to_s.empty?   # пользователь не заблокирован и имеет не пустой e-mail
         usr = User.find_or_create_by(username: username)
@@ -77,6 +80,10 @@ namespace :bp1step do
             usr.update_attribute(:phone, phone)
             usr.update_attribute(:office, office)
             usr.update_attribute(:password, email)
+            usr.update_attribute(:firsname, firsname)
+            usr.update_attribute(:middlname, middlname)
+            usr.update_attribute(:lastname, lastname)
+            #usr.update_attribute(:displayname, name)   # ФИО - модель update_from_ldap
             logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} #{entry.dn}"
             logger.info usr.errors if debug_flag
           else
@@ -84,6 +91,8 @@ namespace :bp1step do
             logger.info "    уже есть пользователь с таким e-mail, #id= #{usr1.id}"
           end
         else  # проверим - не изменилось ли ключевые реквизиты у этого пользователя в AD
+          #puts "#{i}. #{username}\t#{email}\t#{displayname}" if debug_flag
+
           if !(usr.email == email)  # e-mail
             logger.info "#{usr.email} == #{email}: #{usr.email == email}" if debug_flag
             usr.update_attribute(:email, email)
@@ -97,9 +106,11 @@ namespace :bp1step do
             logger.info "#{usr.id}: #{usr.position} = #{position}: #{usr.position == position}" if debug_flag
             usr.update_attribute(:position, position)
           end
-          usr.update_attribute(:phone, phone) if !(usr.phone ==phone) # телефон
+          usr.update_attribute(:phone, phone) if !(usr.phone == phone) # телефон
           usr.update_attribute(:office, office) if !(usr.office == office) # офис
           usr.update_attribute(:middlename, middlename) if !(usr.middlename == middlename) # отчество
+          #usr.update_attribute(:displayname, displayname) if !(usr.displayname == displayname) # ФИО - модель update_from_ldap
+          #puts "#{i}. #{username}\t#{email}\t#{displayname} #{if (usr.displayname == displayname) ? '=' : '#'} #{(usr.displayname)}" if debug_flag
 
           logger.info "#{entry["sn"].first} \t[#{username}] \t #{usr.changed}" if usr.changed?
         end
@@ -122,13 +133,15 @@ namespace :bp1step do
       ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do | entry |
         exist_user += 1
         uac = entry["userAccountControl"].first.to_i
-        if uac & 2 > 0 or entry["mail"].first.to_s.empty? # имеющийся в БД пользователь заблокирован в AD или не имеет e-mail
+        if entry["mail"].first.to_s.empty? # имеющийся в БД пользователь не имеет e-mail
           user.update_attribute(:active, false)
           disabled_users += 1
           # если нет связи с ролями, рабочими местами, процессами
           if user.workplaces.count == 0 and user.business_roles.count == 0 and user.bproce_ids.count == 0
-            user.delete # удалим
-            logger.info "#{i}!#{disabled_users}. #{entry.sAMAccountName} #{entry.dn} \t- DELETE user!"
+            if uac & 2 > 0  # заблокирован в AD
+              user.delete # удалим
+              logger.info "#{i}!#{disabled_users}. #{entry.sAMAccountName} #{entry.dn} \t- DELETE user!"
+            end
           else
             logger.info "#{i}!#{disabled_users}. #{entry.sAMAccountName} #{entry.dn}\t - need DELETE:"
             s = ''
