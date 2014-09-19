@@ -9,12 +9,18 @@ describe BproceBappsController do
       apurpose: 'purpose in process'
     }
   end
-  before(:each) do
-    bproce = create(:bproce)
-    bapp = create(:bapp)
-  end
   def valid_session
     {}
+  end
+
+  before(:each) do
+    @user = FactoryGirl.create(:user)
+    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
+    sign_in @user
+
+    bproce = create(:bproce)
+    bapp = create(:bapp)
+
   end
 
   describe "GET show" do
