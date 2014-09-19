@@ -1,18 +1,15 @@
 require 'spec_helper'
+require 'factory_girl'
 
 describe TermsController do
   render_views
 
-  let(:valid_attributes) { {  shortname: "term",
-                              name: "term_name",
-                              description: "term_description"
- } }
+  let(:valid_attributes) { { shortname: "term", name: "term_name", description: "term_description" } }
   let(:valid_session) { {} }
 
   before(:each) do
-    @user = User.new(:email => "test_w@user.com", :username => "test_w")
+    @user = FactoryGirl.create(:user)
     @user.roles << Role.find_or_create_by(name: "admin", description: 'description')
-    @user.save
     sign_in @user
   end
 
