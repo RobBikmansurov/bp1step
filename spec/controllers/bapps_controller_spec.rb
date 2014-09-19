@@ -3,18 +3,12 @@ require 'factory_girl'
 
 describe BappsController do
   render_views
-  PublicActivity.enabled = false
-  
   let(:valid_attributes) { { "name" => "MyString1", description: 'description1' } }
   let(:valid_session) { {} }
 
   before(:each) do
-    @user = User.new(:email => "test_w@user.com", :username => "test_w")
-    #@user = FactoryGirl.create(:user)
+    @user = FactoryGirl.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
-    #@request.env['devise.mapping'] = :user
-    #@user.confirm!
-    @user.save
     sign_in @user
   end
   
@@ -48,11 +42,11 @@ describe BappsController do
     it "assigns the requested bapp as @bapp" do
       bapp = Bapp.create! valid_attributes
       get :show, {:id => bapp.to_param}, valid_session
-      #response.should render_template(:show)
+      response.should render_template(:show)
       assigns(:bapp).should eq(bapp)
     end
     it "renders 404 page if bapp is not found" do
-      #get :show, :id => 0
+      #get :show, {:id => 0}
       #assigns(:bapp).should eq(bapp)
     end
   end
@@ -113,10 +107,6 @@ describe BappsController do
     describe "with valid params" do
       it "updates the requested bapp" do
         bapp = Bapp.create! valid_attributes
-        # Assuming there are no other bapps in the database, this
-        # specifies that the Bapp created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
         Bapp.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => bapp.id, :bapp => {'these' => 'params'}
       end
