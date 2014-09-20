@@ -9,13 +9,18 @@ describe BproceWorkplacesController do
       workplace_id: 1
     }
   end
-  before(:each) do
-    @bproce = create(:bproce)
-    @workplace = create(:workplace)
-  end
 
   def valid_session
     {}
+  end
+
+  before(:each) do
+    @user = FactoryGirl.create(:user)
+    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
+    sign_in @user
+
+    @bproce = create(:bproce)
+    @workplace = create(:workplace)
   end
 
   #  resources :bproce_workplaces, :only => [:create, :destroy, :show]
