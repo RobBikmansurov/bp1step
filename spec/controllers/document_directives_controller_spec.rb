@@ -13,8 +13,12 @@ describe DocumentDirectivesController do
     {}
   end
   before(:each) do
-    @document = create(:document)
-    @directive = create(:directive)
+    @user = FactoryGirl.create(:user)
+    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
+    sign_in @user
+
+    #document = FactoryGirl.create(:document)
+    #directive = FactoryGirl.create(:directive)
   end
 
   describe "GET index" do
