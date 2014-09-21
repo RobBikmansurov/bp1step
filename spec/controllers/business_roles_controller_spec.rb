@@ -1,49 +1,60 @@
 require 'spec_helper'
 
 describe BusinessRolesController do
-  def setup
-    @current_user = FactoryGirl.create(:admin)
-    sign_in @current_user
-  end
+  render_views
+  let(:valid_attributes) { { id: 1, name: "MyString1", description: 'description1', bproce_id: 1 } }
+  let(:valid_session) { {} }
 
   before(:each) do
-    @user = User.new(:email => "test_w@user.com", :username => "test_w")
-    @user.roles << Role.find_or_create_by(name: "admin")
-    @user.save
+    @user = FactoryGirl.create(:user)
+    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
-  end
 
-  def valid_attributes
-    {
-      :description => "test_descr",
-      :name => "test_name",
-      :bproce_id => 1,
-    }
+    bproce = FactoryGirl.create(:bproce)
   end
-
-  def valid_session
-    {}
-  end
-
+  
   describe "GET index" do
     it "assigns all business_roles as @business_roles" do
-      business_role = BusinessRole.create! valid_attributes
-      get :index, {}, valid_session
-      assigns(:business_roles).should eq([business_role])
+      business_role = BusinessRole.create
+      get :index
+      expect(assigns(:business_roles)).to render_template("index")
     end
+
+    it "responds successfully with an HTTP 200 status code" do
+      get :index
+      expect(response).to be_success
+      expect(response.status).to eq(200)
+    end
+
+    it "renders the index template" do
+      get :index
+      expect(response).to render_template("index")
+    end
+
+    it "loads all of the business_roles into @business_roles" do
+      business_role1, business_role2 = create(:business_role), create(:business_role)
+      get :index
+      expect(assigns(:business_roles)).to match_array([business_role1, business_role2])
+    end
+
   end
 
   describe "GET show" do
     it "assigns the requested business_role as @business_role" do
       business_role = BusinessRole.create! valid_attributes
-      get :show, :id => business_role.id
+      get :show, {:id => business_role.to_param}, valid_session
+      response.should render_template(:show)
       assigns(:business_role).should eq(business_role)
+    end
+    it "renders 404 page if business_role is not found" do
+      #get :show, {:id => 0}
+      #assigns(:business_role).should eq(business_role)
     end
   end
 
   describe "GET new" do
     it "assigns a new business_role as @business_role" do
-      get :new
+      get :new, {}, valid_session
       assigns(:business_role).should be_a_new(BusinessRole)
     end
   end
@@ -51,7 +62,7 @@ describe BusinessRolesController do
   describe "GET edit" do
     it "assigns the requested business_role as @business_role" do
       business_role = BusinessRole.create! valid_attributes
-      get :edit, :id => business_role.id
+      get :edit, {:id => business_role.to_param}, valid_session
       assigns(:business_role).should eq(business_role)
     end
   end
@@ -88,7 +99,7 @@ describe BusinessRolesController do
         # Trigger the behavior that occurs when invalid params are submitted
         BusinessRole.any_instance.stub(:save).and_return(false)
         post :create, :business_role => {}
-        response.code.should == "302"     ##        response.should render_template("new")
+        response.should_not render_template("business_roles/new")
       end
     end
   end
@@ -97,10 +108,6 @@ describe BusinessRolesController do
     describe "with valid params" do
       it "updates the requested business_role" do
         business_role = BusinessRole.create! valid_attributes
-        # Assuming there are no other business_roles in the database, this
-        # specifies that the BusinessRole created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
         BusinessRole.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
         put :update, :id => business_role.id, :business_role => {'these' => 'params'}
       end
@@ -132,7 +139,7 @@ describe BusinessRolesController do
         # Trigger the behavior that occurs when invalid params are submitted
         BusinessRole.any_instance.stub(:save).and_return(false)
         put :update, :id => business_role.id, :business_role => {}
-        response.code.should == "302"       ##        response.should render_template("edit")
+        response.should_not render_template("edit")
       end
     end
   end
@@ -141,14 +148,16 @@ describe BusinessRolesController do
     it "destroys the requested business_role" do
       business_role = BusinessRole.create! valid_attributes
       expect {
-        delete :destroy, :id => business_role.id
+        delete :destroy, {id: business_role.to_param}, valid_session
       }.to change(BusinessRole, :count).by(-1)
+      #expect(BusinessRole.count).to eq(0)
     end
 
     it "redirects to the business_roles list" do
       business_role = BusinessRole.create! valid_attributes
-      delete :destroy, :id => business_role.id
+      delete :destroy, {:id => business_role.to_param}, valid_session
       response.should redirect_to(business_roles_url)
     end
   end
+
 end
