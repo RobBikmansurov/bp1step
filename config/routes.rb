@@ -73,6 +73,14 @@ BPDoc::Application.routes.draw do
   resources :document_directives
   resources :iresources
 
+  resources :home, :only => [:index] do
+    member do
+      get :create_letter    # создать официальное письмо
+      get :create_memo      # создать служебную записку
+      get :create_vacation  # создать заявление на отпуск
+    end
+  end
+
   resources :metrics do
     member do
       get :values
