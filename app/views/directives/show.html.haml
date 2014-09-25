@@ -15,7 +15,7 @@
     примечание:
     = @directive.note
 %h4 Краткое содержание:
-= @directive.annotation
+= markdown(@directive.annotation)
 %p
 - if @directive.document_directive.count > 0
   %h4
@@ -32,6 +32,19 @@
       -else
         %td= document_directive.note
       )
+-if Bproce.last.bproces_of_directives(@directive.id).count > 0
+  %h4
+    Документы этой директивы связаны со следующими процессами:
+  - Bproce.last.bproces_of_directives(@directive.id).each do |bp|
+    = "——" * (bp.depth)
+    - if bp.shortname
+      [
+      =bp.shortname
+      ]
+    = link_to bp.name, bproce_path(bp)
+    -if bp.user
+      = link_to bp.user.displayname, user_path(bp.user)
+    %br
 
 .info_
   создан
