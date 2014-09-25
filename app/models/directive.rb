@@ -40,6 +40,15 @@ class Directive < ActiveRecord::Base
     end
   end
 
+  def directives_of_bproce(bproce_id) # все директивы процесса (связаны с ним через документы процесса)
+    Directive.find_by_sql [ "select directives.* from directives, document_directives, bproce_documents 
+      where bproce_documents.bproce_id = ?
+      and bproce_documents.document_id = document_directives.document_id
+      and directives.id = document_directives.directive_id
+      group by directives.id", bproce_id ]
+  end
+
+
   def self.search(search)
     if search
       where('number ILIKE ? or name ILIKE ? or title ILIKE ? or body ILIKE ?',
