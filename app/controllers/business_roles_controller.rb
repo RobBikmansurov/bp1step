@@ -64,8 +64,13 @@ class BusinessRolesController < ApplicationController
   end
 
   def destroy
+    bproce = @business_role.bproce_id # есть у роли процесс
     flash[:notice] = "Successfully destroyed business_role." if @business_role.destroy
-    respond_with(@business_role)
+    if bproce
+      redirect_to(bproce_business_role_path(bproce))  # вернемся в роли процесса
+    else
+      respond_with(@business_role)
+    end
   end
 
 private

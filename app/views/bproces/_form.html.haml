@@ -21,6 +21,7 @@
     = f.input :tag_list, :label => 'Теги (через запятую)'
   = f.error :base
   %p
+  = link_to 'Show', @bproce, :class => 'button'
   -if can? :update, @bproce
     = f.button :submit
 

@@ -54,4 +54,12 @@ class Bproce < ActiveRecord::Base
     end
   end
 
+  def bproces_of_directives(directive_id) # процессы директивы (все процессы, связанные с директивой через документы)
+    Bproce.find_by_sql [ "select bproces.* from bproces, bproce_documents, document_directives
+      where bproce_documents.bproce_id = bproces.id
+      and document_directives.directive_id = ?
+      and document_directives.document_id = bproce_documents.document_id
+      group by bproces.id", directive_id ]
+  end
+
 end

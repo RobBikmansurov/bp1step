@@ -5,14 +5,14 @@ class HomeController < ApplicationController
 	end
 
   def create_letter   # официальное письмо
-    phone = '291-03-00'
+    phone = '+7(342)291-03-00'
     if user_signed_in?
-      phone = '291-03-' + current_user.phone[1,2] if current_user.phone[0] == '2'
+      phone = '+7(342)291-03-' + current_user.phone[1,2] if current_user.phone[0] == '2'
       username = current_user.firstname[0] + '.' + current_user.middlename[0] + '. ' + current_user.lastname
     else
       username = 'Незарегистрированный пользователь'
     end
-    report = ODFReport::Report.new("reports/bnk-letter.odt") do |r|
+    report = ODFReport::Report.new("reports/letter.odt") do |r|
       r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
       r.add_field "PHONE", phone
       r.add_field "USER_NAME", username
