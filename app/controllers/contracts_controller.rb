@@ -96,11 +96,9 @@ class ContractsController < ApplicationController
         r.add_field :user_position, current_user.position
         r.add_field "USER_NAME", current_user.displayname
       end
-      report_file_name = report.generate
-      send_file(report_file_name,
-        :type => 'application/msword',
+      send_data report.generate, type: 'application/msword',
         :filename => "approval-sheet.odt",
-        :disposition => 'inline' )
+        :disposition => 'inline'
     end
 
     def set_contract

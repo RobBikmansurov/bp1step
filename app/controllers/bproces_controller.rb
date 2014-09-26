@@ -166,14 +166,12 @@ private
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
     end
-    report_file_name = report.generate
-    send_file(report_file_name,
-      :type => 'application/msword',
+    send_data report.generate, type: 'application/msword',
       :filename => "processess.odt",
-      :disposition => 'inline' )
+      :disposition => 'inline'
   end
 
-  # печать карточки процесса
+  # печать Карточки процесса
   def print_card
     report = ODFReport::Report.new("reports/bp-card.odt") do |r|
       r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
@@ -214,6 +212,7 @@ private
       @metrics = Metric.where(:bproce_id => @bproce.id).order(:name)  # метрики процесса
       report_metrics(@metrics, r, false) # сформировать список метрик процесса
       report_docs(@bproce.documents, r, false) # сформировать таблицу документов процесса
+      report_contracts(@bproce.contracts, r, false)   # сформировать список договоров
       report_roles(@bproce.business_roles, r, true) # сформировать таблицу ролей
       report_workplaces(@bproce, r, true) # сформировать таблицу рабочих мест
       report_bapps(@bproce, r, true) # сформировать таблицу приложений процесса
@@ -222,11 +221,9 @@ private
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
     end
-    report_file_name = report.generate
-    send_file(report_file_name,
-      :type => 'application/msword',
+    send_data report.generate, type: 'application/msword',
       :filename => "card.odt",
-      :disposition => 'inline' )
+      :disposition => 'inline'
   end
 
   # заготовка описания процесса
@@ -264,6 +261,7 @@ private
       end
       
       report_docs(@bproce.documents, r, false) # сформировать таблицу документов процесса
+      report_contracts(@bproce.contracts, r, false)   # сформировать список договоров
       report_roles(@bproce.business_roles, r, false) # сформировать таблицу ролей
       report_workplaces(@bproce, r, false) # сформировать таблицу рабочих мест
       report_bapps(@bproce, r, false) # сформировать таблицу приложений процесса
@@ -273,11 +271,9 @@ private
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
     end
-    report_file_name = report.generate
-    send_file(report_file_name,
-      :type => 'application/msword',
+    send_data report.generate, type: 'application/msword',
       :filename => "process.odt",
-      :disposition => 'inline' )
+      :disposition => 'inline'
   end
 
   def print_list
@@ -300,11 +296,10 @@ private
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
     end
-    report_file_name = report.generate
-    send_file(report_file_name,
+    send_data report.generate, type: 'application/msword',
       :type => 'application/msword',
       :filename => "process_list.odt",
-      :disposition => 'inline' )
+      :disposition => 'inline'
   end
 
   # распоряжение о назачении на роли в процессе
@@ -346,11 +341,10 @@ private
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
     end
-    report_file_name = report.generate
-    send_file(report_file_name,
+   send_data report.generate, type: 'application/msword',
       :type => 'application/msword',
       :filename => "order.odt",
-      :disposition => 'inline' )
+      :disposition => 'inline'
   end
 
   def report_roles(roles, r, header)
@@ -392,14 +386,17 @@ private
         t.add_column(:nd) do |document|
           ndoc = document.name
         end
-        t.add_column(:owner_doc) do |document|
-          owner_doc = document.owner.displayname if document.owner
+        t.add_column(:idd) do |document|
+          di = document.id.to_s
+        end
+        t.add_column(:status_doc) do |document|
+          ds = document.status.to_s
         end
         t.add_column(:approved) do |document|
           da = document.approved.strftime('%d.%m.%Y') if document.approved
         end
-        t.add_column(:idd) do |document|
-          di = document.id.to_s
+        t.add_column(:owner_doc) do |document|
+          owner_doc = document.owner.displayname if document.owner
         end
       end
     end
@@ -420,6 +417,28 @@ private
           ades = ba.bapp.description if ba.bapp
         end
         t.add_column(:apurpose)
+      end
+    end
+  end
+
+  def report_contracts(contracts, r, header)
+    cc = 0 # порядковый номер строки для документов
+    r.add_table("TABLE_CONTRACTS", contracts, :header => header, :skip_if_empty => true) do |t|
+      # [CONTRACT_NAME] [CONTRACT_DATE] [AGENT_NAME]
+      if contracts.count > 0  # если договоров нет - пустая таблица не будет выведена
+        r.add_field :contracts, "Юридическое обеспечение:"
+        t.add_column(:cc) do |ca| # порядковый номер строки таблицы
+          cc += 1
+        end
+        t.add_column(:contract_name) do |contract|
+          c_name = 'Договор ' + contract.shortname
+        end
+        t.add_column(:contract_date) do |contract|
+          c_date = ' от ' + contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
+        end
+        t.add_column(:agent_name) do |contract|
+          a_name = contract.agent.name if contract.agent
+        end
       end
     end
   end

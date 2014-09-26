@@ -116,11 +116,9 @@ private
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
     end
-    report_file_name = report.generate
-    send_file(report_file_name,
-      :type => 'application/msword',
+    send_data report.generate, type: 'application/msword',
       :filename => "workplaces.odt",
-      :disposition => 'inline' )
+      :disposition => 'inline'
   end
 
   def print_switch  # подключения рабочих мест
@@ -141,11 +139,9 @@ private
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
     end
-    report_file_name = report.generate
-    send_file(report_file_name,
-      :type => 'application/msword',
+    send_data report.generate, type: 'application/msword',
       :filename => "switch.odt",
-      :disposition => 'inline' )
+      :disposition => 'inline'
   end
 
 end

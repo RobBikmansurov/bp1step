@@ -233,11 +233,9 @@ private
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
     end
-    report_file_name = report.generate
-    send_file(report_file_name,
-      :type => 'application/msword',
-      :filename => "documents.odt",
-      :disposition => 'inline' )
+    send_data report.generate, type: 'application/msword',
+      filename: "documents.odt",
+      disposition: 'inline'
   end
 
   def view
@@ -288,10 +286,9 @@ private
       r.add_field "USER_NAME", current_user.displayname
     end
     report_file_name = report.generate
-    send_file(report_file_name,
-      :type => 'application/msword',
-      :filename => "approval-sheet.odt",
-      :disposition => 'inline' )
+    send_data report.generate, type: 'application/msword',
+      filename: "approval-sheet.odt",
+      disposition: 'inline'
   end
 
 
