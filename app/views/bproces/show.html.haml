@@ -85,11 +85,13 @@
   %h4 Организационно-юридическое обеспечение Процесса соcтавляют:
   -@bproce.contracts.each do | contract |
     -#=link_to contract.shortname, contract_path(contract)
+    договор
     =link_to contract.shortname, contract_path(contract)
     от
     =contract.date_begin.strftime('%d.%m.%Y')
+    с
     =link_to contract.agent.name, agent_path(contract.agent.id) if contract.agent
-
+    %br
 
 -if @bproce.workplaces.count > 0
   %h4
