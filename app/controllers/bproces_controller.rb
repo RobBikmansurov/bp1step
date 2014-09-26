@@ -166,11 +166,9 @@ private
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
     end
-    report_file_name = report.generate
-    send_file(report_file_name,
-      :type => 'application/msword',
+    send_data report.generate, type: 'application/msword',
       :filename => "processess.odt",
-      :disposition => 'inline' )
+      :disposition => 'inline'
   end
 
   # печать карточки процесса
@@ -222,11 +220,9 @@ private
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
     end
-    report_file_name = report.generate
-    send_file(report_file_name,
-      :type => 'application/msword',
+    send_data report.generate, type: 'application/msword',
       :filename => "card.odt",
-      :disposition => 'inline' )
+      :disposition => 'inline'
   end
 
   # заготовка описания процесса
@@ -273,11 +269,9 @@ private
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
     end
-    report_file_name = report.generate
-    send_file(report_file_name,
-      :type => 'application/msword',
+    send_data report.generate, type: 'application/msword',
       :filename => "process.odt",
-      :disposition => 'inline' )
+      :disposition => 'inline'
   end
 
   def print_list
@@ -300,11 +294,10 @@ private
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
     end
-    report_file_name = report.generate
-    send_file(report_file_name,
+    send_data report.generate, type: 'application/msword',
       :type => 'application/msword',
       :filename => "process_list.odt",
-      :disposition => 'inline' )
+      :disposition => 'inline'
   end
 
   # распоряжение о назачении на роли в процессе
@@ -346,11 +339,10 @@ private
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
     end
-    report_file_name = report.generate
-    send_file(report_file_name,
+   send_data report.generate, type: 'application/msword',
       :type => 'application/msword',
       :filename => "order.odt",
-      :disposition => 'inline' )
+      :disposition => 'inline'
   end
 
   def report_roles(roles, r, header)

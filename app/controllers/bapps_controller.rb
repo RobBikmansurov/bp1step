@@ -100,11 +100,9 @@ private
       r.add_field "USER_POSITION", current_user.position
       r.add_field "USER_NAME", current_user.displayname
     end
-    report_file_name = report.generate
-    send_file(report_file_name,
-      :type => 'application/msword',
+    send_data report.generate, type: 'application/msword',
       :filename => "documents.odt",
-      :disposition => 'inline' )
+      :disposition => 'inline'
   end
 
 end
