@@ -22,6 +22,7 @@ class Bproce < ActiveRecord::Base
   has_many :bproce_iresource, :dependent => :destroy
   has_many :bproce_workplaces, :dependent => :destroy
   has_many :business_roles, :dependent => :destroy
+  has_many :bproce_contract
   has_many :contracts, through: :bproce_contract
   has_many :documents, through: :bproce_documents
   has_many :iresource, :through => :bproce_iresource
