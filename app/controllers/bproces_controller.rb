@@ -171,7 +171,7 @@ private
       :disposition => 'inline'
   end
 
-  # печать карточки процесса
+  # печать Карточки процесса
   def print_card
     report = ODFReport::Report.new("reports/bp-card.odt") do |r|
       r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
@@ -384,14 +384,17 @@ private
         t.add_column(:nd) do |document|
           ndoc = document.name
         end
-        t.add_column(:owner_doc) do |document|
-          owner_doc = document.owner.displayname if document.owner
+        t.add_column(:idd) do |document|
+          di = document.id.to_s
+        end
+        t.add_column(:status_doc) do |document|
+          ds = document.status.to_s
         end
         t.add_column(:approved) do |document|
           da = document.approved.strftime('%d.%m.%Y') if document.approved
         end
-        t.add_column(:idd) do |document|
-          di = document.id.to_s
+        t.add_column(:owner_doc) do |document|
+          owner_doc = document.owner.displayname if document.owner
         end
       end
     end
