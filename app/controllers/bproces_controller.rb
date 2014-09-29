@@ -435,10 +435,11 @@ private
           c_name = 'Договор ' + contract.shortname
         end
         t.add_column(:contract_date) do |contract|
-          c_date = ' от ' + contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
+          c_date = " #{contract.status}" if contract.status
+          c_date = c_date + ' от ' + contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
         end
         t.add_column(:agent_name) do |contract|
-          a_name = contract.agent.name if contract.agent
+          a_name = "с #{contract.agent.name}" if contract.agent
         end
       end
     end
