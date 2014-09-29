@@ -8,3 +8,5 @@
         = link_to doc.name, document_path(doc)
         = doc.status
         = doc.approved.strftime('%d.%m.%Y') if doc.approved
+        .id_show_
+          = "##{doc.id}"

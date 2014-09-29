@@ -199,6 +199,12 @@ a.groups:hover {
   border-radius: 3px;
 }
 
+.id_show_ {
+  display:inline-block;
+  position:relative;
+  color: #999;
+}
+
 .info_ {
   position:relative;
   text-align: right;

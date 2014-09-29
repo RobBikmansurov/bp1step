@@ -21,7 +21,9 @@
       %th
   - @agents.each do |agent|
     %tr
-      %td= agent.id
+      %td
+        .id_show_
+          = "##{agent.id}"
       %td= link_to agent.name, agent
       %td= agent.town
       %td=  truncate(agent.contacts, :length => 80, :omission => ' ...')
