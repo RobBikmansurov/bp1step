@@ -22,7 +22,9 @@
     
   - @contracts.each do |contract|
     %tr
-      %td= contract.id
+      %td
+        .id_show_
+          = "##{contract.id}"
       %td
         = link_to contract.shortname, contract_path(contract)
       %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin

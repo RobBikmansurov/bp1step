@@ -20,7 +20,11 @@
 
   -@business_roles.each do |ro|
     %tr
-      %td= link_to ro.name, ro
+      %td
+        = link_to ro.name, ro
+        .id_show_
+          = "##{ro.id}"
+
       %td
         = link_to ro.bproce.shortname, bproce_path(ro.bproce_id) if !ro.bproce.nil?
       %td= truncate(ro.description, :length => 120, :omission => ' ...')

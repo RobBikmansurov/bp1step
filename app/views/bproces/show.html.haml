@@ -87,6 +87,7 @@
     -#=link_to contract.shortname, contract_path(contract)
     договор
     =link_to contract.shortname, contract_path(contract)
+    = contract.status if contract.status
     от
     =contract.date_begin.strftime('%d.%m.%Y')
     с

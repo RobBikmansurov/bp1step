@@ -13,7 +13,8 @@
           %b= link_to business_role.business_role.name, business_role_path(business_role.business_role)
           [
           = link_to business_role.business_role.bproce.shortname, bproce_path(business_role.business_role.bproce)
-          = '#' + business_role.business_role.bproce.id.to_s
+          .id_show_
+            = "##{business_role.business_role.bproce.id}"
           ]
         %td
           = business_role.business_role.description
