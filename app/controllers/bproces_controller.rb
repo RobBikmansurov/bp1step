@@ -423,10 +423,11 @@ private
 
   def report_contracts(contracts, r, header)
     cc = 0 # порядковый номер строки для документов
+    contracts_label = ''
     r.add_table("TABLE_CONTRACTS", contracts, :header => header, :skip_if_empty => true) do |t|
       # [CONTRACT_NAME] [CONTRACT_DATE] [AGENT_NAME]
       if contracts.count > 0  # если договоров нет - пустая таблица не будет выведена
-        r.add_field :contracts, "Юридическое обеспечение:"
+        contracts_label = "Юридическое обеспечение:"
         t.add_column(:cc) do |ca| # порядковый номер строки таблицы
           cc += 1
         end
@@ -441,6 +442,7 @@ private
         end
       end
     end
+    r.add_field :contracts, contracts_label
   end
 
   def report_iresources(bproce, r, header) # сформировать таблицу ресурсов процесса
