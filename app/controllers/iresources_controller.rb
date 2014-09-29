@@ -80,7 +80,7 @@ class IresourcesController < ApplicationController
   end
 
   def autocomplete
-    @iresources = Iresource.order(:label).where("label like ? or location like ?", "%#{params[:term]}%", "%#{params[:term]}%")
+    @iresources = Iresource.order(:label).where("label ilike ? or location ilike ?", "%#{params[:term]}%", "%#{params[:term]}%")
     render json: @iresources.map(&:label)
   end
 

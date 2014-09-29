@@ -67,7 +67,9 @@
     
   - @documents.each do |document|
     %tr
-      %td= document.id
+      %td
+        .id_show_
+          = "##{document.id}"
       %td
         -if document.document_file_file_name  #  если есть файл документа, загруженный через paperclip
           -if can? :view_document, document

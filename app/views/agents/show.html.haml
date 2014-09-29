@@ -10,9 +10,9 @@
     г.
     %b= @agent.town
 %h3Адрес:
-= @agent.address
+= markdown(@agent.address)
 %h3Контакты:
-= @agent.contacts
+= markdown(@agent.contacts)
 
 -if @contracts.count > 0
   %h3Договоры с контрагентом:
