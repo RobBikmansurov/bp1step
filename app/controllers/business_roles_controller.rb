@@ -6,6 +6,8 @@ class BusinessRolesController < ApplicationController
   before_filter :authenticate_user!, :only => [:edit, :new, :create, :update]
   before_filter :get_business_role, :except => [:index, :print, :new]
 
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+
   def index
     if params[:all].present?
       @business_roles = BusinessRole.order(sort_column + ' ' + sort_direction)
@@ -84,7 +86,7 @@ private
   
   def get_business_role
     if params[:search].present? # это поиск
-      @broles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page]).find(:all, :include => :users)
+      @business_roles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page]).find(:all, :include => :users)
       render :index # покажем список найденных бизнес-ролей
     else
       @business_role = params[:id].present? ? BusinessRole.find(params[:id]) : BusinessRole.new
@@ -112,6 +114,11 @@ private
     send_data report.generate, type: 'application/msword',
       :filename => "business_roles.odt",
       :disposition => 'inline'
+  end
+
+  def record_not_found
+    flash[:alert] = "Неверный #id, Бизнес-роль не найдена."
+    redirect_to action: :index
   end
 
 end
