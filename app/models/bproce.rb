@@ -48,7 +48,7 @@ class Bproce < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('shortname ILIKE ? or name ILIKE ? or fullname ILIKE ? or id = ?',
+      where('shortname ILIKE ? or name ILIKE ? or fullname ILIKE ? or bproces.id = ?',
             "%#{search}%", "%#{search}%", "%#{search}%", "#{search.to_i}")
     else
       where(nil)

@@ -21,18 +21,18 @@ class BprocesController < ApplicationController
   def index
     if params[:all].present?
       #@bproces = Bproce.order(sort_column + ' ' + sort_direction)
-      @bproces = Bproce.nested_set
+      @bproces = Bproce.nested_set.order(:lft)
     else
       if params[:tag].present?
         #@bproces = Bproce.tagged_with(params[:tag]).nested_set.search(params[:search]).select('bproces.id, shortname, name as title, parent_id').all
-        @bproces = Bproce.nested_set.tagged_with(params[:tag]).search(params[:search])
+        @bproces = Bproce.nested_set.tagged_with(params[:tag]).search(params[:search]).order(:lft)
       else
         if params[:user].present? #  список процессов пользователя
           @user = User.find(params[:user])
-          @bproces = Bproce.nested_set.where(:user_id => params[:user])
+          @bproces = Bproce.nested_set.where(:user_id => params[:user]).order(:lft)
         else
           #@bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
-          @bproces = Bproce.nested_set.search(params[:search])
+          @bproces = Bproce.nested_set.search(params[:search]).order(:lft)
         end
       end
     end
