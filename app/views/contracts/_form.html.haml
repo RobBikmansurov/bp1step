@@ -11,8 +11,8 @@
   = f.hidden_field :agent_id
   = f.autocomplete_field :agent_name, autocomplete_agents_path
   = f.input :status, :collection => %w[Действует Согласование НеДействует], :prompt => 'Статус дооговора', :input_html => { :value => 'Согласование'}
-  = f.input :date_begin, as: :date_picker
-  = f.input :date_end, as: :date_picker
+  = f.input :date_begin, as: :string, :input_html => {:class=>'datepicker'}
+  = f.input :date_end, as: :string, :input_html => {:class=>'datepicker'}
   
   %p
   = f.label 'Основной договор'

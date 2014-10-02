@@ -3,6 +3,8 @@ $(function() {
   $('.datepicker').datepicker({
     changeMonth: true,
     changeYear: true,
+    inline: true, 
+    showOtherMonths: true, 
     yearRange: "-15:+0",
     dateFormat: "dd.mm.yy",
     autoSize: true,
