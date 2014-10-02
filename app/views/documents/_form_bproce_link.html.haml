@@ -2,7 +2,10 @@
   %h3 Относится к следующим процессам:
   - @document.bproce_document.each do |bproce_document|
     - if bproce_document.bproce_id
-      = link_to bproce_document.bproce.name, bproce_path(bproce_document.bproce)
+      -if bproce_document.bproce
+        = link_to bproce_document.bproce.name, bproce_path(bproce_document.bproce)
+      -else
+        = bproce_document.inspect
       (
       = bproce_document.purpose
       )

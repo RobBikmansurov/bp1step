@@ -55,7 +55,10 @@
       %tr
         %td
           -if bp.bproce_id
-            = link_to bp.bproce.name, bproce_path(bp.bproce_id)
+            -if bp.bproce
+              = link_to bp.bproce.name, bproce_path(bp.bproce_id)
+            -else
+              = bp.inspect  # ссылка на несуществующий процесс
           -else
             = bp.inspect
         %td
