@@ -14,7 +14,7 @@
 %h3 Действия в процессе:
 = markdown(@business_role.description)
 
--if @business_role.bproce.business_roles.count > 1
+-if @business_role.bproce and @business_role.bproce.business_roles.count > 1
   %h4
     Другие роли процесса:
     - @business_role.bproce.business_roles.each do | role |
@@ -58,7 +58,10 @@
         -else
           %td=business_role.note.to_s
       -#%td= link_to Bproce.find(business_role.business_role.bproce).shortname, bproce_business_role_path(business_role.business_role.bproce)
-      %td= link_to business_role.business_role.bproce.shortname, bproce_business_role_path(business_role.business_role.bproce)
+      %td
+        -if business_role.business_role.bproce
+          = link_to business_role.business_role.bproce.shortname, bproce_business_role_path(business_role.business_role.bproce)
+        -else business_role.business_role.inspect
 .info_
   создан
   = @business_role.created_at.strftime('%d.%m.%Y %H:%M:%S') if @business_role.created_at

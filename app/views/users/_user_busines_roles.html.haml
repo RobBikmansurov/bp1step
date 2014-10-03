@@ -11,11 +11,14 @@
       %tr
         %td
           %b= link_to business_role.business_role.name, business_role_path(business_role.business_role)
-          [
-          = link_to business_role.business_role.bproce.shortname, bproce_path(business_role.business_role.bproce)
-          .id_show_
-            = "##{business_role.business_role.bproce.id}"
-          ]
+          -if business_role.business_role.bproce
+            [
+            = link_to business_role.business_role.bproce.shortname, bproce_path(business_role.business_role.bproce)
+            .id_show_
+              = "##{business_role.business_role.bproce.id}"
+            ]
+          -else
+            = business_role.business_role.inspect
         %td
           = business_role.business_role.description
           %br
