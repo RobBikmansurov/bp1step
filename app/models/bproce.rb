@@ -60,7 +60,7 @@ class Bproce < ActiveRecord::Base
       where bproce_documents.bproce_id = bproces.id
       and document_directives.directive_id = ?
       and document_directives.document_id = bproce_documents.document_id
-      group by bproces.id", directive_id ]
+      group by bproces.id order by lft", directive_id ]
   end
 
 end
