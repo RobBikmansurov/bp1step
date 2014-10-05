@@ -41,7 +41,9 @@
         -else
           = user.displayname
       %td= mail_to user.email, user.email, :subject => "BP1Step"
-      %td= "&nbsp; &#9742;&nbsp;".html_safe + user.phone.to_s
+      %td
+        -if user.phone
+          = "&nbsp; &#9742;&nbsp;".html_safe + user.phone.to_s
       %td= user.position
       -if user.office
         %td= link_to user.office, users_path + '?office=' + user.office, class: 'groups'

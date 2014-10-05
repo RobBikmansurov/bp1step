@@ -34,8 +34,7 @@
       = link_to @usr.office.to_s, users_path + '?office=' + @usr.office.to_s, class: 'groups'
       = "|&nbsp;&#10002;".html_safe
       = mail_to @usr.email, @usr.email, :subject => "BP1Step:"
-      = "&nbsp; |&nbsp;&#9742;".html_safe
-      = @usr.phone
+      = "&nbsp; |&nbsp;&#9742; #{@usr.phone}".html_safe if @usr.phone
     %h4
       -if @usr.roles.count
         %b роли доступа:
