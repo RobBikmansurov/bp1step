@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-PublicActivity.enabled = false
-
 describe BproceIresource do
   before(:each) do
   	@bproce_iresource = create (:bproce_iresource)

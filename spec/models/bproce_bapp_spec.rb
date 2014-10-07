@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-PublicActivity.enabled = false
-
 describe BproceBapp do
   context 'validations' do
     it { should validate_presence_of(:bproce_id) }

@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-PublicActivity.enabled = false
-
 describe Term do
   before(:each) do
     @term = create(:term)

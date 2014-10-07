@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-PublicActivity.enabled = false
-
 describe Iresource do
   before(:each) do
     @iresource = create(:iresource)

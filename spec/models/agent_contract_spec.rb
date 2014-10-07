@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-PublicActivity.enabled = false
 
 describe AgentContract do
   context "associations" do

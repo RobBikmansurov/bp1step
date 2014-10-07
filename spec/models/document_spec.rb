@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-PublicActivity.enabled = false
-
 describe Document do
   context 'validations' do
     it { should ensure_length_of(:name).is_at_least(10).is_at_most(200) }
