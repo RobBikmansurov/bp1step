@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-PublicActivity.enabled = false
-
 describe User do
   before(:all) do
     Role.all.each { |r| r.destroy }

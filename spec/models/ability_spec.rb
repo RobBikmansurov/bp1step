@@ -1,8 +1,6 @@
 require "cancan/matchers"
 require "spec_helper"
 
-PublicActivity.enabled = false
-
 describe Ability do
   before (:all) do
     [UserRole, Role, User].each do | model |

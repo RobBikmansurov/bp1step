@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-PublicActivity.enabled = false
-
 describe Directive do
   before(:each) do
     @directive = create(:directive)

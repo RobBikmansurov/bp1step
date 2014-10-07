@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-PublicActivity.enabled = false
-
 describe Metric do
   context "validates" do
     it { should validate_presence_of(:name) }

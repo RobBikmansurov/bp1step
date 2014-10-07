@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-PublicActivity.enabled = false
-
 describe Workplace do
 before(:each) do
     @wp = create(:workplace)

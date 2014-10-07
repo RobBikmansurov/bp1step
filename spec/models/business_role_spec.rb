@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-PublicActivity.enabled = false
-
 describe BusinessRole do
   before(:each) do
     @business_role = create(:business_role)
