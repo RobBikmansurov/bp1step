@@ -6,7 +6,15 @@ class ContractsController < ApplicationController
   autocomplete :bproce, :name, :extra_data => [:id]
 
   def index
-    @contracts = Contract.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    if params[:status].present? #  список договоров, имеющих конкретый статус
+      @contracts = Contract.where(:status => params[:status]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    else
+      if sort_column == 'lft'
+        @contracts = Contract.search(params[:search]).order(:lft).paginate(:per_page => 10, :page => params[:page])
+      else
+        @contracts = Contract.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      end
+    end
   end
 
   def show
@@ -110,7 +118,7 @@ class ContractsController < ApplicationController
     end
 
     def sort_column
-      params[:sort] || "name"
+      params[:sort] || "lft"
     end
 
     def sort_direction
