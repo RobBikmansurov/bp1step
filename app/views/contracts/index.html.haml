@@ -2,11 +2,15 @@
 -title "Каталог Договоров"
 
 %h2
-  Список договоров
   -if params[:search].present?
+    Список Договоров
     [ 
     = params[:search]
     ]
+  -else
+    -if params[:status]
+      Список Договоров в статусе
+      = "[ #{params[:status]} ]"
 
 %table
   %tr
@@ -26,6 +30,7 @@
         .id_show_
           = "##{contract.id}"
       %td
+        = '—' * (contract.depth)
         = link_to contract.shortname, contract_path(contract)
       %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
       %td= contract.status
@@ -43,3 +48,9 @@
 %p
 - if can? :create, Contract
   = link_to 'Добавить новый договор', new_contract_path, :class => 'button'
+%p
+%br
+Статус:
+- Contract.select("status, count(id) as count").group(:status).order(:status).each do |d|
+  -if !d.status.to_s.empty?
+    = link_to d.status, contracts_path + '?status=' + d.status.to_s, class: 'groups'
