@@ -50,8 +50,11 @@ class Contract < ActiveRecord::Base
   end
 
   def parent_name=(name)
-    self.parent = Contract.where(:number => name[/№.*\|/][2..-3]).first if name.present?
-    #self.parent = Contract.find_by_number(name[/№.*\|/][2..-3]) if name.present?
+    if name
+      name_find = name[/№.*\|/][2..-3] if name[/№.*\|/]
+      parent_find = Contract.where(:number => name_find) if name_find
+      self.parent = parent_find.fist if parent_find
+    end
   end
 
   def shortname
