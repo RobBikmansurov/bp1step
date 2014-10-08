@@ -112,7 +112,7 @@ class BprocesController < ApplicationController
     respond_with(@bproce)
   end
 
-  def newmetric
+  def new_metric
     @metric = Metric.new
     @metric.bproce_id = @bproce_id
     @metric.depth = 3

@@ -28,7 +28,11 @@ BPDoc::Application.routes.draw do
     get :autocomplete, :on => :collection
   end
   resources :activities
-  resources :agents
+  resources :agents do
+    member do
+      get :new_contract # новый договор контрагента
+    end
+  end
   resources :bapps
   resources :bproce_bapps, :only => [:create, :destroy, :show, :edit, :update]
   resources :bproce_business_roles, :only => [:show]
@@ -50,7 +54,7 @@ BPDoc::Application.routes.draw do
       get :doc    # описание процесса
       get :card   # карточка процесса
       get :metrics  # метрики процесса
-      get :newmetric  # добавить новую метрику в процесс
+      get :new_metric  # добавить новую метрику в процесс
       get :new_document, to: 'documents#new'
     end
   end

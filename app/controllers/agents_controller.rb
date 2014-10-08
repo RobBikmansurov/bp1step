@@ -1,5 +1,5 @@
 class AgentsController < ApplicationController
-  before_action :set_agent, only: [:show, :edit, :update, :destroy]
+  before_action :set_agent, only: [:show, :edit, :update, :destroy, :new_contract]
   autocomplete :bproce, :name, :extra_data => [:id]
 
   def index
@@ -13,6 +13,10 @@ class AgentsController < ApplicationController
   # GET /agents/new
   def new
     @agent = Agent.new
+  end
+
+  def new_contract  # новый договор контрагента
+    redirect_to new_contract_path({agent_id:@agent.id})
   end
 
   # GET /agents/1/edit

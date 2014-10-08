@@ -42,3 +42,5 @@
 -if can? :update, Agent
   = link_to 'Edit', edit_agent_path(@agent), :class => 'button'
 = link_to 'Back', agents_path, :class => 'button'
+-if can? :update, Agent or can? :create, Contract
+  = link_to 'Новый договор', new_contract_agent_path(@agent), :class => 'button'
