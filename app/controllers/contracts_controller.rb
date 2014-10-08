@@ -23,6 +23,8 @@ class ContractsController < ApplicationController
 
   def new
     @contract = Contract.new
+    @contract.agent_id = params[:agent_id] if params[:agent_id].present?
+    @contract.owner_id = current_user.id if user_signed_in?
     @contract.date_begin = Date.today
     @contract.status = "Согласование"
   end

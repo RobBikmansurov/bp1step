@@ -28,10 +28,7 @@ class DocumentDirective < ActiveRecord::Base
   end
 
   def document_name=(name)
-    puts name
-    self.document = Document.find_by_name(name) if name.present?
-    puts document.id
+    self.document = Document.find_by_name(name) if name
   end
-
 
 end
