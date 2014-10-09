@@ -53,7 +53,7 @@ class Contract < ActiveRecord::Base
     if name
       name_find = name[/№.*\|/][2..-3] if name[/№.*\|/]
       parent_find = Contract.where(:number => name_find) if name_find
-      self.parent = parent_find.fist if parent_find
+      self.parent = parent_find.first if parent_find
     end
   end
 
