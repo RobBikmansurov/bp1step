@@ -238,8 +238,10 @@ private
       r.add_field :description, @bproce.description
       if @bproce.parent_id
         r.add_field :parent, @bproce.parent.name
+        r.add_field :parent_id, " #" + @bproce.parent_id.to_s
       else
         r.add_field :parent, "-"
+        r.add_field :parent_id, " "
       end
       if @bproce.user_id  # владелец процесса
         r.add_field :owner, @bproce.user.displayname
@@ -250,6 +252,7 @@ private
       subs = Bproce.where("lft>? and rgt<?", @bproce.lft, @bproce.rgt).order("lft")  # все подпроцессы процесса
       r.add_table("SUBPROC", subs, :header => false, :skip_if_empty => true) do |t|
         if subs.count > 0  # если документов нет - пустая таблица не будет выведена
+          r.add_field :sub_process, 'В процесс входят следующие подпроцессы:'
           t.add_column(:sp) do |ca| # порядковый номер строки таблицы
             sp += 1
           end
@@ -257,9 +260,13 @@ private
             spname = '__' * (sub.depth - @bproce.depth) + sub.name
             #spname = sub.name
           end
+        else
+          r.add_field :sub_process, 'Подпроцессов нет.'
         end
       end
       
+      @metrics = Metric.where(:bproce_id => @bproce.id).order(:name)  # метрики процесса
+      report_metrics(@metrics, r, false) # сформировать список метрик процесса
       report_docs(@bproce.documents, r, false) # сформировать таблицу документов процесса
       report_contracts(@bproce.contracts, r, false)   # сформировать список договоров
       report_roles(@bproce.business_roles, r, false) # сформировать таблицу ролей
