@@ -60,11 +60,23 @@
 
 
 .info_
-  создан
-  = @contract.created_at.strftime('%d.%m.%Y %H:%M:%S') if @contract.created_at
+  -activity1 = PublicActivity::Activity.where(trackable_type: "Contract", trackable_id: @contract.id).order("created_at asc").first
+  -if activity1
+    создал
+    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    = activity1.owner.displayname.to_s
+  -else
+    создан
+    = @contract.created_at.strftime('%d.%m.%Y %H:%M:%S')
   %br
-  изменен
-  = @contract.updated_at.strftime('%d.%m.%Y %H:%M:%S') if @contract.updated_at
+  -activity2 = PublicActivity::Activity.where(trackable_type: "Contract", trackable_id: @contract.id).order("created_at asc").last
+  -if activity2
+    изменил
+    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    = activity2.owner.displayname.to_s
+  -else
+    изменен
+    = @contract.updated_at.strftime('%d.%m.%Y %H:%M:%S')
 
 %p
 - if can? :update, @contract

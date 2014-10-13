@@ -87,11 +87,23 @@
 = raw @document.tags.map { |t| link_to t, tag_documents_path(t.name), class: 'tags' }.join('&nbsp; ')
 
 .info_
-  создан
-  = @document.created_at.strftime('%d.%m.%Y %H:%M:%S')
+  -activity1 = PublicActivity::Activity.where(trackable_type: "Document", trackable_id: @document.id).order("created_at asc").first
+  -if activity1
+    создал
+    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    = activity1.owner.displayname.to_s
+  -else
+    создан
+    = @document.created_at.strftime('%d.%m.%Y %H:%M:%S')
   %br
-  изменен
-  = @document.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+  -activity2 = PublicActivity::Activity.where(trackable_type: "Document", trackable_id: @document.id).order("created_at asc").last
+  -if activity2
+    изменил
+    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    = activity2.owner.displayname.to_s
+  -else
+    изменен
+    = @document.updated_at.strftime('%d.%m.%Y %H:%M:%S')
 
 %p
 -if can? :update, @document

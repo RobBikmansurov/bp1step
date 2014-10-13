@@ -115,11 +115,24 @@
     = link_to iresource.label, iresource_path(iresource)
 %p
 .info_
-  создан
-  = @bproce.created_at.strftime('%d.%m.%Y %H:%M:%S') if @bproce.created_at
+  -activity1 = PublicActivity::Activity.where(trackable_type: "Bproce", trackable_id: @bproce.id).order("created_at asc").first
+  -if activity1
+    создал
+    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    = activity1.owner.displayname.to_s
+  -else
+    создан
+    = @bproce.created_at.strftime('%d.%m.%Y %H:%M:%S')
   %br
-  изменен
-  = @bproce.updated_at.strftime('%d.%m.%Y %H:%M:%S') if @bproce.updated_at
+  -activity2 = PublicActivity::Activity.where(trackable_type: "Bproce", trackable_id: @bproce.id).order("created_at asc").last
+  -if activity2
+    изменил
+    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    = activity2.owner.displayname.to_s
+  -else
+    изменен
+    = @bproce.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+%p
 -if can? :update, @bproce
   = link_to 'Edit', edit_bproce_path(@bproce), :class => 'button'
 = link_to 'Back', bproces_path, :class => 'button'
