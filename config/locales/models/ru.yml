@@ -63,6 +63,8 @@ ru:
         features: Особенности
       contract:
         number: Номер
+        contract_type: Тип
+        contract_place: Оригинал
         name: Тема
         status: Статус
         date_begin: Дата начала

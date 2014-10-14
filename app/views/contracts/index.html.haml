@@ -8,9 +8,21 @@
     = params[:search]
     ]
   -else
-    -if params[:status]
-      Список Договоров в статусе
-      = "[ #{params[:status]} ]"
+    -if params[:type].present?
+      Список 
+      [ 
+      = params[:type]
+      ]
+    -else
+      -if params[:place].present?
+        Список Договоров в
+        [ 
+        = params[:place]
+        ]
+      -else
+        -if params[:status]
+          Список Договоров в статусе
+          = "[ #{params[:status]} ]"
 
 %table
   %tr
@@ -49,8 +61,17 @@
 - if can? :create, Contract
   = link_to 'Добавить новый договор', new_contract_path, :class => 'button'
 %p
+Тип:
+- Contract.select("contract_type, count(id) as count").group(:contract_type).order(:contract_type).each do |d|
+  -if !d.contract_type.to_s.empty?
+    = link_to d.contract_type, contracts_path + '?type=' + d.contract_type.to_s, class: 'groups'
 %br
 Статус:
 - Contract.select("status, count(id) as count").group(:status).order(:status).each do |d|
   -if !d.status.to_s.empty?
     = link_to d.status, contracts_path + '?status=' + d.status.to_s, class: 'groups'
+%br
+Место хранения:
+- Contract.select("contract_place, count(id) as count").group(:contract_place).order(:contract_place).each do |d|
+  -if !d.contract_place.to_s.empty?
+    = link_to d.contract_place, contracts_path + '?place=' + d.contract_place.to_s, class: 'groups'

@@ -5,11 +5,14 @@ class Contract < ActiveRecord::Base
   validates :number, :presence => true,
                    :length => {:minimum => 1, :maximum => 20}
   validates :name, :presence => true,
-                   :length => {:minimum => 3, :maximum => 50}
+                   :length => {:minimum => 3, :maximum => 255}
   validates :description, :presence => true,
                           :length => {:minimum => 8, :maximum => 255}
   validates :status, :presence => true,
                           :length => {:minimum => 5, :maximum => 15}
+  validates :contract_type, :presence => true,
+                          :length => {:minimum => 5, :maximum => 30}
+  validates :contract_place, :length => {:maximum => 30}
   #validates :owner_id, presence: :true
 
   #belongs_to :contract, foreign_key: "parent_id"  # родительский договор
@@ -23,7 +26,7 @@ class Contract < ActiveRecord::Base
   has_many :bproce_contract, dependent: :destroy
   #has_many :children, :class => 'Contract', foreign_key: :parent_id
 
-  attr_accessible  :owner_name, :owner_id, :agent_name, :agent_id, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :parent_id, :parent_name
+  attr_accessible  :owner_name, :owner_id, :agent_name, :agent_id, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :parent_id, :parent_name, :contract_type, :contract_place
 
 
   include PublicActivity::Model
