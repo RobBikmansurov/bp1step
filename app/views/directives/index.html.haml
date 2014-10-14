@@ -14,12 +14,19 @@
       = params[:body]
       ]  
   -else
-    %h1
-      Директивы
-      -if params[:search].present?
-        [ 
-        = params[:search]
-        ]
+    -if params[:status].present?
+      %h2
+        Директивы - статус
+        [
+        = params[:status]
+        ]  
+    -else
+      %h1
+        Директивы
+        -if params[:search].present?
+          [ 
+          = params[:search]
+          ]
 %table
   %tr
     %th= sortable "number", "Номер"
@@ -68,3 +75,8 @@
     = link_to 'пусто', directives_path + '?body='
   -else
     = link_to directive.body, directives_path + '?body=' + directive.body.to_s, class: 'groups'
+%br
+Статус:
+- Directive.select("status, count(id) as count").group(:status).order(:status).each do |d|
+  -if !d.status.to_s.empty?
+    = link_to d.status, directives_path + '?status=' + d.status.to_s, class: 'groups'

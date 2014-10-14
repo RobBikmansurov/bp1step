@@ -12,7 +12,11 @@ class DirectivesController < ApplicationController
       if params[:body].present?
         @directives = Directive.where(:body => params[:body]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
       else
-        @directives = Directive.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        if params[:status].present?
+          @directives = Directive.where(:status => params[:status]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        else
+          @directives = Directive.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        end
       end
     end
   end
