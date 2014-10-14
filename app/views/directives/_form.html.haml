@@ -7,6 +7,7 @@
     = f.input :approval, :as => :string, :input_html => {:class=>'datepicker', :value => @directive.approval.strftime("%d.%m.%Y")}
   -else
     = f.input :approval, :as => :string, :input_html => {:class=>'datepicker'}
+  = f.input :status, :collection => %w[Действует Проект НеДействует], :prompt => 'Статус директивы', :input_html => { :value => 'Действует'}
   = f.input :name, :as => :text
   = f.input :annotation, :as => :text
   = f.input :note
