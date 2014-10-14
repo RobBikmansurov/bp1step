@@ -74,6 +74,7 @@ ru:
       directive:
         title: Тип директивы
         number: Номер
+        status: Статус
         name: Наименование
         approval: Дата утверждения
         body: Принявший орган
