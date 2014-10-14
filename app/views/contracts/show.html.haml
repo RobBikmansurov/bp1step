@@ -3,8 +3,10 @@
 .id_
   \#
   = @contract.id
-%h2
-  Договор №
+
+%h3
+  = link_to @contract.contract_type.to_s, contracts_path + '?type=' + @contract.contract_type.to_s, class: 'groups'
+  №
   %b
     =@contract.number
     =@contract.name
@@ -13,14 +15,14 @@
 %h3= link_to @contract.agent.name, agent_path(@contract.agent.id) if @contract.agent
 -if @contract.parent
   %h3
-    к договору
-    = link_to @contract.parent.shortname, contract_path(@contract.parent.id)
+    к
+    = link_to @contract.parent.contract_type + ' ' + @contract.parent.shortname, contract_path(@contract.parent.id)
 
 -if @subcontracts.count > 0
   %h3 Субдоговоры и приложения:
   - @subcontracts.each do |subcontract|
     = "——" * (subcontract.depth - @contract.depth)
-    = link_to subcontract.shortname, contract_path(subcontract)
+    = link_to subcontract.contract_type + ' ' + subcontract.shortname, contract_path(subcontract)
     %br
 
 %h3
@@ -44,6 +46,10 @@
 %h3
   Ответственный за договор:
   = link_to @contract.owner_name, user_path(@contract.owner.id) if @contract.owner_id?
+-if @contract.contract_place?
+  %h3
+    Место хранения оригинала:
+    = link_to @contract.contract_place.to_s, contracts_path + '?place=' + @contract.contract_place.to_s, class: 'groups'
 
 %p
 - if !@contract.bproce.blank?  # есть ссылки из договора на процессы?

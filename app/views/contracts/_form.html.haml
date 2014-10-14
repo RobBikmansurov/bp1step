@@ -1,8 +1,9 @@
 = simple_form_for(@contract) do |f|
   = f.error_notification
 
+  = f.input :contract_type, :hint => 'Договор, Соглашение ...'
   = f.input :number
-  = f.input :name
+  = f.input :name, as: :text
   = f.label 'Ответственный'
   = f.hidden_field :owner_id
   = f.autocomplete_field :owner_name, autocomplete_users_path
@@ -25,5 +26,6 @@
   = f.input :note
   = f.input :condition
   = f.input :check
+  = f.input :contract_place, :hint => 'Место хранения оригинала(кратко: отдел папка)'
 
   = f.button :submit

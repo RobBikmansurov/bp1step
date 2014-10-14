@@ -6,13 +6,21 @@ class ContractsController < ApplicationController
   autocomplete :bproce, :name, :extra_data => [:id]
 
   def index
-    if params[:status].present? #  список договоров, имеющих конкретый статус
+    if params[:status].present? #  список договоров, имеющих конкретный статус
       @contracts = Contract.where(:status => params[:status]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
     else
-      if sort_column == 'lft'
-        @contracts = Contract.search(params[:search]).order(:lft).paginate(:per_page => 10, :page => params[:page])
+      if params[:type].present? #  список договоров, имеющих конкретный тип
+        @contracts = Contract.where(:contract_type => params[:type]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
       else
-        @contracts = Contract.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        if params[:place].present? #  список договоров, хранящихся в конкретном месте
+          @contracts = Contract.where(:contract_place => params[:place]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        else
+          if sort_column == 'lft'
+            @contracts = Contract.search(params[:search]).order(:lft).paginate(:per_page => 10, :page => params[:page])
+          else
+            @contracts = Contract.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+          end
+        end
       end
     end
   end
@@ -27,6 +35,7 @@ class ContractsController < ApplicationController
     @contract.owner_id = current_user.id if user_signed_in?
     @contract.date_begin = Date.today
     @contract.status = "Согласование"
+    @contract.contract_type = 'Договор'
   end
 
   def edit
@@ -72,6 +81,7 @@ class ContractsController < ApplicationController
         r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
         r.add_field "REPORT_DATE1", (Date.today + 10.days).strftime('%d.%m.%Y')
         r.add_field :id, @contract.id
+        r.add_field :type, @contract.contract_type
         r.add_field :number, @contract.number
         r.add_field :name, @contract.name
         r.add_field :description, @contract.description
@@ -120,7 +130,7 @@ class ContractsController < ApplicationController
     end
 
     def contract_params
-      params.require(:contract).permit(:owner_id, :owner_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :agent_id, :agent_name, :parent_id, :parent_name)
+      params.require(:contract).permit(:owner_id, :owner_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :agent_id, :agent_name, :parent_id, :parent_name, :contract_type, :contract_place)
     end
 
     def sort_column
