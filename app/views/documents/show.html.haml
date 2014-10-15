@@ -89,7 +89,7 @@
 .info_
   -activity1 = PublicActivity::Activity.where(trackable_type: "Document", trackable_id: @document.id).order("created_at asc").first
   -if activity1
-    создал
+    = link_to 'создал', activities_path(type: "Document", id: @document.id)
     = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
     = activity1.owner.displayname.to_s
   -else
@@ -98,7 +98,7 @@
   %br
   -activity2 = PublicActivity::Activity.where(trackable_type: "Document", trackable_id: @document.id).order("created_at asc").last
   -if activity2
-    изменил
+    = link_to 'изменил', activities_path(type: "Document", id: @document.id)
     = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
     = activity2.owner.displayname.to_s
   -else

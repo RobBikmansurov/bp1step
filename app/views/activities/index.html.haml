@@ -1,12 +1,22 @@
 -title "Действия пользователей"
+
+%h2
+  Протокол действий
+  -if params[:type].present?
+
+  -else
+
 -@activities.each do |activity|
-  %br
   =activity.created_at.strftime('%d.%m.%Y %H:%M:%S')
   -if activity.owner
     =link_to activity.owner.displayname, activity.owner 
     =render_activity(activity)
   -else
     =debug activity.inspect
+  %br
 
 .apple_pagination
   = will_paginate @activities
+
+%p
+= link_to 'Back', :back, :class => 'button'
