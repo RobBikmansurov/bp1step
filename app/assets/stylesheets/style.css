@@ -32,6 +32,7 @@ li {
   list-style:none;
 }
 
+@media screen {
 .nav{
     display: block;
     white-space: nowrap;
@@ -87,7 +88,7 @@ li {
 .nav li:hover ul li a:hover{
     background:#555;
 }
-
+}
 #menu {
   background: #FFCC99;
   box-shadow: 2px 2px 4px #aaa;
@@ -213,6 +214,9 @@ a.groups:hover {
   z-index: 999;
   color: #999;
 }
+.info_ a {
+  color: #999;
+}
 
 .field_with_errors, #flash_alert {
   padding: 2px;
@@ -224,4 +228,10 @@ a.groups:hover {
   padding: 2px;
   color: #336633;
   background-color: #CCFFCC;
+}
+
+@media print { /* стили для печати - скрывают некоторые элеементы */
+  .menu, #menu, .nav, .search, .users { display: none; }
+  a:after {content:" <" attr(href) ">";}
+  h1 {color: #CCC;}
 }
