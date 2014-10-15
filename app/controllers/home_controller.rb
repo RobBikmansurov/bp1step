@@ -7,8 +7,14 @@ class HomeController < ApplicationController
   def create_letter   # официальное письмо
     phone = '+7(342)291-03-00'
     if user_signed_in?
-      phone = '+7(342)291-03-' + current_user.phone[1,2] if current_user.phone[0] == '2'
-      username = current_user.firstname[0] + '.' + current_user.middlename[0] + '. ' + current_user.lastname
+      if current_user.phone
+        phone = '+7(342)291-03-' + current_user.phone[1,2] if current_user.phone[0] == '2'
+      else
+        phone = '+7(342)291-03-00'
+      end
+      username = current_user.firstname.chr + '.' if current_user.firstname
+      username += current_user.middlename.chr  + '.' if current_user.middlename
+      username += ' ' + current_user.lastname
     else
       username = 'Незарегистрированный пользователь'
     end
