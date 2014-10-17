@@ -83,11 +83,11 @@
     -#= ' ' + doc.owner.displayname
 -if @bproce.contracts.count > 0
   %h4 Организационно-юридическое обеспечение Процесса соcтавляют:
-  -@bproce.contracts.each do | contract |
+  -@bproce.contracts.order(:lft).each do | contract |
     -#=link_to contract.shortname, contract_path(contract)
-    договор
-    =link_to contract.shortname, contract_path(contract)
-    = contract.status if contract.status
+    ='—' * (contract.depth)
+    =link_to contract.contract_type.to_s + ' ' + contract.shortname, contract_path(contract)
+    =contract.status if contract.status
     от
     =contract.date_begin.strftime('%d.%m.%Y')
     с
