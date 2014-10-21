@@ -15,21 +15,26 @@
 = markdown(@agent.contacts)
 
 -if @contracts.count > 0
-  %h3Договоры с контрагентом:
+  %h3
+    Договоры с
+    %b= @agent.name
+    \:
   %table
     %tr
       %th #
       %th Номер
-      %th От
       %th Статус
+      %th От
       
     - @contracts.each do |contract|
       %tr
         %td= contract.id
         %td
+          = "—" * (contract.depth)
+          =contract.contract_type
           = link_to contract.shortname, contract_path(contract)
-        %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
         %td= contract.status
+        %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
 
 .info_
   создан
