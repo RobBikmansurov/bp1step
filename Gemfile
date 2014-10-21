@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.0.0'
+ruby '2.1.0'
 gem 'rails', '4.0.1'
 
 #gem 'yaml_db', github: 'jetthoughts/yaml_db', ref: 'fb4b6bd7e12de3cffa93e0a298a1e5253d7e92ba'
@@ -27,7 +27,7 @@ gem "the_sortable_tree", ">= 2.4.0"
 gem 'simple_form'
 gem 'odf-report'
 gem 'public_activity'
-gem 'paperclip', "~> 4.1"
+gem 'paperclip', "~> 4.2"
 gem 'acts-as-taggable-on'
 gem 'protected_attributes'
 gem 'chartkick'
@@ -46,7 +46,7 @@ group :development do
   gem 'capistrano'  # Deploy with Capistrano
   gem 'rvm-capistrano'
   gem 'capistrano-deploy', :require => false
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 3.0.0'
 end
 
 group :production do
