@@ -5,6 +5,8 @@
   = @agent.id
 %h2
   Контрагент 
+  = '[' + @agent.shortname + ']' if @agent.shortname
+%h2
   %b= @agent.name
   -if !@agent.town.blank?
     г.

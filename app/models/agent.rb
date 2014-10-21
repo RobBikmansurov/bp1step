@@ -7,7 +7,7 @@ class Agent < ActiveRecord::Base
                    :length => {:minimum => 3, :maximum => 255}
   validates :town, :length => {:maximum => 30}
 
-  attr_accessible  :name, :town, :address, :contacts, :agent_name
+  attr_accessible  :shortname, :name, :town, :address, :contacts, :agent_name
 
 
   include PublicActivity::Model

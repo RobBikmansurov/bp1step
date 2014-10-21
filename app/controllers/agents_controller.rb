@@ -62,7 +62,7 @@ class AgentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def agent_params
-      params.require(:agent).permit(:name, :town, :address, :contacts)
+      params.require(:agent).permit(:shortname, :name, :town, :address, :contacts)
     end
 
     def sort_column

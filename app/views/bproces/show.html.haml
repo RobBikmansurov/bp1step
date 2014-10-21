@@ -90,8 +90,13 @@
     = contract.status if contract.status
     от
     =contract.date_begin.strftime('%d.%m.%Y')
-    с
-    =link_to contract.agent.name, agent_path(contract.agent.id) if contract.agent
+    -if contract.agent
+      с
+      -if contract.agent.shortname
+        =link_to '[' + contract.agent.shortname + ']', agent_path(contract.agent.id)
+      -else
+        с
+        =link_to contract.agent.name, agent_path(contract.agent.id)
     %br
 
 -if @bproce.workplaces.count > 0

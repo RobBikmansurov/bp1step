@@ -24,6 +24,7 @@ ru:
     attributes:
       agent:
         name: Наименование
+        shortname: Обозначение
         town: Город
         address: Адрес
         contacts: Контакты
