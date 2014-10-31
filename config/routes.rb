@@ -63,6 +63,9 @@ BPDoc::Application.routes.draw do
   resources :contracts do
     member do
       get :approval_sheet # Лист согласования
+      get :scan_create
+      get :scan_delete
+      post :update_scan
     end
   end
   resources :documents do

@@ -24,6 +24,7 @@ class Contract < ActiveRecord::Base
 
   has_many :bproce, through: :bproce_contract
   has_many :bproce_contract, dependent: :destroy
+  has_many :contract_scan, dependent: :destroy
   #has_many :children, :class => 'Contract', foreign_key: :parent_id
 
   attr_accessible  :owner_name, :owner_id, :agent_name, :agent_id, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :parent_id, :parent_name, :contract_type, :contract_place

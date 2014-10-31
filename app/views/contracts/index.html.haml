@@ -42,6 +42,11 @@
         .id_show_
           = "##{contract.id}"
       %td
+        -if contract.contract_scan.first  #  если есть скан
+          -if can? :view_contract, contract
+            - if File.exist?(contract.contract_scan.first.scan.path)
+              = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), contract.contract_scan.first.scan.url, class: 'button-img'
+
         = '—' * (contract.depth)
         = link_to contract.shortname, contract_path(contract)
       %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
