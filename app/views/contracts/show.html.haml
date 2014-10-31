@@ -64,6 +64,19 @@
 -else
   %h3 Процесс не назначен!
 
+%h4Файлы:
+-@contract.contract_scan.each do |contract_scan|
+  -#= link_to bproce_contract.bproce.name, bproce_path(bproce_contract.bproce)
+  - if File.exist?(contract_scan.scan.path)  # есть исходный файл документа
+    -#= link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), @document.pdf_url, class: 'button-img'
+    = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), contract_scan.scan.url, class: 'button-img'
+    = link_to contract_scan.name, contract_scan.scan.url
+    = " (" + contract_scan.scan_file_size.to_s + ")"
+  
+- if can? :update, @contract
+  #update_scan
+    = link_to 'Добавить', scan_create_contract_path(@contract), :remote => true   #, class: 'button'
+
 
 .info_
   -activity1 = PublicActivity::Activity.where(trackable_type: "Contract", trackable_id: @contract.id).order("created_at asc").first

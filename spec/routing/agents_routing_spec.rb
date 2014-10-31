@@ -4,7 +4,8 @@ describe AgentsController do
   describe "routing" do
 
     it "routes to #index" do
-      get("/agents").should route_to("agents#index")
+      get "/agents"
+      response.should route_to("agents#index")
     end
 
     it "routes to #new" do

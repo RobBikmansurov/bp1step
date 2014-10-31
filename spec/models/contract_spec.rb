@@ -19,5 +19,6 @@ describe Contract do
     it { should belong_to(:owner).class_name('User') }
     it { should belong_to(:agent).class_name('Agent') }
     it { should have_many(:bproce_contract).dependent(:destroy) }
+    it { should have_many(:contract_scan).dependent(:destroy) }
   end
 end

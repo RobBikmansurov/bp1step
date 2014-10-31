@@ -3,7 +3,13 @@ class ContractsController < ApplicationController
   helper_method :sort_column, :sort_direction
   before_action :set_contract, only: [:show, :edit, :update, :destroy, :approval_sheet]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+  respond_to :html, :xml, :json, :js
   autocomplete :bproce, :name, :extra_data => [:id]
+
+  def autocomplete
+    @contracts = Contract.order(:number).where("name ilike ? or number ilike ?", "%#{params[:term]}%", "%#{params[:term]}%")
+    render json: @contracts.map(&:autoname)
+  end
 
   def index
     if params[:status].present? #  список договоров, имеющих конкретный статус
@@ -69,9 +75,22 @@ class ContractsController < ApplicationController
       approval_sheet_odt
   end
 
-  def autocomplete
-    @contracts = Contract.order(:number).where("name ilike ? or number ilike ?", "%#{params[:term]}%", "%#{params[:term]}%")
-    render json: @contracts.map(&:autoname)
+  def scan_create
+    @contract = Contract.find(params[:id])
+    @contract_scan = ContractScan.new()
+    @contract_scan.contract = @contract
+    render :scan_create
+  end
+
+  def update_scan
+    #@contract = Contract.find(params[:id]) if params[:id].present?
+    contract_scan = ContractScan.new(params[:contract_scan]) if params[:contract_scan].present?
+    if contract_scan
+      flash[:notice] = 'Файл "' + contract_scan.name  + '" загружен.' if contract_scan.save
+    else      
+      flash[:alert] = "Ошибка - имя файла не указано."
+    end
+    respond_with(contract_scan.contract)
   end
 
   private
@@ -131,6 +150,10 @@ class ContractsController < ApplicationController
 
     def contract_params
       params.require(:contract).permit(:owner_id, :owner_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :agent_id, :agent_name, :parent_id, :parent_name, :contract_type, :contract_place)
+    end
+
+    def contract__scan_params
+      params.require(:contract_scan).permit(:conntract_id, :name)
     end
 
     def sort_column
