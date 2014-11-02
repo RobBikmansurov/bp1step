@@ -93,6 +93,13 @@ class ContractsController < ApplicationController
     respond_with(contract_scan.contract)
   end
 
+  def bproce_create
+    @contract = Contract.find(params[:id])
+    @bproce_contract = @contract.bproce_contract.new
+    #@contract_scan.contract = @contract
+    render :bproce_create
+  end
+
   private
 
     def approval_sheet_odt    # Лист согласования

@@ -66,6 +66,7 @@ BPDoc::Application.routes.draw do
       get :scan_create
       get :scan_delete
       post :update_scan
+      get :bproce_create
     end
   end
   resources :documents do
