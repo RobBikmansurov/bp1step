@@ -33,6 +33,11 @@
         %td= contract.id
         %td
           = "—" * (contract.depth)
+          -if contract.contract_scan.first  #  если есть скан
+            -if can? :view_contract, contract
+              - if File.exist?(contract.contract_scan.first.scan.path)
+                = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), contract.contract_scan.first.scan.url, class: 'button-img'
+
           =contract.contract_type
           = link_to contract.shortname, contract_path(contract)
         %td= contract.status
