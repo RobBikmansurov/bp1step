@@ -1,0 +1,11 @@
+-if @document_directive
+  = simple_form_for @document_directive, remote: true do |dd|
+    = dd.error_notification
+    = dd.hidden_field :directive_id
+    = dd.hidden_field :document_id
+    = dd.label 'Документ'
+    = dd.autocomplete_field :document_name, autocomplete_documents_path, :id_elements => '#document_directive_document_id', :placeholder => 'подстрока в наименовании'
+    
+    = dd.error :base
+    -if can? :update, @directive
+      = dd.button :submit, 'Добавить Внутренний документ банка'

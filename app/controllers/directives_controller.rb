@@ -1,6 +1,7 @@
 class DirectivesController < ApplicationController
   respond_to :html
-  respond_to :xml, :json, :only => :index
+  respond_to :xml
+  respond_to :json, :only => :index
   helper_method :sort_column, :sort_direction
   before_filter :authenticate_user!, :only => [:edit, :new, :create, :update]
   before_filter :get_directive, :except => [:index, :autocomplete]
@@ -55,6 +56,12 @@ class DirectivesController < ApplicationController
   def destroy
     flash[:notice] = "Successfully destroyed directive." if @directive.destroy
     respond_with(@directive)
+  end
+
+  def document_create
+    @directive = Directive.find(params[:id])
+    @document_directive = @directive.document_directive.new
+    render :document_create
   end
 
 private
