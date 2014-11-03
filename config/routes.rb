@@ -11,13 +11,6 @@ BPDoc::Application.routes.draw do
   resources :contracts, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
-  resources :directives do
-    resources :documents  # документы на основании директивы
-    get :autocomplete, :on => :collection
-  end
-  resources :documents do
-    get :autocomplete, :on => :collection
-  end
   resources :iresources, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
@@ -69,7 +62,16 @@ BPDoc::Application.routes.draw do
       get :bproce_create
     end
   end
+  resources :directives do
+    resources :documents  # документы на основании директивы
+    get :autocomplete, :on => :collection
+    member do
+      get :document_create
+      post :document_update
+    end
+  end
   resources :documents do
+    get :autocomplete, :on => :collection
     member do
       get :file_create
       get :file_delete

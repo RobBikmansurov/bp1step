@@ -36,6 +36,10 @@
       -else
         %td= document_directive.note
       )
+- if can? :update, @directive
+  #document
+    = link_to 'Добавить документ', document_create_directive_path(@directive), remote: true #, class: 'button'
+
 -if Bproce.last.bproces_of_directives(@directive.id).count > 0
   %h4
     Документы этой директивы связаны со следующими процессами:

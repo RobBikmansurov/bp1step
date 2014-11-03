@@ -88,7 +88,12 @@
           = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_document_path(document), class: 'button-img'
       -if can? :destroy, document
         %td
-          = link_to image_tag('action_stop.gif', alt: 'Удалить', title: 'Удалить' ), document, data: { confirm: document.name + "\nДействительно хотите удалить документ #" + document.id.to_s + " ?" }, :method => 'delete', class: 'button-img'
+          -if @directive.blank?
+            = link_to image_tag('action_stop.gif', alt: 'Удалить', title: 'Удалить' ), document, data: { confirm: document.name + "\nДействительно хотите удалить документ #" + document.id.to_s + " ?" }, :method => 'delete', class: 'button-img'
+          -else
+            -di = @directive.document_directive.where("directive_id = '?' and document_id = '?'", @directive.id, document.id).first
+            =link_to image_tag('action_stop.gif', :alt => 'Удалить'), di, data: { confirm: document.name + "\nДействительно хотите удалить ссылку на этот документ?" }, :method => 'delete', class: 'button-img' if di
+
 -if !params[:all].present?
   .apple_pagination
     = will_paginate @documents 
