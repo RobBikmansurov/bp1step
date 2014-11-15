@@ -22,7 +22,7 @@ puts "access roles created"
 Role.pluck(:name)
 
 # users
-user1 = User.create(:displayname => 'Иванов И.И.', :username => 'ivanov', :email => 'ivanov@example.com', :password => 'ivanov')
+user1 = User.create(:displayname => 'Иванов И.И.', :username => 'ivanov', :email => 'ivanov@example.com', :password => 'ivanov', firstname: 'Иван', middlename: 'Иванович', lastname: 'Иванов')
 user1.roles << Role.find_by_name(:author)
 user1.roles << Role.find_by_name(:analitic)
 user1.roles << Role.find_by_name(:owner)
