@@ -12,8 +12,9 @@ class DocumentsController < ApplicationController
   def index
     if params[:directive_id].present? # документы относящиеся к директиве
       @directive = Directive.find(params[:directive_id])
-      @documents = @directive.document.paginate(:per_page => 10, :page => params[:page])
-      @title_doc = 'Документы директивы ' + @directive.directive_name
+      #@documents = @directive.document.paginate(:per_page => 10, :page => params[:page])
+      @documents = @directive.document.paginate(:per_page => 100, :page => params[:page])
+      @title_doc = 'для директивы ' + @directive.directive_name
     else
       if params[:all].present?
         @documents = Document.order('cast (part as integer)', :name).all
@@ -29,7 +30,8 @@ class DocumentsController < ApplicationController
             else
               if params[:status].present? #  список документов, имеющих конкретый статус
                 ss = params[:status]
-                @documents = Document.where(:status => ss).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                @documents = Document.where(status: params[:status]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                @title_doc = 'статус [' + params[:status] + ']'
               else
                 if params[:place].present? #  список документов, находящихся в одном месте
                   if params[:place].size == 0
@@ -48,7 +50,7 @@ class DocumentsController < ApplicationController
                       if params[:bproce_id].present?
                         @bproce = Bproce.find(params[:bproce_id])
                         @documents = @bproce.documents.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
-                        @title_doc = 'Документы процесса ' + @bproce.name if @bproce
+                        @title_doc = 'для процесса ' + @bproce.name + ' #' + @bproce.id.to_s if @bproce
                       else
                         @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
                       end
@@ -203,7 +205,7 @@ private
       r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
       @title_doc = '' if !@title_doc
       if params[:page].present?
-        @title_doc = @title_doc + ' стр.' + params[:page]
+        @title_doc = @title_doc + '  стр.' + params[:page]
       end
       r.add_field "REPORT_TITLE", @title_doc
       r.add_table("TABLE_01", @documents, :header => true) do |t|
