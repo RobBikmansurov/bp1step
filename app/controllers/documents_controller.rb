@@ -13,6 +13,7 @@ class DocumentsController < ApplicationController
     if params[:directive_id].present? # документы относящиеся к директиве
       @directive = Directive.find(params[:directive_id])
       @documents = @directive.document.paginate(:per_page => 10, :page => params[:page])
+      @title_doc = 'Документы директивы ' + @directive.directive_name
     else
       if params[:all].present?
         @documents = Document.order('cast (part as integer)', :name).all
@@ -47,6 +48,7 @@ class DocumentsController < ApplicationController
                       if params[:bproce_id].present?
                         @bproce = Bproce.find(params[:bproce_id])
                         @documents = @bproce.documents.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                        @title_doc = 'Документы процесса ' + @bproce.name if @bproce
                       else
                         @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
                       end
@@ -199,6 +201,11 @@ private
       nnp = 0
       first_part = 0  # номер раздела для сброса номера документа в разделе
       r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
+      @title_doc = '' if !@title_doc
+      if params[:page].present?
+        @title_doc = @title_doc + ' стр.' + params[:page]
+      end
+      r.add_field "REPORT_TITLE", @title_doc
       r.add_table("TABLE_01", @documents, :header => true) do |t|
         t.add_column(:nn) do |ca|
           nn += 1

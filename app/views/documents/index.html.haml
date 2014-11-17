@@ -100,10 +100,7 @@
 %p
 - if can? :create, Document
   = link_to 'Каталог', documents_path(@document)+'.odt?all=1', :class => 'button'
-  -if request.query_string
-    = link_to 'Список', documents_path(@document) + '.odt?' + request.query_string, :class => 'button'
-  -else
-    = link_to 'Список', documents_path(@document) + '.odt', :class => 'button'
+  = link_to 'Список', request.original_url.gsub('/documents', '/documents.odt'), :class => 'button'
   -if @bproce
     = link_to 'Новый документ процесса', new_document_bproce_path(@bproce), :class => 'button'
   -else
