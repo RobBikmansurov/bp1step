@@ -56,9 +56,15 @@
 
       -@uworkplaces.each do |user_workplace|
         %tr
-          %td= link_to user_workplace.workplace.designation, workplace_path(user_workplace.workplace)
-          %td= user_workplace.workplace.location
-          %td= user_workplace.workplace.name
+          %td
+            -if user_workplace.workplace
+              = link_to user_workplace.workplace.designation, workplace_path(user_workplace.workplace)
+            -else
+              нет РМ
+              = user_workplace.workplace_id
+              = user_workplace.inspect
+          %td= user_workplace.workplace.location if user_workplace.workplace
+          %td= user_workplace.workplace.name if user_workplace.workplace
           %td= user_workplace.note
           %td
             -if user_workplace.date_from
