@@ -100,6 +100,46 @@ class ContractsController < ApplicationController
     render :bproce_create
   end
 
+  def clone
+    contract = Contract.find(params[:id])   # договор - прототип
+    puts "\nclone"
+    puts contract.inspect
+
+
+    @contract = Contract.new()
+    @contract.agent_id = contract.agent_id
+    @contract.owner_id = current_user.id if user_signed_in?
+    @contract.date_begin = Date.today
+    @contract.status = "Согласование"
+    @contract.contract_type = contract.contract_type
+    @contract.description = contract.description
+    @contract.name = contract.name
+    @contract.number = contract.number + "/1"
+    @contract.text = contract.text
+    @contract.note = 'создан из #' + contract.id.to_s
+    @contract.parent_id = contract.id
+    puts "\nnew"
+    puts @contract.inspect
+    if @contract.save
+      puts "\n saved"
+      puts @contract.inspect
+      flash[:notice] = "Successfully cloned Contract." if @contract.save
+      contract.bproce_contract.each do |bp|     # клонируем ссылки на процессы
+        bproce_contract = BproceContract.new(contract_id: @contract, bproce_id: bp)
+        bproce_contract.contract = @contract
+        bproce_contract.bproce = bp.bproce
+        bproce_contract.purpose = bp.purpose
+        bproce_contract.save
+      end
+      @subcontracts = Contract.where("lft>? and rgt<?", @contract.lft, @contract.rgt).order("lft")
+      render :show
+    else
+      flash[:notice] = @contract.errors
+      @subcontracts = Contract.where("lft>? and rgt<?", contract.lft, contract.rgt).order("lft")
+      render :show
+    end
+  end
+
   private
 
     def approval_sheet_odt    # Лист согласования
