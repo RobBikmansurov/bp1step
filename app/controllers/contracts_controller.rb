@@ -1,9 +1,11 @@
 # coding: utf-8
 class ContractsController < ApplicationController
+  respond_to :odt, :only => :index
+  respond_to :pdf, :only => :show
+  respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
   before_action :set_contract, only: [:show, :edit, :update, :destroy, :approval_sheet]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
-  respond_to :html, :xml, :json, :js
   autocomplete :bproce, :name, :extra_data => [:id]
 
   def autocomplete
@@ -102,10 +104,6 @@ class ContractsController < ApplicationController
 
   def clone
     contract = Contract.find(params[:id])   # договор - прототип
-    puts "\nclone"
-    puts contract.inspect
-
-
     @contract = Contract.new()
     @contract.agent_id = contract.agent_id
     @contract.owner_id = current_user.id if user_signed_in?
@@ -118,12 +116,8 @@ class ContractsController < ApplicationController
     @contract.text = contract.text
     @contract.note = 'создан из #' + contract.id.to_s
     @contract.parent_id = contract.id
-    puts "\nnew"
-    puts @contract.inspect
     if @contract.save
-      puts "\n saved"
-      puts @contract.inspect
-      flash[:notice] = "Successfully cloned Contract." if @contract.save
+      flash[:notice] = "Successfully cloned Contract ##{contract.id}" if @contract.save
       contract.bproce_contract.each do |bp|     # клонируем ссылки на процессы
         bproce_contract = BproceContract.new(contract_id: @contract, bproce_id: bp)
         bproce_contract.contract = @contract
@@ -132,11 +126,9 @@ class ContractsController < ApplicationController
         bproce_contract.save
       end
       @subcontracts = Contract.where("lft>? and rgt<?", @contract.lft, @contract.rgt).order("lft")
-      render :show
     else
       flash[:notice] = @contract.errors
       @subcontracts = Contract.where("lft>? and rgt<?", contract.lft, contract.rgt).order("lft")
-      render :show
     end
   end
 
