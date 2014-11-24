@@ -23,6 +23,8 @@
   - @subcontracts.each do |subcontract|
     = "——" * (subcontract.depth - @contract.depth)
     = link_to subcontract.contract_type.to_s + ' ' + subcontract.shortname, contract_path(subcontract)
+    = ' от ' + subcontract.date_begin.strftime('%d.%m.%Y') if subcontract.date_begin
+    = subcontract.status
     %br
 
 %h3
