@@ -62,13 +62,17 @@ Business processes documentation organization and generation, the 1st step of in
 
 Загрузите проект 
 
->git clone
+>git clone https://github.com/RobBikmansurov/BPDoc
+
+>cd BPDoc
 
 Настройте доступ к БД, в тестовом примере используется SQLite3
 
 >bundle install
 
 >rake db:setup
+
+>rake db:seed
 
 >rails g public_activity:migration
 
@@ -84,8 +88,10 @@ Business processes documentation organization and generation, the 1st step of in
 >rspec spec/models/
 
 ##License#
-MIT?
-
+MIT
+ see in LICENSE 
+ Copyright (c) 2012-2014 Rob Bikmansurov. All rights reserved.
+ Author: Rob Bikmansurov, contacts: robb@mail.ru
 
 
  [Rob Bikmansurov](mailto:robb@mail.ru)
