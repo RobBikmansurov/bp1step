@@ -89,8 +89,10 @@ Business processes documentation organization and generation, the 1st step of in
 
 ##License#
 MIT
- see in LICENSE 
- Copyright (c) 2012-2014 Rob Bikmansurov. All rights reserved.
+ see in LICENSE file.
+
+ Copyright &copy; 2012-2014 Rob Bikmansurov. All rights reserved.
+ 
  Author: Rob Bikmansurov, contacts: robb@mail.ru
 
 
