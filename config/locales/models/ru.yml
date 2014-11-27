@@ -10,6 +10,7 @@ ru:
       bproce_iresource: Ресурс Процесса
       business_role: Роль
       contract: Договор
+      contract_scan: Скан
       document: Документ
       directive: Директива
       iresource: Ресурс
@@ -74,6 +75,8 @@ ru:
         description: О чем
         condition: Условия окончания
         check: Контроль исполнения
+      contract_scan:
+        name: Комментарий
       directive:
         title: Тип директивы
         number: Номер
