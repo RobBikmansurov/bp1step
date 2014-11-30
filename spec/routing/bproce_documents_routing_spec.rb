@@ -1,10 +1,10 @@
 require "spec_helper"
 
-describe BproceDocumentsController do
+RSpec.describe BproceDocumentsController, :type => :routing do
   describe "routing -   resources :bproce_documents, :only => [:show]" do
 
     it "routes to #show" do
-      get("/bproce_documents/1").should route_to("bproce_documents#show", id: "1")
+      expect(get: "/bproce_documents/1").to route_to("bproce_documents#show", id: "1")
     end
 
     it "routes /bproce_documents/1 to bproce-documents#show" do
@@ -20,11 +20,11 @@ describe BproceDocumentsController do
     end
 
     it "routes to #edit" do
-      get("/bproce_documents/1/edit").should route_to("bproce_documents#edit", :id => "1")
+      expect(get: "/bproce_documents/1/edit").to route_to("bproce_documents#edit", :id => "1")
     end
 
     it "routes to #update" do
-      put("/bproce_documents/1").should route_to("bproce_documents#update", :id => "1")
+      expect(put: "/bproce_documents/1").to route_to("bproce_documents#update", :id => "1")
     end
 
   end

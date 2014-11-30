@@ -1,14 +1,12 @@
-require "spec_helper"
-
-describe RolesController do
+RSpec.describe RolesController, :type => :routing do
   describe "routing" do
 
     it "routes to #index" do
-      get("/roles").should route_to("roles#index")
+      expect(get: "/roles").to route_to("roles#index")
     end
 
     it "routes to #show" do
-      get("/roles/1").should route_to("roles#show", :id => "1")
+      expect(get: "/roles/1").to route_to("roles#show", :id => "1")
     end
 
   end
