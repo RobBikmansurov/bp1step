@@ -1,5 +1,4 @@
-require 'spec_helper'
-describe AgentsController do
+RSpec.describe AgentsController, :type => :controller do
 
   let(:valid_attributes) { { "name" => "MyString" } }
   let(:valid_session) { {} }
@@ -8,7 +7,18 @@ describe AgentsController do
     it "assigns all agents as @agents" do
       agent = Agent.create! valid_attributes
       get :index, {}, valid_session
-      assigns(:agents).should eq([agent])
+      #assigns(:agents).to eq([agent])
+      expect(response).to be_success
+      expect(response).to have_http_status(:success)
+      expect(response).to render_template('agents/index')
+    end
+
+    it "loads all of the agents into @agents" do
+      agent1 = Agent.create! valid_attributes
+      agent2 = Agent.create! valid_attributes
+      get :index
+
+      expect(assigns(:agents)).to match_array([agent1, agent2])
     end
   end
 
@@ -16,14 +26,14 @@ describe AgentsController do
     it "assigns the requested agent as @agent" do
       agent = Agent.create! valid_attributes
       get :show, {:id => agent.to_param}, valid_session
-      assigns(:agent).should eq(agent)
+      expect(assigns(:agent)).to eq(agent)
     end
   end
 
   describe "GET new" do
     it "assigns a new agent as @agent" do
       get :new, {}, valid_session
-      assigns(:agent).should be_a_new(Agent)
+      expect(assigns(:agent)).to be_a_new(Agent)
     end
   end
 
@@ -31,7 +41,7 @@ describe AgentsController do
     it "assigns the requested agent as @agent" do
       agent = Agent.create! valid_attributes
       get :edit, {:id => agent.to_param}, valid_session
-      assigns(:agent).should eq(agent)
+      expect(assigns(:agent)).to eq(agent)
     end
   end
 
@@ -45,29 +55,29 @@ describe AgentsController do
 
       it "assigns a newly created agent as @agent" do
         post :create, {:agent => valid_attributes}, valid_session
-        assigns(:agent).should be_a(Agent)
-        assigns(:agent).should be_persisted
+        expect(assigns(:agent)).to be_a(Agent)
+        expect(assigns(:agent)).to be_persisted
       end
 
       it "redirects to the created agent" do
         post :create, {:agent => valid_attributes}, valid_session
-        response.should redirect_to(Agent.last)
+        expect(response).to redirect_to(Agent.last)
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved agent as @agent" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Agent.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Agent).to receive(:save).and_return(false)
         post :create, {:agent => { "name" => "invalid value" }}, valid_session
-        assigns(:agent).should be_a_new(Agent)
+        expect(assigns(:agent)).to be_a_new(Agent)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Agent.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Agent).to receive(:save).and_return(false)
         post :create, {:agent => { "name" => "invalid value" }}, valid_session
-        response.should render_template("new")
+        expect(response).to render_template("new")
       end
     end
   end
@@ -80,20 +90,22 @@ describe AgentsController do
         # specifies that the Agent created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
-        Agent.any_instance.should_receive(:update).with({ "name" => "MyString" })
+        #  put :update, :id => @teacher_leader, :teacher_leader => { :teacher_id => @teacher.id }
+        #Agent.any_instance.to_receive(:update).with({ "name" => "MyString" })
+        expect_any_instance_of(Agent).to receive(:save).at_least(:once)
         put :update, {:id => agent.to_param, :agent => { "name" => "MyString" }}, valid_session
       end
 
       it "assigns the requested agent as @agent" do
         agent = Agent.create! valid_attributes
         put :update, {:id => agent.to_param, :agent => valid_attributes}, valid_session
-        assigns(:agent).should eq(agent)
+        expect(assigns(:agent)).to eq(agent)
       end
 
       it "redirects to the agent" do
         agent = Agent.create! valid_attributes
         put :update, {:id => agent.to_param, :agent => valid_attributes}, valid_session
-        response.should redirect_to(agent)
+        expect(response).to redirect_to(agent)
       end
     end
 
@@ -101,17 +113,17 @@ describe AgentsController do
       it "assigns the agent as @agent" do
         agent = Agent.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
-        Agent.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Agent).to receive(:save).and_return(false)
         put :update, {:id => agent.to_param, :agent => { "name" => "invalid value" }}, valid_session
-        assigns(:agent).should eq(agent)
+        expect(assigns(:agent)).to eq(agent)
       end
 
       it "re-renders the 'edit' template" do
         agent = Agent.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
-        Agent.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Agent).to receive(:save).and_return(false)
         put :update, {:id => agent.to_param, :agent => { "name" => "invalid value" }}, valid_session
-        response.should render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -127,7 +139,7 @@ describe AgentsController do
     it "redirects to the agents list" do
       agent = Agent.create! valid_attributes
       delete :destroy, {:id => agent.to_param}, valid_session
-      response.should redirect_to(agents_url)
+      expect(response).to redirect_to(agents_url)
     end
   end
 
