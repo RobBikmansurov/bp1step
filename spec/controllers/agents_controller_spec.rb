@@ -1,13 +1,12 @@
 RSpec.describe AgentsController, :type => :controller do
 
-  let(:valid_attributes) { { "name" => "MyString" } }
+  let(:valid_attributes) { { "name" => "Agent name" } }
   let(:valid_session) { {} }
 
   describe "GET index" do
     it "assigns all agents as @agents" do
       agent = Agent.create! valid_attributes
       get :index, {}, valid_session
-      #assigns(:agents).to eq([agent])
       expect(response).to be_success
       expect(response).to have_http_status(:success)
       expect(response).to render_template('agents/index')
@@ -67,14 +66,12 @@ RSpec.describe AgentsController, :type => :controller do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved agent as @agent" do
-        # Trigger the behavior that occurs when invalid params are submitted
         expect_any_instance_of(Agent).to receive(:save).and_return(false)
         post :create, {:agent => { "name" => "invalid value" }}, valid_session
         expect(assigns(:agent)).to be_a_new(Agent)
       end
 
       it "re-renders the 'new' template" do
-        # Trigger the behavior that occurs when invalid params are submitted
         expect_any_instance_of(Agent).to receive(:save).and_return(false)
         post :create, {:agent => { "name" => "invalid value" }}, valid_session
         expect(response).to render_template("new")
@@ -86,12 +83,6 @@ RSpec.describe AgentsController, :type => :controller do
     describe "with valid params" do
       it "updates the requested agent" do
         agent = Agent.create! valid_attributes
-        # Assuming there are no other agents in the database, this
-        # specifies that the Agent created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        #  put :update, :id => @teacher_leader, :teacher_leader => { :teacher_id => @teacher.id }
-        #Agent.any_instance.to_receive(:update).with({ "name" => "MyString" })
         expect_any_instance_of(Agent).to receive(:save).at_least(:once)
         put :update, {:id => agent.to_param, :agent => { "name" => "MyString" }}, valid_session
       end
@@ -112,7 +103,6 @@ RSpec.describe AgentsController, :type => :controller do
     describe "with invalid params" do
       it "assigns the agent as @agent" do
         agent = Agent.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
         expect_any_instance_of(Agent).to receive(:save).and_return(false)
         put :update, {:id => agent.to_param, :agent => { "name" => "invalid value" }}, valid_session
         expect(assigns(:agent)).to eq(agent)
@@ -120,7 +110,6 @@ RSpec.describe AgentsController, :type => :controller do
 
       it "re-renders the 'edit' template" do
         agent = Agent.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
         expect_any_instance_of(Agent).to receive(:save).and_return(false)
         put :update, {:id => agent.to_param, :agent => { "name" => "invalid value" }}, valid_session
         expect(response).to render_template("edit")
