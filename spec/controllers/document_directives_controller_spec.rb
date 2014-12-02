@@ -1,17 +1,8 @@
-require 'spec_helper'
-
-describe DocumentDirectivesController do
+RSpec.describe DocumentDirectivesController, type: :controller do
   
-  def valid_attributes
-    {
-      id: 1,
-      directive_id: 1,
-      document_id: 1
-    }
-  end
-  def valid_session
-    {}
-  end
+  let(:valid_attributes) { { directive_id: 1, document_id: 1 } }
+  let(:valid_session) { {} }
+
   before(:each) do
     @user = FactoryGirl.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
@@ -25,7 +16,15 @@ describe DocumentDirectivesController do
     it "assigns all document_directives as @document_directives" do
       document_directive = DocumentDirective.create! valid_attributes
       get :index, {}, valid_session
-      assigns(:document_directives).should eq([document_directive])
+      expect(response).to be_success
+      expect(response).to have_http_status(:success)
+      expect(response).to render_template('document_directives/index')
+    end
+    it "loads all of the document_directives into @document_directives" do
+      dd1 = FactoryGirl.create(:document_directive)
+      dd2 = FactoryGirl.create(:document_directive)
+      get :index, {}, valid_session
+      expect(assigns(:document_directives)).to match_array([dd1, dd2])
     end
   end
 
@@ -33,14 +32,14 @@ describe DocumentDirectivesController do
     it "assigns the requested document_directive as @document_directive" do
       document_directive = DocumentDirective.create! valid_attributes
       get :show, {:id => document_directive.to_param}, valid_session
-      assigns(:document_directive).should eq(document_directive)
+      expect(assigns(:document_directive)).to eq(document_directive)
     end
   end
 
   describe "GET new" do
     it "assigns a new document_directive as @document_directive" do
       get :new, {}, valid_session
-      assigns(:document_directive).should be_a_new(DocumentDirective)
+      expect(assigns(:document_directive)).to be_a_new(DocumentDirective)
     end
   end
 
@@ -48,7 +47,7 @@ describe DocumentDirectivesController do
     it "assigns the requested document_directive as @document_directive" do
       document_directive = DocumentDirective.create! valid_attributes
       get :edit, {:id => document_directive.to_param}, valid_session
-      assigns(:document_directive).should eq(document_directive)
+      expect(assigns(:document_directive)).to eq(document_directive)
     end
   end
 
@@ -62,29 +61,28 @@ describe DocumentDirectivesController do
 
       it "assigns a newly created document_directive as @document_directive" do
         post :create, {:document_directive => valid_attributes}, valid_session
-        assigns(:document_directive).should be_a(DocumentDirective)
-        assigns(:document_directive).should be_persisted
+        expect(assigns(:document_directive)).to be_a(DocumentDirective)
+        expect(assigns(:document_directive)).to be_persisted
       end
 
       it "redirects to the created document_directive" do
         post :create, {:document_directive => valid_attributes}, valid_session
-        response.should redirect_to(DocumentDirective.last)
+       expect(response).to redirect_to(DocumentDirective.last)
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved document_directive as @document_directive" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        DocumentDirective.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(DocumentDirective).to receive(:save).and_return(false)
         post :create, {:document_directive => {}}, valid_session
-        assigns(:document_directive).should be_a_new(DocumentDirective)
+        expect(assigns(:document_directive)).to be_a_new(DocumentDirective)
       end
 
       it "re-renders the 'new' template" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        DocumentDirective.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(DocumentDirective).to receive(:save).and_return(false)
+        #DocumentDirective.any_instance.stub(:save).and_return(false)
         post :create, {:document_directive => {}}, valid_session
-        response.should render_template("new")
+        expect(response).to render_template("new")
       end
     end
   end
@@ -93,43 +91,39 @@ describe DocumentDirectivesController do
     describe "with valid params" do
       it "updates the requested document_directive" do
         document_directive = DocumentDirective.create! valid_attributes
-        # Assuming there are no other document_directives in the database, this
-        # specifies that the DocumentDirective created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        DocumentDirective.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+        expect_any_instance_of(DocumentDirective).to receive(:save).and_return(false)
+        #DocumentDirective.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
         put :update, {:id => document_directive.to_param, :document_directive => {'these' => 'params'}}, valid_session
       end
 
       it "assigns the requested document_directive as @document_directive" do
         document_directive = DocumentDirective.create! valid_attributes
         put :update, {:id => document_directive.to_param, :document_directive => valid_attributes}, valid_session
-        assigns(:document_directive).should eq(document_directive)
+        expect(assigns(:document_directive)).to eq(document_directive)
       end
 
       it "redirects to the document_directive" do
         document_directive = DocumentDirective.create! valid_attributes
         put :update, {:id => document_directive.to_param, :document_directive => valid_attributes}, valid_session
-        response.should redirect_to(document_directive)
+        expect(response).to redirect_to(document_directive)
       end
     end
 
     describe "with invalid params" do
       it "assigns the document_directive as @document_directive" do
         document_directive = DocumentDirective.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        DocumentDirective.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(DocumentDirective).to receive(:save).and_return(false)
+        #DocumentDirective.any_instance.stub(:save).and_return(false)
         put :update, {:id => document_directive.to_param, :document_directive => {}}, valid_session
-        assigns(:document_directive).should eq(document_directive)
+        expect(assigns(:document_directive)).to eq(document_directive)
       end
 
       it "re-renders the 'edit' template" do
         document_directive = DocumentDirective.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        DocumentDirective.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(DocumentDirective).to receive(:save).and_return(false)
+        #DocumentDirective.any_instance.stub(:save).and_return(false)
         put :update, {:id => document_directive.to_param, :document_directive => {}}, valid_session
-        response.code.should == "200"
-        #response.should render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -145,7 +139,7 @@ describe DocumentDirectivesController do
     it "redirects to the document_directives list" do
       document_directive = DocumentDirective.create! valid_attributes
       delete :destroy, {:id => document_directive.to_param}, valid_session
-      response.should redirect_to(document_url)
+      expect(response).to redirect_to(document_url)
     end
   end
 
