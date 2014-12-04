@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Workplace do
-before(:each) do
+  before(:each) do
     @wp = create(:workplace)
   end
 

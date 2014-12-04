@@ -1,15 +1,14 @@
 # Read about factories at http://github.com/thoughtbot/factory_girl
 FactoryGirl.define do
   factory :directive do
-    name 'directive_name'
+    sequence(:id) { |n| "#{n}" }
+    #name "directive_name #{id}"
     title 'directive_title'
-	number 'number'
+	number "number #{id}"
     note 'directive_note'
     body 'directive_body'
     annotation 'directive_annotation'
-    status 'status'
+    status "Проект"
     approval Time.now
-    created_at Time.now
-    updated_at Time.now
   end
 end
