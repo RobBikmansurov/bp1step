@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe BprocesController do
+RSpec.describe BprocesController, type: :controller do
   render_views
 
   def valid_attributes
