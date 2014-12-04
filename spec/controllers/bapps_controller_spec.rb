@@ -1,7 +1,4 @@
-require 'spec_helper'
-
-describe BappsController do
-  render_views
+RSpec.describe BappsController, type: :controller do
   let(:valid_attributes) { { "name" => "MyString1", description: 'description1' } }
   let(:valid_session) { {} }
 
@@ -13,20 +10,11 @@ describe BappsController do
   
   describe "GET index" do
     it "assigns all bapps as @bapps" do
-      bapp = Bapp.create
-      get :index
-      expect(assigns(:bapps)).to render_template("index")
-    end
-
-    it "responds successfully with an HTTP 200 status code" do
-      get :index
+      bapps = Bapp.create! valid_attributes
+      get :index, {}, valid_session
       expect(response).to be_success
-      expect(response.status).to eq(200)
-    end
-
-    it "renders the index template" do
-      get :index
-      expect(response).to render_template("index")
+      expect(response).to have_http_status(:success)
+      expect(response).to render_template('index')
     end
 
     it "loads all of the bapps into @bapps" do
@@ -41,19 +29,19 @@ describe BappsController do
     it "assigns the requested bapp as @bapp" do
       bapp = Bapp.create! valid_attributes
       get :show, {:id => bapp.to_param}, valid_session
-      response.should render_template(:show)
-      assigns(:bapp).should eq(bapp)
+      expect(response).to render_template(:show)
+      expect(assigns(:bapp)).to eq(bapp)
     end
     it "renders 404 page if bapp is not found" do
       #get :show, {:id => 0}
-      #assigns(:bapp).should eq(bapp)
+      #expect(assigns(:bapp)).to eq(bapp)
     end
   end
 
   describe "GET new" do
     it "assigns a new bapp as @bapp" do
       get :new, {}, valid_session
-      assigns(:bapp).should be_a_new(Bapp)
+      expect(assigns(:bapp)).to be_a_new(Bapp)
     end
   end
 
@@ -61,7 +49,7 @@ describe BappsController do
     it "assigns the requested bapp as @bapp" do
       bapp = Bapp.create! valid_attributes
       get :edit, {:id => bapp.to_param}, valid_session
-      assigns(:bapp).should eq(bapp)
+      expect(assigns(:bapp)).to eq(bapp)
     end
   end
 
@@ -75,29 +63,29 @@ describe BappsController do
 
       it "assigns a newly created bapp as @bapp" do
         post :create, :bapp => valid_attributes
-        assigns(:bapp).should be_a(Bapp)
-        assigns(:bapp).should be_persisted
+        expect(assigns(:bapp)).to be_a(Bapp)
+        expect(assigns(:bapp)).to be_persisted
       end
 
       it "redirects to the created bapp" do
         post :create, :bapp => valid_attributes
-        response.should redirect_to(Bapp.last)
+        expect(response).to redirect_to(Bapp.last)
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved bapp as @bapp" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        Bapp.any_instance.stub(:save).and_return(false)
-        post :create, :bapp => {}
-        assigns(:bapp).should be_a_new(Bapp)
+        #Bapp.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Bapp).to receive(:save).and_return(false)
+        post :create, {:bapp => { "name" => "invalid value" }}, valid_session
+        expect(assigns(:bapp)).to be_a_new(Bapp)
       end
 
       it "re-renders the 'new' template" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        Bapp.any_instance.stub(:save).and_return(false)
-        post :create, :bapp => {}
-        response.should_not render_template("bapps/new")
+        #Bapp.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Bapp).to receive(:save).and_return(false)
+        post :create, {:bapp => { "name" => "invalid value" }}, valid_session
+        expect(response).to render_template("new")
       end
     end
   end
@@ -106,38 +94,39 @@ describe BappsController do
     describe "with valid params" do
       it "updates the requested bapp" do
         bapp = Bapp.create! valid_attributes
-        Bapp.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+        #Bapp.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+        expect_any_instance_of(Bapp).to receive(:save).at_least(:once)
         put :update, :id => bapp.id, :bapp => {'these' => 'params'}
       end
 
       it "assigns the requested bapp as @bapp" do
         bapp = Bapp.create! valid_attributes
         put :update, :id => bapp.id, :bapp => valid_attributes
-        assigns(:bapp).should eq(bapp)
+        expect(assigns(:bapp)).to eq(bapp)
       end
 
       it "redirects to the bapp" do
         bapp = Bapp.create! valid_attributes
         put :update, :id => bapp.id, :bapp => valid_attributes
-        response.should redirect_to(bapp)
+        expect(response).to redirect_to(bapp)
       end
     end
 
     describe "with invalid params" do
       it "assigns the bapp as @bapp" do
         bapp = Bapp.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        Bapp.any_instance.stub(:save).and_return(false)
-        put :update, :id => bapp.id, :bapp => {}
-        assigns(:bapp).should eq(bapp)
+        expect_any_instance_of(Bapp).to receive(:save).and_return(false)
+        #Bapp.any_instance.stub(:save).and_return(false)
+        put :update, {:id => bapp.to_param, :bapp => { "name" => "invalid value" }}, valid_session
+        expect(assigns(:bapp)).to eq(bapp)
       end
 
       it "re-renders the 'edit' template" do
         bapp = Bapp.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        Bapp.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Bapp).to receive(:save).and_return(false)
+        #Bapp.any_instance.stub(:save).and_return(false)
         put :update, :id => bapp.id, :bapp => {}
-        response.should_not render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -154,7 +143,7 @@ describe BappsController do
     it "redirects to the bapps list" do
       bapp = Bapp.create! valid_attributes
       delete :destroy, {:id => bapp.to_param}, valid_session
-      response.should redirect_to(bapps_url)
+      expect(response).to redirect_to(bapps_url)
     end
   end
 
