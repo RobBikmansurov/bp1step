@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe IresourcesController do
+RSpec.describe IresourcesController, type: :controller do
 
   def valid_attributes
     {
@@ -17,6 +15,8 @@ describe IresourcesController do
     @user = FactoryGirl.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
+
+    allow(controller).to receive(:authenticate_user!).and_return(true)
   end
 
   describe "GET index" do
