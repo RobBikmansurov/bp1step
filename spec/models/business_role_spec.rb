@@ -1,43 +1,17 @@
 require 'spec_helper'
 
 describe BusinessRole do
-  before(:each) do
-    @business_role = create(:business_role)
+
+  it "is has a valid factory" do
+    expect(build(:business_role)).to be_valid
   end
 
-  context "validates" do
-    it "is valid with valid attributes: name, description, bproce_id" do
-      expect(@business_role).to be_valid
-    end
-    it "is not valid without a name" do #validates :name, :presence => true, :length => {:minimum => 5, :maximum => 50}
-      @business_role.name = nil
-      expect(@business_role).not_to be_valid
-    end
-    it "is not valid if length of name < 5 or > 50" do
-      @business_role.name = "1234"
-      expect(@business_role).not_to be_valid
-      @business_role.name = '1234567890'
-      expect(@business_role).to be_valid
-      @business_role.name = "1234567890" * 5 + "1"
-      expect(@business_role).not_to be_valid
-      @business_role.name = "1234567890" * 5 
-      expect(@business_role).to be_valid
-    end
-    it "is not valid without a description" do #validates :description, :presence => true, :length => {:minimum => 8}
-      @business_role.description = nil
-      expect(@business_role).not_to be_valid
-    end
-    it "is not valid if length of description < 8" do
-      @business_role.description = "1234567"
-      expect(@business_role).not_to be_valid
-      @business_role.description = '12345678'
-      expect(@business_role).to be_valid
-    end
-
-    it "is not valid without a bproce_id" do #validates :bproce_id, :presence => true
-      @business_role.bproce_id = nil
-      expect(@business_role).not_to be_valid
-    end
+  context 'validations' do
+    it { should validate_presence_of(:name) }
+    it { should ensure_length_of(:name).is_at_least(5).is_at_most(50) }
+    it { should validate_presence_of(:bproce_id) }
+    it { should validate_presence_of(:description) }
+    it { should ensure_length_of(:description).is_at_least(8) }
   end
 
   context "associations" do
