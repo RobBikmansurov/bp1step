@@ -4,5 +4,6 @@ FactoryGirl.define do
     name 'business_role_name'
     description "business_role_description"
     bproce
+    #user
   end
 end
