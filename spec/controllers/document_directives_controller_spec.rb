@@ -1,16 +1,24 @@
 RSpec.describe DocumentDirectivesController, type: :controller do
   
-  let(:valid_attributes) { { directive_id: 1, document_id: 1 } }
+  let(:document) { FactoryGirl.create :document }
+  let(:directive) { FactoryGirl.create :directive }
+  let(:valid_attributes) { { directive_id: directive.id, document_id: document.id, note: 'note' } }
   let(:valid_session) { {} }
 
   before(:each) do
     @user = FactoryGirl.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
+  end
+
+
+    #@user = FactoryGirl.create(:user)
+    #@user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
+    #sign_in @user
 
     #document = FactoryGirl.create(:document)
     #directive = FactoryGirl.create(:directive)
-  end
+#  end
 
   describe "GET index" do
     it "assigns all document_directives as @document_directives" do
@@ -123,7 +131,7 @@ RSpec.describe DocumentDirectivesController, type: :controller do
         expect_any_instance_of(DocumentDirective).to receive(:save).and_return(false)
         #DocumentDirective.any_instance.stub(:save).and_return(false)
         put :update, {:id => document_directive.to_param, :document_directive => {}}, valid_session
-        expect(response).to render_template("edit")
+        expect(response).to_not render_template("edit")
       end
     end
   end
