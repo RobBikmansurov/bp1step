@@ -204,6 +204,9 @@ private
           t.add_column(:spname) do |sub|
             spname = '__' * (sub.depth - @bproce.depth) + sub.name
           end
+          t.add_column(:sp_id) do |sub|
+            sp_id = sub.id.to_s
+          end
           t.add_column(:spowner) do |sp|
             spowner = sp.user.displayname if sp.user_id
           end
@@ -258,7 +261,9 @@ private
           end
           t.add_column(:spname) do |sub|
             spname = '__' * (sub.depth - @bproce.depth) + sub.name
-            #spname = sub.name
+          end
+          t.add_column(:sp_id) do |sub|
+            sp_id = sub.id.to_s
           end
         else
           r.add_field :sub_process, 'Подпроцессов нет.'
