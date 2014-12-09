@@ -1,32 +1,34 @@
-require 'spec_helper'
+RSpec.describe DirectivesController, type: :controller do
 
-describe DirectivesController do
-
-  def valid_attributes
-    {
-      id: 1,
-      approval: "01.01.2013",
-      number: "100",
-      name: "directive_name",
-      body: "test"
-    }
-  end
-  
-  def valid_session
-    {}
-  end
+  #let(:valid_attributes) { FactoryGirl.create :directive }
+  let(:valid_attributes) { {approval: "01.01.2013",
+                           number: "100",
+                           name: "directive_name",
+                           body: "test"
+                         }}
+  let(:valid_session) { { "warden.user.user.key" => session["warden.user.user.key"] } }
 
   before(:each) do
-    @user = FactoryGirl.create(:user)
-    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
-    sign_in @user
+    #@user = FactoryGirl.create(:user)
+    #@user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
+    #sign_in @user
+    allow(controller).to receive(:authenticate_user!).and_return(true)
   end
   
   describe "GET index" do
     it "assigns all directives as @directives" do
       directive = Directive.create! valid_attributes
       get :index, {}, valid_session
-      assigns(:directives).should eq([directive])
+      expect(response).to be_success
+      expect(response).to have_http_status(:success)
+      expect(response).to render_template('index')
+    end
+
+    it "loads all of the directives into @directives" do
+      directive1 = FactoryGirl.create(:directive)
+      directive2 = FactoryGirl.create(:directive)
+      get :index
+      expect(assigns(:directives)).to match_array([directive1, directive2])
     end
   end
 
@@ -34,14 +36,14 @@ describe DirectivesController do
     it "assigns the requested directive as @directive" do
       directive = Directive.create! valid_attributes
       get :show, {:id => directive.to_param}, valid_session
-      assigns(:directive).should eq(directive)
+      expect(assigns(:directive)).to eq(directive)
     end
   end
 
   describe "GET new" do
     it "assigns a new directive as @directive" do
       get :new, {}, valid_session
-      assigns(:directive).should be_a_new(Directive)
+      expect(assigns(:directive)).to be_a_new(Directive)
     end
   end
 
@@ -49,7 +51,7 @@ describe DirectivesController do
     it "assigns the requested directive as @directive" do
       directive = Directive.create! valid_attributes
       get :edit, {:id => directive.to_param}, valid_session
-      assigns(:directive).should eq(directive)
+      expect(assigns(:directive)).to eq(directive)
     end
   end
 
@@ -63,29 +65,27 @@ describe DirectivesController do
 
       it "assigns a newly created directive as @directive" do
         post :create, {:directive => valid_attributes}, valid_session
-        assigns(:directive).should be_a(Directive)
-        assigns(:directive).should be_persisted
+        expect(assigns(:directive)).to be_a(Directive)
+        expect(assigns(:directive)).to be_persisted
       end
 
       it "redirects to the created directive" do
         post :create, {:directive => valid_attributes}, valid_session
-        response.should redirect_to(Directive.last)
+        expect(response).to redirect_to(Directive.last)
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved directive as @directive" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        Directive.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Directive).to receive(:save).and_return(false)
         post :create, {:directive => {}}, valid_session
-        assigns(:directive).should be_a_new(Directive)
+        expect(assigns(:directive)).to be_a_new(Directive)
       end
 
       it "re-renders the 'new' template" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        Directive.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Directive).to receive(:save).and_return(false)
         post :create, {:directive => {}}, valid_session
-        response.should_not render_template("new")
+        expect(response).to_not render_template("new")
       end
     end
   end
@@ -94,42 +94,36 @@ describe DirectivesController do
     describe "with valid params" do
       it "updates the requested directive" do
         directive = Directive.create! valid_attributes
-        # Assuming there are no other directives in the database, this
-        # specifies that the Directive created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        Directive.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+        expect_any_instance_of(Directive).to receive(:save).and_return(false)
         put :update, {:id => directive.to_param, :directive => {'these' => 'params'}}, valid_session
       end
 
       it "assigns the requested directive as @directive" do
         directive = Directive.create! valid_attributes
         put :update, {:id => directive.to_param, :directive => valid_attributes}, valid_session
-        assigns(:directive).should eq(directive)
+        expect(assigns(:directive)).to eq(directive)
       end
 
       it "redirects to the directive" do
         directive = Directive.create! valid_attributes
         put :update, {:id => directive.to_param, :directive => valid_attributes}, valid_session
-        response.should redirect_to(directive)
+        expect(response).to redirect_to(directive)
       end
     end
 
     describe "with invalid params" do
       it "assigns the directive as @directive" do
         directive = Directive.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        Directive.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Directive).to receive(:save).and_return(false)
         put :update, {:id => directive.to_param, :directive => {}}, valid_session
-        assigns(:directive).should eq(directive)
+        expect(assigns(:directive)).to eq(directive)
       end
 
       it "re-renders the 'edit' template" do
         directive = Directive.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        Directive.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Directive).to receive(:save).and_return(false)
         put :update, {:id => directive.to_param, :directive => {}}, valid_session
-        response.should_not render_template("edit")
+        expect(response).to_not render_template("edit")
       end
     end
   end
@@ -145,7 +139,7 @@ describe DirectivesController do
     it "redirects to the directives list" do
       directive = Directive.create! valid_attributes
       delete :destroy, {:id => directive.to_param}, valid_session
-      response.should redirect_to(directives_url)
+      expect(response).to redirect_to(directives_url)
     end
   end
 

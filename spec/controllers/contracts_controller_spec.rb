@@ -62,7 +62,6 @@ RSpec.describe ContractsController, type: :controller do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved contract as @contract" do
-        #Contract.any_instance.stub(:save).and_return(false)
         expect_any_instance_of(Contract).to receive(:save).and_return(false)
         post :create, {:contract => { "owner_id" => "invalid value" }}, valid_session
         expect(assigns(:contract)).to be_a_new(Contract)
@@ -80,7 +79,6 @@ RSpec.describe ContractsController, type: :controller do
     describe "with valid params" do
       it "updates the requested contract" do
         contract = Contract.create! valid_attributes
-        #Contract.any_instance.should_receive(:update).with({ "owner_id" => "" })
         expect_any_instance_of(Contract).to receive(:save).at_least(:once)
         put :update, {:id => contract.to_param, :contract => { "owner_id" => "" }}, valid_session
       end
@@ -101,7 +99,6 @@ RSpec.describe ContractsController, type: :controller do
     describe "with invalid params" do
       it "assigns the contract as @contract" do
         contract = Contract.create! valid_attributes
-        #Contract.any_instance.stub(:save).and_return(false)
         expect_any_instance_of(Contract).to receive(:save).and_return(false)
         put :update, {:id => contract.to_param, :contract => { "owner_id" => "invalid value" }}, valid_session
         expect(assigns(:contract)).to eq(contract)
@@ -109,7 +106,6 @@ RSpec.describe ContractsController, type: :controller do
 
       it "re-renders the 'edit' template" do
         contract = Contract.create! valid_attributes
-        #Contract.any_instance.stub(:save).and_return(false)
         expect_any_instance_of(Contract).to receive(:save).and_return(false)
         put :update, {:id => contract.to_param, :contract => { "owner_id" => "invalid value" }}, valid_session
         expect(response).to render_template("edit")

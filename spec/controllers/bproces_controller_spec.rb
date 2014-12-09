@@ -1,6 +1,4 @@
 RSpec.describe BprocesController, type: :controller do
-  render_views
-
   def valid_attributes
     {
       :id => 1,
@@ -14,13 +12,14 @@ RSpec.describe BprocesController, type: :controller do
     @user = FactoryGirl.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
+    allow(controller).to receive(:authenticate_user!).and_return(true)
   end
 
   describe "GET index" do
     it "assigns all bproces as @bproces" do
       bproce = Bproce.create! valid_attributes
       get :index
-      assigns(:bproces).should eq([bproce])
+      expect(assigns(:bproces)).to eq([bproce])
     end
   end
 
@@ -28,14 +27,14 @@ RSpec.describe BprocesController, type: :controller do
     it "assigns the requested bproce as @bproce" do
       bproce = Bproce.create! valid_attributes
       get :show, :id => bproce.id
-      assigns(:bproce).should eq(bproce)
+      expect(assigns(:bproce)).to eq(bproce)
     end
   end
 
   describe "GET new" do
     it "assigns a new bproce as @bproce" do
       get :new
-      assigns(:bproce).should be_a_new(Bproce)
+      expect(assigns(:bproce)).to be_a_new(Bproce)
     end
   end
 
@@ -43,7 +42,7 @@ RSpec.describe BprocesController, type: :controller do
     it "assigns the requested bproce as @bproce" do
       bproce = Bproce.create! valid_attributes
       get :edit, :id => bproce.id
-      assigns(:bproce).should eq(bproce)
+      expect(assigns(:bproce)).to eq(bproce)
     end
   end
 
@@ -57,29 +56,27 @@ RSpec.describe BprocesController, type: :controller do
 
       it "assigns a newly created bproce as @bproce" do
         post :create, :bproce => valid_attributes
-        assigns(:bproce).should be_a(Bproce)
-        assigns(:bproce).should be_persisted
+        expect(assigns(:bproce)).to be_a(Bproce)
+        expect(assigns(:bproce)).to be_persisted
       end
 
       it "redirects to the created bproce" do
         post :create, :bproce => valid_attributes
-        response.should redirect_to(Bproce.last)
+        expect(response).to redirect_to(Bproce.last)
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved bproce as @bproce" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        Bproce.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Bproce).to receive(:save).and_return(false)
         post :create, :bproce => {}
-        assigns(:bproce).should be_a_new(Bproce)
+        expect(assigns(:bproce)).to be_a_new(Bproce)
       end
 
       it "re-renders the 'new' template" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        Bproce.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Bproce).to receive(:save).and_return(false)
         post :create, :bproce => {}
-        response.should_not render_template("new")
+        expect(response).to_not render_template("new")
       end
     end
   end
@@ -88,42 +85,37 @@ RSpec.describe BprocesController, type: :controller do
     describe "with valid params" do
       it "updates the requested bproce" do
         bproce = Bproce.create! valid_attributes
-        # Assuming there are no other bproces in the database, this
-        # specifies that the Bproce created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        Bproce.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+        #Bproce.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+        expect_any_instance_of(Bproce).to receive(:save).and_return(false)
         put :update, :id => bproce.id, :bproce => {'these' => 'params'}
       end
 
       it "assigns the requested bproce as @bproce" do
         bproce = Bproce.create! valid_attributes
         put :update, :id => bproce.id, :bproce => valid_attributes
-        assigns(:bproce).should eq(bproce)
+        expect(assigns(:bproce)).to eq(bproce)
       end
 
       it "redirects to the bproce" do
         bproce = Bproce.create! valid_attributes
         put :update, :id => bproce.id, :bproce => valid_attributes
-        response.should redirect_to(bproce)
+        expect(response).to redirect_to(bproce)
       end
     end
 
     describe "with invalid params" do
       it "assigns the bproce as @bproce" do
         bproce = Bproce.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        Bproce.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Bproce).to receive(:save).and_return(false)
         put :update, :id => bproce.id, :bproce => {}
-        assigns(:bproce).should eq(bproce)
+        expect(assigns(:bproce)).to eq(bproce)
       end
 
       it "re-renders the 'edit' template" do
         bproce = Bproce.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        Bproce.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Bproce).to receive(:save).and_return(false)
         put :update, :id => bproce.id, :bproce => {}
-        response.should_not render_template("edit")
+        expect(response).to_not render_template("edit")
       end
     end
   end
@@ -139,7 +131,7 @@ RSpec.describe BprocesController, type: :controller do
     it "redirects to the bproces list" do
       bproce = Bproce.create! valid_attributes
       delete :destroy, :id => bproce.id
-      response.should redirect_to(bproces_url)
+      expect(response).to redirect_to(bproces_url)
     end
   end
 
