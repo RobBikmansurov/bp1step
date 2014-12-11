@@ -1,5 +1,5 @@
 class DocumentDirectivesController < ApplicationController
-  respond_to :html
+  respond_to :html, :json, :js
   before_filter :authenticate_user!, :only => [:edit, :new, :create, :update]
   before_filter :get_document_directive, :except => :index
 
@@ -29,8 +29,15 @@ class DocumentDirectivesController < ApplicationController
     @document_directive = DocumentDirective.new(params[:document_directive])
     respond_to do |format|
       if @document_directive.save
-        format.html { redirect_to @document_directive, notice: 'Document directive was successfully created.' }
-        format.json { render json: @document_directive, status: :created, location: @document_directive }
+        if params[:document_directive][:to_directive].present?
+          puts "===\nto_directive"
+          @directive = Directive.find(@document_directive.directive_id)
+          format.html { redirect_to directive_path(@directive), notice: 'Document directive was successfully created.' }
+          #format.html { render @directive, action: :show}
+        else
+          format.html { redirect_to @document_directive, notice: 'Document directive was successfully created.', format: :html }
+          format.json { render json: @document_directive, status: :created, location: @document_directive }
+        end
       else
         format.html { render action: "new" }
         format.json { render json: @document_directive.errors, status: :unprocessable_entity }
