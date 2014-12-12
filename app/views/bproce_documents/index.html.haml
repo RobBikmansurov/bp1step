@@ -23,7 +23,12 @@
   - @documents.each do |document|
     %tr
       %td= document.id
-      %td= link_to document.name, document_path(document)
+      %td
+        -if document.document_file_file_name  #  если есть файл документа, загруженный через paperclip
+          -if can? :view_document, document
+            - if File.exist?(document.pdf_path)
+              = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), document.pdf_url, class: 'button-img'
+        = link_to document.name, document_path(document)
       %td= format_content(document.description)
       -#      %td= document.filename
       %td= document.status
