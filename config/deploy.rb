@@ -25,7 +25,7 @@ set :unicorn_conf, "#{deploy_to}/config/unicorn.rb"
 set :unicorn_pid, "#{deploy_to}/tmp/pids/unicorn.pid"
 
 #set :rvm_ruby_string, "ruby-1.9.3-p448@#{application}"
-set :rvm_ruby_string, "ruby-2.0.0-p353@#{application}"
+set :rvm_ruby_string, "ruby-2.1.1@#{application}"
 set :rvm_type, :user
 
 set :scm, :git
@@ -63,6 +63,10 @@ namespace :deploy do
     # скопируем конфигурационые файлы с секретами
     run "cp #{deploy_to}/config/ldap.yml #{deploy_to}/current/config/ldap.yml"
     run "cp #{deploy_to}/config/database.yml #{deploy_to}/current/config/database.yml"
+    # шаблоны документов с шапками или информацией об организации
+    run "cp #{deploy_to}/secret/*.odt #{deploy_to}/current/reports/"
+    # шаблон официального письма
+    run "cp #{deploy_to}/secret/bnk-letter.odt #{deploy_to}/current/reports/letter.odt"
   end
 
 end
