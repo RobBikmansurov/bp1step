@@ -1,5 +1,3 @@
-require 'spec_helper'
-
-describe BproceBusinessRolesController do
+RSpec.describe BproceBusinessRolesController, type: :controller do
 
 end

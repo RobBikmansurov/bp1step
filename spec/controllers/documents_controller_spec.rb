@@ -1,33 +1,32 @@
-require 'spec_helper'
+RSpec.describe DocumentsController, type: :controller do
 
-describe DocumentsController do
-
-  def valid_attributes
-    {
-      name: 'document_name',
-      bproce_id: 1,
-      dlevel: 1,
-      place: 'office1',
-      part: 1,
-      owner_id: FactoryGirl.create(:user)
-    }
-  end
-
-  def valid_session
-    {}
-  end
+  let(:valid_attributes) { FactoryGirl.create (:document) }
+  let(:valid_session) { { "warden.user.user.key" => session["warden.user.user.key"] } }
 
   before(:each) do
-    @user = FactoryGirl.create(:user)
-    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
-    sign_in @user
+    #@user = FactoryGirl.create(:user)
+    #@user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
+    #sign_in @user
+
+    allow(controller).to receive(:authenticate_user!).and_return(true)
+
+    bproce = FactoryGirl.create :bproce
   end
 
   describe "GET index" do
     it "assigns all documents as @documents" do
-      document = Document.create! valid_attributes
-      get :index, { }, valid_session
-      assigns(:documents).should eq([document])
+      directive = Document.create! valid_attributes
+      get :index, {}, valid_session
+      expect(response).to be_success
+      expect(response).to have_http_status(:success)
+      expect(response).to render_template('index')
+    end
+
+    it "loads all of the directives into @directives" do
+      document1 = FactoryGirl.create(:document)
+      document2 = FactoryGirl.create(:document)
+      get :index
+      expect(assigns(:document)).to match_array([document1, document2])
     end
   end
 

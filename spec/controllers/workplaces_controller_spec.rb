@@ -1,51 +1,55 @@
-require 'spec_helper'
-require 'factory_girl'
-describe WorkplacesController do
-  render_views
+RSpec.describe WorkplacesController, :type => :controller do
 
-  def valid_attributes
-    {
-      id: 1,
-      name: "test_name",
-      designation: "test_designation",
-      designation: "test_designation",
-      location: "office"
-    }
-  end
+  let(:valid_attributes) { FactoryGirl.create (:workplace) }
+  let(:valid_session) { { "warden.user.user.key" => session["warden.user.user.key"] } }
+
   before(:each) do
-    @user = FactoryGirl.create(:user)
-    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
-    sign_in @user
+    #@user = FactoryGirl.create(:user)
+    #@user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
+    #sign_in @user
+    
+    allow(controller).to receive(:authenticate_user!).and_return(true)
   end
 
   describe "GET index" do
     it "assigns all workplaces as @workplaces" do
-      workplace = Workplace.create! valid_attributes
+      workplace = FactoryGirl.create(:workplace)
+      get :index, {}, valid_session
+      expect(response).to be_success
+      expect(response).to have_http_status(:success)
+      expect(response).to render_template('workplaces/index')
+    end
+
+    it "loads all of the workplaces into @workplaces" do
+      workplace1 = FactoryGirl.create(:workplace)
+      workplace2 = FactoryGirl.create(:workplace)
       get :index
-      assigns(:workplaces).should eq([workplace])
+      expect(assigns(:workplaces)).to match_array([workplace1, workplace2])
     end
   end
 
   describe "GET show" do
     it "assigns the requested workplace as @workplace" do
-      workplace = Workplace.create! valid_attributes
+      workplace = FactoryGirl.create(:workplace)
+      #puts workplace.inspect
       get :show, :id => workplace.id
-      assigns(:workplace).should eq(workplace)
+      expect(assigns(:workplace)).to eq(workplace)
     end
   end
 
   describe "GET new" do
     it "assigns a new workplace as @workplace" do
       get :new
-      assigns(:workplace).should be_a_new(Workplace)
+      expect(assigns(:workplace)).to be_a_new(Workplace)
     end
   end
 
   describe "GET edit" do
     it "assigns the requested workplace as @workplace" do
-      workplace = Workplace.create! valid_attributes
+      workplace = FactoryGirl.create(:workplace)
+      puts workplace.inspect
       get :edit, :id => workplace.id
-      assigns(:workplace).should eq(workplace)
+      expect(assigns(:workplace)).to eq(workplace)
     end
   end
 
@@ -53,35 +57,33 @@ describe WorkplacesController do
     describe "with valid params" do
       it "creates a new Workplace" do
         expect {
-          post :create, :workplace => valid_attributes
+          post :create, {:workplace => valid_attributes}, valid_session
         }.to change(Workplace, :count).by(1)
       end
 
       it "assigns a newly created workplace as @workplace" do
-        post :create, :workplace => valid_attributes
-        assigns(:workplace).should be_a(Workplace)
-        assigns(:workplace).should be_persisted
+        post :create, {:workplace => valid_attributes}, valid_session
+        expect(assigns(:workplace)).to be_a(Workplace)
+        expect(assigns(:workplace)).to be_persisted
       end
 
       it "redirects to the created workplace" do
         post :create, :workplace => valid_attributes
-        response.should redirect_to(Workplace.last)
+        expect(response).to redirect_to(Workplace.last)
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved workplace as @workplace" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        Workplace.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Workplace).to receive(:save).and_return(false)
         post :create, :workplace => {}
-        assigns(:workplace).should be_a_new(Workplace)
+        expect(assigns(:workplace)).to be_a_new(Workplace)
       end
 
       it "re-renders the 'new' template" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        Workplace.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Workplace).to receive(:save).and_return(false)
         post :create, :workplace => {}
-        response.should_not render_template("new")
+        expect(response).to_not render_template("new")
       end
     end
   end
@@ -89,53 +91,53 @@ describe WorkplacesController do
   describe "PUT update" do
     describe "with valid params" do
       it "updates the requested workplace" do
-        workplace = Workplace.create! valid_attributes
-        Workplace.any_instance.should_receive(:update_attributes).with({'id' => '1'})
-        put :update, :id => workplace.id, :workplace => {'id' => '1'}
+        workplace = FactoryGirl.create(:workplace)
+        expect_any_instance_of(Agent).to receive(:save).at_least(:once)
+        put :update, {:id => workplace.to_param, :workplace => { "name" => "test_name" }}, valid_session
       end
 
       it "assigns the requested workplace as @workplace" do
-        workplace = Workplace.create! valid_attributes
+        workplace = FactoryGirl.create(:workplace)
         put :update, :id => workplace.id, :workplace => valid_attributes
-        assigns(:workplace).should eq(workplace)
+        expect(assigns(:workplace)).to eq(workplace)
       end
 
       it "redirects to the workplace" do
-        workplace = Workplace.create! valid_attributes
+        workplace = FactoryGirl.create(:workplace)
         put :update, :id => workplace.id, :workplace => valid_attributes
-        response.should redirect_to(workplace)
+        expect(response).to redirect_to(workplace)
       end
     end
 
     describe "with invalid params" do
       it "assigns the workplace as @workplace" do
-        workplace = Workplace.create! valid_attributes
-        Workplace.any_instance.stub(:save).and_return(false)
-        put :update, :id => workplace.id, :workplace => {}
-        assigns(:workplace).should eq(workplace)
+        workplace = FactoryGirl.create(:workplace)
+        expect_any_instance_of(Workplace).to receive(:save).and_return(false)
+        put :update, {:id => workplace.to_param, :agent => { "name" => "invalid value" }}, valid_session
+        expect(assigns(:workplace)).to eq(workplace)
       end
 
       it "re-renders the 'edit' template" do
-        workplace = Workplace.create! valid_attributes
-        Workplace.any_instance.stub(:save).and_return(false)
-        put :update, :id => workplace.id, :workplace => {:id => 1}
-        response.should_not render_template("edit")
+        workplace = FactoryGirl.create(:workplace)
+        expect_any_instance_of(Workplace).to receive(:save).and_return(false)
+        put :update, {:id => workplace.to_param, :workplace => { "name" => "invalid value" }}, valid_session
+        expect(response).to_not render_template("edit")
       end
     end
   end
 
   describe "DELETE destroy" do
     it "destroys the requested workplace" do
-      workplace = Workplace.create! valid_attributes
+      workplace = FactoryGirl.create(:workplace)
       expect {
         delete :destroy, :id => workplace.id
       }.to change(Workplace, :count).by(-1)
     end
 
     it "redirects to the workplaces list" do
-      workplace = Workplace.create! valid_attributes
+      workplace = FactoryGirl.create(:workplace)
       delete :destroy, :id => workplace.id
-      response.should redirect_to(workplaces_url)
+      expect(response).to redirect_to(workplaces_url)
     end
   end
 

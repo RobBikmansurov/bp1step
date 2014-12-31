@@ -1,10 +1,7 @@
-require 'spec_helper'
-
-describe BproceBappsController do
+RSpec.describe BproceBappsController, type: :controller do
 
   def valid_attributes
-    { id: 1,
-      bproce_id: 1,
+    { bproce_id: 1,
       bapp_id: 1,
       apurpose: 'purpose in process'
     }
@@ -17,17 +14,17 @@ describe BproceBappsController do
     @user = FactoryGirl.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
+    allow(controller).to receive(:authenticate_user!).and_return(true)
 
     bproce = create(:bproce)
     bapp = create(:bapp)
-
   end
 
   describe "GET show" do
     it "assigns the requested bproce_bapp as @bproce_bapp" do
       bproce_bapp = BproceBapp.create! valid_attributes
       get :show, {:id => bproce_bapp.to_param}, valid_session
-      assigns(:bproce_bapp).should eq(bproce_bapp)
+      expect(assigns(:bproce_bapp)).to eq(bproce_bapp)
     end
   end
 
@@ -35,7 +32,7 @@ describe BproceBappsController do
     it "assigns the requested bproce_bapp as @bproce_bapp" do
       bproce_bapp = BproceBapp.create! valid_attributes
       get :edit, {:id => bproce_bapp.to_param}, valid_session
-      assigns(:bproce_bapp).should eq(bproce_bapp)
+      expect(assigns(:bproce_bapp)).to eq(bproce_bapp)
     end
   end
 
@@ -49,22 +46,21 @@ describe BproceBappsController do
 
       it "assigns a newly created bproce_bapp as @bproce_bapp" do
         post :create, {:bproce_bapp => valid_attributes}, valid_session
-        assigns(:bproce_bapp).should be_a(BproceBapp)
-        assigns(:bproce_bapp).should be_persisted
+        expect(assigns(:bproce_bapp)).to be_a(BproceBapp)
+        expect(assigns(:bproce_bapp)).to be_persisted
       end
 
       it "redirects to the created bproce_bapp" do
         post :create, {:bproce_bapp => valid_attributes}, valid_session
-        response.should redirect_to(BproceBapp.last.bapp)
+        expect(response).to redirect_to(BproceBapp.last.bapp)
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved bproce_bapp as @bproce_bapp" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        BproceBapp.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(BproceBapp).to receive(:save).and_return(false)
         post :create, {:bproce_bapp => {  }}, valid_session
-        assigns(:bproce_bapp).should be_a_new(BproceBapp)
+        expect(assigns(:bproce_bapp)).to be_a_new(BproceBapp)
       end
 
     end
@@ -74,43 +70,36 @@ describe BproceBappsController do
     describe "with valid params" do
       it "updates the requested bproce_bapp" do
         bproce_bapp = BproceBapp.create! valid_attributes
-        # Assuming there are no other bproce_bapps in the database, this
-        # specifies that the BproceBapp created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        BproceBapp.any_instance.should_receive(:update_attributes).with({ "these" => "params" })
+        expect_any_instance_of(BproceBapp).to receive(:save).and_return(false)
         put :update, {:id => bproce_bapp.to_param, :bproce_bapp => { "these" => "params" }}, valid_session
       end
 
       it "assigns the requested bproce_bapp as @bproce_bapp" do
         bproce_bapp = BproceBapp.create! valid_attributes
         put :update, {:id => bproce_bapp.to_param, :bproce_bapp => valid_attributes}, valid_session
-        assigns(:bproce_bapp).should eq(bproce_bapp)
+        expect(assigns(:bproce_bapp)).to eq(bproce_bapp)
       end
 
       it "redirects to the bproce_bapp" do
         bproce_bapp = BproceBapp.create! valid_attributes
         put :update, {:id => bproce_bapp.to_param, :bproce_bapp => valid_attributes}, valid_session
-        response.should redirect_to(bproce_bapp)
+        expect(response).to redirect_to(bproce_bapp)
       end
     end
 
     describe "with invalid params" do
       it "assigns the bproce_bapp as @bproce_bapp" do
         bproce_bapp = BproceBapp.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        BproceBapp.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(BproceBapp).to receive(:save).and_return(false)
         put :update, {:id => bproce_bapp.to_param, :bproce_bapp => {  }}, valid_session
-        assigns(:bproce_bapp).should eq(bproce_bapp)
+        expect(assigns(:bproce_bapp)).to eq(bproce_bapp)
       end
 
       it "re-renders the 'edit' template" do
         bproce_bapp = BproceBapp.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        BproceBapp.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(BproceBapp).to receive(:save).and_return(false)
         put :update, {:id => bproce_bapp.to_param, :bproce_bapp => {  }}, valid_session
-        response.code.should == "302"
-        #response.should render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -130,7 +119,7 @@ describe BproceBappsController do
     it "redirects to the bproce_bapps list" do
       bproce_bapp = BproceBapp.create! valid_attributes
       delete :destroy, {:id => bproce_bapp.to_param}, valid_session
-      response.should redirect_to bapp_url
+      expect(response).to redirect_to bapp_url
     end
   end
 

@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :workplace do
-    name 'workplace_name'
-    description "Workplace description"
-    designation "WorkplaceDesignation"
+  	sequence(:name) { |n| "workplace#{n}" }
+    description { "Workplace description" }
+    designation { "WorkplaceDesignation#{name}" }
   end
 end

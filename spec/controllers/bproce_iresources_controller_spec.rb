@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe BproceIresourcesController do
+RSpec.describe BproceIresourcesController, type: :controller do
 
   def valid_attributes
     {
