@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe BproceDocumentsController do
+RSpec.describe BproceDocumentsController, type: :controller do
 
   def valid_attributes
     { id: 1,

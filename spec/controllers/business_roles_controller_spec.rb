@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe BusinessRolesController do
+RSpec.describe BusinessRolesController, type: :controller do
   render_views
   let(:valid_attributes) { { id: 1, name: "MyString1", description: 'description1', bproce_id: 1 } }
   let(:valid_session) { {} }
@@ -10,7 +8,7 @@ describe BusinessRolesController do
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
 
-    bproce = FactoryGirl.create(:bproce)
+    allow(controller).to receive(:authenticate_user!).and_return(true)
   end
   
   describe "GET index" do

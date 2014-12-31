@@ -1,15 +1,12 @@
-require 'spec_helper'
-require 'factory_girl'
-
-describe MetricsController do
+RSpec.describe MetricsController, type: :controller do
 
   let(:valid_attributes) { { "name" => "Metric name", description: 'description1', bproce_id: 1  } }
   let(:valid_session) { {} }
 
   before(:each) do
-    @user = FactoryGirl.create(:user)
-    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
-    sign_in @user
+    #@user = FactoryGirl.create(:user)
+    #@user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
+    #sign_in @user
   end
 
   describe "GET index" do

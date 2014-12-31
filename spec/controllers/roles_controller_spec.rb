@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe RolesController do
+RSpec.describe RolesController, type: :controller do
 
   def valid_attributes
     {
@@ -18,7 +16,7 @@ describe RolesController do
       Role.all.each { |r| r.destroy }
       role = Role.create! valid_attributes
       get :index, {}, valid_session
-      assigns(:roles).should eq([role])
+      expect(assigns(:roles)).to eq([role])
     end
   end
 
@@ -26,7 +24,7 @@ describe RolesController do
     it "assigns the requested role as @role" do
       role = Role.create! valid_attributes
       get :show, {:id => role.to_param}, valid_session
-      assigns(:role).should eq(role)
+      expect(assigns(:role)).to eq(role)
     end
   end
 

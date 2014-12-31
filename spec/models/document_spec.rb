@@ -12,7 +12,7 @@ describe Document do
 
 
    it "it not valid if dlevel < 1 or > 4" do #validates :dlevel, :numericality => {:less_than => 5, :greater_than => 0}
-     @doc = create(:document)
+     @doc = FactoryGirl.create :document
      @doc.dlevel = nil
      expect(@doc).not_to be_valid
      @doc.dlevel = 0

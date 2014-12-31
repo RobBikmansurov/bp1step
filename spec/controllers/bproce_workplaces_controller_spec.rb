@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe BproceWorkplacesController do
+RSpec.describe BproceWorkplacesController, type: :controller do
 
   def valid_attributes
     {
