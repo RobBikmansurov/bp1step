@@ -17,27 +17,24 @@ class MetricsController < ApplicationController
     if params[:depth].presence
       @current_depth = params[:depth]
     end
-    #graph_type = params[:mo].presence || 'day'
-    #current_period_values = case graph_type
-             #when 'month' then MetricValue.by_month_totals(@metric.id, current_period_date)
-             #when 'week' then MetricValue.by_week_totals(@metric.id, current_period_date)
-             #when 'day' then MetricValue.by_day_totals(@metric.id, current_period_date)
-             #else {}
-             #end
-    current_period_values = case @current_depth.to_i
+    @current_period_values = case @current_depth.to_i
       when 2 then MetricValue.by_day_totals(@metric.id, @current_period_date)
       when 1 then MetricValue.by_month_totals(@metric.id, @current_period_date)
       else MetricValue.by_year_totals(@metric.id, @current_period_date)
     end
-    #current_period_values = MetricValue.by_day_totals(@metric.id, @current_period_date)
-    #current_period_values = MetricValue.by_month_totals(@metric.id, @current_period_date)
+    @average_value = case @metric.depth  # среднее значение за выбранный период
+      when 1 then MetricValue.where(:metric_id => @metric.id).where(dtime: (@current_period_date.beginning_of_year..@current_period_date.end_of_year)).average(:value)
+      when 2 then MetricValue.where(:metric_id => @metric.id).where(dtime: (@current_period_date.beginning_of_year..@current_period_date.end_of_year)).average(:value)
+      else MetricValue.where(:metric_id => @metric.id).where(dtime: (@current_period_date.beginning_of_month..@current_period_date.end_of_month)).average(:value)
+    end
+
     @prev_period_date = @current_period_date - @current_period_date.day
     @next_period_date = @current_period_date.end_of_month + 1
     if @next_period_date == (Date.today.end_of_month + 1)
       @next_period_date = nil
     end
     #values = MetricValue.where(:metric_id => @metric.id).group(:dtime).sum(:value)
-    @data = [ { name: @current_period_date.strftime('%b %Y'), data: current_period_values } ]
+    @data = [ { name: @current_period_date.strftime('%b %Y'), data: @current_period_values } ]
     @metrics = Metric.where(bproce_id: @metric.bproce).order(:name)
     respond_with @data
   end

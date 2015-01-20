@@ -11,6 +11,7 @@
   =@metric.shortname
   ]
   =@metric.name
+  = number_with_precision(@average_value, precision: 2)
 
 -#= link_to 'Год', metric_path({type: :year})     #, remote: true
 -#= link_to 'Месяцы года', metric_path({type: :month})   #, remote: true
@@ -35,7 +36,6 @@
     =link_to 'Метрики', metrics_path
   процесса
   = link_to @metric.bproce.name, bproce_path(@metric.bproce) if @metric.bproce
-
 = @metric.description
 -if @metric.note.presence
   %br
