@@ -10,7 +10,7 @@
   [
   =@metric.shortname
   ]
-  =@metric.name
+  = @metric.name.to_s + ':'
   = number_with_precision(@average_value, precision: 2)
 
 -#= link_to 'Год', metric_path({type: :year})     #, remote: true
