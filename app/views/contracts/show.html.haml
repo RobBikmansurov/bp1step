@@ -22,6 +22,11 @@
   %h3 Субдоговоры и приложения:
   - @subcontracts.each do |subcontract|
     = "——" * (subcontract.depth - @contract.depth)
+    -if subcontract.contract_scan.count > 0  #  если есть скан
+      -if can? :view_contract, @contract
+        - if File.exist?(subcontract.contract_scan.first.scan.path)
+          = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), subcontract.contract_scan.first.scan.url, class: 'button-img'
+      = subcontract.contract_scan.count
     = link_to subcontract.contract_type.to_s + ' ' + subcontract.shortname, contract_path(subcontract)
     = ' от ' + subcontract.date_begin.strftime('%d.%m.%Y') if subcontract.date_begin
     = subcontract.status
@@ -69,15 +74,16 @@
   #update_bproce
     = link_to 'Добавить процесс', bproce_create_contract_path(@contract), :remote => true #, class: 'button'
 
-%h4Файлы:
+%h4Файлы (сканы):
 -@contract.contract_scan.each do |contract_scan|
-  -#= link_to bproce_contract.bproce.name, bproce_path(bproce_contract.bproce)
   - if File.exist?(contract_scan.scan.path)  # есть исходный файл документа
     -#= link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), @document.pdf_url, class: 'button-img'
     = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), contract_scan.scan.url #, class: 'button-img'
     = link_to contract_scan.name, contract_scan.scan.url
-    = " (" + contract_scan.scan_file_size.to_s + ")"
-  
+  - else
+    = contract_scan.name
+  = ' ("' + contract_scan.scan_file_name + '": ' + contract_scan.scan_updated_at.strftime('%d.%m.%Y %H:%M:%S') + ' ' + contract_scan.scan_file_size.to_s + ")"
+  %br
 - if can? :update, @contract
   #update_scan
     = link_to 'Добавить файл (скан)', scan_create_contract_path(@contract), :remote => true #, class: 'button'
