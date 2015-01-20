@@ -1,9 +1,9 @@
 = simple_form_for(@agent) do |f|
   = f.error_notification
   = f.input :shortname
-  = f.input :name
+  = f.input :name, :as => :text
   = f.input :town
-  = f.input :address
+  = f.input :address, :as => :text
   = f.input :contacts
 
   %p
