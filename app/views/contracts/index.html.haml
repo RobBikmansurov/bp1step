@@ -64,6 +64,8 @@
 %p
 - if can? :create, Contract
   = link_to 'Добавить новый договор', new_contract_path, :class => 'button'
+  = link_to 'Список', request.original_url.gsub('/contracts', '/contracts.odt'), :class => 'button'
+
 %p
 Тип:
 - Contract.select("contract_type, count(id) as count").group(:contract_type).order(:contract_type).each do |d|
