@@ -20,6 +20,7 @@ class Document < ActiveRecord::Base
                                                       'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.spreadsheet',
                                                       'application/vnd.ms-excel', 'application/msword',
                                                       'application/doc', 'application/rtf',
+                                                      'application/vnd.oasis.opendocument.graphics',
                                                       'application/octet-stream', 'application/force-download']
   #after_document_file_post_process :test
   after_save :copy_to_pdf
