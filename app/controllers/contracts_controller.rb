@@ -36,7 +36,7 @@ class ContractsController < ApplicationController
             @contracts = Contract.where(:contract_type => params[:type]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
             @title_doc = 'ответственный [' + params[:user] + ']'
           else
-            @title_doc = 'поиск [' + params[:search] + ']'
+            @title_doc = 'поиск [' + params[:search] + ']' if params[':search'].present?
             if sort_column == 'lft'
               @contracts = Contract.search(params[:search]).order(:lft).paginate(:per_page => 10, :page => params[:page])
             else

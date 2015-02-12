@@ -131,6 +131,10 @@ describe Ability do
       expect(ability.can?(:edit_document_place, Document)).to be_truthy  # может изменит место хранения документа
       expect(ability).to be_able_to(:edit_document_place, Document)
     end
+    it "can edit Contract place" do
+      expect(ability.can?(:edit_contract_place, Contract)).to be_truthy  # может изменит место хранения договора
+      expect(ability).to be_able_to(:edit_contract_place, Contract)
+    end
   end
 
   context "authorized user with role :owner" do   # Владелец процесса

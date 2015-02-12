@@ -23,7 +23,7 @@ class DocumentsController < ApplicationController
           if params[:place].size == 0
             @documents = Document.where("place = ''").order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
             @title_doc = 'место хранения оригинала [не указано]'
-        else
+          else
             @documents = Document.where(:place => params[:place]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
             @title_doc = 'место хранения оригинала [' + params[:place] + ']'
           end
