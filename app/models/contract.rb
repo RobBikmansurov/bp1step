@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Contract < ActiveRecord::Base
   acts_as_taggable
   acts_as_nested_set
@@ -16,7 +17,7 @@ class Contract < ActiveRecord::Base
   #validates :owner_id, presence: :true
 
   #belongs_to :contract, foreign_key: "parent_id"  # родительский договор
-  belongs_to :user
+  #belongs_to :user
   belongs_to :agent
   belongs_to :owner, :class_name => 'User'
   belongs_to :parent, :class_name => 'Contract'
