@@ -1,5 +1,6 @@
 class AgentsController < ApplicationController
-  before_action :set_agent, only: [:show, :edit, :update, :destroy, :new_contract]
+  before_filter :authenticate_user!, :only => [:edit, :new]
+  before_action :set_agent, only: [:show, :edit, :update, :destroy, :new_contract, :new]
   autocomplete :bproce, :name, :extra_data => [:id]
 
   def index
@@ -10,20 +11,16 @@ class AgentsController < ApplicationController
     @contracts = Contract.where(:agent_id => @agent.id).order(:lft)
   end
 
-  # GET /agents/new
   def new
-    @agent = Agent.new
   end
 
   def new_contract  # новый договор контрагента
     redirect_to new_contract_path({agent_id:@agent.id})
   end
 
-  # GET /agents/1/edit
   def edit
   end
 
-  # POST /agents
   def create
     @agent = Agent.new(agent_params)
 
@@ -34,7 +31,6 @@ class AgentsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /agents/1
   def update
     if @agent.update(agent_params)
       redirect_to @agent, notice: 'Agent was successfully updated.'
@@ -43,7 +39,6 @@ class AgentsController < ApplicationController
     end
   end
 
-  # DELETE /agents/1
   def destroy
     @agent.destroy
     redirect_to agents_url, notice: 'Agent was successfully destroyed.'
@@ -55,12 +50,19 @@ class AgentsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_agent
-      @agent = Agent.find(params[:id])
+      if params[:search].present? # это поиск
+        @agents = Agent.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        render :index # покажем список найденного
+      else
+        if params[:id].present?
+          @agent = Agent.find(params[:id])
+        else
+          @agent = Agent.new
+        end
+      end
     end
 
-    # Only allow a trusted parameter "white list" through.
     def agent_params
       params.require(:agent).permit(:shortname, :name, :town, :address, :contacts)
     end

@@ -4,7 +4,8 @@ class ContractsController < ApplicationController
   respond_to :pdf, :only => :show
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
-  before_action :set_contract, only: [:show, :edit, :update, :destroy, :approval_sheet]
+  before_filter :authenticate_user!, :only => [:edit, :new]
+  before_action :set_contract, only: [:show, :edit, :update, :destroy, :new, :approval_sheet]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
   autocomplete :bproce, :name, :extra_data => [:id]
 
@@ -31,10 +32,16 @@ class ContractsController < ApplicationController
             @title_doc = 'место хранения оригинала [' + params[:place] + ']'
           end
         else
-          if sort_column == 'lft'
-            @contracts = Contract.search(params[:search]).order(:lft).paginate(:per_page => 10, :page => params[:page])
+          if params[:user].present? #  список договоров, за которые отвечает пользователь
+            @contracts = Contract.where(:contract_type => params[:type]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+            @title_doc = 'ответственный [' + params[:user] + ']'
           else
-            @contracts = Contract.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+            @title_doc = 'поиск [' + params[:search] + ']'
+            if sort_column == 'lft'
+              @contracts = Contract.search(params[:search]).order(:lft).paginate(:per_page => 10, :page => params[:page])
+            else
+              @contracts = Contract.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+            end
           end
         end
       end
@@ -50,7 +57,6 @@ class ContractsController < ApplicationController
   end
 
   def new
-    @contract = Contract.new
     @contract.agent_id = params[:agent_id] if params[:agent_id].present?
     @contract.owner_id = current_user.id if user_signed_in?
     @contract.date_begin = Date.today
@@ -60,6 +66,7 @@ class ContractsController < ApplicationController
 
   def edit
     @bproce_contract = @contract.bproce_contract.new # заготовка для новой связи с процессом
+    respond_with(@contract)
   end
 
   def create
@@ -235,7 +242,16 @@ class ContractsController < ApplicationController
     end
 
     def set_contract
-      @contract = Contract.find(params[:id])
+      if params[:search].present? # это поиск
+        @contracts = Contract.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        render :index # покажем список найденного
+      else
+        if params[:id].present?
+          @contract = Contract.find(params[:id])
+        else
+          @contract = Contract.new
+        end
+      end
     end
 
     def contract_params
