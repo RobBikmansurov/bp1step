@@ -16,39 +16,42 @@ class ContractsController < ApplicationController
 
   def index
     if params[:status].present? #  список договоров, имеющих конкретный статус
-      @contracts = Contract.where(:status => params[:status]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      #@contracts = Contract.where(:status => params[:status]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      @contracts = Contract.where(:status => params[:status])
       @title_doc = 'статус [' + params[:status] + ']'
     else
       if params[:type].present? #  список договоров, имеющих конкретный тип
-        @contracts = Contract.where(:contract_type => params[:type]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        @contracts = Contract.where(:contract_type => params[:type])
         @title_doc = 'тип [' + params[:type] + ']'
       else
         if params[:place].present? #  список договоров, хранящихся в конкретном месте
           if params[:place].size == 0
-            @contracts = Contract.where("contract_place = ''").order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+            @contracts = Contract.where("contract_place = ''")
             @title_doc = 'место хранения оригинала [не указано]'
           else
-            @contracts = Contract.where(:contract_place => params[:place]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+            @contracts = Contract.where(:contract_place => params[:place])
             @title_doc = 'место хранения оригинала [' + params[:place] + ']'
           end
         else
           if params[:user].present? #  список договоров, за которые отвечает пользователь
-            @contracts = Contract.where(:contract_type => params[:type]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+            @contracts = Contract.where(:contract_type => params[:type])
             @title_doc = 'ответственный [' + params[:user] + ']'
           else
             @title_doc = 'поиск [' + params[:search] + ']' if params[':search'].present?
             if sort_column == 'lft'
               @contracts = Contract.search(params[:search]).order(:lft).paginate(:per_page => 10, :page => params[:page])
             else
-              @contracts = Contract.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+              @contracts = Contract.search(params[:search])
             end
           end
         end
       end
     end
     respond_to do |format|
-      format.html
-      format.odt { print }
+      format.html {
+        @contracts = @contracts.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      }
+      format.odt { print  }
       #format.pdf { print }
     end  end
 
@@ -161,7 +164,7 @@ class ContractsController < ApplicationController
       r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
       @title_doc = '' if !@title_doc
       if params[:page].present?
-        @title_doc = @title_doc + '  стр.' + params[:page]
+        #@title_doc = @title_doc + '  стр.' + params[:page]
       end
       r.add_field "REPORT_TITLE", @title_doc
       r.add_table("TABLE_01", @contracts, :header => true) do |t|
