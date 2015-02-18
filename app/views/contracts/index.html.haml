@@ -66,7 +66,9 @@
 %p
 - if can? :create, Contract
   = link_to 'Добавить новый договор', new_contract_path, :class => 'button'
-  = link_to 'Список', request.original_url.gsub('/contracts', '/contracts.odt'), :class => 'button'
+  = link_to 'Список', contracts_path(:format => 'odt'), :class => 'button'
+  = link_to 'XML', contracts_path(:format => 'xml'), :class => 'button'
+  = link_to 'JSON', contracts_path(:format => 'json'), :class => 'button'
 
 %p
 Тип:

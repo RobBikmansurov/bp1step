@@ -3,6 +3,7 @@ class ContractsController < ApplicationController
   respond_to :odt, :only => :index
   respond_to :pdf, :only => :show
   respond_to :html, :xml, :json
+  respond_to :xml, :json, :only => [:index, :show]
   helper_method :sort_column, :sort_direction
   before_filter :authenticate_user!, :only => [:edit, :new]
   before_action :set_contract, only: [:show, :edit, :update, :destroy, :new, :approval_sheet]
@@ -59,11 +60,17 @@ class ContractsController < ApplicationController
         @contracts = @contracts.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
       }
       format.odt { print  }
-      #format.pdf { print }
+      format.json { render json: @contracts }
+      format.xml { render xml: @contracts }
     end  end
 
   def show
     @subcontracts = Contract.where("lft>? and rgt<?", @contract.lft, @contract.rgt).order("lft")
+    respond_to do |format|
+      format.html
+      format.json { render json: @contract }
+      format.xml { render xml: @contract }
+    end
   end
 
   def new
