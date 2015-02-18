@@ -36,6 +36,7 @@ class UsersController < ApplicationController
     @uworkplaces = @usr.user_workplace 	# рабочие места пользователя
     @documents = Document.order(:name).where(owner_id: @usr.id)
     @contracts = Contract.order(:number).where(owner_id: @usr.id)
+    @contracts_pay = Contract.order(:number).where(payer_id: @usr.id)
     respond_with()
   end
 

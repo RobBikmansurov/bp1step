@@ -34,14 +34,21 @@ class ContractsController < ApplicationController
           end
         else
           if params[:user].present? #  список договоров, за которые отвечает пользователь
-            @contracts = Contract.where(:contract_type => params[:type])
-            @title_doc = 'ответственный [' + params[:user] + ']'
+            @user = User.find(params[:user])
+            @contracts = Contract.where(:owner_id => params[:user])
+            @title_doc = 'ответственный [' + @user.displayname + ']'
           else
-            @title_doc = 'поиск [' + params[:search] + ']' if params[':search'].present?
-            if sort_column == 'lft'
-              @contracts = Contract.search(params[:search]).order(:lft).paginate(:per_page => 10, :page => params[:page])
+            if params[:payer].present? #  список договоров, за оплату которых отвечает пользователь
+              @user = User.find(params[:payer])
+              @contracts = Contract.where(:payer_id => params[:payer])
+              @title_doc = 'ответственный за оплату [' + @user.displayname + ']'
             else
-              @contracts = Contract.search(params[:search])
+              @title_doc = 'поиск [' + params[:search] + ']' if params[':search'].present?
+              if sort_column == 'lft'
+                @contracts = Contract.search(params[:search]).order(:lft).paginate(:per_page => 10, :page => params[:page])
+              else
+                @contracts = Contract.search(params[:search])
+              end
             end
           end
         end
@@ -85,6 +92,11 @@ class ContractsController < ApplicationController
   def update
     if @contract.update(contract_params)
       redirect_to @contract, notice: 'Contract was successfully updated.'
+      begin
+        ContractMailer.update_contract(@contract, current_user).deliver    # оповестим ответсвенных об изменениях договора
+      rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+        flash[:alert] = "Error sending mail to contract owner"
+      end
     else
       render action: 'edit'
     end
@@ -258,7 +270,7 @@ class ContractsController < ApplicationController
     end
 
     def contract_params
-      params.require(:contract).permit(:owner_id, :owner_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :agent_id, :agent_name, :parent_id, :parent_name, :contract_type, :contract_place)
+      params.require(:contract).permit(:owner_id, :owner_name, :payer_id, :payer_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :agent_id, :agent_name, :parent_id, :parent_name, :contract_type, :contract_place)
     end
 
     def contract__scan_params
