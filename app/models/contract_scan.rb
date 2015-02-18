@@ -21,6 +21,7 @@ class ContractScan < ActiveRecord::Base
   :content_type => ['application/pdf', 'applications/vnd.pdf', 'binary/octet-stream',
                     'image/jpeg', 'image/gif', 'image/tiff',
                     'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.spreadsheet',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                     'application/vnd.ms-excel', 'application/msword',
                     'application/doc', 'application/rtf',
                     'application/octet-stream', 'application/force-download']
