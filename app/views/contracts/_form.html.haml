@@ -4,9 +4,13 @@
   = f.input :contract_type, :hint => 'Договор, Соглашение ...'
   = f.input :number
   = f.input :name, as: :text
-  = f.label 'Ответственный'
+  = f.label 'Ответственный за договор'
   = f.hidden_field :owner_id
   = f.autocomplete_field :owner_name, autocomplete_users_path
+  %p
+  = f.label 'Ответственный за оплату'
+  = f.hidden_field :payer_id
+  = f.autocomplete_field :payer_name, autocomplete_users_path
   %p
   = f.label 'Контрагент'
   = f.hidden_field :agent_id

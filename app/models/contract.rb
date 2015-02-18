@@ -20,6 +20,7 @@ class Contract < ActiveRecord::Base
   #belongs_to :user
   belongs_to :agent
   belongs_to :owner, :class_name => 'User'
+  belongs_to :payer, :class_name => 'User'
   belongs_to :parent, :class_name => 'Contract'
   belongs_to :contract
 
@@ -28,7 +29,7 @@ class Contract < ActiveRecord::Base
   has_many :contract_scan, dependent: :destroy
   #has_many :children, :class => 'Contract', foreign_key: :parent_id
 
-  attr_accessible  :owner_name, :owner_id, :agent_name, :agent_id, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :parent_id, :parent_name, :contract_type, :contract_place
+  attr_accessible  :owner_name, :owner_id, :payer_name, :payer_id, :agent_name, :agent_id, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :parent_id, :parent_name, :contract_type, :contract_place
 
 
   include PublicActivity::Model
@@ -42,12 +43,20 @@ class Contract < ActiveRecord::Base
     self.agent = Agent.find_by_name(name) if name.present?
   end
   
-  def owner_name    # ответственный за документ
+  def owner_name    # ответственный за договор
     owner.try(:displayname)
   end
 
   def owner_name=(name)
     self.owner = User.find_by_displayname(name) if name.present?
+  end
+
+  def payer_name    # ответственный за оплату договора
+    payer.try(:displayname)
+  end
+
+  def payer_name=(name)
+    self.payer = User.find_by_displayname(name) if name.present?
   end
 
   def parent_name

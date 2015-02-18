@@ -8,3 +8,14 @@
         = link_to contract.shortname, contract_path(contract)
         = ' от ' + contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
         = contract.status
+- if @contracts_pay.count > 0
+  %h3
+    Отвечает за 
+    = link_to 'оплату', contracts_path + '?payer=' + @usr.id.to_s
+    договоров:
+  %ol
+    - @contracts_pay.each do |contract|
+      %li
+        = link_to contract.shortname, contract_path(contract)
+        = ' от ' + contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
+        = contract.status

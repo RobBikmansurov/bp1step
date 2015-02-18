@@ -1,28 +1,30 @@
 -search "Договор" 
--title "Каталог Договоров"
+-title @title_doc
 
 %h2
   -if params[:search].present?
     Список Договоров
-    [ 
-    = params[:search]
-    ]
+    = "[ #{params[:search]} ]"
   -else
     -if params[:type].present?
       Список 
-      [ 
-      = params[:type]
-      ]
+      = "[ #{params[:type]} ]"
     -else
       -if params[:place].present?
         Список Договоров в
-        [ 
-        = params[:place]
-        ]
+        = "[ #{params[:place]} ]"
       -else
-        -if params[:status]
+        -if params[:status].present?
           Список Договоров в статусе
           = "[ #{params[:status]} ]"
+        -else
+          -if params[:user].present?
+            Договоры, за которые отвечает
+            = link_to @user.displayname, user_path(@user)
+          -else
+            -if params[:payer].present?
+              Договоры, за оплату которых отвечает
+              = link_to @user.displayname, user_path(@user)
 
 %table
   %tr
