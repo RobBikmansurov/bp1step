@@ -10,3 +10,9 @@
 = render 'form_new'
 %p
 = link_to 'Back', business_roles_path, :class => 'button'
+
+-if @business_role.bproce and @business_role.bproce.business_roles.count > 1
+  %h4
+    Другие роли процесса:
+    - @business_role.bproce.business_roles.each do | role |
+      = link_to role.name, business_role_path(role)
