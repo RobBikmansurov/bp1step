@@ -1,6 +1,6 @@
 class TermsController < ApplicationController
   respond_to :html
-  respond_to :pdf, :odf, :xml, :json, :only => :index
+  respond_to :xml, :json, :only => [:index, :show]
   helper_method :sort_column, :sort_direction
   before_filter :authenticate_user!, :only => [:edit, :update, :new, :create]
   before_filter :get_term, :except => [:index, :print]
@@ -19,16 +19,16 @@ class TermsController < ApplicationController
     respond_to do |format|
       format.html
       format.json { render json: @terms }
-      format.pdf { print }
+      format.xml { render xml: @terms }
     end
   end
 
   def show
     @term = Term.find(params[:id])
-
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
       format.json { render json: @term }
+      format.xml { render xml: @term }
     end
   end
 

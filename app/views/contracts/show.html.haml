@@ -122,3 +122,6 @@
 -if @contract.status
   -if @contract.status == 'Проект' or @contract.status == 'Согласование'
     = link_to 'Лист согласования', approval_sheet_contract_path(@contract), :class => 'button' if can? :update, Contract
+- if can? :update, @contract
+  = link_to 'XML', contract_path(@contract, :format => 'xml'), :class => 'button'
+  = link_to 'JSON', contract_path(@contract, :format => 'json'), :class => 'button'
