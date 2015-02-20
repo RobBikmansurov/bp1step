@@ -415,7 +415,7 @@ namespace :bp1step do
         puts contract.id, contract.owner.displayname
         wo_bproce_count += 1
         mail_to = u # DEBUG
-        #mail_to = contract.owner if contract.owner   # ответственный за договор
+        mail_to = contract.owner if contract.owner   # ответственный за договор
         ContractMailer.process_is_missing_email(contract, mail_to).deliver
       end
     end
