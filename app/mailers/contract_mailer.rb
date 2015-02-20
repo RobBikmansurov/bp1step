@@ -5,7 +5,9 @@ class ContractMailer < ActionMailer::Base
   def update_contract(contract, current_user)   # рассылка ответственным об изменении договора
     @contract = contract
     address = @contract.owner.email if @contract.owner.email  # ответственный за договор
-    address.concat(', ' + @contract.payer.email.to_s) if !@contract.payer.email.empty?  # отвественный за оплату договора
+    if @contract.payer
+      address.concat(', ' + @contract.payer.email.to_s) if !@contract.payer.email.empty?  # отвественный за оплату договора
+    end
     @current_user = current_user
     mail(:to => address, :subject => "BP1Step: изменен договор ##{@contract.id.to_s}")
   end
