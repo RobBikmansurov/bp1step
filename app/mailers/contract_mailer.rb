@@ -13,7 +13,7 @@ class ContractMailer < ActionMailer::Base
   def process_is_missing_email(contract , user)		# рассылка о необходимости указания процесса для договора
     @contract = contract
     @user = user
-    mail(:to => user.email, :subject => "BP1Step: укажите процесс для договора ##{@contract.id.to_s}")
+    mail(:to => user.email, :subject => "BP1Step: укажите процессы договора ##{@contract.id.to_s}")
   end
 
 end
