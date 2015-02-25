@@ -412,11 +412,12 @@ namespace :bp1step do
     Contract.all.each do |contract| # все договоры
       contract_count += 1
       if contract.bproce_contract.count < 1  # есть процессы?
-        puts contract.id, contract.owner.displayname
+        #puts contract.id, contract.owner.displayname
         wo_bproce_count += 1
         mail_to = u # DEBUG
         mail_to = contract.owner if contract.owner   # ответственный за договор
         ContractMailer.process_is_missing_email(contract, mail_to).deliver
+        logger.info "      ##{contract.id.to_s} \t#{contract.owner.displayname}"
       end
     end
     logger.info "      #{wo_bproce_count} contracts without processes from #{contract_count} contracts"
