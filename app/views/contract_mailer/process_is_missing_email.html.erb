@@ -5,7 +5,8 @@
 </head>
 <body>
   <p><a href=<%=h user_url(@user) %>> <%= @user.displayname%> </a>, Вы отвечаете за договор 
-  <br>#<%= @contract.id.to_s %> <strong><%= @contract.shortname %> от <%= @contract.date_begin %> статус "<%= @contract.status %>"</strong>
+  <br>#<%= @contract.id.to_s %>
+  <a href= <%=h contract_url(@contract) %>><%= @contract.shortname %></a>
   <br>О чем (краткое описание):
   <br><%= @contract.description%></p>
   <p>Пожалуйста, <strong>укажите процессы</strong>, к которым относится данный договор.</p>
