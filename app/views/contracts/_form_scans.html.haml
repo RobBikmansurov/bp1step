@@ -2,10 +2,11 @@
   - if @contract.contract_scan.count > 0
     %h3 Файлы (сканы):
     - @contract.contract_scan.each do |contract_scan|
-      = contract_scan.name
-      (
+      -if can? :update, contract_scan
+        =link_to contract_scan.name, edit_contract_scan_path(contract_scan)
+      -else
+        = contract_scan.name
       = ' ("' + contract_scan.scan_file_name + '": ' + contract_scan.scan_updated_at.strftime('%d.%m.%Y %H:%M:%S') + ' ' + contract_scan.scan_file_size.to_s + ")"
-      )
-      -#-if can? :update, @contract
+      -if can? :update, contract_scan
         =link_to image_tag('action_stop.gif', :alt => 'Удалить'), contract_scan, data: { confirm: contract_scan.scan_file_name + "\nДействительно хотите удалить скан этого договора?" }, :method => 'delete', class: 'button-img'
       %br
