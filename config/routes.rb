@@ -63,6 +63,7 @@ BPDoc::Application.routes.draw do
       get :clone  # создать похожий договор
     end
   end
+  resources :contract_scans, :only => [:destroy, :edit]
   resources :directives do
     resources :documents  # документы на основании директивы
     get :autocomplete, :on => :collection
