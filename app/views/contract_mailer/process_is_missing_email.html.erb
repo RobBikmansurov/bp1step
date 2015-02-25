@@ -4,9 +4,11 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 <body>
-  <a href=<%=h user_url(@user) %>> <%= @user.displayname%> </a>, Вы отвечаете за договор <a href= <%=h contract_url(@contract) %>>#<%= @contract.id.to_s %></a>
-  <br><b><%= @contract.name.to_s %></b>
-  <p>Пожалуйста, укажите процессы, к которым относится данный договор.</p>
+  <p><a href=<%=h user_url(@user) %>> <%= @user.displayname%> </a>, Вы отвечаете за договор 
+  <br>#<%= @contract.id.to_s %> <strong><%= @contract.shortname %> от <%= @contract.date_begin %> статус "<%= @contract.status %>"</strong>
+  <br>О чем (краткое описание):
+  <br><%= @contract.description%></p>
+  <p>Пожалуйста, <strong>укажите процессы</strong>, к которым относится данный договор.</p>
   <hr>
   <p>&copy; BP1Step. Каталог процессов и ресурсов</p>
 </body>
