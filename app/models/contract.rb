@@ -64,8 +64,9 @@ class Contract < ActiveRecord::Base
   end
 
   def parent_name=(name)
-    if name
-      id_find = name[/#.*\ №/][1..-3] # выделим #id
+    id_find = name[/#.*\ №/]
+    if id_find
+      id_find = id_find[1..-3] # выделим #id
       parent_find = Contract.where(:id => id_find) if id_find
       self.parent = parent_find.first if parent_find
     end
