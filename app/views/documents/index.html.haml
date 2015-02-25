@@ -99,8 +99,8 @@
     = will_paginate @documents 
 %p
 - if can? :create, Document
-  = link_to 'Каталог', documents_path(@document)+'.odt?all=1', :class => 'button'
-  = link_to 'Список', request.original_url.gsub('/documents', '/documents.odt'), :class => 'button'
+  = link_to 'Каталог', documents_path(:format => 'odt', :all => '1'), :class => 'button'
+  = link_to 'Список', documents_path(params.merge(:format => 'odt')), :class => 'button'
   -if @bproce
     = link_to 'Новый документ процесса', new_document_bproce_path(@bproce), :class => 'button'
   -else
