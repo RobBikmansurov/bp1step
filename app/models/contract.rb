@@ -65,8 +65,8 @@ class Contract < ActiveRecord::Base
 
   def parent_name=(name)
     if name
-      name_find = name[/№.*\|/][2..-3] if name[/№.*\|/]
-      parent_find = Contract.where(:number => name_find) if name_find
+      id_find = name[/#.*\ №/][1..-3] # выделим #id
+      parent_find = Contract.where(:id => id_find) if id_find
       self.parent = parent_find.first if parent_find
     end
   end
@@ -76,7 +76,7 @@ class Contract < ActiveRecord::Base
   end
 
   def autoname
-    return '№ ' + number.to_s + ' | ' + name.split(//u)[0..50].join
+    return '#' + id.to_s + ' №' + number.to_s + ' | ' + name.split(//u)[0..50].join
   end
 
   def self.search(search)

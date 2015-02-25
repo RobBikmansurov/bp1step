@@ -27,6 +27,10 @@
       %th Номер
       %th Статус
       %th От
+      -if can? :manage, Contract
+        %th
+      -if can? :destroy, Contract
+        %th
       
     - @contracts.each do |contract|
       %tr
@@ -42,6 +46,11 @@
           = link_to contract.shortname, contract_path(contract)
         %td= contract.status
         %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
+        - if can? :manage, contract
+          %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_contract_path(contract), class: 'button-img'
+        - if can? :destroy, contract
+          %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), contract, data: { confirm: 'Договор"' + contract.autoname + "\"\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
+
 
 .info_
   создан
