@@ -21,39 +21,39 @@ class DocumentsController < ApplicationController
       else
         if params[:place].present?  # список документов по месту хранения
           if params[:place].size == 0
-            @documents = Document.where("place = ''").order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+            @documents = Document.where("place = ''")
             @title_doc = 'место хранения оригинала [не указано]'
           else
-            @documents = Document.where(:place => params[:place]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+            @documents = Document.where(:place => params[:place])
             @title_doc = 'место хранения оригинала [' + params[:place] + ']'
           end
         else
           if params[:dlevel].present? #  список документов уровня
-            @documents = Document.where(:dlevel => params[:dlevel]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+            @documents = Document.where(:dlevel => params[:dlevel])
             @title_doc = 'уровень [' + params[:dlevel] + ']'
           else
             if params[:part].present? #  список документов раздела документооборота
-              @documents = Document.where(:part => params[:part]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+              @documents = Document.where(:part => params[:part])
             else
               if params[:status].present? #  список документов, имеющих конкретный статус
                 ss = params[:status]
-                @documents = Document.where(status: params[:status]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                @documents = Document.where(status: params[:status])
                 @title_doc = 'статус [' + params[:status] + ']'
               else
                 if params[:user].present? #  список документов пользователя
                   @user = User.find(params[:user])
-                  @documents = Document.where(:owner_id => params[:user]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                  @documents = Document.where(:owner_id => params[:user])
                   @title_doc = 'владелец [' + @user.displayname + ']' if @user
                 else
                   if params[:tag].present?
-                    @documents = Document.tagged_with(params[:tag]).search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                    @documents = Document.tagged_with(params[:tag]).search(params[:search])
                   else
                     if params[:bproce_id].present?
                       @bproce = Bproce.find(params[:bproce_id])
-                      @documents = @bproce.documents.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                      @documents = @bproce.documents
                       @title_doc = 'для процесса ' + @bproce.name + ' #' + @bproce.id.to_s if @bproce
                     else
-                      @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+                      @documents = Document.search(params[:search])
                     end
                   end
                 end
@@ -64,7 +64,9 @@ class DocumentsController < ApplicationController
       end
     end
     respond_to do |format|
-      format.html
+      format.html {
+        @documents = @documents.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      }
       format.odt { print }
       #format.pdf { print }
     end

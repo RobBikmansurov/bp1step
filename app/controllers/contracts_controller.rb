@@ -59,9 +59,9 @@ class ContractsController < ApplicationController
       format.html {
         @contracts = @contracts.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
       }
-      format.odt { print  }
+      format.odt  { print  }
       format.json { render json: @contracts }
-      format.xml { render xml: @contracts }
+      format.xml  { render xml: @contracts }
     end  end
 
   def show
