@@ -1,14 +1,5 @@
 BPDoc::Application.routes.draw do
-  resources :agents, :only => :autocomlete do
-    get :autocomplete, :on => :collection
-  end
-  resources :bapps, :only => :autocomlete do
-    get :autocomplete, :on => :collection
-  end
   resources :bproces, :only => :autocomlete do
-    get :autocomplete, :on => :collection
-  end
-  resources :contracts, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
   resources :iresources, :only => :autocomlete do
@@ -17,16 +8,16 @@ BPDoc::Application.routes.draw do
   resources :users, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
-  resources :workplaces, :only => :autocomlete do
-    get :autocomplete, :on => :collection
-  end
   resources :activities
   resources :agents do
+    get :autocomplete, :on => :collection
     member do
       get :new_contract # новый договор контрагента
     end
   end
-  resources :bapps
+  resources :bapps do
+    get :autocomplete, :on => :collection
+  end
   resources :bproce_bapps, :only => [:create, :destroy, :show, :edit, :update]
   resources :bproce_business_roles, :only => [:show]
   resources :bproce_iresources, :only => [:new, :create, :destroy, :show, :edit, :update]
@@ -54,6 +45,7 @@ BPDoc::Application.routes.draw do
   resources :bproce_contracts, :except => :index
   resources :business_roles
   resources :contracts do
+    get :autocomplete, :on => :collection
     member do
       get :approval_sheet # Лист согласования
       get :scan_create
@@ -63,7 +55,7 @@ BPDoc::Application.routes.draw do
       get :clone  # создать похожий договор
     end
   end
-  resources :contract_scans, :only => [:destroy, :edit]
+  resources :contract_scans, :only => [:destroy, :edit, :update]
   resources :directives do
     resources :documents  # документы на основании директивы
     get :autocomplete, :on => :collection
@@ -115,7 +107,9 @@ BPDoc::Application.routes.draw do
   #match '/bproces/:id/card' => 'bproces#card', :via => :get  # карточка процесса
   #match '/bproces/:id/doc' => 'bproces#doc', :via => :get  # заготовка описания процесса
   match '/workplaces/switch' => 'workplaces#switch', :via => :get  # подключения рабочих мест
-  resources :workplaces
+  resources :workplaces do
+    get :autocomplete, :on => :collection
+  end
   
   match '/about' => 'pages#about', :via => :get
   get 'pages/about'
