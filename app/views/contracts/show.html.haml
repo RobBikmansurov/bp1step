@@ -75,7 +75,7 @@
 
 -else
   %h3 Процесс не назначен!
-- if can? :update, @contract
+- if can? :update, @contract or @contract.owner_id == current_user.id   # ответственный за договор тоже может добавлять процесс
   #update_bproce
     = link_to 'Добавить процесс', bproce_create_contract_path(@contract), :remote => true #, class: 'button'
 
