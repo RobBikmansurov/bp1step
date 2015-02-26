@@ -9,34 +9,40 @@ class ContractScansController < ApplicationController
   end
 
   def edit
+    @contract = @contract_scan.contract if @contract_scan
   end
 
   def update
+    @contract = @contract_scan.contract if @contract_scan
+    if @contract_scan.update(contract_scan_params)
+      redirect_to @contract, notice: 'Contract_scan name was successfully updated.'
+      begin
+        ContractMailer.update_contract(@contract, current_user).deliver    # оповестим ответсвенных об изменениях договора
+      rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+        flash[:alert] = "Error sending mail to contract owner"
+      end
+    else
+      render action: 'edit'
+    end
   end
 
   def destroy
+    @contract = @contract_scan.contract if @contract_scan
+    @contract_scan.destroy
+    redirect_to contract_url(@contract), notice: 'Contract_scan was successfully destroyed.'
   end
 
   private
 
     def set_contract_scan
-      if params[:search].present? # это поиск
-        @contracts = Contract.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
-        render :index # покажем список найденного
+      if params[:id].present?
+        @contract_scan = ContractScan.find(params[:id])
       else
-        if params[:id].present?
-          @contract_scan = ContractScan.find(params[:id])
-        else
-          @contract = Contract.new
-        end
+        @contract = Contract.new
       end
     end
 
-    def contract_params
-      params.require(:contract).permit(:owner_id, :owner_name, :payer_id, :payer_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :agent_id, :agent_name, :parent_id, :parent_name, :contract_type, :contract_place)
-    end
-
-    def contract__scan_params
+    def contract_scan_params
       params.require(:contract_scan).permit(:conntract_id, :name)
     end
 

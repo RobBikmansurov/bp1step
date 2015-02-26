@@ -8,5 +8,5 @@
         = contract_scan.name
       = ' ("' + contract_scan.scan_file_name + '": ' + contract_scan.scan_updated_at.strftime('%d.%m.%Y %H:%M:%S') + ' ' + contract_scan.scan_file_size.to_s + ")"
       -if can? :update, contract_scan
-        =link_to image_tag('action_stop.gif', :alt => 'Удалить'), contract_scan, data: { confirm: contract_scan.scan_file_name + "\nДействительно хотите удалить скан этого договора?" }, :method => 'delete', class: 'button-img'
+        =link_to image_tag('action_stop.gif', :alt => 'Удалить'), contract_scan, data: { confirm: 'Файл "' + contract_scan.scan_file_name  + '": ' + contract_scan.scan_updated_at.strftime('%d.%m.%Y %H:%M:%S') + "\nДействительно хотите удалить данный файл из договора ##{contract_scan.contract.id} ?" }, :method => 'delete', class: 'button-img'
       %br
