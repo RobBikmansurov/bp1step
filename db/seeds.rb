@@ -59,11 +59,19 @@ wp2 = Workplace.create(:name => 'Главный бухгалтер', :descriptio
 ["Кассир", "Бухгалтер", "Контролер", "Юрист", "Экономист"].each do |name|
 	3.times do |n|
 		n += 1
-		Workplace.create(:name => 'РМ ' + name + n.to_s,
+		wp = Workplace.create(:name => 'РМ ' + name + n.to_s,
 						 :description => 'рабочее место' + name + n.to_s,
 						 :designation => name + n.to_s,
 						 :location => n.to_s + '01')
-  	end
+ 	end
+end
+3.times do |n|
+	n += 1
+	wp = Workplace.find(n+5)
+	uwp = wp.user_workplace.create(date_from: '2015-01-11', date_to: '2015-12-31', note: ' ')
+	u = User.find(n)
+	uwp.user_id = u.id
+	uwp.save
 end
 puts "workplaces created"
 
@@ -87,10 +95,19 @@ puts 'terms created'
 #processes
 bp1 = Bproce.create(name: 'Предоставление сервисов', shortname: 'B.4.1', 
 	fullname: 'Предоставление сервисов', user_id: 1)
+bp1.user_id = user1.id
+bp1.save
 bp11 = Bproce.create(name: 'Управление уровнем сервисов', shortname: 'SLM', fullname: 'Управление уровнем сервисов', parent_id: bp1.id)
 bp12 = Bproce.create(name: 'Управление мощностями', shortname: 'CAP', fullname: 'Управление мощностями', parent_id: bp1.id)
 bp13 = Bproce.create(name: 'Управление непрерывностью', shortname: 'SCM', fullname: 'Управление непрерывностью', parent_id: bp1.id)
 bp14 = Bproce.create(name: 'Управление финансами', shortname: 'FIN', fullname: 'Управление финансами', parent_id: bp1.id)
+bp14.user_id = user1.id
+bp14.save
+bp14.business_roles.create(name: 'НачальникИТ', description: 'Контролирует счета, готовит План закупок')
+br1 = bp14.business_roles.create(name: 'Бухгалтер', description: 'Оплачивает счет, учитывает бухгалтерские документы', features: 'Нужен калькулятор')
+ubr1 = br1.user_business_role.create(date_from: '2015-01-11', date_to: '2015-12-31', note: 'исп.обязанности')
+ubr1.user_id = user1.id
+ubr1.save
 bp15 = Bproce.create(name: 'Управление доступностью', shortname: 'AVA', fullname: 'Управление доступностью', parent_id: bp1.id)
 
 bp2 = Bproce.create(name: 'Поддержка сервисов', shortname: 'B.4.2', fullname: 'Поддержка сервисов')
