@@ -73,14 +73,14 @@ Business processes documentation organization and generation, the 1st step of in
 
 >cp config/database.yml{.example,} 
 
-Замечу, что при использовании SQLite не будет работать
-autocomlete. Для решения этой проблемы можно исправить команды поиска моделях.
+Замечу, что при использовании SQLite не будет работать поиск и
+autocomlete. Для решения этой проблемы можно исправить команды SQL ILIKE на LIKE в методах autocomplete в контроллерах и search в моделях.
 
 Например в app/models/user.rb:
 
       where('username ILIKE ? or displayname ILIKE ?', "%#{search}%", "%#{search}%")
 
-заменить на
+заменить на:
 
       where('username LIKE ? or displayname LIKE ?', "%#{search}%", "%#{search}%")
 
