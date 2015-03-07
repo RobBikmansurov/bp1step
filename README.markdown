@@ -68,10 +68,22 @@ Business processes documentation organization and generation, the 1st step of in
 
 >cd BPDoc
 
-Настройте доступ к БД, в тестовом примере используется SQLite3
-Досаточно просто скопировать config/database.yml.example в config/database.yml
+Настройте доступ к БД, в тестовом примере используется SQLite3.
+Достаточно просто скопировать config/database.yml.example в config/database.yml
 
 >cp config/database.yml{.example,} 
+
+Замечу, что при использовании SQLite не будет работать
+autocomlete. Для решения этой проблемы можно исправить команды поиска моделях.
+
+Например в app/models/user.rb:
+
+      where('username ILIKE ? or displayname ILIKE ?', "%#{search}%", "%#{search}%")
+
+заменить на
+
+      where('username LIKE ? or displayname LIKE ?', "%#{search}%", "%#{search}%")
+
 
 >bundle install
 
