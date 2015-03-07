@@ -69,8 +69,15 @@ Business processes documentation organization and generation, the 1st step of in
 >cd BPDoc
 
 Настройте доступ к БД, в тестовом примере используется SQLite3
+Досаточно просто скопировать config/database.yml.example в config/database.yml
+
+>cp config/database.yml{.example,} 
 
 >bundle install
+
+Для работы с пользователями, хранящими пароли в БД необходимо выполнить скрипт
+
+>./db.auth.on
 
 >rake db:setup
 
