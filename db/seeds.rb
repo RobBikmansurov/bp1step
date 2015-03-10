@@ -1,13 +1,5 @@
 # encoding: utf-8
 
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
-#   Mayor.create(:name => 'Daley', :city => cities.first)
-
 PublicActivity.enabled = false
 # access roles
 Role.create!(:note => 'Просмотр информации по исполняемым ролям, участию в процессах, комментирование документов процесса', :name => 'user', :description => 'Исполнитель')
@@ -119,6 +111,29 @@ bp23 = Bproce.create(name: 'Управление релизами', shortname: '
 bp23 = Bproce.create(name: 'Управление изменениями', shortname: 'CNG', fullname: 'Управление изменениями', parent_id: bp2.id, user_id: user6)
 
 puts "processes created"
+
+ir1 = Iresource.create(level: 'DB', label: '1С.УчетОС', note: '1С.Учет основных средств', location: "//srv/data/1C/OC", volume: 1)
+ir1.user_id = user1.id
+ir1.save
+puts "iresources created"
+
+d = Document.create(name: 'Положение об оплате счетов', status: 'Утвержден', dlevel: 2, place: 'Бух.Папка1', approved: '2015-01-01', approveorgan: 'Правление')
+d.owner_id = user1.id
+d.save
+
+d.bproce_document.create(bproce_id: bp14.id)
+puts 'documents created'
+
+ag1 = Agent.create(name: 'ООО 1С в помощь', town: 'Урюпинск', address: '123000. г.Урюпинск, ул.Ленина,2-101', contacts: 'Оля')
+ag2 = Agent.create(name: 'ООО Рога и копыта', town: '', address: '614000. г.Пермь, ул.Ленина, 1', contacts: 'info@example.com')
+puts 'agents created'
+
+co = Contract.create(number: '2-2014', name: 'предоставления услуг', status: 'Действует', date_begin: '2014-05-01', description: 'jhjhkj', text: 'text', contract_type: 'Договор', description: 'о предоставлении услуг связи')
+co.agent_id = ag2.id
+co.owner_id = user1.id
+co.payer_id = user2.id
+co.save
+puts 'contracts created'
 
 m = Metric.create(name: 'ИнцидентовВсего', description: 'количество инцидентов, зарегистрированных в системе', depth: '3', bproce_id: bp211.id)
 puts "metrics created"
