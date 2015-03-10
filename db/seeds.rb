@@ -18,7 +18,7 @@ user1 = User.create(:displayname => 'Иванов И.И.', :username => 'ivanov'
 user1.roles << Role.find_by_name(:author)
 user1.roles << Role.find_by_name(:analitic)
 user1.roles << Role.find_by_name(:owner)
-user2 = User.create(:displayname => 'Петров П.П.', :username => 'petrov', :email => 'petrov@example.com', :password => 'petrov')
+user2 = User.create(:displayname => 'Петров П.П.', :username => 'petrov', :email => 'petrov@example.com', :password => 'petrov', firstname: 'Петр', middlename: 'Петрович', lastname: 'Петров')
 user2.roles << Role.find_by_name(:author)
 user3 = User.create(:displayname => 'Администратор', :username => 'admin1', :email => 'admin1@example.com', :password => 'admin1')
 user3.roles << Role.find_by_name(:admin)
