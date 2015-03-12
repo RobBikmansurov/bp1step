@@ -142,6 +142,7 @@
 = link_to 'Back', bproces_path, :class => 'button'
 -if can? :update, @bproce
   = link_to 'Карточка', bproce_path(@bproce) + '/card', :class => 'button'
+  = link_to 'Чек-лист', bproce_path(@bproce) + '/check_list', :class => 'button'
   = link_to 'Описание', bproce_path(@bproce) + '/doc', :class => 'button'
   -#= link_to 'Распоряжение', order_bproces(@bproce), :class => 'button'
   = link_to 'Распоряжение', bproce_path(@bproce) + '/order', class: :button

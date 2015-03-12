@@ -57,6 +57,10 @@ class BprocesController < ApplicationController
     print_card # карточка процесса
   end
 
+  def check_list
+    print_check_list # чек-лист карточки процесса
+  end
+
   def doc
     print_doc  # заготовка описания процесса
   end
@@ -197,7 +201,7 @@ private
       sp = 0 # порядковый номер строки для подпроцессов
       subs = Bproce.where("lft>? and rgt<?", @bproce.lft, @bproce.rgt).order("lft")  # все подпроцессы процесса
       r.add_table("SUBPROC", subs, :header => false, :skip_if_empty => true) do |t|
-        if subs.count > 0  # если документов нет - пустая таблица не будет выведена
+        if subs.count > 0  # если подпроцессов нет - пустая таблица не будет выведена
           t.add_column(:sp) do |ca| # порядковый номер строки таблицы
             sp += 1
           end
@@ -228,6 +232,62 @@ private
       :filename => "card.odt",
       :disposition => 'inline'
   end
+
+  # печатать чек-лист Карточки процесса
+  def print_check_list
+    report = ODFReport::Report.new("reports/bp-check.odt") do |r|
+      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
+      r.add_field :id, @bproce.id
+      r.add_field :shortname, @bproce.shortname
+      r.add_field :name, @bproce.name
+      r.add_field :fullname, @bproce.fullname
+      r.add_field :goal, @bproce.goal
+      r.add_field :description, @bproce.description
+      if @bproce.parent_id
+        r.add_field :parent, @bproce.parent.name
+        r.add_field :parent_id, " #" + @bproce.parent_id.to_s
+      else
+        r.add_field :parent, "-"
+        r.add_field :parent_id, " "
+      end
+      if @bproce.user_id  # владелец процесса
+        r.add_field :owner, @bproce.user.displayname
+      else
+        r.add_field :owner, "-"
+      end
+
+      sp = 0 # порядковый номер строки для подпроцессов
+      subs = Bproce.where("lft>? and rgt<?", @bproce.lft, @bproce.rgt).order("lft")  # все подпроцессы процесса
+      r.add_table("SUBPROC", subs, :header => false, :skip_if_empty => true) do |t|
+        if subs.count > 0  # если подпроцессов нет - пустая таблица не будет выведена
+          t.add_column(:sp) do |ca| # порядковый номер строки таблицы
+            sp += 1
+          end
+          t.add_column(:spname) do |sub|
+            spname = '__' * (sub.depth - @bproce.depth) + sub.name
+          end
+          t.add_column(:sp_id) do |sub|
+            sp_id = sub.id.to_s
+          end
+          t.add_column(:spowner) do |sp|
+            spowner = sp.user.displayname if sp.user_id
+          end
+        end
+      end
+      if @bproce.business_roles.count > 0
+        roles = @bproce.business_roles.collect(&:name).join(', ')
+      else
+        roles = 'Роли не выделены!' # сформировать список ролей
+      end
+      r.add_field "ROLES", roles
+      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    send_data report.generate, type: 'application/msword',
+      filename: "check_list.odt",
+      disposition: 'inline'
+  end
+
 
   # заготовка описания процесса
   def print_doc
