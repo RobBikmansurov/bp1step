@@ -103,9 +103,6 @@ Devise.setup do |config|
   # If true, extends the user's remember period when remembered via cookie.
   # config.extend_remember_period = false
 
-  # If true, uses the password salt as remember token. This should be turned
-  # to false if you are not using database authenticatable.
-  config.use_salt_as_remember_token = true
 
   # Options to be passed to the created cookie. For instance, you can set
   # :secure => true in order to force SSL only cookies.
@@ -113,7 +110,7 @@ Devise.setup do |config|
 
   # ==> Configuration for :validatable
   # Range for password length. Default is 6..128.
-  config.password_length = 6..64
+  # config.password_length = 6..128
 
   # Email regex used to validate email formats. It simply asserts that
   # an one (and only one) @ exists in the given string. This is mainly
@@ -202,8 +199,7 @@ Devise.setup do |config|
   # config.navigational_formats = [:"*/*", "*/*", :html]
 
   # The default HTTP method used to sign out a resource. Default is :delete.
-  #config.sign_out_via = :delete
-  config.sign_out_via = :get
+  # config.sign_out_via = :delete
 
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
@@ -219,4 +215,6 @@ Devise.setup do |config|
   #   manager.intercept_401 = false
   #   manager.default_strategies(:scope => :user).unshift :some_external_strategy
   # end
+  config.secret_key = '186a29cf7da10d41a18614636606772e7601be9c35042781cc383fdaa5949bc57a1c5c9a001b92a9596e5414ce0c7f4ecb9521112f48a8d440dd16d71cb5df01'
+
 end
