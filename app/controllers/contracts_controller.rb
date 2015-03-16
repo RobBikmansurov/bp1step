@@ -2,7 +2,7 @@
 class ContractsController < ApplicationController
   respond_to :odt, :only => :index
   respond_to :pdf, :only => :show
-  respond_to :html, :xml, :json
+  respond_to :html
   respond_to :xml, :json, :only => [:index, :show]
   helper_method :sort_column, :sort_direction
   before_filter :authenticate_user!, :only => [:edit, :new]
@@ -11,7 +11,7 @@ class ContractsController < ApplicationController
   autocomplete :bproce, :name, :extra_data => [:id]
 
   def autocomplete
-    @contracts = Contract.order(:number).where("name ilike ? or number ilike ?", "%#{params[:term]}%", "%#{params[:term]}%")
+    @contracts = Contract.order(:number).where("name ilike ? or number ilike ? or id = ?", "%#{params[:term]}%", "%#{params[:term]}%", "#{params[:term].to_i}")
     render json: @contracts.map(&:autoname)
   end
 
