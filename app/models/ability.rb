@@ -22,6 +22,7 @@ class Ability
         can :manage, [Directive, Term]
         can :view_document, Document  # просматривать файл с документом
         can :edit_document, [Document]  # может брать исходник документа
+        can [:read], [Agent, Contract]
       end
 
       if user.has_role? :keeper
