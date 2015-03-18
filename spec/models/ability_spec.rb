@@ -111,6 +111,14 @@ describe Ability do
       expect(ability).to be_able_to(:read, User)
       expect(ability.can?(:show, User)).to be_truthy # видит подробностей о пользователе
     end
+    it "can :show Agent" do
+      expect(ability).to be_able_to(:read, Agent)
+      expect(ability.can?(:show, Agent)).to be_truthy # видит контрагентов
+    end
+    it "can :show Contract" do
+      expect(ability).to be_able_to(:read, Contract)
+      expect(ability.can?(:show, Contract)).to be_truthy # видит контрагентов
+    end
   end
 
   context "authorized user with role :keeper" do   # Владелец процесса

@@ -68,7 +68,7 @@
                 =nav_link "Директивы", directives_path
                 =nav_link 'Термины', terms_path
                 - if user_signed_in?
-                  -if can? :manage, Metric
+                  -if can? :show, Contract
                     =nav_link "Договоры", contracts_path
                     =nav_link "Контрагенты", agents_path
             =nav_link "Сотрудники", users_path
