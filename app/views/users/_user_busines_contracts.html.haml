@@ -5,6 +5,12 @@
   %ol
     - @contracts.each do |contract|
       %li
+        .id_show_
+          = "##{contract.id}"
+        -if contract.contract_scan.first  #  если есть скан
+          -if can? :view_contract, contract
+            - if File.exist?(contract.contract_scan.first.scan.path)
+              = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), contract.contract_scan.first.scan.url, class: 'button-img'
         = link_to contract.shortname, contract_path(contract)
         = ' от ' + contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
         = contract.status
@@ -16,6 +22,13 @@
   %ol
     - @contracts_pay.each do |contract|
       %li
+      %td
+        .id_show_
+          = "##{contract.id}"
+        -if contract.contract_scan.first  #  если есть скан
+          -if can? :view_contract, contract
+            - if File.exist?(contract.contract_scan.first.scan.path)
+              = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), contract.contract_scan.first.scan.url, class: 'button-img'
         = link_to contract.shortname, contract_path(contract)
         = ' от ' + contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
         = contract.status
