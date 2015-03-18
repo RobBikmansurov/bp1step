@@ -35,8 +35,8 @@ class UsersController < ApplicationController
     @uroles = @usr.user_business_role.includes(:business_role).order('business_roles.name')   # исполняет роли
     @uworkplaces = @usr.user_workplace 	# рабочие места пользователя
     @documents = Document.order(:name).where(owner_id: @usr.id)
-    @contracts = Contract.order(:number).where(owner_id: @usr.id)
-    @contracts_pay = Contract.order(:number).where(payer_id: @usr.id)
+    @contracts = Contract.order('date_begin DESC').where(owner_id: @usr.id)
+    @contracts_pay = Contract.order('date_begin DESC').where(payer_id: @usr.id)
     respond_with()
   end
 
