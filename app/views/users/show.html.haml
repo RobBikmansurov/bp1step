@@ -72,6 +72,7 @@
             -if user_workplace.date_to
               \-
               = user_workplace.date_to.strftime("%d.%m.%Y")
+    = render 'user_documents' # избранные (наначенные) документы пользователя
 
   #Roles
     = render 'user_busines_roles'

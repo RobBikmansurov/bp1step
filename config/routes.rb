@@ -73,6 +73,7 @@ BPDoc::Application.routes.draw do
       patch :update_file
       get :approval_sheet # Лист согласования
       get :clone  # создать карточку похожего документа
+      get :add_favorite
     end
   end
   resources :document_directives
@@ -100,8 +101,20 @@ BPDoc::Application.routes.draw do
   #get 'tags', to: 'bproces#index'
   resources :roles, only: [:index, :show]
   resources :terms
-  resources :user_workplaces
+  devise_for :users
+  devise_scope :users do
+    get "sign_in",  :to => "devise/sessions#new"
+    get "sign_out", :to => "devise/sessions#destroy"
+    get "sign_up",  :to => "devise/registrations#new"
+  end
+  resources :users, :only => [:index, :show, :edit, :update] do
+    member do
+      get :order  # распоряжение о назначении исполнителя на роли в процессах
+    end
+  end
   resources :user_business_roles, :only => [:new, :create, :destroy, :edit, :update, :show]
+  resources :user_documents, only: [:destroy]
+  resources :user_workplaces
 
   #match '/bproceses' => 'bproces#list', :via => :get  # получение полного списка процессов
   match '/bprocess' => 'bproces#manage', :via => :get  # получение полного списка процессов
@@ -114,17 +127,6 @@ BPDoc::Application.routes.draw do
   
   match '/about' => 'pages#about', :via => :get
   get 'pages/about'
-  devise_for :users
-  devise_scope :users do
-    get "sign_in",  :to => "devise/sessions#new"
-    get "sign_out", :to => "devise/sessions#destroy"
-    get "sign_up",  :to => "devise/registrations#new"
-  end
-  resources :users, :only => [:index, :show, :edit, :update] do
-    member do
-      get :order  # распоряжение о назначении исполнителя на роли в процессах
-    end
-  end
   root :to => "home#index"
 
 end
