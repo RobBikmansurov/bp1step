@@ -1,8 +1,10 @@
-добавил документ в Избранное
 -if activity.trackable
-  = '(#' + activity.trackable.id.to_s + '):'
+  добавил документ
   = link_to '#' + activity.trackable.document_id.to_s, documents_path + '/' + activity.trackable.document_id.to_s
+  в Избранное
+  = '(#' + activity.trackable.id.to_s + '):'
 -else
+  добавлял в Избранное
   \#
   = activity.trackable_id
-  уже удалена
+  но удалил
