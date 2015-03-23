@@ -1,8 +1,11 @@
-добавил скан к договору
+добавил скан
 -if activity.trackable
   = '(#' + activity.trackable.id.to_s + ')'
-  = link_to activity.trackable.contract.shortname, activity.trackable.contract
--else
-  \#
-  = activity.trackable_id
-  который уже удален
+  к договору
+  -if activity.trackable
+    = '(#' + activity.trackable.id.to_s + ')'
+    = link_to activity.trackable.contract.shortname, activity.trackable.contract
+  -else
+    \#
+    = activity.trackable_id
+    который уже удален

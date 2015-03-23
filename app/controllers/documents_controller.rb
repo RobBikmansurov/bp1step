@@ -100,12 +100,21 @@ class DocumentsController < ApplicationController
     respond_with(@document)
   end
 
+  def add_favorite
+    @user_document = UserDocument.new(user_id: current_user.id, document_id: @document.id, link: 10)
+    flash[:notice] = "##{@document.id} добавлен в Избранное." if @user_document.save
+    @user_documents = UserDocument.where(document_id: @document.id).order('link, updated_at DESC').includes(:user).load  # избранные документы пользователя
+    #respond_with @document, notice: '#' + @document.id.to_s + ' добавлен в Избранное.', action: :show
+    redirect_to @document
+  end
+
   def show
+    @user_document = UserDocument.where(user_id: current_user.id, document_id: @document.id).first if current_user
+    @user_documents = UserDocument.where(document_id: @document.id).order('link, updated_at DESC').load if current_user
     respond_to do |format|
       format.html
       format.pdf { view }
     end
-    #respond_with(@document)
   end
 
   def new
