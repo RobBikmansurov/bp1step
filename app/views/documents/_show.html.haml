@@ -94,7 +94,8 @@
     -if @user_document && @user_document.document_id == @document.id
       = link_to 'Удалить из Избранного', user_document_path, :method => :delete if @user_document.link >= 10 # если документ не добавил менеджер по персоналу
     -else
-      = link_to 'Добавить документ в Избранное', add_favorite_document_path(@document)
+      = link_to 'Добавить в Избранное', add_favorite_document_path(@document)
+      = link_to 'Добавить в Обязательное', add_to_favorite_document_path(@document), :remote => true if current_user.has_role? :manager
 
 %p
 Теги документа:

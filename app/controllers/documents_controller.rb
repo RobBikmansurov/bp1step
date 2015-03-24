@@ -104,7 +104,24 @@ class DocumentsController < ApplicationController
     @user_document = UserDocument.new(user_id: current_user.id, document_id: @document.id, link: 10)
     flash[:notice] = "##{@document.id} добавлен в Избранное." if @user_document.save
     @user_documents = UserDocument.where(document_id: @document.id).order('link, updated_at DESC').includes(:user).load  # избранные документы пользователя
-    #respond_with @document, notice: '#' + @document.id.to_s + ' добавлен в Избранное.', action: :show
+    #respond_with @document, notice: "##{@document.id} добавлен в Избранное."
+    redirect_to @document
+  end
+
+  def add_to_favorite
+    @user_document = UserDocument.new(document_id: @document.id, link: 1)
+    #render :add_to_favorite
+  end
+
+  def update_favorite
+    if params[:user_document].present?
+      user_id = User.where(displayname: params[:user_document][:user]).first.id
+      @user_document = UserDocument.new(user_id: user_id, document_id: @document.id, link: params[:user_document][:link])
+      puts "\n\n...update_favorite..."
+      puts @user_document.inspect
+      flash[:notice] = "##{@document.id} добавлен в Избранное для #{params[:user_document][:user]}." if @user_document.save
+      @user_documents = UserDocument.where(document_id: @document.id).order('link, updated_at DESC').includes(:user).load  # избранные документы пользователя
+    end
     redirect_to @document
   end
 
@@ -206,6 +223,10 @@ private
 
   def document_file_params
     params.require(:document).permit(:document_file)
+  end
+
+  def user_document_params
+    params.require(:user_document).permit(:document_id, :user_id, :link)
   end
 
   def print

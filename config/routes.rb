@@ -73,7 +73,9 @@ BPDoc::Application.routes.draw do
       patch :update_file
       get :approval_sheet # Лист согласования
       get :clone  # создать карточку похожего документа
-      get :add_favorite
+      get :add_favorite     # добровольное занесение в избранное
+      get :add_to_favorite  # юрист заносит в обязательные
+      post :update_favorite
     end
   end
   resources :document_directives
