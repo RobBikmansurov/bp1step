@@ -1,27 +1,26 @@
 #tabs { 
     background: transparent; 
-    border: none; 
+    border: none;
 } 
 #tabs .ui-widget-header { 
-    background: transparent; 
-    border: none; 
-    border-bottom: 1px solid #c0c0c0; 
+    border-bottom: 20px solid #c0c0c0;
     -moz-border-radius: 0px; 
     -webkit-border-radius: 0px; 
     border-radius: 0px; 
 } 
 #tabs .ui-tabs-nav .ui-state-default { 
-    background: transparent; 
     float: right; 
-    border: none; 
 } 
 #tabs .ui-tabs-nav .ui-state-active { 
-    background: transparent url(uiTabsArrow.png) no-repeat bottom center; 
-    border: none; 
+    background: url(uiTabsArrow.png) no-repeat bottom center; 
+    background-color: red;
 } 
 #tabs .ui-tabs-nav .ui-state-default a { 
-    color: #c0c0c0; 
+    background-color: #FFCC99;
+    color: #000000;
+    padding: 1px 4px;
 } 
 #tabs .ui-tabs-nav .ui-state-active a { 
-    color: #459e00; 
+    font-weight: bold;
+    text-transform: uppercase;
 }
