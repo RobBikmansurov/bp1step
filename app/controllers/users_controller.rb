@@ -37,7 +37,6 @@ class UsersController < ApplicationController
     @documents = Document.order(:name).where(owner_id: @usr.id)
     @contracts = Contract.order('date_begin DESC').where(owner_id: @usr.id)
     @contracts_pay = Contract.order('date_begin DESC').where(payer_id: @usr.id)
-    respond_with()
   end
 
   def edit
@@ -61,7 +60,57 @@ class UsersController < ApplicationController
     print_order
   end
 
+  def avatar_delete
+    @usr.avatar = nil
+    flash[:notice] = "Successfully deleted User's avatar." if @usr.save
+    redirect_to @usr
+  end
+
+  def avatar_create
+    render :avatar_create
+    #flash[:notice] = "Successfully updated Document's File." if @document.save
+  end
+
+  def update_avatar
+    ava_file = params[:user][:avatar] if params[:user].present?
+    if !ava_file.blank?
+      flash[:notice] = 'Изображение "' + ava_file.original_filename  + '" загружено.' if @usr.update_attributes(avatar_params)
+    else      
+      flash[:alert] = "Ошибка - имя файла не указано."
+    end
+    redirect_to @usr
+  end
+
+  def update_ava
+    params[:user][:avatar].each do |key, u|
+      if(u[:id] && u[:crop_x] && u[:crop_y] && u[:crop_w] && u[:crop_h])
+        old_upload = Upload.find(u[:id].gsub(/D/, '').to_i)
+        if(old_upload)
+          if(old_upload.update_attributes(u))
+            old_upload.reprocess_avatar
+          end
+        end
+      end
+    end
+    
+    respond_to do |format|
+      if @usr.update_attributes(params[:user])
+        format.html { redirect_to @usr, notice: 'Card was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @usr.errors, status: :unprocessable_entity }
+      end
+    end
+
+  end
+
+
 private
+
+  def avatar_params
+    params.require(:user).permit(:avatar)
+  end
 
   # распоряжение о назачении на роли в процессе
   def print_order

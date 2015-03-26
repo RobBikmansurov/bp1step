@@ -1,0 +1,10 @@
+= simple_form_for @usr, :url => update_avatar_user_path, :html => { :multipart => true } do |f|
+  = f.error_notification
+  -#= f.hidden_field :document_id
+  = f.input :avatar, hint: 'Выберите изображение для загрузки'
+
+  = f.error :base
+  -if user_signed_in?
+    -if current_user.id == @usr.id
+      %p
+      = f.button :submit, "Сохранить изображение"
