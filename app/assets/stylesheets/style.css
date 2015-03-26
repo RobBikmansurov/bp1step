@@ -235,3 +235,19 @@ a.groups:hover {
   a:after {content:" <" attr(href) ">";}
   h1 {color: #CCC;}
 }
+
+.round-image-50 {
+  float: left;
+  position: relative;
+  margin-right: 10px;
+    border: 1px solid #d9d9d9;
+    border-radius: 25px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    height: 50px;
+    width: 50px;
+    overflow: hidden;
+    text-align: center;
+    img { width: 100% }
+}
+
