@@ -1,12 +1,13 @@
 RSpec.describe ContractsController, type: :controller do
 
-  let(:valid_attributes) { { number: '1', name: 'name', status: 'status', description: 'description', "owner_id" => "" , contract_type: "Договор"} }
+  let(:valid_attributes) { { number: '1', name: 'name', status: 'status', description: 'description', "owner_id" => 1 , contract_type: "Договор"} }
   let(:valid_session) { {} }
 
   before(:each) do
     @user = FactoryGirl.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
+    allow(controller).to receive(:authenticate_user!).and_return(true)
   end
 
   describe "GET index" do
@@ -85,13 +86,18 @@ RSpec.describe ContractsController, type: :controller do
 
       it "assigns the requested contract as @contract" do
         contract = Contract.create! valid_attributes
-        put :update, {:id => contract.to_param, :contract => valid_attributes}, valid_session
+        user = FactoryGirl.create(:user)
+        #contract.owner_id = user.id
+        #contract.payer_id = user.id
+        #current_user = FactoryGirl.create(:user)
+        put :update, {:id => contract.to_param, :contract => {umber: '1', name: 'name', status: 'status', description: 'description', "owner_id" => user.id , contract_type: "Договор"}}, valid_session
         expect(assigns(:contract)).to eq(contract)
       end
 
       it "redirects to the contract" do
         contract = Contract.create! valid_attributes
-        put :update, {:id => contract.to_param, :contract => valid_attributes}, valid_session
+        user = FactoryGirl.create(:user)
+        put :update, {:id => contract.to_param, :contract => {umber: '1', name: 'name', status: 'status', description: 'description', "owner_id" => user.id , contract_type: "Договор"}}, valid_session
         expect(response).to redirect_to(contract)
       end
     end
