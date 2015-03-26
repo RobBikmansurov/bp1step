@@ -1,0 +1,133 @@
+-title "Документ " + truncate(@document.name, length: 30)
+-search 'Документ'
+.id_
+  \#
+  = @document.id
+%h2= @document.name 
+%h3 Описание:
+= markdown(@document.description)
+%h3
+  -if @document.status
+    ='"' + @document.status + '"'
+  -if @document.approveorgan
+    %b= @document.approveorgan
+  -if @document.approved
+    от
+    %b= @document.approved.strftime('%d.%m.%Y')
+%h3
+  уровень документа:
+  %b= link_to @document.dlevel.to_s + ': ' + dlevel_title(@document.dlevel), documents_path + '?dlevel=' + @document.dlevel.to_s, class: 'groups'
+
+= render 'show_bproce_link'
+
+%p
+%h3
+  Ответственный за документ:
+  -if @document.owner_id?
+    = link_to @document.owner_name, user_path(@document.owner_id)
+  -else
+    %b
+    не задан
+
+%h3 Примечание:
+= @document.note
+
+= render 'show_directive'
+
+%p
+%h3
+  Место хранения оригинала:
+  %b= link_to @document.place, documents_path + '?place=' + @document.place, class: 'groups', title: place_title(@document.place) if !@document.place.blank?
+
+%h4
+  -if @document.document_file_file_name
+    электронный документ:
+    %b
+      =@document.document_file_file_name
+    - if can? :edit_document, @document
+      = link_to '| Удалить', file_delete_document_path(@document), :remote => true
+      %br
+      размер:
+      =@document.document_file_file_size
+      | загружен:
+      =@document.document_file_updated_at.strftime('%d.%m.%Y %H:%M:%S')
+      | MD5:
+      =@document.document_file_fingerprint
+      #update_file
+      = link_to '| Заменить', file_create_document_path(@document), :remote => true
+
+    -# автору документа показать все файлы документа
+    -# автору документа разрешить взять исходник
+    -# кому можно - смотреть PDF
+
+    - if can? :view_document, @document
+      %br
+      - if File.exist?(@document.document_file.path)  # есть исходный файл документа
+        - if File.exist?(@document.pdf_path)  # есть PDF для просмотра
+          смотреть:
+          = link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), @document.pdf_url, class: 'button-img'
+        \|
+        - if can? :edit_document, @document
+          - if File.extname(@document.document_file.path) == '.pdf'
+          - else
+            взять на редактирование:
+            = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), @document.document_file.url, class: 'button-img'
+      - else
+        файл отсутствует - 
+        %b
+          = @document.document_file_file_name
+  -else
+    - if can? :edit_document, @document
+      Электронный документ отсутствует! 
+      #update_file
+        = link_to 'Добавить', file_create_document_path(@document), :remote => true   #, class: 'button'
+
+%p
+-if can? :view_document, @document
+  #add_favorite
+    -if @user_documents
+      -if @user_documents.count > 0
+        В Избранном:
+        - @user_documents.each do |user_document|
+          = link_to user_document.user.displayname, user_path(user_document.user_id, :anchor => 'Places')
+        %br
+    -if @user_document && @user_document.document_id == @document.id
+      = link_to 'Удалить из Избранного', user_document_path, :method => :delete if @user_document.link >= 10 # если документ не добавил менеджер по персоналу
+    -else
+      = link_to 'Добавить в Избранное', add_favorite_document_path(@document)
+      = link_to 'Добавить в Обязательное', add_to_favorite_document_path(@document), :remote => true if current_user.has_role? :manager
+
+%p
+Теги документа:
+= raw @document.tags.map { |t| link_to t, tag_documents_path(t.name), class: 'tags' }.join('&nbsp; ')
+
+.info_
+  -activity1 = PublicActivity::Activity.where(trackable_type: "Document", trackable_id: @document.id).order("created_at asc").first
+  -if activity1
+    = link_to 'создал', activities_path(type: "Document", id: @document.id)
+    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    = activity1.owner.displayname.to_s
+  -else
+    создан
+    = @document.created_at.strftime('%d.%m.%Y %H:%M:%S')
+  %br
+  -activity2 = PublicActivity::Activity.where(trackable_type: "Document", trackable_id: @document.id).order("created_at asc").last
+  -if activity2
+    = link_to 'изменил', activities_path(type: "Document", id: @document.id)
+    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    = activity2.owner.displayname.to_s
+  -else
+    изменен
+    = @document.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+
+%p
+-if can? :update, @document
+  = link_to 'Edit', edit_document_path(@document), :class => 'button'
+= link_to 'Back', :back, :class => 'button'
+-if @document.status
+  -if @document.status == 'Проект' or @document.status == 'Согласование'
+    = link_to 'Лист согласования', approval_sheet_document_path(@document), :class => 'button' if can? :update, Document
+-if can? :destroy, @document
+  = link_to 'Clone', clone_document_path(@document), :class => 'button'
+-if can? :destroy, @document
+  = link_to 'Удалить', @document, data: { confirm: @document.name + "\nДействительно хотите удалить документ #" + @document.id.to_s + " ?" }, :method => 'delete', class: 'button'
