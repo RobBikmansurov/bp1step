@@ -73,6 +73,9 @@ BPDoc::Application.routes.draw do
       patch :update_file
       get :approval_sheet # Лист согласования
       get :clone  # создать карточку похожего документа
+      get :add_favorite     # добровольное занесение в избранное
+      get :add_to_favorite  # юрист заносит в обязательные
+      post :update_favorite
     end
   end
   resources :document_directives
@@ -100,20 +103,6 @@ BPDoc::Application.routes.draw do
   #get 'tags', to: 'bproces#index'
   resources :roles, only: [:index, :show]
   resources :terms
-  resources :user_workplaces
-  resources :user_business_roles, :only => [:new, :create, :destroy, :edit, :update, :show]
-
-  #match '/bproceses' => 'bproces#list', :via => :get  # получение полного списка процессов
-  match '/bprocess' => 'bproces#manage', :via => :get  # получение полного списка процессов
-  #match '/bproces/:id/card' => 'bproces#card', :via => :get  # карточка процесса
-  #match '/bproces/:id/doc' => 'bproces#doc', :via => :get  # заготовка описания процесса
-  match '/workplaces/switch' => 'workplaces#switch', :via => :get  # подключения рабочих мест
-  resources :workplaces do
-    get :autocomplete, :on => :collection
-  end
-  
-  match '/about' => 'pages#about', :via => :get
-  get 'pages/about'
   devise_for :users
   devise_scope :users do
     get "sign_in",  :to => "devise/sessions#new"
@@ -128,6 +117,21 @@ BPDoc::Application.routes.draw do
       patch :update_avatar
     end
   end
+  resources :user_business_roles, :only => [:new, :create, :destroy, :edit, :update, :show]
+  resources :user_documents, only: [:destroy]
+  resources :user_workplaces
+
+  #match '/bproceses' => 'bproces#list', :via => :get  # получение полного списка процессов
+  match '/bprocess' => 'bproces#manage', :via => :get  # получение полного списка процессов
+  #match '/bproces/:id/card' => 'bproces#card', :via => :get  # карточка процесса
+  #match '/bproces/:id/doc' => 'bproces#doc', :via => :get  # заготовка описания процесса
+  match '/workplaces/switch' => 'workplaces#switch', :via => :get  # подключения рабочих мест
+  resources :workplaces do
+    get :autocomplete, :on => :collection
+  end
+  
+  match '/about' => 'pages#about', :via => :get
+  get 'pages/about'
   root :to => "home#index"
 
 end

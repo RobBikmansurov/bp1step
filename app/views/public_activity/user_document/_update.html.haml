@@ -1,0 +1,8 @@
+обновил документ в Избранном
+-if activity.trackable
+  = '(#' + activity.trackable.id.to_s + '):'
+  = link_to '#' + activity.trackable.document_id.to_s, documents_path + '/' + activity.trackable.document_id.to_s
+-else
+  \#
+  = activity.trackable_id
+  уже удалена

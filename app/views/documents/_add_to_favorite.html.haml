@@ -1,0 +1,22 @@
+= simple_form_for @user_document, url: update_favorite_document_path, :html => { :multipart => true } do |f|
+  Добавить документ в Обязательные выбранному сотруднику:
+  = f.error_notification
+  %br
+  .id_show_
+    = "##{@user_document.document.id}"
+  = "\"#{@user_document.document.name}\""
+  = @user_document.document.status
+  = @user_document.document.approved.strftime('%d.%m.%Y') if @user_document.document.approved
+  %br
+  = f.hidden_field :document_id
+  = f.hidden_field :link
+  = f.hidden_field :user_id
+  = f.label 'Кому добавить*'
+  = f.autocomplete_field :user, autocomplete_users_path, :id_elements => '#user_document_user_id', :placeholder => 'ФИО - кому добавить документ'
+
+
+  = f.error :base
+  -#if can? :update, @user_document
+  -if can? :update, @document
+    %p
+    = f.button :submit, 'в Обязательные'

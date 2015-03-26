@@ -46,6 +46,15 @@ RSpec.describe DocumentsController, :type => :routing do
       expect(get: "/documents/1/clone").to route_to("documents#clone", id: '1')
     end
 
+    it "routes to #add_favorite" do
+      expect(get: "documents/1/add_favorite").to route_to("documents#add_favorite", id: '1')
+    end
+    it "routes to #add_to_favorite" do
+      expect(get: "documents/1/add_to_favorite").to route_to("documents#add_to_favorite", id: '1')
+    end
+    it "routes to #update_favorite" do
+      expect(post: "documents/1/update_favorite").to route_to("documents#update_favorite", id: '1')
+    end
 
   end
 end

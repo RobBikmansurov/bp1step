@@ -1,0 +1,15 @@
+- if @user_documents.count > 0
+  %h3 Избранные документы:
+  %ol
+    - @user_documents.each do |document|
+      %li
+        -if document.document_file_file_name  #  если есть файл документа, загруженный через paperclip
+          -if can? :view_document, document
+            - if File.exist?(document.pdf_path)
+              = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), document.pdf_url, class: 'button-img'
+        = link_to document.name, document_path(document)
+        = document.status
+        = document.approved.strftime('%d.%m.%Y') if document.approved
+        .id_show_
+          = "##{document.id}"
+
