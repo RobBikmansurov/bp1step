@@ -123,6 +123,9 @@ BPDoc::Application.routes.draw do
   resources :users, :only => [:index, :show, :edit, :update] do
     member do
       get :order  # распоряжение о назначении исполнителя на роли в процессах
+      get :avatar_create
+      get :avatar_delete
+      patch :update_avatar
     end
   end
   root :to => "home#index"
