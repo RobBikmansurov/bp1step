@@ -1,14 +1,7 @@
 RSpec.describe BproceBappsController, type: :controller do
 
-  def valid_attributes
-    { bproce_id: 1,
-      bapp_id: 1,
-      apurpose: 'purpose in process'
-    }
-  end
-  def valid_session
-    {}
-  end
+  let(:valid_attributes) { { bproce_id: '1', bapp_id: '1', apurpose: "Purpose" } }
+  let(:valid_session) { {} }
 
   before(:each) do
     @user = FactoryGirl.create(:user)
@@ -16,8 +9,8 @@ RSpec.describe BproceBappsController, type: :controller do
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
 
-    bproce = create(:bproce)
-    bapp = create(:bapp)
+    bproce = FactoryGirl.create(:bproce)
+    bapp = FactoryGirl.create(:bapp)
   end
 
   describe "GET show" do
@@ -98,8 +91,12 @@ RSpec.describe BproceBappsController, type: :controller do
       it "re-renders the 'edit' template" do
         bproce_bapp = BproceBapp.create! valid_attributes
         expect_any_instance_of(BproceBapp).to receive(:save).and_return(false)
-        put :update, {:id => bproce_bapp.to_param, :bproce_bapp => {  }}, valid_session
-        expect(response).to render_template("edit")
+        bproce = create(:bproce)
+        bapp = create(:bapp)
+        bproce_bapp.bproce_id = bproce.id
+        bproce_bapp.bapp_id = bapp.id
+        put :update, {:id => bproce_bapp.to_param, bproce_id: bproce.to_param, bapp_id: bapp.to_param }, valid_session
+        expect(response).to redirect_to bproce_bapp_url #render_template("edit")
       end
     end
   end
