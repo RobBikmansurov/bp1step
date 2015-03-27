@@ -1,17 +1,20 @@
 # coding: utf-8
 class User < ActiveRecord::Base
   scope :active, -> { where(active: true) }
-
-  has_attached_file :avatar, 
-    styles: { medium: "300x300>", mini: "50x50#" }, processors: [:cropper],
-    default_url: "/store/images/:style/missing.png",
-    url: "/store/images/:id.:style.:extension"
-  validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
-  do_not_validate_attachment_file_type :avatar  #paperclip >4.0
-
   validates :username, :presence => true, :uniqueness => true
   validates :email, :presence => true, :uniqueness => true
   
+  has_attached_file :avatar, 
+    styles: { medium: "300x300>", mini: "50x50#" }, 
+    :presence  => false,
+    processors: [:cropper],
+    default_url: "/store/images/:style/missing.png",
+    url: "/store/images/:id.:style.:extension", 
+    :path => ":rails_root/public/store/images/:id.:style.:extension"
+  validates :avatar, :attachment_presence => false
+  validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
+  do_not_validate_attachment_file_type :avatar  #paperclip >4.0
+
   has_many :user_business_role  # бизнес-роли пользователя
   has_many :business_roles, :through => :user_business_role
   has_many :user_workplace # рабочие места пользователя
@@ -23,13 +26,12 @@ class User < ActiveRecord::Base
   has_many :document, through: :user_document
   has_many :user_document, dependent: :destroy
 
-
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   # аутентификация - через БД
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  #devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
   # аутентификация - через LDAP
-  #devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
    
   before_create :create_role
 
