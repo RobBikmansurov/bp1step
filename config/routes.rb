@@ -112,6 +112,13 @@ BPDoc::Application.routes.draw do
   resources :users, :only => [:index, :show, :edit, :update] do
     member do
       get :order  # распоряжение о назначении исполнителя на роли в процессах
+      get :uworkplaces
+      get :uroles
+      get :documents
+      get :contracts
+      get :contracts_pay
+      get :resources
+      get :processes
     end
   end
   resources :user_business_roles, :only => [:new, :create, :destroy, :edit, :update, :show]
