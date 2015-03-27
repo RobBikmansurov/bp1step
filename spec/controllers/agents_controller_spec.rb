@@ -2,6 +2,12 @@ RSpec.describe AgentsController, :type => :controller do
 
   let(:valid_attributes) { { "name" => "Agent name" } }
   let(:valid_session) { {} }
+  before(:each) do
+    @user = FactoryGirl.create(:user)
+    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
+    sign_in @user
+    allow(controller).to receive(:authenticate_user!).and_return(true)
+  end
 
   describe "GET index" do
     it "assigns all agents as @agents" do

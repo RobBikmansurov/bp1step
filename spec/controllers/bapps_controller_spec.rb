@@ -4,10 +4,9 @@ RSpec.describe BappsController, type: :controller do
   let(:valid_session) { {} }
 
   before(:each) do
-    #@user = FactoryGirl.create(:user)
-    #@user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
-    #sign_in @user
-
+    @user = FactoryGirl.create(:user)
+    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
+    sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
   end
   
@@ -79,7 +78,7 @@ RSpec.describe BappsController, type: :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved bapp as @bapp" do
         expect_any_instance_of(Bapp).to receive(:save).and_return(false)
-        post :create, {:bapp => { } }, valid_session
+        post :create, {:bapp => { name: "name"} }, valid_session
         expect(assigns(:bapp)).to be_a_new(Bapp)
       end
 
