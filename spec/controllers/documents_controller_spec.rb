@@ -4,10 +4,9 @@ RSpec.describe DocumentsController, type: :controller do
   let(:valid_session) { { "warden.user.user.key" => session["warden.user.user.key"] } }
 
   before(:each) do
-    #@user = FactoryGirl.create(:user)
-    #@user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
-    #sign_in @user
-
+    @user = FactoryGirl.create(:user)
+    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
+    sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
 
     bproce = FactoryGirl.create :bproce

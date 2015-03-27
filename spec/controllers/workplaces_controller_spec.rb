@@ -1,13 +1,12 @@
 RSpec.describe WorkplacesController, :type => :controller do
 
-  let(:valid_attributes) { FactoryGirl.create (:workplace) }
-  let(:valid_session) { { "warden.user.user.key" => session["warden.user.user.key"] } }
+  let(:valid_attributes) { {name: "workplace", description: 'workplace description', designation: "workplace designation" } }
+  let(:valid_session) { { } }
 
   before(:each) do
-    #@user = FactoryGirl.create(:user)
-    #@user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
-    #sign_in @user
-    
+    @user = FactoryGirl.create(:user)
+    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
+    sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
   end
 
@@ -31,7 +30,6 @@ RSpec.describe WorkplacesController, :type => :controller do
   describe "GET show" do
     it "assigns the requested workplace as @workplace" do
       workplace = FactoryGirl.create(:workplace)
-      #puts workplace.inspect
       get :show, :id => workplace.id
       expect(assigns(:workplace)).to eq(workplace)
     end
@@ -47,7 +45,6 @@ RSpec.describe WorkplacesController, :type => :controller do
   describe "GET edit" do
     it "assigns the requested workplace as @workplace" do
       workplace = FactoryGirl.create(:workplace)
-      puts workplace.inspect
       get :edit, :id => workplace.id
       expect(assigns(:workplace)).to eq(workplace)
     end
@@ -68,7 +65,7 @@ RSpec.describe WorkplacesController, :type => :controller do
       end
 
       it "redirects to the created workplace" do
-        post :create, :workplace => valid_attributes
+        post :create, { :workplace => valid_attributes }, valid_session
         expect(response).to redirect_to(Workplace.last)
       end
     end
@@ -76,13 +73,13 @@ RSpec.describe WorkplacesController, :type => :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved workplace as @workplace" do
         expect_any_instance_of(Workplace).to receive(:save).and_return(false)
-        post :create, :workplace => {}
+        post :create, { :workplace => { name: 'invalid name'} }, valid_session
         expect(assigns(:workplace)).to be_a_new(Workplace)
       end
 
       it "re-renders the 'new' template" do
         expect_any_instance_of(Workplace).to receive(:save).and_return(false)
-        post :create, :workplace => {}
+        post :create, {:workplace => {} }, valid_session
         expect(response).to_not render_template("new")
       end
     end
@@ -92,7 +89,7 @@ RSpec.describe WorkplacesController, :type => :controller do
     describe "with valid params" do
       it "updates the requested workplace" do
         workplace = FactoryGirl.create(:workplace)
-        expect_any_instance_of(Agent).to receive(:save).at_least(:once)
+        expect_any_instance_of(Workplace).to receive(:save).at_least(:once)
         put :update, {:id => workplace.to_param, :workplace => { "name" => "test_name" }}, valid_session
       end
 
