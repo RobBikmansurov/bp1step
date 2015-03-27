@@ -1,0 +1,46 @@
+#Places
+  %h4
+    = @usr.department
+    |
+    = link_to @usr.office.to_s, users_path + '?office=' + @usr.office.to_s, class: 'groups'
+    = "|&nbsp;&#10002;".html_safe
+    = mail_to @usr.email, @usr.email, :subject => "BP1Step:"
+    = "&nbsp; |&nbsp;&#9742; #{@usr.phone}".html_safe if @usr.phone
+  %h4
+    -if @usr.roles.count
+      %b роли доступа:
+      - @usr.roles.each do |role|
+        -if current_user
+          -if current_user.role? :admin
+            = link_to role.description, users_path + '?role=' + role.name
+          -else
+            = role.description
+          \/
+  %h2 Рабочие места:
+  %table
+    %tr
+      %th Рабочее место
+      %th Расположение
+      %th Описание
+      %th
+      %th
+
+    -@uworkplaces.each do |user_workplace|
+      %tr
+        %td
+          -if user_workplace.workplace
+            = link_to user_workplace.workplace.designation, workplace_path(user_workplace.workplace)
+          -else
+            нет РМ
+            = user_workplace.workplace_id
+            = user_workplace.inspect
+        %td= user_workplace.workplace.location if user_workplace.workplace
+        %td= user_workplace.workplace.name if user_workplace.workplace
+        %td= user_workplace.note
+        %td
+          -if user_workplace.date_from
+            = user_workplace.date_from.strftime("%d.%m.%Y")
+          -if user_workplace.date_to
+            \-
+            = user_workplace.date_to.strftime("%d.%m.%Y")
+

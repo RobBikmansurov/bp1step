@@ -6,94 +6,27 @@
   = @usr.firstname
   = @usr.middlename.to_s + ','
   = @usr.position
-
 #tabs
   %ul
     %li
-      %a{:href => "#Roles"}
+      = link_to(uroles_user_path(@usr)) do
         %span Роли
     %li
-      %a{:href => "#Processes"}
+      = link_to(processes_user_path(@usr)) do
         %span Процессы
     %li
-      %a{:href => "#Documents"}
+      = link_to(documents_user_path(@usr)) do
         %span Документы
     %li
-      %a{:href => "#Contracts"}
+      = link_to(contracts_user_path(@usr)) do
         %span Договоры
     %li
-      %a{:href => "#Resources"}
+      = link_to(resources_user_path(@usr)) do
         %span Ресурсы
     %li
-      %a{:href => "#Places"}
+      = link_to(uworkplaces_user_path(@usr)) do
         %span Рабочие места
-  #Places
-    %h4
-      = @usr.department
-      |
-      = link_to @usr.office.to_s, users_path + '?office=' + @usr.office.to_s, class: 'groups'
-      = "|&nbsp;&#10002;".html_safe
-      = mail_to @usr.email, @usr.email, :subject => "BP1Step:"
-      = "&nbsp; |&nbsp;&#9742; #{@usr.phone}".html_safe if @usr.phone
-    %h4
-      -if @usr.roles.count
-        %b роли доступа:
-        - @usr.roles.each do |role|
-          -if current_user
-            -if current_user.role? :admin
-              = link_to role.description, users_path + '?role=' + role.name
-            -else
-              = role.description
-            \/
-    %h2 Рабочие места:
-    %table
-      %tr
-        %th Рабочее место
-        %th Расположение
-        %th Описание
-        %th
-        %th
-
-      -@uworkplaces.each do |user_workplace|
-        %tr
-          %td
-            -if user_workplace.workplace
-              = link_to user_workplace.workplace.designation, workplace_path(user_workplace.workplace)
-            -else
-              нет РМ
-              = user_workplace.workplace_id
-              = user_workplace.inspect
-          %td= user_workplace.workplace.location if user_workplace.workplace
-          %td= user_workplace.workplace.name if user_workplace.workplace
-          %td= user_workplace.note
-          %td
-            -if user_workplace.date_from
-              = user_workplace.date_from.strftime("%d.%m.%Y")
-            -if user_workplace.date_to
-              \-
-              = user_workplace.date_to.strftime("%d.%m.%Y")
-    = render 'user_documents' # избранные (наначенные) документы пользователя
-
-  #Roles
-    = render 'user_busines_roles'
-
-  #Processes
-    = render 'user_busines_processes'
-
-  #Documents
-    = render 'user_busines_documents'
-
-    %p
-    = link_to 'Официальное письмо', create_letter_home_path, class: :button
   
-  #Contracts
-    = render 'user_busines_contracts'
-  
-  #Resources
-    %h3
-      Владелец
-      = link_to 'ресурсов', iresources_path + '?user=' + @usr.id.to_s
-
 %p
 -if can? :assign_roles, User
   = link_to 'Edit', edit_user_path(@usr), :class => 'button'
