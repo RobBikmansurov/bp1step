@@ -2,6 +2,13 @@
 class User < ActiveRecord::Base
   scope :active, -> { where(active: true) }
 
+  has_attached_file :avatar, 
+    styles: { medium: "300x300>", mini: "50x50#" }, processors: [:cropper],
+    default_url: "/store/images/:style/missing.png",
+    url: "/store/images/:id.:style.:extension"
+  validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
+  do_not_validate_attachment_file_type :avatar  #paperclip >4.0
+
   validates :username, :presence => true, :uniqueness => true
   validates :email, :presence => true, :uniqueness => true
   
@@ -13,6 +20,9 @@ class User < ActiveRecord::Base
   has_many :roles, :through => :user_roles
   has_many :bproce
   has_many :iresource
+  has_many :document, through: :user_document
+  has_many :user_document, dependent: :destroy
+
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
@@ -23,7 +33,27 @@ class User < ActiveRecord::Base
    
   before_create :create_role
 
-  attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :firstname, :lastname, :displayname, :role_ids
+  attr_accessible :username, :email, :password, :password_confirmation, :remember_me, 
+    :firstname, :lastname, :displayname, :role_ids, 
+    :avatar, 
+    :crop_x, :crop_y, :crop_w, :crop_h
+  attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
+
+  #after_update :reprocess_pic, :if => :cropping?
+
+  def cropping?
+    !crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
+  end
+
+  def avatar_geometry(style = :original)
+    @geometry ||= {}
+    @geometry[style] ||= Paperclip::Geometry.from_file(avatar.path(style))
+  end
+
+  def reprocess_avatar
+    avatar.reprocess!
+  end
+
   #before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
 
   def has_role?(role_sym)

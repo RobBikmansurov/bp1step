@@ -119,6 +119,9 @@ BPDoc::Application.routes.draw do
       get :contracts_pay
       get :resources
       get :processes
+      get :avatar_create
+      get :avatar_delete
+      patch :update_avatar
     end
   end
   resources :user_business_roles, :only => [:new, :create, :destroy, :edit, :update, :show]
