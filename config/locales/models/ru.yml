@@ -135,6 +135,8 @@ ru:
         description: Описание
         note: Примечание
         source: Источник
+      user:
+        avatar: Изображение
       user_business_role:
         note: Примечание
         date_from: Дата начала

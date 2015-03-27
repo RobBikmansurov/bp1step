@@ -92,12 +92,6 @@ class UsersController < ApplicationController
     else
       render :edit
     end
-    #@usr = User.find(params[:id])
-    #if params[:role].present?
-      #@business_role = Role.new(params[:business_role])
-      #@user_role.save if !@user_role.nil?
-    #end
-    #redirect_to :action => :edit
   end
 
   def order   # распоряжение о назначении исполнителей на роли в процессе
