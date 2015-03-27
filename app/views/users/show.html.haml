@@ -6,6 +6,18 @@
   = @usr.firstname
   = @usr.middlename.to_s + ','
   = @usr.position
+
+  .round-image-50
+    = link_to image_tag(@usr.avatar.url(:mini)), avatar_create_user_path(@usr), :remote => true
+
+-if user_signed_in?
+  -if current_user.id == @usr.id
+    -if @usr.avatar.file?
+      #update_file
+        = link_to 'Удалить фото', avatar_delete_user_path(@usr)
+    -else
+      #update_file
+        = link_to 'Заменить фото', avatar_create_user_path(@usr), :remote => true
 #tabs
   %ul
     %li
@@ -33,4 +45,3 @@
 = link_to 'Back', users_path, :class => 'button'
 -if can? :update, Bproce
   = link_to 'Распоряжение', user_path(@usr) + '/order', class: :button
-

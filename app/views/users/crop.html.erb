@@ -1,0 +1,56 @@
+<%= stylesheet_link_tag 'jquery.Jcrop' %>
+<%= javascript_include_tag 'jquery.Jcrop' %>
+
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+    <% @card.uploads.each do |u| %>
+      $("#cropbox").Jcrop({
+        onChange: update_crop,
+        onSelect: update_crop,
+        setSelect: [0, 0, 1000, 1000],
+        aspectRatio: 1
+      });
+    <%end%>
+  });
+
+  function update_crop(coords) {
+    var rx = 100/coords.w;
+    var ry = 100/coords.h;
+    <% @card.uploads.each do |u| %>
+      $("#preview").css({
+        width: Math.round(rx * <%= u.pic_geometry(:large).width %>) + 'px',
+        height: Math.round(ry * <%= u.pic_geometry(:large).height %>) + 'px',
+        marginLeft: '-' + Math.round(rx * coords.x) + 'px',
+        marginTop: '-' + Math.round(ry * coords.y) + 'px'
+      });
+      var ratio = 
+    <%= u.pic_geometry(:original).width %> /
+    <%= u.pic_geometry(:large).width %>;
+      $("#crop_x").val(Math.round(coords.x * ratio));
+      $("#crop_y").val(Math.round(coords.y * ratio));
+      $("#crop_w").val(Math.round(coords.w * ratio));
+      $("#crop_h").val(Math.round(coords.h * ratio));
+    <% end %>
+  }
+</script>
+
+<% @card.uploads.each do |u| %>
+  <%= image_tag u.pic.url(:large), :id => "cropbox" %>
+<% end %>
+
+<h4>Preview:</h4>
+
+<% @card.uploads.each do |u| %>
+  <div style="width:100px; height:100px; overflow:hidden">
+    <%= image_tag u.pic.url(:large), :id => "preview" %>
+  </div>  
+<% end %>
+
+<%= form_for @card, :html => { :multipart => true } do |f| %>
+  <%= f.fields_for :uploads do |u| %>
+    <% for attribute in [:crop_x, :crop_y, :crop_w, :crop_h] %>
+      <%= u.text_field attribute, :id => "#{attribute}" %>
+    <% end %>
+  <% end %>
+  <p><%= f.submit "Crop" %></p>
+<% end %>

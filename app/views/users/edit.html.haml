@@ -9,8 +9,8 @@
 права доступа
 -if can? :assign_roles, @usr
   assign_role
--if can? :manage, User
-  manage User
+-if can? :manage, @usr
+  manage
 
 -if can? :read, :all
   read all

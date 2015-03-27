@@ -43,7 +43,7 @@ class ContractScansController < ApplicationController
     end
 
     def contract_scan_params
-      params.require(:contract_scan).permit(:conntract_id, :name)
+      params.require(:contract_scan).permit(:contract_id, :name)
     end
 
     def record_not_found
