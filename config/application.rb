@@ -55,7 +55,7 @@ module BPDoc
 
     ActsAsTaggableOn.strict_case_match = true
 
-    Paperclip.options[:log] = true
+    Paperclip.options[:log] = false
 
   end
 end
