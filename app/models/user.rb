@@ -33,7 +33,8 @@ class User < ActiveRecord::Base
   # аутентификация - через LDAP
   devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
    
-  before_create :create_role
+  after_create :create_role
+  before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
 
   attr_accessible :username, :email, :password, :password_confirmation, :remember_me, 
     :firstname, :lastname, :displayname, :role_ids, 
@@ -56,15 +57,13 @@ class User < ActiveRecord::Base
     avatar.reprocess!
   end
 
-  #before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
-
   def has_role?(role_sym)
     roles.any? { |r| r.name.underscore.to_sym == role_sym }
   end
 
   def get_ldap_lastname
     #Rails::logger.info("### Getting the users last name")
-    tempname = Devise::LdapAdapter.get_ldap_param(self.username,"sn").to_s
+    tempname = Devise::LDAP::Adapter.get_ldap_param(self.username,"sn").first
     tempname = tempname.force_encoding("UTF-8")
     #puts "\tLDAP returned lastname of " + tempname
     self.lastname = tempname
@@ -72,7 +71,7 @@ class User < ActiveRecord::Base
 
   def get_ldap_firstname
     #Rails::logger.info("### Getting the users first name")
-    tempname = Devise::LdapAdapter.get_ldap_param(self.username,"givenname").to_s
+    tempname = Devise::LDAP::Adapter.get_ldap_param(self.username,"givenname").first
     tempname = tempname.force_encoding("UTF-8")
     #puts "\tLDAP returned firstname of " + tempname
     self.firstname = tempname
@@ -80,20 +79,18 @@ class User < ActiveRecord::Base
 
   def get_ldap_displayname
     #Rails::logger.info("### Getting the users display name")
-    tempname = Devise::LdapAdapter.get_ldap_param(self.username,"displayname").to_s
-    self.displayname = tempname.force_encoding("UTF-8")
+    tempname = Devise::LDAP::Adapter.get_ldap_param(self.username,"displayname")
+    self.displayname = tempname.first.force_encoding("UTF-8") if tempname
   end 
 
   def get_ldap_email
     #Rails::logger.info("### Getting the users email address")
-    tempmail = Devise::LdapAdapter.get_ldap_param(self.username,"mail").to_s
-    self.email = tempmail
+    tempmail = Devise::LDAP::Adapter.get_ldap_param(self.username,"mail")
+    if tempmail
+      tempmail = tempmail.first
+      self.email = tempmail
+    end
   end
-
-  
-  #def get_ldap_email
-  #  self.email = Devise::LdapAdapter get_ldap_param(self.username,"mail")
-  #end
 
   def self.search(search)
     if search
@@ -109,6 +106,6 @@ class User < ActiveRecord::Base
 
   private
     def create_role
-      self.roles << Role.find_by_name(:user)  #  if ENV["RAILS_ENV"] != 'test' 
+      self.roles << Role.find_by_name(:user)  if self.id  #  if ENV["RAILS_ENV"] != 'test' 
     end
 end

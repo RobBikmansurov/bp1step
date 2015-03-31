@@ -34,7 +34,7 @@ namespace :bp1step do
         :username => LDAP_CONFIG["development"]["admin_user"],
         :password => LDAP_CONFIG["development"]["admin_password"]
       }
-    debug_flag = false # флаг отладки, если true - отладочная печать
+    debug_flag = true # флаг отладки, если true - отладочная печать
 
     filter = Net::LDAP::Filter.eq('memberOf', 'CN=rl_bp1step_users,OU=roles,DC=ad,DC=bankperm,DC=ru') # выбирать членов группы rl_bp1step_users
     treebase = LDAP_CONFIG["development"]["base"]
@@ -57,8 +57,8 @@ namespace :bp1step do
       givenname = entry["givenname"].first
       firstname = entry["firstname"].first
       middlename = entry["middlename"].first
-      lastname = entry["lastname"].first
-      displayname = entry["name"].first
+      lastname = entry["lastname"].first.to_s
+      displayname = entry["name"].first.to_s
       physicaldeliveryofficename = entry["physicaldeliveryofficename"].first
       #logger.info "#{i}. #{username}\t#{email}\t#{sn} #{givenname} #{middlename}\t#{name}   >> #{uac & 2}" if debug_flag
       #logger.info "#{i}. #{name}\t#{email}\t#{position} - #{department}" if debug_flag
@@ -72,7 +72,6 @@ namespace :bp1step do
           usr1 = User.find_by_email(email.to_s) # поищем по e-mail
           if usr1.nil?
             logger.info "+ #{entry["sn"].first} \t[#{username}] \t"
-            #usr = User.new
             usr.update_attribute(:username, username)
             usr.update_attribute(:email, email)
             usr.update_attribute(:department, department)
@@ -80,8 +79,8 @@ namespace :bp1step do
             usr.update_attribute(:phone, phone)
             usr.update_attribute(:office, office)
             usr.update_attribute(:password, email)
-            usr.update_attribute(:firsname, firsname)
-            usr.update_attribute(:middlname, middlname)
+            usr.update_attribute(:firstname, firstname)
+            usr.update_attribute(:middlename, middlename)
             usr.update_attribute(:lastname, lastname)
             #usr.update_attribute(:displayname, name)   # ФИО - модель update_from_ldap
             logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} #{entry.dn}"
@@ -130,20 +129,20 @@ namespace :bp1step do
       i += 1
       filter = Net::LDAP::Filter.eq("sAMAccountName", user.username)
       exist_user = 0
-      ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do | entry |
+      ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do | entry |  # есть в LDAP?
         exist_user += 1
         uac = entry["userAccountControl"].first.to_i
-        if entry["mail"].first.to_s.empty? # имеющийся в БД пользователь не имеет e-mail
-          user.update_attribute(:active, false)
+        groups = Devise::LDAP::Adapter.get_ldap_param(user.username, "memberOf")  # группы пользователя
+        #puts groups.grep(/rl_bp1step/) 
+        if groups.grep(/rl_bp1step_users/).blank? # если не член группы rl_bp1step
+          user.update_attribute(:active, false) # делаем неактивным
           disabled_users += 1
           # если нет связи с ролями, рабочими местами, процессами
           if user.workplaces.count == 0 and user.business_roles.count == 0 and user.bproce_ids.count == 0
-            if uac & 2 > 0  # заблокирован в AD
-              user.delete # удалим
-              logger.info "#{i}!#{disabled_users}. #{entry.sAMAccountName} #{entry.dn} \t- DELETE user!"
-            end
+            user.delete # удалим
+            logger.info "#{i}!#{disabled_users}. ##{user.id} #{user.username}\t #{user.displayname} \t- DELETE user!"
           else
-            logger.info "#{i}!#{disabled_users}. #{entry.sAMAccountName} #{entry.dn}\t - need DELETE:"
+            logger.info "#{i}!#{disabled_users}. ##{user.id} #{user.username}\t #{user.displayname}\t - need DELETE:"
             s = ''
             user.workplaces.each do | wp |
               s = s + wp.name + '  '
@@ -155,6 +154,8 @@ namespace :bp1step do
             end
             logger.info "\t business roles: #{s}" 
           end
+        else
+          user.update_attribute(:active, true) # делаем активным
         end
       end
       logger.info "#{i} #{user.displayname} - not found in LDAP!" if i == 0
