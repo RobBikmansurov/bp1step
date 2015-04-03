@@ -9,9 +9,9 @@ class MetricsController < ApplicationController
   end
 
   def show
-    @current_period_date = Date.today # по умолчанию - текущий период
+    @current_period_date = Time.current #  Date.today # по умолчанию - текущий период
     if params[:date].presence
-      @current_period_date = params[:date].to_date
+      @current_period_date = params[:date].to_time
     end
     @current_depth = @metric.depth - 1  # по умолчанию график с группировкой значений
     if params[:depth].presence
@@ -70,13 +70,13 @@ class MetricsController < ApplicationController
   end
 
   def values
-    @current_period_date = Date.today
+    @current_period_date = Time.current
     if params[:date].presence
-      @current_period_date = params[:date].to_date
+      @current_period_date = params[:date].to_time
     end
     @prev_period_date = @current_period_date - @current_period_date.day
     @next_period_date = @current_period_date.end_of_month + 1
-    if @next_period_date == (Date.today.end_of_month + 1)
+    if @next_period_date == (Time.current.end_of_month + 1)
       @next_period_date = nil
     end
     @values = case @metric.depth  # список значений за выбранный период
