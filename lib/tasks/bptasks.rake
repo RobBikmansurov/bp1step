@@ -363,6 +363,7 @@ namespace :bp1step do
     logger.info "      #{wo_bproce_count} dcouments without processes from #{document_count} documents"
   end
 
+
   desc "List users from ActiveDirectory"
   task :list_active_directory_users  => :environment do   # вывод списка пользователей LDAP для тестирования
     require 'rubygems'
@@ -423,5 +424,40 @@ namespace :bp1step do
     end
     logger.info "      #{wo_bproce_count} contracts without processes from #{contract_count} contracts"
   end
+
+  desc 'Сontrol executed (outdated) contracts'
+  task :check_outdated_contracts => :environment do  # проверить договоры с истекшим сроком окончания - запускается ежеддневно
+    logger = Logger.new('log/bp1step.log')  # протокол работы
+    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_outdated_contracts'
+    outdated_contracts_count = 0
+    u = User.find(97) # пользователь по умолчанию для оповещения
+    Contract.where("date_end <= ?", Date.current).where(status: "Действует").each do | contract |  # просроченные договоры
+      outdated_contracts_count += 1
+      emails = u.email # DEBUG
+      emails = contract.owner.email.to_s if contract.owner   # ответственный за договор
+      emails += ", " + contract.payer.email.to_s if contract.payer
+      ContractMailer.check_outdated_contracts(contract, emails, 'прекратил').deliver
+      logger.info "      ##{contract.id.to_s} \t#{emails}"
+    end
+    logger.info "      #{outdated_contracts_count} contracts is outdated"
+  end
+
+  desc 'Сontrol of expiring contracts'
+  task :check_expiring_contracts => :environment do  # проверить договоры с истекашим сроком окончания - запускается по ПН
+    logger = Logger.new('log/bp1step.log')  # протокол работы
+    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_expiring_contracts'
+    expiring_contracts_count = 0
+    u = User.find(97) # пользователь по умолчанию для оповещения
+    Contract.where("date_end BETWEEN ? AND ?", Date.current, Date.current + 8).where(status: "Действует").each do | contract |  # договоры со сроком действия -2 и + 7 дней от Пн
+      expiring_contracts_count += 1
+      emails = u.email # DEBUG
+      emails = contract.owner.email.to_s if contract.owner   # ответственный за договор
+      emails += ", " + contract.payer.email.to_s if contract.payer
+      ContractMailer.check_outdated_contracts(contract, emails, 'прекращает').deliver
+      logger.info "      ##{contract.id.to_s} \t#{emails}"
+    end
+    logger.info "      #{expiring_contracts_count} contracts is expiring from #{Date.current - 2} to #{Date.current + 7}" 
+  end
+
 
 end
