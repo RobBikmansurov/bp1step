@@ -10,8 +10,8 @@
   %b
     =@contract.number
     =@contract.name
-  от
-  %b=@contract.date_begin.strftime('%d.%m.%Y')
+  = 'от ' + @contract.date_begin.strftime('%d.%m.%Y') if @contract.date_begin
+  = 'по ' + @contract.date_end.strftime('%d.%m.%Y') if @contract.date_end
 %h3= link_to @contract.agent.name, agent_path(@contract.agent.id) if @contract.agent
 -if @contract.parent
   %h3

@@ -240,12 +240,14 @@ a.groups:hover {
   float: left;
   position: relative;
   margin-right: 10px;
-    border: 1px solid #d9d9d9;
-    border-radius: 25px;
-    height: 50px;
-    width: 50px;
-    overflow: hidden;
-    text-align: center;
-    img { width: 100% }
+  border: 1px solid #d9d9d9;
+  border-radius: 25px;
+  height: 50px;
+  width: 50px;
+  overflow: hidden;
+  text-align: center;
+  img { width: 100% };
+  top: 0px;
 }
+
 
