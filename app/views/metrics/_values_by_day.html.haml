@@ -23,7 +23,7 @@
         =link_to image_tag('action_stop.gif', :alt => 'Удалить'), value, data: { confirm: 'Значение за ' + value.dtime.strftime(@datetime_format) + " = " + value.value.to_s + "\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
       -d = d + 1
 
-    -if d < @current_period_date.end_of_month.day
+    -if d <= @current_period_date.end_of_month.day
       -(d..@current_period_date.end_of_month.day).each do |dm|  # после послднего значения
         %td
           = link_to "+" , new_value_metric_path(@metric, dtime: dt + dm.to_s)
