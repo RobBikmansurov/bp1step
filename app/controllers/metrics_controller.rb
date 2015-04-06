@@ -74,7 +74,7 @@ class MetricsController < ApplicationController
     if params[:date].presence
       @current_period_date = params[:date].to_time
     end
-    @prev_period_date = @current_period_date - @current_period_date.day
+    @prev_period_date = @current_period_date - @current_period_date.day.days
     @next_period_date = @current_period_date.end_of_month + 1
     if @next_period_date == (Time.current.end_of_month + 1)
       @next_period_date = nil
