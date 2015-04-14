@@ -40,10 +40,10 @@
   #document
     = link_to 'Добавить документ', document_create_directive_path(@directive), remote: true #, class: 'button'
 
--if Bproce.last.bproces_of_directives(@directive.id).count > 0
+-if @bproces_of_directive.count > 0
   %h4
     Документы этой директивы связаны со следующими процессами:
-  - Bproce.last.bproces_of_directives(@directive.id).each do |bp|
+  - @bproces_of_directive.each do |bp|
     = "——" * (bp.depth)
     - if bp.shortname
       [
