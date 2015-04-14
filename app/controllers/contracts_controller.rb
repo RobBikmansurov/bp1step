@@ -148,12 +148,13 @@ class ContractsController < ApplicationController
     @contract = Contract.new()
     @contract.agent_id = contract.agent_id
     @contract.owner_id = current_user.id if user_signed_in?
-    @contract.date_begin = Date.today
+    @contract.date_begin = Date.current
     @contract.status = "Согласование"
     @contract.contract_type = contract.contract_type
     @contract.description = contract.description
     @contract.name = contract.name
-    @contract.number = contract.number + "/1"
+    @contract.number = contract.number
+    @contract.number += "/1" if @contract.number.size < 19
     @contract.text = contract.text
     @contract.note = 'создан из #' + contract.id.to_s
     @contract.parent_id = contract.id
