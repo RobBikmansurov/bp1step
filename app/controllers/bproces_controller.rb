@@ -49,7 +49,7 @@ class BprocesController < ApplicationController
 
   def show
     @metrics = Metric.where(:bproce_id => @bproce.id).order(:name) if @bproce # метрики процесса
-    @directive_of_bproce = Directive.last.directives_of_bproce(@bproce.id)
+    @directive_of_bproce = Directive.last.directives_of_bproce(@bproce.id) if @bproce
     #@contracts = Contract.where(:bproce_id => @bproce.id)  # договоры процесса
     respond_with(@bproce)
   end
@@ -230,7 +230,7 @@ private
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-      :filename => "card.odt",
+      :filename => "card-#{@bproce.id}-#{Date.current.strftime('%Y%m%d')}.odt",
       :disposition => 'inline'
   end
 
@@ -285,7 +285,7 @@ private
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-      filename: "check_list.odt",
+      filename: "check_list-#{@bproce.id}-#{Date.current.strftime('%Y%m%d')}.odt",
       disposition: 'inline'
   end
 
@@ -370,7 +370,6 @@ private
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-      :type => 'application/msword',
       :filename => "process_list.odt",
       :disposition => 'inline'
   end
@@ -415,8 +414,7 @@ private
       r.add_field "USER_NAME", current_user.displayname
     end
    send_data report.generate, type: 'application/msword',
-      :type => 'application/msword',
-      :filename => "order.odt",
+      :filename => "order-#{@bproce.id}-#{Date.current.strftime('%Y%m%d')}.odt",
       :disposition => 'inline'
   end
 

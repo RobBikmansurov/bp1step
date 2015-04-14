@@ -131,7 +131,7 @@
   -if activity1
     = link_to 'создал', activities_path(type: "Bproce", id: @bproce.id)
     = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity1.owner.displayname.to_s
+    = activity1.owner.displayname.to_s if activity1.owner
   -else
     создан
     = @bproce.created_at.strftime('%d.%m.%Y %H:%M:%S')
@@ -140,7 +140,7 @@
   -if activity2
     = link_to 'изменил', activities_path(type: "Bproce", id: @bproce.id)
     = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity2.owner.displayname.to_s
+    = activity2.owner.displayname.to_s if activity2.owner
   -else
     изменен
     = @bproce.updated_at.strftime('%d.%m.%Y %H:%M:%S')
