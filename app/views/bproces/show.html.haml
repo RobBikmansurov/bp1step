@@ -22,6 +22,9 @@
     =bp.shortname
     ]
   = link_to bp.name, bproce_path(bp)
+  .id_show_
+    = "##{bp.id}"
+
   -if bp.user
     = link_to bp.user.displayname, user_path(bp.user)
   %br
@@ -82,8 +85,8 @@
         = ' ' + doc.approved.strftime('%d.%m.%Y')
     -#= ' ' + doc.owner.displayname
 
--if @directive_of_bproce.count
-  %h4 Директивы процесса:
+-if @directive_of_bproce.count > 0
+  %h4 Директивы, на основании которых разработаны документы процесса:
   -@directive_of_bproce.each do |directive|
     = link_to directive.midname, directive_path(directive)
     = directive.note

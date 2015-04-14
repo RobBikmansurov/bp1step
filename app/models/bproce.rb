@@ -55,7 +55,7 @@ class Bproce < ActiveRecord::Base
     end
   end
 
-  def bproces_of_directive(directive_id) # процессы директивы (все процессы, связанные с директивой через документы)
+  def bproces_of_directive(directive_id) # процессы директивы (все процессы, связанные с директивой через документы) @bproces_of_directive = Bproce.last.bproces_of_directive(@directive.id)  # процессы, документы которых ссылаются на директиву
     Bproce.find_by_sql [ "select bproces.* from bproces, bproce_documents, document_directives
       where bproce_documents.bproce_id = bproces.id
       and document_directives.directive_id = ?
