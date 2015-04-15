@@ -129,7 +129,11 @@ class ContractsController < ApplicationController
     #@contract = Contract.find(params[:id]) if params[:id].present?
     contract_scan = ContractScan.new(params[:contract_scan]) if params[:contract_scan].present?
     if contract_scan
-      flash[:notice] = 'Файл "' + contract_scan.name  + '" загружен.' if contract_scan.save
+      if contract_scan.name.blank?
+        flash[:alert] = 'Ошибка - не указан комментарий для файла скана!'
+      else
+        flash[:notice] = 'Файл "' + contract_scan.name  + '" загружен.' if contract_scan.save
+      end
     else      
       flash[:alert] = "Ошибка - имя файла не указано."
     end
