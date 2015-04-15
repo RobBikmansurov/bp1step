@@ -12,8 +12,8 @@ Role.create!(:note => 'Ведение прав пользователей, на�
 Role.create!(:note => 'Управляет пользователями: прикрепляет документы в Обязательное ', :name => 'manager', :description => 'Менеджер')
 
 puts "access roles created"
-Role.pluck(:name)
-
+Role.all.pluck(:name)
+puts
 # users
 user1 = User.create(:displayname => 'Иванов И.И.', :username => 'ivanov', :email => 'ivanov@example.com', :password => 'ivanov', firstname: 'Иван', middlename: 'Иванович', lastname: 'Иванов')
 user1.roles << Role.find_by_name(:author)
@@ -24,7 +24,7 @@ user2.roles << Role.find_by_name(:author)
 user3 = User.create(:displayname => 'Администратор', :username => 'admin1', :email => 'admin1@example.com', :password => 'admin1')
 user3.roles << Role.find_by_name(:admin)
 user3.roles << Role.find_by_name(:security)
-user4 = User.create(:displayname => 'Сидоров С.С.', :username => 'sidorov', :email => 'sidorov@example.com', :password => 'sidorov')
+user4 = User.create(displayname: 'Сидоров С.С.', username: 'sidorov', email: 'sidorov@example.com', password: 'sidorov', firstname: 'Сидор', middlename: 'Сидорович', lastname: 'Сидоров')
 user4.roles << Role.find_by_name(:author)
 user5 = User.create(displayname: 'Путин В.В.', username: 'putinx', email: 'putinx@example.com', password: 'putinx', department: 'Библиотека', position: 'Юрист', office: '201', phone: '2201')
 user5.roles << Role.find_by_name(:keeper)
@@ -129,7 +129,8 @@ ag1 = Agent.create(name: 'ООО 1С в помощь', town: 'Урюпинск',
 ag2 = Agent.create(name: 'ООО Рога и копыта', town: '', address: '614000. г.Пермь, ул.Ленина, 1', contacts: 'info@example.com')
 puts 'agents created'
 
-co = Contract.create(number: '2-2014', name: 'предоставления услуг', status: 'Действует', date_begin: '2014-05-01', description: 'jhjhkj', text: 'text', contract_type: 'Договор', description: 'о предоставлении услуг связи')
+co = Contract.new(number: '2-2014', name: 'предоставления услуг', status: 'Действует', 
+	date_begin: Date.current, text: 'text', contract_type: 'Договор', description: 'о предоставлении услуг связи')
 co.agent_id = ag2.id
 co.owner_id = user1.id
 co.payer_id = user2.id
@@ -138,5 +139,11 @@ puts 'contracts created'
 
 m = Metric.create(name: 'ИнцидентовВсего', description: 'количество инцидентов, зарегистрированных в системе', depth: '3', bproce_id: bp211.id)
 puts "metrics created"
+
+di=Directive.create(title: 'Положение', number: '123-П', approval: Date.current, name: 'gjgjgjjhhkjkhj', 
+	status: 'Действует', body: 'ЦБ РФ', note: 'Об управлении финансами')
+dd=di.document_directive.create(document_id: d.id)
+
+puts "directives created"
 
 PublicActivity.enabled = true
