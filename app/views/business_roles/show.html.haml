@@ -20,7 +20,6 @@
     - @business_role.bproce.business_roles.each do | role |
       = link_to role.name, business_role_path(role) if @business_role.id != role.id
 
-
 -if !current_user.nil?
   -if current_user.role? :admin
     %h3 Особенности настройки:
@@ -83,4 +82,5 @@
 %p
 - if can? :update, @business_role
   = link_to 'Edit', edit_business_role_path(@business_role), :class => 'button'
-= link_to 'Back', business_roles_path, :class => 'button'
+-#= link_to 'Back', business_roles_path, :class => 'button'
+= link_to 'Back', :back, :class => 'button'

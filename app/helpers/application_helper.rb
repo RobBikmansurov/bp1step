@@ -27,10 +27,18 @@ module ApplicationHelper
   end
 
   def markdown(text)
-    #highlight(text, 'Юрист', highlighter: '<strong>\1</strong>')
     simple_format(text, {}, {})
-    #text.gsub!(/\r\n?/, "\n")                     # \r\n and \r => \n
-    #text.gsub!(/([^\n]\n)(?=[^\n])/, '\1<br />')  # 1 newline   => br 
+  end
+
+  def markdown_and_link(text, business_roles)
+    if business_roles
+      business_roles.each do |business_role|  # заменим названия роли на ссылку
+        text.gsub!(/ #{business_role.name} /, ' <a href="/business_roles/' + business_role.id.to_s + '">' + business_role.name + '</a> ')
+      end
+    end
+    text.gsub!(/\r\n?/, "\n")                       # \r\n and \r => \n
+    text = "<p>#{text.gsub(/\n\n\s*/, '</p><p>')}"  # 2 newline   => p
+    text.gsub!(/([^\n]\n)(?=[^\n])/, '\1<br />')    # 1 newline   => br
   end
 
   def nav_link(link_text, link_path)
