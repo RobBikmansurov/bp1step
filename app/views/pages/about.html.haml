@@ -1,18 +1,22 @@
 %h1 Бизнес-процессы: Первый шаг
 
 Процессов #{Bproce.count}
+-if can? :show, User.first
+  Сотрудников #{User.count}
+%br
 Метрик #{Metric.count}
 Ролей #{BusinessRole.count}
 Рабочих мест #{Workplace.count}
 Приложений #{Bapp.count}
 Инф.ресурсов #{Iresource.count}
-
-Документов #{Document.count}
-Директив #{Directive.count}
-Договоров #{Contract.count}
+%br
+Документов: всего #{Document.count}, из них действует - #{Document.where(status: 'Утвержден').count}, на согласовании - #{Document.where(status: 'Согласование').count}
+%br
+Директив: всего #{Directive.count}, из них действует - #{Directive.where(status: 'Действует').count}
+%br
+Договоров #{Contract.count}, из них действует - #{Contract.where(status: 'Действует').count}, на согласовании - #{Contract.where(status: 'Согласование').count}
 Контрагентов #{Agent.count}
--if can? :show, User.first
-  Сотрудников #{User.count}
+%br
 -if can? :manage, User.first
   =link_to "Действий", activities_path
   #{PublicActivity::Activity.count}
