@@ -14,7 +14,7 @@
 %br
 Директив: всего #{Directive.count}, из них действует - #{Directive.where(status: 'Действует').count}
 %br
-Договоров #{Contract.count}, из них действует - #{Contract.where(status: 'Действует').count}, на согласовании - #{Contract.where(status: 'Согласование').count}
+Договоров #{Contract.count}, из них действует - #{Contract.where(status: 'Действует').count}, на согласовании - #{Contract.where(status: 'Согласование').count}.
 Контрагентов #{Agent.count}
 %br
 -if can? :manage, User.first
@@ -36,8 +36,11 @@
 = link_to "Документами", documents_path
 %br
 =link_to "Документ", documents_path
-всегда относится к одному конкретному 
-=link_to "Процессу", bproces_path
+может относиться к нескольким
+=link_to "Процессам", bproces_path
+в этом случае желательно в примечании указать какая часть документа какой
+=link_to "Процесс", bproces_path
+описывает
 %br
 Юридическое обеспечение
 =link_to "Процесса", bproces_path
