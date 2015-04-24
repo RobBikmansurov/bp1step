@@ -43,4 +43,45 @@
           -if user_workplace.date_to
             \-
             = user_workplace.date_to.strftime("%d.%m.%Y")
-
+  %h2 Статистика:
+  %h4
+    Владелец 
+    = @usr.bproce.count
+    процессов
+  %h4
+    Исполнитель 
+    = @usr.business_roles.count
+    ролей
+  %h4
+    - doc_count = Document.where(owner_id: @usr.id).count   # кол-во документов пользователя
+    -if doc_count > 0
+      Владелец
+      = doc_count
+      документов: из них в статусе 
+      - Document.where(owner_id: @usr.id).group(:status).count.each do | key, value |
+        = "#{key} - #{value}"
+        %nbsp,
+  %h4
+    - contract_count = Contract.where(owner_id: @usr.id).count   # кол-во договоров пользователя
+    -if contract_count > 0
+      Отвечает за
+      = contract_count
+      договоров: из них в статусе 
+      - Contract.where(owner_id: @usr.id).group(:status).count.each do | key, value |
+        = "#{key} - #{value}"
+        %nbsp,
+  %h4
+    - contract_count = Contract.where(payer_id: @usr.id).count   # кол-во договоров пользователя
+    -if contract_count > 0
+      Отвечает за оплату
+      = contract_count
+      договоров: из них в статусе 
+      - Contract.where(payer_id: @usr.id).group(:status).count.each do | key, value |
+        = "#{key} - #{value}"
+        %nbsp,
+  %h4
+    - resource_count = Iresource.where(user_id: @usr.id).count   # кол-во ресурсов пользователя
+    -if resource_count > 0
+      Владелец
+      = resource_count
+      ресурсов
