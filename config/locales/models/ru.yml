@@ -85,6 +85,7 @@ ru:
         approval: Дата утверждения
         body: Принявший орган
         note: Примечание
+        action: Требования
         annotation: Аннотация
       document:
         description: Описание

@@ -11,7 +11,7 @@ class Directive < ActiveRecord::Base
   has_many :document, :through => :document_directive
   has_many :document_directive, :dependent => :destroy
 
-  attr_accessible :name, :body, :number, :approval, :title, :annotation, :note, :status
+  attr_accessible :name, :body, :number, :approval, :title, :annotation, :note, :status, :action
 
   def shortname
     if approval

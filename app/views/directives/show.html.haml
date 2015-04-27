@@ -20,6 +20,11 @@
     = @directive.note
 %h4 Краткое содержание:
 = markdown(@directive.annotation)
+
+-if !@directive.action.blank?
+  %h4 Необходимо исполнить следующие требования:
+  = markdown(@directive.action)
+
 %p
 - if @directive.document_directive.count > 0
   %h4
