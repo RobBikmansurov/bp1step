@@ -10,6 +10,7 @@
   = f.input :status, :collection => %w[Действует Проект НеДействует], :prompt => 'Статус директивы', :input_html => { :value => 'Действует'}
   = f.input :name, :as => :text
   = f.input :annotation, :as => :text
+  = f.input :action, :as => :text  #, placeholder: 'все требования директивы исполнены'
   = f.input :note, :as => :text
 
   - if can? :update, @directive
