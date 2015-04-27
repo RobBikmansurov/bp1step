@@ -16,6 +16,7 @@
   %p
   = f.label 'Родительский процесс'
   = f.autocomplete_field :parent_name, autocomplete_bproces_path
+  = f.input :checked_at, as: :string, :input_html => {:class=>'datepicker'}
 
   -if can? :manage_tag, @bproce
     = f.input :tag_list, :label => 'Теги (через запятую)'

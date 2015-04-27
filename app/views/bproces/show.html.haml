@@ -3,6 +3,9 @@
 .id_
   \#
   = @bproce.id
+-if @bproce.checked_at
+  .checked_
+    = "взят в управление #{@bproce.checked_at.strftime('%d.%m.%Y')}"
 %h2
   [
   %b
@@ -18,9 +21,9 @@
   = "——" * (bp.depth - @bproce.depth)
   -#= bp.depth
   - if bp.shortname
-    [
-    =bp.shortname
-    ]
+    = "[ #{bp.shortname} ]"
+  - if bp.checked_at
+    = "\u2713".html_safe
   = link_to bp.name, bproce_path(bp)
   .id_show_
     = "##{bp.id}"

@@ -206,6 +206,18 @@ a.groups:hover {
   color: #999;
 }
 
+.checked_ {
+  padding: 1px 5px;
+  position:relative;
+  top:0.5em;
+  float:right;
+  z-index: 900;
+  color: #FF6347;
+  background-color: #FFD8C0;
+  border-radius: 3px;
+}
+
+
 .info_ {
   position:relative;
   text-align: right;
