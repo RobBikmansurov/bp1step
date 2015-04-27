@@ -70,7 +70,7 @@
       - Contract.where(owner_id: @usr.id).group(:status).count.each do | key, value |
         = "#{key} - #{value}"
         %nbsp,
-  %h4
+    %br
     - contract_count = Contract.where(payer_id: @usr.id).count   # кол-во договоров пользователя
     -if contract_count > 0
       Отвечает за оплату
