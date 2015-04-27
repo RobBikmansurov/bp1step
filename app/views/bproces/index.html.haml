@@ -29,6 +29,8 @@
     %tr
       %td
         = '—' * (bproce.depth) + '[' + bproce.shortname + '] '
+        - if bproce.checked_at
+          = "\u2713".html_safe
         = link_to bproce.name, bproce_path(bproce)
         .id_show_
           = "##{bproce.id}"

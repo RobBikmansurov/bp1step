@@ -50,6 +50,7 @@ ru:
         description: Краткое описание
         parent_id: Родительский процесс
         user_id: Владелец процесса
+        checked_at: Принят в управление
       bproce_bapp:
         apurpose: Назначение в процессе
       bproce_contract:
