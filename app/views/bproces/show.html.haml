@@ -7,10 +7,8 @@
   .checked_
     = "взят в управление #{@bproce.checked_at.strftime('%d.%m.%Y')}"
 %h2
-  [
   %b
-    = @bproce.shortname
-  ]:
+    = "[ #{@bproce.shortname} ]:"
   = @bproce.name
 -if @bproce.parent_id
   %h3
@@ -20,16 +18,12 @@
 - Bproce.where("lft>? and rgt<?", @bproce.lft, @bproce.rgt).order("lft").each do |bp|
   = "——" * (bp.depth - @bproce.depth)
   -#= bp.depth
-  - if bp.shortname
-    = "[ #{bp.shortname} ]"
-  - if bp.checked_at
-    = "\u2713".html_safe
+  = "[ #{bp.shortname} ]" if bp.shortname
+  = "\u2713".html_safe if bp.checked_at
   = link_to bp.name, bproce_path(bp)
   .id_show_
     = "##{bp.id}"
-
-  -if bp.user
-    = link_to bp.user.displayname, user_path(bp.user)
+  = link_to bp.user.displayname, user_path(bp.user) if bp.user
   %br
 %h3
   %b
@@ -87,15 +81,14 @@
       .id_show_
         = "##{doc.id}"
       = doc.status
-      -if doc.approved
-        = ' ' + doc.approved.strftime('%d.%m.%Y')
-    %br
+      = ' ' + doc.approved.strftime('%d.%m.%Y') if doc.approved
+      %br
 
 -if @directive_of_bproce.count > 0
   %h4 Директивы, на основании которых разработаны документы процесса:
   -@directive_of_bproce.each do |directive|
     = link_to directive.midname, directive_path(directive)
-    = "(#{directive.note}) " if !directive.note.blank?
+    = "(#{directive.note}) " unless directive.note.blank?
     &nbsp; &nbsp;
 
 
@@ -158,8 +151,7 @@
     изменен
     = @bproce.updated_at.strftime('%d.%m.%Y %H:%M:%S')
 %p
--if can? :update, @bproce
-  = link_to 'Edit', edit_bproce_path(@bproce), :class => 'button'
+= link_to 'Edit', edit_bproce_path(@bproce), :class => 'button' if can? :update, @bproce
 = link_to 'Back', bproces_path, :class => 'button'
 -if can? :update, @bproce
   = link_to 'Карточка', bproce_path(@bproce) + '/card', :class => 'button'

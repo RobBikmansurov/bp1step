@@ -5,10 +5,8 @@
 
   - @usr.bproce.order(:lft).each do |bproce|
     = "——" * (bproce.depth)
-    - if bproce.shortname
-      [
-      =bproce.shortname
-      ]
+    = "[ #{bproce.shortname} ]" if bproce.shortname
+    = "\u2713".html_safe if bproce.checked_at
     = link_to bproce.name, bproce_path(bproce)
     .id_show_
       = "##{bproce.id}"
