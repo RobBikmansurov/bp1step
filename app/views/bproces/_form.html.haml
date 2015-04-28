@@ -16,16 +16,14 @@
   %p
   = f.label 'Родительский процесс'
   = f.autocomplete_field :parent_name, autocomplete_bproces_path
-  = f.input :checked_at, as: :string, :input_html => {:class=>'datepicker'}
+  = f.input :checked_at, as: :string, :input_html => {:class=>'datepicker'}  if can? :create, @bproce
+  = f.input :tag_list, :label => 'Теги (через запятую)' if can? :manage_tag, @bproce
 
-  -if can? :manage_tag, @bproce
-    = f.input :tag_list, :label => 'Теги (через запятую)'
   = f.error :base
   %p
   = link_to 'Show', @bproce, :class => 'button'
-  -if can? :update, @bproce
-    = f.button :submit
-
+  = f.button :submit if can? :update, @bproce
+  
 -#if can? :create, @bproce
   %p
   = simple_form_for(@subproce) do |fs|
