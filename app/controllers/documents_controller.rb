@@ -328,7 +328,7 @@ private
     end
     report_file_name = report.generate
     send_data report.generate, type: 'application/msword',
-      filename: "approval-sheet.odt",
+      filename: "d#{@document.id}-approval-sheet.odt",
       disposition: 'inline'
   end
 

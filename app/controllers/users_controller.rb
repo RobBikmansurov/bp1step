@@ -177,7 +177,7 @@ private
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-      :filename => "order.odt",
+      :filename => "u#{@usr.id}-order-#{Date.current.strftime('%Y%m%d')}.odt",
       :disposition => 'inline'
   end
 
