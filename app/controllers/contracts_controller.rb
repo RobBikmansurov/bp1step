@@ -215,7 +215,7 @@ class ContractsController < ApplicationController
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-      filename: "documents.odt",
+      filename: "contracts-#{Date.current.strftime('%Y%m%d')}.odt",
       disposition: 'inline'
   end
 
@@ -264,7 +264,7 @@ class ContractsController < ApplicationController
         r.add_field "USER_NAME", current_user.displayname
       end
       send_data report.generate, type: 'application/msword',
-        :filename => "approval-sheet.odt",
+        :filename => "c#{@contract.id}-approval-sheet.odt",
         :disposition => 'inline'
     end
 

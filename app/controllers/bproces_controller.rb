@@ -172,7 +172,7 @@ private
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-      :filename => "processess.odt",
+      :filename => "processes-#{Date.current.strftime('%Y%m%d')}.odt",
       :disposition => 'inline'
   end
 
@@ -230,7 +230,7 @@ private
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-      :filename => "card-#{@bproce.id}-#{Date.current.strftime('%Y%m%d')}.odt",
+      :filename => "#{@bproce.id}-card-#{Date.current.strftime('%Y%m%d')}.odt",
       :disposition => 'inline'
   end
 
@@ -285,7 +285,7 @@ private
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-      filename: "check_list-#{@bproce.id}-#{Date.current.strftime('%Y%m%d')}.odt",
+      filename: "#{@bproce.id}-check_list-#{Date.current.strftime('%Y%m%d')}.odt",
       disposition: 'inline'
   end
 
@@ -345,7 +345,7 @@ private
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-      :filename => "process.odt",
+      :filename => "#{@bproce.id}-process-#{Date.current.strftime('%Y%m%d')}.odt",
       :disposition => 'inline'
   end
 
@@ -370,7 +370,7 @@ private
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-      :filename => "process_list.odt",
+      :filename => "process_list-#{Date.current.strftime('%Y%m%d')}.odt",
       :disposition => 'inline'
   end
 
@@ -414,7 +414,7 @@ private
       r.add_field "USER_NAME", current_user.displayname
     end
    send_data report.generate, type: 'application/msword',
-      :filename => "order-#{@bproce.id}-#{Date.current.strftime('%Y%m%d')}.odt",
+      :filename => "#{@bproce.id}-order-#{Date.current.strftime('%Y%m%d')}.odt",
       :disposition => 'inline'
   end
 
