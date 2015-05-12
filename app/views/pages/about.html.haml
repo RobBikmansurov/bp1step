@@ -1,14 +1,13 @@
 %h1 Бизнес-процессы: Первый шаг
-
-Процессов #{Bproce.count}
--if can? :show, User.first
-  Сотрудников #{User.count}
+Процессов #{Bproce.count}, из них взято в управление #{Bproce.where.not(checked_at: nil).count}
 %br
 Метрик #{Metric.count}
 Ролей #{BusinessRole.count}
 Рабочих мест #{Workplace.count}
 Приложений #{Bapp.count}
 Инф.ресурсов #{Iresource.count}
+-if can? :show, User.first
+  Сотрудников #{User.count}
 %br
 Документов: всего #{Document.count}, из них действует - #{Document.where(status: 'Утвержден').count}, на согласовании - #{Document.where(status: 'Согласование').count}
 %br
