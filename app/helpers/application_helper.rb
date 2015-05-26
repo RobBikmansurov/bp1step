@@ -39,6 +39,7 @@ module ApplicationHelper
     text.gsub!(/\r\n?/, "\n")                       # \r\n and \r => \n
     text = "<p>#{text.gsub(/\n\n\s*/, '</p><p>')}"  # 2 newline   => p
     text.gsub!(/([^\n]\n)(?=[^\n])/, '\1<br />')    # 1 newline   => br
+    return text
   end
 
   def nav_link(link_text, link_path)
