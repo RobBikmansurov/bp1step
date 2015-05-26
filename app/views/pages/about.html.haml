@@ -96,7 +96,7 @@
   %tr
     %th Роль доступа
     %th Краткое описание
-  - Role.order(:description).all.each do |r|
+  - Role.order(:description).load.each do |r|
     %tr
       %td
         -if can? :assign_roles, User
