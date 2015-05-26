@@ -44,17 +44,23 @@ class ContractsController < ApplicationController
               @contracts = Contract.where(:payer_id => params[:payer])
               @title_doc = 'ответственный за оплату [' + @user.displayname + ']'
             else
-              @title_doc = 'поиск [' + params[:search] + ']' if params[':search'].present?
-              if sort_column == 'lft'
-                @contracts = Contract.search(params[:search]).order(:lft).paginate(:per_page => 10, :page => params[:page])
+              if params[:all].present?
+                @contracts = Contract.all
               else
-                @contracts = Contract.search(params[:search])
+                @title_doc = 'поиск [' + params[:search] + ']' if params[':search'].present?
+                if sort_column == 'lft'
+                  @contracts = Contract.search(params[:search]).order(:lft).paginate(:per_page => 10, :page => params[:page])
+                else
+                  @contracts = Contract.search(params[:search])
+                end
               end
             end
           end
         end
       end
     end
+    logger.debug "\nparams = #{params}\n"
+    logger.debug "\n@contracts.count = #{@contracts.count}\n"
     respond_to do |format|
       format.html {
         @contracts = @contracts.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
