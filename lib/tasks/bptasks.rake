@@ -134,7 +134,7 @@ namespace :bp1step do
         uac = entry["userAccountControl"].first.to_i
         groups = Devise::LDAP::Adapter.get_ldap_param(user.username, "memberOf")  # группы пользователя
         #puts groups.grep(/rl_bp1step/) 
-        if groups.grep(/rl_bp1step_users/).blank? # если не член группы rl_bp1step
+        if groups && groups.grep(/rl_bp1step_users/).blank? # если не член группы rl_bp1step
           user.update_attribute(:active, false) # делаем неактивным
           disabled_users += 1
           # если нет связи с ролями, рабочими местами, процессами
