@@ -34,7 +34,7 @@
         = link_to bproce.name, bproce_path(bproce)
         .id_show_
           = "##{bproce.id}"
-        -if can? :manage_tag, bproce
+        -#if can? :manage_tag, bproce
           %sup= bproce.tag_list
         -if !params[:user].present?
           -if bproce.user
