@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   validates :email, :presence => true, :uniqueness => true
   
   has_attached_file :avatar, 
-    styles: { medium: "300x300>", mini: "50x50#" }, 
+    styles: { medium: "300x300>", mini: "50x50>" }, 
     :presence  => false,
     processors: [:cropper],
     default_url: "/store/images/:style/missing.png",

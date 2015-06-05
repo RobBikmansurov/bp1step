@@ -106,7 +106,7 @@ class ContractsController < ApplicationController
     if @contract.update(contract_params)
       redirect_to @contract, notice: 'Contract was successfully updated.'
       begin
-        ContractMailer.update_contract(@contract, current_user).deliver    # оповестим ответсвенных об изменениях договора
+        ContractMailer.update_contract(@contract, current_user, nil, '').deliver    # оповестим ответственных об изменениях договора
       rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
         flash[:alert] = "Error sending mail to contract owner"
       end
@@ -132,13 +132,18 @@ class ContractsController < ApplicationController
   end
 
   def update_scan
-    #@contract = Contract.find(params[:id]) if params[:id].present?
     contract_scan = ContractScan.new(params[:contract_scan]) if params[:contract_scan].present?
     if contract_scan
+      @contract = contract_scan.contract
       if contract_scan.name.blank?
         flash[:alert] = 'Ошибка - не указан комментарий для файла скана!'
       else
         flash[:notice] = 'Файл "' + contract_scan.name  + '" загружен.' if contract_scan.save
+        begin
+          ContractMailer.update_contract(@contract, current_user, contract_scan, 'добавлен').deliver    # оповестим ответственных об изменениях скана
+        rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+          flash[:alert] = "Error sending mail to contract owner"
+        end
       end
     else      
       flash[:alert] = "Ошибка - имя файла не указано."
