@@ -2,14 +2,24 @@
 class ContractMailer < ActionMailer::Base
   default from: "BP1Step <bp1step@bankperm.ru>"
 
-  def update_contract(contract, current_user)   # рассылка ответственным об изменении договора
+  def update_contract(contract, current_user, scan, action)   # рассылка ответственным об изменении договора или скана
     @contract = contract
+    @scan = scan
+    @action = action
     address = @contract.owner.email if @contract.owner.email  # ответственный за договор
     if @contract.payer
       address.concat(', ' + @contract.payer.email.to_s) if !@contract.payer.email.empty?  # отвественный за оплату договора
     end
     @current_user = current_user
-    mail(:to => address, :subject => "BP1Step: изменен договор ##{@contract.id.to_s}")
+    if @scan
+      mail(to: address, 
+           subject: "BP1Step: #{@action} файл договора ##{@contract.id.to_s}",
+           template_name: "update_contract_scan")
+    else
+      mail(to: address,
+           subject: "BP1Step: изменен договор ##{@contract.id.to_s}",
+           template_name: "update_contract")
+    end
   end
 
   def process_is_missing_email(contract, user)		# рассылка о необходимости указания процесса для договора
@@ -21,7 +31,7 @@ class ContractMailer < ActionMailer::Base
   def check_outdated_contracts(contract, emails, text)   # рассылка о просроченных договорах
     @contract = contract
     @text = text
-    mail(:to => emails, :subject => "BP1Step: #{@text} действие договор ##{@contract.id.to_s}")
+    mail(:to => emails, :subject => "BP1Step: #{@text} договор ##{@contract.id.to_s}")
   end
 
 end
