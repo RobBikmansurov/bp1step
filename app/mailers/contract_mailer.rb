@@ -9,6 +9,7 @@ class ContractMailer < ActionMailer::Base
     address = @contract.owner.email if @contract.owner.email  # ответственный за договор
     if @contract.payer
       address.concat(', ' + @contract.payer.email.to_s) if !@contract.payer.email.empty?  # отвественный за оплату договора
+      address.concat(', bard@bankperm.ru')  # добавим в получатели Бардина для контроля
     end
     @current_user = current_user
     if @scan
