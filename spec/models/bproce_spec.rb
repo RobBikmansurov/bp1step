@@ -1,9 +1,6 @@
 require 'spec_helper'
 
 describe Bproce do
-    before(:each) do
-    @bp = FactoryGirl.create(:bproce)
-  end
 
   context "validates" do
     it { should validate_presence_of(:name) }
