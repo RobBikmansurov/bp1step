@@ -89,6 +89,10 @@ BPDoc::Application.routes.draw do
     end
   end
 
+  resources :tasks
+  resources :requirements
+  resources :letters
+
   resources :metrics do
     member do
       get :values

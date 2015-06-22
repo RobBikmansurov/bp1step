@@ -74,6 +74,13 @@
                   -if can? :show, Contract
                     =nav_link "Договоры", contracts_path
                     =nav_link "Контрагенты", agents_path
+            -if user_signed_in?
+              =content_tag(:li, :class => nav_current(tasks_path)) do
+                =link_to 'Задачи', tasks_path
+                %ul.nav
+                  = nav_link 'Входящие', letters_path
+                  = nav_link 'Задачи', tasks_path 
+                  = nav_link 'Требования', requirements_path
             =nav_link "Сотрудники", users_path
           %ul.nav{:style => "float:right"}
             -#%li Настройки
