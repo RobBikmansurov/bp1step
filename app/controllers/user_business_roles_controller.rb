@@ -1,12 +1,10 @@
 class UserBusinessRolesController < ApplicationController
   respond_to :html, :xml, :json
-  before_filter :get_user_business_role, :only => [:destroy, :edit, :update]
+  before_filter :get_user_business_role, :only => [:destroy, :edit, :update, :show]
   before_filter :authenticate_user!, :except => [:show, :create]
   
   def show
-  	#@u = User.find(params[:id])
-  	#respond_with(@business_roles = @u.business_user_roles)
-    redirect_to :back
+    redirect_to business_role_path(@user_business_role.business_role_id) and return
   end
 
   def new
