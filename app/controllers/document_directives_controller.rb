@@ -8,8 +8,7 @@ class DocumentDirectivesController < ApplicationController
   end
 
   def show
-    respond_with(@document_directive)
-    #redirect_to :back   # сделан возврат,т.к не смог по-другому реализовать возврат в документ после добавления диретктивы
+    redirect_to directive_path(@document_directive.directive_id) and return
   end
 
   def new

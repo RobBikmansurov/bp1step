@@ -3,9 +3,8 @@ class UserWorkplacesController < ApplicationController
   before_filter :authenticate_user!, :only => [:new, :create, :destroy]
   
   def show
-  	#@uw = User.find(params[:id])
-  	#respond_with(@workplaces = @uw.workplaces)
-    redirect_to :back
+    @user_workplace = UserWorkplace.find(params[:id])   # нашли удаляемую связь
+    redirect_to workplace_path(@user_workplace.workplace_id) and return
   end
 
   def new
