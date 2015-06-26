@@ -1,0 +1,11 @@
+= 123
+= simple_form_for @letter_appendix, :url => appendix_update_letter_path, :html => { :multipart => true } do |f|
+  = f.error_notification
+  = f.hidden_field :letter_id
+  = f.input :name
+  = f.input :appendix, hint: 'Выберите файл для загрузки'
+
+  = f.error :base
+  -if can? :update, @letter
+    %p
+    = f.button :submit, 'Сохранить файл'

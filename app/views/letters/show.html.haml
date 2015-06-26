@@ -1,0 +1,83 @@
+-title "Письмо № #{@letter.number} от #{@letter.date.strftime("%d.%m.%Y")}"
+-search 'Письмо'
+.id_
+  \#
+  =@letter.id
+
+-if !@letter.regnumber.blank?
+  %h3 Регистрация № #{@letter.regnumber} от #{@letter.regdate.strftime("%d.%m.%Y")} 
+
+%h2 № #{@letter.number} от #{@letter.date.strftime("%d.%m.%Y")} 
+
+%h3 [ #{@letter.subject} ]
+
+%h3 Корреспондент: #{@letter.sender}
+
+%h3 Краткое содержание (о чем):
+= @letter.body
+
+%h3 Источник: #{@letter.source}
+%h3 
+  Срок исполнения:
+  -if @letter.duedate
+    = @letter.duedate.strftime("%d.%m.%Y")
+
+%h4 Приложения письма:
+-@letter.letter_appendix.each do |letter_appendix|
+  - if File.exist?(letter_appendix.appendix.path)  # есть исходный файл документа
+    -#= link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), @document.pdf_url, class: 'button-img'
+    = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), letter_appendix.appendix.url #, class: 'button-img'
+    = link_to letter_appendix.name, letter_appendix.appendix.url
+  - else
+    = letter_appendix.name
+  = ' ("' + letter_appendix.appendix_file_name + '": ' + letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S') + ' ' + letter_appendix.appendix_file_size.to_s + ")"
+  %br
+- if true or can? :update, @letter
+  #update_appendix
+    = link_to 'Добавить файл приложения', appendix_create_letter_path(@letter), :remote => true
+
+%hr
+%h2 Отметки банка
+
+%h3 
+  Исполнители:
+  - @letter.user_letter.each do |user_letter|
+    &nbsp;
+    = link_to user_letter.user.displayname, user_letter.user
+    -if !user_letter.status?
+      \- отв.
+    &nbsp;
+
+%h3 Статус: #{@letter.status}
+%h3 Результат исполнения:
+= @letter.result
+
+%p
+  %b Letter:
+  = @letter.letter
+
+.info_
+  -activity1 = PublicActivity::Activity.where(trackable_type: "Letter", trackable_id: @letter.id).order("created_at asc").first
+  -if activity1
+    = link_to 'создал', activities_path(type: "Letter", id: @letter.id)
+    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    = activity1.owner.displayname.to_s
+  -else
+    создан
+    = @letter.created_at.strftime('%d.%m.%Y %H:%M:%S')
+  %br
+  -activity2 = PublicActivity::Activity.where(trackable_type: "Letter", trackable_id: @letter.id).order("created_at asc").last
+  -if activity2
+    = link_to 'изменил', activities_path(type: "Letter", id: @letter.id)
+    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    = activity2.owner.displayname.to_s
+  -else
+    изменен
+    = @letter.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+
+%p
+= link_to 'Back', letters_path, :class => 'button'
+
+-if true or can? :update, @letter
+  = link_to 'Edit', edit_letter_path(@letter), :class => 'button'
+  = link_to 'Создать Требование', edit_letter_path(@letter), :class => 'button'

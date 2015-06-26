@@ -1,0 +1,20 @@
+= simple_form_for(@letter) do |f|
+  = f.error_notification
+  -if false
+    = f.input :regnumber
+    = f.input :regdate
+
+  = f.input :number
+  -if @letter.date
+    = f.input :date, :as => :string, :input_html => {:class=>'datepicker', :value => @letter.date.strftime("%d.%m.%Y")}
+  -else
+    = f.input :date, :as => :string, :input_html => {:class=>'datepicker', :value => Time.current.strftime("%d.%m.%Y")}
+  = f.input :subject, as: :text
+  = f.input :source
+  = f.input :sender, as: :text
+  = f.input :duedate, :as => :string, :input_html => {:class=>'datepicker'}
+  = f.input :body, as: :text
+  = f.input :status
+  = f.input :result, as: :text
+  %p
+  = f.button :submit

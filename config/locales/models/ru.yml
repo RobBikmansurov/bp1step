@@ -14,6 +14,7 @@ ru:
       document: Документ
       directive: Директива
       iresource: Ресурс
+      letter: Письмо
       metric: Метрика
       metric_value: Значение метрики
       role: Роль
@@ -22,6 +23,7 @@ ru:
       workplace: Рабочее место
       user: Пользователь
       user_business_role: Исполнитель
+      user_letter: Ответственный
     attributes:
       agent:
         name: Наименование
@@ -116,6 +118,18 @@ ru:
         access_write: Права записи
         access_other: Права
         risk_category: Категория ресурса
+      letter:
+        number: Номер
+        date: Дата
+        regnumber: Номер регистрации
+        regdate: Дата регистрации
+        subject: Тема
+        body: Содержание
+        source: Источник
+        sender: Корреспондент
+        duedate: Срок исполнения
+        status: Статус
+        result: Результат
       metric:
         name: Метрика
         shortname: Обозначение
@@ -143,6 +157,8 @@ ru:
         note: Примечание
         date_from: Дата начала
         date_to: Дата окончания
+      user_letter:
+        status: Ответственный
       user_workplace:
         note: Примечание
         date_from: Дата начала
