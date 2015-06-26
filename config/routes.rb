@@ -89,9 +89,17 @@ BPDoc::Application.routes.draw do
     end
   end
 
+  resources :letters do     # письма, корреспонденция
+    member do
+      get :appendix_create
+      get :appendix_delete
+      post :appendix_update
+    end
+  end
+  resources :letter_appendix, :only => [:destroy, :edit, :update]
+
   resources :tasks
   resources :requirements
-  resources :letters
 
   resources :metrics do
     member do
@@ -130,6 +138,7 @@ BPDoc::Application.routes.draw do
   end
   resources :user_business_roles, :only => [:new, :create, :destroy, :edit, :update, :show]
   resources :user_documents, only: [:destroy]
+  resources :user_letters, only: [:destroy, :update, :create, :show]
   resources :user_workplaces
 
   #match '/bproceses' => 'bproces#list', :via => :get  # получение полного списка процессов

@@ -1,0 +1,67 @@
+-search "Письма" 
+-title @title_letter
+
+%h2
+  Корреспонденция
+  -if params[:search].present?
+    = "[ #{params[:search]} ]"
+
+%table
+  %tr
+    %th #
+    -#%th= sortable "Number", "№"
+    -#%th= sortable "Date", "От"
+    -#%th= sortable "Regnumber", "Вх.№"
+    %th № от
+    %th регистр.
+    %th [ Тема ]
+    %th Корреспондент
+    %th Срок
+    %th Статус
+    %th Исполнитель
+    -if true or can? :manage, Letter or can? :destroy, Letter
+      %th
+        &nbsp;
+
+  - @letters.each do |letter|
+    %tr
+      %td= letter.id
+      %td
+        = link_to letter.number, letter
+        %br
+        = letter.date.strftime("%d.%m.%y")
+      %td
+        -if letter.regnumber.blank?
+          &nbsp;
+        -else
+          № #{letter.regnumber} #{letter.regdate.strftime("%d.%m.%y")}
+      %td= link_to letter.subject, letter
+      -#%td= letter.source
+      %td= letter.sender
+      %td= letter.duedate.strftime("%d.%m.%y") if letter.duedate
+      %td= letter.status
+      %td
+        -letter.user_letter.each do |user_letter|
+          -if user_letter.user
+            - s = "#{user_letter.user.displayname}"
+            -if !user_letter.status.blank?
+              - s = s + "\u2713".html_safe
+            = link_to s, user_letter.user
+          -else
+            удалить ссылку
+            = user_letter.inspect
+      -#%td= letter.letter
+      - if true or can? :manage, Letter or can? :destroy, Letter
+        %td
+          = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_letter_path(letter), class: 'button-img'
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), letter, 
+          data: { confirm: "Письмо № #{letter.number} от #{letter.date.strftime("%d.%m.%Y")}\n #{letter.sender}" + "\nДействительно хотите удалить?" }, 
+          :method => 'delete', class: 'button-img'
+
+%br
+.apple_pagination
+  = will_paginate @letters
+
+%p
+-#if can? :create, Letter
+= link_to 'Новое письмо', new_letter_path, :class => 'button'
