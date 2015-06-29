@@ -5,6 +5,9 @@ class Letter < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: Proc.new { |controller, model| controller.current_user }
 
+  validates :subject, :presence => true,
+                   :length => {:minimum => 3, :maximum => 200}
+
   belongs_to :letter
   has_many :user_letter, :dependent => :destroy  # ответственные за письмо
   has_many :users, :through => :user_letter
