@@ -7,7 +7,7 @@
 -if !@letter.regnumber.blank?
   %h3 Регистрация № #{@letter.regnumber} от #{@letter.regdate.strftime("%d.%m.%Y")} 
 
-%h2 № #{@letter.number} от #{@letter.date.strftime("%d.%m.%Y")} 
+%h2 Письмо № #{@letter.number} от #{@letter.date.strftime("%d.%m.%Y")} 
 
 %h3 [ #{@letter.subject} ]
 
@@ -22,7 +22,7 @@
   -if @letter.duedate
     = @letter.duedate.strftime("%d.%m.%Y")
 
-%h4 Приложения письма:
+%h4 Файлы приложений к письму:
 -@letter.letter_appendix.each do |letter_appendix|
   - if File.exist?(letter_appendix.appendix.path)  # есть исходный файл документа
     -#= link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), @document.pdf_url, class: 'button-img'
@@ -33,7 +33,7 @@
   = ' ("' + letter_appendix.appendix_file_name + '": ' + letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S') + ' ' + letter_appendix.appendix_file_size.to_s + ")"
   %br
 - if true or can? :update, @letter
-  #update_appendix
+  #appendix_update
     = link_to 'Добавить файл приложения', appendix_create_letter_path(@letter), :remote => true
 
 %hr

@@ -7,10 +7,6 @@ class LettersController < ApplicationController
   end
 
   def show
-    respond_to do |format|
-      format.html
-      format.json { render json: @letter }
-    end
   end
 
   def new
@@ -54,6 +50,21 @@ class LettersController < ApplicationController
     @letter = Letter.find(params[:id])
     @letter_appendix = LetterAppendix.new(letter_id: @letter.id)
     render :appendix_create
+  end
+
+  def appendix_update
+    letter_appendix = LetterAppendix.new(params[:letter_appendix]) if params[:letter_appendix].present?
+    if letter_appendix
+      @letter = letter_appendix.letter
+      if letter_appendix.name.blank?
+        flash[:alert] = 'Ошибка - не указано наименование файла приложения!'
+      else
+        flash[:notice] = 'Файл приложения "' + letter_appendix.name  + '" загружен.' if letter_appendix.save
+      end
+    else      
+      flash[:alert] = "Ошибка - имя файла не указано."
+    end
+    respond_with(letter_appendix.letter)
   end
 
 
