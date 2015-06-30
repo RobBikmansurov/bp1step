@@ -35,7 +35,7 @@
           &nbsp;
         -else
           № #{letter.regnumber} #{letter.regdate.strftime("%d.%m.%y")}
-      %td= link_to letter.subject, letter
+      %td= link_to truncate(letter.subject, :length => 40, :omission => ' ...'), letter
       -#%td= letter.source
       %td= letter.sender
       %td= letter.duedate.strftime("%d.%m.%y") if letter.duedate

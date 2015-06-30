@@ -15,6 +15,7 @@ ru:
       directive: Директива
       iresource: Ресурс
       letter: Письмо
+      letter_appendix: Приложение
       metric: Метрика
       metric_value: Значение метрики
       role: Роль
@@ -130,6 +131,9 @@ ru:
         duedate: Срок исполнения
         status: Статус
         result: Результат
+      letter_appendix:
+        name: Имя
+        appendix: Приложение
       metric:
         name: Метрика
         shortname: Обозначение
