@@ -80,4 +80,6 @@
 
 -if true or can? :update, @letter
   = link_to 'Edit', edit_letter_path(@letter), :class => 'button'
-  = link_to 'Создать Требование', edit_letter_path(@letter), :class => 'button'
+  = link_to 'Clone', clone_letter_path(@letter), :class => 'button'
+  = link_to 'Создать Требование', new_requirement_path(@letter), :class => 'button'
+  = link_to 'Создать Исходящее', edit_letter_path(@letter), :class => 'button'
