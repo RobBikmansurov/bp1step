@@ -1,0 +1,71 @@
+-title "Требование ##{@requirement.id} от #{@requirement.date.strftime("%d.%m.%Y")}"
+-search "Требование"
+.id_
+  \#
+  = @requirement.id
+
+%h3
+  Требование
+  = " от " + @requirement.date.strftime('%d.%m.%Y')
+  %br
+  %b= @requirement.label
+%h3 Краткое содержание (о чем):
+= @requirement.body
+
+-if @requirement.letter
+  %h3
+    Основание: Вх.№  
+    = link_to  "#{@requirement.letter.number}", letter_path(@requirement.letter)
+    от #{@requirement.letter.date.strftime('%d.%m.%Y')}
+-else
+  %h3 Источник: #{@requirement.source}
+
+%h3 
+  Срок исполнения:
+  -if @requirement.duedate
+    = @requirement.duedate.strftime("%d.%m.%Y")
+%h3
+  Автор:
+  = link_to @requirement.author.displayname, user_path(@requirement.author.id) if @requirement.author_id?
+
+%hr
+%h2 Отметки банка
+
+%h3 Статус: #{@requirement.status}
+%h3 Результат исполнения:
+= @requirement.result
+
+%h3 
+  Исполнители:
+  - @requirement.user_requirement.each do |user_requirement|
+    &nbsp;
+    = link_to user_requirement.user.displayname, user_requirement.user
+    -if !user_requirement.status?
+      \- отв.
+    &nbsp;
+
+.info_
+  -activity1 = PublicActivity::Activity.where(trackable_type: "Letter", trackable_id: @requirement.id).order("created_at asc").first
+  -if activity1
+    = link_to 'создал', activities_path(type: "Letter", id: @requirement.id)
+    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    = activity1.owner.displayname.to_s
+  -else
+    создан
+    = @requirement.created_at.strftime('%d.%m.%Y %H:%M:%S')
+  %br
+  -activity2 = PublicActivity::Activity.where(trackable_type: "Letter", trackable_id: @requirement.id).order("created_at asc").last
+  -if activity2
+    = link_to 'изменил', activities_path(type: "Letter", id: @requirement.id)
+    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    = activity2.owner.displayname.to_s
+  -else
+    изменен
+    = @requirement.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+
+%p
+= link_to 'Back', requirements_path, :class => 'button'
+
+-if true or can? :update, @requirement
+  = link_to 'Edit', edit_requirement_path(@requirement), :class => 'button'
+  = link_to 'Создать Задачу', new_requirement_path(@requirement), :class => 'button'

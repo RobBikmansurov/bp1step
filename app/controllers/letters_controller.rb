@@ -7,6 +7,7 @@ class LettersController < ApplicationController
   end
 
   def show
+    @requirements = Requirement.where(letter_id: @letter.id)
   end
 
   def new
@@ -46,6 +47,7 @@ class LettersController < ApplicationController
     @letter = Letter.new(sender: letter.sender)
     @letter.duedate = (Time.current + 10.days).strftime("%d.%m.%Y") # срок исполнения - даем 10 дней по умолчанию
     @letter.source = letter.source
+    @letter.subject = letter.subject
   end
 
   def record_not_found

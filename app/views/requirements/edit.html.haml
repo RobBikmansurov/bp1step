@@ -1,0 +1,12 @@
+-title "Требование ##{@requirement.id} от #{@requirement.date.strftime("%d.%m.%Y")}"
+-search 'Требование'
+.id_
+  \#
+  =@requirement.id
+%h2 Изменить требование
+= render 'form'
+-#= render 'user'
+
+%p
+= link_to 'Show', @requirement, :class => 'button'
+= link_to 'Back', requirement_path, :class => 'button'
