@@ -18,6 +18,7 @@ ru:
       letter_appendix: Приложение
       metric: Метрика
       metric_value: Значение метрики
+      requirement: Требование
       role: Роль
       staff: Сотрудник
       term: Термин
@@ -146,6 +147,14 @@ ru:
       profile:
         name: Отображаемое имя
         phone: Телефон
+      requirement:
+        label: Обозначение
+        date: Дата
+        duedate: Срок
+        body: Содержание
+        source: Источник
+        status: Статус
+        result: Результат
       staff:
         fullname: Фамилия Имя Отчество
         position: Должность
