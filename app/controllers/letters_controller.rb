@@ -41,6 +41,13 @@ class LettersController < ApplicationController
     redirect_to letters_url, notice: 'Letter was successfully destroyed.'
   end
 
+  def clone
+    letter = Letter.find(params[:id])   # письмо - прототип
+    @letter = Letter.new(sender: letter.sender)
+    @letter.duedate = (Time.current + 10.days).strftime("%d.%m.%Y") # срок исполнения - даем 10 дней по умолчанию
+    @letter.source = letter.source
+  end
+
   def record_not_found
     flash[:alert] = "Неверный #id - нет такого письма."
     redirect_to action: :index
@@ -86,6 +93,5 @@ class LettersController < ApplicationController
     def sort_direction
       params[:direction] || "desc"
     end
-
 
 end

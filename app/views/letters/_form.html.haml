@@ -15,6 +15,8 @@
   = f.input :duedate, :as => :string, :input_html => {:class=>'datepicker'}
   = f.input :body, as: :text
   = f.input :status
-  = f.input :result, as: :text
+  -if @letter.id
+    %h3 Результат исполнения:
+    = f.input :result, as: :text
   %p
   = f.button :submit
