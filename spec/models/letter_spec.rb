@@ -1,6 +1,6 @@
-require 'rails_helper'
+require 'spec_helper'
 
-describe Contract do
+describe Letter do
   context "validates" do
     it { should validate_presence_of(:subject) }
     it { should ensure_length_of(:subject).is_at_least(3).is_at_most(200) }
