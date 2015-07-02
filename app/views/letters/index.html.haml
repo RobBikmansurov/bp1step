@@ -5,13 +5,13 @@
   Корреспонденция
   -if params[:search].present?
     = "[ #{params[:search]} ]"
-
+  -else
+    -if params[:date].present?
+      = "за [ #{params[:date]} ]"
+   
 %table
   %tr
     %th #
-    -#%th= sortable "Number", "№"
-    -#%th= sortable "Date", "От"
-    -#%th= sortable "Regnumber", "Вх.№"
     %th № от
     %th регистр.
     %th [ Тема ]
@@ -29,7 +29,7 @@
       %td
         = link_to letter.number, letter
         %br
-        = letter.date.strftime("%d.%m.%y")
+        = link_to letter.date.strftime("%d.%m.%y"), letters_path(date: letter.date.strftime("%d.%m.%Y"))
       %td
         -if letter.regnumber.blank?
           &nbsp;

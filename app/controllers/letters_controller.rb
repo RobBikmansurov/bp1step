@@ -3,7 +3,12 @@ class LettersController < ApplicationController
   before_action :set_letter, only: [:show, :edit, :update, :destroy]
 
   def index
-    @letters = Letter.search(params[:search]).order(sort_column + ' ' + sort_direction).page(params[:page])
+    if params[:date].present? # письма за дату
+      @letters = Letter.where(date: params[:date]).order(sort_column + ' ' + sort_direction).page(params[:page])
+      @title_letter = 'за дату ' + params[:date]
+    else
+      @letters = Letter.search(params[:search]).order(sort_column + ' ' + sort_direction).page(params[:page])
+    end
   end
 
   def show
