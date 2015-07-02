@@ -1,6 +1,10 @@
 -title "Требованаие"
 -search "Требованаие"
-%h1 Новое требование
+
+%h2
+  Новое требование
+  = "из Вх.№ #{@requirement.letter.number} от #{@requirement.letter.date.strftime('%d.%m.%Y')}" if @requirement.letter
+
 = render 'form'
 %p
 = link_to 'Back', requirements_path, class: 'button'

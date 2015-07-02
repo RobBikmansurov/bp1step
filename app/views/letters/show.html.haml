@@ -91,5 +91,5 @@
 -if true or can? :update, @letter
   = link_to 'Edit', edit_letter_path(@letter), :class => 'button'
   = link_to 'Clone', clone_letter_path(@letter), :class => 'button'
-  = link_to 'Создать Требование', new_requirement_path(@letter), :class => 'button'
+  = link_to 'Создать Требование', create_requirement_letter_path(@letter), :class => 'button'
   = link_to 'Создать Исходящее', clone_letter_path(@letter), :class => 'button'

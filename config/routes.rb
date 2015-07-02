@@ -95,6 +95,7 @@ BPDoc::Application.routes.draw do
       get :appendix_delete
       post :appendix_update
       get :clone            # письмо от того же корреспондента
+      get :create_requirement  # создать требование
     end
   end
   resources :letter_appendix, :only => [:destroy, :edit, :update]

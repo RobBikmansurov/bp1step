@@ -11,6 +11,7 @@ class RequirementsController < ApplicationController
 
   def new
     @requirement = Requirement.new
+    @requirement.letter_id = params[:letter_id] if params[:letter_id].present?
     @requirement.author_id = current_user.id if user_signed_in?
   end
 

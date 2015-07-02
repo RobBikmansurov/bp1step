@@ -53,6 +53,13 @@ class LettersController < ApplicationController
     @letter.subject = letter.subject
   end
 
+  def create_requirement
+    letter = Letter.find(params[:id])   # письмо - прототип
+    @requirement = Requirement.new(letter_id: letter.id)
+    #redirect_to requirements_new(@requirement) and return
+    redirect_to proc { new_requirement_url(letter_id: letter.id) } and return
+  end
+
   def record_not_found
     flash[:alert] = "Неверный #id - нет такого письма."
     redirect_to action: :index
