@@ -9,16 +9,11 @@
 %table
   %tr
     %th #
-    %th Метка
+    %th Метка, обозначение
     %th Срок
-    %th Source
-    %th Body
-    %th Status
-    %th Result
-    %th Letter
-    %th User
-    %th
-    %th
+    %th Содержание
+    %th Статус
+    %th Ответственные
     %th
 
   - @requirements.each do |requirement|
@@ -27,8 +22,8 @@
       %td
         = link_to requirement.label, requirement
         %br
-        = requirement.date.strftime("%d.%m.%y")
-      %td= requirement.duedate.strftime("%d.%m.%y") if requirement.duedate
+        = requirement.date.strftime("%d.%m.%Y")
+      %td= requirement.duedate.strftime("%d.%m.%Y") if requirement.duedate
       %td= link_to truncate(requirement.body, :length => 40, :omission => ' ...'), requirement
       %td= requirement.status
       %td
