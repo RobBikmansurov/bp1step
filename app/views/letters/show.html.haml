@@ -40,6 +40,10 @@
 %h2 Отметки банка
 
 %h3 
+  Автор:
+  = link_to @letter.author.displayname, user_path(@letter.author.id) if @letter.author_id?
+
+%h3 
   Исполнители:
   - @letter.user_letter.each do |user_letter|
     &nbsp;

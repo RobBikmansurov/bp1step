@@ -1,9 +1,10 @@
 class LettersController < ApplicationController
   respond_to :html, :json
+  before_filter :authenticate_user!, :only => [:edit, :new, :create, :update, :destroy]
   before_action :set_letter, only: [:show, :edit, :update, :destroy]
 
   def index
-    @letters = Letter.search(params[:search]).order(sort_column + ' ' + sort_direction).page(params[:page])
+    @letters = Letter.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end
 
   def show
@@ -12,6 +13,7 @@ class LettersController < ApplicationController
 
   def new
     @letter = Letter.new
+    @letter.author_id = current_user.id if user_signed_in?
     @letter.duedate = (Time.current + 10.days).strftime("%d.%m.%Y") # срок исполнения - даем 10 дней по умолчанию
   end
 
@@ -45,6 +47,7 @@ class LettersController < ApplicationController
   def clone
     letter = Letter.find(params[:id])   # письмо - прототип
     @letter = Letter.new(sender: letter.sender)
+    @letter.author_id = current_user.id if user_signed_in?
     @letter.duedate = (Time.current + 10.days).strftime("%d.%m.%Y") # срок исполнения - даем 10 дней по умолчанию
     @letter.source = letter.source
     @letter.subject = letter.subject
@@ -85,7 +88,7 @@ class LettersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def letter_params
-      params.require(:letter).permit(:regnumber, :regdate, :number, :date, :subject, :source, :sender, :duedate, :body, :status, :result, :letter_id)
+      params.require(:letter).permit(:regnumber, :regdate, :number, :date, :subject, :source, :sender, :duedate, :body, :status, :result, :letter_id, :author_id, :author_name)
     end
 
     def sort_column
