@@ -1,5 +1,6 @@
 = simple_form_for(@letter) do |f|
   = f.error_notification
+  = f.hidden_field :author_id
   -if false
     = f.input :regnumber
     = f.input :regdate

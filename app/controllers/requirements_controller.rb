@@ -2,7 +2,7 @@ class RequirementsController < ApplicationController
   before_action :set_requirement, only: [:show, :edit, :update, :destroy]
 
   def index
-    @requirements = Requirement.search(params[:search]).includes(:user).order(sort_column + ' ' + sort_direction).page(params[:page])
+    @requirements = Requirement.search(params[:search]).includes(:user).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
     @title_requirements = "Требования"
   end
 
