@@ -8,7 +8,12 @@ class LettersController < ApplicationController
       @letters = Letter.where(date: params[:date]).order(sort_column + ' ' + sort_direction).page(params[:page])
       @title_letter = 'за дату ' + params[:date]
     else
-      @letters = Letter.search(params[:search]).order(sort_column + ' ' + sort_direction).page(params[:page])
+      if params[:addresse].present? # письма от адресанта + письма алресату
+        @letters = Letter.where('sender ILIKE ?', params[:addresse]).order(sort_column + ' ' + sort_direction).page(params[:page])
+        @title_letter = 'адреса[н]та ' + params[:addresse]
+      else
+        @letters = Letter.search(params[:search]).order(sort_column + ' ' + sort_direction).page(params[:page])
+        end
     end
   end
 

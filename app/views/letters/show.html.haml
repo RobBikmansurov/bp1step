@@ -13,7 +13,9 @@
 
 %h3 [ #{@letter.subject} ]
 
-%h3 Корреспондент: #{@letter.sender}
+%h3
+  Корреспондент:
+  = link_to @letter.sender, letters_path(addresse: @letter.sender)
 
 %h3 Краткое содержание (о чем):
 = @letter.body
