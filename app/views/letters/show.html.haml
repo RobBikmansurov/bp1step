@@ -7,7 +7,9 @@
 -if !@letter.regnumber.blank?
   %h3 Регистрация № #{@letter.regnumber} от #{@letter.regdate.strftime("%d.%m.%Y")} 
 
-%h2 Письмо № #{@letter.number} от #{@letter.date.strftime("%d.%m.%Y")} 
+%h2
+  Письмо № #{@letter.number} от 
+  = link_to @letter.date.strftime("%d.%m.%Y"), letters_path(date: @letter.date.strftime("%d.%m.%Y"))
 
 %h3 [ #{@letter.subject} ]
 
