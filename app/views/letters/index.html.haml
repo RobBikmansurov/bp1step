@@ -8,6 +8,9 @@
   -else
     -if params[:date].present?
       = "за [ #{params[:date]} ]"
+    -else
+      -if params[:addresse].present?
+        = "адреса[н]та [ #{params[:addresse]} ]"
    
 %table
   %tr
@@ -37,7 +40,7 @@
           № #{letter.regnumber} #{letter.regdate.strftime("%d.%m.%y")}
       %td= link_to truncate(letter.subject, :length => 40, :omission => ' ...'), letter
       -#%td= letter.source
-      %td= letter.sender
+      %td= link_to letter.sender, letters_path(addresse: letter.sender)
       %td= letter.duedate.strftime("%d.%m.%y") if letter.duedate
       %td= letter.status
       %td
