@@ -5,13 +5,13 @@
   Корреспонденция
   -if params[:search].present?
     = "[ #{params[:search]} ]"
-
+  -else
+    -if params[:date].present?
+      = "за [ #{params[:date]} ]"
+   
 %table
   %tr
     %th #
-    -#%th= sortable "Number", "№"
-    -#%th= sortable "Date", "От"
-    -#%th= sortable "Regnumber", "Вх.№"
     %th № от
     %th регистр.
     %th [ Тема ]
@@ -29,7 +29,7 @@
       %td
         = link_to letter.number, letter
         %br
-        = letter.date.strftime("%d.%m.%y")
+        = link_to letter.date.strftime("%d.%m.%y"), letters_path(date: letter.date.strftime("%d.%m.%Y"))
       %td
         -if letter.regnumber.blank?
           &nbsp;
@@ -50,10 +50,11 @@
           -else
             удалить ссылку
             = user_letter.inspect
-      -#%td= letter.letter
-      - if true or can? :manage, Letter or can? :destroy, Letter
-        %td
+
+      %td
+        - if true or can? :manage, Letter
           = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_letter_path(letter), class: 'button-img'
+        - if can? :destroy, Letter
           = link_to image_tag('action_stop.gif', :alt => 'Удалить'), letter, 
           data: { confirm: "Письмо № #{letter.number} от #{letter.date.strftime("%d.%m.%Y")}\n #{letter.sender}" + "\nДействительно хотите удалить?" }, 
           :method => 'delete', class: 'button-img'
