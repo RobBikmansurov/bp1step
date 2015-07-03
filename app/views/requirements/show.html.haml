@@ -68,4 +68,4 @@
 
 -if true or can? :update, @requirement
   = link_to 'Edit', edit_requirement_path(@requirement), :class => 'button'
-  = link_to 'Создать Задачу', new_requirement_path(@requirement), :class => 'button'
+  = link_to 'Создать Задачу', @requirement, :class => 'button'
