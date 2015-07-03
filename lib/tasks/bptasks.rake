@@ -15,6 +15,72 @@ namespace :bp1step do
     BproceMailer.process_without_roles(bproce, mail_to).deliver
   end
 
+  desc "LDAP search testing"
+  task test_ldap: :environment do
+    require 'rubygems'
+    require 'net/ldap'
+    LDAP_CONFIG = YAML.load_file(Devise.ldap_config)  # считаем конфиги доступа к LDAP
+    ldap = Net::LDAP.new :host => LDAP_CONFIG["development"]["host"],
+      :port => LDAP_CONFIG["development"]["port"],
+      :auth => {
+        :method => :simple,
+        :username => LDAP_CONFIG["development"]["admin_user"],
+        :password => LDAP_CONFIG["development"]["admin_password"]
+      }
+    puts "#{ldap.host}:#{ldap.port}"
+    if ldap.bind
+      puts "Success!!"
+    else
+      puts "Failed!"
+      puts ldap.get_operation_result
+    end
+
+    filter = Net::LDAP::Filter.eq('memberOf', 'CN=rl_bp1step_users,OU=roles,DC=ad,DC=bankperm,DC=ru') # выбирать членов группы rl_bp1step_users
+    treebase = LDAP_CONFIG["development"]["base"]
+    attrs = ["sn", "givenname", "middleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description", "userAccountControl"]
+
+    i, j = 0, 0  # счетчики
+    s = ''
+    ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do |entry|
+      i += 1
+      j += 1
+      username = entry["sAMAccountName"].first.downcase
+      s += " \t#{username}"
+      if j > 4
+        puts "#{i-4}. #{s}"
+        j = 0
+        s = ''
+      end
+    end
+  end
+
+  desc "LDAP authentificate testing"
+  task test_ldap_auth: :environment do
+    require 'rubygems'
+    require 'net/ldap'
+    require 'highline/import'
+    LDAP_CONFIG = YAML.load_file(Devise.ldap_config)  # считаем конфиги доступа к LDAP
+    ldap = Net::LDAP.new :host => LDAP_CONFIG["development"]["host"],
+      :port => LDAP_CONFIG["development"]["port"],
+      :auth => {
+        :method => :simple,
+        :username => LDAP_CONFIG["development"]["admin_user"],
+        :password => LDAP_CONFIG["development"]["admin_password"]
+      }
+    puts "\n#{ldap.host}:#{ldap.port}"
+    username = ask("Username: ")
+    username = "CN=#{username},OU=Services,DC=ad,DC=bankperm,DC=ru"
+    puts "Username:" + username
+    password = ask("Password: ") { |q| q.echo = false }
+    if ldap.bind
+      puts "Success bind!!"
+    else
+      puts "Failed!"
+    end
+    puts ldap.get_operation_result
+    ldap.auth username, password
+    puts ldap.get_operation_result
+  end
 
   desc "Sync users from ActiveDirectory"
   # отбирает пользователей - членов группы rl_bp1step_users
