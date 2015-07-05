@@ -42,7 +42,7 @@
       -#%td= letter.source
       %td= link_to letter.sender, letters_path(addresse: letter.sender)
       %td= letter.duedate.strftime("%d.%m.%y") if letter.duedate
-      %td= letter.status
+      %td= LETTER_STATUS.key(letter.status)
       %td
         -letter.user_letter.each do |user_letter|
           -if user_letter.user

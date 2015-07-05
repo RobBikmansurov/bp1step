@@ -12,8 +12,8 @@ class LettersController < ApplicationController
         @letters = Letter.where('sender ILIKE ?', params[:addresse]).order(sort_column + ' ' + sort_direction).page(params[:page])
         @title_letter = 'адреса[н]та ' + params[:addresse]
       else
-        @letters = Letter.search(params[:search]).order(sort_column + ' ' + sort_direction).page(params[:page])
-        end
+        @letters = Letter.search(params[:search]).includes(:user_letter).order(sort_column + ' ' + sort_direction).page(params[:page])
+      end
     end
   end
 
@@ -25,6 +25,7 @@ class LettersController < ApplicationController
     @letter = Letter.new
     @letter.author_id = current_user.id if user_signed_in?
     @letter.duedate = (Time.current + 10.days).strftime("%d.%m.%Y") # срок исполнения - даем 10 дней по умолчанию
+    @letter.status = 0
   end
 
   def edit
@@ -45,6 +46,7 @@ class LettersController < ApplicationController
     if @letter.update(letter_params)
       redirect_to @letter, notice: 'Letter was successfully updated.'
     else
+      @user_letter = UserLetter.new(letter_id: @letter.id)
       render action: 'edit'
     end
   end
@@ -105,7 +107,8 @@ class LettersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def letter_params
-      params.require(:letter).permit(:regnumber, :regdate, :number, :date, :subject, :source, :sender, :duedate, :body, :status, :result, :letter_id, :author_id, :author_name)
+      params.require(:letter).permit(:regnumber, :regdate, :number, :date, :subject, :source, :sender, :duedate, 
+        :body, :status, :status_name, :result, :letter_id, :author_id, :author_name)
     end
 
     def sort_column

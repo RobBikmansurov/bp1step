@@ -7,8 +7,11 @@ class Letter < ActiveRecord::Base
 
   validates :subject, :presence => true,
                    :length => {:minimum => 3, :maximum => 200}
-  validates :number, :length => {:maximum => 20}
+  validates :number, presence: true,
+                     length: {:maximum => 20}
   validates :source, :length => {:maximum => 10}
+  validates :sender, presence: true,
+                     length: {minimum: 3}
 
   belongs_to :letter
   belongs_to :author, :class_name => 'User'
@@ -16,7 +19,7 @@ class Letter < ActiveRecord::Base
   has_many :users, :through => :user_letter
   has_many :letter_appendix, dependent: :destroy
 
-  attr_accessible :number, :date, :subject, :source, :sender, :duedate, :body, :status, :result, :author_id, :author_name
+  attr_accessible :number, :date, :subject, :source, :sender, :duedate, :body, :status, :status_name, :result, :author_id, :author_name
 
   def author_name
     author.try(:displayname)
@@ -24,6 +27,14 @@ class Letter < ActiveRecord::Base
 
   def author_name=(name)
     self.author = User.find_by_displayname(name) if name.present?
+  end
+
+  def status_name
+    LETTER_STATUS.key(status)
+  end
+  
+  def status_name=(key)
+    self.status = LETTER_STATUS[key]
   end
 
   def self.search(search)
