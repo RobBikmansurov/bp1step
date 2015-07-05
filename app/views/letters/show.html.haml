@@ -11,14 +11,15 @@
   Письмо № #{@letter.number} от 
   = link_to @letter.date.strftime("%d.%m.%Y"), letters_path(date: @letter.date.strftime("%d.%m.%Y"))
 
-%h3 [ #{@letter.subject} ]
+%h3
+  %b [ #{@letter.subject} ]
 
 %h3
   Корреспондент:
   = link_to @letter.sender, letters_path(addresse: @letter.sender)
 
 %h3 Краткое содержание (о чем):
-= @letter.body
+= simple_format(@letter.body, {}, {})
 
 %h3 Источник: #{@letter.source}
 %h3 
@@ -56,9 +57,11 @@
       \- отв.
     &nbsp;
 
-%h3 Статус: #{@letter.status}
+%h3
+  Статус:
+  %b= LETTER_STATUS.key(@letter.status)
 %h3 Результат исполнения:
-= @letter.result
+= simple_format(@letter.result, {}, {})
 
 -if @requirements
   - @requirements.each do |requirement|
