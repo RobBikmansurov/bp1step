@@ -17,6 +17,7 @@
     %th #
     %th № от
     %th регистр.
+    %th
     %th [ Тема ]
     %th Корреспондент
     %th Срок
@@ -38,8 +39,11 @@
           &nbsp;
         -else
           № #{letter.regnumber} #{letter.regdate.strftime("%d.%m.%y")}
+      %td
+        -if letter.letter_appendix.first  # если есть приложение 
+          - if File.exist?(letter.letter_appendix.first.appendix.path)
+            = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), letter.letter_appendix.first.appendix.url, class: 'button-img'
       %td= link_to truncate(letter.subject, :length => 40, :omission => ' ...'), letter
-      -#%td= letter.source
       %td= link_to letter.sender, letters_path(addresse: letter.sender)
       %td= letter.duedate.strftime("%d.%m.%y") if letter.duedate
       %td= LETTER_STATUS.key(letter.status)

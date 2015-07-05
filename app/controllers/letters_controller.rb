@@ -12,7 +12,7 @@ class LettersController < ApplicationController
         @letters = Letter.where('sender ILIKE ?', params[:addresse]).order(sort_column + ' ' + sort_direction).page(params[:page])
         @title_letter = 'адреса[н]та ' + params[:addresse]
       else
-        @letters = Letter.search(params[:search]).includes(:user_letter).order(sort_column + ' ' + sort_direction).page(params[:page])
+        @letters = Letter.search(params[:search]).includes(:user_letter, :letter_appendix).order(sort_column + ' ' + sort_direction).page(params[:page])
       end
     end
   end
