@@ -4,13 +4,13 @@
   \#
   = @requirement.id
 
-%h3
+%h2
   Требование
   = " от " + @requirement.date.strftime('%d.%m.%Y')
-  %br
-  %b= @requirement.label
+%h3
+  %b [ #{@requirement.label} ]
 %h3 Краткое содержание (о чем):
-= @requirement.body
+= simple_format(@requirement.body, {}, {})
 
 -if @requirement.letter
   %h3
@@ -30,11 +30,6 @@
 
 %hr
 %h2 Отметки банка
-
-%h3 Статус: #{@requirement.status}
-%h3 Результат исполнения:
-= @requirement.result
-
 %h3 
   Исполнители:
   - @requirement.user_requirement.each do |user_requirement|
@@ -43,6 +38,10 @@
     -if !user_requirement.status?
       \- отв.
     &nbsp;
+%h3 Статус: #{@requirement.status}
+%h3 Результат исполнения:
+= simple_format(@requirement.result, {}, {})
+%hr
 
 .info_
   -activity1 = PublicActivity::Activity.where(trackable_type: "Letter", trackable_id: @requirement.id).order("created_at asc").first
@@ -68,4 +67,4 @@
 
 -if true or can? :update, @requirement
   = link_to 'Edit', edit_requirement_path(@requirement), :class => 'button'
-  = link_to 'Создать Задачу', @requirement, :class => 'button'
+  = link_to 'Создать Задачу', @requirement, disabled: true, class: 'button'
