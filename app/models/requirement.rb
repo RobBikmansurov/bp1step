@@ -11,7 +11,7 @@ class Requirement < ActiveRecord::Base
   has_many :user, through: :user_requirement
   has_many :user_requirement, dependent: :destroy # ответственные за Требование
 
-  attr_accessible :label, :date, :source, :duedate, :body, :status, :result, :author_name, :letter_id
+  attr_accessible :label, :date, :source, :duedate, :body, :status, :status_name, :result, :author_name, :letter_id
 
   def author_name
     author.try(:displayname)
@@ -19,6 +19,14 @@ class Requirement < ActiveRecord::Base
 
   def author_name=(name)
     self.author = User.find_by_displayname(name) if name.present?
+  end
+
+    def status_name
+    REQUIREMENT_STATUS.key(status)
+  end
+  
+  def status_name=(key)
+    self.status = REQUIREMENT_STATUS[key]
   end
 
   def self.search(search)

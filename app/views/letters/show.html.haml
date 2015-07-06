@@ -66,12 +66,11 @@
 -if @requirements
   - @requirements.each do |requirement|
     %h4
-      Требование
+      Требование [
       = link_to requirement.label, requirement
+      ]
       от #{requirement.date.strftime("%d.%m.%Y")}
-%p
-  %b Letter:
-  = @letter.letter
+  -#= @letter.letter
 
 .info_
   -activity1 = PublicActivity::Activity.where(trackable_type: "Letter", trackable_id: @letter.id).order("created_at asc").first

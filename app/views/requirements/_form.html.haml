@@ -10,7 +10,9 @@
   = f.input :duedate, :as => :string, :input_html => {:class=>'datepicker'}
   = f.input :source if !@requirement.letter
   = f.input :body, as: :text
-  = f.input :status
+  = f.hidden_field :status
+  = f.label :Статус
+  = f.select :status_name, REQUIREMENT_STATUS.keys
   = f.input :result, as: :text
   = f.label 'Автор'
   = f.autocomplete_field :author_name, autocomplete_users_path

@@ -25,7 +25,7 @@
         = requirement.date.strftime("%d.%m.%Y")
       %td= requirement.duedate.strftime("%d.%m.%Y") if requirement.duedate
       %td= link_to truncate(requirement.body, :length => 40, :omission => ' ...'), requirement
-      %td= requirement.status
+      %td= REQUIREMENT_STATUS.key(requirement.status)
       %td
         -requirement.user_requirement.each do |user_requirement|
           -if user_requirement.user

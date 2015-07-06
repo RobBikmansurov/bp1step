@@ -49,7 +49,7 @@ class RequirementsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def requirement_params
-      params.require(:requirement).permit(:label, :date, :duedate, :source, :body, :status, :result, :letter_id, :author_id, :author_name)
+      params.require(:requirement).permit(:label, :date, :duedate, :source, :body, :status, :status_name, :result, :letter_id, :author_id, :author_name)
     end
     def sort_column
       params[:sort] || "duedate"
