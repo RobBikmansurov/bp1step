@@ -8,6 +8,8 @@ class UserRequirement < ActiveRecord::Base
   belongs_to :user
   belongs_to :requirement
 
+  attr_accessible :user_id, :requirement_id, :status, :user_name
+
   def user_name
     user.try(:displayname)
   end

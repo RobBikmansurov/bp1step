@@ -17,7 +17,7 @@
   -if @requirement.letter
 
     %p
-    = "Вх.№ #{@requirement.letter.number} от #{@requirement.letter.date.strftime('%d.%m.%Y')}"
+    = "требование создано на основании: Вх.№ #{@requirement.letter.number} от #{@requirement.letter.date.strftime('%d.%m.%Y')}"
 
   %p
   = f.button :submit
