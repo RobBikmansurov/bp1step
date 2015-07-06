@@ -17,9 +17,11 @@
   = f.label 'Автор'
   = f.autocomplete_field :author_name, autocomplete_users_path
   -if @requirement.letter
-
     %p
     = "требование создано на основании: Вх.№ #{@requirement.letter.number} от #{@requirement.letter.date.strftime('%d.%m.%Y')}"
+    = "[#{@requirement.letter.subject}]"
+    %br
+    = "#{@requirement.letter.body}"
 
   %p
   = f.button :submit
