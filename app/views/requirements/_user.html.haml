@@ -1,0 +1,19 @@
+%p
+%h3 Исполнители:
+- @requirement.user_requirement.each do |user_requirement|
+  &nbsp;
+  = link_to user_requirement.user.displayname, user_requirement.user
+  -if !user_requirement.status.blank?
+    \- отв.
+  = link_to image_tag('action_stop.gif', :alt => 'Удалить'), user_requirement, data: { confirm: "Удалить исполнителя #{user_requirement.user.displayname} из ответственых\nза [#{@requirement.label}] от #{@requirement.date.strftime("%d.%m.%Y")} ?" }, :method => 'delete', class: 'button-img'
+  &nbsp;
+
+-if true or can? :update, @requirement
+  = simple_form_for (@user_requirement) do |user_requirement|
+    = user_requirement.error_notification
+    = user_requirement.hidden_field :requirement_id
+    = user_requirement.label 'Исполнитель'
+    = user_requirement.autocomplete_field :user_name, autocomplete_users_path
+    = user_requirement.input :status, as: :boolean
+    = user_requirement.button :submit, 'Добавить Исполнителя'
+

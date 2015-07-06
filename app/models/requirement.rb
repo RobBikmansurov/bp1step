@@ -9,8 +9,7 @@ class Requirement < ActiveRecord::Base
   #belongs_to :user
   belongs_to :author, :class_name => 'User'
   has_many :user, through: :user_requirement
-  has_many :user_requirement, dependent: :destroy
-
+  has_many :user_requirement, dependent: :destroy # ответственные за Требование
 
   attr_accessible :label, :date, :source, :duedate, :body, :status, :result, :author_name, :letter_id
 

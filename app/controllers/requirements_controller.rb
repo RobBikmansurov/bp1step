@@ -16,6 +16,7 @@ class RequirementsController < ApplicationController
   end
 
   def edit
+     @user_requirement = UserRequirement.new(requirement_id: @requirement.id)
   end
 
   def create
