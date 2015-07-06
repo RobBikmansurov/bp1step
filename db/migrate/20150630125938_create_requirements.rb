@@ -6,7 +6,7 @@ class CreateRequirements < ActiveRecord::Migration
       t.date :duedate
       t.string :source
       t.text :body
-      t.string :status, limit: 20
+      t.integer :status
       t.text :result
       t.references :letter, index: true
       t.references :author, index: true
