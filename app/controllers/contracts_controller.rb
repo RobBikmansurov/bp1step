@@ -59,8 +59,6 @@ class ContractsController < ApplicationController
         end
       end
     end
-    logger.debug "\nparams = #{params}\n"
-    logger.debug "\n@contracts.count = #{@contracts.count}\n"
     respond_to do |format|
       format.html {
         @contracts = @contracts.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
