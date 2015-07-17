@@ -15,12 +15,12 @@ class LetterAppendixesController < ApplicationController
   def update
     @letter = @letter_appendix.letter if @letter_appendix
     if @letter_appendix.update(letter_appendix_params)
-      redirect_to @letter, notice: 'Contract_appendix name was successfully updated.'
-      begin
-        ContractMailer.update_letter(@letter, current_user, @letter_appendix, 'изменен').deliver    # оповестим ответственных об изменениях договора
-      rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-        flash[:alert] = "Error sending mail to letter owner"
-      end
+      # redirect_to @letter, notice: 'Contract_appendix name was successfully updated.'
+      # begin
+      #   ContractMailer.update_letter(@letter, current_user, @letter_appendix, 'изменен').deliver    # оповестим ответственных об изменениях договора
+      # rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+      #   flash[:alert] = "Error sending mail to letter owner"
+      # end
     else
       render action: 'edit'
     end
@@ -29,27 +29,27 @@ class LetterAppendixesController < ApplicationController
   def destroy
     @letter = @letter_appendix.letter if @letter_appendix
     if @letter_appendix.destroy
-      begin
-        ContractMailer.update_letter(@letter, current_user, @letter_appendix, 'удален').deliver    # оповестим ответственных об удалении файла договора
-      rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-        flash[:alert] = "Error sending mail to letter owner"
-      end
+      # begin
+      #   ContractMailer.update_letter(@letter, current_user, @letter_appendix, 'удален').deliver    # оповестим ответственных об удалении файла договора
+      # rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+      #   flash[:alert] = "Error sending mail to letter owner"
+      # end
     end
-    redirect_to letter_url(@letter), notice: 'Contract_appendix was successfully destroyed.'
+    redirect_to letter_url(@letter), notice: 'Letter_appendix was successfully destroyed.'
   end
 
   private
 
     def set_letter_appendix
       if params[:id].present?
-        @letter_appendix = ContractScan.find(params[:id])
+        @letter_appendix = LetterAppendix.find(params[:id])
       else
         @letter = Contract.new
       end
     end
 
     def letter_appendix_params
-      params.require(:letter_appendix).permit(:letter_id, :name)
+      params.require(:letter_appendix).permit(:letter_id, :name, :appendix)
     end
 
     def record_not_found

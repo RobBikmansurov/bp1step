@@ -4,21 +4,22 @@ class LettersController < ApplicationController
   before_action :set_letter, only: [:show, :edit, :update, :destroy]
 
   def index
+    @title_letter = 'Письма'
     if params[:date].present? # письма за дату
-      @letters = Letter.where(date: params[:date]).order(sort_column + ' ' + sort_direction).page(params[:page])
-      @title_letter = 'за дату ' + params[:date]
+      @letters = Letter.where(date: params[:date]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      @title_letter += ' за дату ' + params[:date]
     else
       if params[:addresse].present? # письма от адресанта + письма алресату
-        @letters = Letter.where('sender ILIKE ?', params[:addresse]).order(sort_column + ' ' + sort_direction).page(params[:page])
-        @title_letter = 'адреса[н]та ' + params[:addresse]
+        @letters = Letter.where('sender ILIKE ?', params[:addresse]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        @title_letter += ' адреса[н]та ' + params[:addresse]
       else
-        @letters = Letter.search(params[:search]).includes(:user_letter, :letter_appendix).order(sort_column + ' ' + sort_direction).page(params[:page])
+        @letters = Letter.search(params[:search]).includes(:user_letter, :letter_appendix).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
       end
     end
   end
 
   def show
-    @requirements = Requirement.where(letter_id: @letter.id)
+    @requirements = Requirement.where(letter_id: @letter.id) # требования, созданные из письма
   end
 
   def new
@@ -84,18 +85,21 @@ class LettersController < ApplicationController
   end
 
   def appendix_update
-    letter_appendix = LetterAppendix.new(params[:letter_appendix]) if params[:letter_appendix].present?
-    if letter_appendix
-      @letter = letter_appendix.letter
-      if letter_appendix.name.blank?
-        flash[:alert] = 'Ошибка - не указано наименование файла приложения!'
-      else
-        flash[:notice] = 'Файл приложения "' + letter_appendix.name  + '" загружен.' if letter_appendix.save
+    @letter_appendix = LetterAppendix.new(params[:letter_appendix]) if params[:letter_appendix].present?
+    if @letter_appendix
+      puts "\n\nappendix_update"
+      puts @letter_appendix.inspect
+      @letter = @letter_appendix.letter
+      puts "\n #{@letter.inspect}"
+      if @letter_appendix.save
+        flash[:notice] = 'Файл приложения "' + @letter_appendix.appendix_file_name  + '" загружен.'
       end
+      puts @letter_appendix.inspect
+      puts @letter_appendix.errors.full_messages
     else      
       flash[:alert] = "Ошибка - имя файла не указано."
     end
-    respond_with(letter_appendix.letter)
+    respond_with(@letter_appendix.letter)
   end
 
 
@@ -108,7 +112,7 @@ class LettersController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def letter_params
       params.require(:letter).permit(:regnumber, :regdate, :number, :date, :subject, :source, :sender, :duedate, 
-        :body, :status, :status_name, :result, :letter_id, :author_id, :author_name)
+        :body, :status, :status_name, :result, :letter_id, :author_id, :author_name, :letter_appendix)
     end
 
     def sort_column
