@@ -5,8 +5,7 @@ class LetterAppendix < ActiveRecord::Base
   default_scope { order(:name) }
 
   validates :letter_id, presence: true   # относится к письму
-  validates :name, :presence => true,
-                   :length => {:minimum => 3, :maximum => 255}
+  #validates :name, :presence => true, :length => {:minimum => 3, :maximum => 255}
   
   belongs_to :letter
 
@@ -16,7 +15,9 @@ class LetterAppendix < ActiveRecord::Base
     :path => ":rails_root/public/store/appendix/:id.:ymd.:basename.:extension",
     :hash_secret => "BankPermBP1Step"
   validates :appendix, :attachment_presence => true
-  do_not_validate_attachment_file_type :appendix  #paperclip >4.0
+  #do_not_validate_attachment_file_type :appendix  #paperclip >4.0
+  #validates_attachment_file_name :appendix, :matches => [/pdf\Z/, /jpe?g\Z/, /gif\Z/, /tiff\Z/, /tif\Z/, /doc\Z/, /odf\Z/, /xls\Z/, /ods\Z/, /txt\Z/]
+  #validates_attachment_content_type :appendix, :content_type => [/\Aimage/, /\Apdf/]
   validates_attachment_content_type :appendix, 
   :content_type => ['application/pdf', 'applications/vnd.pdf', 'binary/octet-stream',
                     'image/jpeg', 'image/gif', 'image/tiff',

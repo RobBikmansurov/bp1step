@@ -98,7 +98,7 @@ BPDoc::Application.routes.draw do
       get :create_requirement  # создать требование
     end
   end
-  resources :letter_appendix, :only => [:destroy, :edit, :update]
+  resources :letter_appendixes, :only => [:destroy, :edit, :update]
 
   resources :tasks
   resources :requirements do
