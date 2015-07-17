@@ -7,6 +7,6 @@
       -else
         = letter_appendix.name
       = ' ("' + letter_appendix.appendix_file_name + '": ' + letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S') + ' ' + letter_appendix.appendix_file_size.to_s + ")"
-      -if can? :update, letter_appendix
+      -if true or can? :update, letter_appendix
         =link_to image_tag('action_stop.gif', :alt => 'Удалить'), letter_appendix, data: { confirm: 'Файл "' + letter_appendix.appendix_file_name  + '": ' + letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S') + "\nДействительно хотите удалить приложение письма ##{letter_appendix.letter.id} ?" }, :method => 'delete', class: 'button-img'
       %br
