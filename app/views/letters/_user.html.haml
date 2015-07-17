@@ -3,7 +3,7 @@
 - @letter.user_letter.each do |user_letter|
   &nbsp;
   = link_to user_letter.user.displayname, user_letter.user
-  -if !user_letter.status.blank?
+  -if user_letter.status and user_letter.status > 0
     \- отв.
   = link_to image_tag('action_stop.gif', :alt => 'Удалить'), user_letter, data: { confirm: "Удалить исполнителя " + user_letter.user.displayname + "\nиз ответственых за № #{@letter.number} от #{@letter.date.strftime("%d.%m.%Y")} ?" }, :method => 'delete', class: 'button-img'
   &nbsp;

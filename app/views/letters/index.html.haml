@@ -51,7 +51,7 @@
         -letter.user_letter.each do |user_letter|
           -if user_letter.user
             - s = "#{user_letter.user.displayname}"
-            -if !user_letter.status.blank?
+            -if user_letter.status and user_letter.status > 0
               - s = s + "\u2713".html_safe
             = link_to s, user_letter.user
           -else
