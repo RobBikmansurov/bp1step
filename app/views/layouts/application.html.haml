@@ -76,7 +76,7 @@
                     =nav_link "Контрагенты", agents_path
             -if user_signed_in?
               =content_tag(:li, :class => nav_current(tasks_path)) do
-                =link_to 'Задачи', tasks_path
+                =link_to 'Задачи', letters_path
                 %ul.nav
                   = nav_link 'Письма', letters_path
                   = nav_link 'Задачи', tasks_path 
