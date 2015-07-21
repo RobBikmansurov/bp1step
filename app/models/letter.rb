@@ -21,6 +21,8 @@ class Letter < ActiveRecord::Base
 
   attr_accessible :number, :date, :subject, :source, :sender, :duedate, :body, :status, :status_name, :result, :author_id, :author_name
 
+  before_save :check_status
+
   def author_name
     author.try(:displayname)
   end
@@ -44,4 +46,12 @@ class Letter < ActiveRecord::Base
       where(nil)
     end
   end
+
+  private
+    def check_status
+      if status < 1   # письмо новое
+        self.status = 5 if self.user_letter.first  # Назначено
+      end
+      self.status = 0 if !self.user_letter.first  # Новое - если никому не назначено
+    end
 end
