@@ -525,5 +525,73 @@ namespace :bp1step do
     logger.info "      #{expiring_contracts_count} contracts is expiring from #{Date.current - 2} to #{Date.current + 7}" 
   end
 
+  desc "Create Letters from files in  SVK"
+  task :create_letters_from_files  => :environment do     # создание новых писем из файов в каталоге СВК
+    PublicActivity.enabled = false  # отключить протоколирование изменений
+    logger = Logger.new('log/bp1step.log')  # протокол работы
+    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :create_letters_from_files'
+
+    nn = 1
+    nf = 0
+    pathfrom = 'files/REMART/'
+
+    for file in Dir.glob(pathfrom + '*')    # обход всех файлов в каталоге с файлами для писем
+      nf += 1
+      ext = File.extname(file).upcase
+      fname = File.basename(file).upcase            # расширение файла
+      name = fname[0..(fname.size - ext.size - 1)]  # только имя файла
+      l_number, l_subject, l_sender = ""
+      l_date = Date.current.strftime('%d.%m.%Y')
+      l_source = 'СВК'
+
+      case name
+      when /\AOD\d{3,}\z/                                 # ODNNNN.PDF
+        l_number = 'ОД-' + name[2..name.size]
+        l_sender = 'ЦБ РФ'
+        l_subject = 'Об отзыве лицензии / Об уточнении'
+      when /\A\d{3,}\z/                                   #NNNN.PDF или NNNN.TIF
+        l_number = name
+        l_sender = 'Отделение по Пермскому краю ЦБ РФ'
+      #when /\AVES\d{6}_\d{1,}\(\d{1,}\)/
+      when /\AVES\d{6}_+/                                 # вестник банка росии
+        l_number = name[/_\d+\(?f?/]
+        l_number = "#{l_number[1..l_number.size-2]} #{name[/\(\d+\)?f?/]}"
+        l_sender = "Банк России"
+        l_subject = "Вестник Банка России No #{l_number} от #{l_date}"
+      when /\AGR-OT-\d+/                                  # gr-ot-MM.DOC
+        l_number = name
+        l_sender = 'Отделение по Пермскому краю ЦБ РФ'
+        l_subject = "График представления отчетности в виде электронных сообщений"
+      when /\A\d+_U/                                      # Указание БР
+        l_number = name[/\A\d+_?f?/]
+        l_number = "#{l_number[0..l_number.size-2]}-У"
+        l_sender = "Банк России"
+        l_subject = "Указание Банка России № #{l_number} от #{l_date}"
+      when /\A\d+_MR/                                     # Методические рекомендации
+        l_number = name[/\A\d+_?f?/]
+        l_number = "#{l_number[0..l_number.size-2]}-МР"
+        l_sender = "Банк России"
+        l_subject = "Методические рекомендации № #{l_number} от #{l_date}"
+      else
+      end
+      if !l_number.blank? # удалось идентифицировать файл
+        letter = Letter.new(status: 0, )
+        letter.date = Time.current.strftime("%d.%m.%Y")
+        letter.duedate = (Time.current + 10.days).strftime("%d.%m.%Y") # срок исполнения - даем 10 дней по умолчанию
+        letter.number = l_number
+        letter.sender = l_sender
+        letter.subject = l_subject
+        letter.source = l_source
+        if letter.save
+          nn += 1
+          logger.info "##{letter.id} #{name}: \t№#{l_number}\t[#{l_subject}]"
+
+        end
+      end
+    end
+
+    logger.info "All: #{nf} files, created #{nn} letters"
+  end
+
 
 end
