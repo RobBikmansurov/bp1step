@@ -44,7 +44,7 @@ class LetterAppendixesController < ApplicationController
       if params[:id].present?
         @letter_appendix = LetterAppendix.find(params[:id])
       else
-        @letter = Contract.new
+        @letter = Letter.new
       end
     end
 
