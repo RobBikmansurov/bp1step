@@ -30,7 +30,8 @@ class LettersController < ApplicationController
   end
 
   def edit
-    @user_letter = UserLetter.new(letter_id: @letter.id)
+    @user_letter = UserLetter.new(letter_id: @letter.id)    # заготовка дляответственного
+    @letter.author_id = current_user.id if @letter.author_id.blank? and user_signed_in?   # если автора нет - назначим первого, кто внес изменения
   end
 
   def create
@@ -104,15 +105,13 @@ class LettersController < ApplicationController
 
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_letter
       @letter = Letter.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
     def letter_params
       params.require(:letter).permit(:regnumber, :regdate, :number, :date, :subject, :source, :sender, :duedate, 
-        :body, :status, :status_name, :result, :letter_id, :author_id, :author_name, :letter_appendix)
+        :body, :status, :status_name, :result, :letter_id, :author_id, :author_name, :letter_appendix, :letter_id, :name, :appendix)
     end
 
     def sort_column
