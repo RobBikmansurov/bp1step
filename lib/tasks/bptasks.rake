@@ -342,7 +342,7 @@ namespace :bp1step do
     pathfrom = 'files/_1_Нормативные документы банка/__Внутренние документы Банка_действующие/'
     d = Dir.new(pathfrom)
 
-    Find.find( pathfrom ) do |f|  # обход всех файлов в каталогах с джокументами
+    Find.find( pathfrom ) do |f|  # обход всех файлов в каталогах с документами
       if not File.stat(f).directory?
         nf += 1
         fname = f[pathfrom.size..-1]
@@ -555,7 +555,8 @@ namespace :bp1step do
       #when /\AVES\d{6}_\d{1,}\(\d{1,}\)/
       when /\AVES\d{6}_+/                                 # вестник банка росии
         l_number = name[/_\d+\(?f?/]
-        l_number = "#{l_number[1..l_number.size-2]} #{name[/\(\d+\)?f?/]}"
+        l_number = "#{l_number[1..l_number.size-2]}"
+        l_number = "#{l_number.to_i.to_s} #{name[/\(\d+\)?f?/]}"
         l_sender = "Банк России"
         l_subject = "Вестник Банка России No #{l_number} от #{l_date}"
       when /\AGR-OT-\d+/                                  # gr-ot-MM.DOC
@@ -585,6 +586,8 @@ namespace :bp1step do
         if letter.save
           nn += 1
           logger.info "##{letter.id} #{name}: \t№#{l_number}\t[#{l_subject}]"
+          letter_appendix = LetterAppendix.new(letter_id: letter.id)
+          
 
         end
       end
