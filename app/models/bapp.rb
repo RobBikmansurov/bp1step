@@ -1,7 +1,4 @@
 class Bapp < ActiveRecord::Base
-  include PublicActivity::Model
-  tracked owner: Proc.new { |controller, model| controller.current_user }
-  
   acts_as_taggable
   
   validates :name, :presence => true,
@@ -15,6 +12,9 @@ class Bapp < ActiveRecord::Base
   accepts_nested_attributes_for :bproces
 
   attr_accessible :name, :description, :apptype, :purpose, :version_app, :directory_app, :distribution_app, :executable_file, :licence, :source_app, :note, :tag_list
+
+  include PublicActivity::Model
+  tracked owner: Proc.new { |controller, model| controller.current_user }
 
   def self.search(search)
     if search
