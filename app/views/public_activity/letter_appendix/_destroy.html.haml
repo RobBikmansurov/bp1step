@@ -1,0 +1,8 @@
+удалил Приложение
+-if activity.trackable
+  к
+  = link_to "Письму ##{activity.trackable.letter_id}", letter_path(activity.trackable.letter_id)
+  = "(##{activity.trackable.id})"
+-else
+  к Письму
+  = "(##{activity.trackable_id})"
