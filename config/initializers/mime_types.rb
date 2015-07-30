@@ -6,4 +6,3 @@
 Mime::Type.register "text/msword", :odt
 #Mime::Type.register "text/pdf", :pdf
 #Mime::Type.register "applications/vnd.pdf", :pdf
-Mime::Type.register "applications/pdf", :pdf
