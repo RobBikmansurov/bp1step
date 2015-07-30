@@ -12,7 +12,7 @@ class UserRequirementsController < ApplicationController
   end
 
   def create
-    @user_requirement = UserRequirement.create(params[:user_requirement])
+    @user_requirement = UserRequirement.new(params[:user_requirement])
     flash[:notice] = "Successfully created user_requirement." if @user_requirement.save
     respond_with(@user_requirement)
   end
