@@ -12,8 +12,10 @@ class UserLettersController < ApplicationController
   end
 
   def create
-    @user_letter = UserLetter.create(params[:user_letter])
+    @user_letter = UserLetter.new(params[:user_letter])
+    p "\n\nUserLettersController.create 1 #{@user_letter.inspect}"
     if @user_letter.save
+      p "\n\nUserLettersController.create 2 #{@user_letter.inspect}"
       flash[:notice] = "Successfully created user_letter."
       letter = Letter.find(@user_letter.letter)
       letter.update_column(:status, 5) if letter.status < 1 # если есть ответственные - статус = Назначено

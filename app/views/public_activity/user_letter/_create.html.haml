@@ -1,0 +1,9 @@
+назначил Исполнителя
+-if activity.trackable
+  = link_to "Письма ##{activity.trackable.letter_id}", letters_path + '/' + activity.trackable.letter_id.to_s
+  = "(##{activity.trackable.id}): -> "
+  = link_to "#{activity.trackable.user.displayname}", user_path(activity.trackable.user)
+-else
+  но запись
+  = "(##{activity.trackable_id})"
+  уже удалена

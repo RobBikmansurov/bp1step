@@ -29,6 +29,10 @@ class Requirement < ActiveRecord::Base
     self.status = REQUIREMENT_STATUS[key]
   end
 
+  def name
+    return "[#{label}] от #{date.strftime("%d.%m.%y")}"
+  end
+
   def self.search(search)
     if search
       where('label ILIKE ? or source ILIKE ?', "%#{search}%", "%#{search}%")

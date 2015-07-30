@@ -1,0 +1,10 @@
+изменил Исполнителя Письма
+-if activity.trackable
+  = link_to "##{activity.trackable.letter_id}", letter_path(activity.trackable.letter_id)
+  = "(##{activity.trackable.id}): -> "
+  =link_to activity.trackable.user.displayname, user_path(activity.trackable.user)
+  \->
+-else
+  но запись
+  = "(##{activity.trackable_id})"
+  уже удалена

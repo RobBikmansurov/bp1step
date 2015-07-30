@@ -2,6 +2,9 @@ source 'https://rubygems.org'
 
 ruby '2.2.2'
 gem 'rails', '4.2.1'
+# production
+#ruby '2.2.1'
+#gem 'rails', '4.0.1'
 
 #gem 'yaml_db', github: 'jetthoughts/yaml_db', ref: 'fb4b6bd7e12de3cffa93e0a298a1e5253d7e92ba'
 
@@ -14,9 +17,10 @@ gem 'jquery-ui-rails'
 gem 'therubyracer'
 gem 'unicorn'
 
-gem "devise", "~> 3.4.1"#, git: "https://github.com/plataformatec/devise"
+gem "devise", ">= 3.4.1"#, git: "https://github.com/plataformatec/devise"
 gem "devise_ldap_authenticatable"
 gem "cancan"
+#gem 'cancancan', '~> 1.10'
 gem 'alphabetical_paginate'
 gem 'haml-rails'
 gem 'execjs'
@@ -27,17 +31,24 @@ gem "the_sortable_tree", ">= 2.4.0"
 gem 'simple_form'
 gem 'odf-report'
 gem 'public_activity'
-gem 'paperclip', "~> 4.2"
+#gem 'paperclip', "~> 4.2"
+gem "paperclip", :git => "git://github.com/thoughtbot/paperclip.git"
 gem 'acts-as-taggable-on'
 gem 'protected_attributes'
 gem 'chartkick'
 gem 'groupdate'
+gem 'jcrop-rails-v2'
 
-group :test do
+group :test, :development do
+  gem 'rspec-rails'
   gem 'sqlite3'
   gem 'capybara'
-  gem 'shoulda-matchers'
   gem 'webrat'
+  gem "selenium-webdriver"
+end
+
+group :test do
+  gem 'shoulda-matchers', require: false
 end
 
 group :development do
@@ -45,7 +56,8 @@ group :development do
   gem 'capistrano'  # Deploy with Capistrano
   gem 'rvm-capistrano',  require: false
   gem 'capistrano-deploy', :require => false
-  gem 'rubocop', require: false
+  #gem 'rubocop', require: false
+  #gem "rails-erd"
 end
 
 group :production do

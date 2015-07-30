@@ -30,7 +30,7 @@ class LettersController < ApplicationController
   end
 
   def edit
-    @user_letter = UserLetter.new(letter_id: @letter.id)    # заготовка дляответственного
+    @user_letter = UserLetter.new(letter_id: @letter.id)    # заготовка для ответственного
     @letter.author_id = current_user.id if @letter.author_id.blank? and user_signed_in?   # если автора нет - назначим первого, кто внес изменения
   end
 
