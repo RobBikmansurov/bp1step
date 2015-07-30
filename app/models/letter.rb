@@ -39,6 +39,10 @@ class Letter < ActiveRecord::Base
     self.status = LETTER_STATUS[key]
   end
 
+  def name
+    return "№#{number} от #{date.strftime("%d.%m.%y")}"
+  end
+
   def self.search(search)
     if search
       where('number ILIKE ? or regnumber ILIKE ? or subject ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")

@@ -1,0 +1,11 @@
+создал Приложение
+-if activity.trackable
+  %b
+    = "[#{activity.trackable.appendix_file_name}]"
+  к
+  = link_to "Письму ##{activity.trackable.letter_id}", letter_path(activity.trackable.letter_id)
+  = "(##{activity.trackable.id})"
+-else
+  к Письму, но запись
+  = "(##{activity.trackable_id})"
+  удалена
