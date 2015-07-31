@@ -4,5 +4,4 @@
 # Mime::Type.register "text/richtext", :rtf
 # Mime::Type.register_alias "text/html", :iphone
 Mime::Type.register "text/msword", :odt
-#Mime::Type.register "text/pdf", :pdf
-#Mime::Type.register "applications/vnd.pdf", :pdf
+
