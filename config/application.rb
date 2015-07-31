@@ -33,7 +33,8 @@ module BPDoc
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # config.time_zone = 'Central Time (US & Canada)'
     config.time_zone = 'Ekaterinburg'   # 'UTC +06:00'
-    config.active_record.default_timezone = :local
+    #config.active_record.default_timezone = :local # так не работают графики - ActiveRecord::Base.default_timezone must be :utc to use Groupdate 
+    config.active_record.default_timezone = :utc
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
@@ -55,8 +56,7 @@ module BPDoc
     config.filter_parameters += [:password]
 
     ActsAsTaggableOn.strict_case_match = true
-
-    Paperclip.options[:log] = false
-
+    Rails.application.config.action_dispatch.cookies_serializer = :hybrid
+    
   end
 end
