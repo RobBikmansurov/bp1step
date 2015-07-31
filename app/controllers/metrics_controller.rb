@@ -93,14 +93,13 @@ class MetricsController < ApplicationController
   end
 
   def new_value
-    @metric_value = MetricValue.new()  # заготовка для новго значения
+    @metric_value = MetricValue.new()  # заготовка для нового значения
     @metric_value.metric_id = @metric.id
     @metric_value.dtime = params[:dtime] if params[:dtime].present?
     render 'metric_values/new'
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_metric
       @metric = Metric.find(params[:id])
       @bproce = Bproce.find(params[:bproce_id]) if params[:bproce_id].present?
