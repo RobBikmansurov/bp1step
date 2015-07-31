@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 
-ruby '2.2.2'
-gem 'rails', '4.2.1'
+#ruby '2.2.2'
+#gem 'rails', '4.2.1'
 # production
-#ruby '2.2.1'
-#gem 'rails', '4.0.1'
+ruby '2.2.1'
+gem 'rails', '4.2.3'
 
 #gem 'yaml_db', github: 'jetthoughts/yaml_db', ref: 'fb4b6bd7e12de3cffa93e0a298a1e5253d7e92ba'
 
@@ -40,7 +40,6 @@ gem 'groupdate'
 gem 'jcrop-rails-v2'
 
 group :test, :development do
-  gem 'rspec-rails'
   gem 'sqlite3'
   gem 'capybara'
   gem 'webrat'
