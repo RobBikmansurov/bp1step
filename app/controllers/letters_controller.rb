@@ -47,6 +47,11 @@ class LettersController < ApplicationController
   def update
     if @letter.update(letter_params)
       redirect_to @letter, notice: 'Letter was successfully updated.'
+      begin
+        LetterMailer.update_Letter(@letter, current_user, nil, '').deliver    # оповестим Исполнителей об изменении Письма
+      rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+        flash[:alert] = "Error sending mail to responsible for the letter"
+      end
     else
       @user_letter = UserLetter.new(letter_id: @letter.id)
       render action: 'edit'
