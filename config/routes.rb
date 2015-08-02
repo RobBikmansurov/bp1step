@@ -96,6 +96,8 @@ BPDoc::Application.routes.draw do
       post :appendix_update
       get :clone            # письмо от того же корреспондента
       get :create_requirement  # создать требование
+      get :create_user      # назначить ответственного
+      post :update_user
     end
   end
   resources :letter_appendixes, :only => [:destroy, :edit, :update]

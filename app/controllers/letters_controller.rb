@@ -20,6 +20,10 @@ class LettersController < ApplicationController
 
   def show
     @requirements = Requirement.where(letter_id: @letter.id) # требования, созданные из письма
+    respond_to do |format|
+      format.html
+      format.json { render json: @letter }
+    end
   end
 
   def new
@@ -77,6 +81,24 @@ class LettersController < ApplicationController
     @requirement = Requirement.new(letter_id: letter.id)
     #redirect_to requirements_new(@requirement) and return
     redirect_to proc { new_requirement_url(letter_id: letter.id) } and return
+  end
+
+  def create_user
+    @letter = Letter.find(params[:id])
+    @user_letter = UserLetter.new(letter_id: @letter.id)    # заготовка для ответственного
+    render :create_user
+    ##respond_with(@letter)
+  end
+
+  def update_user
+    user_letter = UserLetter.new(params[:user_letter]) if params[:user_letter].present?
+    if user_letter
+      @letter = user_letter.letter
+      flash[:notice] = "Исполнитель #{user_letter.user_name} назначен" if user_letter.save
+    else
+      flash[:alert] = "Ошибка - ФИО Исполнителя не указано."
+    end
+    respond_with(@letter)
   end
 
   def record_not_found
