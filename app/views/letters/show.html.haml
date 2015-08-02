@@ -57,6 +57,10 @@
       \- отв.
     &nbsp;
 
+- if true or can? :update, @letter or @letter.author == current_user.id   # автор тоже может добавлять процесс
+  #create_user
+    = link_to 'Добавить Исполнителя', create_user_letter_path(@letter), remote: true
+
 %h3
   Статус:
   %b= LETTER_STATUS.key(@letter.status)
