@@ -5,7 +5,7 @@
   =@letter.id
 
 = render 'form'
-= render 'user'
+= render 'user' if @letter.user_letter.first
 = render 'appendixes'
 
 %p
