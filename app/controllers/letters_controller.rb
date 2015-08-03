@@ -2,6 +2,7 @@ class LettersController < ApplicationController
   respond_to :html, :json
   before_filter :authenticate_user!, :only => [:edit, :new, :create, :update, :destroy]
   before_action :set_letter, only: [:show, :edit, :update, :destroy]
+  helper_method :sort_column, :sort_direction
 
   def index
     @title_letter = 'Письма'
