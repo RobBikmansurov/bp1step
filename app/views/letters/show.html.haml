@@ -59,7 +59,7 @@
     &nbsp;
     - is_can_update = true if user_letter.user.id = current_user.id  # исполнители могут добавлять других исполнителей
 - if @letter.author
-  - is_can_update = true if letter.author.id = current_user.id  # автор может добавлять других исполнителей
+  - is_can_update = true if @letter.author.id = current_user.id  # автор может добавлять других исполнителей
 
 - if can? :update, @letter or is_can_update  # автор и исполнители могут добавлять других исполнителей
   #create_user
