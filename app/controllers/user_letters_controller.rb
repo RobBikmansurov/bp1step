@@ -27,17 +27,14 @@ class UserLettersController < ApplicationController
   end
 
   def destroy
-    p "\n\n"
-    p "#{params[:id]}"
-    user_letter = UserLetter.find(params[:id])   # нашли удаляемую связь
-    p "#{user_letter}"
-    @letter = Letter.find(user_letter.letter_id) # запомнили письмо для этой удаляемой связи
+    @user_letter = UserLetter.find(params[:id])   # нашли удаляемую связь
+    @letter = Letter.find(@user_letter.letter_id) # запомнили письмо для этой удаляемой связи
     begin
       UserLetterMailer.user_letter_destroy(@user_letter, current_user).deliver_now    # оповестим исполнителя
     rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
       flash[:alert] = "Error sending mail to #{@user_letter.user.email}"
     end
-    if user_letter.destroy   # удалили связь
+    if @user_letter.destroy   # удалили связь
       @letter.update_column(:status, 0) if !@letter.user_letter.first # если нет ответственных - статус = Новое
     end
     respond_with(@letter)  # вернулись в письмо
