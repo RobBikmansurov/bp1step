@@ -28,6 +28,7 @@ class LettersController < ApplicationController
 
   def new
     @letter = Letter.new
+    @letter.sender = params[:addresse] if params[:addresse].present?
     @letter.author_id = current_user.id if user_signed_in?
     @letter.duedate = (Time.current + 10.days).strftime("%d.%m.%Y") # срок исполнения - даем 10 дней по умолчанию
     @letter.status = 0
@@ -50,11 +51,11 @@ class LettersController < ApplicationController
 
   def update
     if @letter.update(letter_params)
-      begin
-        LetterMailer.update_letter(@letter, current_user, nil, '').deliver    # оповестим Исполнителей об изменении Письма
-      rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-        flash[:alert] = "Error sending mail to responsible for the letter"
-      end
+      # begin
+      #   LetterMailer.update_letter(@letter, current_user, nil, '').deliver    # оповестим Исполнителей об изменении Письма
+      # rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+      #   flash[:alert] = "Error sending mail to responsible for the letter"
+      # end
       redirect_to @letter, notice: 'Letter was successfully updated.'
     else
       @user_letter = UserLetter.new(letter_id: @letter.id)
