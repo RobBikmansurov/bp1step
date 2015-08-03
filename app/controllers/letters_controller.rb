@@ -50,12 +50,12 @@ class LettersController < ApplicationController
 
   def update
     if @letter.update(letter_params)
-      redirect_to @letter, notice: 'Letter was successfully updated.'
       begin
-        LetterMailer.update_Letter(@letter, current_user, nil, '').deliver    # оповестим Исполнителей об изменении Письма
+        LetterMailer.update_letter(@letter, current_user, nil, '').deliver    # оповестим Исполнителей об изменении Письма
       rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
         flash[:alert] = "Error sending mail to responsible for the letter"
       end
+      redirect_to @letter, notice: 'Letter was successfully updated.'
     else
       @user_letter = UserLetter.new(letter_id: @letter.id)
       render action: 'edit'
@@ -93,8 +93,16 @@ class LettersController < ApplicationController
   def update_user
     user_letter = UserLetter.new(params[:user_letter]) if params[:user_letter].present?
     if user_letter
-      @letter = user_letter.letter
-      flash[:notice] = "Исполнитель #{user_letter.user_name} назначен" if user_letter.save
+      if user_letter.save
+        flash[:notice] = "Исполнитель #{user_letter.user_name} назначен"
+        begin
+          UserLetterMailer.user_letter_create(user_letter, current_user).deliver_now    # оповестим нового исполнителя
+        rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+          flash[:alert] = "Error sending mail to #{user_letter.user.email}"
+        end
+        @letter = user_letter.letter   #Letter.find(@user_letter.letter_id)
+        @letter.update_column(:status, 5) if @letter.status < 1 # если есть ответственные - статус = Назначено
+      end
     else
       flash[:alert] = "Ошибка - ФИО Исполнителя не указано."
     end
