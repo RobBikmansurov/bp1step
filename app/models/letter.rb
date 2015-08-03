@@ -45,7 +45,7 @@ class Letter < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('number ILIKE ? or regnumber ILIKE ? or subject ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
+      where('number ILIKE ? or regnumber ILIKE ? or subject ILIKE ? or id = ?', "%#{search}%", "%#{search}%", "%#{search}%", "#{search.to_i}")
     else
       where(nil)
     end
