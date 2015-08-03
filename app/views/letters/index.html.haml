@@ -14,14 +14,14 @@
    
 %table
   %tr
-    %th #
-    %th № от
+    %th= sortable "id", "#"
+    %th= sortable 'date', '№ от'
     %th регистр.
     %th
     %th [ Тема ]
     %th Корреспондент
-    %th Срок
-    %th Статус
+    %th= sortable 'duedate', 'Срок'
+    %th= sortable "status", "Статус"
     %th Исполнитель
     -if true or can? :manage, Letter or can? :destroy, Letter
       %th
