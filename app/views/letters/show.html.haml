@@ -50,14 +50,18 @@
 
 %h3 
   Исполнители:
+  - is_can_update = false
   - @letter.user_letter.each do |user_letter|
     &nbsp;
     = link_to user_letter.user.displayname, user_letter.user
     -if user_letter.status and user_letter.status > 0
       \- отв.
     &nbsp;
+    - is_can_update = true if user_letter.user.id = current_user.id  # исполнители могут добавлять других исполнителей
+- if @letter.author
+  - is_can_update = true if letter.author.id = current_user.id  # автор может добавлять других исполнителей
 
-- if true or can? :update, @letter or @letter.author == current_user.id   # автор тоже может добавлять процесс
+- if can? :update, @letter or is_can_update  # автор и исполнители могут добавлять других исполнителей
   #create_user
     = link_to 'Добавить Исполнителя', create_user_letter_path(@letter), remote: true
 

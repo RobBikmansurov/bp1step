@@ -12,7 +12,7 @@ class UserLetterMailer < ActionMailer::Base
 
   def user_letter_destroy(user_letter, current_user)		# рассылка об удалении исполнителя из ответственных
     @user_letter = user_letter
-    @letter = user_letter.letter if user_letter
+    @letter = user_letter.letter
     @user = user_letter.user
     @current_user = current_user
     mail(:to => @user.email, :subject => "BP1Step: удален исполнитель Письма ##{@letter.name}")
