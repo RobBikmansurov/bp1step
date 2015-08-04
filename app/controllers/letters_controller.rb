@@ -157,7 +157,8 @@ class LettersController < ApplicationController
     end
 
     def sort_column
-      params[:sort] || "date"
+      #params[:sort] || "date"
+      params[:sort] || "id"   # вверху - самые новые письма
     end
 
     def sort_direction
