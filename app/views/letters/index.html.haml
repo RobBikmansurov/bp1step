@@ -11,6 +11,8 @@
     -else
       -if params[:addresse].present?
         = "адреса[н]та [ #{params[:addresse]} ]"
+      -else
+        = "статус [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
    
 %table
   %tr
@@ -44,7 +46,7 @@
           - if File.exist?(letter.letter_appendix.first.appendix.path)
             = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), letter.letter_appendix.first.appendix.url, class: 'button-img'
       %td= link_to truncate(letter.subject, :length => 40, :omission => ' ...'), letter
-      %td= link_to letter.sender, letters_path(addresse: letter.sender)
+      %td= link_to truncate(letter.sender, :length => 20, :omission => ' ...'), letters_path(addresse: letter.sender)
       %td= letter.duedate.strftime("%d.%m.%y") if letter.duedate
       %td= LETTER_STATUS.key(letter.status)
       %td
@@ -57,7 +59,6 @@
           -else
             удалить ссылку
             = user_letter.inspect
-
       %td
         - if true or can? :manage, Letter
           = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_letter_path(letter), class: 'button-img'
@@ -76,3 +77,10 @@
     = link_to 'Новое письмо', new_letter_path({addresse: params[:addresse]}), class: 'button'
   -else
     = link_to 'Новое письмо', new_letter_path, class:'button'
+
+%p
+Статус:
+- Letter.select("status, count(id) as count").group(:status).order(:status).each do |d|
+  -if !d.status.to_s.empty?
+    = link_to " #{LETTER_STATUS.key(d.status)} ", letters_path + '?status=' + d.status.to_s, class: 'groups'
+    &nbsp;
