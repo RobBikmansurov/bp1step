@@ -12,7 +12,8 @@
       -if params[:addresse].present?
         = "адреса[н]та [ #{params[:addresse]} ]"
       -else
-        = "статус [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
+        -if params[:status].present?
+          = "статус [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
    
 %table
   %tr

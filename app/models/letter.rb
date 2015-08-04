@@ -13,6 +13,9 @@ class Letter < ActiveRecord::Base
   validates :sender, presence: true,
                      length: {minimum: 3}
 
+  scope :overdue, -> { where('duedate <= ? and status < 90', Date.current) }  # не исполненные в срок письма
+  scope :not_assigned, -> { where('status < 5 and author_id IS NOT NULL') }   # не назначенные, нет исполнителя
+
   belongs_to :letter
   belongs_to :author, :class_name => 'User'
   has_many :user_letter, :dependent => :destroy  # ответственные за письмо
@@ -22,6 +25,7 @@ class Letter < ActiveRecord::Base
   attr_accessible :number, :date, :subject, :source, :sender, :duedate, :body, :status, :status_name, :result, :author_id, :author_name
 
   before_save :check_status
+
 
   def author_name
     author.try(:displayname)

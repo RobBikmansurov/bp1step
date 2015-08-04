@@ -100,12 +100,11 @@ namespace :bp1step do
         :username => LDAP_CONFIG["development"]["admin_user"],
         :password => LDAP_CONFIG["development"]["admin_password"]
       }
-    debug_flag = true # флаг отладки, если true - отладочная печать
+    debug_flag = false # флаг отладки, если true - отладочная печать
 
     filter = Net::LDAP::Filter.eq('memberOf', 'CN=rl_bp1step_users,OU=roles,DC=ad,DC=bankperm,DC=ru') # выбирать членов группы rl_bp1step_users
     treebase = LDAP_CONFIG["development"]["base"]
     attrs = ["sn", "givenname", "middleName", "cn", "telephonenumber", "sAMAccountName", "title", "physicaldeliveryofficename", "department", "name", "mail", "description", "userAccountControl"]
-
 
     i, new_users, upd_users, not_found_users, disabled_users = 0, 0, 0, 0, 0  # счетчики
     ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do |entry|
@@ -595,6 +594,30 @@ namespace :bp1step do
 
     logger.info "All: #{nf} files, created #{nn} letters"
   end
+
+  
+  desc 'Сontrol of expiring duedate letters'
+  task :check_overdue_letters => :environment do  # проверить письма с просроченным сроком исполениия
+    logger = Logger.new('log/bp1step.log')  # протокол работы
+    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_overdue_letters'
+
+    count = 0
+    u = User.find(97) # пользователь по умолчанию для оповещения
+    Letter.overdue.each do | letter |  # письма в статусе < Исполнено со сроком исполнения <= текущей дате
+      count += 1
+      emails = ''
+      emails = "#{letter.author.email}" if letter.author   # автор
+      letter.user_letter.each do |user_letter|  # исполнители
+        emails += ', ' if !emails.blank?
+        emails += "#{user_letter.user.email}" if user_letter.user
+      end
+      logger.info "      ##{letter.id}\tсрок = #{letter.duedate.strftime("%d.%m.%Y")}\t#{emails}"
+      emails = u.email # DEBUG
+      LetterMailer.check_overdue_letters(letter, emails).deliver_now if !emails.blank?
+    end
+    logger.info "      #{count} letters is duedate" 
+  end
+
 
 
 end
