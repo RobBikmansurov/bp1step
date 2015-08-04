@@ -59,6 +59,8 @@ namespace :deploy do
     run "ln -s -- #{deploy_to}/files/ #{deploy_to}/current/files"
     run "rm -rf #{deploy_to}/lib"
     run "ln -s -- #{deploy_to}/current/lib/ #{deploy_to}/lib"
+    run "rm -rf #{deploy_to}/config/routes.rb"                                              # а может надо весь config заменять?
+    run "ln -s -- #{deploy_to}/current/config/routes.rb #{deploy_to}/config/routes.rb"
     #run "rm -rf #{deploy_to}/config"
     # скопируем конфигурационые файлы с секретами
     run "cp #{deploy_to}/config/ldap.yml #{deploy_to}/current/config/ldap.yml"

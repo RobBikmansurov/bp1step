@@ -602,7 +602,6 @@ namespace :bp1step do
     logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_overdue_letters'
 
     count = 0
-    u = User.find(97) # пользователь по умолчанию для оповещения
     Letter.overdue.each do | letter |  # письма в статусе < Исполнено со сроком исполнения <= текущей дате
       count += 1
       emails = ''
@@ -612,7 +611,7 @@ namespace :bp1step do
         emails += "#{user_letter.user.email}" if user_letter.user
       end
       logger.info "      ##{letter.id}\tсрок = #{letter.duedate.strftime("%d.%m.%Y")}\t#{emails}"
-      emails = u.email # DEBUG
+      #emails = 'robb@bankperm.ru'
       LetterMailer.check_overdue_letters(letter, emails).deliver_now if !emails.blank?
     end
     logger.info "      #{count} letters is duedate" 
