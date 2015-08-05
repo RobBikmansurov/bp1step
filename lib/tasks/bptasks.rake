@@ -530,11 +530,12 @@ namespace :bp1step do
     logger = Logger.new('log/bp1step.log')  # протокол работы
     logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :create_letters_from_files'
 
-    nn = 1
+    nn = 0
     nf = 0
-    pathfrom = 'files/REMART/'
+    pathfrom =  Rails.root.join("public", 'store', "REMART")
+    logger.info "#{pathfrom.to_s}"
 
-    for file in Dir.glob(pathfrom + '*')    # обход всех файлов в каталоге с файлами для писем
+    for file in Dir.glob(pathfrom.join('*.*').to_s)    # обход всех файлов в каталоге с файлами для писем
       nf += 1
       ext = File.extname(file).upcase
       fname = File.basename(file).upcase            # расширение файла
@@ -551,6 +552,7 @@ namespace :bp1step do
       when /\A\d{3,}\z/                                   #NNNN.PDF или NNNN.TIF
         l_number = name
         l_sender = 'Отделение по Пермскому краю ЦБ РФ'
+        l_subject = name
       #when /\AVES\d{6}_\d{1,}\(\d{1,}\)/
       when /\AVES\d{6}_+/                                 # вестник банка росии
         l_number = name[/_\d+\(?f?/]
@@ -573,7 +575,9 @@ namespace :bp1step do
         l_sender = "Банк России"
         l_subject = "Методические рекомендации № #{l_number} от #{l_date}"
       else
+        # неизвестные файлы не добавляем
       end
+
       if !l_number.blank? # удалось идентифицировать файл
         letter = Letter.new(status: 0, )
         letter.date = Time.current.strftime("%d.%m.%Y")
@@ -582,11 +586,16 @@ namespace :bp1step do
         letter.sender = l_sender
         letter.subject = l_subject
         letter.source = l_source
-        if letter.save
+        if letter.save!    # письмо создали, теперь присоедним файл
           nn += 1
           logger.info "##{letter.id} #{name}: \t№#{l_number}\t[#{l_subject}]"
           letter_appendix = LetterAppendix.new(letter_id: letter.id)
-          
+          File.open file do | f |
+            letter_appendix.appendix = f
+            letter_appendix.save!
+          end
+
+          File.rename(file, File.join(File.dirname(file), 'ARC', File.basename(file))) if File.exist?(file)   # перенеем в архив
 
         end
       end
