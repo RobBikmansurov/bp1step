@@ -12,6 +12,7 @@ class Letter < ActiveRecord::Base
   validates :source, :length => {:maximum => 10}
   validates :sender, presence: true,
                      length: {minimum: 3}
+  validates :date, presence: true
 
   scope :overdue, -> { where('duedate <= ? and status < 90', Date.current) }  # не исполненные в срок письма
   scope :not_assigned, -> { where('status < 5 and author_id IS NOT NULL') }   # не назначенные, нет исполнителя
