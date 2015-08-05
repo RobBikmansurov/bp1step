@@ -11,7 +11,7 @@ class LetterAppendix < ActiveRecord::Base
   validates :appendix, :attachment_presence => false, validate_media_type: false
 
   validates_attachment_content_type :appendix, 
-    :content_type => [ 'application/pdf', 'applications/vnd.pdf', /\Aimage/, /\Aapplication/ ]
+    :content_type => [ 'application/pdf', 'application/vnd.pdf', /\Aimage/, /\Aapplication/ ]
   #validates_attachment_file_name :appendix, :matches => [/png\Z/, /jpe?g\Z/, /pdf\Z/]
   #validates_attachment_file_name :appendix, matches: [/\.(pdf|(docx?)|dot|wrd)\z/]
   do_not_validate_attachment_file_type :appendix

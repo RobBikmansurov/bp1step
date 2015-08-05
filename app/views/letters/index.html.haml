@@ -36,7 +36,7 @@
       %td
         = link_to letter.number, letter
         %br
-        = link_to letter.date.strftime("%d.%m.%y"), letters_path(date: letter.date.strftime("%d.%m.%Y"))
+        = link_to letter.date.strftime("%d.%m.%y"), letters_path(date: letter.date.strftime("%d.%m.%Y")) if letter.date
       %td
         -if letter.regnumber.blank?
           &nbsp;
