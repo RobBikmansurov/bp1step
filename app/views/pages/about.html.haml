@@ -13,8 +13,21 @@
 %br
 Директив: всего #{Directive.count}, из них действует - #{Directive.where(status: 'Действует').count}
 %br
-Договоров #{Contract.count}, из них действует - #{Contract.where(status: 'Действует').count}, на согласовании - #{Contract.where(status: 'Согласование').count}.
+Договоров #{Contract.count}:
+- Contract.select("status, count(id) as count").group(:status).order(:status).each do |d|
+  -if !d.status.to_s.empty?
+    #{d.status.downcase} (#{d.count})
 Контрагентов #{Agent.count}
+%br
+Писем #{Letter.count}:
+- Letter.select("status, count(id) as count").group(:status).order(:status).each do |d|
+  -if !d.status.to_s.empty?
+    #{LETTER_STATUS.key(d.status)} (#{d.count})
+  -else
+    \+ (#{d.count})
+от
+#{Letter.select('sender, count(id)').group(:sender).length} Корреспондентов
+
 %br
 -if can? :manage, User.first
   =link_to "Действий", activities_path
