@@ -593,9 +593,10 @@ namespace :bp1step do
           File.open file do | f |
             letter_appendix.appendix = f
             letter_appendix.save!
+            letter_appendix.appendix.reprocess!
           end
 
-          File.rename(file, File.join(File.dirname(file), 'ARC', File.basename(file))) if File.exist?(file)   # перенеем в архив
+          File.rename(file, File.join(File.dirname(file), 'ARC', File.basename(file))) if File.exist?(file)   # перенесем в архив
 
         end
       end
