@@ -1,7 +1,7 @@
 создал договор
 -if activity.trackable
   = '(#' + activity.trackable.id.to_s + ')'
-  = link_to activity.trackable.name, activity.trackable
+  = link_to activity.trackable.shortname, activity.trackable
 -else
   \#
   = activity.trackable_id
