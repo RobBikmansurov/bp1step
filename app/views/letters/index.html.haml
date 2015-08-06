@@ -20,7 +20,6 @@
     %th= sortable "id", "#"
     %th= sortable 'date', '№ от'
     %th регистр.
-    %th
     %th [ Тема ]
     %th Корреспондент
     %th= sortable 'duedate', 'Срок'
@@ -46,7 +45,7 @@
         -if letter.letter_appendix.first  # если есть приложение 
           - if File.exist?(letter.letter_appendix.first.appendix.path)
             = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), letter.letter_appendix.first.appendix.url, class: 'button-img'
-      %td= link_to truncate(letter.subject, :length => 40, :omission => ' ...'), letter
+        = link_to truncate(letter.subject, :length => 40, :omission => ' ...'), letter
       %td= link_to truncate(letter.sender, :length => 20, :omission => ' ...'), letters_path(addresse: letter.sender)
       %td= letter.duedate.strftime("%d.%m.%y") if letter.duedate
       %td= LETTER_STATUS.key(letter.status)
@@ -83,5 +82,5 @@
 Статус:
 - Letter.select("status, count(id) as count").group(:status).order(:status).each do |d|
   -if !d.status.to_s.empty?
-    = link_to " #{LETTER_STATUS.key(d.status)} ", letters_path + '?status=' + d.status.to_s, class: 'groups'
+    = link_to " #{LETTER_STATUS.key(d.status)} (#{d.count}) ", letters_path + '?status=' + d.status.to_s, class: 'groups'
     &nbsp;

@@ -1,10 +1,8 @@
--title "Действия пользователей"
+-title "Протокол действий"
 
 %h2
   Протокол действий
-  -if params[:type].present?
-
-  -else
+  = @activities_header
 
 -@activities.each do |activity|
   =activity.created_at.strftime('%d.%m.%Y %H:%M:%S')
