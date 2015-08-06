@@ -3,6 +3,7 @@ class LettersController < ApplicationController
   before_filter :authenticate_user!, :only => [:edit, :new, :create, :update, :destroy]
   before_action :set_letter, only: [:show, :edit, :update, :destroy]
   helper_method :sort_column, :sort_direction
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @title_letter = 'Письма'
@@ -164,5 +165,10 @@ class LettersController < ApplicationController
     def sort_direction
       params[:direction] || "desc"
     end
+  def record_not_found
+    flash[:alert] = "Письмо ##{params[:id]} не найдено."
+    redirect_to action: :index
+  end
+
 
 end
