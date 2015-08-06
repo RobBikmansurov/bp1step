@@ -12,6 +12,13 @@ class ActivitiesController < ApplicationController
             | PublicActivity::Activity.select(:id).where(trackable_type: "UserLetter", trackable_id: letter.user_letter.ids) \
             | PublicActivity::Activity.select(:id).where(trackable_type: "LetterAppendix", trackable_id: letter.letter_appendix.ids)
           @activities = PublicActivity::Activity.where(id: ids).order("created_at desc")
+        when 'contract'
+          contract = Contract.find("#{params[:id]}")
+          @activities_header = "Договор #{contract.shortname}"
+          ids = PublicActivity::Activity.select(:id).where(trackable_type: "#{params[:type]}", trackable_id: "#{params[:id]}") \
+            | PublicActivity::Activity.select(:id).where(trackable_type: "ContractScan", trackable_id: contract.contract_scan.ids) \
+            | PublicActivity::Activity.select(:id).where(trackable_type: "BproceContract", trackable_id: contract.bproce_contract.ids)
+          @activities = PublicActivity::Activity.where(id: ids).order("created_at desc")
         else
           @activities = PublicActivity::Activity.where(trackable_type: "#{params[:type]}", trackable_id: "#{params[:id]}")
         end

@@ -79,7 +79,7 @@
 Статус:
 - Contract.select("status, count(id) as count").group(:status).order(:status).each do |d|
   -if !d.status.to_s.empty?
-    = link_to d.status, contracts_path + '?status=' + d.status.to_s, class: 'groups'
+    = link_to " #{d.status} (#{d.count}) ", contracts_path + '?status=' + d.status.to_s, class: 'groups'
 %br
 Место хранения:
 - Contract.select("contract_place, count(id) as count").group(:contract_place).order(:contract_place).each do |d|
