@@ -532,7 +532,7 @@ namespace :bp1step do
 
     nn = 0
     nf = 0
-    pathfrom =  Rails.root.join("public", 'store', "REMART")
+    pathfrom =  Rails.root.join("svk_in")
     logger.info "#{pathfrom.to_s}"
 
     for file in Dir.glob(pathfrom.join('*.*').to_s)    # обход всех файлов в каталоге с файлами для писем
