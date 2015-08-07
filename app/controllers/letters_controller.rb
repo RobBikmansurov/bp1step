@@ -19,7 +19,8 @@ class LettersController < ApplicationController
           @letters = Letter.where('status = ?', params[:status]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
           @title_letter += ' статус ' + params[:status]
         else
-          @letters = Letter.search(params[:search]).where('status < 90').includes(:user_letter, :letter_appendix).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+          #@letters = Letter.search(params[:search]).where('status < 90').includes(:user_letter, :letter_appendix).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+          @letters = Letter.search(params[:search]).includes(:user_letter, :letter_appendix).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
         end
       end
     end
