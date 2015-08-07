@@ -57,7 +57,8 @@
     -if doc_count > 0
       Владелец
       = doc_count
-      документов: из них в статусе 
+      = link_to 'документов', documents_path(user: @usr)
+      \: из них в статусе 
       - Document.where(owner_id: @usr.id).group(:status).count.each do | key, value |
         = "#{key} - #{value}"
         %nbsp,
@@ -66,7 +67,8 @@
     -if contract_count > 0
       Отвечает за
       = contract_count
-      договоров: из них в статусе 
+      = link_to 'договоров', contracts_path(user: @usr)
+      \: из них в статусе 
       - Contract.where(owner_id: @usr.id).group(:status).count.each do | key, value |
         = "#{key} - #{value}"
         %nbsp,
@@ -75,7 +77,8 @@
     -if contract_count > 0
       Отвечает за оплату
       = contract_count
-      договоров: из них в статусе 
+      = link_to 'договоров', contracts_path(payer: @usr)
+      \: из них в статусе 
       - Contract.where(payer_id: @usr.id).group(:status).count.each do | key, value |
         = "#{key} - #{value}"
         %nbsp,
@@ -83,5 +86,12 @@
     - resource_count = Iresource.where(user_id: @usr.id).count   # кол-во ресурсов пользователя
     -if resource_count > 0
       Владелец
-      = resource_count
-      ресурсов
+      = link_to 'ресурсов', iresources_path + '?user=' + @usr.id.to_s
+  %h4
+    - letters = Letter.joins(:user_letter).where("user_letters.user_id = ?", @usr.id)
+    -if letters
+      Исполнитель
+      = link_to " писем (#{letters.count})", letters_path(user: @usr)
+      из них:
+      - letters.select('letters.status, count(letters.id) as count').group(:status).each do | letter |
+        = "#{ LETTER_STATUS.key(letter.status)} - #{letter.count}  "
