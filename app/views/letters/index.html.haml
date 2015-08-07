@@ -2,18 +2,9 @@
 -title @title_letter
 
 %h2
-  Корреспонденция
+  = @title_letter if @title_letter
   -if params[:search].present?
     = "[ #{params[:search]} ]"
-  -else
-    -if params[:date].present?
-      = "за [ #{params[:date]} ]"
-    -else
-      -if params[:addresse].present?
-        = "адреса[н]та [ #{params[:addresse]} ]"
-      -else
-        -if params[:status].present?
-          = "статус [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
    
 %table
   %tr
@@ -50,12 +41,12 @@
       %td= letter.duedate.strftime("%d.%m.%y") if letter.duedate
       %td= LETTER_STATUS.key(letter.status)
       %td
-        -letter.user_letter.each do |user_letter|
+        -letter.user_letter.includes(:user).each do |user_letter|
           -if user_letter.user
             - s = "#{user_letter.user.displayname}"
-            -if user_letter.status and user_letter.status > 0
-              - s = s + "\u2713".html_safe
-            = link_to s, user_letter.user
+            - s = s + "\u2713".html_safe if user_letter.status and user_letter.status > 0   # пометим ответственного
+            -#= link_to s, user_letter.user
+            = link_to s, letters_path(user: user_letter.user)
           -else
             удалить ссылку
             = user_letter.inspect
@@ -82,5 +73,5 @@
 Статус:
 - Letter.select("status, count(id) as count").group(:status).order(:status).each do |d|
   -if !d.status.to_s.empty?
-    = link_to " #{LETTER_STATUS.key(d.status)} (#{d.count}) ", letters_path + '?status=' + d.status.to_s, class: 'groups'
+    = link_to " #{LETTER_STATUS.key(d.status)} (#{d.count}) ", letters_path(status: d.status), class: 'groups'
     &nbsp;
