@@ -32,6 +32,7 @@ class LettersController < ApplicationController
               @letters = Letter.search(params[:search]).includes(:user_letter, :letter_appendix)
             else
                @letters = Letter.search(params[:search]).where('status < 90').includes(:user_letter, :letter_appendix)
+                @title_letter += ' незавершенные'
             end
           end
         end
@@ -164,7 +165,12 @@ class LettersController < ApplicationController
 
   private
     def set_letter
-      @letter = Letter.find(params[:id])
+      if params[:search].present? # это поиск
+        @letters = Letter.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        render :index # покажем список найденного
+      else
+        @letter = Letter.find(params[:id])
+      end
     end
 
     def letter_params
