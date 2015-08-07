@@ -45,7 +45,6 @@
           -if user_letter.user
             - s = "#{user_letter.user.displayname}"
             - s = s + "\u2713".html_safe if user_letter.status and user_letter.status > 0   # пометим ответственного
-            -#= link_to s, user_letter.user
             = link_to s, letters_path(user: user_letter.user)
           -else
             удалить ссылку
