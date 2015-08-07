@@ -82,3 +82,4 @@
   - Letter.select("status, count(id) as count").group(:status).order(:status).each do | d |
     -if !d.status.to_s.empty?
       = link_to " #{LETTER_STATUS.key(d.status)} (#{d.count}) ", letters_path(status: d.status), class: 'groups'
+      &nbsp;
