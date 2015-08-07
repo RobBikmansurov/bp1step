@@ -7,25 +7,32 @@ class LettersController < ApplicationController
 
   def index
     @title_letter = 'Письма'
-    if params[:date].present? # письма за дату
-      @letters = Letter.where(date: params[:date])
-      @title_letter += ' за ' + params[:date]
+    if params[:user].present?
+      user = User.find(params[:user])
+      @letters = Letter.joins(:user_letter).where("user_letters.user_id = ?", params[:user])
+      @title_letter += " исполнителя [ #{user.displayname} ]"
+      if params[:status].present?
+        @letters = @letters.where('letters.status = ?', params[:status])
+        @title_letter += " в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
+      end
     else
-      if params[:addresse].present? # письма от адресанта + письма алресату
-        @letters = Letter.where('sender ILIKE ?', params[:addresse])
-        @title_letter += ' адреса[н]та ' + params[:addresse]
+      if params[:date].present? # письма за дату
+        @letters = Letter.where(date: params[:date])
+        @title_letter += ' за ' + params[:date]
       else
-        if params[:status].present?
-          @letters = Letter.where('status = ?', params[:status])
-          @title_letter += " в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
+        if params[:addresse].present? # письма от адресанта + письма алресату
+          @letters = Letter.where('sender ILIKE ?', params[:addresse])
+          @title_letter += ' адреса[н]та ' + params[:addresse]
         else
-          if params[:user].present?
-            user = User.find(params[:user])
-            @letters = Letter.joins(:user_letter).where("user_letters.user_id = ?", params[:user])
-            @title_letter += " исполнителя [ #{user.displayname} ]"
+          if params[:status].present?
+            @letters = Letter.where('status = ?', params[:status])
+            @title_letter += " в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
           else
-            #@letters = Letter.search(params[:search]).where('status < 90').includes(:user_letter, :letter_appendix).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
-            @letters = Letter.search(params[:search]).includes(:user_letter, :letter_appendix)
+            if params[:search].present?
+              @letters = Letter.search(params[:search]).includes(:user_letter, :letter_appendix)
+            else
+               @letters = Letter.search(params[:search]).where('status < 90').includes(:user_letter, :letter_appendix)
+            end
           end
         end
       end
