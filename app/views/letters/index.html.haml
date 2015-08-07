@@ -41,6 +41,7 @@
       %td= letter.duedate.strftime("%d.%m.%y") if letter.duedate
       %td= LETTER_STATUS.key(letter.status)
       %td
+        - i = 0
         -letter.user_letter.includes(:user).each do |user_letter|
           -if user_letter.user
             - s = "#{user_letter.user.displayname}"
@@ -49,6 +50,9 @@
           -else
             удалить ссылку
             = user_letter.inspect
+          - if i == 0
+            %br
+          - i += 1
       %td
         - if true or can? :manage, Letter
           = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_letter_path(letter), class: 'button-img'
