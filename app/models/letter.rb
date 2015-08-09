@@ -15,6 +15,7 @@ class Letter < ActiveRecord::Base
   validates :date, presence: true
 
   scope :overdue, -> { where('duedate <= ? and status < 90', Date.current) }  # не исполненные в срок письма
+  scope :soon_deadline, -> { where('duedate > ? and status < 90', Date.current - 5.days) }  # с наступающим сроком исполнения
   scope :not_assigned, -> { where('status < 5 and author_id IS NOT NULL') }   # не назначенные, нет исполнителя
 
   belongs_to :letter
