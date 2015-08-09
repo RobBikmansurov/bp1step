@@ -606,25 +606,40 @@ namespace :bp1step do
   end
 
   
-  desc 'Сontrol of expiring duedate letters'
-  task :check_overdue_letters => :environment do  # проверить письма с просроченным сроком исполениия
+  desc 'Сontrol of expiring duedate or soon deadline letters'
+  task :check_letters_duedate => :environment do  # проверить письма, не исполненные в срок
     logger = Logger.new('log/bp1step.log')  # протокол работы
     logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_overdue_letters'
 
     count = 0
-    Letter.overdue.each do | letter |  # письма в статусе < Исполнено со сроком исполнения <= текущей дате
-      count += 1
+    count_soon_deadline = 0
+    letters = Letter.soon_deadline | Letter.overdue
+    letters.each do | letter |  # письма в статусе < Исполнено с наступающим сроком исполнения или просроченные
+      days = letter.duedate - Date.current
       emails = ''
-      emails = "#{letter.author.email}" if letter.author   # автор
+      emails = "#{letter.author.email}" if days < 0 and letter.author   # автор
+      users = ''
       letter.user_letter.each do |user_letter|  # исполнители
-        emails += ', ' if !emails.blank?
-        emails += "#{user_letter.user.email}" if user_letter.user
+        if user_letter.user
+          emails += ', ' if !emails.blank?
+          emails += "#{user_letter.user.email}"
+          users += "#{user_letter.user.displayname}"
+        end
       end
-      logger.info "      ##{letter.id}\tсрок = #{letter.duedate.strftime("%d.%m.%Y")}\t#{emails}"
       #emails = 'robb@bankperm.ru'
-      LetterMailer.check_overdue_letters(letter, emails).deliver_now if !emails.blank?
+      if days < 0
+        count += 1
+        logger.info "      ##{letter.id}\tсрок! #{letter.duedate.strftime("%d.%m.%y")}: #{(-days).to_i}\t#{emails}"
+        LetterMailer.check_overdue_letters(letter, emails).deliver_now if !emails.blank?
+      else
+        if [0, 1, 2, 5].include?(days)
+          count_soon_deadline += 1
+          logger.info "      ##{letter.id}\tскоро #{letter.duedate.strftime("%d.%m.%y")}: #{days.to_i}\t#{emails}"
+          LetterMailer.soon_deadline_letters(letter, emails, days, users).deliver_now if !emails.blank?
+      end
+      end
     end
-    logger.info "      #{count} letters is duedate" 
+    logger.info "      #{count} letters is duedate and #{count_soon_deadline} soon deadlineletters"
   end
 
 
