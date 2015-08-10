@@ -10,8 +10,8 @@ class LetterMailer < ActionMailer::Base
   def soon_deadline_letters(letter, emails, days, users)   # рассылка исполнителям о наступлении срока исполнения письма
     @letter = letter
     @users = users
-    @days = days
-    mail(:to => emails, :subject => "BP1Step: #{days} дн. на Письмо #{@letter.name}")
+    @days = days.to_i
+    mail(:to => emails, :subject => "BP1Step: #{@days} дн. на Письмо #{@letter.name}")
   end
 
 end
