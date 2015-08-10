@@ -38,7 +38,13 @@
             = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), letter.letter_appendix.first.appendix.url, class: 'button-img'
         = link_to truncate(letter.subject, :length => 40, :omission => ' ...'), letter
       %td= link_to truncate(letter.sender, :length => 20, :omission => ' ...'), letters_path(addresse: letter.sender)
-      %td= letter.duedate.strftime("%d.%m.%y") if letter.duedate
+      %td
+        -if letter.duedate
+          -if letter.duedate < Date.current
+            %span{:style => "color: red;"}
+              = letter.duedate.strftime("%d.%m.%y")
+          -else
+            = letter.duedate.strftime("%d.%m.%y")
       %td= LETTER_STATUS.key(letter.status)
       %td
         - i = 0
