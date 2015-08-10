@@ -105,8 +105,8 @@
 %p
 = link_to 'Back', letters_path, :class => 'button'
 
--if true or can? :update, @letter
+-if can? :update, @letter or is_can_update  # автор и исполнители могут добавлять других исполнителей
   = link_to 'Edit', edit_letter_path(@letter), :class => 'button'
-  = link_to 'Clone', clone_letter_path(@letter), :class => 'button'
-  = link_to 'Создать Требование', create_requirement_letter_path(@letter), :class => 'button'
-  = link_to 'Создать Исходящее', clone_letter_path(@letter), :class => 'button'
+  = link_to 'Clone', clone_letter_path(@letter), :class => 'button' 
+  -#= link_to 'Создать Требование', create_requirement_letter_path(@letter), :class => 'button'
+  -#= link_to 'Создать Исходящее', clone_letter_path(@letter), :class => 'button'
