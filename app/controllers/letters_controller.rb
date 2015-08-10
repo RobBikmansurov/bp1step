@@ -117,6 +117,11 @@ class LettersController < ApplicationController
   def update_user
     user_letter = UserLetter.new(params[:user_letter]) if params[:user_letter].present?
     if user_letter
+      user_letter_clone = UserLetter.where(letter_id: user_letter.letter_id, user_id: user_letter.user_id).first  # проверим - нет такого исполнителя?
+      if user_letter_clone
+        user_letter_clone.status = user_letter.status
+        user_letter = user_letter_clone
+      end
       if user_letter.save
         flash[:notice] = "Исполнитель #{user_letter.user_name} назначен"
         begin
