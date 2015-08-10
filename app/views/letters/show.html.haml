@@ -28,7 +28,10 @@
     %b= @letter.duedate.strftime("%d.%m.%Y")
     - days = @letter.duedate - Date.current
     = " (осталось #{days.to_i} дн.)" if days > 0
-    = " (прошло #{(-days).to_i} дн.)" if days < 0
+    -if days <= 0
+      %span{:style => "color: red;"}
+        = " (опоздание #{(-days).to_i} дн.)" if days < 0
+        = " сегодня!" if days == 0
 
 %h4 Файлы приложений к письму:
 -@letter.letter_appendix.each do |letter_appendix|
