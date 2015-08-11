@@ -8,8 +8,8 @@ class Letter < ActiveRecord::Base
   validates :subject, :presence => true,
                    :length => {:minimum => 3, :maximum => 200}
   validates :number, presence: true,
-                     length: {:maximum => 20}
-  validates :source, :length => {:maximum => 10}
+                     length: {:maximum => 30}
+  validates :source, :length => {:maximum => 20}
   validates :sender, presence: true,
                      length: {minimum: 3}
   validates :date, presence: true
@@ -24,7 +24,8 @@ class Letter < ActiveRecord::Base
   has_many :users, :through => :user_letter
   has_many :letter_appendix, dependent: :destroy
 
-  attr_accessible :number, :date, :subject, :source, :sender, :duedate, :body, :status, :status_name, :result, :author_id, :author_name
+  attr_accessible :number, :date, :regnumber, :regdate, :subject, :source, :sender, \
+   :duedate, :body, :status, :status_name, :result, :author_id, :author_name, :action
 
   before_save :check_status
 
@@ -43,6 +44,14 @@ class Letter < ActiveRecord::Base
   
   def status_name=(key)
     self.status = LETTER_STATUS[key]
+  end
+
+  def action
+    ''
+  end
+
+  def action=(action)
+    self.result += "\r\n" + Time.current.strftime("%d.%m.%Y %H:%M:%S - ") + action
   end
 
   def name
