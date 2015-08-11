@@ -6,7 +6,7 @@ class LettersController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
-    @title_letter = 'Письма'
+    @title_letter = 'Письма входящие'
     if params[:user].present?
       user = User.find(params[:user])
       @letters = Letter.joins(:user_letter).where("user_letters.user_id = ?", params[:user])
@@ -74,6 +74,7 @@ class LettersController < ApplicationController
 
   def update
     if @letter.update(letter_params)
+      #@letter.action = Time.current.strftime("%d.%m.%Y %H:%M:%S") + ": #{current_user.displayname} " + params[:letter][:action]
       # begin
       #   LetterMailer.update_letter(@letter, current_user, nil, '').deliver    # оповестим Исполнителей об изменении Письма
       # rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
@@ -179,8 +180,9 @@ class LettersController < ApplicationController
     end
 
     def letter_params
-      params.require(:letter).permit(:regnumber, :regdate, :number, :date, :subject, :source, :sender, :duedate, 
-        :body, :status, :status_name, :result, :letter_id, :author_id, :author_name, :letter_appendix, :letter_id, :name, :appendix)
+      params.require(:letter).permit(:regnumber, :regdate, :number, :date, :subject, :source, :sender, \
+        :duedate, :body, :status, :status_name, :result, :letter_id, :author_id, :author_name, \
+        :letter_appendix, :letter_id, :name, :appendix, :action)
     end
 
     def sort_column

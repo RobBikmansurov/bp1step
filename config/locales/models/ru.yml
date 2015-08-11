@@ -132,6 +132,7 @@ ru:
         duedate: Срок исполнения
         status: Статус
         result: Результат
+        action: Что сделано
       letter_appendix:
         name: Имя
         appendix: Приложение
