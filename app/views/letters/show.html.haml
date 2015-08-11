@@ -4,9 +4,6 @@
   \#
   =@letter.id
 
--if !@letter.regnumber.blank?
-  %h3 Регистрация № #{@letter.regnumber} от #{@letter.regdate.strftime("%d.%m.%Y")} 
-
 %h2
   Письмо № #{@letter.number} от 
   = link_to @letter.date.strftime("%d.%m.%Y"), letters_path(date: @letter.date.strftime("%d.%m.%Y")) if @letter.date
@@ -48,6 +45,15 @@
 
 %hr
 %h2 Отметки банка
+
+-if !@letter.regnumber.blank?
+  %h3
+    Зарегистрирован: Вх.№ 
+    %b #{@letter.regnumber}
+    -if @letter.regdate
+      от
+      %b
+        = "#{@letter.regdate.strftime("%d.%m.%Y")}" 
 
 %h3 
   Автор:

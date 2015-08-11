@@ -10,7 +10,7 @@
   %tr
     %th= sortable "id", "#"
     %th= sortable 'date', '№ от'
-    %th регистр.
+    %th= sortable 'regnumber', 'регистр.'
     %th [ Тема ]
     %th Корреспондент
     %th= sortable 'duedate', 'Срок'
@@ -31,7 +31,8 @@
         -if letter.regnumber.blank?
           &nbsp;
         -else
-          № #{letter.regnumber} #{letter.regdate.strftime("%d.%m.%y")}
+          #{letter.regnumber}
+          -# #{letter.regdate.strftime("%d.%m.%y")}
       %td
         -if letter.letter_appendix.first  # если есть приложение 
           - if File.exist?(letter.letter_appendix.first.appendix.path)
@@ -50,14 +51,14 @@
         - i = 0
         -letter.user_letter.includes(:user).each do |user_letter|
           -if user_letter.user
+            -if i > 0
+              %br
             - s = "#{user_letter.user.displayname}"
             - s = s + "\u2713".html_safe if user_letter.status and user_letter.status > 0   # пометим ответственного
             = link_to s, letters_path(user: user_letter.user)
           -else
             удалить ссылку
             = user_letter.inspect
-          - if i == 0
-            %br
           - i += 1
       %td
         - if true or can? :manage, Letter

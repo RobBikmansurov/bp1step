@@ -1,15 +1,16 @@
 = simple_form_for(@letter) do |f|
   = f.error_notification
   = f.hidden_field :author_id
-  -if false
-    = f.input :regnumber
-    = f.input :regdate
-
   = f.input :number
   -if @letter.date
     = f.input :date, :as => :string, :input_html => {:class=>'datepicker', :value => @letter.date.strftime("%d.%m.%Y")}
   -else
     = f.input :date, :as => :string, :input_html => {:class=>'datepicker', :value => Time.current.strftime("%d.%m.%Y")}
+
+  -if !@letter.author_id or @letter.author_id == current_user.id
+    = f.input :regnumber
+    = f.input :regdate, as: :string, :input_html => {:class=>'datepicker'}
+
   = f.input :subject, as: :text
   = f.input :source
   = f.input :sender, as: :text
@@ -18,8 +19,9 @@
   = f.hidden_field :status
   = f.label :Статус
   = f.select :status_name, LETTER_STATUS.keys
+  = f.hidden_field :result
   -if @letter.id
     %h3 Результат исполнения:
-    = f.input :result, as: :text
+    = f.input :action, as: :text
   %p
   = f.button :submit
