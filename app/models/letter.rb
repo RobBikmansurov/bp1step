@@ -27,7 +27,7 @@ class Letter < ActiveRecord::Base
   attr_accessible :number, :date, :regnumber, :regdate, :subject, :source, :sender, \
    :duedate, :body, :status, :status_name, :result, :author_id, :author_name, :action
 
-  before_save :check_status
+  before_save :check_status, :check_regdate
 
 
   def author_name
@@ -72,5 +72,10 @@ class Letter < ActiveRecord::Base
         self.status = 5 if self.user_letter.first  # Назначено
       end
       self.status = 0 if !self.user_letter.first  # Новое - если никому не назначено
+    end
+    def check_regdate
+      if !regnumber.blank?
+        self.regdate = Date.current.strftime("%d.%m.%Y") if regdate.blank?
+      end
     end
 end
