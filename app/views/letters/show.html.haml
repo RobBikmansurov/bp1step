@@ -53,7 +53,7 @@
     -if @letter.regdate
       от
       %b
-        = "#{@letter.regdate.strftime("%d.%m.%Y")}" 
+        = link_to @letter.regdate.strftime("%d.%m.%Y"), letters_path(regdate: @letter.regdate.strftime("%d.%m.%Y"))
 
 %h3 
   Автор:
