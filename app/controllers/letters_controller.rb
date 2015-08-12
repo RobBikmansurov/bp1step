@@ -158,15 +158,10 @@ class LettersController < ApplicationController
   def appendix_update
     @letter_appendix = LetterAppendix.new(params[:letter_appendix]) if params[:letter_appendix].present?
     if @letter_appendix
-      puts "\n\nappendix_update"
-      puts @letter_appendix.inspect
       @letter = @letter_appendix.letter
-      puts "\n #{@letter.inspect}"
       if @letter_appendix.save
         flash[:notice] = 'Файл приложения "' + @letter_appendix.appendix_file_name  + '" загружен.'
       end
-      puts @letter_appendix.inspect
-      puts @letter_appendix.errors.full_messages
     else      
       flash[:alert] = "Ошибка - имя файла не указано."
     end
