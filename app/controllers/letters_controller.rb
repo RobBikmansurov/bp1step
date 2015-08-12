@@ -182,7 +182,7 @@ class LettersController < ApplicationController
     def letter_params
       params.require(:letter).permit(:regnumber, :regdate, :number, :date, :subject, :source, :sender, \
         :duedate, :body, :status, :status_name, :result, :letter_id, :author_id, :author_name, \
-        :letter_appendix, :letter_id, :name, :appendix, :action)
+        :letter_appendix, :letter_id, :name, :appendix, :action, :completion_date)
     end
 
     def sort_column

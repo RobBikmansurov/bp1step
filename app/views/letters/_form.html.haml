@@ -20,6 +20,7 @@
   = f.label :Статус
   = f.select :status_name, LETTER_STATUS.keys
   = f.hidden_field :result
+  = f.hidden_field :completion_date
   -if @letter.id
     %h3 Результат исполнения:
     = f.input :action, as: :text
