@@ -25,7 +25,7 @@ class Letter < ActiveRecord::Base
   has_many :letter_appendix, dependent: :destroy
 
   attr_accessible :number, :date, :regnumber, :regdate, :subject, :source, :sender, \
-   :duedate, :body, :status, :status_name, :result, :author_id, :author_name, :action
+   :duedate, :body, :status, :status_name, :result, :author_id, :author_name, :action, :completion_date
 
   before_save :check_status, :check_regdate
 
@@ -51,7 +51,7 @@ class Letter < ActiveRecord::Base
   end
 
   def action=(action)
-    self.result += "\r\n" + Time.current.strftime("%d.%m.%Y %H:%M:%S - ") + action
+    self.result += "\r\n" + Time.current.strftime("%d.%m.%Y %H:%M:%S - ") + action if !action.blank?
   end
 
   def name
@@ -68,10 +68,14 @@ class Letter < ActiveRecord::Base
 
   private
     def check_status
-      if status < 1   # письмо новое
-        self.status = 5 if self.user_letter.first  # Назначено
+      if self.user_letter.first  # если есть исполнители
+        self.status = 5 if status < 1 # Назначено, если есть исполнители
+      else
+        self.status = 0  if status < 90  # Новое, т.к. нет исполнителей и не завершено
       end
-      self.status = 0 if !self.user_letter.first  # Новое - если никому не назначено
+      if status >= 90 # завершено
+        self.completion_date = Date.current.strftime("%d.%m.%Y") if status_was < 90   # запомним дату исполения, если новый статус - "Завершено"
+      end
     end
     def check_regdate
       if !regnumber.blank?
