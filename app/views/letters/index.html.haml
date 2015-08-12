@@ -32,7 +32,8 @@
           &nbsp;
         -else
           #{letter.regnumber}
-          -# #{letter.regdate.strftime("%d.%m.%y")}
+          %br
+          = link_to letter.regdate.strftime("%d.%m.%y"), letters_path(regdate: letter.regdate.strftime("%d.%m.%Y")) if letter.regdate
       %td
         -if letter.letter_appendix.first  # если есть приложение 
           - if File.exist?(letter.letter_appendix.first.appendix.path)
