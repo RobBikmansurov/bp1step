@@ -42,11 +42,17 @@
       %td= link_to truncate(letter.sender, :length => 20, :omission => ' ...'), letters_path(addresse: letter.sender)
       %td
         -if letter.duedate
-          -if letter.duedate < Date.current
+          -if letter.status < 90 and letter.duedate < Date.current
             %span{:style => "color: red;"}
               = letter.duedate.strftime("%d.%m.%y")
           -else
             = letter.duedate.strftime("%d.%m.%y")
+          -if letter.completion_date
+            -if letter.completion_date > letter.duedate
+              %br
+                %span{:style => "color: red;"}
+                  = letter.completion_date.strftime("%d.%m.%y")
+
       %td= LETTER_STATUS.key(letter.status)
       %td
         - i = 0
