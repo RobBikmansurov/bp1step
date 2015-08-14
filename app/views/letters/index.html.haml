@@ -10,7 +10,7 @@
   %tr
     %th= sortable "id", "#"
     %th= sortable 'date', '№ от'
-    %th= sortable 'regnumber', 'регистр.'
+    %th= sortable 'regnumber', 'Вх.№ от'
     %th [ Тема ]
     %th Корреспондент
     %th= sortable 'duedate', 'Срок'
@@ -42,7 +42,7 @@
       %td= link_to truncate(letter.sender, :length => 20, :omission => ' ...'), letters_path(addresse: letter.sender)
       %td
         -if letter.duedate
-          -if letter.status < 90 and letter.duedate < Date.current
+          -if letter.status < 90 and letter.duedate <= Date.current
             %span{:style => "color: red;"}
               = letter.duedate.strftime("%d.%m.%y")
           -else
