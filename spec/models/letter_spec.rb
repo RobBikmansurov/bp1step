@@ -13,8 +13,8 @@ describe Letter do
   end
 
   context "associations" do
-    it { should belong_to(:letter).class_name('Letter')}
-    it { should belong_to(:author).class_name('User')}
+    it { should belong_to(:letter) }
+    it { should belong_to(:author) }
     it { should have_many(:user_letter).dependent(:destroy) }
     it { should have_many(:letter_appendix).dependent(:destroy) }
   end
