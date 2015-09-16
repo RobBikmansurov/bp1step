@@ -24,5 +24,7 @@
   -if @letter.id
     %h3 Результат исполнения:
     = f.input :action, as: :text
+    = simple_format(@letter.result, {}, {})
+
   %p
   = f.button :submit
