@@ -1,5 +1,13 @@
-require 'rails_helper'
+require 'spec_helper'
 
-RSpec.describe UserRequirement, :type => :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+describe UserRequirement do
+  context "validates" do
+    it { should validate_presence_of(:requirement) }
+    it { should validate_presence_of(:user) }
+  end
+
+  context "associations" do
+    it { should belong_to(:requirement) }
+    it { should belong_to(:user) }
+  end
 end
