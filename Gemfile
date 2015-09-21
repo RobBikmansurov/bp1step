@@ -19,8 +19,7 @@ gem 'unicorn'
 
 gem "devise", ">= 3.4.1"#, git: "https://github.com/plataformatec/devise"
 gem "devise_ldap_authenticatable"
-gem "cancan"
-#gem 'cancancan', '~> 1.10'
+gem 'cancancan', '~> 1.10'
 gem 'alphabetical_paginate'
 gem 'haml-rails'
 gem 'execjs'
@@ -32,7 +31,7 @@ gem 'simple_form'
 gem 'odf-report'
 gem 'public_activity'
 #gem 'paperclip', "~> 4.2"
-gem "paperclip", :git => "git://github.com/thoughtbot/paperclip.git"
+gem "paperclip", git: "git://github.com/thoughtbot/paperclip.git"
 gem 'acts-as-taggable-on'
 gem 'protected_attributes'
 gem 'chartkick'
@@ -54,7 +53,7 @@ group :development do
   #gem 'sqlite3'
   gem 'capistrano'  # Deploy with Capistrano
   gem 'rvm-capistrano',  require: false
-  gem 'capistrano-deploy', :require => false
+  gem 'capistrano-deploy', require: false
   #gem 'rubocop', require: false
   #gem "rails-erd"
 end
