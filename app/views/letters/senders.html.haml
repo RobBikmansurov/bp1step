@@ -1,8 +1,8 @@
 -search "Корреспонденты" 
--#title @title_letter
+-title @title_senders
 
 %h2
-  = @title_letter if @title_letter
+  = @title_senders if @title_senders
   -if params[:search].present?
     = "[ #{params[:search]} ]"
    
@@ -16,7 +16,10 @@
 
   
   - _name = '**'
+  - _i = 0
   - @senders.each do |sender|
+    - _i += 1
+    = "#{_i} #{sender[0][0]}: #{LETTER_STATUS.key(sender[0][1])} - #{sender[1]}"
     -if _name == sender[0][0]  # корреспондент уже был
       %td
         = LETTER_STATUS.key(sender[0][1])
@@ -25,7 +28,10 @@
       -if _name != '**'
         %tr
           %td
-            = link_to _name, letters_path(addresse: _name) 
+            = link_to _name, letters_path(addresse: _name)
+          %td
+            = LETTER_STATUS.key(sender[0][1])
+            = sender[1]
       - _name = sender[0][0]
       - _counts = sender.inspect
 
@@ -42,7 +48,7 @@
 = link_to 'Корреспонденты', senders_letters_path, class: 'button'
 
 %p
-Статус:
+Письма в статусе:
 -if params[:user].present?
   -# @letters.select("letters.status, count(id) as count").group('letters.status').order('letters.status').each do |d|
   - letters = Letter.joins(:user_letter).where("user_letters.user_id = ?", params[:user])
