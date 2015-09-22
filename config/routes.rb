@@ -90,6 +90,9 @@ BPDoc::Application.routes.draw do
   end
 
   resources :letters do     # письма, корреспонденция
+    collection do
+      get :senders
+    end
     member do
       get :appendix_create
       get :appendix_delete

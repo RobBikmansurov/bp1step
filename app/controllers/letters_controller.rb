@@ -168,6 +168,10 @@ class LettersController < ApplicationController
     respond_with(@letter_appendix.letter)
   end
 
+  def senders
+      @senders = Letter.select(:sender).group(:sender, :status).order(:sender, :status).count
+      #@senders = @senders.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+  end
 
   private
     def set_letter
