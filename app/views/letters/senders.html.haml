@@ -17,11 +17,15 @@
   
   - _name = '**'
   - @senders.each do |sender|
-    -if _name == sender[0][0]  # новый корреспондент
-      %td= sender.inspect
+    -if _name == sender[0][0]  # корреспондент уже был
+      %td
+        = LETTER_STATUS.key(sender[0][1])
+        = sender[1]
     -else
-      %tr
-        %td= sender[0][0]
+      -if _name != '**'
+        %tr
+          %td
+            = link_to _name, letters_path(addresse: _name) 
       - _name = sender[0][0]
       - _counts = sender.inspect
 
