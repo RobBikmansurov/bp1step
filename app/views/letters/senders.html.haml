@@ -9,17 +9,22 @@
 %table
   %tr
     %th= sortable "sender", "Корреспондент"
+  - @senders.each do |sender|
+    %tr
+      %td
+        = link_to sender[0][0], letters_path(addresse: sender[0][0])
+      %td
+        = "#{LETTER_STATUS.key(sender[0][1])} - #{sender[1]}"
+%table
+  %tr
+    %th= sortable "sender", "Корреспондент"
     %th Новое
     %th Назначено
     %th На исполнении
     %th Завершено
 
-  
   - _name = '**'
-  - _i = 0
   - @senders.each do |sender|
-    - _i += 1
-    = "#{_i} #{sender[0][0]}: #{LETTER_STATUS.key(sender[0][1])} - #{sender[1]}"
     -if _name == sender[0][0]  # корреспондент уже был
       %td
         = LETTER_STATUS.key(sender[0][1])
@@ -29,9 +34,9 @@
         %tr
           %td
             = link_to _name, letters_path(addresse: _name)
-          %td
-            = LETTER_STATUS.key(sender[0][1])
-            = sender[1]
+      %td
+        = LETTER_STATUS.key(sender[0][1])
+        = sender[1]
       - _name = sender[0][0]
       - _counts = sender.inspect
 
