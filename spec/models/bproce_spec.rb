@@ -4,12 +4,12 @@ describe Bproce do
 
   context "validates" do
     it { should validate_presence_of(:name) }
-    it { should validate_uniqueness_of(:name) }
-    it { should ensure_length_of(:name).is_at_least(10).is_at_most(250) }
+    #it { should validate_uniqueness_of(:name) }
+    it { should validate_length_of(:name).is_at_least(10).is_at_most(250) }
     it { should validate_presence_of(:shortname) }
-    it { should validate_uniqueness_of(:shortname) }
-    it { should ensure_length_of(:shortname).is_at_least(1).is_at_most(50) }
-    it { should ensure_length_of(:fullname).is_at_least(10).is_at_most(250) }
+    #it { should validate_uniqueness_of(:shortname) }
+    it { should validate_length_of(:shortname).is_at_least(1).is_at_most(50) }
+    it { should validate_length_of(:fullname).is_at_least(10).is_at_most(250) }
   end
 
   context "associations" do
