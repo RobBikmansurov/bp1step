@@ -10,6 +10,10 @@
   -if !@letter.author_id or @letter.author_id == current_user.id
     = f.input :regnumber
     = f.input :regdate, as: :string, :input_html => {:class=>'datepicker'}
+  -if @letter.status < 5
+    = f.collection_radio_buttons :in_out, [[1, 'Входящее'] ,[2, 'Исходящее']], :first, :last
+  -else
+    = LETTER_DIRECTION.key(@letter.in_out)
 
   = f.input :subject, as: :text
   = f.input :source

@@ -5,7 +5,8 @@
   =@letter.id
 
 %h2
-  Письмо № #{@letter.number} от 
+  = LETTER_DIRECTION.key(@letter.in_out)
+  письмо № #{@letter.number} от 
   = link_to @letter.date.strftime("%d.%m.%Y"), letters_path(date: @letter.date.strftime("%d.%m.%Y")) if @letter.date
 
 %h3
@@ -124,7 +125,10 @@
     = @letter.updated_at.strftime('%d.%m.%Y %H:%M:%S')
 
 %p
-= link_to 'Back', letters_path, :class => 'button'
+-if @letter.in_out == 1
+  = link_to 'Back', letters_path, :class => 'button'
+-else
+  = link_to 'Back', letters_path(out: 1), :class => 'button'
 
 -if can? :update, @letter or is_can_update  # автор и исполнители могут добавлять других исполнителей
   = link_to 'Edit', edit_letter_path(@letter), :class => 'button'
