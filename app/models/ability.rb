@@ -4,6 +4,8 @@ class Ability
   def initialize(user)
     user ||= User.new   # guest user (not logged in)
 
+    alias_action :create, :read, :update, :destroy, :to => :crud
+
     if user.roles.count == 0
       can :read, :all #for guest without roles
       cannot :show, User
@@ -34,19 +36,19 @@ class Ability
       if user.has_role? :owner  # владелец процесса
         can [:update, :create], Document
         can :manage, [Directive, Term]
-        can :manage, [BproceBapp, BproceIresource]
+        can :crud, [BproceBapp, BproceIresource]
         can :update, Bproce, :user_id => user.id  # процесс владельца
-        can :manage, BusinessRole  # роли в процессе владельца
-        can :manage, Metric
-        can :manage, [Contract, Agent, ContractScan]
+        can :crud, BusinessRole  # роли в процессе владельца
+        can :crud, Metric
+        can :crud, [Contract, Agent, ContractScan]
       end
 
       if user.has_role? :analitic
         can [:update, :create], Document
-        can :manage, [Bproce, Bapp, BusinessRole, BproceBapp, Term, Contract, Agent, ContractScan]
+        can :crud, [Bproce, Bapp, BusinessRole, BproceBapp, Term, Contract, Agent, ContractScan]
         can :manage_tag, [Bproce] # может редактировать теги процессов
         can :edit_document, [Document]  # может брать исходник документа
-        can :manage, Metric
+        can :crud, Metric
       end
 
       if user.has_role? :admin
