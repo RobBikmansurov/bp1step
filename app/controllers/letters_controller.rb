@@ -14,6 +14,9 @@ class LettersController < ApplicationController
       if params[:status].present?
         @letters = @letters.where('letters.status = ?', params[:status])
         @title_letter += "в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
+      else
+        @letters = @letters.where('letters.status < 90', params[:status])
+        @title_letter += " не завершенные"
       end
     else
       if params[:date].present? # письма за дату
@@ -36,7 +39,7 @@ class LettersController < ApplicationController
                 @letters = Letter.search(params[:search]).includes(:user_letter, :letter_appendix)
               else
                  @letters = Letter.search(params[:search]).where('status < 90').includes(:user_letter, :letter_appendix)
-                  @title_letter += 'незавершенные'
+                  @title_letter += 'не завершенные'
               end
             end
           end
