@@ -57,6 +57,8 @@ module BPDoc
 
     ActsAsTaggableOn.strict_case_match = true
     Rails.application.config.action_dispatch.cookies_serializer = :hybrid
+
+    config.active_record.raise_in_transactional_callbacks = true
     
   end
 end
