@@ -6,42 +6,49 @@ class LettersController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
-    @title_letter = 'Письма входящие'
+    @title_letter = 'Письма '
     if params[:user].present?
       user = User.find(params[:user])
       @letters = Letter.joins(:user_letter).where("user_letters.user_id = ?", params[:user])
-      @title_letter += " исполнителя [ #{user.displayname} ]"
+      @title_letter += "исполнителя [ #{user.displayname} ]"
       if params[:status].present?
         @letters = @letters.where('letters.status = ?', params[:status])
-        @title_letter += " в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
+        @title_letter += "в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
       end
     else
       if params[:date].present? # письма за дату
         @letters = Letter.where(date: params[:date])
-        @title_letter += ' за ' + params[:date]
+        @title_letter += 'за ' + params[:date]
       else
         if params[:regdate].present? # письма за дату регистрации
           @letters = Letter.where(regdate: params[:regdate])
-          @title_letter += ' зарегистрированные ' + params[:regdate]
+          @title_letter += 'зарегистрированные ' + params[:regdate]
         else
           if params[:addresse].present? # письма от адресанта + письма алресату
             @letters = Letter.where('sender ILIKE ?', params[:addresse])
-            @title_letter += ' адреса[н]та ' + params[:addresse]
+            @title_letter += 'адреса[н]та ' + params[:addresse]
           else
             if params[:status].present?
               @letters = Letter.where('status = ?', params[:status])
-              @title_letter += " в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
+              @title_letter += "в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
             else
               if params[:search].present?
                 @letters = Letter.search(params[:search]).includes(:user_letter, :letter_appendix)
               else
                  @letters = Letter.search(params[:search]).where('status < 90').includes(:user_letter, :letter_appendix)
-                  @title_letter += ' незавершенные'
+                  @title_letter += 'незавершенные'
               end
             end
           end
         end
       end
+    end
+    if params[:out].present?
+      @letters = @letters.where('in_out <> 1')
+      @title_letter += ' Исходящие'
+    else
+      @letters = @letters.where('in_out = 1')
+      @title_letter += ' Входящие'
     end
     @letters = @letters.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end
@@ -187,7 +194,7 @@ class LettersController < ApplicationController
     def letter_params
       params.require(:letter).permit(:regnumber, :regdate, :number, :date, :subject, :source, :sender, \
         :duedate, :body, :status, :status_name, :result, :letter_id, :author_id, :author_name, \
-        :letter_appendix, :letter_id, :name, :appendix, :action, :completion_date)
+        :letter_appendix, :letter_id, :name, :appendix, :action, :completion_date, :in_out)
     end
 
     def sort_column

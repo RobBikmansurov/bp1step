@@ -10,7 +10,8 @@
   %tr
     %th= sortable "id", "#"
     %th= sortable 'date', '№ от'
-    %th= sortable 'regnumber', 'Вх.№ от'
+    %th= sortable 'regnumber', 'Рег.№ от'
+    %th
     %th [ Тема ]
     %th Корреспондент
     %th= sortable 'duedate', 'Срок'
@@ -34,6 +35,8 @@
           #{letter.regnumber}
           %br
           = link_to letter.regdate.strftime("%d.%m.%y"), letters_path(regdate: letter.regdate.strftime("%d.%m.%Y")) if letter.regdate
+      %td
+        = (letter.in_out == 1 ? 'В' : 'И')
       %td
         -if letter.letter_appendix.first  # если есть приложение 
           - if File.exist?(letter.letter_appendix.first.appendix.path)
@@ -88,7 +91,6 @@
 = link_to 'Корреспонденты', senders_letters_path, class: 'button'
 
 %p
-Статус:
 -if params[:user].present?
   -# @letters.select("letters.status, count(id) as count").group('letters.status').order('letters.status').each do |d|
   - letters = Letter.joins(:user_letter).where("user_letters.user_id = ?", params[:user])
@@ -98,7 +100,15 @@
         = link_to " #{LETTER_STATUS.key(letter.status)} (#{letter.count}) ", letters_path(status: letter.status, user: params[:user]), class: 'groups'
       &nbsp;
 -else
-  - Letter.select("status, count(id) as count").group(:status).order(:status).each do | d |
-    -if !d.status.to_s.empty?
-      = link_to " #{LETTER_STATUS.key(d.status)} (#{d.count}) ", letters_path(status: d.status), class: 'groups'
-      &nbsp;
+  -if params[:out].present?
+    Исходящие:
+    -Letter.select("status, count(id) as count").where('in_out <> 1').group(:status).order(:status).each do | d |
+      -if !d.status.to_s.empty?
+        = link_to " #{LETTER_STATUS.key(d.status)} (#{d.count}) ", letters_path(status: d.status, out: 1), class: 'groups'
+        &nbsp;
+  -else
+    Входящие:
+    -Letter.select("status, count(id) as count").where('in_out = 1').group(:status).order(:status).each do | d |
+      -if !d.status.to_s.empty?
+        = link_to " #{LETTER_STATUS.key(d.status)} (#{d.count}) ", letters_path(status: d.status), class: 'groups'
+        &nbsp;

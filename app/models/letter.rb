@@ -25,7 +25,7 @@ class Letter < ActiveRecord::Base
   has_many :letter_appendix, dependent: :destroy
 
   attr_accessible :number, :date, :regnumber, :regdate, :subject, :source, :sender, \
-   :duedate, :body, :status, :status_name, :result, :author_id, :author_name, :action, :completion_date
+   :duedate, :body, :status, :status_name, :result, :author_id, :author_name, :action, :completion_date, :in_out
 
   before_save :check_status, :check_regdate
 
