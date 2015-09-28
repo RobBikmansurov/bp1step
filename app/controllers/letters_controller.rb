@@ -57,6 +57,10 @@ class LettersController < ApplicationController
   end
 
   def show
+    if @letter.letter_id
+      @letter_link =  Letter.find(@letter.letter_id)
+    end
+    @letters_outgoing = Letter.where(letter_id: @letter.id).order('date DESC')  # исходящие из данного письма
     @requirements = Requirement.where(letter_id: @letter.id) # требования, созданные из письма
     respond_to do |format|
       format.html
@@ -81,7 +85,7 @@ class LettersController < ApplicationController
     @letter = Letter.new(letter_params)
 
     if @letter.save
-      redirect_to @letter, notice: 'Letter was successfully created.'
+      redirect_to @letter, notice: 'Письмо создано.'
     else
       render action: 'new'
     end
@@ -95,7 +99,7 @@ class LettersController < ApplicationController
       # rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
       #   flash[:alert] = "Error sending mail to responsible for the letter"
       # end
-      redirect_to @letter, notice: 'Letter was successfully updated.'
+      redirect_to @letter, notice: 'Письмо сохранено.'
     else
       @user_letter = UserLetter.new(letter_id: @letter.id)
       render action: 'edit'
@@ -104,7 +108,7 @@ class LettersController < ApplicationController
 
   def destroy
     @letter.destroy
-    redirect_to letters_url, notice: 'Letter was successfully destroyed.'
+    redirect_to letters_url, notice: 'Письмо удалено.'
   end
 
   def clone
@@ -114,6 +118,16 @@ class LettersController < ApplicationController
     @letter.duedate = (Time.current + 10.days).strftime("%d.%m.%Y") # срок исполнения - даем 10 дней по умолчанию
     @letter.source = letter.source
     @letter.subject = letter.subject
+  end
+
+  def create_outgoing
+    letter = Letter.find(params[:id])   # входящее письмо
+    @letter = Letter.new(sender: letter.sender, in_out: 2, letter_id: letter.id, status: 10)
+    @letter.author_id = current_user.id if user_signed_in?
+    @letter.duedate = (Time.current + 3.days).strftime("%d.%m.%Y") # срок исполнения - даем 3 дней по умолчанию
+    @letter.source = letter.source
+    @letter.subject = letter.subject
+    @letter.result = "на #{letter.name}"
   end
 
   def create_requirement
