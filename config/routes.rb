@@ -95,6 +95,7 @@ BPDoc::Application.routes.draw do
       get :appendix_delete
       post :appendix_update
       get :clone            # письмо от того же корреспондента
+      get :create_outgoing  # исходящее письмо на входящее
       get :create_requirement  # создать требование
       get :create_user      # назначить ответственного
       post :update_user
