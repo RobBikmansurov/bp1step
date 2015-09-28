@@ -13,6 +13,7 @@
   -if @letter.status < 5
     = f.collection_radio_buttons :in_out, [[1, 'Входящее'] ,[2, 'Исходящее']], :first, :last
   -else
+    = f.hidden_field :in_out
     = LETTER_DIRECTION.key(@letter.in_out)
 
   = f.input :subject, as: :text
@@ -25,9 +26,12 @@
   = f.select :status_name, LETTER_STATUS.keys
   = f.hidden_field :result
   = f.hidden_field :completion_date
+  = f.hidden_field :letter_id
   -if @letter.id
     %h3 Результат исполнения:
     = f.input :action, as: :text
+    = simple_format(@letter.result, {}, {})
+  -else
     = simple_format(@letter.result, {}, {})
 
   %p

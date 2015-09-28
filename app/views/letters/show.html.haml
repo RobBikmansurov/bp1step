@@ -8,6 +8,11 @@
   = LETTER_DIRECTION.key(@letter.in_out)
   письмо № #{@letter.number} от 
   = link_to @letter.date.strftime("%d.%m.%Y"), letters_path(date: @letter.date.strftime("%d.%m.%Y")) if @letter.date
+-if @letter_link
+  %h3
+    на 
+    = link_to "№ #{@letter_link.number}", letter_path(@letter_link)
+    от #{@letter_link.date.strftime("%d.%m.%Y")}
 
 %h3
   %b [ #{@letter.subject} ]
@@ -96,6 +101,14 @@
 %h3 Результат исполнения:
 = simple_format(@letter.result, {}, {})
 
+-if @letters_outgoing
+  %h4
+  - @letters_outgoing.each do |letter_outgoing|
+    %h4
+      Исх.
+      = link_to "№ #{letter_outgoing.number}", letter_path(letter_outgoing)
+      от #{letter_outgoing.date.strftime("%d.%m.%Y")}
+
 -if @requirements
   - @requirements.each do |requirement|
     %h4
@@ -134,4 +147,5 @@
   = link_to 'Edit', edit_letter_path(@letter), :class => 'button'
   = link_to 'Clone', clone_letter_path(@letter), :class => 'button' 
   -#= link_to 'Создать Требование', create_requirement_letter_path(@letter), :class => 'button'
-  -#= link_to 'Создать Исходящее', clone_letter_path(@letter), :class => 'button'
+  -if @letter.in_out == 1
+    = link_to 'Создать Исходящее', create_outgoing_letter_path(@letter), :class => 'button'

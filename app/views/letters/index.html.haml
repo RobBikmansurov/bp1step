@@ -11,7 +11,7 @@
     %th= sortable "id", "#"
     %th= sortable 'date', '№ от'
     %th= sortable 'regnumber', 'Рег.№ от'
-    %th
+    -#%th
     %th [ Тема ]
     %th Корреспондент
     %th= sortable 'duedate', 'Срок'
@@ -35,7 +35,7 @@
           #{letter.regnumber}
           %br
           = link_to letter.regdate.strftime("%d.%m.%y"), letters_path(regdate: letter.regdate.strftime("%d.%m.%Y")) if letter.regdate
-      %td
+      -#%td
         = (letter.in_out == 1 ? 'В' : 'И')
       %td
         -if letter.letter_appendix.first  # если есть приложение 
@@ -88,6 +88,11 @@
     = link_to 'Новое письмо', new_letter_path({addresse: params[:addresse]}), class: 'button'
   -else
     = link_to 'Новое письмо', new_letter_path, class:'button'
+-if params[:out].present?
+  = link_to 'Входящие', letters_path, :class => 'button'
+-else
+  = link_to 'Исходящие', letters_path(out: 1), :class => 'button'
+
 = link_to 'Корреспонденты', senders_letters_path, class: 'button'
 
 %p
