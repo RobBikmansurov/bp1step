@@ -6,7 +6,7 @@ Business processes documentation organization and generation, the 1st step of in
 **BP1Step** - первый шаг на небольшом предприятии для наведения порядка в процессах и повышения уровня зрелости организации.
 
 **BP1Step** - простой инструмент для документирования процессов, ресурсов, действий сотрудников, это web-приложение на базе Ruby on Rails с несколькими сервисными rake-задачами (например: синхронизация списка пользователей из LDAP, контроль бизнес-правил).
-Аутентификация пользователей с помощью Devise, ограничения ролей доступа на базе CanCan.
+Аутентификация пользователей с помощью Devise, ограничения ролей доступа на базе CanCanCan.
 
 Язык: русский
 
@@ -109,6 +109,14 @@ autocomlete. Для решения этой проблемы можно испр
 Пока есть тесты только для моделей
 
 >rspec spec/models/
+
+## Contributing
+
+1. Fork it ( https://github.com/[my-github-username]/storage/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
 
 ##License#
 MIT
