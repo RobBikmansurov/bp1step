@@ -9,30 +9,22 @@
 %table
   %tr
     %th= sortable "sender", "Корреспондент"
-    %th Новое
-    %th Назначено
-    %th На исполнении
-    %th Завершено
+    - LETTER_STATUS.keys.each do |status|
+      %th= status
 
   - _name = '**'
-  - _td = ''
+  - _td_hash = {}
   - @senders.each do |sender|
-    -if _name == sender[0][0]  # корреспондент уже был
-    -else
-      -if _name != '**'
+    -if _name != sender[0][0]  # новый корреспондент
+      -if _name != '**' # пропустим в первый раз, т.к. предыдущего корреспондента не было
         %tr
           %td
             = link_to _name, letters_path(addresse: _name)
-            \-
-            = _td
+            - LETTER_STATUS.keys.each do |status|
+              %td= _td_hash[status]
       - _name = sender[0][0]
-      - _counts = sender.inspect
-      - _td = ''
-    - _td += "#{LETTER_STATUS.key(sender[0][1])} #{sender[1]}"
-
-
-    -#%td= LETTER_STATUS.key(letter.status)
-      
+      - _td_hash = {}
+    - _td_hash [LETTER_STATUS.key(sender[0][1])] = "#{sender[1]}"
 
 %br
 -#.apple_pagination
