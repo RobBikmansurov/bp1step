@@ -83,15 +83,15 @@
   = will_paginate @letters
 
 %p
+-if params[:out].present?
+  = link_to 'Входящие', letters_path, :class => 'button'
+-else
+  = link_to 'Исходящие', letters_path(out: 1), :class => 'button'
 -if can? :create, Letter
   -if params[:addresse].present? # письма от адресанта + письма алресату
     = link_to 'Новое письмо', new_letter_path({addresse: params[:addresse]}), class: 'button'
   -else
     = link_to 'Новое письмо', new_letter_path, class:'button'
--if params[:out].present?
-  = link_to 'Входящие', letters_path, :class => 'button'
--else
-  = link_to 'Исходящие', letters_path(out: 1), :class => 'button'
 
 = link_to 'Корреспонденты', senders_letters_path, class: 'button'
 
