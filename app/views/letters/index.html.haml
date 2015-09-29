@@ -13,7 +13,7 @@
     %th= sortable 'regnumber', 'Рег.№ от'
     -#%th
     %th [ Тема ]
-    %th Корреспондент
+    %th= link_to 'Корреспондент', senders_letters_path
     %th= sortable 'duedate', 'Срок'
     %th= sortable "status", "Статус"
     %th Исполнитель
@@ -89,7 +89,7 @@
   = link_to 'Исходящие', letters_path(out: 1), :class => 'button'
 -if can? :create, Letter
   -if params[:addresse].present? # письма от адресанта + письма алресату
-    = link_to 'Новое письмо', new_letter_path({addresse: params[:addresse]}), class: 'button'
+    = link_to 'Новое письмо в адрес', new_letter_path({addresse: params[:addresse]}), class: 'button'
   -else
     = link_to 'Новое письмо', new_letter_path, class:'button'
 
