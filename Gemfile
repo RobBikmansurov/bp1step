@@ -27,8 +27,8 @@ gem "the_sortable_tree", ">= 2.4.0"
 gem 'simple_form'
 gem 'odf-report'
 gem 'public_activity'
-#gem 'paperclip', "~> 4.2"
-gem "paperclip", git: "git://github.com/thoughtbot/paperclip.git"
+gem 'paperclip', "~> 4.2"
+#gem "paperclip", git: "git://github.com/thoughtbot/paperclip.git"
 gem 'acts-as-taggable-on'
 gem 'protected_attributes'
 gem 'chartkick'
