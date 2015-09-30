@@ -14,7 +14,7 @@ gem 'jquery-ui-rails'
 gem 'therubyracer'
 gem 'unicorn'
 
-gem "devise", ">= 3.4.1"#, git: "https://github.com/plataformatec/devise"
+gem "devise", "~> 3.5.2"#, git: "https://github.com/plataformatec/devise"
 gem "devise_ldap_authenticatable"
 gem 'cancancan', '~> 1.10'
 gem 'alphabetical_paginate'
