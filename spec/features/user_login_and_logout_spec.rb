@@ -31,7 +31,7 @@ RSpec.feature "User logs in and logs out", :type => :feature do
   scenario "locks account after 3 failed attempts" do
 
     email = "someone@example.tld"
-    user = create(:user, email: email, password: "somepassword", password_confirmation: "somepassword")
+    #user = create(:user, email: email, password: "somepassword", password_confirmation: "somepassword")
 
     visit new_user_session_path
 
@@ -44,14 +44,6 @@ RSpec.feature "User logs in and logs out", :type => :feature do
     login email, "3rd-try-wrong-password"
     expect(page).to have_content "Your account is locked."
 
-  end
-
-  private
-
-  def login(email, password)
-    fill_in "Email", with: email
-    fill_in "Password", with: password
-    click_button "Log in"
   end
 
 end
