@@ -53,6 +53,7 @@ group :development do
   gem 'capistrano-deploy', require: false
   #gem 'rubocop', require: false
   #gem "rails-erd"
+  gem 'guard-rspec', require: false
 end
 
 group :production do
