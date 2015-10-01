@@ -18,7 +18,10 @@
   %b [ #{@letter.subject} ]
 
 %h3
-  Корреспондент:
+  -if @letter.in_out == 1
+    Отправитель:
+  -else
+    Получатель:
   = link_to @letter.sender, letters_path(addresse: @letter.sender)
 
 %h3 Краткое содержание (о чем):
