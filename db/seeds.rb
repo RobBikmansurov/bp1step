@@ -10,6 +10,7 @@ Role.create!(:note => 'Ведение документов и директив, 
 Role.create!(:note => 'Отвечает за хранение бумажных оригиналов, изменяет место хранения документа', :name => 'keeper', :description => 'Хранитель')
 Role.create!(:note => 'Ведение прав пользователей, настройка системы', :name => 'security', :description => 'Администратор доступа')
 Role.create!(:note => 'Управляет пользователями: прикрепляет документы в Обязательное ', :name => 'manager', :description => 'Менеджер')
+Role.create!(:note => 'Создает и регистрирует письма', :name => 'secretar', :description => 'Секретарь')
 
 puts "access roles created"
 Role.all.pluck(:name)
