@@ -69,11 +69,10 @@ class LettersController < ApplicationController
   end
 
   def new
-    @letter = Letter.new
+    @letter = Letter.new(in_out: 1, status: 0)
     @letter.sender = params[:addresse] if params[:addresse].present?
     @letter.author_id = current_user.id if user_signed_in?
     @letter.duedate = (Time.current + 10.days).strftime("%d.%m.%Y") # срок исполнения - даем 10 дней по умолчанию
-    @letter.status = 0
   end
 
   def edit
@@ -113,7 +112,7 @@ class LettersController < ApplicationController
 
   def clone
     letter = Letter.find(params[:id])   # письмо - прототип
-    @letter = Letter.new(sender: letter.sender)
+    @letter = Letter.new(sender: letter.sender, in_out: letter.in_out, status: 0)
     @letter.author_id = current_user.id if user_signed_in?
     @letter.duedate = (Time.current + 10.days).strftime("%d.%m.%Y") # срок исполнения - даем 10 дней по умолчанию
     @letter.source = letter.source
@@ -122,7 +121,8 @@ class LettersController < ApplicationController
 
   def create_outgoing
     letter = Letter.find(params[:id])   # входящее письмо
-    @letter = Letter.new(sender: letter.sender, in_out: 2, letter_id: letter.id, status: 10)
+    @letter = Letter.new(sender: letter.sender, in_out: 2, letter_id: letter.id, status: 10, 
+      date: Time.current.strftime("%d.%m.%Y"), number: 'б/н')
     @letter.author_id = current_user.id if user_signed_in?
     @letter.duedate = (Time.current + 3.days).strftime("%d.%m.%Y") # срок исполнения - даем 3 дней по умолчанию
     @letter.source = letter.source
@@ -192,6 +192,14 @@ class LettersController < ApplicationController
     respond_with(@letter_appendix.letter)
   end
 
+  def register
+    max_reg_number = Letter.where('in_out = ? and  regdate > ?', @letter.in_out, Time.current.beginning_of_year).maximum(:regnumber).to_i
+    max_reg_number += 1   # next registration number for current year
+    @letter.update(regnumber: max_reg_number, regdate: Time.current.strftime("%d.%m.%Y"))
+    @letter.update(number: max_reg_number, date: Time.current.strftime("%d.%m.%Y")) if @letter.in_out != 1
+    render :show
+  end
+
   def senders
     @senders = Letter.select(:sender)
     @senders = @senders.where('sender ILIKE ?', "%#{params[:search]}%") if params[:search].present?
@@ -203,13 +211,6 @@ class LettersController < ApplicationController
     end
     #@senders = @senders.paginate(:per_page => 10, :page => params[:page])
     @title_senders = 'Корреспонденты (адресанты и адресаты)'
-  end
-
-  def register
-    max_reg_number = Letter.where('in_out = ? and  regdate > ?', @letter.in_out, Time.current.beginning_of_year).maximum(:regnumber).to_i
-    max_reg_number += 1   # next registration number for current year
-    @letter.update(regnumber: max_reg_number, regdate: Time.current.strftime("%d.%m.%Y"))
-    render :show
   end
 
   private

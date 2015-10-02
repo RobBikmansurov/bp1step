@@ -7,11 +7,19 @@
   -else
     = f.input :date, :as => :string, :input_html => {:class=>'datepicker', :value => Time.current.strftime("%d.%m.%Y")}
 
-  -if !@letter.author_id or @letter.author_id == current_user.id
+  -if can? :create, @letter
     = f.input :regnumber
     = f.input :regdate, as: :string, :input_html => {:class=>'datepicker'}
-  -if @letter.status < 5
-    = f.collection_radio_buttons :in_out, [[1, 'Входящее'] ,[2, 'Исходящее']], :first, :last
+  -else
+    Зарегистрирован: #{@letter.in_out == 1 ? 'Вх.№' : 'Исх.№'}
+    %b #{@letter.regnumber}
+    -if @letter.regdate
+      от
+      %b= @letter.regdate.strftime("%d.%m.%Y")
+
+
+  -if @letter.status < 5 and can? :create, @letter
+    = f.collection_radio_buttons :in_out, [[1, 'Входящее'] ,[2, 'Исходящее']], :first, :last 
   -else
     = f.hidden_field :in_out
     = LETTER_DIRECTION.key(@letter.in_out)
