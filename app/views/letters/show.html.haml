@@ -65,11 +65,16 @@
     = link_to 'Добавить файл приложения', appendix_create_letter_path(@letter), :remote => true
 
 %hr
-%h2 Отметки банка
-
--if !@letter.regnumber.blank?
+-if @letter.regnumber.blank?
+  %h2
+    Отметки банка
+    -if true or can? :registr, @letter
+      =link_to 'Зарегистрировать', register_letter_path(@letter), class: 'button'
+-else
+  %h2 Отметки банка
   %h3
-    Зарегистрирован: Вх.№ 
+    Зарегистрирован: 
+    = @letter.in_out == 1 ? 'Вх.№' : 'Исх.№'
     %b #{@letter.regnumber}
     -if @letter.regdate
       от

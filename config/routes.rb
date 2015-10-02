@@ -102,6 +102,7 @@ BPDoc::Application.routes.draw do
       get :create_requirement  # создать требование
       get :create_user      # назначить ответственного
       post :update_user
+      get :register       # зарегистрировать
     end
   end
   resources :letter_appendixes, :only => [:destroy, :edit, :update]

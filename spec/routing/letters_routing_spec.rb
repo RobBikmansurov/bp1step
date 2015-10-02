@@ -29,5 +29,9 @@ RSpec.describe LettersController, :type => :routing do
       expect(:delete => "/letters/1").to route_to("letters#destroy", :id => "1")
     end
 
+    it "routes to #register" do
+      expect(:get => "/letters/1/register").to route_to("letters#register", :id => "1")
+    end
+
   end
 end

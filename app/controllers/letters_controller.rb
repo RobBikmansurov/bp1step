@@ -1,7 +1,7 @@
 class LettersController < ApplicationController
   respond_to :html, :json
-  before_filter :authenticate_user!, :only => [:edit, :new, :create, :update, :destroy]
-  before_action :set_letter, only: [:show, :edit, :update, :destroy]
+  before_filter :authenticate_user!, :only => [:edit, :new, :create, :update, :destroy, :register]
+  before_action :set_letter, only: [:show, :edit, :update, :destroy, :register]
   helper_method :sort_column, :sort_direction
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
@@ -203,6 +203,13 @@ class LettersController < ApplicationController
     end
     #@senders = @senders.paginate(:per_page => 10, :page => params[:page])
     @title_senders = 'Корреспонденты (адресанты и адресаты)'
+  end
+
+  def register
+    max_reg_number = Letter.where('in_out = ? and  regdate > ?', @letter.in_out, Time.current.beginning_of_year).maximum(:regnumber).to_i
+    max_reg_number += 1   # next registration number for current year
+    @letter.update(regnumber: max_reg_number, regdate: Time.current.strftime("%d.%m.%Y"))
+    render :show
   end
 
   private
