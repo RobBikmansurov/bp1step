@@ -2,14 +2,16 @@ RSpec.describe TermsController, :type => :controller do
 
   let(:valid_attributes) { { shortname: "term", name: "term_name", description: "term_description" } }
   let(:valid_session) { {} }
-
-  before(:each) do
+  #PublicActivity.set_controller(@controller)
+  let(:current_user) {user}
+  
+  before do
+    Term.destroy_all
+    User.destroy_all
     @user = FactoryGirl.create(:user)
-    @user.roles << Role.find_or_create_by(name: "admin", description: 'description')
+    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
-
     allow(controller).to receive(:authenticate_user!).and_return(true)
-    #allow(controller).to receive(:signed_in?).and_return(false)
   end
 
   describe "GET index" do
@@ -33,6 +35,7 @@ RSpec.describe TermsController, :type => :controller do
       term = Term.create! valid_attributes
       get :show, {:id => term.to_param}, valid_session
       expect(assigns(:term)).to eq(term)
+      term.destroy
     end
   end
 
@@ -48,6 +51,7 @@ RSpec.describe TermsController, :type => :controller do
       term = Term.create! valid_attributes
       get :edit, {:id => term.to_param}, valid_session
       expect(assigns(:term)).to eq(term)
+      term.destroy
     end
   end
 
@@ -138,7 +142,7 @@ RSpec.describe TermsController, :type => :controller do
     it "redirects to the terms list" do
       term = Term.create! valid_attributes
       delete :destroy, {:id => term.to_param}, valid_session
-      expect(response).to redirect_to(terms_url)
+      expect(response).to redirect_to('/terms')
     end
   end
 
