@@ -25,7 +25,7 @@ class Ability
         can :view_document, Document  # просматривать файл с документом
         can :edit_document, [Document]  # может брать исходник документа
         can [:read], [Agent, Contract]
-        can [:create_user, :create, :update], Letter    # назначать исполнителей писем
+        can [:create_user, :update], Letter    # назначать исполнителей писем
       end
 
       if user.has_role? :keeper
@@ -49,6 +49,12 @@ class Ability
         can :manage_tag, [Bproce] # может редактировать теги процессов
         can :edit_document, [Document]  # может брать исходник документа
         can :crud, Metric
+      end
+
+      if user.has_role? :secretar
+        can [:create_user, :create, :update], Letter    # назначать исполнителей писем, создать, изменить письмо
+        can :registr, Letter  # регистрирует корреспонденцию
+        can :create_outgoing, Letter  # создает исходящее по входящему
       end
 
       if user.has_role? :admin

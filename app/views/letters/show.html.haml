@@ -68,7 +68,7 @@
 -if @letter.regnumber.blank?
   %h2
     Отметки банка
-    -if true or can? :registr, @letter
+    -if can? :registr, @letter
       =link_to 'Зарегистрировать', register_letter_path(@letter), class: 'button'
 -else
   %h2 Отметки банка
@@ -153,7 +153,8 @@
 
 -if can? :update, @letter or is_can_update  # автор и исполнители могут добавлять других исполнителей
   = link_to 'Edit', edit_letter_path(@letter), :class => 'button'
-  = link_to 'Clone', clone_letter_path(@letter), :class => 'button' 
   -#= link_to 'Создать Требование', create_requirement_letter_path(@letter), :class => 'button'
-  -if @letter.in_out == 1
-    = link_to 'Создать Исходящее', create_outgoing_letter_path(@letter), :class => 'button'
+  -if can? :create_outgoing, @letter
+    = link_to 'Новое похожее', clone_letter_path(@letter), :class => 'button' 
+    = link_to 'Создать Исходящее', create_outgoing_letter_path(@letter), :class => 'button' if @letter.in_out == 1
+
