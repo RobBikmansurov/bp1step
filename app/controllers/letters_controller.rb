@@ -201,16 +201,22 @@ class LettersController < ApplicationController
   end
 
   def senders
-    @senders = Letter.select(:sender)
+    @title_senders = 'Корреспонденты (адресанты и адресаты), письма '
+    if params[:status].present?
+      @senders = Letter.select(:sender)..where('letters.status = ?', params[:status])
+      @title_senders += "в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
+    else
+      @senders = Letter.select(:sender).where('letters.status < 90', params[:status])
+      @title_senders += "не завершенные"
+    end
     @senders = @senders.where('sender ILIKE ?', "%#{params[:search]}%") if params[:search].present?
-    _direction = params[:direction] || "desc"
-    if _direction == 'desc'
+    _direction = params[:direction] || "asc"
+    if _direction == 'asc'
       @senders = @senders.group(:sender, :status).order("sender DESC, status ASC").count
     else
       @senders = @senders.group(:sender, :status).order("sender ASC, status ASC").count
     end
     #@senders = @senders.paginate(:per_page => 10, :page => params[:page])
-    @title_senders = 'Корреспонденты (адресанты и адресаты)'
   end
 
   private
