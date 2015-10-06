@@ -8,8 +8,9 @@
     = f.input :date, :as => :string, :input_html => {:class=>'datepicker', :value => Time.current.strftime("%d.%m.%Y")}
 
   -if can? :create, @letter
-    = f.input :regnumber
-    = f.input :regdate, as: :string, :input_html => {:class=>'datepicker'}
+    -if !@letter.id.blank?
+      = f.input :regnumber
+      = f.input :regdate, as: :string, :input_html => {:class=>'datepicker'}
   -else
     Зарегистрирован: #{@letter.in_out == 1 ? 'Вх.№' : 'Исх.№'}
     %b #{@letter.regnumber}
