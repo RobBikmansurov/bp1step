@@ -36,5 +36,8 @@ BPDoc::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.active_record.raise_in_transactional_callbacks = true
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
 
+  config.assets.compile = false
+  
 end
