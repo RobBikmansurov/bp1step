@@ -5,7 +5,7 @@ $(function() {
     changeYear: true,
     inline: true, 
     showOtherMonths: true, 
-    yearRange: "-15:+0",
+    yearRange: "-15:+1",
     dateFormat: "dd.mm.yy",
     autoSize: true,
     dayNamesMin: ['ВС', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'СБ'],
