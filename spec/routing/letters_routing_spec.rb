@@ -33,5 +33,9 @@ RSpec.describe LettersController, :type => :routing do
       expect(:get => "/letters/1/register").to route_to("letters#register", :id => "1")
     end
 
+    it "routes to #log_week" do
+      expect(:get => "/letters/log_week").to route_to("letters#log_week")
+    end
+
   end
 end

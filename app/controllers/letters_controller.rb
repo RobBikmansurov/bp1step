@@ -192,8 +192,34 @@ class LettersController < ApplicationController
     respond_with(@letter_appendix.letter)
   end
 
+  def log_week    # реестр регистрации
+    if params[:week_day].present?
+      d = params[:week_day].to_date
+    else
+      d = Date.current - 7  # по умолчанию - предыдущая неделя
+    end
+    week_start = d - d.days_to_week_start # начало недели отчета
+    week_end = week_start + 6   # конец недели отчета
+    @log_period = "с #{week_start.strftime("%d.%m.%Y")} по #{week_end.strftime("%d.%m.%Y")}"
+    @letters = Letter.where('regdate > ? and regdate < ?', week_start - 1, week_end + 1)
+    if params[:out].present?
+      @letters = @letters.where('in_out <> 1')
+      @log_title = 'Исходящей'
+    else
+      @letters = @letters.where('in_out = 1')
+      @log_title = 'Входящей'
+    end
+
+    if @letters
+      log_week_report
+    else
+      redirect_to letters_path, notice: "Не регистрировались письма за период: #{week_start.strftime("%d.%m.%Y")} - #{week_end.strftime("%d.%m.%Y")}"
+      #render Rails.application.routes.recognize_path(request.referer)[:action]
+    end
+  end
+
   def register
-    max_reg_number = Letter.where('in_out = ? and  regdate > ?', @letter.in_out, Time.current.beginning_of_year).maximum(:regnumber).to_i
+    max_reg_number = Letter.where('in_out = ? and regdate > ?', @letter.in_out, Time.current.beginning_of_year).maximum(:regnumber).to_i
     max_reg_number += 1   # next registration number for current year
     @letter.update(regnumber: max_reg_number, regdate: Time.current.strftime("%d.%m.%Y"))
     @letter.update(number: max_reg_number, date: Time.current.strftime("%d.%m.%Y")) if @letter.in_out != 1
@@ -246,6 +272,35 @@ class LettersController < ApplicationController
   def record_not_found
     flash[:alert] = "Письмо ##{params[:id]} не найдено."
     redirect_to action: :index
+  end
+
+  def log_week_report    # реестр за неделю
+    report = ODFReport::Report.new("reports/letters_reestr.odt") do |r|
+      nn = 0
+      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
+      r.add_field "IN_OUT_NAME", @log_title
+      r.add_field "REPORT_PERIOD", @log_period
+      r.add_table("TABLE_01", @letters, :header=>true) do |t|
+        t.add_column(:nn) do |ca|
+          nn += 1
+          "#{nn}."
+        end
+        t.add_column(:id)
+        t.add_column(:regnumber)
+        t.add_column(:regdate) do |letter|
+          "#{letter.regdate.strftime('%d.%m.%Y')}"
+        end
+        t.add_column(:sender)
+        t.add_column(:subject)
+        t.add_column(:author, :author_name)
+        t.add_column(:source)
+      end
+      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    send_data report.generate, type: 'application/msword',
+      :filename => "letters_reestr.odt",
+      :disposition => 'inline'    
   end
 
 

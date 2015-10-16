@@ -92,6 +92,7 @@ BPDoc::Application.routes.draw do
   resources :letters do     # письма, корреспонденция
     collection do
       get :senders
+      get :log_week    # журнал регистрации за неделю
     end
     member do
       get :appendix_create
