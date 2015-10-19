@@ -201,13 +201,14 @@ class LettersController < ApplicationController
     week_start = d - d.days_to_week_start # начало недели отчета
     week_end = week_start + 6   # конец недели отчета
     @log_period = "с #{week_start.strftime("%d.%m.%Y")} по #{week_end.strftime("%d.%m.%Y")}"
-    @letters = Letter.where('regdate > ? and regdate < ?', week_start - 1, week_end + 1)
+    @week_number = "#{week_start.strftime("%Y-%m-%d")}"
+    @letters = Letter.where('regdate > ? and regdate < ?', week_start - 1, week_end + 1).order(:regnumber)
     if params[:out].present?
       @letters = @letters.where('in_out <> 1')
-      @log_title = 'Исходящей'
+      @in_out = 2
     else
       @letters = @letters.where('in_out = 1')
-      @log_title = 'Входящей'
+      @in_out = 1
     end
 
     if @letters
@@ -278,7 +279,18 @@ class LettersController < ApplicationController
     report = ODFReport::Report.new("reports/letters_reestr.odt") do |r|
       nn = 0
       r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
-      r.add_field "IN_OUT_NAME", @log_title
+      if @in_out == 1      # журнал воходящей корресподенции
+        r.add_field "HEADER1", "Вх.№ и дата регистрации"
+        r.add_field "HEADER2", "Исх.№ и дата"
+        r.add_field "HEADER3", "Отправитель"
+        r.add_field "IN_OUT_NAME", 'Входящей'
+      else
+        r.add_field "IN_OUT_NAME", 'Исходящей'
+        r.add_field "HEADER1", "Исх.№ и дата регистрации"
+        r.add_field "HEADER2", "На Вх.№ от даты"
+        r.add_field "HEADER3", "Получатель"
+      end
+      r.add_field "WEEK_NUMBER", @week_number
       r.add_field "REPORT_PERIOD", @log_period
       r.add_table("TABLE_01", @letters, :header=>true) do |t|
         t.add_column(:nn) do |ca|
@@ -288,7 +300,11 @@ class LettersController < ApplicationController
         t.add_column(:id)
         t.add_column(:regnumber)
         t.add_column(:regdate) do |letter|
-          "#{letter.regdate.strftime('%d.%m.%Y')}"
+          "#{letter.regdate.strftime('%d.%m.%y')}"
+        end
+        t.add_column(:number)
+        t.add_column(:date) do |letter|
+          "#{letter.date.strftime('%d.%m.%y')}"
         end
         t.add_column(:sender)
         t.add_column(:subject)
