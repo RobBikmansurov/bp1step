@@ -28,7 +28,7 @@ class LettersController < ApplicationController
           @title_letter += 'зарегистрированные ' + params[:regdate]
         else
           if params[:addresse].present? # письма от адресанта + письма алресату
-            @letters = Letter.where('sender ILIKE ?', params[:addresse])
+            @letters = Letter.where('sender ILIKE ?', params[:addresse].strip)
             @title_letter += 'адреса[н]та ' + params[:addresse]
           else
             if params[:status].present?
