@@ -52,7 +52,7 @@ class Letter < ActiveRecord::Base
   end
 
   def action=(action)
-    self.result += "\r\n" + Time.current.strftime("%d.%m.%Y %H:%M:%S - ") + action if !action.blank?
+    self.result += action if !action.blank?
   end
 
   def name
