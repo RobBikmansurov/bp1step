@@ -96,9 +96,10 @@
 = link_to 'Корреспонденты', senders_letters_path, class: 'button'
 -if can? :create, Letter
   -if params[:out].present?
-    = link_to 'Реестр', log_week_letters_path(out: "#{params[:out]}"), :class => 'button'
+    = link_to 'Реестр', log_week_letters_path(out: "#{params[:out]}", week_day: "#{Date.current - 7}"), :class => 'button'
   -else
-    = link_to 'Реестр', log_week_letters_path, :class => 'button'
+    = link_to 'Реестр', log_week_letters_path(week_day: "#{Date.current - 7}"), :class => 'button'
+= link_to 'Контроль', check_letters_path, :class => 'button'
 
 %p
 -if params[:user].present?

@@ -93,6 +93,7 @@ BPDoc::Application.routes.draw do
     collection do
       get :senders
       get :log_week    # журнал регистрации за неделю
+      get :check       # журнал
     end
     member do
       get :appendix_create
