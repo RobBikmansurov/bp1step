@@ -92,7 +92,8 @@ class LettersController < ApplicationController
 
   def update
     if @letter.update(letter_params)
-      #@letter.action = Time.current.strftime("%d.%m.%Y %H:%M:%S") + ": #{current_user.displayname} " + params[:letter][:action]
+      @letter.result += "\r\n" + Time.current.strftime("%d.%m.%Y %H:%M:%S") + ": #{current_user.displayname} - " + params[:letter][:action] if params[:letter][:action].present?
+      @letter.update_column(:result, "#{@letter.result}")
       # begin
       #   LetterMailer.update_letter(@letter, current_user, nil, '').deliver    # оповестим Исполнителей об изменении Письма
       # rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
@@ -259,7 +260,7 @@ class LettersController < ApplicationController
     def letter_params
       params.require(:letter).permit(:regnumber, :regdate, :number, :date, :subject, :source, :sender, \
         :duedate, :body, :status, :status_name, :result, :letter_id, :author_id, :author_name, \
-        :letter_appendix, :letter_id, :name, :appendix, :action, :completion_date, :in_out)
+        :letter_appendix, :letter_id, :name, :appendix, :completion_date, :in_out)
     end
 
     def sort_column
@@ -318,6 +319,5 @@ class LettersController < ApplicationController
       :filename => "letters_reestr.odt",
       :disposition => 'inline'    
   end
-
 
 end
