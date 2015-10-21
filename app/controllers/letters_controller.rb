@@ -111,6 +111,11 @@ class LettersController < ApplicationController
     redirect_to letters_url, notice: 'Письмо удалено.'
   end
 
+  def check
+    @letters = Letter.where('status < 90 and duedate <= ?', Date.current + 1).order(:duedate)
+    check_report
+  end
+
   def clone
     letter = Letter.find(params[:id])   # письмо - прототип
     @letter = Letter.new(sender: letter.sender, in_out: letter.in_out, status: 0)
@@ -212,11 +217,10 @@ class LettersController < ApplicationController
       @in_out = 1
     end
 
-    if @letters
+    if @letters.count > 0
       log_week_report
     else
-      redirect_to letters_path, notice: "Не регистрировались письма за период: #{week_start.strftime("%d.%m.%Y")} - #{week_end.strftime("%d.%m.%Y")}"
-      #render Rails.application.routes.recognize_path(request.referer)[:action]
+      redirect_to letters_path, notice: "Нет зарегистрированных писем за период: #{week_start.strftime("%d.%m.%Y")} - #{week_end.strftime("%d.%m.%Y")}."
     end
   end
 
@@ -276,10 +280,73 @@ class LettersController < ApplicationController
     redirect_to action: :index
   end
 
+  def check_report    # реестр за неделю
+    report = ODFReport::Report.new("reports/letters_check.odt") do |r|
+      nn = 0
+      r.add_field "REPORT_PERIOD", Date.current.strftime('%d.%m.%Y')
+      r.add_field "REPORT_DATE", Date.current.strftime('%d.%m.%Y')
+      if @in_out == 1      # журнал воходящей корресподенции
+        r.add_field "HEADER1", "Вх.№ и дата регистрации"
+        r.add_field "HEADER2", "Исх.№ и дата"
+        r.add_field "HEADER3", "Отправитель"
+        r.add_field "IN_OUT_NAME", 'Входящей'
+      else
+        r.add_field "IN_OUT_NAME", 'Исходящей'
+        r.add_field "HEADER1", "Исх.№ и дата регистрации"
+        r.add_field "HEADER2", "На Вх.№ от даты"
+        r.add_field "HEADER3", "Получатель"
+      end
+      r.add_field "WEEK_NUMBER", @week_number
+      r.add_table("LETTERS", @letters, :header=>true) do |t|
+        t.add_column(:nn) do |ca|
+          nn += 1
+          "#{nn}."
+        end
+        t.add_column(:id)
+        t.add_column(:regnumber)
+        t.add_column(:regdate) do |letter|
+          "#{letter.regdate.strftime('%d.%m.%y')}" if letter.regdate
+        end
+        t.add_column(:number)
+        t.add_column(:date) do |letter|
+          "#{letter.date.strftime('%d.%m.%y')}"
+        end
+        t.add_column(:sender) do |letter|
+          (letter.in_out == 1 ? '<=' : "=>") + "#{letter.sender}"
+        end
+        t.add_column(:subject)
+        t.add_column(:author, :author_name)
+        t.add_column(:source)
+        t.add_column(:duedate) do |letter|
+          days = letter.duedate - Date.current
+          "#{letter.duedate.strftime('%d.%m.%y')}" + (days < 0 ? " (+ #{(-days).to_i} дн.)" : "")
+        end
+        t.add_column(:status) do |letter|
+          LETTER_STATUS.key(letter.status)
+        end
+        s = ''
+        t.add_column(:users) do |letter|  # исполнители
+          letter.user_letter.each do |user_letter|
+            s += ", " if !s.blank?
+            s += user_letter.user.displayname
+            s += '-отв.' if user_letter.status and user_letter.status > 0
+          end
+          "#{s}"
+        end
+        t.add_column(:result)
+      end
+      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    send_data report.generate, type: 'application/msword',
+      :filename => "letters_check.odt",
+      :disposition => 'inline'    
+  end
+
   def log_week_report    # реестр за неделю
     report = ODFReport::Report.new("reports/letters_reestr.odt") do |r|
       nn = 0
-      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
+      r.add_field "REPORT_DATE", Date.current.strftime('%d.%m.%Y')
       if @in_out == 1      # журнал воходящей корресподенции
         r.add_field "HEADER1", "Вх.№ и дата регистрации"
         r.add_field "HEADER2", "Исх.№ и дата"
