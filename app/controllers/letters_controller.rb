@@ -284,7 +284,6 @@ class LettersController < ApplicationController
     report = ODFReport::Report.new("reports/letters_check.odt") do |r|
       nn = 0
       r.add_field "REPORT_PERIOD", Date.current.strftime('%d.%m.%Y')
-      r.add_field "REPORT_DATE", Date.current.strftime('%d.%m.%Y')
       if @in_out == 1      # журнал воходящей корресподенции
         r.add_field "HEADER1", "Вх.№ и дата регистрации"
         r.add_field "HEADER2", "Исх.№ и дата"
@@ -324,8 +323,8 @@ class LettersController < ApplicationController
         t.add_column(:status) do |letter|
           LETTER_STATUS.key(letter.status)
         end
-        s = ''
         t.add_column(:users) do |letter|  # исполнители
+          s = ''
           letter.user_letter.each do |user_letter|
             s += ", " if !s.blank?
             s += user_letter.user.displayname
@@ -346,7 +345,7 @@ class LettersController < ApplicationController
   def log_week_report    # реестр за неделю
     report = ODFReport::Report.new("reports/letters_reestr.odt") do |r|
       nn = 0
-      r.add_field "REPORT_DATE", Date.current.strftime('%d.%m.%Y')
+      #r.add_field "REPORT_DATE", Date.current.strftime('%d.%m.%Y')
       if @in_out == 1      # журнал воходящей корресподенции
         r.add_field "HEADER1", "Вх.№ и дата регистрации"
         r.add_field "HEADER2", "Исх.№ и дата"
