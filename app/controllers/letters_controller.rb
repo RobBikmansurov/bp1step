@@ -224,8 +224,9 @@ class LettersController < ApplicationController
   end
 
   def register
-    max_reg_number = Letter.where('in_out = ? and regdate > ?', @letter.in_out, Time.current.beginning_of_year).maximum(:regnumber).to_i
-    max_reg_number += 1   # next registration number for current year
+    len_regnumber = Letter.where('in_out = ? and regdate > ?', @letter.in_out, Time.current.beginning_of_year).maximum('length(regnumber)')  # длина строки наибольшего номера
+    max_reg_number = Letter.where('in_out = ? and regdate > ? and length(regnumber) >= ?', @letter.in_out, Time.current.beginning_of_year, len_regnumber).maximum(:regnumber).to_i
+    max_reg_number += 1   # next registration number for current year and directiom
     @letter.update(regnumber: max_reg_number, regdate: Date.current.strftime("%d.%m.%Y"))
     if @letter.in_out != 1  # это исходящее письмо
       if @letter.letter_id
