@@ -48,7 +48,9 @@ class UsersController < ApplicationController
   end
 
   def execute
-    @letters = @usr.user_workplace
+    @letters = Letter.joins(:user_letter).where("user_letters.user_id = ? and letters.status < 90", @usr.id).order(:status)
+    @requirements = Requirement.joins(:user_requirement).where("user_requirements.user_id = ?", @usr.id).order(:status)
+
     respond_to do |format|
       format.html { render layout: false }
     end
