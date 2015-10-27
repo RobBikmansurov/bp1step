@@ -1,9 +1,8 @@
 #Executes
-- letters = Letter.joins(:user_letter).where("user_letters.user_id = ? and letters.status < 90", @usr.id).order(:status)
--if letters
+-if @letters.count > 0
   %h2
-    Требуют внимания письма
-    = link_to "(#{letters.count})", letters_path(user: @usr)
+    Требуют внимания Письма
+    = link_to "(#{@letters.count})", letters_path(user: @usr)
     \:
   %table
     %tr
@@ -15,7 +14,7 @@
       %thСтатус
 
     -# letters.select('letters.status, count(letters.id) as count').group(:status).each do | letter |
-    - letters.each do |letter|
+    - @letters.each do |letter|
       %tr
         %td= letter.id
         %td
@@ -40,5 +39,27 @@
                 %br
                   %span{:style => "color: red;"}
                     = letter.completion_date.strftime("%d.%m.%y")
-
         %td= LETTER_STATUS.key(letter.status)
+
+-if @requirements.count > 0
+  %h2
+    Требуют внимания Требования
+    = link_to "(#{@requirements.count})", requirements_path(user: @usr)
+    \:
+  %table
+    %tr
+      %th #
+      %th Метка, обозначение
+      %th Содержание
+      %th Срок
+      %th Статус
+  
+    - @requirements.each do |requirement|
+      %tr
+        %td= requirement.id
+        %td
+          = link_to requirement.label, requirement
+          = requirement.date.strftime("%d.%m.%Y")
+        %td= link_to requirement.body, requirement
+        %td= requirement.duedate.strftime("%d.%m.%Y") if requirement.duedate
+        %td= REQUIREMENT_STATUS.key(requirement.status)
