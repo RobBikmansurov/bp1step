@@ -87,11 +87,3 @@
     -if resource_count > 0
       Владелец
       = link_to 'ресурсов', iresources_path + '?user=' + @usr.id.to_s
-  %h4
-    - letters = Letter.joins(:user_letter).where("user_letters.user_id = ?", @usr.id)
-    -if letters
-      Исполнитель
-      = link_to " писем (#{letters.count})", letters_path(user: @usr)
-      из них:
-      - letters.select('letters.status, count(letters.id) as count').group(:status).each do | letter |
-        = "#{ LETTER_STATUS.key(letter.status)} - #{letter.count}  "

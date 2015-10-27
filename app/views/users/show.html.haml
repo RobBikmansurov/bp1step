@@ -21,6 +21,9 @@
 #tabs
   %ul
     %li
+      = link_to(execute_user_path(@usr)) do
+        %span К исполнению
+    %li
       = link_to(uroles_user_path(@usr)) do
         %span Роли
     %li

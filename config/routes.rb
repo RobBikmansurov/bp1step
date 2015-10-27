@@ -145,6 +145,7 @@ BPDoc::Application.routes.draw do
       get :contracts_pay
       get :resources
       get :processes
+      get :execute          # к исполнению (письма, задачи, требования)
       get :avatar_create
       get :avatar_delete
       patch :update_avatar

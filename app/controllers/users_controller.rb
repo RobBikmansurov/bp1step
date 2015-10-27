@@ -46,6 +46,13 @@ class UsersController < ApplicationController
       format.html { render layout: false }
     end
   end
+
+  def execute
+    @letters = @usr.user_workplace
+    respond_to do |format|
+      format.html { render layout: false }
+    end
+  end
   
   def uroles
     @uroles = @usr.user_business_role.includes(:business_role).order('business_roles.name') # исполняет роли
