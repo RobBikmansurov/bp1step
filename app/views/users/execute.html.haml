@@ -1,0 +1,44 @@
+#Executes
+- letters = Letter.joins(:user_letter).where("user_letters.user_id = ? and letters.status < 90", @usr.id).order(:status)
+-if letters
+  %h2
+    Требуют внимания письма
+    = link_to "(#{letters.count})", letters_path(user: @usr)
+    \:
+  %table
+    %tr
+      %th #
+      %th Исх.№
+      %th [ Тема ]
+      %thКорреспондент
+      %thСрок
+      %thСтатус
+
+    -# letters.select('letters.status, count(letters.id) as count').group(:status).each do | letter |
+    - letters.each do |letter|
+      %tr
+        %td= letter.id
+        %td
+          = link_to letter.number, letter
+          от 
+          = letter.date.strftime("%d.%m.%y") if letter.date
+        %td
+          -if letter.letter_appendix.first  # если есть приложение 
+            - if File.exist?(letter.letter_appendix.first.appendix.path)
+              = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), letter.letter_appendix.first.appendix.url, class: 'button-img'
+          = link_to letter.subject, letter
+        %td= letter.sender
+        %td
+          -if letter.duedate
+            -if letter.status < 90 and letter.duedate <= Date.current
+              %span{:style => "color: red;"}
+                = letter.duedate.strftime("%d.%m.%y")
+            -else
+              = letter.duedate.strftime("%d.%m.%y")
+            -if letter.completion_date
+              -if letter.completion_date > letter.duedate
+                %br
+                  %span{:style => "color: red;"}
+                    = letter.completion_date.strftime("%d.%m.%y")
+
+        %td= LETTER_STATUS.key(letter.status)

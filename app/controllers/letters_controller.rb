@@ -82,8 +82,7 @@ class LettersController < ApplicationController
 
   def create
     @letter = Letter.new(letter_params)
-
-    if @letter.save
+   if @letter.save
       redirect_to @letter, notice: 'Письмо создано.'
     else
       render action: 'new'
@@ -227,9 +226,14 @@ class LettersController < ApplicationController
   def register
     max_reg_number = Letter.where('in_out = ? and regdate > ?', @letter.in_out, Time.current.beginning_of_year).maximum(:regnumber).to_i
     max_reg_number += 1   # next registration number for current year
-    @letter.update(regnumber: max_reg_number, regdate: Time.current.strftime("%d.%m.%Y"))
-    @letter.update(number: max_reg_number, date: Time.current.strftime("%d.%m.%Y")) if @letter.in_out != 1
-    render :show
+    @letter.update(regnumber: max_reg_number, regdate: Date.current.strftime("%d.%m.%Y"))
+    if @letter.in_out != 1  # это исходящее письмо
+      if @letter.letter_id
+        letter = Letter.find(@letter.letter_id)
+        @letter.update(number: letter.number, date: letter.date) if letter
+      end
+    end
+    redirect_to proc { letter_url(letter_id: @letter.id) } and return
   end
 
   def senders
@@ -284,17 +288,6 @@ class LettersController < ApplicationController
     report = ODFReport::Report.new("reports/letters_check.odt") do |r|
       nn = 0
       r.add_field "REPORT_PERIOD", Date.current.strftime('%d.%m.%Y')
-      if @in_out == 1      # журнал воходящей корресподенции
-        r.add_field "HEADER1", "Вх.№ и дата регистрации"
-        r.add_field "HEADER2", "Исх.№ и дата"
-        r.add_field "HEADER3", "Отправитель"
-        r.add_field "IN_OUT_NAME", 'Входящей'
-      else
-        r.add_field "IN_OUT_NAME", 'Исходящей'
-        r.add_field "HEADER1", "Исх.№ и дата регистрации"
-        r.add_field "HEADER2", "На Вх.№ от даты"
-        r.add_field "HEADER3", "Получатель"
-      end
       r.add_field "WEEK_NUMBER", @week_number
       r.add_table("LETTERS", @letters, :header=>true) do |t|
         t.add_column(:nn) do |ca|
@@ -302,13 +295,20 @@ class LettersController < ApplicationController
           "#{nn}."
         end
         t.add_column(:id)
-        t.add_column(:regnumber)
+        t.add_column(:regnumber) do |letter|
+          "#{letter.in_out == 1 ? 'Вх.№' : 'Исх.№'} #{letter.regnumber}"
+        end
         t.add_column(:regdate) do |letter|
           "#{letter.regdate.strftime('%d.%m.%y')}" if letter.regdate
         end
-        t.add_column(:number)
+        t.add_column(:number) do |letter|
+          if letter.regnumber == letter.number
+          else
+            "#{letter.in_out == 1 ? 'Исх.№' : 'на №'} #{letter.number}"
+          end
+        end
         t.add_column(:date) do |letter|
-          "#{letter.date.strftime('%d.%m.%y')}"
+          "от #{letter.date.strftime('%d.%m.%y')}"
         end
         t.add_column(:sender) do |letter|
           (letter.in_out == 1 ? '<=' : "=>") + "#{letter.sender}"
