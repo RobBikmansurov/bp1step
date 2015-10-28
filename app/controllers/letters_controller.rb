@@ -36,22 +36,25 @@ class LettersController < ApplicationController
               @title_letter += "в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
             else
               if params[:search].present?
+                logger.debug "params: #{params[:search]}"
                 @letters = Letter.search(params[:search]).includes(:user_letter, :letter_appendix)
               else
-                 @letters = Letter.search(params[:search]).where('status < 90').includes(:user_letter, :letter_appendix)
-                  @title_letter += 'не завершенные'
+                @letters = Letter.search(params[:search]).where('status < 90').includes(:user_letter, :letter_appendix)
+                @title_letter += 'не завершенные'
               end
             end
           end
         end
       end
     end
-    if params[:out].present?
-      @letters = @letters.where('in_out <> 1')
-      @title_letter += ' Исходящие'
-    else
-      @letters = @letters.where('in_out = 1')
-      @title_letter += ' Входящие'
+    unless params[:search].present?
+      if params[:out].present?
+        @letters = @letters.where('in_out <> 1')
+        @title_letter += ' Исходящие'
+      else
+        @letters = @letters.where('in_out = 1')
+        @title_letter += ' Входящие'
+      end
     end
     @letters = @letters.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end
