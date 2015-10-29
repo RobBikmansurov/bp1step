@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150812075038) do
+ActiveRecord::Schema.define(version: 20151028105818) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -384,6 +384,26 @@ ActiveRecord::Schema.define(version: 20150812075038) do
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
+  create_table "tasks", force: :cascade do |t|
+    t.string   "name",            limit: 255
+    t.text     "description"
+    t.date     "duedate"
+    t.text     "result"
+    t.integer  "status"
+    t.date     "completion_date"
+    t.integer  "letter_id"
+    t.integer  "requirement_id"
+    t.integer  "author_id"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "tasks", ["author_id"], name: "index_tasks_on_author_id", using: :btree
+  add_index "tasks", ["duedate"], name: "index_tasks_on_duedate", using: :btree
+  add_index "tasks", ["letter_id"], name: "index_tasks_on_letter_id", using: :btree
+  add_index "tasks", ["name"], name: "index_tasks_on_name", unique: true, using: :btree
+  add_index "tasks", ["requirement_id"], name: "index_tasks_on_requirement_id", using: :btree
+
   create_table "terms", force: :cascade do |t|
     t.string   "shortname",   limit: 255
     t.string   "name",        limit: 255
@@ -456,6 +476,18 @@ ActiveRecord::Schema.define(version: 20150812075038) do
   add_index "user_roles", ["role_id"], name: "index_user_roles_on_role_id", using: :btree
   add_index "user_roles", ["user_id"], name: "index_user_roles_on_user_id", using: :btree
 
+  create_table "user_tasks", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "task_id"
+    t.integer  "status"
+    t.date     "review_date"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "user_tasks", ["task_id"], name: "index_user_tasks_on_task_id", using: :btree
+  add_index "user_tasks", ["user_id"], name: "index_user_tasks_on_user_id", using: :btree
+
   create_table "user_workplaces", force: :cascade do |t|
     t.date     "date_from"
     t.date     "date_to"
@@ -514,4 +546,8 @@ ActiveRecord::Schema.define(version: 20150812075038) do
     t.integer  "port"
   end
 
+  add_foreign_key "tasks", "letters"
+  add_foreign_key "tasks", "requirements"
+  add_foreign_key "user_tasks", "tasks"
+  add_foreign_key "user_tasks", "users"
 end

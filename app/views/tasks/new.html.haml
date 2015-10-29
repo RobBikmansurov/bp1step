@@ -1,0 +1,10 @@
+-title "Задача"
+-search "Задача"
+
+%h2
+  Новая задача
+  = " из Требования #{@requirement.name}" if @requirement
+
+= render 'form'
+%p
+= link_to 'Back', tasks_path, class: 'button'

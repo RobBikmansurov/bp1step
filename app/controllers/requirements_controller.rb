@@ -7,6 +7,7 @@ class RequirementsController < ApplicationController
   end
 
   def show
+    @tasks = Task.where('requirement_id = ?', @requirement.id)
   end
 
   def new
@@ -27,6 +28,11 @@ class RequirementsController < ApplicationController
     else
       render action: 'new'
     end
+  end
+
+  def create_task
+    parent_requirement = Requirement.find(params[:id]) 
+    redirect_to proc { new_task_url(requirement_id: parent_requirement.id) } and return
   end
 
   def update

@@ -29,5 +29,9 @@ RSpec.describe RequirementsController, :type => :routing do
       expect(:delete => "/requirements/1").to route_to("requirements#destroy", :id => "1")
     end
 
+    it "routes to #create_task" do
+      expect(:get => "/requirements/1/create_task").to route_to("requirements#create_task", :id => "1")
+    end
+
   end
 end

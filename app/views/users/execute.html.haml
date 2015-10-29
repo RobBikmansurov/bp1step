@@ -21,11 +21,7 @@
           = link_to letter.number, letter
           от 
           = letter.date.strftime("%d.%m.%y") if letter.date
-        %td
-          -if letter.letter_appendix.first  # если есть приложение 
-            - if File.exist?(letter.letter_appendix.first.appendix.path)
-              = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), letter.letter_appendix.first.appendix.url, class: 'button-img'
-          = link_to letter.subject, letter
+        %td= link_to letter.subject, letter
         %td= letter.sender
         %td
           -if letter.duedate
@@ -40,6 +36,36 @@
                   %span{:style => "color: red;"}
                     = letter.completion_date.strftime("%d.%m.%y")
         %td= LETTER_STATUS.key(letter.status)
+
+-if @tasks.count > 0
+  %h2
+    Требуют внимания Задачи
+    = link_to "(#{@tasks.count})", tasks_path(user: @usr)
+    \:
+  %table
+    %tr
+      %th #
+      %th Название
+      %thСрок
+      %thСтатус
+
+    - @tasks.each do |task|
+      %tr
+        %td= task.id
+        %td= link_to task.name, task
+        %td
+          -if task.duedate
+            -if task.status < 90 and task.duedate <= Date.current
+              %span{:style => "color: red;"}
+                = task.duedate.strftime("%d.%m.%y")
+            -else
+              = task.duedate.strftime("%d.%m.%y")
+            -if task.completion_date
+              -if task.completion_date > task.duedate
+                %br
+                  %span{:style => "color: red;"}
+                    = task.completion_date.strftime("%d.%m.%y")
+        %td= TASK_STATUS.key(task.status)
 
 -if @requirements.count > 0
   %h2
