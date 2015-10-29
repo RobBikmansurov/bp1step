@@ -20,8 +20,8 @@ class UserTasksController < ApplicationController
       rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
         flash[:alert] = "Error sending mail to #{@user_task.user.email}"
       end
-      Task = Task.find(@user_task.Task_id)
-      Task.update_column(:status, 5) if Task.status < 1 # если есть ответственные - статус = Назначено
+      task = Task.find(@user_task.Task_id)
+      task.update_column(:status, 5) if Task.status < 1 # если есть ответственные - статус = Назначено
     else
       flash[:alert] = "Error create user_task"
     end
@@ -30,16 +30,16 @@ class UserTasksController < ApplicationController
 
   def destroy
     @user_task = UserTask.find(params[:id])   # нашли удаляемую связь
-    @Task = Task.find(@user_task.Task_id) # запомнили письмо для этой удаляемой связи
+    @task = Task.find(@user_task.task_id) # запомнили письмо для этой удаляемой связи
     begin
       UserTaskMailer.user_task_destroy(@user_task, current_user).deliver_now    # оповестим исполнителя
     rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
       flash[:alert] = "Error sending mail to #{@user_task.user.email}"
     end
     if @user_task.destroy   # удалили связь
-      @Task.update_column(:status, 0) if !@Task.user_task.first # если нет ответственных - статус = Новое
+      @task.update_column(:status, 0) if !@task.user_task.first # если нет ответственных - статус = Новая
     end
-    respond_with(@Task)  # вернулись в письмо
+    respond_with(@task)  # вернулись в задачу
   end
 
 end
