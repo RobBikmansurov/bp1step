@@ -1,4 +1,5 @@
 class RequirementsController < ApplicationController
+  respond_to :html, :json
   before_action :set_requirement, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -35,12 +36,42 @@ class RequirementsController < ApplicationController
     redirect_to proc { new_task_url(requirement_id: parent_requirement.id) } and return
   end
 
+  def create_user
+    @requirement = Requirement.find(params[:id])
+    @user_requirement = UserRequirement.new(requirement_id: @requirement.id)    # заготовка для исполнителя
+    render :create_user
+  end
+
   def update
     if @requirement.update(requirement_params)
       redirect_to @requirement, notice: 'Requirement was successfully updated.'
     else
       render action: 'edit'
     end
+  end
+
+  def update_user
+    user_requirement = UserRequirement.new(params[:user_requirement]) if params[:user_requirement].present?
+    if user_requirement
+      user_requirement_clone = UserRequirement.where(requirement_id: user_requirement.requirement_id, user_id: user_requirement.user_id).first  # проверим - нет такого исполнителя?
+      if user_requirement_clone
+        user_requirement_clone.status = user_requirement.status
+        user_requirement = user_requirement_clone
+      end
+      if user_requirement.save
+        flash[:notice] = "Исполнитель #{user_requirement.user_name} назначен"
+        begin
+          UserRequirementMailer.user_requirement_create(user_requirement, current_user).deliver_now    # оповестим нового исполнителя
+        rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+          flash[:alert] = "Error sending mail to #{user_requirement.user.email}"
+        end
+        @requirement = user_requirement.requirement   #requirement.find(@user_requirement.requirement_id)
+        @requirement.update_column(:status, 5) if @requirement.status < 1 # если есть ответственные - статус = Назначено
+      end
+    else
+      flash[:alert] = "Ошибка - ФИО Исполнителя не указано."
+    end
+    respond_with(@requirement)
   end
 
   def destroy

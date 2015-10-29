@@ -20,8 +20,8 @@ class UserTasksController < ApplicationController
       rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
         flash[:alert] = "Error sending mail to #{@user_task.user.email}"
       end
-      task = Task.find(@user_task.Task_id)
-      task.update_column(:status, 5) if Task.status < 1 # если есть ответственные - статус = Назначено
+      task = Task.find(@user_task.task_id)
+      task.update_column(:status, 5) if task.status < 1 # если есть ответственные - статус = Назначено
     else
       flash[:alert] = "Error create user_task"
     end

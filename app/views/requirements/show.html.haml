@@ -26,7 +26,7 @@
     = @requirement.duedate.strftime("%d.%m.%Y")
 %h3
   Автор:
-  = link_to @requirement.author.displayname, user_path(@requirement.author.id) if @requirement.author_id?
+  = link_to @requirement.author.displayname, user_path(@requirement.author.id) if @requirement.author_id
 
 %hr
 %h2 Отметки банка
@@ -38,6 +38,10 @@
     -if !user_requirement.status?
       \- отв.
     &nbsp;
+- if can? :update, @requirement
+  #create_user
+    = link_to 'Добавить Исполнителя', create_user_requirement_path(@requirement), remote: true
+
 %h3
   Статус:
   %b= REQUIREMENT_STATUS.key(@requirement.status)
