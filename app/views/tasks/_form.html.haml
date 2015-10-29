@@ -1,0 +1,20 @@
+= simple_form_for(@task) do |f|
+  = f.error_notification
+  = f.hidden_field :author_id
+  = f.hidden_field :completion_date
+  = f.hidden_field :requirement_id
+  = f.input :name
+  = f.input :description, as: :text
+  = f.input :duedate, :as => :string, :input_html => {:class=>'datepicker'}
+  = f.label :Статус
+  = f.select :status_name, TASK_STATUS.keys
+  = f.hidden_field :result
+  -if @task.id
+    %h3 Результат исполнения:
+    = f.input :action, as: :text
+    = simple_format(@task.result, {}, {})
+  -else
+    = simple_format(@task.result, {}, {})
+
+  %p
+  = f.button :submit

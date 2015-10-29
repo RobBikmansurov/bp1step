@@ -43,6 +43,12 @@
   %b= REQUIREMENT_STATUS.key(@requirement.status)
 %h3 Результат исполнения:
 = simple_format(@requirement.result, {}, {})
+
+- if @tasks
+  %h3 Задачи для реализации данного требования:
+  - @tasks.each do |task|
+    =  link_to task.name, task
+
 %hr
 
 .info_
@@ -65,8 +71,8 @@
     = @requirement.updated_at.strftime('%d.%m.%Y %H:%M:%S')
 
 %p
-= link_to 'Back', requirements_path, :class => 'button'
+= link_to 'Back', requirements_path, class: 'button'
 
--if true or can? :update, @requirement
-  = link_to 'Edit', edit_requirement_path(@requirement), :class => 'button'
-  = link_to 'Создать Задачу', @requirement, disabled: true, class: 'button'
+-if can? :update, @requirement
+  = link_to 'Edit', edit_requirement_path(@requirement), class: 'button'
+  = link_to 'Создать Задачу', create_task_requirement_path(@requirement), class: 'button'

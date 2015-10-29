@@ -1,4 +1,5 @@
 BPDoc::Application.routes.draw do
+  resources :tasks
   resources :bproces, :only => :autocomlete do
     get :autocomplete, :on => :collection
   end
@@ -102,18 +103,12 @@ BPDoc::Application.routes.draw do
       get :clone            # письмо от того же корреспондента
       get :create_outgoing  # исходящее письмо на входящее
       get :create_requirement  # создать требование
-      get :create_user      # назначить ответственного
+      get :create_user      # назначить исполнителя
       post :update_user
       get :register       # зарегистрировать
     end
   end
   resources :letter_appendixes, :only => [:destroy, :edit, :update]
-
-  resources :tasks
-  resources :requirements do
-    member do
-    end
-  end
 
   resources :metrics do
     member do
@@ -128,7 +123,20 @@ BPDoc::Application.routes.draw do
   #get 'tags/:tag', to: 'bproces#index', as: :tag
   #get 'tags', to: 'bproces#index'
   resources :roles, only: [:index, :show]
+  resources :tasks do
+    member do
+      get :create_user      # назначить исполнителя
+      post :update_user
+    end
+  end
+
   resources :terms
+  resources :requirements do
+    member do
+      get :create_task
+    end
+  end
+
   devise_for :users
   devise_scope :users do
     get "sign_in",  :to => "devise/sessions#new"

@@ -140,7 +140,7 @@ class LettersController < ApplicationController
 
   def create_requirement
     letter = Letter.find(params[:id])   # письмо - прототип
-    @requirement = Requirement.new(letter_id: letter.id)
+    @requirement = Requirement.new(letter_id: letter.id, author_id: current_user.id)
     #redirect_to requirements_new(@requirement) and return
     redirect_to proc { new_requirement_url(letter_id: letter.id) } and return
   end
@@ -174,11 +174,6 @@ class LettersController < ApplicationController
       flash[:alert] = "Ошибка - ФИО Исполнителя не указано."
     end
     respond_with(@letter)
-  end
-
-  def record_not_found
-    flash[:alert] = "Неверный #id - нет такого письма."
-    redirect_to action: :index
   end
 
   def appendix_create

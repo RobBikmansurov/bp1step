@@ -41,6 +41,7 @@ class Ability
         can :crud, BusinessRole  # роли в процессе владельца
         can :crud, Metric
         can :crud, [Contract, Agent, ContractScan]
+        can :crud, [Task, Requirement]
       end
 
       if user.has_role? :analitic
@@ -49,6 +50,7 @@ class Ability
         can :manage_tag, [Bproce] # может редактировать теги процессов
         can :edit_document, [Document]  # может брать исходник документа
         can :crud, Metric
+        can :crud, [Task, Requirement]
       end
 
       if user.has_role? :secretar
