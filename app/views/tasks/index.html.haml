@@ -2,7 +2,7 @@
 -title @title_tasks
 
 %h2
-  Задачи
+  = @title_tasks if @title_tasks
   -if params[:search].present?
     = "[ #{params[:search]} ]"
 

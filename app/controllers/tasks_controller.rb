@@ -5,10 +5,10 @@ class TasksController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
-    @title_tasks = 'Задачи 1'
+    @title_tasks = 'Задачи '
     if params[:user].present?
       user = User.find(params[:user])
-      @tasks = Task.joins(:user_task).where("user_tasks.user_id = ?", params[:user])
+      @tasks = Task.joins(:user_task).where("user_tasks.user_id = ?", "#{params[:user]}")
       @title_tasks += "исполнителя [ #{user.displayname} ]"
       if params[:status].present?
         @tasks = @tasks.where('tasks.status = ?', params[:status])

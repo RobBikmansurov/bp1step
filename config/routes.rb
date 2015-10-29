@@ -163,6 +163,7 @@ BPDoc::Application.routes.draw do
   resources :user_documents, only: [:destroy]
   resources :user_letters, only: [:destroy, :update, :create, :show]
   resources :user_requirements, only: [:destroy, :update, :create, :show]
+  resources :user_tasks, only: [:destroy, :update, :create, :show]
   resources :user_workplaces
 
   #match '/bproceses' => 'bproces#list', :via => :get  # получение полного списка процессов

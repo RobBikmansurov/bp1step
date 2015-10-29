@@ -1,0 +1,9 @@
+%p
+%h3 Исполнители:
+- @task.user_task.each do |user_task|
+  &nbsp;
+  = link_to user_task.user.displayname, user_task.user
+  -if user_task.status and user_task.status > 0
+    \- отв.
+  = link_to image_tag('action_stop.gif', :alt => 'Удалить'), user_task, data: { confirm: "Удалить исполнителя " + user_task.user.displayname + "\nиз Задачи [#{user_task.task.name}] ?" }, :method => 'delete', class: 'button-img'
+  &nbsp;
