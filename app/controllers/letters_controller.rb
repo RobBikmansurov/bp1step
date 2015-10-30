@@ -283,7 +283,7 @@ class LettersController < ApplicationController
     redirect_to action: :index
   end
 
-  def check_report    # реестр за неделю
+  def check_report    #  Отчет "Контроль исполнения"
     report = ODFReport::Report.new("reports/letters_check.odt") do |r|
       nn = 0
       r.add_field "REPORT_PERIOD", Date.current.strftime('%d.%m.%Y')

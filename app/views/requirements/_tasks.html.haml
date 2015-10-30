@@ -3,7 +3,7 @@
   %table
     - @tasks.each do |task|
       %tr
-        %td= task.id
+        %td= "##{task.id}"
         %td= link_to task.name, task
         %td= truncate(task.description, :length => 50, :omission => ' ...')
         %td= task.duedate.strftime("%d.%m.%Y") if task.duedate

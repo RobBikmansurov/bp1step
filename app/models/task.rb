@@ -19,6 +19,14 @@ class Task < ActiveRecord::Base
     self.status = TASK_STATUS[key]
   end
 
+  def author_name
+    author.try(:displayname)
+  end
+
+  def author_name=(name)
+    self.author = User.find_by_displayname(name) if name.present?
+  end
+
   def action
     ''
   end

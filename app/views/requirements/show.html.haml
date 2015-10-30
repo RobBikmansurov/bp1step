@@ -76,3 +76,4 @@
 -if can? :update, @requirement
   = link_to 'Edit', edit_requirement_path(@requirement), class: 'button'
   = link_to 'Создать Задачу', create_task_requirement_path(@requirement), class: 'button'
+  = link_to 'План мероприятий', tasks_list_requirement_path(@requirement), class: 'button'
