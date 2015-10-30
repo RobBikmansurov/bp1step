@@ -1,0 +1,20 @@
+- if @tasks
+  %h3 Задачи для реализации данного требования:
+  %table
+    - @tasks.each do |task|
+      %tr
+        %td= task.id
+        %td= link_to task.name, task
+        %td= truncate(task.description, :length => 50, :omission => ' ...')
+        %td= task.duedate.strftime("%d.%m.%Y") if task.duedate
+        %td= TASK_STATUS.key(task.status)
+        %td
+          -task.user_task.each do |user_task|
+            -if user_task.user
+              - s = "#{user_task.user.displayname}"
+              -if !user_task.status.blank?
+                - s = s + "\u2713".html_safe
+              = link_to s, user_task.user
+            -else
+              удалить ссылку
+              = user_task.inspect
