@@ -22,10 +22,10 @@
       %tr
         %td= task.id
         %td= link_to task.name, task
-        %td= truncate(task.description, :length => 40, :omission => ' ...')
+        %td= truncate(task.description, :length => 50, :omission => ' ...')
         %td
           = link_to "Письмо #{task.letter_id}", letters_path(task.letter_id) if task.letter_id
-          = link_to "Требование ##{task.requirement_id}", requirements_path(task.requirement_id) if task.requirement_id
+          = link_to "Требование ##{task.requirement_id}", requirement_path(task.requirement_id) if task.requirement_id
 
         %td= task.duedate.strftime("%d.%m.%Y") if task.duedate
         %td= TASK_STATUS.key(task.status)
