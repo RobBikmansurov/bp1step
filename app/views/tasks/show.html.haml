@@ -38,7 +38,6 @@
   - @task.user_task.each do |user_task|
     &nbsp;
     = link_to user_task.user.displayname, tasks_path(user: user_task.user)
-
     -if user_task.status and user_task.status > 0
       \- отв.
     &nbsp;

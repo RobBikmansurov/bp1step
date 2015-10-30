@@ -27,9 +27,8 @@
 %h3
   Автор:
   = link_to @requirement.author.displayname, user_path(@requirement.author.id) if @requirement.author_id
-
 %hr
-%h2 Отметки банка
+
 %h3 
   Исполнители:
   - @requirement.user_requirement.each do |user_requirement|
@@ -48,10 +47,7 @@
 %h3 Результат исполнения:
 = simple_format(@requirement.result, {}, {})
 
-- if @tasks
-  %h3 Задачи для реализации данного требования:
-  - @tasks.each do |task|
-    =  link_to task.name, task
+=render 'tasks'
 
 %hr
 
