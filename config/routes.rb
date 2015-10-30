@@ -103,6 +103,7 @@ BPDoc::Application.routes.draw do
       get :clone            # письмо от того же корреспондента
       get :create_outgoing  # исходящее письмо на входящее
       get :create_requirement  # создать требование
+      get :create_task
       get :create_user      # назначить исполнителя
       post :update_user
       get :register       # зарегистрировать
