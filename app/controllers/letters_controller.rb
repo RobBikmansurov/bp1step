@@ -65,6 +65,7 @@ class LettersController < ApplicationController
     end
     @letters_outgoing = Letter.where(letter_id: @letter.id).order('date DESC')  # исходящие из данного письма
     @requirements = Requirement.where(letter_id: @letter.id) # требования, созданные из письма
+    @tasks = Task.where(letter_id: @letter.id) # задачи, созданные из письма
     respond_to do |format|
       format.html
       format.json { render json: @letter }
@@ -143,6 +144,11 @@ class LettersController < ApplicationController
     @requirement = Requirement.new(letter_id: letter.id, author_id: current_user.id)
     #redirect_to requirements_new(@requirement) and return
     redirect_to proc { new_requirement_url(letter_id: letter.id) } and return
+  end
+
+  def create_task
+    parent_letter = Letter.find(params[:id]) 
+    redirect_to proc { new_task_url(letter_id: parent_letter.id) } and return
   end
 
   def create_user

@@ -109,21 +109,28 @@
 %h3 Результат исполнения:
 = simple_format(@letter.result, {}, {})
 
--if @letters_outgoing
-  %h4
+%hr
+-if @letters_outgoing.count > 0
+  %h4 Созданы Исходящие:
   - @letters_outgoing.each do |letter_outgoing|
-    %h4
-      Исх.
-      = link_to "№ #{letter_outgoing.regnumber}", letter_path(letter_outgoing)
-      от #{letter_outgoing.regdate.strftime("%d.%m.%Y")}
+    Исх.
+    = link_to "№ #{letter_outgoing.regnumber}", letter_path(letter_outgoing)
+    от #{letter_outgoing.regdate.strftime("%d.%m.%Y")}
 
--if @requirements
+-if @requirements.count > 0
+  %h4 Созданы Требования:
   - @requirements.each do |requirement|
-    %h4
-      Требование [
-      = link_to requirement.label, requirement
-      ]
-      от #{requirement.date.strftime("%d.%m.%Y")}
+    Требование [
+    = link_to requirement.label, requirement
+    ]
+    от #{requirement.date.strftime("%d.%m.%Y")}
+-if @tasks.count > 0
+  %h4 Созданы Задачи:
+  - @tasks.each do |task|
+    Задача [
+    = link_to task.name, task
+    ]
+    от #{task.created_at.strftime("%d.%m.%Y")}
   -#= @letter.letter
 
 .info_
@@ -153,8 +160,9 @@
 
 -if can? :update, @letter or is_can_update  # автор и исполнители могут добавлять других исполнителей
   = link_to 'Edit', edit_letter_path(@letter), :class => 'button'
-  -#= link_to 'Создать Требование', create_requirement_letter_path(@letter), :class => 'button'
   -if can? :create_outgoing, @letter
     = link_to 'Новое похожее', clone_letter_path(@letter), :class => 'button' 
     = link_to 'Создать Исходящее', create_outgoing_letter_path(@letter), :class => 'button' if @letter.in_out == 1
+  = link_to '+Задачу', create_task_letter_path(@letter), :class => 'button'
+  = link_to '+Требование', create_requirement_letter_path(@letter), :class => 'button'
 

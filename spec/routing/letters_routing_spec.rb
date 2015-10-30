@@ -64,6 +64,9 @@ RSpec.describe LettersController, :type => :routing do
     it "routes to #register" do
       expect(:get => "/letters/1/register").to route_to("letters#register", :id => "1")
     end
+    it "routes to #create_task" do
+      expect(:get => "/letters/1/create_task").to route_to("letters#create_task", :id => "1")
+    end
 
   end
 end

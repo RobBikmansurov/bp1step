@@ -40,6 +40,10 @@ class TasksController < ApplicationController
       @requirement = Requirement.find(params[:requirement_id] )
       @task.requirement_id = @requirement.id if @requirement
     end
+    if params[:letter_id].present?
+      @letter= Letter.find(params[:letter_id] )
+      @task.letter_id = @letter.id if @letter
+    end
     @task.author_id = current_user.id
   end
 
