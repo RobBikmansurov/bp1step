@@ -21,7 +21,7 @@ class Requirement < ActiveRecord::Base
     self.author = User.find_by_displayname(name) if name.present?
   end
 
-    def status_name
+  def status_name
     REQUIREMENT_STATUS.key(status)
   end
   

@@ -1,6 +1,6 @@
 class RequirementsController < ApplicationController
   respond_to :html, :json
-  before_action :set_requirement, only: [:show, :edit, :update, :destroy]
+  before_action :set_requirement, only: [:show, :edit, :update, :destroy, :tasks_list]
 
   def index
     @requirements = Requirement.search(params[:search]).includes(:user).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
@@ -79,6 +79,11 @@ class RequirementsController < ApplicationController
     redirect_to requirements_url, notice: 'Requirement was successfully destroyed.'
   end
 
+  def tasks_list
+    @tasks = Task.where('requirement_id = ?', @requirement.id).order('duedate, status')
+    tasks_list_report
+  end
+
   private
     def set_requirement
       @requirement = Requirement.find(params[:id])
@@ -96,4 +101,73 @@ class RequirementsController < ApplicationController
       params[:direction] || "desc"
     end
 
+    def tasks_list_report
+      report = ODFReport::Report.new("reports/requirement_tasks_list.odt") do |r|
+        nn = 0
+        r.add_field "REPORT_DATE", Date.current.strftime('%d.%m.%Y')
+        r.add_field "REQUIREMENT_DATE", @requirement.date.strftime('%d.%m.%Y')
+        r.add_field "REQ_ID", @requirement.id
+        r.add_field "REQUIREMENT_LABEL", @requirement.label
+        r.add_field "REQUIREMENT_BODY", @requirement.body
+        if @requirement.letter
+          s = "Основание: Вх.№  "
+          s += "#{@requirement.letter.number} от #{@requirement.letter.date.strftime('%d.%m.%Y')}"
+        else
+          s = "Источник: #{@requirement.source}"
+        end
+        r.add_field "REQUIREMENT_SOURCE", s
+        r.add_field "REQUIREMENT_DUEDATE", @requirement.duedate.strftime('%d.%m.%Y')
+        r.add_field "REQUIREMENT_AUTHOR", "#{@requirement.author.displayname}"
+        s = ''
+        @requirement.user_requirement.each do |user_requirement|
+          s += ", " if !s.blank?
+          s += user_requirement.user.displayname
+          s += '-отв.' if user_requirement.status and user_requirement.status > 0
+        end
+        r.add_field "REQUIREMENT_USERS", s
+
+
+
+        r.add_table("TASKS", @tasks, :header=>true) do |t|
+          t.add_column(:nn) do |ca|
+            nn += 1
+            "#{nn}."
+          end
+          t.add_column(:id)
+          t.add_column(:name) do |task|
+            "[#{task.name}]"
+          end
+          t.add_column(:description) do |task|
+            "#{task.description}"
+          end
+          t.add_column(:date) do |task|
+            "от #{task.created_at.strftime('%d.%m.%y')}"
+          end
+          t.add_column(:author, :author_name)
+          #t.add_column(:source)
+          t.add_column(:duedate) do |task|
+            days = task.duedate - Date.current
+            "#{task.duedate.strftime('%d.%m.%y')}" + (days < 0 ? " (+ #{(-days).to_i} дн.)" : "")
+          end
+          t.add_column(:status) do |task|
+            TASK_STATUS.key(task.status)
+          end
+          t.add_column(:users) do |task|  # исполнители задачи
+            s = ''
+            task.user_task.each do |user_task|
+              s += ", " if !s.blank?
+              s += user_task.user.displayname
+              s += '-отв.' if user_task.status and user_task.status > 0
+            end
+            "#{s}"
+          end
+          t.add_column(:result)
+        end
+        r.add_field "USER_POSITION", current_user.position.mb_chars.capitalize.to_s
+        r.add_field "USER_NAME", current_user.displayname
+      end
+      send_data report.generate, type: 'application/msword',
+        :filename => "requirement_tasks_list.odt",
+        :disposition => 'inline'    
+    end
 end

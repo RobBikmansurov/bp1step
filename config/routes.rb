@@ -122,22 +122,23 @@ BPDoc::Application.routes.draw do
   get 'documents/tags/:tag', to: 'documents#index', as: :tag_documents
   #get 'tags/:tag', to: 'bproces#index', as: :tag
   #get 'tags', to: 'bproces#index'
-  resources :roles, only: [:index, :show]
+
   resources :tasks do
     member do
       get :create_user      # назначить исполнителя
       post :update_user
     end
   end
-
   resources :terms
   resources :requirements do
     member do
       get :create_task
       get :create_user      # назначить исполнителя
       post :update_user
+      get :tasks_list
     end
   end
+  resources :roles, only: [:index, :show]
 
   devise_for :users
   devise_scope :users do
