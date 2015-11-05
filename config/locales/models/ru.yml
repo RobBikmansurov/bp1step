@@ -21,6 +21,7 @@ ru:
       requirement: Требование
       role: Роль
       staff: Сотрудник
+      task: Задача
       term: Термин
       workplace: Рабочее место
       user: Пользователь
@@ -159,6 +160,13 @@ ru:
       staff:
         fullname: Фамилия Имя Отчество
         position: Должность
+      task:
+        name: Наименование
+        description: Подробное описание
+        duedate: Срок исполнения
+        status: Статус
+        result: Результат
+        action: Что сделано
       term:
         name: Название
         shortname: Краткое название
