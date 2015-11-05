@@ -67,7 +67,9 @@ class TasksController < ApplicationController
 
   def update
     if @task.update(task_params)
-      redirect_to @task, notice: 'Task was successfully updated.'
+      @task.result += "\r\n" + Time.current.strftime("%d.%m.%Y %H:%M:%S") + ": #{current_user.displayname} - " + params[:task][:action] if params[:task][:action].present?
+      @task.update_column(:result, "#{@task.result}")
+      redirect_to @task, notice: 'Задача изменена'
     else
       render :edit
     end
