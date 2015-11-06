@@ -2,7 +2,7 @@
 -title @title_requirements
 
 %h2
-  Требования
+  = @title_requirements if @title_requirements
   -if params[:search].present?
     = "[ #{params[:search]} ]"
 
@@ -51,3 +51,9 @@
 %p
 -#if can? :create, Letter
 = link_to 'Новое требование', new_requirement_path, :class => 'button'
+
+%p
+-Requirement.select("status, count(id) as count").group(:status).order(:status).each do | requirement |
+  -if !requirement.status.to_s.empty?
+    = link_to " #{REQUIREMENT_STATUS.key(requirement.status)} (#{requirement.count}) ", requirements_path(status: requirement.status), class: 'groups'
+    &nbsp;
