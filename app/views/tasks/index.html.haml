@@ -61,3 +61,8 @@
 .apple_pagination
   = will_paginate @tasks if @tasks
 
+
+-Task.select("status, count(id) as count").group(:status).order(:status).each do | task |
+  -if !task.status.to_s.empty?
+    = link_to " #{TASK_STATUS.key(task.status)} (#{task.count}) ", tasks_path(status: task.status), class: 'groups'
+    &nbsp;
