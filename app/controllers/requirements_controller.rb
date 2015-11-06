@@ -8,7 +8,7 @@ class RequirementsController < ApplicationController
   end
 
   def show
-    @tasks = Task.where('requirement_id = ?', @requirement.id).order('duedate, status')
+    @tasks = Task.where('requirement_id = ?', @requirement.id).order('status, duedate')
   end
 
   def new
