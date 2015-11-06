@@ -23,7 +23,15 @@
         = link_to requirement.label, requirement
         %br
         = requirement.date.strftime("%d.%m.%Y")
-      %td= requirement.duedate.strftime("%d.%m.%Y") if requirement.duedate
+      %td
+        -if requirement.duedate
+          -if requirement.status < 90 and requirement.duedate <= Date.current
+            %span{:style => "color: red;"}
+              = requirement.duedate.strftime("%d.%m.%y")
+          -else
+            = requirement.duedate.strftime("%d.%m.%y")
+
+
       %td= link_to truncate(requirement.body, :length => 40, :omission => ' ...'), requirement
       %td= REQUIREMENT_STATUS.key(requirement.status)
       %td

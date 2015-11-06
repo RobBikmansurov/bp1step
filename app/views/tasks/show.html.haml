@@ -48,14 +48,13 @@
     ]
 
 %h3
-  Автор:
-  = link_to @task.author.displayname, user_path(@task.author.id) if @task.author_id?
-
-%h3 
+  -if @task.author_id?
+    Автор:
+    = link_to @task.author.displayname, user_path(@task.author.id)
+    &nbsp; &nbsp;
   Исполнители:
   - is_can_update = false
   - @task.user_task.each do |user_task|
-    &nbsp;
     = link_to user_task.user.displayname, tasks_path(user: user_task.user)
     -if user_task.status and user_task.status > 0
       \- отв.
