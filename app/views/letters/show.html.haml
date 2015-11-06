@@ -82,15 +82,15 @@
         = link_to @letter.regdate.strftime("%d.%m.%Y"), letters_path(regdate: @letter.regdate.strftime("%d.%m.%Y"))
 
 %h3 
-  Автор:
-  = link_to @letter.author.displayname, user_path(@letter.author.id) if @letter.author_id?
-
-%h3 
+  -if @letter.author_id?
+    Автор:
+    = link_to @letter.author.displayname, user_path(@letter.author.id)
+    &nbsp; &nbsp;
   Исполнители:
   - is_can_update = false
   - @letter.user_letter.each do |user_letter|
-    &nbsp;
     = link_to user_letter.user.displayname, letters_path(user: user_letter.user)
+    &nbsp;
 
     -if user_letter.status and user_letter.status > 0
       \- отв.

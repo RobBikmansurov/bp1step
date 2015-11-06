@@ -23,13 +23,19 @@
 %h3 
   Срок исполнения:
   -if @requirement.duedate
-    = @requirement.duedate.strftime("%d.%m.%Y")
+    %b= @requirement.duedate.strftime("%d.%m.%Y")
+    -if @requirement.status < 90
+      - days = @requirement.duedate - Date.current
+      = " (осталось #{days.to_i} дн.)" if days > 0
+      -if days <= 0
+        %span{:style => "color: red;"}
+          = " (опоздание #{(-days).to_i} дн.)" if days < 0
+          = " сегодня!" if days == 0
 %h3
-  Автор:
-  = link_to @requirement.author.displayname, user_path(@requirement.author.id) if @requirement.author_id
-%hr
-
-%h3 
+  -if @requirement.author_id
+    Автор:
+    = link_to @requirement.author.displayname, user_path(@requirement.author.id)
+    &nbsp; &nbsp;
   Исполнители:
   - @requirement.user_requirement.each do |user_requirement|
     &nbsp;

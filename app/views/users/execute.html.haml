@@ -87,5 +87,11 @@
           = link_to requirement.label, requirement
           = requirement.date.strftime("%d.%m.%Y")
         %td= link_to requirement.body, requirement
-        %td= requirement.duedate.strftime("%d.%m.%Y") if requirement.duedate
+        %td
+          -if requirement.duedate
+            -if requirement.status < 90 and requirement.duedate <= Date.current
+              %span{:style => "color: red;"}
+                = requirement.duedate.strftime("%d.%m.%y")
+            -else
+              = requirement.duedate.strftime("%d.%m.%y")
         %td= REQUIREMENT_STATUS.key(requirement.status)
