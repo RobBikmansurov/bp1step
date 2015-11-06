@@ -5,8 +5,18 @@
       %tr
         %td= "##{task.id}"
         %td= link_to task.name, task
-        %td= truncate(task.description, :length => 50, :omission => ' ...')
-        %td= task.duedate.strftime("%d.%m.%Y") if task.duedate
+        %td
+          -if task.duedate
+            -if task.status < 90 and task.duedate <= Date.current
+              %span{:style => "color: red;"}
+                = task.duedate.strftime("%d.%m.%y")
+            -else
+              = task.duedate.strftime("%d.%m.%y")
+            -if task.completion_date
+              -if task.completion_date > task.duedate
+                %br
+                  %span{:style => "color: red;"}
+                    = task.completion_date.strftime("%d.%m.%y")
         %td= TASK_STATUS.key(task.status)
         %td
           -task.user_task.each do |user_task|
@@ -18,3 +28,4 @@
             -else
               удалить ссылку
               = user_task.inspect
+        %td= truncate(task.result, :length => 100, :omission => ' ...')
