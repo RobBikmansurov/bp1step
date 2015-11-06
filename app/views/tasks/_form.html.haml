@@ -7,6 +7,7 @@
   = f.input :name, as: :text
   = f.input :description, as: :text
   = f.input :duedate, :as => :string, :input_html => {:class=>'datepicker'}
+  %br
   = f.label :Статус
   = f.select :status_name, TASK_STATUS.keys
   = f.hidden_field :result
