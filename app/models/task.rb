@@ -11,6 +11,8 @@ class Task < ActiveRecord::Base
   has_many :user, through: :user_task
   has_many :user_task, dependent: :destroy # ответственные
 
+  before_save :check_status
+
   def status_name
     TASK_STATUS.key(status)
   end
@@ -42,5 +44,18 @@ class Task < ActiveRecord::Base
       where(nil)
     end
   end
+
+  private
+    def check_status
+      if self.user_task.first  # если есть исполнители
+        self.status = 5 if status < 1 # Назначено, если есть исполнители
+      else
+        self.status = 0  if status < 90  # Новое, т.к. нет исполнителей и не завершено
+      end
+      if status >= 90 # завершено
+        self.completion_date = Date.current.strftime("%d.%m.%Y") if status_was < 90   # запомним дату исполения, если новый статус - "Завершено"
+      end
+    end
+
 
 end
