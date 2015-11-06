@@ -25,7 +25,6 @@ class TasksController < ApplicationController
         @tasks = Task.search(params[:search]).where('status < 90').includes(:user_task)
         @title_tasks += 'не завершенные'
       end
-      @tasks = @tasks.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
     end
     @tasks = @tasks.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end

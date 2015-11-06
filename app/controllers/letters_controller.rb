@@ -36,7 +36,6 @@ class LettersController < ApplicationController
               @title_letter += "в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
             else
               if params[:search].present?
-                logger.debug "params: #{params[:search]}"
                 @letters = Letter.search(params[:search]).includes(:user_letter, :letter_appendix)
               else
                 @letters = Letter.search(params[:search]).where('status < 90').includes(:user_letter, :letter_appendix)

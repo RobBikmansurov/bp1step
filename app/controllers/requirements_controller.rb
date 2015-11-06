@@ -3,8 +3,15 @@ class RequirementsController < ApplicationController
   before_action :set_requirement, only: [:show, :edit, :update, :destroy, :tasks_list]
 
   def index
-    @requirements = Requirement.search(params[:search]).includes(:user).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
-    @title_requirements = "Требования"
+    @title_requirements = 'Требования '
+    if params[:status].present?
+      @requirements = Requirement.where('status = ?', params[:status]).includes(:user_requirement)
+      @title_requirements += "в статусе [ #{REQUIREMENT_STATUS.key(params[:status].to_i)} ]"
+    else
+      @requirements = Requirement.search(params[:search]).where('status < 90').includes(:user_requirement)
+      @title_requirements += 'не завершенные'
+    end
+    @requirements = @requirements.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end
 
   def show
