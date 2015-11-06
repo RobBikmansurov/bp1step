@@ -18,8 +18,13 @@ class TasksController < ApplicationController
         @title_tasks += " не завершенные"
       end
     else
-      @tasks = Task.search(params[:search]).where('status < 90').includes(:user_task)
-      @title_tasks += 'не завершенные'
+      if params[:status].present?
+        @tasks = Task.where('tasks.status = ?', params[:status])
+        @title_tasks += "в статусе [ #{TASK_STATUS.key(params[:status].to_i)} ]"
+      else
+        @tasks = Task.search(params[:search]).where('status < 90').includes(:user_task)
+        @title_tasks += 'не завершенные'
+      end
       @tasks = @tasks.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
     end
     @tasks = @tasks.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
