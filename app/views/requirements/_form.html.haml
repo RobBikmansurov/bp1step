@@ -11,6 +11,7 @@
   = f.input :source if !@requirement.letter
   = f.input :body, as: :text
   = f.hidden_field :status
+  %br
   = f.label :Статус
   = f.select :status_name, REQUIREMENT_STATUS.keys
   = f.input :result, as: :text
