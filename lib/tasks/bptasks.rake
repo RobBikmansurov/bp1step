@@ -614,7 +614,7 @@ namespace :bp1step do
     count = 0
     count_soon_deadline = 0
     letters = Letter.soon_deadline | Letter.overdue
-    letters.each do | letter |  # письма в статусе < Исполнено с наступающим сроком исполнения или просроченные
+    letters.each do | letter |  # письма в статусе < Завершено с наступающим сроком исполнения или просроченные
       days = letter.duedate - Date.current
       emails = ''
       emails = "#{letter.author.email}" if days < 0 and letter.author   # автор

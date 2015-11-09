@@ -11,6 +11,10 @@ class Task < ActiveRecord::Base
   has_many :user, through: :user_task
   has_many :user_task, dependent: :destroy # ответственные
 
+  scope :overdue, -> { where('duedate <= ? and status < 90', Date.current) }  # не исполненные в срок
+  scope :soon_deadline, -> { where('duedate > ? and status < 90', Date.current - 5.days) }  # с наступающим сроком исполнения
+  scope :not_assigned, -> { where('status < 5 and author_id IS NOT NULL') }   # не назначенные, нет исполнителя
+
   before_save :check_status
 
   def status_name
