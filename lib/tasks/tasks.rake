@@ -22,7 +22,7 @@ namespace :bp1step do
         end
       end
       logger.info "      #{emails}"
-      emails = 'robb@bankperm.ru'
+      #emails = 'robb@bankperm.ru'
       if days < 0
         count += 1
         logger.info "      ##{task.id}\tсрок! #{task.duedate.strftime("%d.%m.%y")}: #{(-days).to_i}\t#{emails}"

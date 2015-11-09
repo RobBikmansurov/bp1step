@@ -5,7 +5,7 @@
 </head>
 <body>
   Вы - исполнитель Задачи
-  <a href=<%=h task_url(@letter) %>> <%= @task.name%> </a>
+  <a href=<%=h task_url(@task) %>> <%= @task.name%> </a>
   <br>Вашей команде в составе: <%= @users%>
   осталось дней - <%= @days%> на исполнение требований письма.
   <p>
