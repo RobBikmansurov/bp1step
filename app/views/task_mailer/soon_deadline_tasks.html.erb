@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 <body>
-  Вы - исполнитель Задачи
+  Вы - исполнитель Задачи #<%= @task.id%><br>
   <a href=<%=h task_url(@task) %>> <%= @task.name%> </a>
   <br>Вашей команде в составе: <%= @users%>
   осталось дней - <%= @days%> на исполнение требований письма.
