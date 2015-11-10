@@ -137,6 +137,7 @@ BPDoc::Application.routes.draw do
       get :create_user      # назначить исполнителя
       post :update_user
       get :tasks_list
+      get :tasks_report
     end
   end
   resources :roles, only: [:index, :show]
