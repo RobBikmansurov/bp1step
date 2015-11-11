@@ -224,7 +224,16 @@ class RequirementsController < ApplicationController
           #t.add_column(:source)
           t.add_column(:duedate) do |task|
             days = task.duedate - Date.current
-            "#{task.duedate.strftime('%d.%m.%y')}" + (days < 0 ? " (+ #{(-days).to_i} дн.)" : "")
+            "#{task.duedate.strftime('%d.%m.%y')}" # + (days < 0 ? " (+ #{(-days).to_i} дн.)" : "")
+          end
+          t.add_column(:completiondate) do |task|
+            "#{task.completion_date.strftime('%d.%m.%y')}" if task.completion_date
+          end
+          t.add_column(:completionalert) do |task|
+            if task.completion_date
+              days = task.completion_date - task.duedate if task.duedate
+              (days > 0 ? " (опоздание #{(days).to_i} дн.)" : "")
+            end
           end
           t.add_column(:status) do |task|
             TASK_STATUS.key(task.status)
