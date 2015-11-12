@@ -16,7 +16,11 @@ class UsersController < ApplicationController
         if params[:all].present?
           @users = User.active.order(sort_column + ' ' + sort_direction)
         else
-          @users = User.page(params[:page]).active.search(params[:search]).order(sort_column + ' ' + sort_direction)
+          if params[:search].present?
+            @users = User.page(params[:page]).search(params[:search]).order(sort_column + ' ' + sort_direction)
+          else
+            @users = User.page(params[:page]).order(sort_column + ' ' + sort_direction)
+          end
           #@users, @alphaParams = User.all.alpha_paginate(params[:letter]){|user| user.lastname}
         end
       end
