@@ -40,7 +40,8 @@
           %td= workplace.switch + ':' + workplace.port.to_s
         -else
           %td= workplace.switch
-      %td= workplace.description
+      %td
+        = truncate(workplace.description, :length => 100, :omission => ' ...')
       -if workplace.users.first
         %td
           = link_to workplace.users.first.displayname, workplace.users.first

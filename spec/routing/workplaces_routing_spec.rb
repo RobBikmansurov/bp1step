@@ -29,5 +29,10 @@ RSpec.describe WorkplacesController, :type => :routing do
       expect(delete: "/workplaces/1").to route_to("workplaces#destroy", :id => "1")
     end
 
+    it "routes to #create_user" do
+      expect(:get => "/workplaces/1/create_user").to route_to("workplaces#create_user", :id => "1")
+    end
+     # post :update_user
+
   end
 end

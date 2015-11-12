@@ -15,14 +15,15 @@ class WorkplacesController < ApplicationController
       @workplaces = Workplace.includes(:users)
     else
       if params[:location].present?
-        @workplaces = Workplace.includes(:users).where(:location => params[:location]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        @workplaces = Workplace.where(:location => params[:location])
       else
         if params[:switch].present?
-          @workplaces = Workplace.includes(:users).where(:switch => params[:switch]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+          @workplaces = Workplace.where(:switch => params[:switch])
         else
-          @workplaces = Workplace.includes(:users).search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+          @workplaces = Workplace.search(params[:search])
         end
       end
+      @workplaces = @workplaces.includes(:users).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
     end
     respond_to do |format|
       format.html
@@ -49,6 +50,30 @@ class WorkplacesController < ApplicationController
   def create
     @workplace = Workplace.create(params[:workplace])
     flash[:notice] = "Successfully created workplace." if @workplace.save
+    respond_with(@workplace)
+  end
+
+  def create_user
+    @workplace = Workplace.find(params[:id])
+    @user_workplace = UserWorkplace.new(workplace_id: @workplace.id)    # заготовка для исполнителя
+    render :create_user
+  end
+
+  def update_user
+    user_workplace = UserWorkplace.new(params[:user_workplace]) if params[:user_workplace].present?
+    if user_workplace
+      if user_workplace.save
+        flash[:notice] = "Сотрудник на #{user_workplace.user_name} назначен"
+        begin
+          UserWorkplaceMailer.user_workplace_create(user_workplace, current_user).deliver_now    # оповестим нового сотрудника
+        rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+          flash[:alert] = "Error sending mail to #{user_workplace.user.email}"
+        end
+        @workplace = user_workplace.workplace
+      end
+    else
+      flash[:alert] = "Ошибка - ФИО Сотрудника не указано."
+    end
     respond_with(@workplace)
   end
 
