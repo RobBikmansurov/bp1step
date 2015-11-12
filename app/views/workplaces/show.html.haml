@@ -17,7 +17,7 @@
       = @workplace.port
 
 %h3 Описание
-= @workplace.description
+= simple_format(@workplace.description, {}, {})
 - if @workplace.typical
   Типовое рабочее место
   = @workplace.name
@@ -34,15 +34,17 @@
     -else
       = link_to wp.bproce.name, bproce_path(wp.bproce_id)
 
--if @workplace.user_workplace.count > 0
-  %h2 Исполнители:
+%h3
+  Сотрудники:
   - @workplace.user_workplace.each do |user_workplace|
     = link_to user_workplace.user.displayname, user_workplace.user
-    (
-    = user_workplace.date_from
-    \-
-    = user_workplace.date_to
-    )
+    - date_from = user_workplace.date_from.strftime("%d.%m.%y") if user_workplace.date_from
+    - date_to = user_workplace.date_to.strftime("%d.%m.%y") if user_workplace.date_to
+    = "(#{date_from} - #{date_to}) [#{user_workplace.note}] "
+    &nbsp;
+- if can? :update, @workplace
+  #create_user
+    = link_to 'Добавить Сотрудника', create_user_workplace_path(@workplace), remote: true
 
 .info_
   создан

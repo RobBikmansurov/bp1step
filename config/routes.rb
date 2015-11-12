@@ -178,6 +178,10 @@ BPDoc::Application.routes.draw do
   match '/workplaces/switch' => 'workplaces#switch', :via => :get  # подключения рабочих мест
   resources :workplaces do
     get :autocomplete, :on => :collection
+    member do
+      get :create_user      # назначить исполнителя
+      post :update_user
+    end
   end
   
   match '/about' => 'pages#about', :via => :get
