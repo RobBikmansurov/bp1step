@@ -32,7 +32,7 @@
     -if can? :update, wp
       = link_to wp.bproce.name, edit_bproce_path(wp.bproce_id)
     -else
-      = link_to wp.bproce.name, bproce_path(wp.bproce_id)
+      = link_to wp.bproce.name, bproce_workplace_path(wp.bproce_id)
 
 %h3
   Сотрудники:
