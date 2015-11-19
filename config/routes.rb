@@ -45,7 +45,12 @@ BPDoc::Application.routes.draw do
     end
   end
   resources :bproce_contracts, :except => :index
-  resources :business_roles
+  resources :business_roles do
+    member do
+      get :create_user      # назначить исполнителя
+      post :update_user
+    end
+  end
   resources :contracts do
     get :autocomplete, :on => :collection
     member do

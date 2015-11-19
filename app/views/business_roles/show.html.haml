@@ -31,6 +31,10 @@
   =@business_role.name
   ]
   \:
+- if can? :update, @business_role
+  #create_user
+    = link_to 'Добавить Исполнителя', create_user_business_role_path(@business_role), remote: true
+
 %table
   %tr
     %th ФИО
