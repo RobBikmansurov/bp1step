@@ -127,7 +127,7 @@
 -if @document.status
   -if @document.status == 'Проект' or @document.status == 'Согласование'
     = link_to 'Лист согласования', approval_sheet_document_path(@document), :class => 'button' if can? :update, Document
--if can? :destroy, @document
+-if can? :clone, @document
   = link_to 'Clone', clone_document_path(@document), :class => 'button'
 -if can? :destroy, @document
   = link_to 'Удалить', @document, data: { confirm: @document.name + "\nДействительно хотите удалить документ #" + @document.id.to_s + " ?" }, :method => 'delete', class: 'button'

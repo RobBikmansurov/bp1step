@@ -20,7 +20,7 @@ class Ability
 
       if user.has_role? :author
         can :create, Document
-        can [:update, :destroy], Document, :owner_id => user.id  # документ владельца
+        can [:update, :destroy, :clone], Document, :owner_id => user.id  # документ владельца
         can :manage, [Directive, Term]
         can :view_document, Document  # просматривать файл с документом
         can :edit_document, [Document]  # может брать исходник документа
@@ -34,7 +34,7 @@ class Ability
       end
 
       if user.has_role? :owner  # владелец процесса
-        can [:update, :create], Document
+        can [:update, :create, :clone], Document
         can :manage, [Directive, Term]
         can :crud, [BproceBapp, BproceIresource]
         can :update, Bproce, :user_id => user.id  # процесс владельца
@@ -45,7 +45,7 @@ class Ability
       end
 
       if user.has_role? :analitic
-        can [:update, :create], Document
+        can [:update, :create, :clone], Document
         can :crud, [Bproce, Bapp, BusinessRole, BproceBapp, Term, Contract, Agent, ContractScan]
         can :manage_tag, [Bproce] # может редактировать теги процессов
         can :edit_document, [Document]  # может брать исходник документа
