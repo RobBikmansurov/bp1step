@@ -93,8 +93,10 @@ class LettersController < ApplicationController
   end
 
   def update
+    status_was = @letter.status
     if @letter.update(letter_params)
       @letter.result += "\r\n" + Time.current.strftime("%d.%m.%Y %H:%M:%S") + ": #{current_user.displayname} - " + params[:letter][:action] if params[:letter][:action].present?
+      @letter.result += "\r\n" + Time.current.strftime("%d.%m.%Y %H:%M:%S") + ": #{current_user.displayname} - считает что все работы по письму исполнены" if @letter.status >= 90 and status_was < 90 # стало завершено
       @letter.update_column(:result, "#{@letter.result}")
       # begin
       #   LetterMailer.update_letter(@letter, current_user, nil, '').deliver    # оповестим Исполнителей об изменении Письма
