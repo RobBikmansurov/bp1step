@@ -45,6 +45,30 @@ class BusinessRolesController < ApplicationController
     respond_with(@business_role)
   end
 
+  def create_user
+    @business_role = BusinessRole.find(params[:id])
+    @user_business_role = UserBusinessRole.new(business_role_id: @business_role.id)    # заготовка для исполнителя
+    render :create_user
+  end
+
+  def update_user
+    user_business_role = UserBusinessRole.new(params[:user_business_role]) if params[:user_business_role].present?
+    if user_business_role
+      if user_business_role.save
+        flash[:notice] = "Новый исполнитель #{user_business_role.user_name} назначен"
+        begin
+          UserBusinessRoleMailer.user_create_role(user_business_role, current_user).deliver_now    # оповестим нового исполнителя
+        rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+          flash[:alert] = "Error sending mail to #{user_business_role.user.email}"
+        end
+        @business_role = user_business_role.business_role
+      end
+    else
+      flash[:alert] = "Ошибка - ФИО Сотрудника не указано."
+    end
+    respond_with(@business_role)
+  end
+
   def show
     respond_with(@business_role)
   end

@@ -29,5 +29,10 @@ RSpec.describe BusinessRolesController, :type => :routing do
       expect(delete: "/business_roles/1").to route_to("business_roles#destroy", :id => "1")
     end
 
+    it "routes to #create_user" do
+      expect(:get => "/business_roles/1/create_user").to route_to("business_roles#create_user", :id => "1")
+    end
+     # post :update_user
+
   end
 end
