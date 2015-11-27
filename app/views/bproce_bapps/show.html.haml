@@ -10,7 +10,7 @@
   = link_to @bproce_bapp.bproce.name, bproce_path(@bproce_bapp.bproce)
 %h2
   Назначение в процессе:
-= @bproce_bapp.apurpose
+= simple_format(@bproce_bapp.apurpose, {}, {})
 
 %p
 - if can? :update, @bproce_bapp
