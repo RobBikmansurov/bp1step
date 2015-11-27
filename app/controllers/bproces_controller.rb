@@ -503,7 +503,7 @@ private
           cc += 1
         end
         t.add_column(:contract_name) do |contract|
-          c_name = contract.contract_type.to_s + ' ' + contract.shortname
+          c_name = contract.contract_type.to_s + ' ' + contract.name
         end
         t.add_column(:contract_date) do |contract|
           c_date = " #{contract.status}" if contract.status
