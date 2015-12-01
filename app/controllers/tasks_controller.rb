@@ -73,7 +73,7 @@ class TasksController < ApplicationController
     status_was = @task.status
     if @task.update(task_params)
       @task.result += "\r\n" + Time.current.strftime("%d.%m.%Y %H:%M:%S") + ": #{current_user.displayname} - " + params[:task][:action] if params[:task][:action].present?
-      @task.result += "\r\n" + Time.current.strftime("%d.%m.%Y %H:%M:%S") + ": #{current_user.displayname} - считает задачу полностью исполненной" if @task.status >= 90 and status_was < 90 # стало завершено
+      @task.result += "\r\n" + Time.current.strftime("%d.%m.%Y %H:%M:%S") + ": #{current_user.displayname} считает задачу полностью исполненной" if @task.status >= 90 and status_was < 90 # стало завершено
       @task.update_column(:result, "#{@task.result}")
       redirect_to @task, notice: 'Задача изменена'
     else
