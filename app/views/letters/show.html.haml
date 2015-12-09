@@ -158,7 +158,7 @@
 -else
   = link_to 'Back', letters_path(out: 1), :class => 'button'
 
--if can? :update, @letter or is_can_update  # автор и исполнители могут добавлять других исполнителей
+-if can? :update, @letter or is_can_update  # автор и исполнители могут изменять письмо
   = link_to 'Edit', edit_letter_path(@letter), :class => 'button'
   -if can? :create_outgoing, @letter
     = link_to 'Новое похожее', clone_letter_path(@letter), :class => 'button' 

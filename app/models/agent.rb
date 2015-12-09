@@ -5,7 +5,7 @@ class Agent < ActiveRecord::Base
   validates :name, presence: true,
                    length: { minimum: 3, maximum: 255 }
   validates :town, length: { maximum: 30 }
-  attr_accessible :shortname, :name, :town, :address, :contacts, :agent_name
+  attr_accessible :shortname, :name, :town, :address, :contacts, :agent_name, :note
   include PublicActivity::Model
   tracked owner: Proc.new { |controller, model| controller.current_user }
   def self.search(search)

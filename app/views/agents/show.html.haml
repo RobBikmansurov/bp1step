@@ -9,12 +9,16 @@
 %h2
   %b= @agent.name
   -if !@agent.town.blank?
-    г.
-    %b= @agent.town
+    %b= ", г. #{@agent.town}"
 %h3Адрес:
 = markdown(@agent.address)
 %h3Контакты:
 = markdown(@agent.contacts)
+-if !@agent.note.blank?
+  %h3Примечания:
+  = markdown(@agent.note)
+
+%hr
 
 -if @contracts.count > 0
   %h3
