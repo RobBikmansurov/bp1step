@@ -33,11 +33,21 @@ module ApplicationHelper
   def markdown_and_link(text, business_roles)
     if business_roles
       business_roles.each do |business_role|  # заменим названия роли на ссылку
-        text.gsub!(/ #{business_role.name} /, ' <a href="/business_roles/' + business_role.id.to_s + '">' + business_role.name + '</a> ')
+        text.gsub!(/(^|\s|^\s)#{business_role.name}($|\s)/, ' <a href="/business_roles/' + business_role.id.to_s + '">' + business_role.name + '</a> ')
       end
     end
     text.gsub!(/\r\n?/, "\n")                       # \r\n and \r => \n
     text = "<p>#{text.gsub(/\n\n\s*/, '</p><p>')}"  # 2 newline   => p
+    text.gsub!(/([^\n]\n)(?=[^\n])/, '\1<br />')    # 1 newline   => br
+    return text
+  end
+
+  def add_link_from_id(text, route)
+    aid = text.match('(^|\s|^\s)#([1-9]\d+)($|\s)') # ищем ID в тексте
+    if aid
+      text.gsub!(/#{aid[0]}/, ' <a href="/' + route + '/' + aid[2] + '">' + aid[0].strip + '</a> ')
+    end
+    text.gsub!(/\r\n?/, "\n")                       # \r\n and \r => \n
     text.gsub!(/([^\n]\n)(?=[^\n])/, '\1<br />')    # 1 newline   => br
     return text
   end
