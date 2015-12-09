@@ -43,7 +43,7 @@ module ApplicationHelper
   end
 
   def add_link_from_id(text, route)
-    aid = text.match('(^|\s|^\s)#([1-9]\d+)($|\s)') # ищем ID в тексте
+    aid = text.match('(^|\s|^\s)#([1-9]\d+)($|\s|\.|,)') # ищем ID в тексте
     if aid
       text.gsub!(/#{aid[0]}/, ' <a href="/' + route + '/' + aid[2] + '">' + aid[0].strip + '</a> ')
     end
