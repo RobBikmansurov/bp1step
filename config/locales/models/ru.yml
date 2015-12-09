@@ -34,6 +34,7 @@ ru:
         town: Город
         address: Адрес
         contacts: Контакты
+        note: Примечание
       bapp:
         name: Название
         apptype: Тип приложения
