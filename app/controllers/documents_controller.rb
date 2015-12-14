@@ -134,6 +134,9 @@ class DocumentsController < ApplicationController
     end
   end
 
+  def show_files
+  end
+
   def new
     @document = Document.new
     if params[:id].present?  # будем добавлять документ процесса

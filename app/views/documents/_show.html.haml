@@ -82,6 +82,10 @@
       #update_file
         = link_to 'Добавить', file_create_document_path(@document), :remote => true   #, class: 'button'
 
+- if can? :edit_document, @document
+  #show_files
+    = link_to 'Сохраненные файлы', show_files_document_path(@document), :remote => true   #, class: 'button'
+
 %p
 -if can? :view_document, @document
   #add_favorite
