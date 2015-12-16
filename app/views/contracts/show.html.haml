@@ -41,7 +41,7 @@
 -#= @contract.text
 -if !@contract.note.blank?
   %h3 Примечание
-  = @contract.note
+  = raw add_link_from_id(@contract.note, 'contracts')
 -if !@contract.condition.blank?
   %h3 Условие окончания/продления
   = @contract.condition
