@@ -20,4 +20,9 @@ class DocumentMailer < ActionMailer::Base
     mail(:to => user.email, :subject => "BP1Step: укажите процесс документа ##{@doc.id.to_s}")
   end
 
+  def check_documents_status(document, emails, text)  #контроль статуса документов
+    @document = document
+    @text = text
+    mail(:to => emails, :subject => "BP1Step: статус документа ##{@document.id.to_s}")
+  end
 end
