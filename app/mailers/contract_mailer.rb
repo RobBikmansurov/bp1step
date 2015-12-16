@@ -35,4 +35,9 @@ class ContractMailer < ActionMailer::Base
     mail(:to => emails, :subject => "BP1Step: #{@text} договор ##{@contract.id.to_s}")
   end
 
+  def check_contracts_status(contract, emails)  # оповещение о договорах в статусе "Согласование"
+    @contract = contract
+    mail(:to => emails, :subject => "BP1Step: согласование договора ##{@contract.id.to_s}")
+  end
+  
 end
