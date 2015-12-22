@@ -5,7 +5,11 @@
   =@letter.id
 
 %h2
-  = "#{LETTER_DIRECTION.key(@letter.in_out)}:"
+  -if @letter.in_out > 1
+    %div.h2{ :style => "display: inline; color: #eee; background-color: #000;" }
+      = "#{LETTER_DIRECTION.key(@letter.in_out)}:"
+  -else
+    = "#{LETTER_DIRECTION.key(@letter.in_out)}:"
   -if @letter_link
     ответ на 
     = link_to "№ #{@letter_link.number}", letter_path(@letter_link)
