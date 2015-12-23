@@ -13,7 +13,7 @@ body {
 }
 h1,h2,h3,h4,h5 {
   background-color: #eee;
-  margin:0.5em 0 0.5em 0;
+  line-height: 1;
 }
 
 a {
