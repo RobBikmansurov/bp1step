@@ -137,7 +137,7 @@ class LettersController < ApplicationController
     @letter.duedate = (Time.current + 3.days).strftime("%d.%m.%Y") # срок исполнения - даем 3 дней по умолчанию
     @letter.source = letter.source
     @letter.subject = letter.subject
-    @letter.result = "на #{letter.name}"
+    @letter.result = "это ответ на #{letter.name} (##{letter.id})"
   end
 
   def create_requirement
