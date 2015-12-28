@@ -113,6 +113,7 @@ BPDoc::Application.routes.draw do
       get :create_user      # назначить исполнителя
       post :update_user
       get :register       # зарегистрировать
+      get :reestr         # реестр выписок
     end
   end
   resources :letter_appendixes, :only => [:destroy, :edit, :update]
