@@ -1,7 +1,7 @@
 class LettersController < ApplicationController
   respond_to :html, :json
   before_filter :authenticate_user!, :only => [:edit, :new, :create, :update, :destroy, :register]
-  before_action :set_letter, only: [:show, :edit, :update, :destroy, :register]
+  before_action :set_letter, only: [:show, :edit, :update, :destroy, :register, :reestr]
   helper_method :sort_column, :sort_direction
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
@@ -228,6 +228,12 @@ class LettersController < ApplicationController
     end
   end
 
+  def reestr  # реестр
+    @letters = Letter.where('sender ILIKE ? and regdate = ?', @letter.sender, @letter.regdate).order(:regnumber)
+    @sender = @letter.sender
+    reestr_report
+  end
+
   def register
     len_regnumber = Letter.where('in_out = ? and regdate > ?', @letter.in_out, Time.current.beginning_of_year).maximum('length(regnumber)')  # длина строки наибольшего номера
     max_reg_number = Letter.where('in_out = ? and regdate > ? and length(regnumber) >= ?', @letter.in_out, Time.current.beginning_of_year, len_regnumber).maximum(:regnumber).to_i
@@ -389,6 +395,30 @@ class LettersController < ApplicationController
     end
     send_data report.generate, type: 'application/msword',
       :filename => "letters_reestr.odt",
+      :disposition => 'inline'    
+  end
+
+  def reestr_report   # реестр исходящих
+    report = ODFReport::Report.new("reports/reestr.odt") do |r|
+      nn = 0
+      r.add_field "REPORT_DATE", "#{Date.current.strftime('%d.%m.%Y')} г."
+      r.add_field "SENDER", @sender
+      r.add_table("TABLE_01", @letters, :header=>true) do |t|
+        t.add_column(:nn) do |ca|
+          nn += 1
+          "#{nn}."
+        end
+        t.add_column(:regnumber)
+        t.add_column(:regdate) do |letter|
+          "#{letter.regdate.strftime('%d.%m.%Y')}" if letter.regdate
+        end
+        t.add_column(:naim, :subject)
+      end
+      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    send_data report.generate, type: 'application/msword',
+      :filename => "reestr.odt",
       :disposition => 'inline'    
   end
 

@@ -17,7 +17,7 @@
 -if !@directive.note.empty?
   %h4
     примечание:
-    = @directive.note
+    = raw add_link_from_id(@directive.note, 'directives')
 %h4 Краткое содержание:
 = markdown(@directive.annotation)
 
