@@ -126,7 +126,7 @@ namespace :bp1step do
       physicaldeliveryofficename = entry["physicaldeliveryofficename"].first
       #logger.info "#{i}. #{username}\t#{email}\t#{sn} #{givenname} #{middlename}\t#{name}   >> #{uac & 2}" if debug_flag
       #logger.info "#{i}. #{name}\t#{email}\t#{position} - #{department}" if debug_flag
-      #puts "#{i}. #{username}\t#{email}\t#{displayname}" if debug_flag
+      puts "#{i}. #{username}\t#{email}\t#{displayname}" if debug_flag
 
       if uac & 2 == 0  or !entry["mail"].first.to_s.empty?   # пользователь не заблокирован и имеет не пустой e-mail
         usr = User.find_or_create_by(username: username)
@@ -191,35 +191,39 @@ namespace :bp1step do
     i, disabled_users = 0, 0
     User.all.each do |user|     # проверим: все ли пользователи есть в LDAP
       i += 1
+      #puts "#{i}. #{user.username}\t#{user.email}\t#{user.displayname}" if debug_flag
       filter = Net::LDAP::Filter.eq("sAMAccountName", user.username)
       exist_user = 0
       ldap.search(:base => treebase, :attributes => attrs, :filter => filter) do | entry |  # есть в LDAP?
         exist_user += 1
         uac = entry["userAccountControl"].first.to_i
         groups = Devise::LDAP::Adapter.get_ldap_param(user.username, "memberOf")  # группы пользователя
-        #puts groups.grep(/rl_bp1step/) 
-        if groups && groups.grep(/rl_bp1step_users/).blank? # если не член группы rl_bp1step
-          user.update_attribute(:active, false) # делаем неактивным
-          disabled_users += 1
-          # если нет связи с ролями, рабочими местами, процессами
-          if user.workplaces.count == 0 and user.business_roles.count == 0 and user.bproce_ids.count == 0
-            user.delete # удалим
-            logger.info "#{i}!#{disabled_users}. ##{user.id} #{user.username}\t #{user.displayname} \t- DELETE user!"
+        if groups
+          if groups.grep(/rl_bp1step_users/).blank? # если не член группы rl_bp1step
+            user.update_attribute(:active, false) # делаем неактивным
+            disabled_users += 1
+            # если нет связи с ролями, рабочими местами, процессами
+            if user.workplaces.count == 0 and user.business_roles.count == 0 and user.bproce_ids.count == 0
+              user.delete # удалим
+              logger.info "#{i}!#{disabled_users}. ##{user.id} #{user.username}\t #{user.displayname} \t- DELETE user!"
+            else
+              logger.info "#{i}!#{disabled_users}. ##{user.id} #{user.username}\t #{user.displayname}\t - need DELETE:"
+              s = ''
+              user.workplaces.each do | wp |
+                s = s + wp.name + '  '
+              end
+              logger.info "\t workplaces: #{s}" 
+              s = ''
+              user.business_roles.each do | brole |
+                s = s + brole.name + '  '
+              end
+              logger.info "\t business roles: #{s}" 
+            end
           else
-            logger.info "#{i}!#{disabled_users}. ##{user.id} #{user.username}\t #{user.displayname}\t - need DELETE:"
-            s = ''
-            user.workplaces.each do | wp |
-              s = s + wp.name + '  '
-            end
-            logger.info "\t workplaces: #{s}" 
-            s = ''
-            user.business_roles.each do | brole |
-              s = s + brole.name + '  '
-            end
-            logger.info "\t business roles: #{s}" 
+            user.update_attribute(:active, true) # делаем активным - член группы rl_bp1step_users
           end
         else
-          user.update_attribute(:active, true) # делаем активным
+          user.update_attribute(:active, false) # делаем активным - нет групп
         end
       end
       logger.info "#{i} #{user.displayname} - not found in LDAP!" if i == 0
