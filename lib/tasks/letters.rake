@@ -46,6 +46,11 @@ namespace :bp1step do
         l_number = "#{l_number[0..l_number.size-2]}-У"
         l_sender = "Банк России"
         l_subject = "Указание Банка России № #{l_number} от #{l_date}"
+      when /\A\d+_P/                                      # Положение БР
+        l_number = name[/\A\d+_?f?/]
+        l_number = "#{l_number[0..l_number.size-2]}-П"
+        l_sender = "Банк России"
+        l_subject = "Пооложение Банка России № #{l_number} от #{l_date}"
       when /\A\d+_MR/                                     # Методические рекомендации
         l_number = name[/\A\d+_?f?/]
         l_number = "#{l_number[0..l_number.size-2]}-МР"
