@@ -7,7 +7,8 @@
   = @bproce_bapp.bapp.description
 %h3
   используется в процессе
-  = link_to @bproce_bapp.bproce.name, bproce_path(@bproce_bapp.bproce)
+  = link_to @bproce_bapp.bproce.name, bproce_path(@bproce_bapp.bproce,) + '/bapps'
+
 %h2
   Назначение в процессе:
 = simple_format(@bproce_bapp.apurpose, {}, {})
