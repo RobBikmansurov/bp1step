@@ -161,6 +161,7 @@ class ContractsController < ApplicationController
     @contract = Contract.new()
     @contract.agent_id = contract.agent_id
     @contract.owner_id = current_user.id if user_signed_in?
+    @contract.payer_id = contract.payer_id  # ответственный за оплату
     @contract.date_begin = Date.current
     @contract.status = "Согласование"
     @contract.contract_type = contract.contract_type
