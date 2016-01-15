@@ -99,7 +99,8 @@
   -if activity1
     = link_to 'создал', activities_path(type: "Contract", id: @contract.id)
     = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity1.owner.displayname.to_s
+    -if activity1.owner
+      = activity1.owner.displayname.to_s
   -else
     создан
     = @contract.created_at.strftime('%d.%m.%Y %H:%M:%S')
