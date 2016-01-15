@@ -135,6 +135,7 @@ BPDoc::Application.routes.draw do
     member do
       get :create_user      # назначить исполнителя
       post :update_user
+      get :report
     end
   end
   resources :terms
