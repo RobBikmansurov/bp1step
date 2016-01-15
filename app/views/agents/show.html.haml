@@ -59,7 +59,8 @@
   -if activity1
     = link_to 'создал', activities_path(type: "Agent", id: @agent.id)
     = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity1.owner.displayname.to_s
+    -if activity1.owner
+      = activity1.owner.displayname.to_s
   -else
     создан
     = @agent.created_at.strftime('%d.%m.%Y %H:%M:%S')
