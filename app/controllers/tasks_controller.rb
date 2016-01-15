@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   respond_to :html, :json
-  before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :set_task, only: [:show, :edit, :update, :destroy, :report]
   helper_method :sort_column, :sort_direction
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
@@ -115,6 +115,9 @@ class TasksController < ApplicationController
     redirect_to action: :index
   end
 
+  def report
+    task_report
+  end
 
   private
     def set_task
@@ -132,5 +135,46 @@ class TasksController < ApplicationController
     def sort_direction
       params[:direction] || "desc"
     end
+
+    def task_report
+      report = ODFReport::Report.new("reports/task_report.odt") do |r|
+        nn = 0
+        r.add_field "REPORT_DATE", Date.current.strftime('%d.%m.%Y')
+        r.add_field "TASK_DATE", @task.created_at.strftime('%d.%m.%Y')
+        r.add_field "TASK_ID", @task.id
+        r.add_field "NAME", @task.name
+        r.add_field "DESCRIPTION", @task.description
+        s = "Вх.№ #{@task.letter.number} от #{@task.letter.date.strftime('%d.%m.%Y')}" if @task.letter
+        s = "Требование ##{@task.requirement.id} от #{@task.requirement.date.strftime('%d.%m.%Y')} [#{@task.requirement.label}]" if @task.requirement
+        r.add_field "SOURCE", s
+        r.add_field "DUEDATE", @task.duedate.strftime('%d.%m.%Y')
+        r.add_field "AUTHOR", "#{@task.author.displayname}"
+        s = ''
+        @task.user_task.each do |user_task|
+          s += ", " if !s.blank?
+          s += user_task.user.displayname
+          s += '-отв.' if user_task.status and user_task.status > 0
+        end
+        r.add_field "TASK_USERS", "#{s}"
+        r.add_field "RESULT", @task.result
+        s, a = '', ''
+        days = 0
+        if @task.completion_date
+          s = "#{@task.completion_date.strftime('%d.%m.%y')}" 
+          days = @task.completion_date - @task.duedate if @task.duedate
+          a = " (опоздание #{(days).to_i} дн.)" if days > 0
+          r.add_field "COMPLETIONALERT", "#{a}"
+        end
+        r.add_field "COMPLETIONDATE", "#{s}"
+        r.add_field "STATUS", TASK_STATUS.key(@task.status)
+
+        r.add_field "USER_POSITION", current_user.position.mb_chars.capitalize.to_s
+        r.add_field "USER_NAME", current_user.displayname
+      end
+      send_data report.generate, type: 'application/msword',
+        :filename => "task_report.odt",
+        :disposition => 'inline'    
+    end
+
 
 end

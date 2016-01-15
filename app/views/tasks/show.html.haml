@@ -98,3 +98,4 @@
 
 -if can? :update, @task or is_can_update
   = link_to 'Edit', edit_task_path(@task), class: 'button'
+  = link_to 'Отчет', report_task_path(@task), class: 'button'
