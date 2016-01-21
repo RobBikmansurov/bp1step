@@ -48,7 +48,7 @@ class MetricsController < ApplicationController
 
   def create
     @metric = Metric.new(metric_params)
-
+    @metric.mhash = Digest::MD5.hexdigest(rand().to_s)  # для новой метрики создадим HASH по умолчанию
     if @metric.save
       redirect_to @metric, notice: 'Metric was successfully created.'
     else
@@ -99,6 +99,37 @@ class MetricsController < ApplicationController
     render 'metric_values/new'
   end
 
+  def set
+    @metric = Metric.find(params[:id])
+    p params.inspect
+    p params[:v].presence
+    p params[:h].presence
+    if @metric and params[:v].presence and params[:h].presence
+      where_datetime = case @metric.depth
+        when 1 then "'#{Time.current.beginning_of_year}' AND '#{Time.current.end_of_year}'"   # текущий год
+        when 2 then "'#{Time.current.beginning_of_month}' AND '#{Time.current.end_of_month}'" # текущий месяц
+        when 3 then "'#{Time.current.beginning_of_day}' AND '#{Time.current.end_of_day}'"     # текущий день
+        else "'#{Time.current.beginning_of_hour}' AND '#{Time.current.end_of_hour}'"     # текущий час
+      end
+      value = MetricValue.where(metric_id: @metric.id).where("dtime BETWEEN #{where_datetime}").first
+      if !value  # не нашли?
+        value = MetricValue.new()  # новое значение
+        value.metric_id = @metric.id
+      end
+      value.dtime = Time.current  # обновим время записи значения
+      p value.inspect
+      if Digest::MD5.hexdigest(@metric.mhash) == params[:h]
+        value.value = params[:v]
+        value.save
+        render :nothing => true, :status => 200, :content_type => 'text/html'
+      else
+        render :nothing => true, :status => 400, :content_type => 'text/html'
+      end
+    else
+      render :nothing => true, :status => 404, :content_type => 'text/html'
+    end
+  end
+
   private
     def set_metric
       @metric = Metric.find(params[:id])
@@ -107,7 +138,7 @@ class MetricsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def metric_params
-      params.require(:metric).permit(:bproce_id, :name, :shortname, :description, :note, :depth, :bproce_name)
+      params.require(:metric).permit(:bproce_id, :name, :shortname, :description, :note, :depth, :depth_name, :bproce_name, :mtype, :msql)
     end
 
     def sort_column
@@ -116,6 +147,11 @@ class MetricsController < ApplicationController
 
     def sort_direction
       params[:direction] || "asc"
+    end
+
+    def record_not_found
+      flash[:alert] = "Метрика ##{params[:id]} не найдена."
+      redirect_to action: :index
     end
 
 end
