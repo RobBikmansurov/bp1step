@@ -13,7 +13,7 @@
     %th=sortable "name", "Метрика"
     %th Описание
     %th Глубина
-    -if can? :manage, Metric
+    -if can? :update, Metric
       %th
       %th
     -if can? :destroy, Metric
@@ -24,12 +24,12 @@
       %td= link_to metric.name, metric
       %td= truncate(metric.description, :length => 180, :omission => ' ...')
       %td= metric.depth
-      - if can? :manage, metric
+      - if can? :update, metric
         %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_metric_path(metric), class: 'button-img'
         %td= link_to image_tag('File-Presentation-icon.png', :alt => 'Значения'),  metric_path(metric) + '/values?', class: 'button-img'
       - if can? :destroy, metric
         %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), metric, data: { confirm: 'Метрика"' + metric.name + "\"\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
 
 %p
-- if can? :destroy, Metric
+- if can? :create, Metric
   = link_to "Добавить новую Метрику" , new_metric_bproce_path(@bproce), :class => 'button'
