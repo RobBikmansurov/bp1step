@@ -29,5 +29,9 @@ RSpec.describe MetricsController, :type => :routing do
       expect(delete: "/metrics/1").to route_to("metrics#destroy", :id => "1")
     end
 
+    it "routes to #set" do
+      expect(get: '/metrics/1/set').to route_to('metrics#set', id: '1')
+    end
+
   end
 end

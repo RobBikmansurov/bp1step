@@ -157,7 +157,7 @@ class TasksController < ApplicationController
         end
         r.add_field "TASK_USERS", "#{s}"
         r.add_field "RESULT", @task.result
-        s, a = '', ''
+        s, a = ' ', ' '
         days = 0
         if @task.completion_date
           s = "#{@task.completion_date.strftime('%d.%m.%y')}" 
