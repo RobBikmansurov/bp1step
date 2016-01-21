@@ -48,6 +48,7 @@ class TasksController < ApplicationController
       @letter= Letter.find(params[:letter_id] )
       @task.letter_id = @letter.id if @letter
     end
+    @task.duedate = Time.current.days_since(10).strftime('%d.%m.%Y')
     @task.author_id = current_user.id
   end
 

@@ -57,8 +57,8 @@
   = will_paginate @requirements
 
 %p
--#if can? :create, Letter
-= link_to 'Новое требование', new_requirement_path, :class => 'button'
+-if can? :create, Requirement
+  = link_to 'Новое требование', new_requirement_path, :class => 'button'
 
 %p
 -Requirement.select("status, count(id) as count").group(:status).order(:status).each do | requirement |
