@@ -168,7 +168,7 @@ private
         t.add_column(:id)
         t.add_column(:goal)
       end
-      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_POSITION", current_user.position.mb_chars.capitalize.to_s
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
@@ -226,7 +226,7 @@ private
       report_bapps(@bproce, r, true) # сформировать таблицу приложений процесса
       report_iresources(@bproce, r, true) # сформировать таблицу ресурсов процесса
 
-      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_POSITION", current_user.position.mb_chars.capitalize.to_s
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
@@ -281,7 +281,7 @@ private
         roles = 'Роли не выделены!' # сформировать список ролей
       end
       r.add_field "ROLES", roles
-      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_POSITION", current_user.position.mb_chars.capitalize.to_s
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
@@ -341,7 +341,7 @@ private
       report_iresources(@bproce, r, false) # сформировать таблицу ресурсов процесса
 
 
-      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_POSITION", current_user.position.mb_chars.capitalize.to_s
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
@@ -366,7 +366,7 @@ private
         t.add_column(:name)
         t.add_column(:fullname)
       end
-      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_POSITION", current_user.position.mb_chars.capitalize.to_s
       r.add_field "USER_NAME", current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
@@ -410,7 +410,7 @@ private
         end
       end
 
-      r.add_field "USER_POSITION", current_user.position
+      r.add_field "USER_POSITION", current_user.position.mb_chars.capitalize.to_s
       r.add_field "USER_NAME", current_user.displayname
     end
    send_data report.generate, type: 'application/msword',
