@@ -161,11 +161,14 @@ class TasksController < ApplicationController
         s, a = ' ', ' '
         days = 0
         if @task.completion_date
-          s = "#{@task.completion_date.strftime('%d.%m.%y')}" 
+          s = "#{@task.completion_date.strftime('%d.%m.%Y')}"  # %H:%M:%S')}" 
           days = @task.completion_date - @task.duedate if @task.duedate
-          a = " (опоздание #{(days).to_i} дн.)" if days > 0
-          r.add_field "COMPLETIONALERT", "#{a}"
+          a = " (с опозданием в #{(days).to_i} дн.)" if days > 0
+        else
+          days = Date.current - @task.duedate if @task.duedate
+          a = " (опоздание уже #{(days).to_i} дн.)" if days > 0
         end
+        r.add_field "COMPLETIONALERT", "#{a}"
         r.add_field "COMPLETIONDATE", "#{s}"
         r.add_field "STATUS", TASK_STATUS.key(@task.status)
 
