@@ -144,6 +144,9 @@ ru:
         description: Описание
         note: Примечание
         depth: Глубина
+        mtype: Тип
+        msql: SQL-запрос
+        mhash: HASH
       metric_value:
         dtime: Дата значения
         value: Значение метрики

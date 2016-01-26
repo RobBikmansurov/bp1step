@@ -21,11 +21,11 @@
 
   - @metrics.each do |metric|
     %tr
-      %td= link_to metric.name, metric
+      %td= link_to metric.shortname, metric
       %td
         = link_to metric.bproce.shortname, bproce_path(metric.bproce_id) if !metric.bproce.nil?
       %td= truncate(metric.description, :length => 180, :omission => ' ...')
-      %td= metric.depth
+      %td= METRICS_VALUE_DEPTH.key(metric.depth)
       - if can? :crud, metric
         %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_metric_path(metric), class: 'button-img'
         %td= link_to image_tag('File-Presentation-icon.png', :alt => 'Значения'),  metric_path(metric) + '/values?', class: 'button-img'
