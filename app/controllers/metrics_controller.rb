@@ -109,7 +109,7 @@ class MetricsController < ApplicationController
         when 1 then "'#{Time.current.beginning_of_year}' AND '#{Time.current.end_of_year}'"   # текущий год
         when 2 then "'#{Time.current.beginning_of_month}' AND '#{Time.current.end_of_month}'" # текущий месяц
         when 3 then "'#{Time.current.beginning_of_day}' AND '#{Time.current.end_of_day}'"     # текущий день
-        else "'#{Time.current.beginning_of_hour}' AND '#{Time.current.end_of_hour}'"     # текущий час
+        else "'#{Time.current.beginning_of_hour}' AND '#{Time.current.end_of_hour}'"          # текущий час
       end
       value = MetricValue.where(metric_id: @metric.id).where("dtime BETWEEN #{where_datetime}").first
       if !value  # не нашли?
