@@ -23,7 +23,7 @@
     %tr
       %td= link_to metric.shortname, metric
       %td
-        = link_to metric.bproce.shortname, bproce_path(metric.bproce_id) if !metric.bproce.nil?
+        = link_to metric.bproce.shortname, bproce_path(metric.bproce_id) + '/metrics' if !metric.bproce.nil?
       %td= truncate(metric.description, :length => 180, :omission => ' ...')
       %td= METRICS_VALUE_DEPTH.key(metric.depth)
       - if can? :crud, metric
