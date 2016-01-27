@@ -54,6 +54,7 @@ group :development do
   #gem 'rubocop', require: false
   #gem "rails-erd"
   gem 'guard-rspec', require: false
+  gem 'tiny_tds'
 end
 
 group :production do
