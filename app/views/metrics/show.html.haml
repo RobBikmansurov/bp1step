@@ -19,6 +19,7 @@
 -#prev_period_date = Date.today - Date.today.day
 
 = render partial: 'graph', locals: {data: @data}
+-#= "date: #{@current_period_date}   depth: #{@current_depth}"
 
 .apple_pagination
   .pagination
@@ -57,7 +58,7 @@
 -if @metric.depth > 3
   Час
 
--if @metrics.count > 0
+-if @metrics.count > 1
   %h4
     Другие метрики процесса
     = link_to @metric.bproce.name, bproce_path(@metric.bproce) if @metric.bproce
