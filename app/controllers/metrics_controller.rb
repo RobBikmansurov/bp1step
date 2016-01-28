@@ -5,7 +5,19 @@ class MetricsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
-    @metrics = Metric.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    @title_metrics = "Метрики процессов"
+    if params[:depth].present?
+      @metrics = Metric.where(depth: params[:depth])
+      @title_metrics += " [глубина данных: #{params[:depth]}]"
+    else
+      if params[:mtype].present?
+        @metrics = Metric.where(mtype: params[:mtype])
+        @title_metrics += " [тип: #{params[:mtype]}]"
+      else
+        @metrics = Metric.search(params[:search])
+      end
+    end
+    @metrics = @metrics.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
   end
 
   def show
@@ -101,7 +113,7 @@ class MetricsController < ApplicationController
     render 'metric_values/new'
   end
 
-  def set
+  def set   # http: GET /metrics/ID/set?v=VALUE&h=HASH
     @metric = Metric.find(params[:id])
     p params.inspect
     p params[:v].presence

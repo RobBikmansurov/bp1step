@@ -79,5 +79,5 @@
 %p
 - if can? :update, @metric
   = link_to 'Edit', edit_metric_path(@metric), :class => 'button'
-  = link_to 'Values', metric_path(@metric) + '/values?' + 'date=' + @current_period_date.strftime('%Y-%m-01'), :class => 'button'
+  = link_to 'Значения', metric_path(@metric) + '/values?' + 'date=' + @current_period_date.strftime('%Y-%m-01'), :class => 'button'
 = link_to 'Back', metrics_path, :class => 'button'
