@@ -68,10 +68,10 @@ namespace :bp1step do
         sql.gsub!(/\r\n?/, " ") #заменим \n \r на пробелы
 
         sql_period = case metric.depth
-          when 1 then "'#{date.beginning_of_year}' AND '#{date.end_of_year}'"   # текущий год
-          when 2 then "'#{date.beginning_of_month}' AND '#{date.end_of_month}'" # текущий месяц
-          when 3 then "'#{date.beginning_of_day}' AND '#{date.end_of_day}'"     # текущий день
-          else "'#{date.beginning_of_hour}' AND '#{date.end_of_hour}'"          # текущий час
+          when 1 then "'#{date.beginning_of_year.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{date.end_of_year.strftime("%Y-%m-%d %H:%M:%S")}'"   # текущий год
+          when 2 then "'#{date.beginning_of_month.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{date.end_of_month.strftime("%Y-%m-%d %H:%M:%S")}'" # текущий месяц
+          when 3 then "'#{date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")}'"     # текущий день
+          else "'#{date.beginning_of_hour.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{date.end_of_hour.strftime("%Y-%m-%d %H:%M:%S")}'"          # текущий час
         end
         sql_date = case metric.depth
           when 1 then "'#{date.beginning_of_year}'"   # текущий год
