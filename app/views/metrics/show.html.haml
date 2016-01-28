@@ -7,11 +7,8 @@
   \#
   =@metric.id
 %h2
-  [
-  =@metric.shortname
-  ]
-  = @metric.name.to_s + ':'
-  = number_with_precision(@average_value, precision: 2)
+  = "[#{@metric.shortname}] #{@metric.name}:"
+  = " ср.#{number_with_precision(@average_value, precision: 2)}" if @average_value and @average_value > 0
 
 -#= link_to 'Год', metric_path({type: :year})     #, remote: true
 -#= link_to 'Месяцы года', metric_path({type: :month})   #, remote: true
@@ -40,22 +37,11 @@
 %h4= @metric.description
 = '[' + @metric.note.to_s + ']' if @metric.note
 %p
-
 Глубина данных:
--if @metric.depth > 0
-  -if @current_depth == 1
-    = link_to 'Год', metric_path({date: @current_period_date.strftime('%Y-%m-01'), :depth => '1'})
-  -else
-    Год
--if @metric.depth > 1
-  -if @current_depth == '2'
-    = link_to 'Месяц', metric_path({date: @current_period_date.strftime('%Y-%m-01'), :depth => '1'})
-  -else
-    Месяц
--if @metric.depth > 2
-  День
--if @metric.depth > 3
-  Час
+- (METRICS_VALUE_DEPTH.min[1]..@metric.depth).each do |k|
+  = link_to "#{METRICS_VALUE_DEPTH.key(k)} ", metric_path({date: @current_period_date.strftime('%Y-%m-01'), depth: k})
+  &nbsp;
+%p
 
 -if @metrics.count > 1
   %h4
