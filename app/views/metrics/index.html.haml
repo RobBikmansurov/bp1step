@@ -1,11 +1,10 @@
 -title "Метрики процессов"
 -search "Метрику"
-%h1
-  Метрики процессов
+
+%h2
+  = @title_metrics if @title_metrics
   -if params[:search].present?
-    [ 
-    = params[:search]
-    ]
+    = "[ #{params[:search]} ]"
 
 %table
   %tr
@@ -38,3 +37,14 @@
 %p
 - if can? :destroy, Metric
   = link_to "Добавить новую Метрику" , new_metric_path, :class => 'button'
+%p
+Глубина данных:
+- Metric.select("depth, count(id) as count").group(:depth).order(:depth).each do |m|
+  -#-if !m.depth.to_s.empty?
+  = link_to " #{METRICS_VALUE_DEPTH.key(m.depth)} ", metrics_path(depth: m.depth.to_s), class: 'groups'  #, title: dlevel_title(d.dlevel)
+  &nbsp;
+%br
+Тип:
+- Metric.select("mtype, count(id) as count").group(:mtype).order(:mtype).each do |m|
+  = link_to " #{m.mtype}(#{m.count}) ", metrics_path(mtype: m.mtype), class: 'groups' if m.mtype and !m.mtype.empty? #, title: dlevel_title(d.dlevel) 
+  &nbsp;
