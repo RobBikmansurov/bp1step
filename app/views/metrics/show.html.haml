@@ -30,18 +30,17 @@
       = link_to "&#8592;&nbsp;".html_safe  + @prev_period_date.strftime('%b %Y'), metric_path({date: @prev_period_date.strftime('%Y-%m-01')}) if @prev_period_date
       = link_to @next_period_date.strftime('%b %Y').html_safe + "&nbsp;&#8594;".html_safe , metric_path({date: @next_period_date.strftime('%Y-%m-01')}) if @next_period_date
 
-%h3
+%h4
   -if @metric.bproce
     =link_to 'Метрика', bproce_path(@metric.bproce) + '/metrics' 
   -else
     =link_to 'Метрики', metrics_path
   процесса
   = link_to @metric.bproce.name, bproce_path(@metric.bproce) if @metric.bproce
-= @metric.description
--if @metric.note.presence
-  %br
-  = '[' + @metric.note.to_s + ']'
-%br
+%h4= @metric.description
+= '[' + @metric.note.to_s + ']' if @metric.note
+%p
+
 Глубина данных:
 -if @metric.depth > 0
   -if @current_depth == 1
