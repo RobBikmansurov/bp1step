@@ -67,7 +67,8 @@
       -if @current_period_date
         = link_to metr.name, metric_path(metr, {date: @current_period_date.strftime('%Y-%m-01')}) 
       -else
-        = link_to metr.name, metric_path(metr) 
+        = link_to metr.name, metric_path(metr)
+      &nbsp;
 
 .info_
   создан
