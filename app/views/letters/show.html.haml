@@ -119,7 +119,8 @@
   - @letters_outgoing.each do |letter_outgoing|
     Исх.
     = link_to "№ #{letter_outgoing.regnumber}", letter_path(letter_outgoing)
-    от #{letter_outgoing.regdate.strftime("%d.%m.%Y")}
+    = "от #{letter_outgoing.regdate.strftime("%d.%m.%Y")}" if letter_outgoing.regdate
+    &nbsp;
 
 -if @requirements.count > 0
   %h4 Созданы Требования:
@@ -128,6 +129,7 @@
     = link_to requirement.label, requirement
     ]
     от #{requirement.date.strftime("%d.%m.%Y")}
+    %br
 -if @tasks.count > 0
   %h4 Созданы Задачи:
   - @tasks.each do |task|
@@ -135,6 +137,7 @@
     = link_to task.name, task
     ]
     от #{task.created_at.strftime("%d.%m.%Y")}
+    %br
   -#= @letter.letter
 
 .info_
