@@ -30,7 +30,8 @@
     %th Описание
     %th Глубина
     -if can? :update, Metric
-      %thЗначения
+      %th
+        Посл.значение
       %th
     -if can? :destroy, Metric
       %th
@@ -45,7 +46,7 @@
         %td
           - last_value =  MetricValue.select(:dtime).where(metric_id: metric.id).order(:dtime).last
           - if last_value
-            = "#{last_value.dtime.strftime('%d.%m.%y %H:%M:%S')}"
+            = link_to "#{last_value.dtime.strftime('%d.%m.%y %H:%M:%S')}", metric_path(metric, date: last_value.dtime.strftime('%Y-%m-%d'))
           - else
             = link_to image_tag('File-Presentation-icon.png', :alt => 'Значения'),  metric_path(metric) + '/values?', class: 'button-img'
         %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_metric_path(metric), class: 'button-img'
