@@ -7,46 +7,48 @@
   \#
   =@metric.id
 %h2
-  = "[#{@metric.shortname}] #{@metric.name}:"
+  = "[#{@metric.shortname}] #{@metric.name} за"
+  %b= "#{@current_period_name}: "
   = " ср.#{number_with_precision(@average_value, precision: 2)}" if @average_value and @average_value > 0
+-#="@metric.depth = #{@metric.depth}"
+-#="@current_depth = #{@current_depth}"
+-#%br="  (#{@date1.strftime('%d.%m.%Y')} - #{@date2.strftime('%d.%m.%Y')})"
+
 
 -#= link_to 'Год', metric_path({type: :year})     #, remote: true
 -#= link_to 'Месяцы года', metric_path({type: :month})   #, remote: true
 -#= link_to 'Дни месяца', metric_path({type: :day})     #, remote: true
 -#prev_period_date = Date.today - Date.today.day
-
+-#= @data.inspect
 = render partial: 'graph', locals: {data: @data}
 -#= "date: #{@current_period_date}   depth: #{@current_depth}"
 
 .apple_pagination
   .pagination
-    -if @metric.depth == 2
-      = link_to "&#8592;&nbsp;".html_safe  + @prev_period_date.strftime('%Y'), metric_path({date: @prev_period_date.strftime('%Y-01-01')}) if @prev_period_date
-      = link_to @next_period_date.strftime('%Y').html_safe + "&nbsp;&#8594;".html_safe , metric_path({date: @next_period_date.strftime('%Y-01-01')}) if @next_period_date
-    -else
-      = link_to "&#8592;&nbsp;".html_safe  + @prev_period_date.strftime('%b %Y'), metric_path({date: @prev_period_date.strftime('%Y-%m-01')}) if @prev_period_date
-      = link_to @next_period_date.strftime('%b %Y').html_safe + "&nbsp;&#8594;".html_safe , metric_path({date: @next_period_date.strftime('%Y-%m-01')}) if @next_period_date
+    = link_to "&#8592;&nbsp;".html_safe + @prev_name, metric_path({date: @prev_date, depth: @current_depth}) if @prev_name
+    = link_to "(#{@current_period_name})", metric_path({date: Time.current, depth: @current_depth})
+    = link_to @next_name.html_safe + "&nbsp;&#8594;".html_safe, metric_path({date: @next_date, depth: @current_depth}) if @next_name
 
 %h4
   -if @metric.bproce
-    =link_to 'Метрика', bproce_path(@metric.bproce) + '/metrics' 
+    =link_to 'Метрика', metrics_bproce_path(@metric.bproce)
   -else
     =link_to 'Метрики', metrics_path
   процесса
   = link_to @metric.bproce.name, bproce_path(@metric.bproce) if @metric.bproce
 %h4= @metric.description
-= '[' + @metric.note.to_s + ']' if @metric.note
+= "[#{@metric.note}]" if @metric.note
 %p
-Глубина данных:
+Показать значения за:
 - (METRICS_VALUE_DEPTH.min[1]..@metric.depth).each do |k|
-  = link_to "#{METRICS_VALUE_DEPTH.key(k)} ", metric_path({date: @current_period_date.strftime('%Y-%m-01'), depth: k})
+  = link_to "#{METRICS_VALUE_DEPTH.key(k)} ", metric_path({date: @current_period_date.strftime('%Y-%m-01'), depth: k}) if @metric.depth > k
   &nbsp;
 %p
 
 -if @metrics.count > 1
   %h4
     Другие метрики процесса
-    = link_to @metric.bproce.name, bproce_path(@metric.bproce) if @metric.bproce
+    = link_to @metric.bproce.name, metrics_bproce_path(@metric.bproce) if @metric.bproce
   - @metrics.each do |metr|
     -if @metric.id != metr.id
       -if @current_period_date
@@ -67,3 +69,5 @@
   = link_to 'Edit', edit_metric_path(@metric), :class => 'button'
   = link_to 'Значения', metric_path(@metric) + '/values?' + 'date=' + @current_period_date.strftime('%Y-%m-01'), :class => 'button'
 = link_to 'Back', metrics_path, :class => 'button'
+:javascript
+  var Chartkick = {"language": "ru"};

@@ -27,6 +27,7 @@ class Bproce < ActiveRecord::Base
   has_many :documents, through: :bproce_documents
   has_many :iresource, :through => :bproce_iresource
   has_many :workplaces, :through => :bproce_workplaces
+  has_many :metrics
   belongs_to :bproce, foreign_key: "parent_id"  # родительский процесс
   belongs_to :user    # владелец процессв
 
