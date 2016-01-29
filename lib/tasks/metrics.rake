@@ -58,6 +58,7 @@ namespace :bp1step do
     metrics_type = 'MSSQL'
     count = 0
     errors = 0
+    #Metric.where(mtype: metrics_type).where(id: 8).each do | metric |  # метрики с типом 'MSSQL'
     Metric.where(mtype: metrics_type).each do | metric |  # метрики с типом 'MSSQL'
       count += 1
       #('2016-01-01'.to_datetime.to_i .. '2016-01-27'.to_datetime.to_i).step(1.day) do |datei|
@@ -93,10 +94,7 @@ namespace :bp1step do
           if result['count'].present?
             new_value = result['count']
             value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{sql_period}").first
-            if !value  # не нашли?
-              value = MetricValue.new()  # новое значение
-              value.metric_id = metric.id
-            end
+            value = MetricValue.new(metric_id: metric.id) if !value  # не нашли? - новое значение
             value.dtime = date  # обновим время записи значения
             value.value = new_value if new_value.to_i > 0
             value.save
