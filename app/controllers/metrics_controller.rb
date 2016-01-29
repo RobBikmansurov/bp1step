@@ -21,34 +21,44 @@ class MetricsController < ApplicationController
   end
 
   def show
-    if params[:date].presence
-      @current_period_date = params[:date].to_time
-    else
-      @current_period_date = Time.current.beginning_of_month #  по умолчанию - текущий период
-    end
-    if params[:depth].presence
-      @current_depth = params[:depth]
-    else
-      @current_depth = @metric.depth - 1  # по умолчанию график с группировкой значений
-    end
-    @current_period_values = case @current_depth.to_i
-      when 2 then MetricValue.by_day_totals(@metric.id, @current_period_date)
-      when 1 then MetricValue.by_month_totals(@metric.id, @current_period_date)
-      else MetricValue.by_year_totals(@metric.id, @current_period_date)
-    end
-    @average_value = case @metric.depth  # среднее значение за выбранный период
-      when 1 then MetricValue.where(:metric_id => @metric.id).where(dtime: (@current_period_date.beginning_of_year..@current_period_date.end_of_year)).average(:value)
-      when 2 then MetricValue.where(:metric_id => @metric.id).where(dtime: (@current_period_date.beginning_of_year..@current_period_date.end_of_year)).average(:value)
-      else MetricValue.where(:metric_id => @metric.id).where(dtime: (@current_period_date.beginning_of_month..@current_period_date.end_of_month)).average(:value)
-    end
+    @current_period_date = (params[:date].presence || Time.current.to_s).to_time
+    @current_period_date = Time.current if @current_period_date > Time.current
+    @current_depth = (params[:depth].presence || @metric.depth - 1).to_i
+    case @current_depth
+    when 1 # год
+      @format_period = '%Y'
+      @date1 = @current_period_date.beginning_of_year
+      @date2 = @current_period_date.end_of_year
+      @prev_date = @date1.ago(1.year)
+      @next_date = @date2.since(1.year)
+      #values = MetricValue.group_by_month(:dtime, range: @date1..@date2, format: "%M").order('MAX(dtime) ASC').count
+      values = MetricValue.where(metric_id: @metric.id).order('MAX(dtime) ASC').group_by_month(:dtime, range: @date1..@date2, time_zone: "UTC").sum(:value)
+    when 2 # месяц
+      @format_period = '%B %Y'
+      @date1 = @current_period_date.beginning_of_month
+      @date2 = @current_period_date.end_of_month
+      @prev_date = @date1.ago(1.month)
+      @next_date = @date2.since(1.month)
+      values = MetricValue.where(metric_id: @metric.id).group_by_day(:dtime, range: @date1..@date2, format: "%-d").order('MAX(dtime) ASC').sum(:value)
+    when 3 # день
+      @format_period = '%d.%m.%Y'
+      @date1 = @current_period_date.beginning_of_day
+      @date2 = @current_period_date.end_of_day
+      @prev_date = @date1.ago(1.day)
+      @next_date = @date2.since(1.day)
+      values = MetricValue.group_by_hour(:dtime, range: @date1..@date2, format: "%H").order('MAX(dtime) ASC').sum(:value)
+  end
+    @current_period_name = @current_period_date.strftime(@format_period)
+    @prev_name = @prev_date.strftime(@format_period)
+    @next_name = @next_date.strftime(@format_period) if @next_date
 
     @prev_period_date = @current_period_date - @current_period_date.day
     @next_period_date = @current_period_date.end_of_month + 1
     if @next_period_date == (Time.current.end_of_month + 1)
       @next_period_date = nil
     end
-    #values = MetricValue.where(:metric_id => @metric.id).group(:dtime).sum(:value)
-    @data = [ { name: @current_period_date.strftime('%b %Y'), data: @current_period_values } ]
+
+    @data = [ { name: @current_period_name, data: values, format: "%l %P" } ]
     @metrics = Metric.where(bproce_id: @metric.bproce).order(:name)
     respond_with @data
   end

@@ -34,6 +34,7 @@ gem 'protected_attributes'
 gem 'chartkick'
 gem 'groupdate'
 gem 'jcrop-rails-v2'
+gem 'tiny_tds'
 
 group :test, :development do
   gem 'sqlite3'
@@ -54,7 +55,6 @@ group :development do
   #gem 'rubocop', require: false
   #gem "rails-erd"
   gem 'guard-rspec', require: false
-  gem 'tiny_tds'
 end
 
 group :production do
