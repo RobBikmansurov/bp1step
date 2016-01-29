@@ -8,9 +8,11 @@
   .checked_
     = "взят в управление #{@bproce.checked_at.strftime('%d.%m.%Y')}"
 %h2
+  Процесс
   %b
-    = "[ #{@bproce.shortname} ]:"
-  = @bproce.name
+    = link_to "[#{@bproce.shortname}]", bproce_path
+  ="#{@bproce.name}"
+%h3= @bproce.fullname
 %h4
   %b
     Цель:
@@ -20,8 +22,7 @@
     = markdown(@bproce.goal)
 
 %h2
-  Метрики процесса
-  = link_to @bproce.name, bproce_path
+  Метрики процесса:
 
 %table
   %tr
