@@ -130,15 +130,8 @@
     ]
     от #{requirement.date.strftime("%d.%m.%Y")}
     %br
--if @tasks.count > 0
-  %h4 Созданы Задачи:
-  - @tasks.each do |task|
-    Задача [
-    = link_to task.name, task
-    ]
-    от #{task.created_at.strftime("%d.%m.%Y")}
-    %br
-  -#= @letter.letter
+=render 'tasks' if @tasks.count > 0
+
 
 .info_
   -activity1 = PublicActivity::Activity.where(trackable_type: "Letter", trackable_id: @letter.id).order("created_at asc").first
