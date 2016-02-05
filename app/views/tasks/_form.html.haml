@@ -9,7 +9,7 @@
   = f.input :duedate, :as => :string, :input_html => {:class=>'datepicker'}
   %br
   = f.label :Статус
-  = f.select :status_name, TASK_STATUS.keys
+  = f.select :status_name, @task_status_enabled.keys
   = f.hidden_field :result
   -if @task.id
     %h3 Результат исполнения:

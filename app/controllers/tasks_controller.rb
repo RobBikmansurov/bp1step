@@ -2,6 +2,7 @@ class TasksController < ApplicationController
   respond_to :html, :json
   before_action :set_task, only: [:show, :edit, :update, :destroy, :report]
   helper_method :sort_column, :sort_direction
+  before_filter :authenticate_user!, :only => [:edit, :new]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -48,11 +49,18 @@ class TasksController < ApplicationController
       @letter= Letter.find(params[:letter_id] )
       @task.letter_id = @letter.id if @letter
     end
+    @task_status_enabled = TASK_STATUS.select { |key, value| value < 5 }  # Оставим только одно разрешенное состояние
     @task.duedate = Time.current.days_since(10).strftime('%d.%m.%Y')
     @task.author_id = current_user.id
   end
 
   def edit
+    if current_user.id == @task.author.id or @task.user_task.where(status: 1).pluck(:user_id).include? current_user.id
+      @task_status_enabled = TASK_STATUS.select { |key, value| value > 5 }  # автору и ответственному можно переводить в любое состояние
+    else
+      @task_status_enabled = TASK_STATUS.select { |key, value| value > 0}
+      @task_status_enabled = TASK_STATUS.select { |key, value| value < 90 } if @task.status < 90
+    end
   end
 
   def create
