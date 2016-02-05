@@ -114,14 +114,7 @@
 = simple_format(@letter.result, {}, {})
 
 %hr
--if @letters_outgoing.count > 0
-  %h4 Созданы Исходящие:
-  - @letters_outgoing.each do |letter_outgoing|
-    Исх.
-    = link_to "№ #{letter_outgoing.regnumber}", letter_path(letter_outgoing)
-    = "от #{letter_outgoing.regdate.strftime("%d.%m.%Y")}" if letter_outgoing.regdate
-    &nbsp;
-
+=render 'letters_outgoing' if @letters_outgoing.count > 0
 -if @requirements.count > 0
   %h4 Созданы Требования:
   - @requirements.each do |requirement|
