@@ -9,13 +9,13 @@
     %div.h2{ :style => "display: inline; color: #eee; background-color: #000;" }
       = #{LETTER_DIRECTION.key(@letter.in_out)}:
   - else
-    = #{LETTER_DIRECTION.key(@letter.in_out)}:
+    #{LETTER_DIRECTION.key(@letter.in_out)}:
   - if @letter_link
     ответ на
     = link_to "№ #{@letter_link.number}", letter_path(@letter_link)
     от #{@letter_link.date.strftime("%d.%m.%Y")}
   - else
-    = "Исх.№ #{@letter.number} от"
+    Исх.№ #{@letter.number} от
     = link_to @letter.date.strftime("%d.%m.%Y"), letters_path(date: @letter.date.strftime("%d.%m.%Y")) if @letter.date
 
 %h3

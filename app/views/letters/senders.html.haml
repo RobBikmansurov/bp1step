@@ -1,34 +1,33 @@
--search "Корреспонденты" 
--title @title_senders
+- search "Корреспонденты"
+- title @title_senders
 
 %h2
   = @title_senders if @title_senders
-  -if params[:search].present?
-    = "[ #{params[:search]} ]"
-   
+  - if params[:search].present?
+    "[ #{params[:search]} ]
+
 %table
   %tr
     %th= sortable "sender", "Корреспондент"
     - LETTER_STATUS.keys.each do |status|
       %th= status
 
-  - _name = '**'
-  - _td_hash = {}
+  - name = '**'
+  - td_hash = {}
   - @senders.each do |sender|
-    -if _name != sender[0][0]  # новый корреспондент
-      -if _name != '**' # пропустим в первый раз, т.к. предыдущего корреспондента не было
+    - if name != sender[0][0]  # новый корреспондент
+      - if name != '**' # пропустим в первый раз, т.к. предыдущего корреспондента не было
         %tr
           %td
-            = link_to _name, letters_path(addresse: _name)
+            = link_to name, letters_path(addresse: name)
             - LETTER_STATUS.keys.each do |status|
-              %td= _td_hash[status]
-      - _name = sender[0][0]
-      - _td_hash = {}
-    - _td_hash [LETTER_STATUS.key(sender[0][1])] = "#{sender[1]}"
+              %td= td_hash[status]
+      - name = sender[0][0]
+      - td_hash = {}
+    - td_hash [LETTER_STATUS.key(sender[0][1])] = "#{sender[1]}"
 
 %br
--#.apple_pagination
--#  = will_paginate @senders
+-# .apple_pagination -# = will_paginate @senders
 
 %p
 = link_to 'Письма', letters_path, class: 'button'
@@ -36,16 +35,16 @@
 
 %p
 Письма в статусе:
--if params[:user].present?
+- if params[:user].present?
   -# @letters.select("letters.status, count(id) as count").group('letters.status').order('letters.status').each do |d|
   - letters = Letter.joins(:user_letter).where("user_letters.user_id = ?", params[:user])
-  -if letters
-    - letters.select('letters.status, count(letters.id) as count').group(:status).each do | letter |
-      -if !letter.status.blank?
+  - if letters
+    - letters.select('letters.status, count(letters.id) as count').group(:status).each do |letter|
+      - if !letter.status.blank?
         = link_to " #{LETTER_STATUS.key(letter.status)} (#{letter.count}) ", letters_path(status: letter.status, user: params[:user]), class: 'groups'
       &nbsp;
--else
-  - Letter.select("status, count(id) as count").group(:status).order(:status).each do | d |
-    -if !d.status.to_s.empty?
+- else
+  - Letter.select("status, count(id) as count").group(:status).order(:status).each do |d|
+    - if !d.status.to_s.empty?
       = link_to " #{LETTER_STATUS.key(d.status)} (#{d.count}) ", letters_path(status: d.status), class: 'groups'
       &nbsp;
