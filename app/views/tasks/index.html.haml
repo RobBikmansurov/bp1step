@@ -1,23 +1,23 @@
--search "Задачи" 
--title @title_tasks
+- search "Задачи" 
+- title @title_tasks
 
 %h2
   = @title_tasks if @title_tasks
-  -if params[:search].present?
-    = "[ #{params[:search]} ]"
+  - if params[:search].present?
+    [ #{params[:search]} ]
 
 %table
   %tr
-    %th #
+    %th= sortable "id", "#"
     %th Наименование
     %th Описание
     %th Источник
-    %th Срок
-    %th Статус
+    %th= sortable 'duedate', 'Срок'
+    %th= sortable "status", "Статус"
     %th Ответственные
     %th
 
-  -if @tasks
+  - if @tasks
     - @tasks.each do |task|
       %tr
         %td= task.id
