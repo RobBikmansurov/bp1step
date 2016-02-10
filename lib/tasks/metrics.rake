@@ -61,7 +61,7 @@ namespace :bp1step do
     #Metric.where(mtype: metrics_type).where(id: 8).each do | metric |  # метрики с типом 'MSSQL'
     Metric.where(mtype: metrics_type).each do | metric |  # метрики с типом 'MSSQL'
       count += 1
-      #('2016-01-01'.to_datetime.to_i .. '2016-01-27'.to_datetime.to_i).step(1.day) do |datei|
+      #('2016-02-01'.to_datetime.to_i .. '2016-02-09'.to_datetime.to_i).step(1.day) do |datei|
       (Time.current.to_i .. Time.current.to_i).step(1.day) do |datei|
         date = Time.at(datei)
         #date = Time.current
@@ -75,10 +75,10 @@ namespace :bp1step do
           else "'#{date.beginning_of_hour.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{date.end_of_hour.strftime("%Y-%m-%d %H:%M:%S")}'"          # текущий час
         end
         sql_date = case metric.depth
-          when 1 then "'#{date.beginning_of_year}'"   # текущий год
-          when 2 then "'#{date.beginning_of_month}'" # текущий месяц
-          when 3 then "'#{date.beginning_of_day.strftime("%m.%d.%Y")}'"     # текущий день
-          else "'#{date.beginning_of_hour}'"          # текущий час
+          when 1 then "'#{date.beginning_of_year.strftime("%Y-%m-%d")}'"   # текущий год
+          when 2 then "'#{date.beginning_of_month.strftime("%Y-%m-%d")}'" # текущий месяц
+          when 3 then "'#{date.beginning_of_day.strftime("%Y-%m-%d")}'"     # текущий день
+          else "'#{date.beginning_of_hour.strftime("%Y-%m-%d %H")}'"          # текущий час
         end
         sql.gsub!(/##PERIOD##/, sql_period) #заменим период
         sql.gsub!(/##DATE##/, sql_date) #заменим дату
