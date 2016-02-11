@@ -63,6 +63,7 @@
 %p
 - if can? :create, Task
   = link_to 'Новая задача', new_task_path, class: 'button'
+= link_to 'Контроль', check_tasks_path, class: 'button'
 
 %p
 - Task.select("status, count(id) as count").group(:status).order(:status).each do |task|

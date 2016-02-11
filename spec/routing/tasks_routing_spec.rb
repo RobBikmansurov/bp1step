@@ -38,7 +38,11 @@ RSpec.describe TasksController, type: :routing do
     #      post :update_user
 
     it "routes to #report" do
-      expect(:get => "/tasks/1/report").to route_to("tasks#report", :id => "1")
+      expect(get: "/tasks/1/report").to route_to("tasks#report", id: "1")
+    end
+
+    it "routes to #check" do
+      expect(get: "/tasks/check").to route_to("tasks#check")
     end
 
   end
