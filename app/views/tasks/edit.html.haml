@@ -1,12 +1,9 @@
--title "Задача #{@task.name}"
--search 'Задачу'
-.id_
-  \#
-  =@task.id
+- title "Задача #{@task.name}"
+- search 'Задачу'
+.id_ ##{@task.id}
 
 = render 'form'
-= render 'user' if @task.user_task.first
 
 %p
-= link_to 'Show', @task, :class => 'button'
-= link_to 'Back', tasks_path, :class => 'button'
+= link_to 'Show', @task, class: 'button'
+= link_to 'Back', tasks_path, class: 'button'
