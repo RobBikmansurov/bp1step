@@ -55,11 +55,12 @@ class TasksController < ApplicationController
   end
 
   def edit
+    @task_status_enabled = TASK_STATUS.select { |key, value| value >= 0 }  # автору и ответственному можно переводить в любое 
     if current_user.id == @task.author.id or @task.user_task.where(status: 1).pluck(:user_id).include? current_user.id
-      @task_status_enabled = TASK_STATUS.select { |key, value| value > 5 }  # автору и ответственному можно переводить в любое состояние
+      # @task_status_enabled = TASK_STATUS.select { |key, value| value > 5 }  # автору и ответственному можно переводить в любое состояние
     else
       @task_status_enabled = TASK_STATUS.select { |key, value| value > 0}
-      @task_status_enabled = TASK_STATUS.select { |key, value| value < 90 } if @task.status < 90
+      @task_status_enabled = @task_status_enabled.select { |key, value| value < 90 } if @task.status < 90
     end
   end
 
@@ -84,7 +85,7 @@ class TasksController < ApplicationController
       @task.result += "\r\n" + Time.current.strftime("%d.%m.%Y %H:%M:%S") + ": #{current_user.displayname} - " + params[:task][:action] if params[:task][:action].present?
       @task.result += "\r\n" + Time.current.strftime("%d.%m.%Y %H:%M:%S") + ": #{current_user.displayname} считает задачу полностью исполненной" if @task.status >= 90 and status_was < 90 # стало завершено
       @task.update_column(:result, "#{@task.result}")
-      redirect_to @task, notice: 'Задача изменена'
+      redirect_to @task, notice: 'Инофрмация по Задаче сохранена'
     else
       render :edit
     end

@@ -1,14 +1,12 @@
--title "Задача [#{@task.name}]"
--search "Задача"
-.id_
-  \#
-  = @task.id
+- title "Задача [#{@task.name}]"
+- search "Задача"
+.id_ ##{@task.id}
 
 %h2
   Задача
   = " от " + @task.created_at.strftime('%d.%m.%Y %H:%M:%S')
 
--if @requirement
+- if @requirement
   %h3
     Требование
     = link_to "#{@requirement.name}", @requirement
@@ -18,37 +16,37 @@
 %h3 Краткое описание:
 = simple_format(@task.description, {}, {})
 
--if @task.letter
+- if @task.letter
   %h3
-    Основание: Вх.№  
-    = link_to  "#{@task.letter.number}", letter_path(@task.letter)
+    Основание: Вх.№
+    = link_to "#{@task.letter.number}", letter_path(@task.letter)
     от #{@task.letter.date.strftime('%d.%m.%Y')}
 
-%h3 
+%h3
   Срок исполнения:
-  -if @task.duedate
+  - if @task.duedate
     %b= @task.duedate.strftime("%d.%m.%Y")
-    -if @task.status < 90
+    - if @task.status < 90
       - days = @task.duedate - Date.current
       = " (осталось #{days.to_i} дн.)" if days > 0
-      -if days <= 0
-        %span{:style => "color: red;"}
+      - if days <= 0
+        %span{ style: "color: red;" }
           = " (опоздание #{(-days).to_i} дн.)" if days < 0
           = " сегодня!" if days == 0
-  -if @task.completion_date
+  - if @task.completion_date
     [ фактически:
     %b= @task.completion_date.strftime("%d.%m.%Y")
 
-    -if @task.status >= 90
+    - if @task.status >= 90
       - days = 0
       - days = @task.completion_date - @task.duedate if @task.duedate
-      -if days > 0
-        %span{:style => "color: red;"}
+      - if days > 0
+        %span{ style: "color: red;" }
           = " (опоздание #{days.to_i} дн.)"
     ]
 
 %h3
-  -if @task.author_id?
+  - if @task.author_id?
     Автор:
     = link_to @task.author.displayname, user_path(@task.author.id)
     &nbsp; &nbsp;
@@ -56,14 +54,14 @@
   - is_can_update = false
   - @task.user_task.each do |user_task|
     = link_to user_task.user.displayname, tasks_path(user: user_task.user)
-    -if user_task.status and user_task.status > 0
+    - if user_task.status and user_task.status > 0
       \- отв.
     &nbsp;
-    - is_can_update = true if user_task.user.id == current_user.id  # исполнители могут добавлять других исполнителей
+    - is_can_update = true if user_task.user.id == current_user.id and user_task.status > 0 # отв.исполнители могут добавлять других исполнителей
 - if @task.author
   - is_can_update = true if @task.author.id == current_user.id  # автор может добавлять других исполнителей
 
-- if can? :update, @task or is_can_update  # автор и исполнители могут добавлять других исполнителей
+- if @task.status < 90 and  can? :update, @task or is_can_update  # автор и исполнители могут добавлять других исполнителей
   #create_user
     = link_to 'Добавить Исполнителя', create_user_task_path(@task), remote: true
 
@@ -75,27 +73,27 @@
 %hr
 
 .info_
-  -activity1 = PublicActivity::Activity.where(trackable_type: "task", trackable_id: @task.id).order("created_at asc").first
-  -if activity1
+  - activity1 = PublicActivity::Activity.where(trackable_type: "task", trackable_id: @task.id).order("created_at asc").first
+  - if activity1
     = link_to 'создал', activities_path(type: "task", id: @task.id)
     = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
     = activity1.owner.displayname.to_s
-  -else
+  - else
     создан
     = @task.created_at.strftime('%d.%m.%Y %H:%M:%S')
   %br
-  -activity2 = PublicActivity::Activity.where(trackable_type: "task", trackable_id: @task.id).order("created_at asc").last
-  -if activity2
+  - activity2 = PublicActivity::Activity.where(trackable_type: "task", trackable_id: @task.id).order("created_at asc").last
+  - if activity2
     = link_to 'изменил', activities_path(type: "task", id: @task.id)
     = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
     = activity2.owner.displayname.to_s
-  -else
+  - else
     изменен
     = @task.updated_at.strftime('%d.%m.%Y %H:%M:%S')
 
 %p
 = link_to 'Back', tasks_path, class: 'button'
 
--if can? :update, @task or is_can_update
+- if can? :update, @task or is_can_update
   = link_to 'Edit', edit_task_path(@task), class: 'button'
   = link_to 'Отчет', report_task_path(@task), class: 'button'
