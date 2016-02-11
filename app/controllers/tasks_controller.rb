@@ -208,6 +208,12 @@ class TasksController < ApplicationController
         t.add_column(:name)
         t.add_column(:description)
         t.add_column(:author, :author_name)
+        t.add_column(:source) do |task|
+          source = ''
+          source += "Письмо #{task.letter_id}" if task.letter_id
+          source += "Требование ##{task.requirement_id}" if task.requirement_id
+          "#{source}"
+        end
         t.add_column(:duedate) do |task|
           "#{task.duedate.strftime('%d.%m.%y')}"
         end
