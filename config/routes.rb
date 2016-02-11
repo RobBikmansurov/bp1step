@@ -1,5 +1,4 @@
 BPDoc::Application.routes.draw do
-  resources :tasks
   resources :bproces, only: :autocomlete do
     get :autocomplete, on: :collection
   end
@@ -100,7 +99,7 @@ BPDoc::Application.routes.draw do
     collection do
       get :senders
       get :log_week    # журнал регистрации за неделю
-      get :check       # журнал
+      get :check       # контроль
     end
     member do
       get :appendix_create
@@ -133,6 +132,9 @@ BPDoc::Application.routes.draw do
   # get 'tags', to: 'bproces#index'
 
   resources :tasks do
+    collection do
+      get :check       # контроль
+    end
     member do
       get :create_user      # назначить исполнителя
       post :update_user

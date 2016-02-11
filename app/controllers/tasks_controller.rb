@@ -2,8 +2,8 @@ class TasksController < ApplicationController
   respond_to :html, :json
   before_action :set_task, only: [:show, :edit, :update, :destroy, :report]
   helper_method :sort_column, :sort_direction
-  before_filter :authenticate_user!, :only => [:edit, :new]
-  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+  before_filter :authenticate_user!, only: [:edit, :new, :create, :update, :check]
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
     @title_tasks = 'Задачи '
@@ -62,6 +62,11 @@ class TasksController < ApplicationController
       @task_status_enabled = TASK_STATUS.select { |key, value| value > 0}
       @task_status_enabled = @task_status_enabled.select { |key, value| value < 90 } if @task.status < 90
     end
+  end
+
+  def check
+    @tasks = Task.where('status < 90 and duedate <= ?', Date.current + 1).order(:duedate)
+    check_report
   end
 
   def create
@@ -185,9 +190,59 @@ class TasksController < ApplicationController
         r.add_field "USER_NAME", current_user.displayname
       end
       send_data report.generate, type: 'application/msword',
-        :filename => "task_report.odt",
+        :filename => "task-#{@task.id}-#{Date.current.strftime('%Y%m%d')}.odt",
         :disposition => 'inline'    
     end
 
+    def check_report    #  Отчет "Контроль исполнения"
+    report = ODFReport::Report.new("reports/tasks_check.odt") do |r|
+      nn = 0
+      r.add_field "REPORT_PERIOD", Date.current.strftime('%d.%m.%Y')
+      r.add_field "WEEK_NUMBER", @week_number
+      r.add_table("TASKS", @tasks, :header=>true) do |t|
+        t.add_column(:nn) do |ca|
+          nn += 1
+          "#{nn}."
+        end
+        t.add_column(:id)
+        t.add_column(:name)
+        t.add_column(:description)
+        t.add_column(:author, :author_name)
+        t.add_column(:duedate) do |task|
+          "#{task.duedate.strftime('%d.%m.%y')}"
+        end
+        t.add_column(:completiondate) do |task|
+          "#{task.completion_date.strftime('%d.%m.%y')}" if task.completion_date
+        end
+        t.add_column(:completionalert) do |task|
+          if task.completion_date
+            days = task.completion_date - task.duedate if task.duedate
+            (days > 0 ? " (опоздание #{(days).to_i} дн.)" : "")
+          else
+            days = task.duedate - Date.current
+            (days < 0 ? " (уже #{(-days).to_i} дн.)" : "")
+          end
+        end
+        t.add_column(:status) do |task|
+          TASK_STATUS.key(task.status)
+        end
+        t.add_column(:users) do |task|  # исполнители
+          s = ''
+          task.user_task.each do |user_task|
+            s += ", " if !s.blank?
+            s += user_task.user.displayname
+            s += '-отв.' if user_task.status and user_task.status > 0
+          end
+          "#{s}"
+        end
+        t.add_column(:result)
+      end
+      r.add_field "USER_POSITION", current_user.position.mb_chars.capitalize.to_s
+      r.add_field "USER_NAME", current_user.displayname
+    end
+    send_data report.generate, type: 'application/msword',
+      filename: "tasks-check-#{Date.current.strftime('%Y%m%d')}.odt",
+      disposition: 'inline'    
+    end
 
 end
