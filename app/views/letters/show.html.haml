@@ -1,22 +1,20 @@
-- title "Письмо № #{@letter.number} от #{@letter.date.strftime("%d.%m.%Y")}"
+- title "Письмо № #{@letter.number} от #{@letter.date.strftime('%d.%m.%Y')}"
 - search 'Письмо'
-.id_
-  \#
-  = @letter.id
+.id_ ##{@letter.id}
 
 %h2
   - if @letter.in_out > 1
-    %div.h2{ :style => "display: inline; color: #eee; background-color: #000;" }
-      = #{LETTER_DIRECTION.key(@letter.in_out)}:
+    %div.h2{style: 'display: inline; color: #eee; background-color: #000;'}
+      #{LETTER_DIRECTION.key(@letter.in_out)}:
   - else
     #{LETTER_DIRECTION.key(@letter.in_out)}:
   - if @letter_link
     ответ на
     = link_to "№ #{@letter_link.number}", letter_path(@letter_link)
-    от #{@letter_link.date.strftime("%d.%m.%Y")}
+    от #{@letter_link.date.strftime('%d.%m.%Y')}
   - else
     Исх.№ #{@letter.number} от
-    = link_to @letter.date.strftime("%d.%m.%Y"), letters_path(date: @letter.date.strftime("%d.%m.%Y")) if @letter.date
+    = link_to @letter.date.strftime('%d.%m.%Y'), letters_path(date: @letter.date.strftime('%d.%m.%Y')) if @letter.date
 
 %h3
   %b [ #{@letter.subject} ]
@@ -35,38 +33,38 @@
 %h3
   Срок исполнения:
   - if @letter.duedate
-    %b= @letter.duedate.strftime("%d.%m.%Y")
+    %b= @letter.duedate.strftime('%d.%m.%Y')
     - if @letter.status < 90
       - days = @letter.duedate - Date.current
       = " (осталось #{days.to_i} дн.)" if days > 0
       - if days <= 0
-        %span{ style: "color: red;" }
+        %span{ style: 'color: red;' }
           = " (опоздание #{(-days).to_i} дн.)" if days < 0
           = " сегодня!" if days == 0
   - if @letter.completion_date
     [ фактически:
-    %b= @letter.completion_date.strftime("%d.%m.%Y")
+    %b= @letter.completion_date.strftime('%d.%m.%Y')
 
     - if @letter.status >= 90
       - days = 0
       - days = @letter.completion_date - @letter.duedate if @letter.duedate
       - if days > 0
-        %span{ style: "color: red;" }
+        %span{ style: 'color: red;' }
           = " (опоздание #{days.to_i} дн.)"
     ]
 
 %h4 Файлы приложений к письму:
 - @letter.letter_appendix.each do |letter_appendix|
-  - if File.exist?(letter_appendix.appendix.path)  # есть исходный файл документа
-    = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), letter_appendix.appendix.url #, class: 'button-img'
-    = link_to (letter_appendix.name.blank? ? "#{letter_appendix.appendix_file_name}" : "#{letter_appendix.name}"), letter_appendix.appendix.url
+  - if File.exist?(letter_appendix.appendix.path) # есть исходный файл документа
+    = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), letter_appendix.appendix.url # , class: 'button-img'
+    = link_to (letter_appendix.name.blank? ? letter_appendix.appendix_file_name.to_s : letter_appendix.name.to_s), letter_appendix.appendix.url
   - else
     = letter_appendix.name
   = " ( \"#{letter_appendix.appendix_file_name}\": #{letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S')}  #{letter_appendix.appendix_file_size})"
   %br
-- if true or can? :update, @letter
+- if can? :update, @letter
   #appendix_update
-    = link_to 'Добавить файл приложения', appendix_create_letter_path(@letter), :remote => true
+    = link_to 'Добавить файл приложения', appendix_create_letter_path(@letter), remote: true
 
 %hr
 - if @letter.regnumber.blank?
@@ -83,7 +81,7 @@
     - if @letter.regdate
       от
       %b
-        = link_to @letter.regdate.strftime("%d.%m.%Y"), letters_path(regdate: @letter.regdate.strftime("%d.%m.%Y"))
+        = link_to @letter.regdate.strftime('%d.%m.%Y'), letters_path(regdate: @letter.regdate.strftime('%d.%m.%Y'))
 
 %h3
   - if @letter.author_id?
@@ -96,14 +94,14 @@
     = link_to user_letter.user.displayname, letters_path(user: user_letter.user)
     &nbsp;
 
-    - if user_letter.status and user_letter.status > 0
+    - if user_letter.status && user_letter.status > 0
       \- отв.
     &nbsp;
-    - is_can_update = true if user_letter.user.id == current_user.id  # исполнители могут добавлять других исполнителей
+    - is_can_update = true if user_letter.user.id == current_user.id # исполнители могут добавлять других исполнителей
 - if @letter.author
-  - is_can_update = true if @letter.author.id == current_user.id  # автор может добавлять других исполнителей
+  - is_can_update = true if @letter.author.id == current_user.id # автор может добавлять других исполнителей
 
-- if can? :update, @letter or is_can_update  # автор и исполнители могут добавлять других исполнителей
+- if can? :update, @letter || is_can_update # автор и исполнители могут добавлять других исполнителей
   #create_user
     = link_to 'Добавить Исполнителя', create_user_letter_path(@letter), remote: true
 
@@ -119,42 +117,41 @@
   %h4 Созданы Требования:
   - @requirements.each do |requirement|
     = link_to "Требование [#{requirement.label}]", requirement
-    от #{requirement.date.strftime("%d.%m.%Y")}
+    от #{requirement.date.strftime('%d.%m.%Y')}
     %br
 = render 'tasks' if @tasks.count > 0
 
 
 .info_
-  - activity1 = PublicActivity::Activity.where(trackable_type: "Letter", trackable_id: @letter.id).order("created_at asc").first
+  - activity1 = PublicActivity::Activity.where(trackable_type: 'Letter', trackable_id: @letter.id).order('created_at asc').first
   - if activity1
-    = link_to 'создал', activities_path(type: "Letter", id: @letter.id)
+    = link_to 'создал', activities_path(type: 'Letter', id: @letter.id)
     = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
     = activity1.owner.displayname.to_s
   - else
     создан
     = @letter.created_at.strftime('%d.%m.%Y %H:%M:%S')
   %br
-  - activity2 = PublicActivity::Activity.where(trackable_type: "Letter", trackable_id: @letter.id).order("created_at asc").last
+  - activity2 = PublicActivity::Activity.where(trackable_type: 'Letter', trackable_id: @letter.id).order('created_at asc').last
   - if activity2
-    = link_to 'изменил', activities_path(type: "Letter", id: @letter.id)
+    = link_to 'изменил', activities_path(type: 'Letter', id: @letter.id)
     = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
     = activity2.owner.displayname.to_s
   - else
     изменен
     = @letter.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-
 %p
 - if @letter.in_out == 1
-  = link_to 'Back', letters_path, :class => 'button'
+  = link_to 'Back', letters_path, class: 'button'
 - else
-  = link_to 'Back', letters_path(out: 1), :class => 'button'
+  = link_to 'Back', letters_path(out: 1), class: 'button'
 
-- if can? :update, @letter or is_can_update  # автор и исполнители могут изменять письмо
-  = link_to 'Edit', edit_letter_path(@letter), :class => 'button'
+- if can? :update, @letter || is_can_update # автор и исполнители могут изменять письмо
+  = link_to 'Edit', edit_letter_path(@letter), class: 'button'
   - if can? :create_outgoing, @letter
-    = link_to 'Новое похожее', clone_letter_path(@letter), :class => 'button'
-    = link_to 'Создать Исходящее', create_outgoing_letter_path(@letter), :class => 'button' if @letter.in_out == 1
-  = link_to '+Задачу', create_task_letter_path(@letter), :class => 'button'
-  = link_to '+Требование', create_requirement_letter_path(@letter), :class => 'button'
+    = link_to 'Новое похожее', clone_letter_path(@letter), class: 'button'
+    = link_to 'Создать Исходящее', create_outgoing_letter_path(@letter), class: 'button' if @letter.in_out == 1
+  = link_to '+Задачу', create_task_letter_path(@letter), class: 'button'
+  = link_to '+Требование', create_requirement_letter_path(@letter), class: 'button'
   - if can? :create_outgoing, @letter
-    = link_to 'Реестр выписок', reestr_letter_path(@letter), :class => 'button'
+    = link_to 'Реестр выписок', reestr_letter_path(@letter), class: 'button'
