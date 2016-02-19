@@ -2,7 +2,7 @@ class TasksController < ApplicationController
   respond_to :html, :json
   before_action :set_task, only: [:show, :edit, :update, :destroy, :report]
   helper_method :sort_column, :sort_direction
-  before_filter :authenticate_user!, only: [:edit, :new, :create, :update, :check]
+  before_filter :authenticate_user!, only: [:edit, :new, :create, :update, :check, :show]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
@@ -16,7 +16,7 @@ class TasksController < ApplicationController
         @title_tasks += "в статусе [ #{TASK_STATUS.key(params[:status].to_i)} ]"
       else
         @tasks = @tasks.where('tasks.status < 90', params[:status])
-        @title_tasks += " не завершенные"
+        @title_tasks += ' не завершенные'
       end
     else
       if params[:status].present?
@@ -27,7 +27,7 @@ class TasksController < ApplicationController
         @title_tasks += 'не завершенные'
       end
     end
-    @tasks = @tasks.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    @tasks = @tasks.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
   end
 
   def show
@@ -99,7 +99,7 @@ class TasksController < ApplicationController
   def update_user
     user_task = UserTask.new(params[:user_task]) if params[:user_task].present?
     if user_task
-      user_task_clone = UserTask.where(task_id: user_task.task_id, user_id: user_task.user_id).first  # проверим - нет такого исполнителя?
+      user_task_clone = UserTask.where(task_id: user_task.task_id, user_id: user_task.user_id).first # проверим - нет такого исполнителя?
       if user_task_clone
         user_task_clone.status = user_task.status
         user_task = user_task_clone
@@ -107,7 +107,7 @@ class TasksController < ApplicationController
       if user_task.save
         flash[:notice] = "Исполнитель #{user_task.user_name} назначен"
         begin
-          UserTaskMailer.user_task_create(user_task, current_user).deliver_now    # оповестим нового исполнителя
+          UserTaskMailer.user_task_create(user_task, current_user).deliver_now # оповестим нового исполнителя
         rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
           flash[:alert] = "Error sending mail to #{user_task.user.email}"
         end
@@ -115,7 +115,7 @@ class TasksController < ApplicationController
         @task.update_column(:status, 5) if @task.status < 1 # если есть ответственные - статус = Назначено
       end
     else
-      flash[:alert] = "Ошибка - ФИО Исполнителя не указано."
+      flash[:alert] = 'Ошибка - ФИО Исполнителя не указано.'
     end
     respond_with(@task)
   end
@@ -126,7 +126,7 @@ class TasksController < ApplicationController
   end
 
   def record_not_found
-    flash[:alert] = "Неверный #id - нет такой задачи."
+    flash[:alert] = 'Неверный #id - нет такой задачи.'
     redirect_to action: :index
   end
 
@@ -144,34 +144,34 @@ class TasksController < ApplicationController
     end
 
     def sort_column
-      params[:sort] || "id"   # вверху - самые новые задачи
+      params[:sort] || 'id'   # вверху - самые новые задачи
     end
 
     def sort_direction
-      params[:direction] || "desc"
+      params[:direction] || 'desc'
     end
 
     def task_report
-      report = ODFReport::Report.new("reports/task_report.odt") do |r|
+      report = ODFReport::Report.new('reports/task_report.odt') do |r|
         nn = 0
-        r.add_field "REPORT_DATE", Date.current.strftime('%d.%m.%Y')
-        r.add_field "TASK_DATE", @task.created_at.strftime('%d.%m.%Y')
-        r.add_field "TASK_ID", @task.id
-        r.add_field "NAME", @task.name
-        r.add_field "DESCRIPTION", @task.description
+        r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
+        r.add_field 'TASK_DATE', @task.created_at.strftime('%d.%m.%Y')
+        r.add_field 'TASK_ID', @task.id
+        r.add_field 'NAME', @task.name
+        r.add_field 'DESCRIPTION', @task.description
         s = "Вх.№ #{@task.letter.number} от #{@task.letter.date.strftime('%d.%m.%Y')}" if @task.letter
         s = "Требование ##{@task.requirement.id} от #{@task.requirement.date.strftime('%d.%m.%Y')} [#{@task.requirement.label}]" if @task.requirement
-        r.add_field "SOURCE", s
-        r.add_field "DUEDATE", @task.duedate.strftime('%d.%m.%Y')
+        r.add_field 'SOURCE', s
+        r.add_field 'DUEDATE', @task.duedate.strftime('%d.%m.%Y')
         r.add_field "AUTHOR", "#{@task.author.displayname}"
         s = ''
         @task.user_task.each do |user_task|
-          s += ", " if !s.blank?
+          s += ', ' unless s.blank?
           s += user_task.user.displayname
-          s += '-отв.' if user_task.status and user_task.status > 0
+          s += '-отв.' if user_task.status && user_task.status > 0
         end
-        r.add_field "TASK_USERS", "#{s}"
-        r.add_field "RESULT", @task.result
+        r.add_field 'TASK_USERS', "#{s}"
+        r.add_field 'RESULT', @task.result
         s, a = ' ', ' '
         days = 0
         if @task.completion_date
@@ -182,28 +182,27 @@ class TasksController < ApplicationController
           days = Date.current - @task.duedate if @task.duedate
           a = " (опоздание уже #{(days).to_i} дн.)" if days > 0
         end
-        r.add_field "COMPLETIONALERT", "#{a}"
-        r.add_field "COMPLETIONDATE", "#{s}"
-        r.add_field "STATUS", TASK_STATUS.key(@task.status)
+        r.add_field 'COMPLETIONALERT', "#{a}"
+        r.add_field 'COMPLETIONDATE', "#{s}"
+        r.add_field 'STATUS', TASK_STATUS.key(@task.status)
 
-        r.add_field "USER_POSITION", current_user.position.mb_chars.capitalize.to_s
-        r.add_field "USER_NAME", current_user.displayname
+        r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
+        r.add_field 'USER_NAME', current_user.displayname
       end
-      send_data report.generate, type: 'application/msword',
-        :filename => "task-#{@task.id}-#{Date.current.strftime('%Y%m%d')}.odt",
-        :disposition => 'inline'    
+      send_data report.generate,
+        type: 'application/msword',
+        filename: "task-#{@task.id}-#{Date.current.strftime('%Y%m%d')}.odt",
+        disposition: 'inline'    
     end
 
     def check_report    #  Отчет "Контроль исполнения"
     report = ODFReport::Report.new("reports/tasks_check.odt") do |r|
       nn = 0
-      r.add_field "REPORT_PERIOD", Date.current.strftime('%d.%m.%Y')
-      r.add_field "WEEK_NUMBER", @week_number
-      r.add_table("TASKS", @tasks, :header=>true) do |t|
-        t.add_column(:nn) do |ca|
-          nn += 1
-          "#{nn}."
-        end
+      r.add_field 'REPORT_PERIOD', Date.current.strftime('%d.%m.%Y')
+      r.add_field 'WEEK_NUMBER', @week_number
+      r.add_table('TASKS', @tasks, header: true) do |t|
+        nn += 1
+        t.add_column(:nn)
         t.add_column(:id)
         t.add_column(:name)
         t.add_column(:description)
@@ -212,43 +211,42 @@ class TasksController < ApplicationController
           source = ''
           source += "Письмо #{task.letter_id}" if task.letter_id
           source += "Требование ##{task.requirement_id}" if task.requirement_id
-          "#{source}"
+          source
         end
         t.add_column(:duedate) do |task|
-          "#{task.duedate.strftime('%d.%m.%y')}"
+          task.duedate.strftime('%d.%m.%y').to_s
         end
         t.add_column(:completiondate) do |task|
-          "#{task.completion_date.strftime('%d.%m.%y')}" if task.completion_date
+          task.completion_date.strftime('%d.%m.%y').to_s if task.completion_date
         end
         t.add_column(:completionalert) do |task|
           if task.completion_date
             days = task.completion_date - task.duedate if task.duedate
-            (days > 0 ? " (опоздание #{(days).to_i} дн.)" : "")
+            (days > 0 ? " (опоздание #{days.to_i} дн.)" : '')
           else
             days = task.duedate - Date.current
-            (days < 0 ? " (уже #{(-days).to_i} дн.)" : "")
+            (days < 0 ? " (уже #{(-days).to_i} дн.)" : '')
           end
         end
         t.add_column(:status) do |task|
           TASK_STATUS.key(task.status)
         end
-        t.add_column(:users) do |task|  # исполнители
+        t.add_column(:users) do |task| # исполнители
           s = ''
           task.user_task.each do |user_task|
-            s += ", " if !s.blank?
+            s += ', ' unless s.blank?
             s += user_task.user.displayname
-            s += '-отв.' if user_task.status and user_task.status > 0
+            s += '-отв.' if user_task.status && user_task.status > 0
           end
-          "#{s}"
+          s
         end
         t.add_column(:result)
       end
-      r.add_field "USER_POSITION", current_user.position.mb_chars.capitalize.to_s
-      r.add_field "USER_NAME", current_user.displayname
+      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
+      r.add_field 'USER_NAME', current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
       filename: "tasks-check-#{Date.current.strftime('%Y%m%d')}.odt",
-      disposition: 'inline'    
+      disposition: 'inline'
     end
-
 end
