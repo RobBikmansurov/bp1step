@@ -1,7 +1,7 @@
 class BproceContractsController < ApplicationController
   respond_to :html, :xml, :json, :js
-  before_filter :authenticate_user!, :only => [:edit, :new, :destroy]
-  before_filter :get_bproce_contract, :except => [ :index, :show ]
+  before_filter :authenticate_user!, only: [:edit, :new, :destroy]
+  before_filter :get_bproce_contract, except: [:index, :show]
   
   def new
     @contract = Contract.find(params[:contract_id])
@@ -20,8 +20,7 @@ class BproceContractsController < ApplicationController
 
   def show
     @bproce_contract = BproceContract.find(params[:id])
-    @bproce = Bproce.find(@bproce_contract.bproce_id)
-    respond_with(@bproce_contracts = @bproce.bproce_contracts)
+    redirect_to contract_path(@bproce_contract.contract_id) and return
   end
 
   def destroy

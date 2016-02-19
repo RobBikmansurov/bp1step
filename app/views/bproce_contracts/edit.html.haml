@@ -1,0 +1,28 @@
+-title 'Договор процесса'
+-search 'Договор'
+
+.id_ ##{@bproce_contract.bproce.id}
+%h3
+  #{@bproce_contract.contract.contract_type}
+
+  = link_to "№#{@bproce_contract.contract.number} #{@bproce_contract.contract.name}", contract_path(@bproce_contract.contract)
+  = 'от ' + @bproce_contract.contract.date_begin.strftime('%d.%m.%Y') if @bproce_contract.contract.date_begin
+%h3= link_to @bproce_contract.contract.agent.name, agent_path(@bproce_contract.contract.agent.id) if @bproce_contract.contract.agent
+
+
+
+%h3
+  в процессе
+  %b
+    = "[ #{@bproce_contract.bproce.shortname} ]:"
+  = link_to @bproce_contract.bproce.name, bproce_path(@bproce_contract.bproce)
+%p
+
+= simple_form_for(@bproce_contract, html: {multipart: true}) do |f|
+  = f.error_notification
+  = f.input :purpose, :as => :text
+  
+  %br
+  -if can? :update, @bproce_contract.bproce
+    = f.button :submit, 'Сохранить назначение'
+  = link_to 'Back', :back, class: 'button'
