@@ -1,29 +1,27 @@
--title @contract.contract_type + " №" + @contract.number
--search "Договор"
-.id_
-  \#
-  = @contract.id
+- title @contract.contract_type + " №" + @contract.number
+- search 'Договор'
+.id_ ##{@contract.id}
 
 %h3
   = link_to @contract.contract_type.to_s, contracts_path + '?type=' + @contract.contract_type.to_s, class: 'groups'
   №
-  %b
-    =@contract.number
-    =@contract.name
+  %b #{@contract.number} #{@contract.name}
   = 'от ' + @contract.date_begin.strftime('%d.%m.%Y') if @contract.date_begin
   = 'по ' + @contract.date_end.strftime('%d.%m.%Y') if @contract.date_end
 %h3= link_to @contract.agent.name, agent_path(@contract.agent.id) if @contract.agent
--if @contract.parent
+- if @contract.parent
   %h3
     к
     = link_to @contract.parent.contract_type + ' ' + @contract.parent.shortname, contract_path(@contract.parent.id)
+    = "от #{@contract.parent.date_begin.strftime('%d.%m.%Y')}" if @contract.parent.date_begin
+    [#{@contract.parent.status}]
 
--if @subcontracts.count > 0
+- if @subcontracts.count > 0
   %h3 Субдоговоры и приложения:
   - @subcontracts.each do |subcontract|
-    = "——" * (subcontract.depth - @contract.depth)
-    -if subcontract.contract_scan.count > 0  #  если есть скан
-      -if can? :view_contract, @contract
+    = '——' * (subcontract.depth - @contract.depth)
+    - if subcontract.contract_scan.count > 0 # если есть скан
+      - if can? :view_contract, @contract
         - if File.exist?(subcontract.contract_scan.first.scan.path)
           = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), subcontract.contract_scan.first.scan.url, class: 'button-img'
       = subcontract.contract_scan.count
@@ -37,15 +35,13 @@
   %b= @contract.status
 %h3 О чем (краткое описание)
 = @contract.description
--#%h3 Краткое содержание
--#= @contract.text
--if !@contract.note.blank?
+- unless @contract.note.blank?
   %h3 Примечание
   = raw add_link_from_id(@contract.note, 'contracts')
--if !@contract.condition.blank?
+- unless @contract.condition.blank?
   %h3 Условие окончания/продления
   = @contract.condition
--if !@contract.check.blank?
+- unless @contract.check.blank?
   %h3 Контроль исполнения
   = @contract.check
 
@@ -53,76 +49,76 @@
 %h3
   Ответственный за договор:
   = link_to @contract.owner_name, user_path(@contract.owner.id) if @contract.owner_id?
--if @contract.payer_id?
+- if @contract.payer_id?
   %h3
     Ответственный за оплату договора:
     = link_to @contract.payer_name, user_path(@contract.payer.id)
 
--if @contract.contract_place?
+- if @contract.contract_place?
   %h3
     Место хранения оригинала:
     = link_to @contract.contract_place.to_s, contracts_path + '?place=' + @contract.contract_place.to_s, class: 'groups'
 
 %p
-- if !@contract.bproce.blank?  # есть ссылки из договора на процессы?
+- if !@contract.bproce.blank? # есть ссылки из договора на процессы?
   %h3 Процесс:
   - @contract.bproce_contract.each do |bproce_contract|
     = link_to bproce_contract.bproce.name, bproce_path(bproce_contract.bproce)
-    -if can? :update, Contract
+    - if can? :update, Contract
       = link_to '( ' + bproce_contract.purpose.to_s + ' )', edit_bproce_contract_path(bproce_contract)
-    -else
-      = '( ' + bproce_contract.purpose.to_s + ' )'
+    - else
+      ( #{bproce_contract.purpose} )
 
--else
+- else
   %h3 Процесс не назначен!
-- if can? :update, @contract or @contract.owner_id == current_user.id   # ответственный за договор тоже может добавлять процесс
+- if can? :update, @contract || @contract.owner_id == current_user.id # ответственный за договор тоже может добавлять процесс
   #update_bproce
-    = link_to 'Добавить процесс', bproce_create_contract_path(@contract), :remote => true #, class: 'button'
+    = link_to 'Добавить процесс', bproce_create_contract_path(@contract), remote: true # , class: 'button'
 
-%h4Файлы (сканы):
--@contract.contract_scan.each do |contract_scan|
-  - if File.exist?(contract_scan.scan.path)  # есть исходный файл документа
-    -#= link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), @document.pdf_url, class: 'button-img'
-    = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), contract_scan.scan.url #, class: 'button-img'
+%h4 Файлы (сканы):
+- @contract.contract_scan.each do |contract_scan|
+  - if File.exist?(contract_scan.scan.path) # есть исходный файл документа
+    -# = link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), @document.pdf_url, class: 'button-img'
+    = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), contract_scan.scan.url # , class: 'button-img'
     = link_to contract_scan.name, contract_scan.scan.url
   - else
     = contract_scan.name
-  = ' ("' + contract_scan.scan_file_name + '": ' + contract_scan.scan_updated_at.strftime('%d.%m.%Y %H:%M:%S') + ' ' + contract_scan.scan_file_size.to_s + ")"
+  = ' ("' + contract_scan.scan_file_name + '": ' + contract_scan.scan_updated_at.strftime('%d.%m.%Y %H:%M:%S') + ' ' + contract_scan.scan_file_size.to_s + ')'
   %br
 - if can? :update, @contract
   #update_scan
-    = link_to 'Добавить файл (скан)', scan_create_contract_path(@contract), :remote => true #, class: 'button'
+    = link_to 'Добавить файл (скан)', scan_create_contract_path(@contract), remote: true # , class: 'button'
 
 
 .info_
-  -activity1 = PublicActivity::Activity.where(trackable_type: "Contract", trackable_id: @contract.id).order("created_at asc").first
-  -if activity1
-    = link_to 'создал', activities_path(type: "Contract", id: @contract.id)
+  - activity1 = PublicActivity::Activity.where(trackable_type: 'Contract', trackable_id: @contract.id).order('created_at asc').first
+  - if activity1
+    = link_to 'создал', activities_path(type: 'Contract', id: @contract.id)
     = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    -if activity1.owner
+    - if activity1.owner
       = activity1.owner.displayname.to_s
-  -else
+  - else
     создан
     = @contract.created_at.strftime('%d.%m.%Y %H:%M:%S')
   %br
-  -activity2 = PublicActivity::Activity.where(trackable_type: "Contract", trackable_id: @contract.id).order("created_at asc").last
-  -if activity2
-    = link_to 'изменил', activities_path(type: "Contract", id: @contract.id)
+  - activity2 = PublicActivity::Activity.where(trackable_type: 'Contract', trackable_id: @contract.id).order('created_at asc').last
+  - if activity2
+    = link_to 'изменил', activities_path(type: 'Contract', id: @contract.id)
     = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
     = activity2.owner.displayname.to_s
-  -else
+  - else
     изменен
     = @contract.updated_at.strftime('%d.%m.%Y %H:%M:%S')
 
 %p
 - if can? :update, @contract
-  = link_to 'Edit', edit_contract_path(@contract), :class => 'button'
-= link_to 'Back', :back, :class => 'button'
--if @contract.status
-  -if @contract.status == 'Проект' or @contract.status == 'Согласование'
-    = link_to 'Лист согласования', approval_sheet_contract_path(@contract), :class => 'button' if can? :update, Contract
+  = link_to 'Edit', edit_contract_path(@contract), class: 'button'
+= link_to 'Back', :back, class: 'button'
+- if @contract.status
+  - if @contract.status == 'Проект' || @contract.status == 'Согласование'
+    = link_to 'Лист согласования', approval_sheet_contract_path(@contract), class: 'button' if can? :update, Contract
 - if can? :update, @contract
-  = link_to 'XML', contract_path(@contract, :format => 'xml'), :class => 'button'
-  = link_to 'JSON', contract_path(@contract, :format => 'json'), :class => 'button'
--if can? :destroy, @contract
-  = link_to 'Новый субдоговор', clone_contract_path(@contract), :class => 'button'
+  = link_to 'XML', contract_path(@contract, format: 'xml'), class: 'button'
+  = link_to 'JSON', contract_path(@contract, format: 'json'), class: 'button'
+- if can? :destroy, @contract
+  = link_to 'Новый субдоговор', clone_contract_path(@contract), class: 'button'
