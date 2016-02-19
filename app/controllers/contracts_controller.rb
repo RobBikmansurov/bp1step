@@ -195,7 +195,7 @@ class ContractsController < ApplicationController
       @title_doc += '  стр.' + params[:page] if params[:page].present?
       r.add_field 'REPORT_TITLE', @title_doc
       r.add_table('TABLE_01', @contracts, header: true) do |t|
-        t.add_column(:nn) do |nn|
+        t.add_column(:nn) do |n1|
           nn += 1
           "#{nn}."
         end
@@ -251,7 +251,7 @@ class ContractsController < ApplicationController
       if !@contract.bproce.blank? # есть ссылки из документа на другие процессы?
         r.add_field :bp, 'Относится к процессам:'
         r.add_table('BPROCS', @contract.bproce_contract.all, header: false, skip_if_empty: true) do |t|
-          t.add_column(:rr) do |rr| # порядковый номер строки таблицы
+          t.add_column(:rr) do |r1| # порядковый номер строки таблицы
             rr += 1
           end
           t.add_column(:process_name) do |bp|

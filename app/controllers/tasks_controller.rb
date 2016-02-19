@@ -196,57 +196,58 @@ class TasksController < ApplicationController
     end
 
     def check_report    #  Отчет "Контроль исполнения"
-    report = ODFReport::Report.new("reports/tasks_check.odt") do |r|
-      nn = 0
-      r.add_field 'REPORT_PERIOD', Date.current.strftime('%d.%m.%Y')
-      r.add_field 'WEEK_NUMBER', @week_number
-      r.add_table('TASKS', @tasks, header: true) do |t|
-        nn += 1
-        t.add_column(:nn)
-        t.add_column(:id)
-        t.add_column(:name)
-        t.add_column(:description)
-        t.add_column(:author, :author_name)
-        t.add_column(:source) do |task|
-          source = ''
-          source += "Письмо #{task.letter_id}" if task.letter_id
-          source += "Требование ##{task.requirement_id}" if task.requirement_id
-          source
-        end
-        t.add_column(:duedate) do |task|
-          task.duedate.strftime('%d.%m.%y').to_s
-        end
-        t.add_column(:completiondate) do |task|
-          task.completion_date.strftime('%d.%m.%y').to_s if task.completion_date
-        end
-        t.add_column(:completionalert) do |task|
-          if task.completion_date
-            days = task.completion_date - task.duedate if task.duedate
-            (days > 0 ? " (опоздание #{days.to_i} дн.)" : '')
-          else
-            days = task.duedate - Date.current
-            (days < 0 ? " (уже #{(-days).to_i} дн.)" : '')
+      report = ODFReport::Report.new("reports/tasks_check.odt") do |r|
+        nn = 0
+        r.add_field 'REPORT_PERIOD', Date.current.strftime('%d.%m.%Y')
+        r.add_field 'WEEK_NUMBER', @week_number
+        r.add_table('TASKS', @tasks, header: true) do |t|
+          t.add_column(:nn) do |r1| # порядковый номер строки таблицы
+            nn += 1
           end
-        end
-        t.add_column(:status) do |task|
-          TASK_STATUS.key(task.status)
-        end
-        t.add_column(:users) do |task| # исполнители
-          s = ''
-          task.user_task.each do |user_task|
-            s += ', ' unless s.blank?
-            s += user_task.user.displayname
-            s += '-отв.' if user_task.status && user_task.status > 0
+          t.add_column(:id)
+          t.add_column(:name)
+          t.add_column(:description)
+          t.add_column(:author, :author_name)
+          t.add_column(:source) do |task|
+            source = ''
+            source += "Письмо #{task.letter_id}" if task.letter_id
+            source += "Требование ##{task.requirement_id}" if task.requirement_id
+            source
           end
-          s
+          t.add_column(:duedate) do |task|
+            task.duedate.strftime('%d.%m.%y').to_s
+          end
+          t.add_column(:completiondate) do |task|
+            task.completion_date.strftime('%d.%m.%y').to_s if task.completion_date
+          end
+          t.add_column(:completionalert) do |task|
+            if task.completion_date
+              days = task.completion_date - task.duedate if task.duedate
+              (days > 0 ? " (опоздание #{days.to_i} дн.)" : '')
+            else
+              days = task.duedate - Date.current
+              (days < 0 ? " (уже #{(-days).to_i} дн.)" : '')
+            end
+          end
+          t.add_column(:status) do |task|
+            TASK_STATUS.key(task.status)
+          end
+          t.add_column(:users) do |task| # исполнители
+            s = ''
+            task.user_task.each do |user_task|
+              s += ', ' unless s.blank?
+              s += user_task.user.displayname
+              s += '-отв.' if user_task.status && user_task.status > 0
+            end
+            s
+          end
+          t.add_column(:result)
         end
-        t.add_column(:result)
+        r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
+        r.add_field 'USER_NAME', current_user.displayname
       end
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
-    end
-    send_data report.generate, type: 'application/msword',
-      filename: "tasks-check-#{Date.current.strftime('%Y%m%d')}.odt",
-      disposition: 'inline'
+      send_data report.generate, type: 'application/msword',
+        filename: "tasks-check-#{Date.current.strftime('%Y%m%d')}.odt",
+        disposition: 'inline'
     end
 end
