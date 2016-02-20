@@ -3,12 +3,9 @@
   = f.input :name, :as => :text
   = f.input :dlevel, :collection => 1..4, :as => :radio_buttons, :hint => 'Политики, Стратегии(1) - Положения, Описания(2) - Регламенты, Инструкции(3) - Свидетельства: Акты, Протоколы, Журналы(4)'
   = f.input :description
-
   = f.hidden_field :bproce_id
-
   = f.label 'Ответственный за документ'
   = f.autocomplete_field :owner_name, autocomplete_users_path
-
   
   -#= f.association :status_id, Category.all
   = f.input :status, :collection => %w[Утвержден Проект Согласование НеДействует], :prompt => 'Статус документа', :input_html => { :value => 'Утвержден'}

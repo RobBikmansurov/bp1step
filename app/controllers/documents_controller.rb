@@ -1,20 +1,24 @@
 # coding: utf-8
 class DocumentsController < ApplicationController
-  respond_to :odt, :only => :index
-  respond_to :pdf, :only => :show
+  respond_to :odt, only: :index
+  respond_to :pdf, only: :show
+  respond_to :html
+  respond_to :xml, :json, only: [:index, :show]
   helper_method :sort_column, :sort_direction
   before_filter :authenticate_user!, :only => [:edit, :new]
   before_filter :get_document, :except => [:index, :print, :view, :create, :new]
-  respond_to :xml, :json, only: [:index, :show]
 
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     if params[:directive_id].present? # документы относящиеся к директиве
       @directive = Directive.find(params[:directive_id])
-      #@documents = @directive.document.paginate(:per_page => 10, :page => params[:page])
       @documents = @directive.document.paginate(:per_page => 100, :page => params[:page])
       @title_doc = 'для директивы ' + @directive.directive_name
+    elsif params[:bproce_id].present?
+      @bproce = Bproce.find(params[:bproce_id])
+      @documents = @bproce.documents.paginate(:per_page => 100, :page => params[:page])
+      @title_doc = 'для процесса ' + @bproce.name + ' #' + @bproce.id.to_s if @bproce
     else
       if params[:all].present?
         @documents = Document.order('cast (part as integer)', :name).all
@@ -48,13 +52,7 @@ class DocumentsController < ApplicationController
                   if params[:tag].present?
                     @documents = Document.tagged_with(params[:tag]).search(params[:search])
                   else
-                    if params[:bproce_id].present?
-                      @bproce = Bproce.find(params[:bproce_id])
-                      @documents = @bproce.documents
-                      @title_doc = 'для процесса ' + @bproce.name + ' #' + @bproce.id.to_s if @bproce
-                    else
-                      @documents = Document.search(params[:search])
-                    end
+                    @documents = Document.search(params[:search])
                   end
                 end
               end
@@ -63,12 +61,10 @@ class DocumentsController < ApplicationController
         end
       end
     end
+    @documents = @documents.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
     respond_to do |format|
-      format.html {
-        @documents = @documents.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
-      }
-      format.odt { print }
-      #format.pdf { print }
+      format.html { }
+      format.odt  { print }
     end
   end
 
@@ -146,23 +142,20 @@ class DocumentsController < ApplicationController
   end
 
   def new
-    @document = Document.new
+    @document = Document.new(dlevel: 3, status: 'Проект', place: '?!') # место хранения не определено
     if params[:id].present?  # будем добавлять документ процесса
       @bproce = Bproce.find(params[:id])
       @document.bproce_id = @bproce.id
     end
     @document.owner_id = current_user.id if current_user  # владелец документа - пользователь
-    @document.place = '?!'  # место хранения не определено
-    #respond_with(@document)
   end
 
   def clone
     document = Document.find(params[:id])   # документ - прототип
-    @document = Document.new()
+    @document = Document.new(status: 'Проект') # новый документ
     @document.name = document.name
     @document.description = document.description
     @document.dlevel = document.dlevel
-    @document.status = "Проект"
     @document.approveorgan = document.approveorgan
     @document.note = 'создан из #' + document.id.to_s
     @document.owner_id = current_user.id if current_user  # владелец документа - пользователь
@@ -178,8 +171,6 @@ class DocumentsController < ApplicationController
       end
       document.document_directive.each do |document_directive|    # клонируем ссылки на директивы
         new_document_directive = DocumentDirective.new(document_id: @document.id, directive_id: document_directive.directive_id, note: document_directive.note)
-        puts
-        puts new_document_directive.inspect
         new_document_directive.save
       end
     end
@@ -188,20 +179,20 @@ class DocumentsController < ApplicationController
   def create
     @document = Document.new(document_params)
     if @document.save
-      flash[:notice] = "Successfully created Document."
+      flash[:notice] = 'Документ создан'
       bproce = Bproce.find(@document.bproce_id) if @document.bproce_id  # добавляем документ из процесса?
       if bproce
         bproce_document = BproceDocument.new(document_id: @document, bproce_id: bproce) # привязали документ к процессу
         bproce_document.document = @document
         bproce_document.bproce = bproce
-        flash[:notice] = "Successfully created Document from Process #" + bproce.id.to_s  if bproce_document.save
+        flash[:notice] = "Создан документ процесса ##{bproce.id}" if bproce_document.save
       end
     end
-    respond_with(@document)
+    render :show
   end
 
   def destroy
-    flash[:notice] = "Successfully destroyed Document." if @document.destroy
+    flash[:notice] = 'Документ удален' if @document.destroy
     respond_to do |format|
       format.html { redirect_to documents_url }
     end
@@ -209,7 +200,7 @@ class DocumentsController < ApplicationController
 
   def file_delete
     @document.document_file = nil
-    flash[:notice] = "Successfully deleted Document's File." if @document.save
+    flash[:notice] = 'Файл документа удален' if @document.save
     render :show
   end
 
@@ -241,17 +232,15 @@ private
   end
 
   def print
-    report = ODFReport::Report.new("reports/documents.odt") do |r|
-      nn = 0  # порядковый номер документа
+    report = ODFReport::Report.new('reports/documents.odt') do |r|
+      nn = 0 # порядковый номер документа
       nnp = 0
-      first_part = 0  # номер раздела для сброса номера документа в разделе
-      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
+      first_part = 0 # номер раздела для сброса номера документа в разделе
+      r.add_field 'REPORT_DATE', Date.today.strftime('%d.%m.%Y')
       @title_doc = '' if !@title_doc
-      if params[:page].present?
-        @title_doc = @title_doc + '  стр.' + params[:page]
-      end
-      r.add_field "REPORT_TITLE", @title_doc
-      r.add_table("TABLE_01", @documents, :header => true) do |t|
+      @title_doc += '  стр.' + params[:page] if params[:page].present?
+      r.add_field 'REPORT_TITLE', @title_doc
+      r.add_table('TABLE_01', @documents, header: true) do |t|
         t.add_column(:nn) do |ca|
           nn += 1
           "#{nn}."
@@ -269,44 +258,41 @@ private
         t.add_column(:id, :id)
         t.add_column(:dlevel, :id)
         t.add_column(:organ, :approveorgan)
-        t.add_column(:approved) do |document|   # дата утверждения в нормальном формате
-          if document.approved
-            "#{document.approved.strftime('%d.%m.%Y')}"
-          end
+        t.add_column(:approved) do |document| # дата утверждения в нормальном формате
+          "#{document.approved.strftime('%d.%m.%Y')}" if document.approved
         end
-
-        t.add_column(:responsible) do |document|  # владелец документа, если задан
+        t.add_column(:responsible) do |document| # владелец документа, если задан
           if document.owner_id
             "#{document.owner.displayname}"
           end
         end
         t.add_column(:place)
       end
-      r.add_field "USER_POSITION", current_user.position
-      r.add_field "USER_NAME", current_user.displayname
+      r.add_field :user_position, current_user.position.mb_chars.capitalize.to_s
+      r.add_field :user_name, current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-      filename: "documents.odt",
-      disposition: 'inline'
+                               filename: 'documents.odt',
+                               disposition: 'inline'
   end
 
   def view
-    fname = "files" + @document.file_name         # добавим путь к файлам
-    case File.extname(fname)  # определим по расширению файла его mime-тип
-    when '.pdf'
-      type = 'application/pdf'
-    when '.doc'
-      type = 'application/msword'
-    else
-      type = 'application/vnd.oasis.opendocument.text'
+    fname = 'files' + @document.file_name # добавим путь к файлам
+    type = case File.extname(fname) # определим по расширению файла его mime-тип
+      when '.pdf'
+        'application/pdf'
+      when '.doc'
+        'application/msword'
+      else
+        'application/vnd.oasis.opendocument.text'
     end
-    send_file(fname, :type => type, :filename => File.basename(@document.file_name), :disposition => 'inline' )
+    send_file(fname, type: type, filename: File.basename(@document.file_name), disposition: 'inline' )
   end
 
   def approval_sheet_odt
-    report = ODFReport::Report.new("reports/approval-sheet.odt") do |r|
-      r.add_field "REPORT_DATE", Date.today.strftime('%d.%m.%Y')
-      r.add_field "REPORT_DATE1", (Date.today + 10.days).strftime('%d.%m.%Y')
+    report = ODFReport::Report.new('reports/approval-sheet.odt') do |r|
+      r.add_field 'REPORT_DATE', Date.today.strftime('%d.%m.%Y')
+      r.add_field 'REPORT_DATE1', (Date.today + 10.days).strftime('%d.%m.%Y')
       r.add_field :id, @document.id
       r.add_field :name, @document.name
       r.add_field :description, @document.description
@@ -314,8 +300,8 @@ private
       r.add_field :document_owner, @document.owner_name
       rr = 0
       if !@document.bproce.blank?  # есть ссылки из документа на другие процессы?
-        r.add_field :bp, "Относится к процессам:"
-        r.add_table("BPROCS", @document.bproce_document.all, :header => false, :skip_if_empty => true) do |t|
+        r.add_field :bp, 'Относится к процессам:'
+        r.add_table('BPROCS', @document.bproce_document.all, header: false, skip_if_empty: true) do |t|
           t.add_column(:rr) do |n1| # порядковый номер строки таблицы
             rr += 1
           end
@@ -330,30 +316,25 @@ private
           end
         end
       else
-        r.add_field :bp, "Процесс не назначен!"
+        r.add_field :bp, 'Процесс не назначен!'
       end
-      #r.add_field "ORDERNUM", Date.today.strftime('%Y%m%d-с') + @usr.id.to_s
-      #r.add_field :displayname, @usr.displayname
-      r.add_field :user_position, current_user.position
-      r.add_field "USER_NAME", current_user.displayname
+      r.add_field :user_position, current_user.position.mb_chars.capitalize.to_s
+      r.add_field :user_name, current_user.displayname
     end
     report_file_name = report.generate
     send_data report.generate, type: 'application/msword',
-      filename: "d#{@document.id}-approval-sheet.odt",
-      disposition: 'inline'
+                               filename: "d#{@document.id}-approval-sheet.odt",
+                               disposition: 'inline'
   end
-
 
   def get_document
     if params[:search].present? # это поиск
-      @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
+    elsif params[:id].present?
+      @document = Document.find(params[:id])
     else
-      if params[:id].present?
-        @document = Document.find(params[:id])
-      else
-        @document = Document.new
-      end
+      @document = Document.new
     end
   end
 
@@ -362,12 +343,11 @@ private
     redirect_to action: :index
   end
 
-  def sort_column  
-    params[:sort] || "name"
-  end  
-    
-  def sort_direction  
-    params[:direction] || "asc"  
-  end  
+  def sort_column
+    params[:sort] || 'name'
+  end
 
+  def sort_direction
+    params[:direction] || 'asc'
+  end
 end
