@@ -25,19 +25,12 @@ class BproceDocumentsController < ApplicationController
   end
 
   def destroy
-    document = @bproce_document.document
-    logger.debug "document = #{document.inspect}"
-    logger.debug "@bproce_document = #{@bproce_document.inspect}"
-    if document.bproce.count > 1
-      flash[:notice] = "Successfully destroyed bproce_document." if @bproce_document.destroy
+    if @bproce_document.document.bproce.count > 1
+      flash[:notice] = "Документ удален из процесса ##{@bproce_document.bproce_id}" if @bproce_document.destroy
     else
-      flash[:alert] = "Error destroyed bproce_document."
+      flash[:alert] = "Нельзя удалить единственный процесс из документа!"
     end
-    if !@bproce.blank?
-      respond_with(@bproce)
-    else
-      respond_with(document)
-    end
+    respond_with(@bproce_document.document) # вернемся в документ
   end
 
   def edit
