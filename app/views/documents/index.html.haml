@@ -102,10 +102,17 @@
 %p
 - if can? :create, Document
   = link_to 'Каталог', documents_path(format: 'odt', all: '1'), class: 'button'
-  = link_to 'Список', documents_path(format: 'odt'), class: 'button'
   - if @bproce
+    = link_to 'Список', documents_path(format: 'odt', bproce_id: @bproce.id), class: 'button'
     = link_to 'Новый документ процесса', new_document_bproce_path(@bproce), class: 'button'
+  - elsif @directive
+    = link_to 'Список', documents_path(format: 'odt', directive_id: @directive.id), class: 'button'
+    -# = link_to 'Новый документ директивы', new_document_directive_path(@directive), class: 'button'
   - else
+    - if params[:page].present?
+      = link_to 'Список', documents_path(format: 'odt', page: params[:page]), class: 'button'
+    - else
+      = link_to 'Список', documents_path(format: 'odt'), class: 'button'
     = link_to 'Добавить новый документ', new_document_path, class: 'button'
 
 %p

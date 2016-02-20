@@ -25,10 +25,10 @@ class Document < ActiveRecord::Base
   #after_document_file_post_process :test
   after_save :copy_to_pdf
 
-  validates :name, :length => {:minimum => 10, :maximum => 200}
+  validates :name, presence: true, length: {minimum: 10, maximum: 200}
   #validates :bproce_id, :presence => true # документ относится к процессу
-  validates :dlevel, :numericality => {:less_than => 5, :greater_than => 0}
-  validates :place, :presence => true   # документ должен иметь место хранения
+  validates :dlevel, presence: true, numericality: {less_than: 5, greater_than: 0}
+  validates :place, presence: true   # документ должен иметь место хранения
   validates :owner_id, presence: true   # должен иметь ответственного
   #validates :description, :length => {:maximum => 255}  # описание - не длиннее 255 символов
 
