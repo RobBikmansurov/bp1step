@@ -1,0 +1,12 @@
+- if @bproce_document
+  = simple_form_for(@bproce_document) do |bp|
+    = bp.error_notification
+    = bp.hidden_field :document_id
+    = bp.hidden_field :bproce_id
+    = bp.label 'Процесс'
+    = bp.autocomplete_field :bproce_name, autocomplete_bproces_path, id_elements: '#bproce_id', placeholder: 'подстрока в наименовании', data: { no_matches_label: '333' }
+    = bp.input :purpose
+    %p
+    = bp.error :base
+    - if can? :update, @document
+      = bp.button :submit, 'Добавить Процесс'
