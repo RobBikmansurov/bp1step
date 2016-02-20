@@ -82,6 +82,7 @@ BPDoc::Application.routes.draw do
       get :add_to_favorite  # юрист заносит в обязательные
       post :update_favorite
       get :show_files
+      get :bproce_create
     end
   end
   resources :document_directives

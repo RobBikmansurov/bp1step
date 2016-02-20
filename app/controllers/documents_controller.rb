@@ -2,10 +2,10 @@
 class DocumentsController < ApplicationController
   respond_to :odt, :only => :index
   respond_to :pdf, :only => :show
-  respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
   before_filter :authenticate_user!, :only => [:edit, :new]
   before_filter :get_document, :except => [:index, :print, :view, :create, :new]
+  respond_to :xml, :json, only: [:index, :show]
 
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
@@ -82,7 +82,6 @@ class DocumentsController < ApplicationController
     @document = Document.find(params[:id])
     @document_directive = @document.document_directive.new # заготовка для новой связи с директивой
     @document_bproce = @document.bproce_document.new # заготовка для новой связи с процессом
-    respond_with(@document)
   end
 
   def update
@@ -131,8 +130,17 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf { view }
+      format.json { render json: @document }
+      format.xml { render xml: @document }
     end
   end
+
+  def bproce_create
+    @document = Document.find(params[:id])
+    @bproce_document = @document.bproce_document.new
+    render :bproce_create
+  end
+
 
   def show_files
   end
