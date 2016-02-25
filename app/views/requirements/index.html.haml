@@ -1,19 +1,18 @@
--search "Требования" 
--title @title_requirements
+- search "Требования"
+- title @title_requirements
 
 %h2
   = @title_requirements if @title_requirements
-  -if params[:search].present?
-    = "[ #{params[:search]} ]"
+  = "[ #{params[:search]} ]" if params[:search].present?
 
 %table
   %tr
-    %th #
-    %th Метка, обозначение
-    %th Срок
-    %th Содержание
-    %th Статус
-    %th Ответственные
+    %th= sortable 'id', '#'
+    %thМетка, обозначение
+    %thСодержание
+    %th= sortable 'duedate', 'Срок'
+    %th= sortable 'status', 'Статус'
+    %thОтветственные
     %th
 
   - @requirements.each do |requirement|
@@ -22,46 +21,42 @@
       %td
         = link_to requirement.label, requirement
         %br
-        = requirement.date.strftime("%d.%m.%Y")
+        = requirement.date.strftime('%d.%m.%Y')
+      %td= link_to truncate(requirement.body, length: 40, omission: ' ...'), requirement
       %td
-        -if requirement.duedate
-          -if requirement.status < 90 and requirement.duedate <= Date.current
-            %span{:style => "color: red;"}
-              = requirement.duedate.strftime("%d.%m.%y")
-          -else
-            = requirement.duedate.strftime("%d.%m.%y")
-
-
-      %td= link_to truncate(requirement.body, :length => 40, :omission => ' ...'), requirement
+        - if requirement.duedate
+          - if requirement.status < 90 && requirement.duedate <= Date.current
+            %span{ style: 'color: red;' }
+              = requirement.duedate.strftime('%d.%m.%y')
+          - else
+            = requirement.duedate.strftime('%d.%m.%y')
       %td= REQUIREMENT_STATUS.key(requirement.status)
       %td
-        -requirement.user_requirement.each do |user_requirement|
-          -if user_requirement.user
-            - s = "#{user_requirement.user.displayname}"
-            -if !user_requirement.status.blank?
-              - s = s + "\u2713".html_safe
+        - requirement.user_requirement.each do |user_requirement|
+          - if user_requirement.user
+            - s = user_requirement.user.displayname.to_s
+            - s += "\u2713".html_safe unless user_requirement.status.blank?
             = link_to s, user_requirement.user
-          -else
+          - else
             удалить ссылку
             = user_requirement.inspect
-      -#%td= letter.letter
       - if true or can? :manage, Requirement or can? :destroy, Requirement
         %td
-          = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_requirement_path(requirement), class: 'button-img'
-          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), requirement, 
-          data: { confirm: "Требование #{requirement.label} от #{requirement.date.strftime("%d.%m.%Y")}\n #{requirement.body}" + "\nДействительно хотите удалить?" }, 
-          :method => 'delete', class: 'button-img'
+          = link_to image_tag('page_edit.gif', alt: 'Изменить'), edit_requirement_path(requirement), class: 'button-img'
+          = link_to image_tag('action_stop.gif', alt: 'Удалить'), requirement,
+          data: { confirm: "Требование #{requirement.label} от #{requirement.date.strftime('%d.%m.%Y')}\n #{requirement.body}\nДействительно хотите удалить?" },
+          method: 'delete', class: 'button-img'
 
 %br
 .apple_pagination
   = will_paginate @requirements
 
 %p
--if can? :create, Requirement
-  = link_to 'Новое требование', new_requirement_path, :class => 'button'
+- if can? :create, Requirement
+  = link_to 'Новое требование', new_requirement_path, class: 'button'
 
 %p
--Requirement.select("status, count(id) as count").group(:status).order(:status).each do | requirement |
-  -if !requirement.status.to_s.empty?
+- Requirement.select('status, count(id) as count').group(:status).order(:status).each do |requirement|
+  - unless requirement.status.to_s.empty?
     = link_to " #{REQUIREMENT_STATUS.key(requirement.status)} (#{requirement.count}) ", requirements_path(status: requirement.status), class: 'groups'
     &nbsp;
