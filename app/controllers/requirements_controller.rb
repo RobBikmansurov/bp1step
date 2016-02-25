@@ -1,5 +1,6 @@
 class RequirementsController < ApplicationController
   respond_to :html, :json
+  helper_method :sort_column, :sort_direction
   before_action :set_requirement, only: [:show, :edit, :update, :destroy, :tasks_list, :tasks_report]
 
   def index
