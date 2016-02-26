@@ -41,10 +41,10 @@
   - if letters
     - letters.select('letters.status, count(letters.id) as count').group(:status).each do |letter|
       - if !letter.status.blank?
-        = link_to " #{LETTER_STATUS.key(letter.status)} (#{letter.count}) ", letters_path(status: letter.status, user: params[:user]), class: 'groups'
+        = link_to " #{LETTER_STATUS.key(letter.status)} (#{letter.count}) ", senders_letters_path(status: letter.status, user: params[:user]), class: 'groups'
       &nbsp;
 - else
   - Letter.select("status, count(id) as count").group(:status).order(:status).each do |d|
     - if !d.status.to_s.empty?
-      = link_to " #{LETTER_STATUS.key(d.status)} (#{d.count}) ", letters_path(status: d.status), class: 'groups'
+      = link_to " #{LETTER_STATUS.key(d.status)} (#{d.count}) ", senders_letters_path(status: d.status), class: 'groups'
       &nbsp;

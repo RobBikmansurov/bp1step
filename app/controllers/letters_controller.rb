@@ -251,7 +251,7 @@ class LettersController < ApplicationController
   def senders
     @title_senders = 'Корреспонденты (адресанты и адресаты), письма '
     if params[:status].present?
-      @senders = Letter.select(:sender)..where('letters.status = ?', params[:status])
+      @senders = Letter.select(:sender).where('letters.status = ?', params[:status])
       @title_senders += "в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
     else
       @senders = Letter.select(:sender).where('letters.status < 90', params[:status])
