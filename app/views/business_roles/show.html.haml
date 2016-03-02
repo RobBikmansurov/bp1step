@@ -1,12 +1,10 @@
--title 'Роль ' + @business_role.name + '. ' + @business_role.bproce.shortname if @business_role.bproce
--search "Роль"
-.id_
-  \#
-  =@business_role.id
+- title 'Роль ' + @business_role.name + '. ' + @business_role.bproce.shortname if @business_role.bproce
+- search 'Роль'
+.id_ ##{@business_role.id}
 %h2
   Роль
   [
-  =@business_role.name
+  = @business_role.name
   ]
 %h3
   в процессе
@@ -14,21 +12,21 @@
 %h3 Действия в процессе:
 = markdown(@business_role.description)
 
--if @business_role.bproce and @business_role.bproce.business_roles.count > 1
+- if @business_role.bproce && @business_role.bproce.business_roles.count > 1
   %h4
     Другие роли процесса:
-    - @business_role.bproce.business_roles.each do | role |
+    - @business_role.bproce.business_roles.each do |role|
       = link_to role.name, business_role_path(role) if @business_role.id != role.id
 
--if !current_user.nil?
-  -if current_user.role? :admin
+- unless current_user.nil?
+  - if current_user.role? :admin
     %h3 Особенности настройки:
     = @business_role.features
 
 %h3
   Исполнители роли
   [
-  =@business_role.name
+  = @business_role.name
   ]
   \:
 - if can? :update, @business_role
@@ -43,48 +41,48 @@
     %th Процесс
   - @business_role.user_business_role.order(:date_from).each do |business_role|
     %tr
-      -if business_role.user
-        %td{style: ('text-decoration: line-through;' if !business_role.user.active)} 
+      - if business_role.user
+        %td{ style: ('text-decoration: line-through;' unless business_role.user.active) }
           = link_to business_role.user.displayname, business_role.user
           = link_to business_role.user.office, users_path + '?office=' + business_role.user.office, class: 'groups' if business_role.user.office
 
-      -else
+      - else
         %td
           удалить ссылку
           = business_role.inspect
       %td
-        = business_role.date_from.strftime("%d.%m.%Y") if business_role.date_from
+        = business_role.date_from.strftime('%d.%m.%Y') if business_role.date_from
         \-
-        = business_role.date_to.strftime("%d.%m.%Y") if business_role.date_to
-        -if can? :update, @business_role
+        = business_role.date_to.strftime('%d.%m.%Y') if business_role.date_to
+        - if can? :update, @business_role
           %td= link_to !business_role.note.empty? ? business_role.note : ' - ', edit_user_business_role_path(business_role)
-        -else
-          %td=business_role.note.to_s
-      -#%td= link_to Bproce.find(business_role.business_role.bproce).shortname, bproce_business_role_path(business_role.business_role.bproce)
+        - else
+          %td= business_role.note.to_s
       %td
-        -if business_role.business_role.bproce
+        - if business_role.business_role.bproce
           = link_to business_role.business_role.bproce.shortname, bproce_business_role_path(business_role.business_role.bproce)
-        -else business_role.business_role.inspect
+        - else business_role.business_role.inspect
 .info_
-  -activity1 = PublicActivity::Activity.where(trackable_type: "BusinessRole", trackable_id: @business_role.id).order("created_at asc").first
-  -if activity1
-    = link_to 'создал', activities_path(type: "BusinessRole", id: @business_role.id)
+  - activity1 = PublicActivity::Activity.where(trackable_type: 'BusinessRole', trackable_id: @business_role.id).order('created_at asc').first
+  - if activity1
+    = link_to 'создал', activities_path(type: 'BusinessRole', id: @business_role.id)
     = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity1.owner.displayname.to_s
-  -else
+    - unless activity1.owner.nil?
+      = activity1.owner.displayname.to_s
+  - else
     создан
     = @business_role.created_at.strftime('%d.%m.%Y %H:%M:%S')
   %br
-  -activity2 = PublicActivity::Activity.where(trackable_type: "BusinessRole", trackable_id: @business_role.id).order("created_at asc").last
-  -if activity2
-    = link_to 'изменил', activities_path(type: "BusinessRole", id: @business_role.id)
+  - activity2 = PublicActivity::Activity.where(trackable_type: 'BusinessRole', trackable_id: @business_role.id).order('created_at asc').last
+  - if activity2
+    = link_to 'изменил', activities_path(type: 'BusinessRole', id: @business_role.id)
     = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity2.owner.displayname.to_s
-  -else
+    - unless activity2.owner.nil?
+      = activity2.owner.displayname.to_s
+  - else
     изменен
     = @business_role.updated_at.strftime('%d.%m.%Y %H:%M:%S')
 %p
 - if can? :update, @business_role
-  = link_to 'Edit', edit_business_role_path(@business_role), :class => 'button'
--#= link_to 'Back', business_roles_path, :class => 'button'
-= link_to 'Back', :back, :class => 'button'
+  = link_to 'Edit', edit_business_role_path(@business_role), class: 'button'
+= link_to 'Back', :back, class: 'button'
