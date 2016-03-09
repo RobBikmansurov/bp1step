@@ -34,7 +34,8 @@
   Статус
   %b= @contract.status
 %h3 О чем (краткое описание)
-= @contract.description
+= simple_format(@contract.description, {}, {})
+
 - unless @contract.note.blank?
   %h3 Примечание
   = raw add_link_from_id(@contract.note, 'contracts')
