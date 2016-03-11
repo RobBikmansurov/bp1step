@@ -120,16 +120,19 @@
 - Document.select('status, count(id) as count').group(:status).order(:status).each do |d|
   - unless d.status.to_s.empty?
     = link_to d.status, documents_path + '?status=' + d.status.to_s, class: 'groups'
+    &nbsp;
 %br
 Уровень:
 - Document.select('dlevel, count(id) as count').group(:dlevel).order(:dlevel).each do |d|
   - unless d.dlevel.to_s.empty?
-    = link_to d.dlevel, documents_path + '?dlevel=' + d.dlevel.to_s, class: 'groups', title: dlevel_title(d.dlevel)
+    = link_to dlevel_title(d.dlevel), documents_path + '?dlevel=' + d.dlevel.to_s, class: 'groups', title: dlevel_title(d.dlevel)
+    &nbsp;
 %br
 Оригинал:
 - Document.select('place, count(id) as count').group(:place).order(:place).each do |d|
   - unless d.place.to_s.empty?
     = link_to d.place, documents_path + '?place=' + d.place.to_s, class: 'groups', title: place_title(d.place)
+    &nbsp;
 %p
 Теги:
 = raw Document.all_tags.map { |t| link_to t.name, tag_documents_path(t.name), class: 'tags' }.join('&nbsp; ')
