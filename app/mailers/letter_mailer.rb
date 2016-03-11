@@ -14,4 +14,18 @@ class LetterMailer < ActionMailer::Base
     mail(:to => emails, :subject => "BP1Step: #{@days} дн. на Письмо #{@letter.name}")
   end
 
+  def update_letter(letter, current_user, result) # рассылка об изменении письма
+    @letter = letter
+    @current_user = current_user
+    @result = result
+    address = ''
+    @letter.user_letter.each do |user_letter|
+      if user_letter.user && !user_letter.user.email.empty?
+        address += ', ' unless address.empty?
+        address += user_letter.user.email
+      end
+    end
+    mail(:to => address, :subject => "BP1Step: Письмо #{@letter.name}: #{LETTER_STATUS.key(@letter.status)}")
+  end
+
 end
