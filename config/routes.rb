@@ -28,6 +28,7 @@ BPDoc::Application.routes.draw do
     # resources :documents
     resources :business_roles, only: [:new]
     resources :documents, only: [:new, :index]
+    resources :contracts, only: [:index]
     collection do
       get :manage
       post :rebuild
