@@ -49,11 +49,11 @@
 %hr
 %h3
   Ответственный за договор:
-  = link_to @contract.owner_name, user_path(@contract.owner.id) if @contract.owner_id?
+  = link_to @contract.owner_name, contracts_path(user: @contract.owner.id.to_s) if @contract.owner_id?
 - if @contract.payer_id?
   %h3
     Ответственный за оплату договора:
-    = link_to @contract.payer_name, user_path(@contract.payer.id)
+    = link_to @contract.payer_name, contracts_path(payer: @contract.payer.id.to_s)
 
 - if @contract.contract_place?
   %h3
