@@ -1,52 +1,34 @@
--search "Договор" 
--title @title_doc
+- search 'Договор'
+- title @title_doc
 
-%h2
-  -if params[:search].present?
-    Список Договоров
-    = "[ #{params[:search]} ]"
-  -else
-    -if params[:type].present?
-      Список 
-      = "[ #{params[:type]} ]"
-    -else
-      -if params[:place].present?
-        Список Договоров в
-        = "[ #{params[:place]} ]"
-      -else
-        -if params[:status].present?
-          Список Договоров в статусе
-          = "[ #{params[:status]} ]"
-        -else
-          -if params[:user].present?
-            Договоры, за которые отвечает
-            = link_to @user.displayname, user_path(@user)
-          -else
-            -if params[:payer].present?
-              Договоры, за оплату которых отвечает
-              = link_to @user.displayname, user_path(@user)
+%h3
+  - if @bproce
+    Договоры процесса
+    = link_to @bproce.name, bproce_path(@bproce)
+  - else
+    = @title_doc if @title_doc
+  - if params[:search].present?
+    [ #{params[:search]} ]
 
 %table
   %tr
-    %th=sortable "id", "#"
-    %th= sortable "number", "Номер"
-    %th= sortable "date_begin", "От"
-    %th= sortable "status", "Статус"
-    %th= sortable "agent_id", "Контрагент"
-    -if can? :update, Contract
+    %th= sortable 'id', '#'
+    %th= sortable 'number', 'Номер'
+    %th= sortable 'date_begin', 'От'
+    %th= sortable 'status', 'Статус'
+    %th= sortable 'agent_id', 'Контрагент'
+    - if can? :update, Contract
       %th
-    -if can? :destroy, Contract
+    - if can? :destroy, Contract
       %th
-    
   - @contracts.each do |contract|
     %tr
       %td
-        .id_show_
-          = "##{contract.id}"
+        .id_show_ ##{contract.id}
       %td
-        = '—' * (contract.depth)
-        -if contract.contract_scan.first  #  если есть скан
-          -if can? :view_contract, contract
+        = '—' * contract.depth
+        - if contract.contract_scan.first # если есть скан
+          - if can? :view_contract, contract
             - if File.exist?(contract.contract_scan.first.scan.path)
               = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), contract.contract_scan.first.scan.url, class: 'button-img'
         = link_to contract.shortname, contract_path(contract)
@@ -54,34 +36,40 @@
       %td= contract.status
       %td= link_to contract.agent.name, agent_path(contract.agent.id) if contract.agent
 
-      -if can? :update, contract
+      - if can? :update, contract
         %td
-          = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_contract_path(contract), class: 'button-img'
-      -if can? :destroy, contract
+          = link_to image_tag('page_edit.gif', alt: 'Изменить'), edit_contract_path(contract), class: 'button-img'
+      - if can? :destroy, contract
         %td
-          = link_to image_tag('action_stop.gif', alt: 'Удалить', title: 'Удалить' ), contract, data: { confirm: contract.shortname + "\nДействительно хотите удалить договор?" }, :method => 'delete', class: 'button-img'
--if !params[:all].present?
+          = link_to image_tag('action_stop.gif', alt: 'Удалить', title: 'Удалить'), contract, data: { confirm: contract.shortname + "\nДействительно хотите удалить договор?" }, method: 'delete', class: 'button-img'
+- unless params[:all].present?
   .apple_pagination
-    = will_paginate @contract 
+    = will_paginate @contract
 %p
 - if can? :create, Contract
-  = link_to 'Добавить новый договор', new_contract_path, :class => 'button'
-  = link_to 'Список', contracts_path(params.merge(:format => 'odt')), :class => 'button'
-  = link_to 'XML', contracts_path(params.merge(:format => 'xml')), :class => 'button'
-  = link_to 'JSON', contracts_path(params.merge(:format => 'json')), :class => 'button'
+  = link_to 'Добавить новый договор', new_contract_path, class: 'button'
+  - if @bproce
+    = link_to 'Список', contracts_path(format: 'odt', bproce_id: @bproce.id), class: 'button'
+  - else
+    = link_to 'Список', contracts_path(format: 'odt'), class: 'button'
+  = link_to 'XML', contracts_path(format: 'xml'), class: 'button'
+  = link_to 'JSON', contracts_path(format: 'json'), class: 'button'
 
 %p
 Тип:
-- Contract.select("contract_type, count(id) as count").group(:contract_type).order(:contract_type).each do |d|
-  -if !d.contract_type.to_s.empty?
+- Contract.select('contract_type, count(id) as count').group(:contract_type).order(:contract_type).each do |d|
+  - unless d.contract_type.to_s.empty?
     = link_to d.contract_type, contracts_path(type: d.contract_type.to_s), class: 'groups'
+    &nbsp;
 %br
 Статус:
-- Contract.select("status, count(id) as count").group(:status).order(:status).each do |d|
-  -if !d.status.to_s.empty?
+- Contract.select('status, count(id) as count').group(:status).order(:status).each do |d|
+  - unless d.status.to_s.empty?
     = link_to " #{d.status} (#{d.count}) ", contracts_path(status: d.status.to_s), class: 'groups'
+    &nbsp;
 %br
 Место хранения:
-- Contract.select("contract_place, count(id) as count").group(:contract_place).order(:contract_place).each do |d|
-  -if !d.contract_place.to_s.empty?
+- Contract.select('contract_place, count(id) as count').group(:contract_place).order(:contract_place).each do |d|
+  - unless d.contract_place.to_s.empty?
     = link_to d.contract_place, contracts_path(place: d.contract_place.to_s), class: 'groups'
+    &nbsp;

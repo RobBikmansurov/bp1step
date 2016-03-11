@@ -93,20 +93,9 @@
 
 
 -if @bproce.contracts.count > 0
-  %h4 Организационно-юридическое обеспечение Процесса соcтавляют:
-  -@bproce.contracts.order(:lft).each do | contract |
-    ='——' * (contract.depth)
-    =link_to contract.contract_type.to_s + ' ' + contract.shortname, contract_path(contract)
-    =contract.status if contract.status
-    от
-    =contract.date_begin.strftime('%d.%m.%Y')
-    -if contract.agent
-      с
-      -if !contract.agent.shortname.blank?
-        =link_to '[' + contract.agent.shortname + ']', agent_path(contract.agent.id)
-      -else
-        =link_to contract.agent.name, agent_path(contract.agent.id)
-    %br
+  %h4
+    Организационно-юридическое обеспечение Процесса соcтавляют:
+    = link_to "Договоры (Действует #{@bproce.contracts.where(status: 'Действует').count} из #{@bproce.contracts.count})", bproce_contracts_path(@bproce)
 
 -if @bproce.workplaces.count > 0
   %h4
