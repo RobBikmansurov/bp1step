@@ -128,7 +128,7 @@ class RequirementsController < ApplicationController
           s = "Источник: #{@requirement.source}"
         end
         r.add_field "REQUIREMENT_SOURCE", s
-        r.add_field "REQUIREMENT_DUEDATE", @requirement.duedate.strftime('%d.%m.%Y')
+        r.add_field "REQUIREMENT_DUEDATE", @requirement.duedate.strftime('%d.%m.%Y') if @requirement.duedate
         r.add_field "REQUIREMENT_AUTHOR", "#{@requirement.author.displayname}"
         s = ''
         @requirement.user_requirement.each do |user_requirement|
