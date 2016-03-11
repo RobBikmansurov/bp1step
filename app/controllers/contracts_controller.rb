@@ -36,23 +36,23 @@ class ContractsController < ApplicationController
       if @contracts.nil?
         if params[:type].present? # список договоров, имеющих конкретный тип
           @contracts = Contract.where(contract_type: params[:type])
-          @title_doc += 'тип [' + params[:type] + ']'
+          @title_doc += ' тип [' + params[:type] + ']'
         elsif params[:place].present? # список договоров, хранящихся в конкретном месте
           if params[:place].size == 0
             @contracts = Contract.where('contract_place = ""')
-            @title_doc += 'место хранения оригинала [не указано]'
+            @title_doc += ' место хранения оригинала [не указано]'
           else
             @contracts = Contract.where(contract_place: params[:place])
-            @title_doc += 'место хранения оригинала [' + params[:place] + ']'
+            @title_doc += ' место хранения оригинала [' + params[:place] + ']'
           end
         elsif params[:user].present? # список договоров, за которые отвечает пользователь
           @user = User.find(params[:user])
           @contracts = Contract.where(owner_id: params[:user])
-          @title_doc += 'ответственный [' + @user.displayname + ']'
+          @title_doc += ' ответственный [' + @user.displayname + ']'
         elsif params[:payer].present? # список договоров, за оплату которых отвечает пользователь
           @user = User.find(params[:payer])
           @contracts = Contract.where(payer_id: params[:payer])
-          @title_doc += 'ответственный за оплату [' + @user.displayname + ']'
+          @title_doc += ' ответственный за оплату [' + @user.displayname + ']'
         else
           @title_doc += ' поиск [' + params[:search] + ']' if params[':search'].present?
           if sort_column == 'lft'
