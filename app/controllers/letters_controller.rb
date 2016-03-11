@@ -102,9 +102,6 @@ class LettersController < ApplicationController
       elsif @letter.status < 90 && status_was >= 90 # стало не завершено, а было завершено
         @letter.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{current_user.displayname} считает, что работы по письму надо продолжить"
       end
-      p "#{params[:letter][:action].to_s}"
-      p "#{status_was} = #{@letter.status}"
-      p "#{params[:letter][:action].present?} or #{status_was != @letter.status}"
       if params[:letter][:action].present? or status_was != @letter.status
         @letter.update_column(:result, "#{@letter.result}")
         text = params[:letter][:action].to_s
