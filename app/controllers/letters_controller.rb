@@ -27,7 +27,7 @@ class LettersController < ApplicationController
           @letters = Letter.where(regdate: params[:regdate])
           @title_letter += 'зарегистрированные ' + params[:regdate]
         else
-          if params[:addresse].present? # письма от адресанта + письма алресату
+          if params[:addresse].present? # письма от адресанта + письма адресату
             @letters = Letter.where('sender ILIKE ?', params[:addresse].strip)
             @title_letter += 'адреса[н]та ' + params[:addresse]
           else
@@ -249,7 +249,7 @@ class LettersController < ApplicationController
   end
 
   def senders
-    @title_senders = 'Корреспонденты (адресанты и адресаты), письма '
+    @title_senders = 'Корреспонденты (адреса[н]ты), письма '
     if params[:status].present?
       @senders = Letter.select(:sender).where('letters.status = ?', params[:status])
       @title_senders += "в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
@@ -257,7 +257,12 @@ class LettersController < ApplicationController
       @senders = Letter.select(:sender).where('letters.status < 90', params[:status])
       @title_senders += "не завершенные"
     end
-    @senders = @senders.where('sender ILIKE ?', "%#{params[:search]}%") if params[:search].present?
+    if params[:addresse].present? # письма от адресанта + письма алресату
+      @senders = @senders.where('sender ILIKE ?', params[:addresse].strip)
+      @title_senders += 'адреса[н]та ' + params[:addresse]
+    else
+      @senders = @senders.where('sender ILIKE ?', "%#{params[:search]}%") if params[:search].present?
+    end
     _direction = params[:direction] || "asc"
     if _direction == 'asc'
       @senders = @senders.group(:sender, :status).order("sender DESC, status ASC").count
@@ -350,8 +355,8 @@ class LettersController < ApplicationController
       r.add_field 'USER_NAME', current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-                               filename: "letters_check.odt",
-                               disposition: 'inline'    
+                               filename: 'letters_check.odt',
+                               disposition: 'inline'
   end
 
   def log_week_report # реестр за неделю
@@ -395,7 +400,7 @@ class LettersController < ApplicationController
     end
     send_data report.generate, type: 'application/msword',
                                filename: 'letters_reestr.odt',
-                               disposition: 'inline'    
+                               disposition: 'inline'
   end
 
   def reestr_report # реестр исходящих
@@ -418,8 +423,7 @@ class LettersController < ApplicationController
       r.add_field 'USER_NAME', current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-                               filename: "reestr.odt",
-                               disposition: 'inline'    
+                               filename: 'reestr.odt',
+                               disposition: 'inline'
   end
-
 end
