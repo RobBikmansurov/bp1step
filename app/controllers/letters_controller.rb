@@ -93,7 +93,8 @@ class LettersController < ApplicationController
   end
 
   def update
-    status_was = @letter.status
+    status_was = @letter.status # старые значения
+    result_was = @letter.result
     if @letter.update(letter_params)
       @letter.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{current_user.displayname} - " + params[:letter][:action] if params[:letter][:action].present?
       if @letter.status >= 90 && status_was < 90 # стало завершено
@@ -101,12 +102,18 @@ class LettersController < ApplicationController
       elsif @letter.status < 90 && status_was >= 90 # стало не завершено, а было завершено
         @letter.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{current_user.displayname} считает, что работы по письму надо продолжить"
       end
-      @letter.update_column(:result, "#{@letter.result}")
-      # begin
-      #   LetterMailer.update_letter(@letter, current_user, nil, '').deliver    # оповестим Исполнителей об изменении Письма
-      # rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-      #   flash[:alert] = "Error sending mail to responsible for the letter"
-      # end
+      p "#{params[:letter][:action].to_s}"
+      p "#{status_was} = #{@letter.status}"
+      p "#{params[:letter][:action].present?} or #{status_was != @letter.status}"
+      if params[:letter][:action].present? or status_was != @letter.status
+        @letter.update_column(:result, "#{@letter.result}")
+        text = params[:letter][:action].to_s
+        begin
+          LetterMailer.update_letter(@letter, current_user, text).deliver # оповестим Исполнителей об изменении Письма
+        rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+          flash[:alert] = "Error sending mail to responsible for the letter"
+        end
+      end
       redirect_to @letter, notice: 'Письмо сохранено.'
     else
       @user_letter = UserLetter.new(letter_id: @letter.id)
