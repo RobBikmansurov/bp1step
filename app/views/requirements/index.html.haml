@@ -9,7 +9,7 @@
   %tr
     %th= sortable 'id', '#'
     %thМетка, обозначение
-    %thСодержание
+    -# %thСодержание
     %th= sortable 'duedate', 'Срок'
     %th= sortable 'status', 'Статус'
     %thОтветственные
@@ -22,7 +22,7 @@
         = link_to requirement.label, requirement
         %br
         = requirement.date.strftime('%d.%m.%Y')
-      %td= link_to truncate(requirement.body, length: 40, omission: ' ...'), requirement
+      -# %td= link_to truncate(requirement.body, length: 40, omission: ' ...'), requirement
       %td
         - if requirement.duedate
           - if requirement.status < 90 && requirement.duedate <= Date.current
