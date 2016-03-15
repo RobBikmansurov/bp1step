@@ -43,10 +43,6 @@ group :test, :development do
   gem "selenium-webdriver"
 end
 
-group :test do
-  gem 'shoulda-matchers', require: false
-end
-
 group :development do
   #gem 'sqlite3'
   gem 'capistrano'  # Deploy with Capistrano
@@ -63,5 +59,6 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
+  gem 'shoulda-matchers', require: false
   gem 'factory_girl_rails'
 end
