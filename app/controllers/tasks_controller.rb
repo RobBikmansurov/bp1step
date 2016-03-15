@@ -107,7 +107,7 @@ class TasksController < ApplicationController
       if user_task.save
         flash[:notice] = "Исполнитель #{user_task.user_name} назначен"
         begin
-          #UserTaskMailer.user_task_create(user_task, current_user).deliver_now # оповестим нового исполнителя
+          UserTaskMailer.user_task_create(user_task, current_user).deliver_now # оповестим нового исполнителя
         rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
           flash[:alert] = "Error sending mail to #{user_task.user.email}"
         end
