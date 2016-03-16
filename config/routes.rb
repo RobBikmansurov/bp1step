@@ -22,10 +22,10 @@ BPDoc::Application.routes.draw do
   resources :bproce_business_roles, only: [:show]
   resources :bproce_iresources, only: [:new, :create, :destroy, :show, :edit, :update]
   resources :bproce_workplaces, only: [:create, :destroy, :show]
+  resources :bproce_contracts, except: :index
   resources :bproce_documents, except: :index
   resources :bproces do
     resources :bapps
-    # resources :documents
     resources :business_roles, only: [:new]
     resources :documents, only: [:new, :index]
     resources :contracts, only: [:index]
@@ -44,7 +44,6 @@ BPDoc::Application.routes.draw do
       get :new_document, to: 'documents#new'
     end
   end
-  resources :bproce_contracts, except: :index
   resources :business_roles do
     member do
       get :create_user # назначить исполнителя
