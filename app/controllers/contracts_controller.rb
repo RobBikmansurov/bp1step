@@ -238,7 +238,7 @@ class ContractsController < ApplicationController
       r.add_field :owner, @contract.owner_name
       if @contract.parent
         parent = "к #{@contract.parent.contract_type} #{@contract.parent.shortname} [#{@contract.parent.status}]"
-        parent += " от #{@contract.date_begin.strftime('%d.%m.%Y')}" if @contract.date_begin
+        parent += " от #{@contract.parent.date_begin.strftime('%d.%m.%Y')}" if @contract.parent.date_begin
       else
         parent = ''
       end
