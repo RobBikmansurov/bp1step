@@ -7,6 +7,7 @@ class Directive < ActiveRecord::Base
   validates :name, :presence => true, :length => {:minimum => 10}
   validates :body, :length => {:minimum => 2, :maximum => 100}	# орган, утвердивший документ
   validates :status, length: {maximum: 30}
+  validates :note, length: {maximum: 255}
 
   has_many :document, :through => :document_directive
   has_many :document_directive, :dependent => :destroy

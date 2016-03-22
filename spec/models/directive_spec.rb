@@ -9,6 +9,7 @@ describe Directive do
     it { should validate_length_of(:name).is_at_least(10) }
     it { should validate_length_of(:status).is_at_most(30) }
     it { should validate_length_of(:body).is_at_least(2).is_at_most(100) }
+    it { should validate_length_of(:note).is_at_most(255) }
   end
 
   context "associations" do
