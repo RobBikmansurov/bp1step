@@ -16,7 +16,11 @@ class RequirementsController < ApplicationController
   end
 
   def show
-    @tasks = Task.where('requirement_id = ?', @requirement.id).order('status, duedate, id')
+    if params[:sort].present?
+      @tasks = Task.where('requirement_id = ?', @requirement.id).order(sort_column + ' ' + sort_direction)
+    else
+      @tasks = Task.where('requirement_id = ?', @requirement.id).order('status, duedate, id')
+    end
   end
 
   def new
