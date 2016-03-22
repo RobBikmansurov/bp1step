@@ -1,6 +1,14 @@
 - if @tasks
   %h3 Задачи для реализации данного требования:
   %table
+    %tr
+      %th= sortable 'id', '#'
+      %thМетка, обозначение
+      -# %thСодержание
+      %th= sortable 'duedate', 'Срок'
+      %th= sortable 'status', 'Статус'
+      %thОтветственные
+      %thЧто сделано
     - @tasks.each do |task|
       %tr
         %td= "##{task.id}"
