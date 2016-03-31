@@ -54,7 +54,7 @@ class UsersController < ApplicationController
   def execute
     @letters = Letter.joins(:user_letter).where("user_letters.user_id = ? and letters.status < 90", @usr.id).order(:duedate, :status)
     @tasks = Task.joins(:user_task).where("user_tasks.user_id = ? and tasks.status < 90", @usr.id).order(:duedate, :status)
-    @requirements = Requirement.joins(:user_requirement).where("user_requirements.user_id = ?", @usr.id).order(:duedate, :status)
+    @requirements = Requirement.joins(:user_requirement).where("user_requirements.user_id = ? and requirements.status < 90", @usr.id).order(:duedate, :status)
 
     respond_to do |format|
       format.html { render layout: false }
