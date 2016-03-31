@@ -52,9 +52,16 @@ class UsersController < ApplicationController
   end
 
   def execute
-    @letters = Letter.joins(:user_letter).where("user_letters.user_id = ? and letters.status < 90", @usr.id).order(:duedate, :status)
-    @tasks = Task.joins(:user_task).where("user_tasks.user_id = ? and tasks.status < 90", @usr.id).order(:duedate, :status)
-    @requirements = Requirement.joins(:user_requirement).where("user_requirements.user_id = ? and requirements.status < 90", @usr.id).order(:duedate, :status)
+    @letters_ids = Letter.joins(:user_letter).where("user_letters.user_id = ? and letters.status < 90", @usr.id).ids # \
+                 # | Letter.where("author_id = ? and status < 90", @usr.id).ids
+    @letters = Letter.where(id: @letters_ids).order(:duedate, :status)
+    @tasks_ids = Task.joins(:user_task).where("user_tasks.user_id = ? and tasks.status < 90", @usr.id).ids \
+               | Task.where("author_id = ? and status < 90", @usr.id).ids
+    @tasks = Task.where(id: @tasks_ids).order(:duedate, :status)
+    @requirements_ids = Requirement.joins(:user_requirement).where("user_requirements.user_id = ? and requirements.status < 90", @usr.id).ids \
+                      | Requirement.where("author_id = ? and status < 90", @usr.id).ids
+    @requirements = Requirement.where(id: @requirements_ids).order(:duedate, :status)
+
 
     respond_to do |format|
       format.html { render layout: false }
