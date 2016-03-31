@@ -1,8 +1,8 @@
 #Executes
 -if @letters.count > 0
   %h2
-    Требуют внимания Письма
-    = link_to "(#{@letters.count})", letters_path(user: @usr)
+    Незавершенные
+    = link_to "Письма (#{@letters.count})", letters_path(user: @usr)
     \:
   %table
     %tr
@@ -39,8 +39,8 @@
 
 -if @tasks.count > 0
   %h2
-    Требуют внимания Задачи
-    = link_to "(#{@tasks.count})", tasks_path(user: @usr)
+    Незавершенные
+    = link_to "Задачи (#{@tasks.count})", tasks_path(user: @usr)
     \:
   %table
     %tr
@@ -65,12 +65,14 @@
                 %br
                   %span{:style => "color: red;"}
                     = task.completion_date.strftime("%d.%m.%y")
-        %td= TASK_STATUS.key(task.status)
+        %td
+          = '!' if current_user && task.author_id == current_user.id
+          = TASK_STATUS.key(task.status)
 
--if @requirements.count > 0
+-if @requirements_ids.size > 0
   %h2
-    Требуют внимания Требования
-    = link_to "(#{@requirements.count})", requirements_path(user: @usr)
+    Незавершенные
+    = link_to "Требования (#{@requirements_ids.size})", requirements_path(user: @usr)
     \:
   %table
     %tr
@@ -92,4 +94,6 @@
                 = requirement.duedate.strftime("%d.%m.%y")
             -else
               = requirement.duedate.strftime("%d.%m.%y")
-        %td= REQUIREMENT_STATUS.key(requirement.status)
+        %td
+          = '!' if current_user && requirement.author_id == current_user.id
+          = REQUIREMENT_STATUS.key(requirement.status)
