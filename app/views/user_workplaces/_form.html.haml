@@ -1,0 +1,10 @@
+= simple_form_for(@user_workplace) do |ubr|
+  = ubr.error_notification
+  = ubr.hidden_field :workplace_id
+  = ubr.association :user, :collection => User.all(:order => 'displayname'), :include_blank => true, :prompt => 'Работник', :label_method => :displayname, :label => 'Находится на этом месте'
+  = ubr.input :date_from, :as => :string, :input_html =>{:class=>'datepicker', :value => Date.today.strftime("%d.%m.%Y")}
+  = ubr.input :date_to, :as => :string, :input_html =>{:class=>'datepicker', :value => Date.today.change(:month => 12, :day => 31).strftime("%d.%m.%Y")}
+  = ubr.input :note
+  = ubr.error :base
+  -if can? :update, @workplace
+    = ubr.button :submit

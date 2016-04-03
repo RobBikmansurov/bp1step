@@ -1,0 +1,8 @@
+обновил рабочее место
+-if activity.trackable
+  = '(#' + activity.trackable.id.to_s + ')'
+  = link_to activity.trackable.designation, activity.trackable
+-else
+  \#
+  = activity.trackable_id
+  которое уже удалено

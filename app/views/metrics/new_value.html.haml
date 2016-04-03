@@ -1,0 +1,22 @@
+-title "Новое значение метрики"
+-search "Метрику"
+.id_
+  \#
+  =@metric_value.metric_id
+%h2
+  Новое значение метрики
+  = link_to @metric.name, @metric
+%h3
+  за
+  =dtime.strftime('%d.%m.%Y %A')
+= simple_form_for(@metric_value, :as => 'MetricValue') do |f|
+  = f.error_notification
+  -#= f.input :dtime, :as => :string, :input_html =>{:class=>'datepicker'}
+  = f.input :value
+  
+  %p
+  = f.button :submit
+
+%p
+= link_to 'Show', @metric, :class => 'button'
+= link_to 'Back', :back, :class => 'button'

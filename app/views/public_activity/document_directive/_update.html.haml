@@ -1,0 +1,8 @@
+обновил связь документа и директивы
+-if activity.trackable
+  = '(#' + activity.trackable.id.to_s + ')'
+  = link_to activity.trackable.document_id.to_s + '-' + activity.trackable.directive_id.to_s, activity.trackable
+-else
+  \#
+  = activity.trackable_id
+  которая уже удалена

@@ -1,0 +1,10 @@
+= simple_form_for(@bproce_document, :html => { :multipart => true }) do |f|
+  = f.error_notification
+  = f.input :purpose, :as => :text
+  
+  -if can? :update, @bproce_document.bproce
+    %p
+    = f.button :submit
+
+-#= @document_directives.inspect
+-#= @document.directive

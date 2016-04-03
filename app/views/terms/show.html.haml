@@ -1,0 +1,26 @@
+-title 'Термин ' + @term.name
+-search 'Термин'
+%h2
+  = @term.name
+  (
+  %b
+    = @term.shortname
+  )
+%h3 Определение:
+= @term.description
+%h4 Примечание:
+= @term.note
+%h4 Источник:
+= @term.source
+
+.info_
+  создан
+  = @term.created_at.strftime('%d.%m.%Y %H:%M:%S')
+  %br
+  изменен
+  = @term.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+
+%p
+- if can? :update, Term
+  = link_to 'Edit', edit_term_path(@term), :class => 'button'
+= link_to 'Back', terms_path, :class => 'button'

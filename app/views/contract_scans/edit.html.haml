@@ -1,0 +1,34 @@
+-title 'Скан договора ' + @contract_scan.scan_file_name.to_s
+-search "Скан договора"
+.id_
+  \#
+  = @contract_scan.id
+%h2Изменить комментарий файла (скана) договора
+%h3
+  -#= link_to @contract.contract_type.to_s, contracts_path + '?type=' + @contract.contract_type.to_s, class: 'groups'
+  =@contract.contract_type.to_s
+  = link_to @contract.shortname, contract_path(@contract)
+  от
+  %b=@contract.date_begin.strftime('%d.%m.%Y')
+  статус
+  %b=@contract.status
+%h3= link_to @contract.agent.name, agent_path(@contract.agent.id) if @contract.agent
+-if @contract.parent
+  %h3
+    к
+    = link_to @contract.parent.contract_type + ' ' + @contract.parent.shortname, contract_path(@contract.parent.id)
+%p
+%h3
+  Файл
+  %b='"' + @contract_scan.scan_file_name + '":'
+  =@contract_scan.scan_updated_at.strftime('%d.%m.%Y %H:%M:%S') + ' ' + @contract_scan.scan_file_size.to_s
+= simple_form_for(@contract_scan) do |f|
+  = f.error_notification
+  = f.input :name
+  -if can? :update, @contract_scan
+    %p
+    = f.button :submit, 'Сохранить новый комментарий'
+%p
+-#= link_to 'XML', document_path(@document, :format => :xml), :class => 'button'
+= link_to 'Show', contract_path(@contract), :class => 'button'
+= link_to 'Back', :back, :class => 'button'

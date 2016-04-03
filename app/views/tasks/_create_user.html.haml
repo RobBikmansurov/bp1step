@@ -1,0 +1,8 @@
+= simple_form_for @user_task, url: update_user_task_path, html: { multipart: true } do |f|
+  = f.error_notification
+  = f.hidden_field :task_id
+  = f.label 'Исполнитель'
+  = f.autocomplete_field :user_name, autocomplete_users_path
+  = f.input :status, as: :boolean
+  = f.error :base
+  = f.button :submit, 'Добавить Исполнителя'

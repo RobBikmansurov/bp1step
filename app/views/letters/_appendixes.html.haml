@@ -1,0 +1,17 @@
+- if @letter.id? # ну какие ссылки на сканы для нового письма
+  - if @letter.letter_appendix.count > 0
+    %h3 Приложения:
+    - @letter.letter_appendix.each do |letter_appendix|
+      - if can? :update, letter_appendix
+        = link_to letter_appendix.name, edit_letter_appendix_path(letter_appendix)
+      - else
+        = letter_appendix.name
+        ("#{letter_appendix.appendix_file_name}": #{letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S')} #{letter_appendix.appendix_file_size})
+
+      - if true or can? :update, letter_appendix
+        = link_to image_tag('action_stop.gif', alt: 'Удалить'),
+          letter_appendix,
+          data: { confirm: 'Файл "' + letter_appendix.appendix_file_name  + '": ' + letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S') + "\nДействительно хотите удалить его \nиз письма #{letter_appendix.letter.name} ?" },
+          method: 'delete',
+          class: 'button-img'
+      %br

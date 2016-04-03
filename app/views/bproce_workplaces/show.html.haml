@@ -1,0 +1,30 @@
+-title "Рабочие места процесса " + @bproce.shortname
+%h2
+  Рабочие места процесса
+  = link_to @bproce.name, bproce_path(@bproce)
+
+%table
+  %tr
+    %thОбозначение
+    %thНаименование
+    %thОписание
+    %th Исполнитель
+    %thМестоположение
+    -#%th
+    
+  - @workplaces.each do |workplace|
+    %tr
+      %td= link_to workplace.designation, workplace_path(workplace)
+      %td= workplace.name
+      %td= workplace.description
+      -if workplace.users.first
+        %td
+          = link_to workplace.users.first.displayname, workplace.users.first
+          -if workplace.users.count > 1
+            +
+            = workplace.users.count - 1
+      -else
+        %td
+      %td= link_to workplace.location, workplaces_path + '?location=' + workplace.location
+      -#%td= link_to 'Удалить', workplace, confirm: 'Действительно хотите удалить?', :method => :delete 
+

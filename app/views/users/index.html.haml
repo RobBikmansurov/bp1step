@@ -1,0 +1,75 @@
+-title "Список сотрудников"
+-search 'Человека'
+%h1
+  Список сотрудников
+  -if params[:role].present?
+    = "[#{@role.description}]"
+  -else
+    -if params[:search].present?
+      = "[ #{params[:search]} ]"
+    -else
+      -if params[:office].present?
+        = "[ #{params[:office]} ]"
+-#= alphabetical_paginate @alphaParams
+
+%table
+  %tr
+    %th= sortable "displayname", "ФИО"
+    %th= sortable "email", "Почта"
+    %th= sortable "phone", "Телефон"
+    %th Должность
+    %th= sortable "office", "Офис"
+    -if can? :manage, @users.first
+      %th Login
+      %th Last login
+    - if can? :destroy, @users.first
+      %th Роли доступа
+  
+  -@users.each do |user|
+    %tr
+      %td
+        %p{style: ('text-decoration: line-through;' if !user.active)} 
+          -if can? :show, user
+            = link_to user.displayname, user
+          -else
+            = user.displayname
+      %td= mail_to user.email, user.email, :subject => "BP1Step"
+      %td
+        -if user.phone
+          = "&nbsp; &#9742;&nbsp;".html_safe + user.phone.to_s
+      %td
+        %p{style: ('text-decoration: line-through;' if !user.active)} 
+          = user.position
+      -if user.office
+        %td= link_to user.office, users_path + '?office=' + user.office, class: 'groups'
+      -else
+        %td
+      -if can? :manage, user
+        %td= user.current_sign_in_at.strftime("%d.%m.%y %H:%M:%S") if !user.current_sign_in_at.nil?
+        -#%td= user.current_sign_in_at.to_s(:ru_datetime) if !user.current_sign_in_at.nil?
+        %td= user.last_sign_in_at.strftime("%d.%m.%y %H:%M:%S") if !user.last_sign_in_at.nil?
+      - if can? :assign_roles, user
+        %td
+          = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_user_path(user), class: 'button-img'
+          -user.roles.each do |role|
+            = role.description
+
+-if !params[:all].present?
+  .apple_pagination
+    = will_paginate @users 
+
+%p
+%br
+Каб.:
+- User.select("office, count(id) as count").group(:office).order(:office).each do |user|
+  -if user.office.to_s.empty?
+    = link_to 'пусто', users_path + '?office='
+  -else
+    = link_to user.office, users_path + '?office=' + user.office.to_s, class: 'groups'
+-#%br
+  Роли:
+  - UserRole.select("role, count(id) as count").group(:role).order(:role).each do |user|
+    -if user.role.to_s.empty?
+      = link_to 'пусто', users_path + '?role='
+    -else
+      = link_to user.role, users_path + '?role=' + user.role.to_s, class: 'groups'

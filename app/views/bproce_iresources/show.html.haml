@@ -1,0 +1,18 @@
+-title "Ресурс процесса"
+%h3
+  Ресурс
+  = link_to @bproce_iresource.iresource.label, iresource_path(@bproce_iresource.iresource)
+%h4= @bproce_iresource.iresource.location
+%h4= @bproce_iresource.iresource.alocation
+%h3
+  используется в процессе
+  = link_to @bproce_iresource.bproce.name, bproce_path(@bproce_iresource.bproce)
+%h2
+  Назначение в процессе:
+= @bproce_iresource.rpurpose
+
+%p
+- if can? :update, @bproce_iresource
+  = link_to 'Edit', edit_bproce_iresource_path(@bproce_iresource), :class => 'button'
+= link_to 'Back', bproce_iresources_path, :class => 'button'
+

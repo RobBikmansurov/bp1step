@@ -1,0 +1,26 @@
+#tabs { 
+    background: transparent; 
+    border: none;
+} 
+#tabs .ui-widget-header { 
+    border-bottom: 20px solid #c0c0c0;
+    -moz-border-radius: 0px; 
+    -webkit-border-radius: 0px; 
+    border-radius: 0px; 
+} 
+#tabs .ui-tabs-nav .ui-state-default { 
+    float: right; 
+} 
+#tabs .ui-tabs-nav .ui-state-active { 
+    background: url(uiTabsArrow.png) no-repeat bottom center; 
+    background-color: red;
+} 
+#tabs .ui-tabs-nav .ui-state-default a { 
+    background-color: #FFCC99;
+    color: #000000;
+    padding: 1px 4px;
+} 
+#tabs .ui-tabs-nav .ui-state-active a { 
+    font-weight: bold;
+    text-transform: uppercase;
+}

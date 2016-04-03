@@ -1,0 +1,19 @@
+-title "Информационный ресурс процесса"
+- if @bproce_iresource.iresource_id
+  %h3
+    Информационный ресурс: 
+    -#= link_to @bproce_iresource.iresource.name, iresource_path(@bproce_iresource.iresource)
+- if @bproce_iresource.bproce_id
+  %h3
+    будет добавлен в процесс:
+    =@bproce_iresource.inspect
+    -#= link_to @bproce_iresource.bproce.name, bproce_path(@bproce_iresource.bproce)
+%h2
+  Назначение:
+-#= render 'form'
+-#= debug params
+
+%p
+- if can? :update, @bproce_iresource
+  = link_to 'Show', @bproce_iresource, :class => 'button'
+= link_to 'Back', bproce_iresources_path, :class => 'button'

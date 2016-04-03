@@ -1,0 +1,18 @@
+-title "Метрика"
+-search "Метрику"
+%h2
+  Добавить Метрику процесса
+  = link_to @bproce.name, bproce_path(@bproce)
+= simple_form_for(@metric) do |f|
+  = f.error_notification
+  = f.hidden_field :bproce_id, :value => @bproce.id
+  = f.input :shortname
+  = f.input :name
+  = f.input :description, :as => :text
+  = f.label 'Глубина даннных'
+  = f.select :depth_name, METRICS_VALUE_DEPTH.keys
+  %p
+  = f.error :base
+  = f.button :submit
+%p
+  = link_to 'Back', bproce_path(@bproce) + '/metrics', :class => 'button'

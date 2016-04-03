@@ -1,0 +1,36 @@
+= simple_form_for(@iresource) do |f|
+  = f.error_notification
+  = f.input :level
+  = f.input :label
+  = f.input :location
+  = f.input :alocation
+  = f.input :volume
+  = f.input :note
+  = f.input :access_read
+  = f.input :access_write
+  = f.input :access_other
+  = f.input :risk_category
+  = f.label 'Исполнитель'
+  = f.autocomplete_field :owner_name, autocomplete_users_path
+  -#= f.input :owner_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Ответственный за ресурс'
+  = f.error :base
+  - if can? :update, @iresource
+    %p
+    = f.button :submit
+
+%p
+-# не показывать для нового ресурса связанные с ним объекты - их еще нет
+-if @iresource.id?
+  %table
+    %tr
+      %th Этот Ресурс используется в Процессах:
+      %th
+    -@iresource.bproce_iresources.each do |ires|  # все процессы, где используется данный ресурс
+      %tr
+        %td
+          = link_to ires.bproce.name, bproce_path(ires.bproce)
+          (
+          = ires.rpurpose.to_s
+          )
+        %td
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), ires, data: { confirm: "Действительно хотите исключить [" + ires.iresource.label + "] из процесса:\n" + ires.bproce.name + "?" }, :method => 'delete', class: 'button-img'

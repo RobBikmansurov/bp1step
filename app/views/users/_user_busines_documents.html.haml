@@ -1,0 +1,12 @@
+- if @documents.count > 0
+  %h3
+    Отвечает за 
+    = link_to 'внутренние документы:', documents_path + '?user=' + @usr.id.to_s
+  %ol
+    - @documents.each do |doc|
+      %li
+        = link_to doc.name, document_path(doc)
+        = doc.status
+        = doc.approved.strftime('%d.%m.%Y') if doc.approved
+        .id_show_
+          = "##{doc.id}"

@@ -1,0 +1,16 @@
+%p
+%h3
+  - if @task.author_id?
+    Автор:
+    = link_to @task.author.displayname, user_path(@task.author.id)
+    &nbsp; &nbsp;
+  Исполнители:
+  - @task.user_task.each do |user_task|
+    = link_to user_task.user.displayname, user_task.user
+    - if user_task.status and user_task.status > 0
+      \- отв.
+    = link_to image_tag('action_stop.gif', alt: 'Удалить'),
+    	user_task, data: { confirm: "Удалить исполнителя " + user_task.user.displayname + "\nиз Задачи [#{user_task.task.name}] ?" },
+    	method: 'delete',
+    	class: 'button-img' if user_task.user.id == current_user.id and user_task.status > 0
+    &nbsp;

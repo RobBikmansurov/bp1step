@@ -1,0 +1,11 @@
+-title "Документ процесса"
+-search "Документ" 
+
+=render 'show'
+=render 'form'
+
+%p
+-#= link_to 'Show', bproce_document_path(@bproce_document), :class => 'button'
+= link_to 'Back', bproce_document_path(@bproce_document.bproce), :class => 'button'
+
+

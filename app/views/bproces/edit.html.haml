@@ -1,0 +1,16 @@
+-title 'Процесс ' + @bproce.shortname
+-search "Процесс"
+.id_
+  \#
+  = @bproce.id
+%h1 Процесс 
+= render 'form'
+%p
+= render 'business_roles'
+-#= render 'documents'
+= render 'bapps'
+= render 'workplaces'
+= render 'iresources'
+
+= link_to 'Show', @bproce, :class => 'button'
+= link_to 'Back', bproces_path, :class => 'button'

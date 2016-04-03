@@ -1,0 +1,18 @@
+%h3
+  В процессе участвуют
+  =link_to 'Роли:', bproce_business_role_path(@bproce)
+
+-@bproce.business_roles.each do |business_role|
+  = link_to business_role.name, business_role_path(business_role)
+  -if can? :destroy, business_role
+    = link_to image_tag('action_stop.gif', :alt => 'Удалить'), business_role, data: { confirm: "Действительно хотите исключить [" + business_role.name + "] из процесса:\n" + @bproce.name + "?" }, :method => 'delete', class: 'button-img'
+
+-if @business_role
+  = simple_form_for(@business_role) do |r|
+    = r.error_notification
+    = r.input :name
+    = r.input :description, :as => :text
+    = r.hidden_field :bproce_id
+    = r.error :base
+    -if can? :update, @bproce
+      = r.button :submit, 'Добавить Роль'

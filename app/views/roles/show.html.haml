@@ -1,0 +1,19 @@
+-title 'Роль доступа ' + @role.name
+.id_
+  \#
+  =@role.id
+%h2
+  = @role.name
+%h3 Описание:
+= @role.description
+
+%p
+-if current_user
+  -if current_user.role? :admin
+    список пользователей, кому назначена роль
+    = link_to @role.description, users_path + '?role=' + @role.name
+
+%p
+- if can? :update, Role
+  = link_to 'Edit', edit_role_path(@role), :class => 'button'
+= link_to 'Back', roles_path, :class => 'button'

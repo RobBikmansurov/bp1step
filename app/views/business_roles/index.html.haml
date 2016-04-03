@@ -1,0 +1,60 @@
+-title "Каталог Ролей"
+-search "Роль"
+%h1
+  Каталог Ролей
+  -if params[:search].present?
+    [ 
+    = params[:search]
+    ]
+
+%table
+  %tr
+    %th= sortable "name", "Роль"
+    %th= sortable "bproce_id", "Процесс"
+    %th= sortable "description", "Действия роли в процессе"
+    %th Исполнитель
+    -if can? :manage, BusinessRole
+      %th
+    -if can? :destroy, BusinessRole
+      %th
+
+  -@business_roles.each do |ro|
+    %tr
+      %td
+        = link_to ro.name, ro
+        .id_show_
+          = "##{ro.id}"
+
+      %td
+        = link_to ro.bproce.shortname, bproce_path(ro.bproce_id) if !ro.bproce.nil?
+      %td= truncate(ro.description, :length => 120, :omission => ' ...')
+
+      -if ro.users.count > 0
+        %td
+          - user_count = 0
+          - ro.users.order(:lastname).each do | user |
+            -user_count = user_count + 1
+            -if user_count < 8
+              = link_to user.displayname, user
+            -else
+              \+
+      -else
+        %td
+      - if can? :manage, ro
+        %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_business_role_path(ro), class: 'button-img'
+      - if can? :destroy, ro
+        %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), ro, data: { confirm: 'Роль"' + ro.name + "\"\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
+
+
+.apple_pagination
+  -#.page_info
+    -#    = page_entries_info @business_roles
+  = will_paginate @business_roles 
+%p
+- if can? :destroy, BusinessRole
+  = link_to 'Каталог', business_roles_path + '.odt?all=1', :class => 'button'
+  -if request.query_string
+    = link_to 'Список', business_roles_path + '.odt?' + request.query_string, :class => 'button'
+  -else
+    = link_to 'Список', business_roles_path + '.odt', :class => 'button'
+  = link_to "Добавить новую роль" , new_business_role_path, :class => 'button'

@@ -1,0 +1,9 @@
+%h2 Представьтесь, пожалуйста:
+= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+  -if devise_mapping.ldap_authenticatable?
+    = f.input :username, :label => 'аккаунт', :required => true, :autofocus => true, hint: 'Ваше доменное имя для входа в сеть'
+  -else
+    = f.input :email, :required => true, :autofocus => true
+  = f.input :password, :label => 'пароль', hint: 'Ваш пароль для входа в сеть'
+  = f.input :remember_me, :label => 'запомнить меня на этом компьютере', as: :boolean, :boolean_style => :inline if devise_mapping.rememberable?
+  = f.button :submit, "Войти"

@@ -1,0 +1,14 @@
+#!/bin/sh
+# монтирование CIFS-ресурсов в каталог /
+# хранилище документов bp1step.store
+# robb@bankperm.ru
+
+#USER=`whoami | tr // \\`
+USER=DOMAIN_SQL/bp1step
+MOUNT="mount.cifs"
+OPTIONS="-o user=${USER},credentials=/root/.bp1step,iocharset=utf8,serverino,_netdev,uid=1002,gid=1002,file_mode=0644"
+
+#ROOT="/home/${USER}/mnt"
+ROOT="/home/rubydev/bp1step"
+
+${MOUNT} //ad.bankperm.ru/perm/rps/in	${ROOT}/svk_in ${OPTIONS}

@@ -1,0 +1,15 @@
+%h3
+  Процесс описывают
+  =link_to 'Документы:', bproce_path(@bproce) + '/documents'
+
+-@bproce.documents.each do |doc|
+  = link_to doc.name, document_path(doc)
+  = ' ' + doc.approved.to_s
+  %br
+= simple_form_for(@document) do |r|
+  = r.error_notification
+  = r.input :name
+  = r.hidden_field :bproce_id
+  = r.error :base
+  -if can? :update, @bproce
+    = r.button :submit, 'Добавить Документ'

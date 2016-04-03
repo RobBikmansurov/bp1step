@@ -1,0 +1,8 @@
+обновил договор
+-if activity.trackable
+  = '(#' + activity.trackable.id.to_s + ')'
+  = link_to activity.trackable.shortname, activity.trackable
+-else
+  \#
+  = activity.trackable_id
+  который уже удален

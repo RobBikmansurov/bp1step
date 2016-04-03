@@ -1,0 +1,25 @@
+= simple_form_for(@business_role) do |f|
+  = f.error_notification
+  = f.input :name
+  = f.input :description
+
+  = f.label 'Процесс'
+  -if @business_role.bproce_id?
+    = link_to @business_role.bproce.name, bproce_path(@business_role.bproce)
+  -else
+    = f.autocomplete_field :bproce_name, autocomplete_bproces_path, :id_elements => '#bproce_id', :placeholder => 'подстрока в наименовании', :data => { :no_matches_label => '333' }
+  %br
+
+  -if current_user.role? :admin
+    = f.input :features, :as => :text
+
+  = f.hidden_field :bproce_id
+  -#= f.hidden_field :bproce_name
+  = f.error :base
+  -if can? :update, @business_role
+    = f.button :submit
+-#=debug params
+  =debug @bproce
+  =debug @business_role
+
+

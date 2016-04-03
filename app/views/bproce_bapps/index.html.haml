@@ -1,0 +1,41 @@
+-if @bproce == nil
+  -title "Каталог Приложений процессов"
+  %h1 Каталог Приложений процессов
+-else
+  -title "Каталог Приложений процесса"
+  %h1
+    Каталог Приложений процесса
+    = @bproce.name
+-#=@bproce.inspect
+%table
+  %tr
+    %th Процесс
+    %th Приложение
+    %th Назначение в процессе
+    - if can? :destroy, BproceBapp
+      %th
+  
+  -@bproce_bapp.each do |bb|
+    %tr
+      %td= link_to bb.bproce.shortname, bb.bproce
+      %td
+        = link_to bb.bapp.name, bb.bapp if bb.bapp != nil
+      %td
+        -if bb.apurpose.blank?
+          = link_to 'не определено', edit_bproce_bapp_path(bb)
+        -else
+          = link_to bb.apurpose, bproce_bapp_path(bb)
+      -if can? :destroy, bb
+        %td
+          = link_to 'Destroy', bb, data: { confirm: 'Are you sure?'}, :method => :delete
+
+.apple_pagination
+  = will_paginate @bproce_bapp 
+
+-#= debug.params
+%p
+- if can? :destroy, BproceBapp
+  -if @bproce == nil
+    = link_to "Добавить новое приложение" , new_bapp_path, :class => 'button'
+  -else
+    = link_to "Добавить новое приложение в процесс" , new_bproce_bapp_path + '?bproce_id=' + @bproce.id, :class => 'button'

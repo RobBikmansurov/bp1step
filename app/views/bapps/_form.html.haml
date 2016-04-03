@@ -1,0 +1,49 @@
+= simple_form_for(@bapp) do |f|
+  = f.error_notification
+  = f.input :name
+  = f.input :apptype
+  = f.input :description, :as => :text
+  = f.input :purpose, :as => :text
+  = f.input :version_app
+  = f.input :directory_app
+  = f.input :distribution_app
+  = f.input :executable_file
+  = f.input :licence
+  = f.input :source_app
+  = f.input :note, :as => :text
+  -if can? :manage_tag, @bapp
+    = f.input :tag_list, :label => 'Теги (через запятую)'
+  = f.error :base
+  -if can? :update, @bapp
+    = f.button :submit
+  %p
+-# не показывать для нового приложения связанные с ним процессы - их еще нет
+-if @bapp.id?
+  %table
+    %tr
+      %th Это Приложение используется в Процессах:
+      %th Назначение в процессе
+      %th
+    -@bapp.bproce_bapps.each do |bp|
+      %tr
+        %td
+          = link_to bp.bproce.name, bproce_path(bp.bproce_id)
+        %td
+          = link_to bp.apurpose, bproce_bapp_path(bp)
+        %td
+          - if can? :update, @bapp
+            = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bp, data: { confirm: "Действительно хотите исключить [" + bp.bapp.name + "] из процесса:\n" + bp.bproce.name + "?" }, :method => 'delete', class: 'button-img'
+
+  = simple_form_for(@bproce_bapp) do |ff|
+    = ff.error_notification
+    = ff.hidden_field :bapp_id
+    = ff.hidden_field :bproce_id
+    = ff.label 'Процесс'
+    = ff.autocomplete_field :bproce_name, autocomplete_bproces_path, :id_elements => '#bproce_bapp_bproce_id', :placeholder => 'подстрока в наименовании', :data => { :no_matches_label => '333' }
+    -##= ff.autocomplete_field :bproce_id, autocomplete_brand_name_products_path, :id_element => '#some_element'
+    -#= ff.association :bproce, :collection => Bproce.all(:order => 'name'), :label => 'Процесс', :hint => 'Выберите процесс', :prompt => 'Выберите процесс, где Приложение используется'
+    = ff.input :apurpose, :hint => 'Укажите назначение приложения в выбранном процессе'
+    = ff.error :base
+    = ff.button :submit, 'Связать с процессом'
+-#=debug params
+-#=debug @bproce_bapp

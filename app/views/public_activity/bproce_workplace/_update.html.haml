@@ -1,0 +1,10 @@
+-if activity.trackable
+  = 'обновил связь (#' + activity.trackable.id.to_s + '): рабочего места ['
+  = link_to activity.trackable.workplace.designation, workplace_path(activity.trackable.workplace)
+  ] с процессом
+  = link_to activity.trackable.bproce.name, bproce_path(activity.trackable.bproce)
+-else
+  связь рабочего места с процессом
+  \#
+  = activity.trackable_id
+  уже удалена

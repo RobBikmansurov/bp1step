@@ -1,0 +1,22 @@
+-#= Rails.root.to_s
+- path_document_files = 'public/store/'
+- other_files = Dir.glob("#{path_document_files}#{@document.id}.*")
+-#- other_files = Dir.glob("#{path_document_files}3*")
+- if other_files.count > 0
+  Другие версии сохраненных файлов:
+  %table
+    %tr
+      %thИмя
+      %thРазмер
+      %thЗагружен
+    - other_files.each do |file|
+      %tr
+        %td
+          %b
+            = "#{file[path_document_files.size..file.size]}"
+          -#= link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), file, class: 'button-img'
+
+        %td
+          = "#{File.size(file)}"
+        %td
+          = File.mtime(file).strftime('%d.%m.%Y %H:%M:%S')

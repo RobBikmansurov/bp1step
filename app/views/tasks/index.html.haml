@@ -1,0 +1,72 @@
+- search "Задачи"
+- title @title_tasks
+
+%h2
+  = @title_tasks if @title_tasks
+  - if params[:search].present?
+    [ #{params[:search]} ]
+
+%table
+  %tr
+    %th= sortable "id", "#"
+    %thНаименование
+    %thОписание
+    %thИсточник
+    %th= sortable 'duedate', 'Срок'
+    %th= sortable "status", "Статус"
+    %thОтветственные
+    %th
+
+  - if @tasks
+    - @tasks.each do |task|
+      %tr
+        %td= task.id
+        %td= link_to task.name, task
+        %td= truncate(task.description, length: 50, omission: ' ...')
+        %td
+          = link_to "Письмо #{task.letter_id}", letter_path(task.letter_id) if task.letter_id
+          = link_to "Требование ##{task.requirement_id}", requirement_path(task.requirement_id) if task.requirement_id
+        %td
+          - if task.duedate
+            - if task.status < 90 and task.duedate <= Date.current
+              %span{ style: "color: red;" }
+                = task.duedate.strftime("%d.%m.%y")
+            - else
+              = task.duedate.strftime("%d.%m.%y")
+            - if task.completion_date
+              - if task.completion_date > task.duedate
+                %br
+                  %span{ style: "color: red;" }
+                    = task.completion_date.strftime("%d.%m.%y")
+        %td= TASK_STATUS.key(task.status)
+        %td
+          - task.user_task.each do |user_task|
+            - if user_task.user
+              - s = "#{user_task.user.displayname}"
+              - if !user_task.status.blank?
+                - s += "\u2713".html_safe
+              = link_to s, user_task.user
+            - else
+              удалить ссылку
+              = user_task.inspect
+        - if current_user.id == task.author.id or can? :manage, task or can? :destroy, task
+          %td
+            = link_to image_tag('page_edit.gif', alt: 'Изменить'), edit_task_path(task), class: 'button-img'
+            = link_to image_tag('action_stop.gif', alt: 'Удалить'), task,
+            data: { confirm: "Задача #{task.name}" + "\nДействительно хотите удалить?" },
+            method: 'delete', class: 'button-img'
+
+%br
+.apple_pagination
+  = will_paginate @tasks if @tasks
+
+%p
+- if can? :create, Task
+  = link_to 'Новая задача', new_task_path, class: 'button'
+= link_to 'Контроль', check_tasks_path, class: 'button'
+
+%p
+- Task.select("status, count(id) as count").group(:status).order(:status).each do |task|
+  - if !task.status.to_s.empty?
+    = link_to " #{TASK_STATUS.key(task.status)} (#{task.count}) ", tasks_path(status: task.status), class: 'groups'
+    &nbsp;

@@ -1,0 +1,8 @@
+изменил Письмо
+-if activity.trackable
+  = link_to activity.trackable.name, activity.trackable
+  = "(##{activity.trackable.id})"
+-else
+  \#
+  = activity.trackable_id
+  которое уже удалено

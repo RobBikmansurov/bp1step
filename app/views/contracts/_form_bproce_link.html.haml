@@ -1,0 +1,10 @@
+-if @contract.id? # ну какие ссылки на процессы для нового договора
+  %h3 Относится к следующим процессам:
+  - @contract.bproce_contract.each do |bproce_contract|
+    - if bproce_contract.bproce_id
+      = link_to bproce_contract.bproce.name, bproce_path(bproce_contract.bproce)
+      (
+      = bproce_contract.purpose
+      )
+      -if can? :update, bproce_contract.contract
+        =link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce_contract, data: { confirm: bproce_contract.bproce.name + "\nДействительно хотите удалить договор из этого процесса?" }, :method => 'delete', class: 'button-img' if bproce_contract.bproce

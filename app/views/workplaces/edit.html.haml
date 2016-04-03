@@ -1,0 +1,12 @@
+-title 'Рабочее место'
+-search "РабочееМесто" 
+%h1Рабочее место:
+= render 'form'
+= render 'users'
+%p
+- if user_signed_in?
+  - if current_user.workplaces.count < 2	# если у пользователя нет рабочего места
+    = link_to 'Я нахожусь на этом рабочем месте!', new_user_workplace_path 
+%p
+= link_to 'Show', @workplace, :class => 'button'
+= link_to 'Back', workplaces_path, :class => 'button'

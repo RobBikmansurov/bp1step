@@ -1,0 +1,41 @@
+-title @usr.displayname + ' роли доступа'
+-search 'Человека'
+%h1 
+  %b
+    = @usr.displayname
+  = @usr.position  
+
+
+права доступа
+-if can? :assign_roles, @usr
+  assign_role
+-if can? :manage, @usr
+  manage
+
+-if can? :read, :all
+  read all
+
+-if can? :manage, [Bproce, BusinessRole, Document]
+  manage, [Bproce, BusinessRole, Document]
+
+%h4
+  = @usr.department
+  |
+  = @usr.office
+  |
+  = mail_to @usr.email, @usr.email, :subject => "BP1Step:"
+  |
+  = @usr.phone
+  |
+
+= simple_form_for(@usr) do |u|
+  = u.error_notification
+  = u.collection_check_boxes :role_ids, Role.all, :id, :description
+  = u.error :base
+  %p
+  -if can? :assign_roles, @usr
+    = u.button :submit, 'Сохранить роли доступа'
+
+%p
+= link_to 'Show', @usr, :class => 'button'
+= link_to 'Back', users_path, :class => 'button'

@@ -1,0 +1,123 @@
+%h1 Бизнес-процессы: Первый шаг
+Процессов #{Bproce.count}, из них взято в управление #{Bproce.where.not(checked_at: nil).count}
+%br
+Метрик #{Metric.count}
+Ролей #{BusinessRole.count}
+Рабочих мест #{Workplace.count}
+Приложений #{Bapp.count}
+Инф.ресурсов #{Iresource.count}
+-if can? :show, User.first
+  Сотрудников #{User.count}
+%br
+Документов: всего #{Document.count}, из них действует - #{Document.where(status: 'Утвержден').count}, на согласовании - #{Document.where(status: 'Согласование').count}
+%br
+Директив: всего #{Directive.count}, из них действует - #{Directive.where(status: 'Действует').count}
+%br
+Договоров #{Contract.count}:
+- Contract.select("status, count(id) as count").group(:status).order(:status).each do |d|
+  -if !d.status.to_s.empty?
+    #{d.status.downcase} (#{d.count})
+Контрагентов #{Agent.count}
+%br
+Писем #{Letter.count}:
+- Letter.select("status, count(id) as count").group(:status).order(:status).each do |d|
+  -if !d.status.to_s.empty?
+    #{LETTER_STATUS.key(d.status)} (#{d.count})
+  -else
+    \+ (#{d.count})
+от
+#{Letter.select('sender, count(id)').group(:sender).length} Корреспондентов
+
+%br
+-if can? :manage, User.first
+  =link_to "Действий", activities_path
+  #{PublicActivity::Activity.count}
+
+%h2 Легенда
+Вся деятельность организации рассматривается как совокупность
+=link_to "Процессов", bproces_path
+\- последовательности действий определенных сотрудников или программных систем, направленных на достижение результата.
+После того, как
+=link_to "Процесс", bproces_path
+определен, он должен быть документирован и взят под контроль. Если процесс контролируется - он может быть повторяем и управляем. Для контроля и улучшения процесса в него могут быть встроены средства измерения
+(
+=link_to "Метрики", metrics_path
+).
+=link_to "Процесс", bproces_path
+описывается 
+= link_to "Документами", documents_path
+%br
+=link_to "Документ", documents_path
+может относиться к нескольким
+=link_to "Процессам", bproces_path
+в этом случае желательно в примечании указать какая часть документа какой
+=link_to "Процесс", bproces_path
+описывает
+%br
+Юридическое обеспечение
+=link_to "Процесса", bproces_path
+составляют
+=link_to "Договоры", contracts_path
+с
+=link_to "Контрагентами", agents_path
+
+%br
+При выделении
+=link_to "Процесса", bproces_path
+ему назначается уникальное название, определяется цель, выделяются
+=link_to "Роли", business_roles_path
+исполнителей в процессе, определяются ресурсы (например, 
+=link_to "Приложения", bapps_path
+=link_to "Инф.ресурсы", iresources_path
+=link_to "Рабочие места", workplaces_path
+)
+%p
+=link_to "Роль", business_roles_path
+всегда относится к одному конкретному 
+=link_to "Процессу", bproces_path
+Обозначение
+=link_to "Роли", business_roles_path
+может быть не уникально, но в одном
+=link_to "Процессе", bproces_path
+нельзя использовать одинаковые
+=link_to "Роли", business_roles_path
+Название роли должно отражать ее назначение в конкретном процессе, нельзя указывать должность в названии роли!
+%p
+=link_to "Приложение", bapps_path
+может использоваться в нескольких
+=link_to "Процессах", bproces_path
+, но в каждом оно имеет определенное назначение
+
+%p
+=link_to "Исполнитель", users_path
+участвует в 
+= link_to "Процессе", bproces_path
+и исполняет назначенные ему
+= link_to "Роли", business_roles_path
+
+=link_to "Исполнитель", users_path
+находится на
+= link_to "Рабочем месте", workplaces_path
+и использует в своей работе 
+=link_to "Приложения", bapps_path
+
+%h2 Соглашение о наименованиях
+Обозначения сущностей (Роль, РабочееМесто, Приложение) всегда даются в так называемой ВерблюжьейНотации (CamelNotation) - все слова с прописной буквы слитно, это позволит в будущем автоматически выделять в тексте такие сущности и подставлять ссылки.
+
+%h3 Объем доступа задается ролями доступа
+%table
+  %tr
+    %th Роль доступа
+    %th Краткое описание
+  - Role.order(:description).load.each do |r|
+    %tr
+      %td
+        -if can? :assign_roles, User
+          = link_to r.description, users_path + '?role=' + r.name
+        -else
+          = r.description
+      %td
+        = r.note
+У пользователя может быть несколько ролей доступа.
+
+%p

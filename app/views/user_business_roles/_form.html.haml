@@ -1,0 +1,13 @@
+= simple_form_for(@user_business_role) do |ubr|
+  = ubr.error_notification
+  = ubr.hidden_field :business_role_id
+  
+  = ubr.label 'Исполнитель'
+  = ubr.autocomplete_field :user_name, autocomplete_users_path
+  
+  = ubr.input :date_from, :as => :string, :input_html =>{:class=>'datepicker', :value => @user_business_role.date_from.strftime("%d.%m.%Y")}
+  = ubr.input :date_to, :as => :string, :input_html =>{:class=>'datepicker', :value =>@user_business_role.date_to.strftime("%d.%m.%Y")}
+  = ubr.input :note
+  = ubr.error :base
+  -if can? :update, @business_role
+    = ubr.button :submit

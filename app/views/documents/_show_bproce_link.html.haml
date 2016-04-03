@@ -1,0 +1,18 @@
+%p
+- if !@document.bproce.blank? # есть ссылки из документа на другие процессы?
+  %h3 
+    Процесс:
+    - @document.bproce_document.each do |bproce_document|
+      = link_to bproce_document.bproce.name, bproce_path(bproce_document.bproce) + '/documents' # в документы процесса
+      -if can? :update, Document
+        = link_to '( ' + bproce_document.purpose.to_s + ' )', edit_bproce_document_path(bproce_document)
+      -else
+        = '( ' + bproce_document.purpose.to_s + ' )'
+
+-else
+  %h3 Процесс не назначен!
+- if can? :update, @document || current_user && @document.owner_id == current_user.id # ответственный за документ тоже может добавлять процесс
+  #update_bproce
+    = link_to 'Добавить процесс', bproce_create_document_path(@document), remote: true
+
+
