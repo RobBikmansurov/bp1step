@@ -1,0 +1,25 @@
+- if @usr.roles.count > 0
+  %h2
+    Исполняет роли:
+  %table
+    %tr
+      %th Роль [ процесс ]
+      %th
+        Действия в процессе,
+        %i основание 
+    - @uroles.each do |business_role|
+      %tr
+        %td
+          %b= link_to business_role.business_role.name, business_role_path(business_role.business_role)
+          -if business_role.business_role.bproce
+            [
+            = link_to business_role.business_role.bproce.shortname, bproce_path(business_role.business_role.bproce)
+            .id_show_
+              = "##{business_role.business_role.bproce.id}"
+            ]
+          -else
+            = business_role.business_role.inspect
+        %td
+          = business_role.business_role.description
+          %br
+          %i= business_role.note

@@ -1,0 +1,60 @@
+-title "Метрики процесса"
+-search "Процесс"
+
+.id_
+  \#
+  = @bproce.id
+-if @bproce.checked_at
+  .checked_
+    = "взят в управление #{@bproce.checked_at.strftime('%d.%m.%Y')}"
+%h2
+  Процесс
+  %b
+    = link_to "[#{@bproce.shortname}]", bproce_path
+  ="#{@bproce.name}"
+%h3= @bproce.fullname
+%h4
+  %b
+    Цель:
+  -if @bproce.goal.blank?
+    не задана
+  -else
+    = markdown(@bproce.goal)
+
+%h2
+  Метрики процесса:
+
+%table
+  %tr
+    %th=sortable "sortname", "Метрика"
+    %th=sortable "name", "Название"
+    %th Описание
+    %th Глубина
+    -if can? :update, Metric
+      %th
+        Посл.значение
+      %th
+    -if can? :destroy, Metric
+      %th
+
+  - @metrics.each do |metric|
+    %tr
+      %td= link_to "[#{metric.shortname}]", metric
+      %td= link_to metric.name, metric
+      %td= truncate(metric.description, :length => 180, :omission => ' ...')
+      %td= METRICS_VALUE_DEPTH.key(metric.depth)
+      - if can? :update, metric
+        %td
+          - last_value =  MetricValue.select(:dtime).where(metric_id: metric.id).order(:dtime).last
+          - if last_value
+            = link_to "#{last_value.dtime.strftime('%d.%m.%y %H:%M:%S')}", metric_path(metric, date: last_value.dtime.strftime('%Y-%m-%d'))
+          - else
+            = link_to image_tag('File-Presentation-icon.png', :alt => 'Значения'),  metric_path(metric) + '/values?', class: 'button-img'
+        %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_metric_path(metric), class: 'button-img'
+
+      - if can? :destroy, metric
+        %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), metric, data: { confirm: 'Метрика"' + metric.name + "\"\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
+
+%p
+- if can? :create, Metric
+  = link_to "Новая Метрика процесса" , new_metric_bproce_path(@bproce), :class => 'button'

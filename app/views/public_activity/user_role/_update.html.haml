@@ -1,0 +1,11 @@
+изменил исполнителю роль доступа
+-if activity.trackable
+  = '(#' + activity.trackable.id.to_s + '):#'
+  =activity.trackable.user.id
+  =link_to activity.trackable.user.displayname, user_path(activity.trackable.user)
+  \->
+  activity.trackable.role.description
+-else
+  \#
+  = activity.trackable_id
+  уже удален

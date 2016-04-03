@@ -1,0 +1,12 @@
+-if @bproce_contract
+  %br
+  = simple_form_for(@bproce_contract) do |ff|
+    = ff.error_notification
+    = ff.hidden_field :contract_id
+    = ff.hidden_field :bproce_id
+    = ff.label 'Процесс'
+    = ff.autocomplete_field :bproce_name, autocomplete_bproces_path, id_elements: '#bproce_id', placeholder: 'подстрока в наименовании', :data => { no_matches_label: '333' }
+    = ff.input :purpose, hint: 'Укажите назначение Договора в выбранном процессе'
+    = ff.error :base
+    = ff.button :submit, 'Связать с процессом'
+-#=debug params

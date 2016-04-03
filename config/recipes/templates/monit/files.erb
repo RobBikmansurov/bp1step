@@ -1,0 +1,2 @@
+check file cluster/docs with path <%= deploy_to %>/files/monit.chk
+   if does not exist for 5 cycles then exec "<%= deploy_to %>/mount-bp1step"

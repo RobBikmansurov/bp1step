@@ -1,0 +1,35 @@
+-# основные реквизиты Процесса
+= simple_form_for(@bproce) do |f|
+  = f.error_notification
+  = f.hidden_field :parent_id
+  = f.input :shortname
+  = f.input :name
+  = f.input :fullname, :as => :text
+  = f.input :goal
+  = f.input :description
+  
+  -#= f.input :user_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Владелец процесса', :prompt => 'Владелец процесса'
+  = f.label 'Владелец процесса'
+  = f.autocomplete_field :user_name, autocomplete_users_path  
+  
+  -#= f.association :parent, :collection => Bproce.all(:order => 'name'), :label => 'Родительский процесс', :include_blank => false, :prompt => 'Выберите родительский процесс из списка'
+  %p
+  = f.label 'Родительский процесс'
+  = f.autocomplete_field :parent_name, autocomplete_bproces_path
+  = f.input :checked_at, as: :string, :input_html => {:class=>'datepicker'}  if can? :create, @bproce
+  = f.input :tag_list, :label => 'Теги (через запятую)' if can? :manage_tag, @bproce
+
+  = f.error :base
+  %p
+  = link_to 'Show', @bproce, :class => 'button'
+  = f.button :submit if can? :update, @bproce
+  
+-#if can? :create, @bproce
+  %p
+  = simple_form_for(@subproce) do |fs|
+    = fs.input :name
+    = fs.button :submit, "Новый Подпроцесс"
+
+-#=debug params
+-#=debug @bproce
+-#=debug @business_role

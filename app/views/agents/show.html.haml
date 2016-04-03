@@ -1,0 +1,82 @@
+-title 'Контрагент ' + @agent.name
+-search "Контрагент"
+.id_
+  \#
+  = @agent.id
+%h2
+  Контрагент 
+  = '[' + @agent.shortname + ']' if @agent.shortname
+%h2
+  %b= @agent.name
+  -if !@agent.town.blank?
+    %b= ", г. #{@agent.town}"
+%h3Адрес:
+= markdown(@agent.address)
+%h3Контакты:
+= markdown(@agent.contacts)
+-if !@agent.note.blank?
+  %h3Примечания:
+  = markdown(@agent.note)
+
+%hr
+
+-if @contracts.count > 0
+  %h3
+    Договоры с
+    %b= @agent.name
+    \:
+  %table
+    %tr
+      %th #
+      %th Номер
+      %th Статус
+      %th От
+      -if can? :manage, Contract
+        %th
+      -if can? :destroy, Contract
+        %th
+      
+    - @contracts.each do |contract|
+      %tr
+        %td= contract.id
+        %td
+          = "—" * (contract.depth)
+          -if contract.contract_scan.first  #  если есть скан
+            -if can? :view_contract, contract
+              - if File.exist?(contract.contract_scan.first.scan.path)
+                = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), contract.contract_scan.first.scan.url, class: 'button-img'
+          =contract.contract_type
+          = link_to contract.shortname, contract_path(contract)
+        %td= contract.status
+        %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
+        - if can? :manage, contract
+          %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_contract_path(contract), class: 'button-img'
+        - if can? :destroy, contract
+          %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), contract, data: { confirm: 'Договор"' + contract.autoname + "\"\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
+
+.info_
+  -activity1 = PublicActivity::Activity.where(trackable_type: "Agent", trackable_id: @agent.id).order("created_at asc").first
+  -if activity1
+    = link_to 'создал', activities_path(type: "Agent", id: @agent.id)
+    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    -if activity1.owner
+      = activity1.owner.displayname.to_s
+  -else
+    создан
+    = @agent.created_at.strftime('%d.%m.%Y %H:%M:%S')
+  %br
+  -activity2 = PublicActivity::Activity.where(trackable_type: "Agent", trackable_id: @agent.id).order("created_at asc").last
+  -if activity2
+    = link_to 'изменил', activities_path(type: "Agent", id: @agent.id)
+    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    = activity2.owner.displayname.to_s
+  -else
+    изменен
+    = @agent.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+
+%p
+-if can? :update, Agent
+  = link_to 'Edit', edit_agent_path(@agent), :class => 'button'
+= link_to 'Back', agents_path, :class => 'button'
+-if can? :update, Agent or can? :create, Contract
+  = link_to 'Новый договор', new_contract_agent_path(@agent), :class => 'button'

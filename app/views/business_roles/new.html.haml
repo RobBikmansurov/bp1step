@@ -1,0 +1,18 @@
+-title "Роль"
+-search "Роль"
+%h2
+  Добавить роль
+-if @business_role.bproce_id?
+  %h3
+    в процесс
+    = link_to @business_role.bproce.name, bproce_business_role_path(@business_role.bproce)
+
+= render 'form_new'
+%p
+= link_to 'Back', business_roles_path, :class => 'button'
+
+-if @business_role.bproce and @business_role.bproce.business_roles.count > 1
+  %h4
+    Другие роли процесса:
+    - @business_role.bproce.business_roles.each do | role |
+      = link_to role.name, business_role_path(role)

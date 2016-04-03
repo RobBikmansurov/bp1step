@@ -1,0 +1,19 @@
+%h1 Бизнес-процессы: Первый шаг
+
+%h3
+  = link_to "Процессы:", bproces_path
+  = Bproce.count
+%h3
+  = link_to "Роли", roles_path
+  = Role.count
+%h3
+  = link_to "Рабочие места", workplaces_path
+  = Workplace.count
+%h3
+  = link_to "Приложения", bapps_path
+  = Bapp.count
+%h3
+  = link_to "Документы", documents_path
+  = Document.count
+
+%p

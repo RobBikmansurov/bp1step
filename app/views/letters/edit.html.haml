@@ -1,0 +1,13 @@
+- title "Письмо № #{@letter.number} от #{@letter.date.strftime("%d.%m.%Y")}"
+- search 'Письмо'
+.id_
+  \#
+  = @letter.id
+
+= render 'form'
+= render 'user' if @letter.user_letter.first
+= render 'appendixes'
+
+%p
+= link_to 'Show', @letter, :class => 'button'
+= link_to 'Back', letter_path, :class => 'button'

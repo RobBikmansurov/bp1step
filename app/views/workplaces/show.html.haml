@@ -1,0 +1,58 @@
+-title 'Рабочее место ' + @workplace.designation if @workplace
+-search "РабочееМесто" 
+.id_
+  \#
+  = @workplace.id if @workplace
+%h2
+  [
+  %b
+    = @workplace.designation
+  ]:
+- if can? :manage, Workplace
+  %h3
+    = @workplace.name
+    -if !@workplace.switch.to_s.empty?
+      = link_to @workplace.switch, workplaces_path + '?switch=' + @workplace.switch.to_s, class: 'groups'
+      \:
+      = @workplace.port
+
+%h3 Описание
+= simple_format(@workplace.description, {}, {})
+- if @workplace.typical
+  Типовое рабочее место
+  = @workplace.name
+%h3
+  Местоположение:
+  = link_to @workplace.location, workplaces_path + '?location=' + @workplace.location, class: 'groups'
+
+-if @workplace.bproce_workplaces.count > 0
+  %h2
+    Участвует в процессах
+  -@workplace.bproce_workplaces.each do |wp|
+    -if can? :update, wp
+      = link_to wp.bproce.name, edit_bproce_path(wp.bproce_id)
+    -else
+      = link_to wp.bproce.name, bproce_workplace_path(wp.bproce_id)
+
+%h3
+  Сотрудники:
+  - @workplace.user_workplace.each do |user_workplace|
+    = link_to user_workplace.user.displayname, user_workplace.user
+    - date_from = user_workplace.date_from.strftime("%d.%m.%y") if user_workplace.date_from
+    - date_to = user_workplace.date_to.strftime("%d.%m.%y") if user_workplace.date_to
+    = "(#{date_from} - #{date_to}) [#{user_workplace.note}] "
+    &nbsp;
+- if can? :update, @workplace
+  #create_user
+    = link_to 'Добавить Сотрудника', create_user_workplace_path(@workplace), remote: true
+
+.info_
+  создан
+  = @workplace.created_at.strftime('%d.%m.%Y %H:%M:%S') if @workplace.created_at
+  %br
+  изменен
+  = @workplace.updated_at.strftime('%d.%m.%Y %H:%M:%S') if @workplace.updated_at
+%p
+- if can? :update, Workplace
+  = link_to 'Edit', edit_workplace_path(@workplace), :class => 'button'
+= link_to 'Back', workplaces_path, :class => 'button'

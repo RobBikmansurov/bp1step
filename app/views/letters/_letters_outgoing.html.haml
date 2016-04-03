@@ -1,0 +1,38 @@
+%h4 Письма, созданные на основании данного письма:
+%table
+  - @letters_outgoing.each do |letter|
+    %tr
+      %td ##{letter.id}
+      %td
+        - regnumber = (letter.in_out == 1 ? 'Вх.' : 'Исх.')
+        - regnumber += "№ #{letter.regnumber}"
+        - regnumber += " от #{letter.regdate.strftime('%d.%m.%y')}" if letter.regdate
+        = link_to regnumber, letter
+      %td= letter.subject
+      %td
+        - if letter.duedate
+          - if letter.status < 90 and letter.duedate <= Date.current
+            %span{ style: "color: red;" }
+              = letter.duedate.strftime("%d.%m.%y")
+          - else
+            = letter.duedate.strftime("%d.%m.%y")
+          - if letter.completion_date
+            - if letter.completion_date > letter.duedate
+              %br
+                %span{ style: "color: red;" }
+                  = letter.completion_date.strftime("%d.%m.%y")
+      %td= LETTER_STATUS.key(letter.status)
+      %td
+        - i = 0
+        - letter.user_letter.includes(:user).each do |user_letter|
+          - if user_letter.user
+            - if i > 0
+              %br
+            - s = "#{user_letter.user.displayname}"
+            - s += "\u2713".html_safe if user_letter.status and user_letter.status > 0   # пометим ответственного
+            -# = link_to s, letters_path(user: user_letter.user)
+            = link_to s, user_path(user_letter.user)
+          - else
+            удалить ссылку
+            = user_letter.inspect
+          - i += 1

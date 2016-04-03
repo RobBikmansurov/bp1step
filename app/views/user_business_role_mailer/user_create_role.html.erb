@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+  <a href=<%=h user_url(@user)%>><%= @user.displayname%></a> назначен исполнителем роли
+  <a href=<%=h business_role_url(@user_business_role.business_role) %>> <%= @user_business_role.business_role.name%> </a>:<br> - <i><%= @user_business_role.business_role.description%><i>
+  <p>в процессе <a href= <%=h bproce_url(@bproce) %>>#<%= @bproce.id.to_s %></a> - <b><%= @bproce.name.to_s %></b></p>
+  <p><%= 'с ' + @user_business_role.date_from.strftime('%d.%m.%Y') if !@user_business_role.date_from.blank? %> <%= @user_business_role.note%></p>
+  <br>
+  <p>Пожалуйста, ознакомьтесь с <a href=<%=h bproce_url(@bproce) + '/documents' %>>документами процесса</a></p>
+  <hr>
+  <p><%= @current_user.displayname %></p>
+  <p>&copy; BP1Step. Каталог процессов и ресурсов</p>
+</body>
+</html>

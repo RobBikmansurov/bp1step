@@ -1,0 +1,19 @@
+-title "Приложение процесса"
+- if @bproce_bapp.bapp_id
+  %h3
+    Приложение: 
+    = link_to @bproce_bapp.bapp.name, bapp_path(@bproce_bapp.bapp)
+- if @bproce_bapp.bproce_id
+  %h3
+    будет добавлено в процесс:
+    -#=@bproce_bapp.inspect
+    = link_to @bproce_bapp.bproce.name, bproce_path(@bproce_bapp.bproce)
+%h2
+  Назначение:
+= render 'form'
+-#= debug params
+
+%p
+- if can? :update, @bproce_bapp
+  = link_to 'Show', @bproce_bapp, :class => 'button'
+= link_to 'Back', bproce_bapps_path, :class => 'button'

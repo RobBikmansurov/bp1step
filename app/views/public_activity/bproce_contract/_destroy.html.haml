@@ -1,0 +1,10 @@
+-if activity.trackable
+  = 'удалил (#' + activity.trackable.id.to_s + '): договор ['
+  = link_to activity.trackable.contract.shortname, contract_path(activity.trackable.contract)
+  ] с процессом
+  = link_to activity.trackable.bproce.name, bproce_path(activity.trackable.bproce)
+-else
+  связь договора с процессом
+  \#
+  = activity.trackable_id
+  уже удалена

@@ -1,0 +1,47 @@
+-title "Роль"
+-search "Роль"
+.id_
+  \#
+  =@business_role.id
+%h2 
+  Роль
+  [
+  =@business_role.name
+  ]
+-if @business_role.bproce_id?
+  %h3
+    в процессе
+    = link_to @business_role.bproce.name, bproce_business_role_path(@business_role.bproce)
+= render 'form'
+%h3
+  Исполнители роли
+  [
+  =@business_role.name
+  ]
+  \:
+%table
+  %tr
+    %th Исполнители
+    %th период
+    %th примечание
+    %th
+  - @business_role.user_business_role.each do |user_business_role|
+    %tr
+      %td= link_to user_business_role.user.displayname, user_business_role.user
+      %td
+        = user_business_role.date_from.strftime("%d.%m.%Y") if user_business_role.date_from
+        \-
+        = user_business_role.date_to.strftime("%d.%m.%Y") if user_business_role.date_to
+      %td= user_business_role.note
+      - if can? :destroy, @business_role
+        %td
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), user_business_role, data: { confirm: "#{user_business_role.user.displayname} исполнитель роли [#{user_business_role.business_role.name}]\nДействительно хотите удалить его?" }, :method => 'delete', class: 'button-img'
+%p
+= link_to 'Show', @business_role, :class => 'button'
+= link_to 'Back', business_roles_path, :class => 'button'
+
+-if @business_role.bproce and @business_role.bproce.business_roles.count > 1
+  %h4
+    Другие роли процесса:
+    - @business_role.bproce.business_roles.each do | role |
+      = link_to role.name, business_role_path(role) if @business_role.id != role.id

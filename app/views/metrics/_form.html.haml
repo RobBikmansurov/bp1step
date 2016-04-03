@@ -1,0 +1,26 @@
+= simple_form_for(@metric) do |f|
+  = f.error_notification
+  = f.input :shortname
+  = f.input :name
+  = f.input :description, :as => :text
+  = f.label 'Глубина даннных'
+  = f.select :depth_name, METRICS_VALUE_DEPTH.keys
+  -if can? :update, MetricValue
+    = f.input :mtype
+    = f.input :msql, as: :text
+    = f.input :mhash, disabled: true
+  -if @metric.bproce_id?
+    %br
+    Перейти к процессу
+    = link_to @metric.bproce.name, bproce_path(@metric.bproce)
+  
+  %br
+  = f.label 'Процесс'
+  = f.autocomplete_field :bproce_name, autocomplete_bproces_path, :id_elements => '#bproce_workplace_bproce_id', :placeholder => 'подстрока в наименовании', :data => { :no_matches_label => '333' }
+  = f.error :base
+
+  %p
+  -if can? :update, @metric
+    = f.button :submit
+
+

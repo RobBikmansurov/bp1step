@@ -1,0 +1,26 @@
+- if @bproce.workplaces.empty?
+  %h3
+    В процессе пока не участвуют
+    =link_to "Рабочие Места", workplaces_path
+- else
+  %h3
+    В процессе участвуют
+    =link_to 'Рабочие Места:', bproce_workplace_path(@bproce)
+  -@bproce.bproce_workplaces.each do | bpwp |	#  список рабочих мест процесса
+    -if bpwp.workplace
+      = link_to bpwp.workplace.designation, workplace_path(bpwp.workplace)
+      = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bpwp, data: { confirm: "Действительно хотите исключить [" + bpwp.workplace.designation + "] из процесса:\n" + @bproce.name + "?" }, :method => 'delete', class: 'button-img'
+    -else
+      = bpwp.workplace.inspect
+
+-if @bproce_workplace
+  = simple_form_for(@bproce_workplace) do | bproce_workplace |
+    = bproce_workplace.error_notification
+    = bproce_workplace.hidden_field :bproce_id
+    -#= bproce_workplace.input :workplace_designation, data: {autocomplete_source: autocomplete_workplaces_path}, :as => :autocomplete, :label => 'Рабочее место', :prompt => 'Рабочее место', :placeholder => 'найти рабочее место из списка'
+    = bproce_workplace.label 'Рабочее место'
+    = bproce_workplace.autocomplete_field :workplace_designation, autocomplete_workplaces_path 
+
+    = bproce_workplace.error :base
+    -if can? :update, @bproce
+      = bproce_workplace.button :submit, 'Связать Рабочее место и Процесс'

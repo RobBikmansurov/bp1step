@@ -1,0 +1,7 @@
+изменил
+-if activity.trackable
+  = link_to "Требование от #{activity.trackable.date.strftime("%d.%m.%y")}", activity.trackable
+  = "(##{activity.trackable.id})"
+-else
+  = "Требование (##{activity.trackable_id}),"
+  которое уже удалено

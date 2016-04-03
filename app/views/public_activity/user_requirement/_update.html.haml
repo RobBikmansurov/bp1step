@@ -1,0 +1,10 @@
+изменил Исполнителя
+-if activity.trackable
+  = link_to "Требования ##{activity.trackable.requirement_id}", requirement_path(activity.trackable.requirement_id)
+  = "(##{activity.trackable.id}): -> "
+  =link_to activity.trackable.user.displayname, user_path(activity.trackable.user)
+  \->
+-else
+  Требования, но запись
+  = "(##{activity.trackable_id})"
+  уже удалена

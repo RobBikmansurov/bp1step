@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+  Внесены изменения в действия роли <a href=<%=h business_role_url(@business_role) %>> <%= @business_role.name%> </a>
+  в процессе <a href= <%=h bproce_url(@bproce) %>>[<%=@bproce.shortname.to_s %>]</a> <b><%= @bproce.name.to_s %></b> #<%= @bproce.id.to_s %>
+  <i><%= simple_format(@business_role.description, {},{})%><i>
+  <p><%= @current_user.displayname %></p>
+  <p>&copy; BP1Step. Каталог процессов и ресурсов</p>
+</body>
+</html>

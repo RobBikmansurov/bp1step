@@ -1,0 +1,12 @@
+изменил исполнителю роль
+-if activity.trackable
+  = '(#' + activity.trackable.id.to_s + '): #'
+  =activity.trackable.user.id
+  =link_to activity.trackable.user.displayname, user_path(activity.trackable.user)
+  \-> #
+  =activity.trackable.business_role.id
+  = link_to activity.trackable.business_role.name, business_role_path(activity.trackable.business_role)
+-else
+  \#
+  = activity.trackable_id
+  уже удален

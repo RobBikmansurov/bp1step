@@ -1,0 +1,25 @@
+%h1 Список соответствия Документов и Директив
+
+%table
+  %tr
+    %th Documents
+    %th Directives
+    %th Note
+    %th
+    %th
+    %th
+
+  - @document_directives.each do |document_directive|
+    %tr
+      %td= link_to document_directive.document.shortname, document_path(document_directive.document)
+      %td= link_to document_directive.directive.shortname, directive_path(document_directive.directive)
+      %td= document_directive.id
+      %td= document_directive.note
+      %td= link_to 'Show', document_directive
+      %td= link_to 'Edit', edit_document_directive_path(document_directive)
+
+.apple_pagination
+  = will_paginate @directives
+
+%p
+= link_to 'New Document directive', new_document_directive_path, :class => 'button'

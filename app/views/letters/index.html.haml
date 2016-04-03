@@ -1,0 +1,126 @@
+- search "Письма"
+- title @title_letter
+
+%h2
+  = @title_letter if @title_letter
+  - if params[:search].present?
+    [ #{params[:search]} ]
+
+%table
+  %tr
+    %th= sortable "id", "#"
+    %th= sortable 'date', "#{params[:out].present? ? 'Вх.' : 'Исх.'} № от"
+    %th= sortable 'regnumber', "Рег.#{params[:out].present? ? 'Исх.' : 'Вх.'}№ от"
+    -# %th
+    %th [ Тема ]
+    %th= link_to 'Корреспондент', senders_letters_path
+    %th= sortable 'duedate', 'Срок'
+    %th= sortable "status", "Статус"
+    %th Исполнитель
+    - if true or can? :manage, Letter or can? :destroy, Letter
+      %th
+        &nbsp;
+
+  - @letters.each do |letter|
+    %tr
+      %td= letter.id
+      %td
+        = link_to letter.number, letter
+        %br
+        = link_to letter.date.strftime("%d.%m.%y"), letters_path(date: letter.date.strftime("%d.%m.%Y")) if letter.date
+      %td
+        - if letter.regnumber.blank?
+          &nbsp;
+        - else
+          #{letter.regnumber}
+          %br
+          = link_to letter.regdate.strftime("%d.%m.%y"), letters_path(regdate: letter.regdate.strftime("%d.%m.%Y")) if letter.regdate
+      -# %td
+        = (letter.in_out == 1 ? 'В' : 'И')
+      %td
+        - if letter.letter_appendix.first  # если есть приложение
+          - if File.exist?(letter.letter_appendix.first.appendix.path)
+            = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), letter.letter_appendix.first.appendix.url, class: 'button-img'
+        = link_to truncate(letter.subject, length: 40, omission: ' ...'), letter
+      %td= link_to truncate(letter.sender, length: 20, omission: ' ...'), letters_path(addresse: letter.sender)
+      %td
+        - if letter.duedate
+          - if letter.status < 90 and letter.duedate <= Date.current
+            %span{ style: "color: red;" }
+              = letter.duedate.strftime("%d.%m.%y")
+          - else
+            = letter.duedate.strftime("%d.%m.%y")
+          - if letter.completion_date
+            - if letter.completion_date > letter.duedate
+              %br
+                %span{ style: "color: red;" }
+                  = letter.completion_date.strftime("%d.%m.%y")
+
+      %td= LETTER_STATUS.key(letter.status)
+      %td
+        - i = 0
+        - letter.user_letter.includes(:user).each do |user_letter|
+          - if user_letter.user
+            - if i > 0
+              %br
+            - s = "#{user_letter.user.displayname}"
+            - s += "\u2713".html_safe if user_letter.status and user_letter.status > 0   # пометим ответственного
+            -# = link_to s, letters_path(user: user_letter.user)
+            = link_to s, user_path(user_letter.user)
+          - else
+            удалить ссылку
+            = user_letter.inspect
+          - i += 1
+      %td
+        - if true or can? :manage, Letter
+          = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_letter_path(letter), class: 'button-img'
+        - if can? :destroy, Letter
+          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), letter,
+          data: { confirm: "Письмо № #{letter.number} от #{letter.date.strftime("%d.%m.%Y")}\n #{letter.sender}" + "\nДействительно хотите удалить?" },
+          :method => 'delete', class: 'button-img'
+
+%br
+.apple_pagination
+  = will_paginate @letters
+
+%p
+- if params[:out].present?
+  = link_to 'Входящие', letters_path, class: 'button'
+- else
+  = link_to 'Исходящие', letters_path(out: 2), class: 'button'
+- if can? :create, Letter
+  - if params[:addresse].present? # письма от адресанта + письма алресату
+    = link_to 'Новое письмо в адрес', new_letter_path(addresse: params[:addresse]), class: 'button'
+  - else
+    = link_to 'Новое письмо', new_letter_path, class: 'button'
+
+= link_to 'Корреспонденты', senders_letters_path, class: 'button'
+- if can? :create, Letter
+  - if params[:out].present?
+    = link_to 'Реестр', log_week_letters_path(out: "#{params[:out]}", week_day: "#{Date.current - 7}"), class: 'button'
+  - else
+    = link_to 'Реестр', log_week_letters_path(week_day: "#{Date.current - 7}"), class: 'button'
+= link_to 'Контроль', check_letters_path, class: 'button'
+
+%p
+- if params[:user].present?
+  -# @letters.select("letters.status, count(id) as count").group('letters.status').order('letters.status').each do |d|
+  - letters = Letter.joins(:user_letter).where("user_letters.user_id = ?", params[:user])
+  - if letters
+    - letters.select('letters.status, count(letters.id) as count').group(:status).each do |letter|
+      - if !letter.status.blank?
+        = link_to " #{LETTER_STATUS.key(letter.status)} (#{letter.count}) ", letters_path(status: letter.status, user: params[:user]), class: 'groups'
+      &nbsp;
+- else
+  - if params[:out].present?
+    Исходящие:
+    - Letter.select("status, count(id) as count").where('in_out <> 1').group(:status).order(:status).each do |d|
+      - if !d.status.to_s.empty?
+        = link_to " #{LETTER_STATUS.key(d.status)} (#{d.count}) ", letters_path(status: d.status, out: 1), class: 'groups'
+        &nbsp;
+  - else
+    Входящие:
+    - Letter.select("status, count(id) as count").where('in_out = 1').group(:status).order(:status).each do |d|
+      - if !d.status.to_s.empty?
+        = link_to " #{LETTER_STATUS.key(d.status)} (#{d.count}) ", letters_path(status: d.status), class: 'groups'
+        &nbsp;

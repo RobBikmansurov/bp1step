@@ -1,0 +1,8 @@
+-title "Приложение"
+-search "Приложение"
+%h1 Приложение
+= render 'form'
+%p
+- if can? :update, @bapp
+  = link_to 'Show', @bapp, :class => 'button'
+= link_to 'Back', bapps_path, :class => 'button'

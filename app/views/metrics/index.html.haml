@@ -1,0 +1,50 @@
+-title "Метрики процессов"
+-search "Метрику"
+
+%h2
+  = @title_metrics if @title_metrics
+  -if params[:search].present?
+    = "[ #{params[:search]} ]"
+
+%table
+  %tr
+    %th=sortable "name", "Метрика"
+    %th=sortable  "bproce_id", "Процесс"
+    %th Описание
+    %th Глубина
+    -if can? :crud, Metric
+      %th
+      %th
+    -if can? :destroy, Metric
+      %th
+
+  - @metrics.each do |metric|
+    %tr
+      %td= link_to metric.shortname, metric
+      %td
+        = link_to metric.bproce.shortname, bproce_path(metric.bproce_id) + '/metrics' if !metric.bproce.nil?
+      %td= truncate(metric.description, :length => 180, :omission => ' ...')
+      %td= METRICS_VALUE_DEPTH.key(metric.depth)
+      - if can? :crud, metric
+        %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_metric_path(metric), class: 'button-img'
+        %td= link_to image_tag('File-Presentation-icon.png', :alt => 'Значения'),  metric_path(metric) + '/values?', class: 'button-img'
+      - if can? :destroy, metric
+        %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), metric, data: { confirm: 'Метрика"' + metric.name + "\"\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
+
+.apple_pagination
+  = will_paginate @metrics
+
+%p
+- if can? :destroy, Metric
+  = link_to "Добавить новую Метрику" , new_metric_path, :class => 'button'
+%p
+Глубина данных:
+- Metric.select("depth, count(id) as count").group(:depth).order(:depth).each do |m|
+  -#-if !m.depth.to_s.empty?
+  = link_to " #{METRICS_VALUE_DEPTH.key(m.depth)} ", metrics_path(depth: m.depth.to_s), class: 'groups'  #, title: dlevel_title(d.dlevel)
+  &nbsp;
+%br
+Тип:
+- Metric.select("mtype, count(id) as count").group(:mtype).order(:mtype).each do |m|
+  = link_to " #{m.mtype}(#{m.count}) ", metrics_path(mtype: m.mtype), class: 'groups' if m.mtype and !m.mtype.empty? #, title: dlevel_title(d.dlevel) 
+  &nbsp;

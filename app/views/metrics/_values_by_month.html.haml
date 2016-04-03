@@ -1,0 +1,34 @@
+%h3
+  Значения метрики по месяцам за
+  =@current_period_date.strftime('%Y')
+%table
+  %tr
+    %th
+    -mon = @current_period_date.beginning_of_year   # начало года
+    -(1..12).each do | m |
+      %th{ :style => "width:8%" }
+        = (mon + (m - 1).month).strftime('%b %y')
+  %tr
+    %td=@metric.shortname
+    -m=1
+    -y=@current_period_date.strftime('%Y-')   # начало даты для значений
+    -@values.each do |value|
+      -if value.dtime.month > m
+        -(m..value.dtime.month - 1).each do |mo|
+          %td
+            = link_to "+" , new_value_metric_path(@metric, dtime: y + mo.to_s + '-01')
+          -m = value.dtime.month
+      %td
+        -#=link_to value.dtime.strftime(@datetime_format), edit_metric_value_path(value.id)
+        =link_to value.value, edit_metric_value_path(value.id)
+        =link_to image_tag('action_stop.gif', :alt => 'Удалить'), value, data: { confirm: 'Значение за ' + value.dtime.strftime(@datetime_format) + " = " + value.value.to_s + "\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
+        -m = m + 1
+    -if m < 12
+      -(m..12).each do |mo|
+        %td
+          = link_to "+" , new_value_metric_path(@metric, dtime: y + mo.to_s + '-01')
+
+.apple_pagination
+  .pagination
+    = link_to "&#8592;&nbsp;".html_safe  + (@current_period_date.beginning_of_year-12.month).strftime('%Y'), metric_path(@metric) + '/values?' + 'date=' + (@current_period_date.beginning_of_year-12.month).strftime('%Y-%m-01'), :class => 'previous_page' if @prev_period_date
+    = link_to (@current_period_date.end_of_year + 2.day).strftime('%Y').html_safe + "&nbsp;&#8594;".html_safe ,  metric_path(@metric) + '/values?' + 'date=' + (@current_period_date.end_of_year + 2.day).strftime('%Y-%m-01'), :class => 'next_page' if @next_period_date

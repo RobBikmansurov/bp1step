@@ -1,0 +1,20 @@
+-title "Приложение процесса"
+%h3
+  Приложение
+  = link_to @bproce_bapp.bapp.name, bapp_path(@bproce_bapp.bapp)
+%h4
+  Описание:
+  = @bproce_bapp.bapp.description
+%h3
+  используется в процессе
+  = link_to @bproce_bapp.bproce.name, bproce_path(@bproce_bapp.bproce,) + '/bapps'
+
+%h2
+  Назначение в процессе:
+= simple_format(@bproce_bapp.apurpose, {}, {})
+
+%p
+- if can? :update, @bproce_bapp
+  = link_to 'Edit', edit_bproce_bapp_path(@bproce_bapp), :class => 'button'
+= link_to 'Back', bproce_bapps_path, :class => 'button'
+

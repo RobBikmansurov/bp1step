@@ -1,0 +1,17 @@
+= simple_form_for(@directive) do |f|
+  = f.error_notification
+  = f.input :title
+  = f.input :body
+  = f.input :number
+  -if @directive.approval
+    = f.input :approval, :as => :string, :input_html => {:class=>'datepicker', :value => @directive.approval.strftime("%d.%m.%Y")}
+  -else
+    = f.input :approval, :as => :string, :input_html => {:class=>'datepicker'}
+  = f.input :status, :collection => %w[Действует Проект НеДействует], :prompt => 'Статус директивы', :input_html => { :value => 'Действует'}
+  = f.input :name, :as => :text
+  = f.input :annotation, :as => :text
+  = f.input :action, :as => :text  #, placeholder: 'все требования директивы исполнены'
+  = f.input :note, :as => :text
+
+  - if can? :update, @directive
+    = f.button :submit

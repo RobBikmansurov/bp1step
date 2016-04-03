@@ -1,0 +1,42 @@
+-title "Каталог Документов процесса " + @bp.shortname
+%h1Каталог Документов процесса
+-#= form_tag documents_path, :method => 'get' do
+  = hidden_field_tag :direction, params[:direction]
+  = hidden_field_tag :sort, params[:sort]
+  %p  
+    = text_field_tag :search, params[:search]
+    = submit_tag "Search", :name => nil
+
+%table
+  %tr
+    %th#
+    %th= sortable "name", "Наименование"
+    %th= sortable "description", "Описание"
+    -#    %th Имя файла
+    -#%th authority
+    %th= sortable "status", "Статус"
+    %th Дата
+    -#%th responsible
+    %th Место
+    %th
+    
+  - @documents.each do |document|
+    %tr
+      %td= document.id
+      %td
+        -if document.document_file_file_name  #  если есть файл документа, загруженный через paperclip
+          -if can? :view_document, document
+            - if File.exist?(document.pdf_path)
+              = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), document.pdf_url, class: 'button-img'
+        = link_to document.name, document_path(document)
+      %td= format_content(document.description)
+      -#      %td= document.filename
+      %td= document.status
+      %td= document.approved 
+      %td= document.place 
+      %td= link_to 'Удалить', document, data: { confirm: 'Действительно хотите удалить?' }, :method => :delete 
+
+.apple_pagination
+  = will_paginate @documents 
+ 
+= link_to 'Добавить новый документ', new_document_path, :class => 'button'

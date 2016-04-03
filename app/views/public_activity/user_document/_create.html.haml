@@ -1,0 +1,10 @@
+-if activity.trackable
+  добавил документ
+  = link_to '#' + activity.trackable.document_id.to_s, documents_path + '/' + activity.trackable.document_id.to_s
+  в Избранное
+  = '(#' + activity.trackable.id.to_s + '):'
+-else
+  добавлял в Избранное
+  \#
+  = activity.trackable_id
+  но удалил

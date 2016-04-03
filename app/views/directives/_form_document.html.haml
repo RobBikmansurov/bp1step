@@ -1,0 +1,31 @@
+-if @directive.id?  # для новой директивы еще нет ссылок на документы
+  %p
+  %h4 На основании этой директивы разработаны следующие внутренние документы банка:
+  %table
+    - @directive.document_directive.each do |document_directive|
+      -if document_directive.id
+        %tr
+          %td
+            -if document_directive.document
+              = link_to document_directive.document.name, document_path(document_directive.document)
+              = document_directive.document.status
+              = document_directive.document.approved.strftime('%d.%m.%Y') if document_directive.document.approved
+            -else
+              = document_directive.inspect
+          %td= link_to document_directive.note.to_s, document_directive
+          -if can? :update, @directive
+            %td
+              =link_to image_tag('action_stop.gif', :alt => 'Удалить'), document_directive, data: { confirm: document_directive.document.name + "\nДействительно хотите удалить ссылку на этот документ?" }, :method => 'delete', class: 'button-img' if document_directive.document
+
+-if @document_directive
+  = simple_form_for(@document_directive) do |dd|
+    = dd.error_notification
+    = dd.hidden_field :directive_id
+    = dd.hidden_field :document_id
+    = dd.label 'Документ'
+    = dd.autocomplete_field :document_name, autocomplete_documents_path, :id_elements => '#document_directive_document_id', :placeholder => 'подстрока в наименовании'
+    
+    -#= dd.input :document_id, :collection => Document.order('name').load, :prompt => 'Добавить внутренний документ банка', :label_method => :shortname
+    = dd.error :base
+    -if can? :update, @directive
+      = dd.button :submit, 'Добавить Внутренний документ банка'

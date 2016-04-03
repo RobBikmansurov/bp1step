@@ -1,0 +1,197 @@
+ru:
+  activerecord:
+    models:
+      agent: Контрагент
+      bapp: Приложение
+      bproce: Процесс
+      bproce_bapp: Приложение Процесса
+      bproce_document: Документ Процесса
+      bproce_workplace: Рабочее место Процесса
+      bproce_iresource: Ресурс Процесса
+      business_role: Роль
+      contract: Договор
+      contract_scan: Скан
+      document: Документ
+      directive: Директива
+      iresource: Ресурс
+      letter: Письмо
+      letter_appendix: Приложение
+      metric: Метрика
+      metric_value: Значение метрики
+      requirement: Требование
+      role: Роль
+      staff: Сотрудник
+      task: Задача
+      term: Термин
+      workplace: Рабочее место
+      user: Пользователь
+      user_business_role: Исполнитель
+      user_letter: Ответственный
+    attributes:
+      agent:
+        name: Наименование
+        shortname: Обозначение
+        town: Город
+        address: Адрес
+        contacts: Контакты
+        note: Примечание
+      bapp:
+        name: Название
+        apptype: Тип приложения
+        description: Описание
+        purpose: Назначение
+        bproce_id: Процесс
+        version_app: Версия
+        directory_app: Каталог
+        distribution_app: Дистрибутив
+        executable_file: Исполняемый файл
+        licence: Лицензия
+        source_app: Источник
+        note: Примечание
+      bproce:
+        name: Наименование
+        shortname: Обозначение
+        fullname: Полное наименование
+        goal: Цель процесса
+        description: Краткое описание
+        parent_id: Родительский процесс
+        user_id: Владелец процесса
+        checked_at: Принят в управление
+      bproce_bapp:
+        apurpose: Назначение в процессе
+      bproce_contract:
+        purpose: Назначение в процессе
+      bproce_document:
+        purpose: Назначение в процессе
+      bproce_iresource:
+        rpurpose: Назначение в процессе
+      business_role:
+        name: Обозначение
+        description: Действия в процессе
+        bproce_id: Процесс
+        features: Особенности
+      contract:
+        number: Номер
+        contract_type: Тип
+        contract_place: Оригинал
+        name: Тема
+        status: Статус
+        date_begin: Дата начала
+        date_end: Дата завершения
+        note: Примечания
+        description: О чем
+        condition: Условия окончания
+        check: Контроль исполнения
+      contract_scan:
+        name: Комментарий
+      directive:
+        title: Тип директивы
+        number: Номер
+        status: Статус
+        name: Наименование
+        approval: Дата утверждения
+        body: Принявший орган
+        note: Примечание
+        action: Требования
+        annotation: Аннотация
+      document:
+        description: Описание
+        name: Наименование
+        dlevel: Уровень
+        status: Статус
+        part: Раздел
+        place: Оригинал
+        eplace: Электронный документ
+        document_file: Электронный документ
+        approved: Дата утверждения
+        approveorgan: Орган
+        note: Примечание
+        bproce_id: Процесс
+      document_directive:
+        document_id: Документ
+        directive_id: Директива
+        note: Примечание
+      iresource:
+        level: Тип
+        label: Метка
+        location: URI
+        alocation: URL
+        volume: Объем, GB
+        note: Примечание
+        access_read: Права чтения
+        access_write: Права записи
+        access_other: Права
+        risk_category: Категория ресурса
+      letter:
+        number: Номер
+        date: Дата
+        regnumber: Номер регистрации
+        regdate: Дата регистрации
+        subject: Тема
+        body: Содержание
+        source: Источник
+        sender: Корреспондент
+        duedate: Срок исполнения
+        status: Статус
+        result: Результат
+        action: Что сделано
+      letter_appendix:
+        name: Имя
+        appendix: Приложение
+      metric:
+        name: Метрика
+        shortname: Обозначение
+        description: Описание
+        note: Примечание
+        depth: Глубина
+        mtype: Тип
+        msql: SQL-запрос
+        mhash: HASH
+      metric_value:
+        dtime: Дата значения
+        value: Значение метрики
+      profile:
+        name: Отображаемое имя
+        phone: Телефон
+      requirement:
+        label: Обозначение
+        date: Дата
+        duedate: Срок
+        body: Содержание
+        source: Источник
+        status: Статус
+        result: Результат
+      staff:
+        fullname: Фамилия Имя Отчество
+        position: Должность
+      task:
+        name: Наименование
+        description: Подробное описание
+        duedate: Срок исполнения
+        status: Статус
+        result: Результат
+        action: Что сделано
+      term:
+        name: Название
+        shortname: Краткое название
+        description: Описание
+        note: Примечание
+        source: Источник
+      user:
+        avatar: Изображение
+      user_business_role:
+        note: Примечание
+        date_from: Дата начала
+        date_to: Дата окончания
+      user_letter:
+        status: Ответственный
+      user_workplace:
+        note: Примечание
+        date_from: Дата начала
+        date_to: Дата окончания
+      workplace:
+        designation: Обозначение
+        name: имя ПК
+        location: Местоположение
+        description: Описание
+        typical: Типовое рабочее место

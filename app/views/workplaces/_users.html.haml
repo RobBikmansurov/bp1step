@@ -1,0 +1,10 @@
+%p
+%h2 Сотрудники:
+- @workplace.user_workplace.each do |user_workplace|
+  = link_to user_workplace.user.displayname, user_workplace.user
+  - date_from = user_workplace.date_from.strftime("%d.%m.%y") if user_workplace.date_from
+  - date_to = user_workplace.date_to.strftime("%d.%m.%y") if user_workplace.date_to
+  = "(#{date_from} - #{date_to}) [#{user_workplace.note}] "
+  &nbsp;
+
+  = link_to image_tag('action_stop.gif', :alt => 'Удалить'), user_workplace, data: { confirm: "Удалить сотрудника #{user_workplace.user.displayname}\n с рабочего места #{user_workplace.workplace.designation} ?" }, :method => 'delete', class: 'button-img'

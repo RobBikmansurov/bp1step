@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+  <a href=<%=h user_url(@user) %>> <%= @user.displayname%> </a>, вы - владелец процесса
+  <p>В процессе <a href= <%=h bproce_url(@bproce) %>>#<%= @bproce.id.to_s %></a> - <b><%= @bproce.name.to_s %></b> не выделены роли</p>
+  <p>Пожалуйста, выделите роли и занесите информацию в Каталог<b></p>
+  <hr>
+  <p>&copy; BP1Step. Каталог процессов и ресурсов</p>
+</body>
+</html>

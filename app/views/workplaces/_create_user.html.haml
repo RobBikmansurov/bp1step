@@ -1,0 +1,10 @@
+= simple_form_for @user_workplace, :url => update_user_workplace_path, :html => { :multipart => true } do |f|
+  = f.error_notification
+  = f.hidden_field :workplace_id
+  = f.label 'Сотрудник'
+  = f.autocomplete_field :user_name, autocomplete_users_path
+  = f.input :date_from, :as => :string, :input_html =>{:class=>'datepicker', :value => Date.today.strftime("%d.%m.%Y")}
+  = f.input :date_to, :as => :string, :input_html =>{:class=>'datepicker', :value => Date.today.change(:month => 12, :day => 31).strftime("%d.%m.%Y")}
+  = f.input :note
+  = f.error :base
+  = f.button :submit, 'Добавить Сотрудника'
