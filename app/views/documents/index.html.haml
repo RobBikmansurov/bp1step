@@ -1,6 +1,7 @@
 - search 'Документ'
 - if @directive.blank?
   - title 'Каталог Документов'
+  - command_params = {}
   - if params[:place].present?
     %h2
       Список Документов, хранящихся в
@@ -23,6 +24,7 @@
           %h2
             Список Документов в статусе
             = params[:status]
+            - command_params = command_params.merge(status: params[:status])
         - else
           - if params[:user]
             %h2
@@ -101,7 +103,7 @@
     = will_paginate @documents
 %p
 - if can? :create, Document
-  = link_to 'Каталог', documents_path(format: 'odt', all: '1'), class: 'button'
+  = link_to 'Каталог', documents_path(command_params.merge(format: 'odt', all: '1')), class: 'button'
   - if @bproce
     = link_to 'Список', documents_path(format: 'odt', bproce_id: @bproce.id), class: 'button'
     = link_to 'Новый документ процесса', new_document_bproce_path(@bproce), class: 'button'
