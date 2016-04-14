@@ -35,7 +35,7 @@
         - requirement.user_requirement.each do |user_requirement|
           - if user_requirement.user
             - s = user_requirement.user.displayname.to_s
-            - s += "\u2713".html_safe unless user_requirement.status.blank?
+            - s += "\u2713".html_safe if user_requirement.status && user_requirement.status > 0   # пометим ответственного
             = link_to s, user_requirement.user
           - else
             удалить ссылку
