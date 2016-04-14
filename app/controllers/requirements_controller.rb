@@ -2,6 +2,8 @@ class RequirementsController < ApplicationController
   respond_to :html, :json
   helper_method :sort_column, :sort_direction
   before_action :set_requirement, only: [:show, :edit, :update, :destroy, :tasks_list, :tasks_report]
+  before_filter :authenticate_user!, only: [:edit, :new, :create, :update, :check, :show]
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
     @title_requirements = 'Требования '
@@ -115,6 +117,11 @@ class RequirementsController < ApplicationController
 
     def sort_direction
       params[:direction] || "desc"
+    end
+
+    def record_not_found
+      flash[:alert] = "Требование ##{params[:id]} не найдено"
+      redirect_to action: :index
     end
 
     def tasks_list_report
