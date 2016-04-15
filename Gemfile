@@ -44,7 +44,8 @@ group :test, :development do
 end
 
 group :development do
-  #gem 'sqlite3'
+  gem "better_errors"
+  gem "binding_of_caller"
   gem 'capistrano'  # Deploy with Capistrano
   gem 'rvm-capistrano',  require: false
   gem 'capistrano-deploy', require: false
@@ -57,8 +58,8 @@ group :production do
   gem 'pg'
 end
 
-group :development, :test do
+group :test do
+  gem 'shoulda-matchers', '~> 3.1'
   gem 'rspec-rails', '~> 3.0'
-  gem 'shoulda-matchers', require: false
   gem 'factory_girl_rails'
 end
