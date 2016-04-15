@@ -6,10 +6,11 @@ load "config/recipes/nginx"
 load "config/recipes/unicorn"
 load "config/recipes/monit"
 
-#server 'vrdev1.ad.bankperm.ru', :app, :web, :db, :primary => true
-#set :serverFQDN, 'vrdev1.ad.bankperm.ru'
-server 'vrdev.ad.bankperm.ru', :app, :web, :db, :primary => true
-set :serverFQDN, 'vrdev.ad.bankperm.ru'
+srv = 'vrdev'
+server "#{srv}.ad.bankperm.ru", :app, :web, :db, :primary => true
+set :serverFQDN, "#{srv}.ad.bankperm.ru"
+#server 'vrdev.ad.bankperm.ru', :app, :web, :db, :primary => true
+#set :serverFQDN, 'vrdev.ad.bankperm.ru'
 
 # http and https proxy
 default_environment['http_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
