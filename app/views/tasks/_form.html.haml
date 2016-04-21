@@ -38,7 +38,7 @@
             %span{ style: "color: red;" }
               = " (опоздание #{days.to_i} дн.)"
         ]
-  = render 'user' if @task.user_task.first
+  = render 'user' if @task.user_task.any?
 
   = f.hidden_field :result
   - if @task.id
