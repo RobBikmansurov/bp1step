@@ -39,7 +39,12 @@ class UserTasksController < ApplicationController
     if @user_task.destroy   # удалили связь
       @task.update_column(:status, 0) if !@task.user_task.first # если нет ответственных - статус = Новая
     end
-    respond_with(@task)  # вернулись в задачу
+    #respond_with(@task)  # вернулись в задачу
+    respond_to do |format|
+      format.html { respond_with(@task, notice: 'Удален исполнитель задачи.') }
+      format.json { head :no_content }
+      format.js   { render :layout => false }
+    end
   end
 
 end
