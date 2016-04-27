@@ -12,7 +12,10 @@ class UserTask < ActiveRecord::Base
   end
 
   def user_name=(name)
-    self.user_id = User.find_by_displayname(name).id if name.present?
+    if name.present?
+      user = User.find_by_displayname(name)
+      self.user_id = user.id if user
+    end
   end
 
 end
