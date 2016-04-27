@@ -42,26 +42,27 @@
           (опоздание #{days.to_i} дн.)
     ]
 %h3
+  - is_can_update = false
+  - is_can_add_user = false
   - if @task.author_id?
     Автор:
     = link_to @task.author.displayname, user_path(@task.author.id)
     &nbsp; &nbsp;
-  Исполнители:
-  - is_can_update = false
-  - is_can_add_user = false
-  - @task.user_task.each do |user_task|
-    = link_to user_task.user.displayname, tasks_path(user: user_task.user)
-    - if user_task.status && user_task.status > 0
-      \- отв.
-      - is_can_add_user = true if user_task.user.id == current_user.id # отв.исполнители могут добавлять других исполнителей
-    &nbsp;
-    - is_can_update = true if user_task.user.id == current_user.id # исполнители могут править (кнопка Edit) - но только "Что сделано"
-- if @task.author # у задачи есть автор
-  - if @task.author.id == current_user.id
-    - is_can_update = true # автор может править
-    - is_can_add_user = true # автор может добавлять других исполнителей
+    - if @task.author_id == current_user.id # автор может добавлять других исполнителей и изменять задачу
+      - is_can_add_user = true
+      - is_can_update = true
 
-- if @task.status < 90 and can? :update, @task or is_can_add_user # автор и исполнители могут добавлять других исполнителей
+  Исполнители:
+  - @task.user_task.each do |user_task|
+    %fio
+      = link_to user_task.user.displayname, user_task.user
+      - if user_task.status? and user_task.status > 0
+        \- отв.
+        - is_can_add_user = true if user_task.user.id == current_user.id # отв.исполнители могут добавлять других исполнителей
+      - if is_can_add_user || is_can_update # автор или отв.исполнитель
+        = link_to image_tag('action_stop.gif', alt: 'Удалить'), user_task, method: :delete, data: { confirm: "Удалить исполнителя #{user_task.user.displayname}\nиз Задачи [#{user_task.task.name}] ?" }, remote: true, class: 'delete_user'
+    &nbsp;&nbsp;
+- if @task.status < 90 && is_can_add_user # автор и исполнители могут добавлять других исполнителей
   #create_user
     = link_to 'Добавить Исполнителя', create_user_task_path(@task), remote: true
 
