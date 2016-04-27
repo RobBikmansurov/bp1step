@@ -42,7 +42,7 @@
           (опоздание #{days.to_i} дн.)
     ]
 %h3
-  - is_can_update = false
+  - is_can_update = false # разрешения будем формировать когда пробежим по исполнителям
   - is_can_add_user = false
   - if @task.author_id?
     Автор:
@@ -61,8 +61,9 @@
         - is_can_add_user = true if user_task.user.id == current_user.id # отв.исполнители могут добавлять других исполнителей
       - if is_can_add_user || is_can_update # автор или отв.исполнитель
         = link_to image_tag('action_stop.gif', alt: 'Удалить'), user_task, method: :delete, data: { confirm: "Удалить исполнителя #{user_task.user.displayname}\nиз Задачи [#{user_task.task.name}] ?" }, remote: true, class: 'delete_user'
+      - is_can_update = true if @task == current_user.id # исполнители могут изменять задачу
     &nbsp;&nbsp;
-- if @task.status < 90 && is_can_add_user # автор и исполнители могут добавлять других исполнителей
+- if @task.status < 90 && is_can_add_user # автор и исполнители могут добавлять других исполнителей для незавершенных задач
   #create_user
     = link_to 'Добавить Исполнителя', create_user_task_path(@task), remote: true
 
