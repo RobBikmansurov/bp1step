@@ -4,14 +4,12 @@
     Автор:
     = link_to @task.author.displayname, user_path(@task.author.id)
     &nbsp; &nbsp;
+
   Исполнители:
   - @task.user_task.each do |user_task|
-    = link_to user_task.user.displayname, user_task.user
-    = '- отв.' if user_task.status? and user_task.status > 0
-    - if user_task.status? && user_task.status > 0 || @task.author_id? && @task.author_id == current_user.id
-      = link_to image_tag('action_stop.gif', alt: 'Удалить'),
-    	user_task, data: { confirm: "Удалить исполнителя " + user_task.user.displayname + "\nиз Задачи [#{user_task.task.name}] ?" },
-    	method: 'delete',
-    	class: 'button-img'
-    = link_to 'Destroy', user_task, method: :delete, data: { confirm: 'Are you sure?' }, :remote => true, :class => 'delete_user'
-    &nbsp;
+    %fio
+      = link_to user_task.user.displayname, user_task.user
+      = '- отв.' if user_task.status? and user_task.status > 0
+      - if user_task.status? && user_task.status > 0 || @task.author_id? && @task.author_id == current_user.id
+        = link_to image_tag('action_stop.gif', alt: 'Удалить'), user_task, method: :delete, data: { confirm: "Удалить исполнителя #{user_task.user.displayname}\nиз Задачи [#{user_task.task.name}] ?" }, remote: true, class: 'delete_user'
+
