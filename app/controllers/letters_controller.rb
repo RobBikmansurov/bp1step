@@ -105,11 +105,11 @@ class LettersController < ApplicationController
       if params[:letter][:action].present? or status_was != @letter.status
         @letter.update_column(:result, "#{@letter.result}")
         text = params[:letter][:action].to_s
-        begin
-          LetterMailer.update_letter(@letter, current_user, text).deliver # оповестим Исполнителей об изменении Письма
-        rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-          flash[:alert] = "Error sending mail to responsible for the letter"
-        end
+        # begin
+        #   LetterMailer.update_letter(@letter, current_user, text).deliver # оповестим Исполнителей об изменении Письма
+        # rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+        #   flash[:alert] = "Error sending mail to responsible for the letter"
+        # end
       end
       redirect_to @letter, notice: 'Письмо сохранено.'
     else
