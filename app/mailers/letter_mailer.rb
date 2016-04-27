@@ -25,7 +25,7 @@ class LetterMailer < ActionMailer::Base
         address += user_letter.user.email
       end
     end
-    mail(:to => address, :subject => "BP1Step: Письмо #{@letter.name}: #{LETTER_STATUS.key(@letter.status)}")
+    mail(:to => address, :subject => "BP1Step: Письмо #{@letter.name} [#{LETTER_STATUS.key(@letter.status)}] изменено")
   end
 
 end
