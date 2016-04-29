@@ -50,6 +50,7 @@ class TasksController < ApplicationController
       @task.letter_id = @letter.id if @letter
     end
     @task_status_enabled = TASK_STATUS.select { |key, value| value < 5 }  # Оставим только одно разрешенное состояние
+    @task.status = 0
     @task.duedate = Time.current.days_since(10).strftime('%d.%m.%Y')
     @task.author_id = current_user.id
   end
@@ -74,6 +75,7 @@ class TasksController < ApplicationController
     if @task.save
       redirect_to @task, notice: 'Task was successfully created.'
     else
+      @task_status_enabled = TASK_STATUS.select { |key, value| value < 5 }  # Оставим только одно разрешенное состояние
       render :new
     end
   end
@@ -176,7 +178,7 @@ class TasksController < ApplicationController
           s += '-отв.' if user_task.status && user_task.status > 0
         end
         r.add_field 'TASK_USERS', "#{s}"
-        r.add_field 'RESULT', @task.result
+        r.add_field 'RESULT', @task.result.blank? ? "Не исполнено!" : @task.result
         s, a = ' ', ' '
         days = 0
         if @task.completion_date
@@ -246,7 +248,9 @@ class TasksController < ApplicationController
             end
             s
           end
-          t.add_column(:result)
+          t.add_column(:result) do |task|
+            task.result.blank? ? "Не исполнено!" : task.result
+          end
         end
         r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
         r.add_field 'USER_NAME', current_user.displayname
