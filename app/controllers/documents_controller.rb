@@ -19,44 +19,44 @@ class DocumentsController < ApplicationController
       @bproce = Bproce.find(params[:bproce_id])
       @documents = @bproce.documents.paginate(:per_page => 100, :page => params[:page])
     else
+      @documents = Document.all
       if params[:all].present?
-        @documents = Document.order('cast (part as integer)', :name).all
+        @documents = @documents.order('cast (part as integer)', :name).all
         @title_doc = 'Каталог документов'
       else
         if params[:place].present?  # список документов по месту хранения
           if params[:place].size == 0
-            @documents = Document.where("place = ''")
+            @documents = @documents.where("place = ''")
             @title_doc += ' - место хранения оригинала [не указано]'
           else
-            @documents = Document.where(:place => params[:place])
+            @documents = @documents.where(:place => params[:place])
             @title_doc += ", хранящихся в [#{params[:place]}]"
           end
         else
           if params[:dlevel].present? #  список документов уровня
-            @documents = Document.where(:dlevel => params[:dlevel])
+            @documents = @documents.where(:dlevel => params[:dlevel])
             @title_doc += " уровень [#{params[:dlevel]}]: #{DOCUMENT_LEVEL.key(params[:dlevel].to_i)}"
           else
             if params[:part].present? #  список документов раздела документооборота
-              @documents = Document.where(:part => params[:part])
+              @documents = @documents.where(:part => params[:part])
               @title_doc += " раздела [#{params[:part]}]"
             else
-              if params[:status].present? #  список документов, имеющих конкретный статус
-                @documents = Document.where(status: params[:status])
-                @title_doc += " в статусе [#{params[:status]}]"
+              if params[:user].present? #  список документов пользователя
+                @user = User.find(params[:user])
+                @documents = Document.where(:owner_id => params[:user])
+                @title_doc += ', ответственный [' + @user.displayname + ']' if @user
               else
-                if params[:user].present? #  список документов пользователя
-                  @user = User.find(params[:user])
-                  @documents = Document.where(:owner_id => params[:user])
-                  @title_doc += ', ответственный [' + @user.displayname + ']' if @user
-                else
-                  if params[:tag].present?
-                    @title_doc += ", тэг [#{params[:tag]}]"
-                    @documents = Document.tagged_with(params[:tag]).search(params[:search])
-                  end
-                  if params[:search].present?
-                    @title_doc += ", содержащих [#{params[:search]}]"
-                    @documents = Document.search(params[:search])
-                  end
+                if params[:tag].present?
+                  @title_doc += ", тэг [#{params[:tag]}]"
+                  @documents = @documents.tagged_with(params[:tag]).search(params[:search])
+                end
+                if params[:search].present?
+                  @title_doc += ", содержащих [#{params[:search]}]"
+                  @documents = @documents.search(params[:search])
+                end
+                if params[:status].present? #  список документов, имеющих конкретный статус
+                  @documents = @documents.where(status: params[:status])
+                  @title_doc += " в статусе [#{params[:status]}]"
                 end
               end
             end

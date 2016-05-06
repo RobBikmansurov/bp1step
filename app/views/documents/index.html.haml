@@ -13,21 +13,8 @@
 - else
   - title 'Каталог Документов'
   %h2= @title_doc
-  - if params[:place].present?
-  - else
-    - if params[:dlevel]
-    - else
-      - if params[:part]
-      - else
-        - if params[:status]
-          - command_params = command_params.merge(status: params[:status])
-        - else
-          - if params[:user]
-          - else
-            - if params[:search].present?
-            - else
-              - if params[:tag].present?
-              - else
+  - command_params = command_params.merge('status' => params[:status]) if params[:status].present?
+  - command_params = command_params.merge('search' => params[:search]) if params[:search].present?
 
 %table
   %tr
@@ -88,10 +75,7 @@
     = link_to 'Список', documents_path(format: 'odt', directive_id: @directive.id), class: 'button'
     -# = link_to 'Новый документ директивы', new_document_directive_path(@directive), class: 'button'
   - else
-    - if params[:page].present?
-      = link_to 'Список', documents_path(format: 'odt', page: params[:page]), class: 'button'
-    - else
-      = link_to 'Список', documents_path(format: 'odt'), class: 'button'
+    = link_to 'Список', documents_path(command_params.merge(format: 'odt')), class: 'button'
     = link_to 'Добавить новый документ', new_document_path, class: 'button'
 
 %p
