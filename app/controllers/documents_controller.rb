@@ -47,7 +47,7 @@ class DocumentsController < ApplicationController
                 if params[:user].present? #  список документов пользователя
                   @user = User.find(params[:user])
                   @documents = Document.where(:owner_id => params[:user])
-                  @title_doc = 'владелец [' + @user.displayname + ']' if @user
+                  @title_doc += ', ответственный [' + @user.displayname + ']' if @user
                 else
                   if params[:tag].present?
                     @title_doc += ", тэг [#{params[:tag]}]"
