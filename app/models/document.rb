@@ -84,7 +84,11 @@ class Document < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search.to_i}")
+      if search.to_i > 0
+        where('name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search.to_i}")
+      else
+        where('name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%")
+      end
     else
       where(nil)
     end
