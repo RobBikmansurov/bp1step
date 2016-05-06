@@ -23,9 +23,6 @@
           - command_params = command_params.merge(status: params[:status])
         - else
           - if params[:user]
-            %h2
-              Документы владельца
-              = link_to @user.displayname, user_path(@user)
           - else
             - if params[:search].present?
             - else
