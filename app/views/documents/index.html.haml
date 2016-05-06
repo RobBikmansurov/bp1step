@@ -1,56 +1,36 @@
 - search 'Документ'
-- if @directive.blank?
+- command_params = Hash.new
+- if @bproce
+  - title "Документы процесса ##{@bproce.id}"
+  %h3
+    Документы процесса
+    = link_to @bproce.name, bproce_path(@bproce)
+- elsif @directive
+  - title "Документы директивы ##{@directive.id}"
+  %h3
+    Документы, разработанные на основании 
+    = link_to @directive.shortname, directive_path(@directive)
+- else
   - title 'Каталог Документов'
-  - command_params = {}
+  %h2= @title_doc
   - if params[:place].present?
-    %h2
-      Список Документов, хранящихся в
-      [
-      = params[:place]
-      ]
   - else
     - if params[:dlevel]
-      %h2
-        = params[:dlevel]
-        \:
-        = dlevel_title(@documents.first.dlevel)
     - else
       - if params[:part]
-        %h2
-          Список Документов раздела
-          = params[:part]
       - else
         - if params[:status]
-          %h2
-            Список Документов в статусе
-            = params[:status]
-            - command_params = command_params.merge(status: params[:status])
+          - command_params = command_params.merge(status: params[:status])
         - else
           - if params[:user]
             %h2
               Документы владельца
               = link_to @user.displayname, user_path(@user)
           - else
-            - if @bproce
-              %h3
-                Документы процесса
-                = link_to @bproce.name, bproce_path(@bproce)
+            - if params[:search].present?
             - else
-              %h1
-                Каталог Документов
-                - if params[:search].present?
-                  [ 
-                  = params[:search]
-                  ]
-                - else
-                  - if params[:tag].present?
-                    %sup
-                      = params[:tag]
-- else
-  - title "Список внутренних документов банка"
-  %h3
-    Документы, разработанные на основании 
-    = link_to @directive.shortname, directive_path(@directive)
+              - if params[:tag].present?
+              - else
 
 %table
   %tr

@@ -11,38 +11,38 @@ class DocumentsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
+    @title_doc = 'Список документов'
     if params[:directive_id].present? # документы относящиеся к директиве
       @directive = Directive.find(params[:directive_id])
       @documents = @directive.document.paginate(:per_page => 100, :page => params[:page])
-      @title_doc = 'для директивы ' + @directive.directive_name
     elsif params[:bproce_id].present?
       @bproce = Bproce.find(params[:bproce_id])
       @documents = @bproce.documents.paginate(:per_page => 100, :page => params[:page])
-      @title_doc = 'для процесса ' + @bproce.name + ' #' + @bproce.id.to_s if @bproce
     else
       if params[:all].present?
         @documents = Document.order('cast (part as integer)', :name).all
+        @title_doc = 'Каталог документов'
       else
         if params[:place].present?  # список документов по месту хранения
           if params[:place].size == 0
             @documents = Document.where("place = ''")
-            @title_doc = 'место хранения оригинала [не указано]'
+            @title_doc += ' - место хранения оригинала [не указано]'
           else
             @documents = Document.where(:place => params[:place])
-            @title_doc = 'место хранения оригинала [' + params[:place] + ']'
+            @title_doc += ", хранящихся в [#{params[:place]}]"
           end
         else
           if params[:dlevel].present? #  список документов уровня
             @documents = Document.where(:dlevel => params[:dlevel])
-            @title_doc = 'уровень [' + params[:dlevel] + ']'
+            @title_doc += " уровень [#{params[:dlevel]}]: #{DOCUMENT_LEVEL.key(params[:dlevel].to_i)}"
           else
             if params[:part].present? #  список документов раздела документооборота
               @documents = Document.where(:part => params[:part])
+              @title_doc += " раздела [#{params[:part]}]"
             else
               if params[:status].present? #  список документов, имеющих конкретный статус
-                ss = params[:status]
                 @documents = Document.where(status: params[:status])
-                @title_doc = 'статус [' + params[:status] + ']'
+                @title_doc += " в статусе [#{params[:status]}]"
               else
                 if params[:user].present? #  список документов пользователя
                   @user = User.find(params[:user])
@@ -50,8 +50,11 @@ class DocumentsController < ApplicationController
                   @title_doc = 'владелец [' + @user.displayname + ']' if @user
                 else
                   if params[:tag].present?
+                    @title_doc += ", тэг [#{params[:tag]}]"
                     @documents = Document.tagged_with(params[:tag]).search(params[:search])
-                  else
+                  end
+                  if params[:search].present?
+                    @title_doc += ", содержащих [#{params[:search]}]"
                     @documents = Document.search(params[:search])
                   end
                 end
@@ -60,10 +63,11 @@ class DocumentsController < ApplicationController
           end
         end
       end
-      @documents = @documents.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page]) if !params[:all].present?
     end
     respond_to do |format|
-      format.html { }
+      format.html {
+        @documents = @documents.order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page]) if !params[:all].present?
+      }
       format.odt  { print }
     end
   end
