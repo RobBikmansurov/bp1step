@@ -178,9 +178,16 @@ a.tags:hover {
   text-decoration: none;
 }
 
-a.groups:hover {
+a.groups:hover, a.groups-s:hover {
   color: #FFCC99;
   background-color: #993300;
+}
+
+.groups-s, a.groups-s {
+  color: OldLace;
+  box-shadow: 1px 1px 2px #330000;
+  background-color: #996633;
+  border-radius: 3px;
 }
 
 .button-img, a.button-img, a.button-img:hover {
