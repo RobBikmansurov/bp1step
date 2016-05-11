@@ -37,8 +37,7 @@
     - @contract.contract_place = '!?' if @contract.contract_place.blank?
     =  f.hidden_field :contract_place
     Место хранения оригиналов на бумаге:
-    %b= link_to @contract.contract_place, contracts_path + '?place=' + @contract.contract_place, class: 'groups', title: place_title(@contract.contract_place)
-
+    %b= link_to @contract.contract_place, contracts_path(place: @contract.contract_place), class: 'groups'
 
   -if can? :update, @contract
     %p

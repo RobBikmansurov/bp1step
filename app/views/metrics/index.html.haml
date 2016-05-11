@@ -41,10 +41,10 @@
 Глубина данных:
 - Metric.select("depth, count(id) as count").group(:depth).order(:depth).each do |m|
   -#-if !m.depth.to_s.empty?
-  = link_to " #{METRICS_VALUE_DEPTH.key(m.depth)} ", metrics_path(depth: m.depth.to_s), class: 'groups'  #, title: dlevel_title(d.dlevel)
+  = link_to " #{METRICS_VALUE_DEPTH.key(m.depth)} ", metrics_path(depth: m.depth.to_s), class: 'groups'
   &nbsp;
 %br
 Тип:
 - Metric.select("mtype, count(id) as count").group(:mtype).order(:mtype).each do |m|
-  = link_to " #{m.mtype}(#{m.count}) ", metrics_path(mtype: m.mtype), class: 'groups' if m.mtype and !m.mtype.empty? #, title: dlevel_title(d.dlevel) 
+  = link_to " #{m.mtype}(#{m.count}) ", metrics_path(mtype: m.mtype), class: 'groups' if m.mtype and !m.mtype.empty?
   &nbsp;

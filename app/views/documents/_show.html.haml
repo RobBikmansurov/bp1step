@@ -16,7 +16,7 @@
     %b= @document.approved.strftime('%d.%m.%Y')
 %h3
   уровень документа:
-  %b= link_to @document.dlevel.to_s + ': ' + dlevel_title(@document.dlevel), documents_path + '?dlevel=' + @document.dlevel.to_s, class: 'groups'
+  %b= link_to "#{@document.dlevel}: #{DOCUMENT_LEVEL.key(@document.dlevel)}", documents_path(dlevel: @document.dlevel.to_s), class: 'groups'
 
 = render 'show_bproce_link'
 
@@ -37,7 +37,7 @@
 %p
 %h3
   Место хранения оригинала:
-  %b= link_to @document.place, documents_path + '?place=' + @document.place, class: 'groups', title: place_title(@document.place) if !@document.place.blank?
+  %b= link_to @document.place, documents_path(place: @document.place), class: 'groups', title: DOCUMENT_PLACE.key(@document.place) if !@document.place.blank?
 
 %h4
   -if @document.document_file_file_name
