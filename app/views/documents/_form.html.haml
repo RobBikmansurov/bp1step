@@ -22,7 +22,7 @@
     - @document.place = '!?' if @document.place.blank?
     =  f.hidden_field :place
     Место хранения оригиналов на бумаге:
-    %b= link_to @document.place, documents_path + '?place=' + @document.place, class: 'groups', title: place_title(@document.place)
+    %b= link_to @document.place, documents_path(place: @document.place), class: 'groups', title: DOCUMENT_PLACE.key(@document.place)
 
     %p
   -if can? :manage_tag, @document

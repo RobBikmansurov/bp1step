@@ -30,7 +30,7 @@ class DocumentsController < ApplicationController
             @title_doc += ' - место хранения оригинала [не указано]'
           else
             @documents = @documents.where(:place => params[:place])
-            @title_doc += ", хранящихся в [#{params[:place]}]"
+            @title_doc += ", хранящихся в [#{params[:place]}]: #{DOCUMENT_PLACE.key(params[:place])}"
           end
         else
           if params[:dlevel].present? #  список документов уровня
@@ -241,7 +241,7 @@ private
       nnp = 0
       first_part = 0 # номер раздела для сброса номера документа в разделе
       r.add_field 'REPORT_DATE', Date.today.strftime('%d.%m.%Y')
-      @title_doc = '' if !@title_doc
+      #@title_doc = '' if !@title_doc
       @title_doc += '  стр.' + params[:page] if params[:page].present?
       r.add_field 'REPORT_TITLE', @title_doc
       r.add_table('TABLE_01', @documents, header: true) do |t|

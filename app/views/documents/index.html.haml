@@ -19,6 +19,7 @@
     - command_params = command_params.merge(command_search) # сохранить параметр для вызова Списка
   - command_params = command_params.merge('status' => params[:status]) if params[:status].present?
   - command_params = command_params.merge('place' => params[:place]) if params[:place].present?
+  - command_params = command_params.merge('dlevel' => params[:dlevel]) if params[:dlevel].present?
 
 %table
   %tr
@@ -86,28 +87,22 @@
 Статус:
 - Document.select('status, count(id) as count').group(:status).order(:status).each do |d|
   - unless d.status.to_s.empty?
-    - if params[:status].present? && d.status == params[:status]
-      = link_to d.status, documents_path + '?status=' + d.status.to_s, class: 'groups-s'
-    -else
-      = link_to d.status, documents_path(command_search.merge(status: d.status)), class: 'groups'
+    - cl = (params[:status].present? && d.status == params[:status]) ? 'groups-s' : 'groups'
+    = link_to d.status, documents_path(command_search.merge(status: d.status)), class: cl
     &nbsp;
 %br
 Уровень:
 - Document.select('dlevel, count(id) as count').group(:dlevel).order(:dlevel).each do |d|
   - unless d.dlevel.to_s.empty?
-    - if params[:dlevel].present? && d.dlevel.to_s == params[:dlevel]
-      = link_to dlevel_title(d.dlevel), documents_path + '?dlevel=' + d.dlevel.to_s, class: 'groups-s', title: DOCUMENT_LEVEL.key(d.dlevel)
-    -else
-      = link_to dlevel_title(d.dlevel), documents_path + '?dlevel=' + d.dlevel.to_s, class: 'groups', title: DOCUMENT_LEVEL.key(d.dlevel)
+    - cl = (params[:dlevel].present? && d.dlevel.to_s == params[:dlevel]) ? 'groups-s' : 'groups'
+    = link_to DOCUMENT_LEVEL.key(d.dlevel), documents_path(dlevel: d.dlevel.to_s), class: cl, title: DOCUMENT_LEVEL.key(d.dlevel)
     &nbsp;
 %br
 Оригинал:
 - Document.select('place, count(id) as count').group(:place).order(:place).each do |d|
   - unless d.place.to_s.empty?
-    - if params[:place].present? && d.place == params[:place]
-      = link_to d.place, documents_path + '?place=' + d.place.to_s, class: 'groups-s', title: place_title(d.place)
-    - else
-      = link_to d.place, documents_path + '?place=' + d.place.to_s, class: 'groups', title: place_title(d.place)
+    - cl = (params[:place].present? && d.place == params[:place]) ? 'groups-s' : 'groups'
+    = link_to d.place, documents_path(command_search.merge(place: d.place.to_s)), class: cl, title: DOCUMENT_PLACE.key(d.place)
     &nbsp;
 %p
 Теги:
