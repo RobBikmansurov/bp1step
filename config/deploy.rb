@@ -63,6 +63,10 @@ namespace :deploy do
     run "rm -rf #{deploy_to}/config/routes.rb"                                              # а может надо весь config заменять?
     run "ln -s -- #{deploy_to}/current/config/routes.rb #{deploy_to}/config/routes.rb"
     #run "rm -rf #{deploy_to}/config"
+
+    # скопируем конфигурационый файл
+    run "cp #{deploy_to}/config/environments/production.rb #{deploy_to}/current/config/environments/production.rb"
+
     # скопируем конфигурационые файлы с секретами
     run "cp #{deploy_to}/config/ldap.yml #{deploy_to}/current/config/ldap.yml"
     run "cp #{deploy_to}/config/database.yml #{deploy_to}/current/config/database.yml"
