@@ -315,9 +315,8 @@ class LettersController < ApplicationController
       r.add_field 'REPORT_PERIOD', Date.current.strftime('%d.%m.%Y')
       r.add_field 'WEEK_NUMBER', @week_number
       r.add_table('LETTERS', @letters, header: true) do |t|
-        t.add_column(:nn) do |nn|
+        t.add_column(:nn) do |n1|
           nn += 1
-          "#{nn}."
         end
         t.add_column(:id)
         t.add_column(:regnumber) do |letter|

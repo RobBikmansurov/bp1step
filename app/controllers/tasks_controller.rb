@@ -83,6 +83,7 @@ class TasksController < ApplicationController
   def create_user
     @task = Task.find(params[:id])
     @user_task = UserTask.new(task_id: @task.id)    # заготовка для исполнителя
+    @user_task_status_boolean = false
     render :create_user
   end
 
@@ -112,6 +113,7 @@ class TasksController < ApplicationController
           user_task_clone.status = user_task.status
           user_task = user_task_clone
         end
+        user_task.status = params[:user_task][:status_boolean] if params[:user_task][:status_boolean].present?
         if user_task.save
           flash[:notice] = "Исполнитель #{user_task.user_name} назначен"
           begin

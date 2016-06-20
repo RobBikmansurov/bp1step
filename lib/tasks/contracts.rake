@@ -12,7 +12,7 @@ namespace :bp1step do
       emails = u.email # DEBUG
       emails = contract.owner.email.to_s if contract.owner   # ответственный за договор
       emails += ", " + contract.payer.email.to_s if contract.payer
-      ContractMailer.check_outdated_contracts(contract, emails, 'прекратил').deliver
+      ContractMailer.check_outdated_contracts(contract, emails, 'завершен').deliver
       logger.info "      ##{contract.id.to_s} \t#{emails}"
     end
     logger.info "      #{outdated_contracts_count} contracts is outdated"
