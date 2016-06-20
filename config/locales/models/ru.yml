@@ -184,7 +184,9 @@ ru:
         date_from: Дата начала
         date_to: Дата окончания
       user_letter:
-        status: Ответственный
+        status: Статус
+      user_task:
+        status: Статус
       user_workplace:
         note: Примечание
         date_from: Дата начала

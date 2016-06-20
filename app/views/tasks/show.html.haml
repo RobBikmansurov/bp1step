@@ -56,7 +56,7 @@
   - @task.user_task.each do |user_task|
     %fio
       = link_to user_task.user.displayname, user_task.user
-      - if user_task.status? and user_task.status > 0
+      - if user_task.responsible?
         \- отв.
         - is_can_add_user = true if user_task.user.id == current_user.id # отв.исполнители могут добавлять других исполнителей
       - if is_can_add_user || is_can_update # автор или отв.исполнитель

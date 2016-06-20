@@ -5,7 +5,9 @@ class UserTask < ActiveRecord::Base
   belongs_to :user
   belongs_to :task
 
-  attr_accessible :user_id, :task_id, :status, :review_date, :user_name
+  attr_accessible :user_id, :task_id, :status, :review_date, :user_name, :status_boolean
+  attr_reader :responsible
+  attr_accessor :status_boolean
 
   def user_name
     user.try(:displayname)
@@ -16,6 +18,10 @@ class UserTask < ActiveRecord::Base
       user = User.find_by_displayname(name)
       self.user_id = user.id if user
     end
+  end
+
+  def responsible? # ответственный исполнитель, если задан статус, отличный от 0
+    (status.nil? || status == 0 ? false : true)
   end
 
 end
