@@ -3,7 +3,7 @@
 .id_ ##{@task.id}
 
 %h2
-  Задача от #{@task.created_at.strftime('%d.%m.%Y %H:%M:%S')}
+  Задача ##{@task.id} от #{@task.created_at.strftime('%d.%m.%Y')}
 
 - if @requirement
   %h3
