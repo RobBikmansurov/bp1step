@@ -64,7 +64,9 @@ class ContractsController < ApplicationController
       end
     end
     respond_to do |format|
-      format.html { @contracts = @contracts.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page]) }
+      format.html { 
+        @contracts = @contracts.includes(:agent).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      }
       format.odt  { print }
       format.json { render json: @contracts }
       format.xml  { render xml: @contracts }
@@ -174,7 +176,7 @@ class ContractsController < ApplicationController
     @contract.parent_id = contract.id
     if @contract.save
       flash[:notice] = "Successfully cloned Contract ##{contract.id}" if @contract.save
-      contract.bproce_contract.each do |bp| # клонируем ссылки на процессы
+      contract.bproce_contract.find_each do |bp| # клонируем ссылки на процессы
         bproce_contract = BproceContract.new(contract_id: @contract, bproce_id: bp)
         bproce_contract.contract = @contract
         bproce_contract.bproce = bp.bproce

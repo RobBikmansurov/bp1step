@@ -166,14 +166,14 @@ class DocumentsController < ApplicationController
     @document.place = '?!'  # место хранения не определено
     if @document.save
       flash[:notice] = "Successfully cloned Document." if @document.save
-      document.bproce_document.each do |bp|     # клонируем ссылки на процессы
+      document.bproce_document.find_each do |bp|     # клонируем ссылки на процессы
         bproce_document = BproceDocument.new(document_id: @document, bproce_id: bp)
         bproce_document.document = @document
         bproce_document.bproce = bp.bproce
         bproce_document.purpose = bp.purpose
         bproce_document.save
       end
-      document.document_directive.each do |document_directive|    # клонируем ссылки на директивы
+      document.document_directive.find_each do |document_directive|    # клонируем ссылки на директивы
         new_document_directive = DocumentDirective.new(document_id: @document.id, directive_id: document_directive.directive_id, note: document_directive.note)
         new_document_directive.save
       end

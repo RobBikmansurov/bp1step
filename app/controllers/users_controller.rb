@@ -141,7 +141,7 @@ class UsersController < ApplicationController
   end
 
   def update_ava
-    params[:user][:avatar].each do |key, u|
+    params[:user][:avatar].find_each do |key, u|
       if(u[:id] && u[:crop_x] && u[:crop_y] && u[:crop_w] && u[:crop_h])
         old_upload = Upload.find(u[:id].gsub(/D/, '').to_i)
         if(old_upload)
