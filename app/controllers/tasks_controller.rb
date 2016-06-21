@@ -178,7 +178,7 @@ class TasksController < ApplicationController
         r.add_field 'DUEDATE', @task.duedate.strftime('%d.%m.%Y')
         r.add_field "AUTHOR", "#{@task.author.displayname}"
         s = ''
-        @task.user_task.each do |user_task|
+        @task.user_task.find_each do |user_task|
           s += ', ' unless s.blank?
           s += user_task.user.displayname
           s += '-отв.' if user_task.status && user_task.status > 0
@@ -247,7 +247,7 @@ class TasksController < ApplicationController
           end
           t.add_column(:users) do |task| # исполнители
             s = ''
-            task.user_task.each do |user_task|
+            task.user_task.find_each do |user_task|
               s += ', ' unless s.blank?
               s += user_task.user.displayname
               s += '-отв.' if user_task.status && user_task.status > 0

@@ -349,7 +349,7 @@ class LettersController < ApplicationController
         end
         t.add_column(:users) do |letter| # исполнители
           s = ''
-          letter.user_letter.each do |user_letter|
+          letter.user_letter.find_each do |user_letter|
             s += ', ' if !s.blank?
             s += user_letter.user.displayname
             s += '-отв.' if user_letter.status and user_letter.status > 0

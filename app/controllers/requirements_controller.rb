@@ -142,7 +142,7 @@ class RequirementsController < ApplicationController
         r.add_field "REQUIREMENT_DUEDATE", @requirement.duedate.strftime('%d.%m.%Y') if @requirement.duedate
         r.add_field "REQUIREMENT_AUTHOR", "#{@requirement.author.displayname}"
         s = ''
-        @requirement.user_requirement.each do |user_requirement|
+        @requirement.user_requirement.find_each do |user_requirement|
           s += ", " if !s.blank?
           s += user_requirement.user.displayname
           s += '-отв.' if user_requirement.status and user_requirement.status > 0
@@ -175,7 +175,7 @@ class RequirementsController < ApplicationController
           end
           t.add_column(:users) do |task|  # исполнители задачи
             s = ''
-            task.user_task.each do |user_task|
+            task.user_task.find_each do |user_task|
               s += ", " if !s.blank?
               s += user_task.user.displayname
               s += '-отв.' if user_task.status and user_task.status > 0
@@ -210,7 +210,7 @@ class RequirementsController < ApplicationController
         r.add_field "REQUIREMENT_DUEDATE", @requirement.duedate.strftime('%d.%m.%Y')
         r.add_field "REQUIREMENT_AUTHOR", "#{@requirement.author.displayname}"
         s = ''
-        @requirement.user_requirement.each do |user_requirement|
+        @requirement.user_requirement.find_each do |user_requirement|
           s += ", " if !s.blank?
           s += user_requirement.user.displayname
           s += '-отв.' if user_requirement.status and user_requirement.status > 0
@@ -252,7 +252,7 @@ class RequirementsController < ApplicationController
           end
           t.add_column(:users) do |task|  # исполнители задачи
             s = ''
-            task.user_task.each do |user_task|
+            task.user_task.find_each do |user_task|
               s += ", " if !s.blank?
               s += user_task.user.displayname
               s += '-отв.' if user_task.status and user_task.status > 0
