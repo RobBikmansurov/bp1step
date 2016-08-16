@@ -18,9 +18,14 @@
       %tr
         %td= letter.id
         %td
-          = link_to letter.number, letter
-          от 
-          = letter.date.strftime("%d.%m.%y") if letter.date
+          - if letter.in_out > 1
+            %div.h2{style: 'display: inline; color: #eee; background-color: #000;'}
+              #{LETTER_DIRECTION.key(letter.in_out)[0..2]}:
+            = link_to "№#{letter.regnumber}", letter
+            = "от #{letter.regdate.strftime('%d.%m.%y')}" if letter.regdate
+            на
+          = link_to "№#{letter.number}", letter
+          = "от #{letter.date.strftime('%d.%m.%y')}" if letter.date
         %td= link_to letter.subject, letter
         %td= letter.sender
         %td
@@ -80,7 +85,7 @@
       %th Метка, обозначение
       %th Срок
       %th Статус
-  
+
     - @requirements.each do |requirement|
       %tr
         %td= requirement.id
