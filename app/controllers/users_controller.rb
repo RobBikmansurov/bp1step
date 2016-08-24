@@ -67,7 +67,7 @@ class UsersController < ApplicationController
       format.html { render layout: false }
     end
   end
-  
+
   def uroles
     @uroles = @usr.user_business_role.includes(:business_role).order('business_roles.name') # исполняет роли
     #- @uworkplaces = @usr.user_workplace # рабочие места пользователя
@@ -85,8 +85,9 @@ class UsersController < ApplicationController
   end
 
   def contracts
-    @contracts = Contract.order(:number).where(owner_id: @usr.id)
-    @contracts_pay = Contract.order(:number).where(payer_id: @usr.id)
+    contracts = Contract.where(status: 'Действует').includes(:agent, :contract_scan).order(:number)
+    @contracts = contracts.where(owner_id: @usr.id).includes(:agent, :contract_scan).order(:number)
+    @contracts_pay = Contract.where(payer_id: @usr.id).includes(:agent, :contract_scan).order(:number)
     respond_to do |format|
       format.html { render layout: false }
     end
@@ -134,7 +135,7 @@ class UsersController < ApplicationController
     ava_file = params[:user][:avatar] if params[:user].present?
     if !ava_file.blank?
       flash[:notice] = 'Изображение "' + ava_file.original_filename  + '" загружено.' if @usr.update_attributes(avatar_params)
-    else      
+    else
       flash[:alert] = "Ошибка - имя файла не указано."
     end
     redirect_to @usr
@@ -151,7 +152,7 @@ class UsersController < ApplicationController
         end
       end
     end
-    
+
     respond_to do |format|
       if @usr.update_attributes(params[:user])
         format.html { redirect_to @usr, notice: 'Card was successfully updated.' }
