@@ -1,2 +1,27 @@
 #Contracts
-  = render 'user_busines_contracts'
+  %h2
+    Отвечает за
+    = link_to 'договоры:', contracts_path(user: @usr.id.to_s)
+  - if @contracts.exists?
+    %table
+      %th #
+      %th
+      %th Номер
+      %th От
+      %th Статус
+      %th Контрагент
+      = render @contracts
+
+  %h2
+    Отвечает за
+    = link_to 'оплату', contracts_path(payer: @usr.id.to_s)
+    договоров:
+  - if @contracts_pay.exists?
+    %table
+      %th #
+      %th
+      %th Номер
+      %th От
+      %th Статус
+      %th Контрагент
+      = render @contracts_pay
