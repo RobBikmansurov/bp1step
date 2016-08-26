@@ -2,6 +2,7 @@
 
 PublicActivity.enabled = false
 # access roles
+Role.destroy_all
 Role.create!(:note => 'Просмотр информации по исполняемым ролям, участию в процессах, комментирование документов процесса', :name => 'user', :description => 'Исполнитель')
 Role.create!(:note => 'Ведение документов, ролей, приложений, рабочих мест процесса, назначение исполнителей на роли', :name => 'owner', :description => 'Владелец процесса')
 Role.create!(:note => 'Ведение списка процессов, документов, ролей, рабочих мест, приложений', :name => 'analitic', :description => 'Бизнес-аналитик')
@@ -16,7 +17,10 @@ puts "access roles created"
 Role.all.pluck(:name)
 puts
 # users
-user1 = User.create(:displayname => 'Иванов И.И.', :username => 'ivanov', :email => 'ivanov@example.com', :password => 'ivanov', firstname: 'Иван', middlename: 'Иванович', lastname: 'Иванов')
+User.destroy_all
+user1 = User.create(displayname: 'Иванов И.И.', username: 'ivanov', email: 'ivanov@example.com', password: 'ivanov', 
+	                 firstname: 'Иван', middlename: 'Иванович', lastname: 'Иванов', office: '101', position: 'Экономист',
+	                 phone: '+7(342)212-34-56')
 user1.roles << Role.find_by_name(:author)
 user1.roles << Role.find_by_name(:analitic)
 user1.roles << Role.find_by_name(:owner)
@@ -35,6 +39,10 @@ user6.roles << Role.find_by_name(:author)
 user6.roles << Role.find_by_name(:owner)
 user6.roles << Role.find_by_name(:analitic)
 user6.roles << Role.find_by_name(:security)
+user7 = User.create(displayname: 'Яровая И.Й.', username: 'shapoklyak', email: 'shapoklyak@example.com',
+	password: 'shapoklyak', phone: '8-800-0001234')
+user7.roles << Role.find_by_name(:secretar)
+user7.roles << Role.find_by_name(:author)
 puts "users created"
 
 # applications
@@ -120,20 +128,29 @@ ir1.save
 puts "iresources created"
 
 d = Document.create(name: 'Положение об оплате счетов', status: 'Утвержден', dlevel: 2, place: 'Бух.Папка1', approved: '2015-01-01', approveorgan: 'Правление')
-d.owner_id = user1.id
+d.owner_id = user2.id
+d.save
+d.bproce_document.create(bproce_id: bp14.id, purpose: '???')
+d = Document.create(name: 'Устав', status: 'Утвержден', dlevel: 2, place: 'Сейф1', approved: '2015-01-01', approveorgan: 'Собрание акционеров')
+d.owner_id = user4.id
 d.save
 
-d.bproce_document.create(bproce_id: bp14.id)
 puts 'documents created'
 
-ag1 = Agent.create(name: 'ООО 1С в помощь', town: 'Урюпинск', address: '123000. г.Урюпинск, ул.Ленина,2-101', contacts: 'Оля')
+ag1 = Agent.create(name: 'ООО 1С в помощь', town: 'Урюпинск', address: '123000. г.Урюпинск, ул.Ленина,2-101', contacts: 'Оля, +7(900)1234567')
 ag2 = Agent.create(name: 'ООО Рога и копыта', town: '', address: '614000. г.Пермь, ул.Ленина, 1', contacts: 'info@example.com')
 puts 'agents created'
 
 co = Contract.new(number: '2-2014', name: 'предоставления услуг', status: 'Действует', 
-	date_begin: Date.current, text: 'text', contract_type: 'Договор', description: 'о предоставлении услуг связи')
+	date_begin: Date.current - 6.month, text: 'text', contract_type: 'Договор', description: 'о предоставлении услуг связи')
 co.agent_id = ag2.id
 co.owner_id = user1.id
+co.payer_id = user2.id
+co.save
+co = Contract.new(number: '1', name: 'оказания услуг', status: 'Действует', 
+	date_begin: Date.current - 1.year, text: 'text', contract_type: 'Договор', description: 'о технической поддержке')
+co.agent_id = ag1.id
+co.owner_id = user3.id
 co.payer_id = user2.id
 co.save
 puts 'contracts created'
@@ -141,10 +158,46 @@ puts 'contracts created'
 m = Metric.create(name: 'ИнцидентовВсего', description: 'количество инцидентов, зарегистрированных в системе', depth: '3', bproce_id: bp211.id)
 puts "metrics created"
 
-di=Directive.create(title: 'Положение', number: '123-П', approval: Date.current, name: 'gjgjgjjhhkjkhj', 
+di = Directive.create(title: 'Положение', number: '123-П', approval: Date.current - 1.month, name: 'gjgjgjjhhkjkhj', 
 	status: 'Действует', body: 'ЦБ РФ', note: 'Об управлении финансами')
-dd=di.document_directive.create(document_id: d.id)
-
+dd = di.document_directive.create(document_id: d.id)
 puts "directives created"
+
+
+l1 = Letter.create(number: "12-34/123", date: Date.current - 10, subject: "о предоставлении информации", source: "фельдпочта", 
+	               sender: "Администрация президента", body: "срочно предоставить", duedate: Date.current - 1, author: user7,
+	               status: 5)
+l1.user_letter.create(user_id: user5.id, status: 1)
+l1.user_letter.create(user_id: user6.id)
+l1 = Letter.create(number: "99/2", date: Date.current - 1.month, subject: "о согласовании митинга", source: "курьер", 
+	               sender: "ФБК", body: "хотят согласовать", duedate: Date.current - 20, author: user7,
+	               status: 5)
+l1.user_letter.create(user_id: user2.id, status: 1)
+l1.user_letter.create(user_id: user3.id)
+puts 'Letters created'
+
+r = Requirement.create(label: "Напрячься и предоставить информацию!", date: Date.current - 5, duedate: Date.current,
+                        body: "товарищи, надо собраться и сделать", status: 0, letter_id: l1.id, author: user5)
+r.user_requirement(user_id: user5.id, requirement_id: r.id, status: 1)
+
+puts 'Requirements created'
+
+t1 = Task.create(name: "Напрячься срочно и сильно", description: "Очень важно сделать это усилие.\r\nСрочно и быстро и резко.\r\nВ едином порыве",
+                 duedate: Date.current - 3, requirement_id: r.id, author: user6, status: 5)
+t1.user_task.create(user_id: user4.id)
+t2 = Task.create(name: "предоставить", description: "Всем вместе взять и предоставить.\r\nДо единогоьгвоздя, нежно и в тему",
+                 duedate: Date.current, requirement_id: r.id, author: user2, status: 50)
+t2.user_task.create(user_id: user2.id)
+puts 'Tasks created'
+
+User.all do |u|
+  u.office = Random.rand(110)
+  u.phone = Random.rand(11000000)
+  #u.firstname = ['Иван', 'Петр', 'Михаил', 'Махмуд', 'Джон', 'Сидор'].sample if u.firstname.nil?
+  #u.lastname = ['Иванов', 'Петров', 'Михайлов', 'Махмудов', 'Джон', 'Сидоров'].sample if u.lastname.nil?
+  u.position = ['Директор', 'Капитан', 'Экономист', 'Полковник', 'Бухгалтер']
+  p u.position, u.phone, u.office
+  u.save!
+end
 
 PublicActivity.enabled = true
