@@ -8,7 +8,7 @@ Business processes documentation organization and generation, the 1st step of in
 **BP1Step** - простой инструмент для документирования процессов, ресурсов, действий сотрудников, это web-приложение на базе Ruby on Rails с несколькими сервисными rake-задачами (например: синхронизация списка пользователей из LDAP, контроль бизнес-правил).
 Аутентификация пользователей с помощью Devise, ограничения ролей доступа на базе CanCanCan.
 
-https://travis-ci.org/RobBikmansurov/BPDoc.svg?branch=master
+[![Build Status](https://travis-ci.org/RobBikmansurov/BPDoc.svg?branch=master)](https://travis-ci.org/RobBikmansurov/BPDoc)
 
 Язык: русский
 
