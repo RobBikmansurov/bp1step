@@ -34,13 +34,13 @@ user4.roles << Role.find_by_name(:author)
 user5 = User.create(displayname: 'Путин В.В.', username: 'putinx', email: 'putinx@example.com', password: 'putinx', department: 'Библиотека', position: 'Юрист', office: '201', phone: '2201')
 user5.roles << Role.find_by_name(:keeper)
 user5.roles << Role.find_by_name(:user)
-user6 = User.create(:displayname => 'Кудрин А.В.', :username => 'kudrin', :email => 'kudrin@example.com', :password => 'kudrin')
+user6 = User.create(:displayname => 'Кудрин А.В.', :username => 'kudrin', :email => 'kudrin@example.com', :password => 'kudrin', position: 'Финансист')
 user6.roles << Role.find_by_name(:author)
 user6.roles << Role.find_by_name(:owner)
 user6.roles << Role.find_by_name(:analitic)
 user6.roles << Role.find_by_name(:security)
 user7 = User.create(displayname: 'Яровая И.Й.', username: 'shapoklyak', email: 'shapoklyak@example.com',
-	password: 'shapoklyak', phone: '8-800-0001234')
+	password: 'shapoklyak', phone: '8-800-0001234', position: 'старший менеджер')
 user7.roles << Role.find_by_name(:secretar)
 user7.roles << Role.find_by_name(:author)
 puts "users created"
@@ -158,10 +158,14 @@ puts 'contracts created'
 m = Metric.create(name: 'ИнцидентовВсего', description: 'количество инцидентов, зарегистрированных в системе', depth: '3', bproce_id: bp211.id)
 puts "metrics created"
 
-di = Directive.create(title: 'Положение', number: '123-П', approval: Date.current - 1.month, name: 'gjgjgjjhhkjkhj', 
+di = Directive.create(title: 'Положение', number: '123-П', approval: Date.current - 1.month, 
+  name: 'Краткий порядок управления финансами', 
 	status: 'Действует', body: 'ЦБ РФ', note: 'Об управлении финансами')
 dd = di.document_directive.create(document_id: d.id)
-puts "directives created"
+di = Directive.create(title: 'Основной закон', number: '00', approval: '2011-09-11', name: 'Конституция', 
+  status: 'Действует', body: 'РФ', note: 'Основной и самый главный')
+dd = di.document_directive.create(document_id: Document.last.id)
+p "directives created"
 
 
 l1 = Letter.create(number: "12-34/123", date: Date.current - 10, subject: "о предоставлении информации", source: "фельдпочта", 
@@ -185,19 +189,9 @@ puts 'Requirements created'
 t1 = Task.create(name: "Напрячься срочно и сильно", description: "Очень важно сделать это усилие.\r\nСрочно и быстро и резко.\r\nВ едином порыве",
                  duedate: Date.current - 3, requirement_id: r.id, author: user6, status: 5)
 t1.user_task.create(user_id: user4.id)
-t2 = Task.create(name: "предоставить", description: "Всем вместе взять и предоставить.\r\nДо единогоьгвоздя, нежно и в тему",
+t2 = Task.create(name: "предоставить", description: "Всем вместе взять и предоставить.\r\nДо единого гвоздя, нежно и в тему",
                  duedate: Date.current, requirement_id: r.id, author: user2, status: 50)
 t2.user_task.create(user_id: user2.id)
 puts 'Tasks created'
-
-User.all do |u|
-  u.office = Random.rand(110)
-  u.phone = Random.rand(11000000)
-  #u.firstname = ['Иван', 'Петр', 'Михаил', 'Махмуд', 'Джон', 'Сидор'].sample if u.firstname.nil?
-  #u.lastname = ['Иванов', 'Петров', 'Михайлов', 'Махмудов', 'Джон', 'Сидоров'].sample if u.lastname.nil?
-  u.position = ['Директор', 'Капитан', 'Экономист', 'Полковник', 'Бухгалтер']
-  p u.position, u.phone, u.office
-  u.save!
-end
 
 PublicActivity.enabled = true
