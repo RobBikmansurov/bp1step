@@ -43,13 +43,13 @@ module ApplicationHelper
   end
 
   def add_link_from_id(text, route)
-    aid = text.match('(^|\s|^\s)#([1-9]\d+)($|\s|\.|,)') # ищем ID в тексте
-    if aid
-      text.gsub!(/#{aid[0]}/, ' <a href="/' + route + '/' + aid[2] + '">' + aid[0].strip + '</a> ')
+    if text
+      aid = text.match('(^|\s|^\s)#([1-9]\d+)($|\s|\.|,)') # ищем ID в тексте
+      text.gsub!(/#{aid[0]}/, ' <a href="/' + route + '/' + aid[2] + '">' + aid[0].strip + '</a> ') if aid
+      text.gsub!(/\r\n?/, "\n")                       # \r\n and \r => \n
+      text.gsub!(/([^\n]\n)(?=[^\n])/, '\1<br />')    # 1 newline   => br
     end
-    text.gsub!(/\r\n?/, "\n")                       # \r\n and \r => \n
-    text.gsub!(/([^\n]\n)(?=[^\n])/, '\1<br />')    # 1 newline   => br
-    return text
+    text
   end
 
   def nav_link(link_text, link_path)
