@@ -3,6 +3,7 @@ class Document < ActiveRecord::Base
   # FIXME разобраться со статусами на русском
   # STATUSES = %w[Проект Согласование Утвержден]
   # validates_inclusion_of :status, in: STATUSES
+  scope :active, -> { where.not(status: 'НеДействует') } # действующие документы
 
   acts_as_taggable
   #acts_as_taggable_on :category
@@ -15,7 +16,7 @@ class Document < ActiveRecord::Base
     :hash_secret => "BankPermBP1Step"
   validates :document_file, :attachment_presence => false
   do_not_validate_attachment_file_type :document_file  #paperclip >4.0
-  validates_attachment_content_type :document_file, 
+  validates_attachment_content_type :document_file,
                                     :content_type => ['application/pdf', 'applications/vnd.pdf', 'binary/octet-stream',
                                                       'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.spreadsheet',
                                                       'application/vnd.ms-excel', 'application/msword',
