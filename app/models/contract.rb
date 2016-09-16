@@ -3,6 +3,9 @@ class Contract < ActiveRecord::Base
   acts_as_taggable
   acts_as_nested_set
 
+  scope :active, -> { where.not(status: 'НеДействует') } # действующие договоры
+
+
   validates :number, :presence => true,
                    :length => {:minimum => 1, :maximum => 20}
   validates :name, :presence => true,
@@ -42,7 +45,7 @@ class Contract < ActiveRecord::Base
   def agent_name=(name)
     self.agent = Agent.find_by_name(name) if name.present?
   end
-  
+
   def owner_name    # ответственный за договор
     owner.try(:displayname)
   end
