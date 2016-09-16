@@ -1,35 +1,75 @@
 - title "Письмо № #{@letter.number} от #{@letter.date.strftime('%d.%m.%Y')}"
 - search 'Письмо'
-.id_ ##{@letter.id}
+%table
+  %tr
+    %td
+      %h3
+        - if @letter.in_out > 1
+          %div.h2{style: 'display: inline; color: #eee; background-color: #000;'}
+            #{LETTER_DIRECTION.key(@letter.in_out)}:
+        - else
+          #{LETTER_DIRECTION.key(@letter.in_out)}:
+      %h3
+        %br
+        - if @letter.in_out != 1 # Исходящее
+          Исх.№
+          - if @letter.regnumber.blank?
+            - if can? :registr, @letter
+              = link_to 'Зарегистрировать', register_letter_path(@letter), class: 'button'
+          - else
+            %b #{@letter.regnumber}
+            - if @letter.regdate
+              от
+              %b
+                = link_to @letter.regdate.strftime('%d.%m.%Y'), letters_path(regdate: @letter.regdate.strftime('%d.%m.%Y'))
 
-%h2
-  - if @letter.in_out > 1
-    %div.h2{style: 'display: inline; color: #eee; background-color: #000;'}
-      #{LETTER_DIRECTION.key(@letter.in_out)}:
-  - else
-    #{LETTER_DIRECTION.key(@letter.in_out)}:
-  - if @letter_link
-    ответ на
-    = link_to "№ #{@letter_link.number}", letter_path(@letter_link)
-    от #{@letter_link.date.strftime('%d.%m.%Y')}
-  - else
-    Исх.№ #{@letter.number} от
-    = link_to @letter.date.strftime('%d.%m.%Y'), letters_path(date: @letter.date.strftime('%d.%m.%Y')) if @letter.date
+        - if @letter_link
+          %br
+          ответ на
+          = link_to "Вх.№ #{@letter_link.number}", letter_path(@letter_link)
+          от #{@letter_link.date.strftime('%d.%m.%Y')}
+        - else
+          Исх.№ #{@letter.number} от
+          = link_to @letter.date.strftime('%d.%m.%Y'), letters_path(date: @letter.date.strftime('%d.%m.%Y')) if @letter.date
+  
+        - if @letter.in_out == 1 # Входящее
+          - if @letter.regnumber.blank?
+            %h2
+              Отметки банка
+              - if can? :registr, @letter
+                = link_to 'Зарегистрировать', register_letter_path(@letter), class: 'button'
+          - else
+            %br
+              Зарегистрирован:
+              = @letter.in_out == 1 ? 'Вх.№' : 'Исх.№'
+              %b "#{@letter.regnumber}"
+              - if @letter.regdate
+                от
+                %b
+                  = link_to @letter.regdate.strftime('%d.%m.%Y'), letters_path(regdate: @letter.regdate.strftime('%d.%m.%Y'))
+    %td
+      %h2
+        - if @letter.in_out == 1
+          Отправитель:
+        - else
+          Получатель:
+        %br
+        = link_to @letter.sender, letters_path(addresse: @letter.sender)
+    %td
+      .id_ ##{@letter.id}
 
-%h3
-  %b [ #{@letter.subject} ]
-
-%h3
-  - if @letter.in_out == 1
-    Отправитель:
-  - else
-    Получатель:
-  = link_to @letter.sender, letters_path(addresse: @letter.sender)
-
-%h3 Краткое содержание (о чем):
-= simple_format(@letter.body, {}, {})
-
-%h3 Источник: #{@letter.source}
+  %tr
+    %td
+      %h2
+        %b [ #{@letter.subject} ]
+    %td
+      \&nbsp;
+  %tr
+    %td
+      %h3 Краткое содержание (о чем):
+      = simple_format(@letter.body, {}, {})
+    %td
+      %h3 Источник: #{@letter.source}
 %h3
   Срок исполнения:
   - if @letter.duedate
@@ -67,21 +107,6 @@
     = link_to 'Добавить файл приложения', appendix_create_letter_path(@letter), remote: true
 
 %hr
-- if @letter.regnumber.blank?
-  %h2
-    Отметки банка
-    - if can? :registr, @letter
-      = link_to 'Зарегистрировать', register_letter_path(@letter), class: 'button'
-- else
-  %h2 Отметки банка
-  %h3
-    Зарегистрирован:
-    = @letter.in_out == 1 ? 'Вх.№' : 'Исх.№'
-    %b "#{@letter.regnumber}"
-    - if @letter.regdate
-      от
-      %b
-        = link_to @letter.regdate.strftime('%d.%m.%Y'), letters_path(regdate: @letter.regdate.strftime('%d.%m.%Y'))
 
 %h3
   - if @letter.author_id?
