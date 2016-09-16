@@ -17,7 +17,7 @@ class BprocesController < ApplicationController
       format.pdf { print_list }
     end
   end
-  
+
   def index
     if params[:all].present?
       #@bproces = Bproce.order(sort_column + ' ' + sort_direction)
@@ -219,7 +219,7 @@ private
       end
       @metrics = Metric.where(:bproce_id => @bproce.id).order(:name)  # метрики процесса
       report_metrics(@metrics, r, false) # сформировать список метрик процесса
-      report_docs(@bproce.documents, r, false) # сформировать таблицу документов процесса
+      report_docs(@bproce.documents.active, r, false) # сформировать таблицу действующих документов процесса
       report_contracts(@bproce.contracts, r, false)   # сформировать список договоров
       report_roles(@bproce.business_roles, r, true) # сформировать таблицу ролей
       report_workplaces(@bproce, r, true) # сформировать таблицу рабочих мест
@@ -330,10 +330,10 @@ private
           r.add_field :sub_process, 'Подпроцессов нет.'
         end
       end
-      
+
       @metrics = Metric.where(:bproce_id => @bproce.id).order(:name)  # метрики процесса
       report_metrics(@metrics, r, false) # сформировать список метрик процесса
-      report_docs(@bproce.documents, r, false) # сформировать таблицу документов процесса
+      report_docs(@bproce.documents.active, r, false) # действующие документы процесса
       report_contracts(@bproce.contracts, r, false)   # сформировать список договоров
       report_roles(@bproce.business_roles, r, false) # сформировать таблицу ролей
       report_workplaces(@bproce, r, false) # сформировать таблицу рабочих мест
@@ -546,7 +546,7 @@ private
     me = 0 # порядковый номер строки для метрики
     r.add_table("TABLE_METRICS", metrics, :header => header, :skip_if_empty => true) do |t|
       if metrics.count > 0  # если метрик нет - пустая таблица не будет выведена
-        r.add_field :metrics, "Метрики процесса:" 
+        r.add_field :metrics, "Метрики процесса:"
         t.add_column(:me) do |nme| # порядковый номер строки таблицы
           me += 1
         end
