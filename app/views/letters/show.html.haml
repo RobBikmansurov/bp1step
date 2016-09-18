@@ -135,14 +135,14 @@
 = simple_format(@letter.result, {}, {})
 
 %hr
-= render 'letters_outgoing' if @letters_outgoing.empty?
-- if @requirements.empty?
+= render 'letters_outgoing' if @letters_outgoing.any?
+- if @requirements.any?
   %h4 Созданы Требования:
   - @requirements.each do |requirement|
     = link_to "Требование [#{requirement.label}]", requirement
     от #{requirement.date.strftime('%d.%m.%Y')}
     %br
-= render 'tasks' if @tasks.empty?
+= render 'tasks' if @tasks.any?
 
 .info_
   - activity1 = PublicActivity::Activity.where(trackable_type: 'Letter', trackable_id: @letter.id).order('created_at asc').first
