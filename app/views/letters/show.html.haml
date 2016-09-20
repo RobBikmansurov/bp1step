@@ -27,7 +27,7 @@
           ответ на
           = link_to "Вх.№ #{@letter_link.number}", letter_path(@letter_link)
           от #{@letter_link.date.strftime('%d.%m.%Y')}
-        - elsif !@letter.number.blank? && @letter.number != 'б/н'
+        - elsif !@letter.number.blank? && @letter.number != 'б/н' && @letter.number != '-'
           Исх.№ #{@letter.number} от
           = link_to @letter.date.strftime('%d.%m.%Y'), letters_path(date: @letter.date.strftime('%d.%m.%Y')) if @letter.date
 
