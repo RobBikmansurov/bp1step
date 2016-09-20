@@ -96,12 +96,12 @@ li {
 th {
   background:#c3d9ff;
 }
-th .current {  
-  padding-right: 12px;  
-  background-repeat: no-repeat;  
-  background-position: right center;  
-}  
-th .asc { background-image: url(up_arrow.gif); }  
+th .current {
+  padding-right: 12px;
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+th .asc { background-image: url(up_arrow.gif); }
 th .desc { background-image: url(down_arrow.gif); }
 
 tbody tr:nth-child(even) td, tbody tr.even td {background: #DCE6EA;}
@@ -109,7 +109,7 @@ tbody tr:nth-child(even) td, tbody tr.even td {background: #DCE6EA;}
 a.button,
 .button {
   border:1px solid #9a9a9a;
-  text-align:center; 
+  text-align:center;
   text-decoration:none;
   border-radius:3px;
   box-shadow:rgba(0, 0, 0, 0.8) 0px 2px 3px;
@@ -270,3 +270,11 @@ a.groups:hover, a.groups-s:hover {
 }
 
 
+.image_inline_left {
+  position:relative;
+  float:left;
+}
+.image_inline_right {
+  position:relative;
+  float:right;
+}
