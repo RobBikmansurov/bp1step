@@ -8,7 +8,6 @@
           = f.collection_radio_buttons :in_out, [[1, 'Входящее'], [2, 'Исходящее']], :first, :last
         - else
           = f.hidden_field :in_out
-          = LETTER_DIRECTION.key(@letter.in_out)
         = f.input :number
         - if @letter.date
           = f.input :date, as: :string, input_html: {class: 'datepicker', value: @letter.date.strftime("%d.%m.%Y")}
@@ -26,7 +25,17 @@
             от
             %b= @letter.regdate.strftime("%d.%m.%Y")
       %td
-        = f.input :sender, as: :text
+        - label = 'Контрагент'
+        - if @letter.status >= 5 && request.parameters[:action] != 'new'
+          .image_inline_left
+            - if @letter.in_out != 1 # Исходящее
+              - label = 'Получатель'
+              =image_tag 'out_mail.png', size: "64x64", alt: "#{LETTER_DIRECTION.key(@letter.in_out)}"
+            - else
+              - label = 'Отправитель'
+              =image_tag 'in_mail.png', size: "64x64", alt: "#{LETTER_DIRECTION.key(@letter.in_out)}"
+
+        = f.input :sender, as: :text, label: label
     %tr
       %td
         = f.input :subject, as: :text
