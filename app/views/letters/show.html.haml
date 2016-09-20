@@ -96,7 +96,7 @@
     = link_to (letter_appendix.name.blank? ? letter_appendix.appendix_file_name.to_s : letter_appendix.name.to_s), letter_appendix.appendix.url
   - else
     = letter_appendix.name
-  = " ( \"#{letter_appendix.appendix_file_name}\": #{letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S')}  #{letter_appendix.appendix_file_size})"
+  = " (#{letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S')}  #{letter_appendix.appendix_file_size})"
   %br
 - if can? :update, @letter
   #appendix_update
