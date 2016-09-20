@@ -8,7 +8,8 @@ class Letter < ActiveRecord::Base
   validates :subject, :presence => true,
                    :length => {:minimum => 3, :maximum => 200}
   validates :number, presence: true,
-                     length: {:maximum => 30}
+                     length: {:maximum => 30},
+                     if: lambda{ in_out != 2 }
   validates :source, :length => {:maximum => 20}
   validates :sender, presence: true,
                      length: {minimum: 3}
@@ -42,7 +43,7 @@ class Letter < ActiveRecord::Base
   def status_name
     LETTER_STATUS.key(status)
   end
-  
+
   def status_name=(key)
     self.status = LETTER_STATUS[key]
   end
