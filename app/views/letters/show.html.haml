@@ -3,64 +3,60 @@
 %table
   %tr
     %td
-      %h3
-        - if @letter.in_out > 1
-          %div.h2{style: 'display: inline; color: #eee; background-color: #000;'}
-            #{LETTER_DIRECTION.key(@letter.in_out)}:
-        - else
-          #{LETTER_DIRECTION.key(@letter.in_out)}:
-      %h3
-        %br
+      - if @letter.in_out != 1 # Исходящее
+        .image_inline_right
+          =image_tag 'out_mail.png', size: "64x64", alt: "#{LETTER_DIRECTION.key(@letter.in_out)}"
+      - else
+        .image_inline_left
+          =image_tag 'in_mail.png', size: "64x64", alt: "#{LETTER_DIRECTION.key(@letter.in_out)}"
+      .large
         - if @letter.in_out != 1 # Исходящее
-          Исх.№
           - if @letter.regnumber.blank?
             - if can? :registr, @letter
-              = link_to 'Зарегистрировать', register_letter_path(@letter), class: 'button'
+              %h2
+                = link_to 'Зарегистрировать', register_letter_path(@letter), class: 'button'
           - else
+            Исх.№
             %b #{@letter.regnumber}
             - if @letter.regdate
               от
               %b
                 = link_to @letter.regdate.strftime('%d.%m.%Y'), letters_path(regdate: @letter.regdate.strftime('%d.%m.%Y'))
-
+        %br
         - if @letter_link
-          %br
           ответ на
           = link_to "Вх.№ #{@letter_link.number}", letter_path(@letter_link)
           от #{@letter_link.date.strftime('%d.%m.%Y')}
-        - else
+        - elsif !@letter.number.blank? && @letter.number != 'б/н'
           Исх.№ #{@letter.number} от
           = link_to @letter.date.strftime('%d.%m.%Y'), letters_path(date: @letter.date.strftime('%d.%m.%Y')) if @letter.date
-  
+
         - if @letter.in_out == 1 # Входящее
           - if @letter.regnumber.blank?
-            %h2
-              Отметки банка
-              - if can? :registr, @letter
+            - if can? :registr, @letter
+              %h2
                 = link_to 'Зарегистрировать', register_letter_path(@letter), class: 'button'
           - else
             %br
               Зарегистрирован:
               = @letter.in_out == 1 ? 'Вх.№' : 'Исх.№'
-              %b "#{@letter.regnumber}"
+              %b #{@letter.regnumber}
               - if @letter.regdate
                 от
                 %b
                   = link_to @letter.regdate.strftime('%d.%m.%Y'), letters_path(regdate: @letter.regdate.strftime('%d.%m.%Y'))
     %td
-      %h2
+      .id_ ##{@letter.id}
+      .large
         - if @letter.in_out == 1
           Отправитель:
         - else
           Получатель:
-        %br
-        = link_to @letter.sender, letters_path(addresse: @letter.sender)
-    %td
-      .id_ ##{@letter.id}
+      %h2= link_to @letter.sender, letters_path(addresse: @letter.sender)
 
   %tr
     %td
-      %h2
+      %h3
         %b [ #{@letter.subject} ]
     %td
       \&nbsp;
