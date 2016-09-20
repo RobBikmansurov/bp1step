@@ -76,20 +76,21 @@
   #update_bproce
     = link_to 'Добавить процесс', bproce_create_contract_path(@contract), remote: true # , class: 'button'
 
-%h4 Файлы (сканы):
 - @contract.contract_scan.each do |contract_scan|
-  - if File.exist?(contract_scan.scan.path) # есть исходный файл документа
-    -# = link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), @document.pdf_url, class: 'button-img'
-    = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), contract_scan.scan.url # , class: 'button-img'
-    = link_to contract_scan.name, contract_scan.scan.url
-  - else
-    = contract_scan.name
-  = ' ("' + contract_scan.scan_file_name + '": ' + contract_scan.scan_updated_at.strftime('%d.%m.%Y %H:%M:%S') + ' ' + contract_scan.scan_file_size.to_s + ')'
-  %br
-- if can? :update, @contract
-  #update_scan
-    = link_to 'Добавить файл (скан)', scan_create_contract_path(@contract), remote: true # , class: 'button'
-
+  .floating-box
+    - if File.exist?(contract_scan.scan.path) # есть исходный файл документа
+      = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), contract_scan.scan.url # , class: 'button-img'
+      = link_to contract_scan.name, contract_scan.scan.url
+    - else
+      = contract_scan.name
+    (#{contract_scan.scan_file_name}:
+    #{contract_scan.scan_updated_at.strftime('%d.%m.%Y %H:%M:%S')}
+    #{contract_scan.scan_file_size})
+.floating-box
+  - if can? :update, @contract
+    #update_scan
+      = link_to 'Добавить файл (скан)', scan_create_contract_path(@contract), remote: true
+%hr
 
 .info_
   - activity1 = PublicActivity::Activity.where(trackable_type: 'Contract', trackable_id: @contract.id).order('created_at asc').first

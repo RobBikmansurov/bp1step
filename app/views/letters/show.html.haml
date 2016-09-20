@@ -89,18 +89,17 @@
           = " (опоздание #{days.to_i} дн.)"
     ]
 
-%h4 Файлы приложений к письму:
 - @letter.letter_appendix.each do |letter_appendix|
-  - if File.exist?(letter_appendix.appendix.path) # есть исходный файл документа
-    = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), letter_appendix.appendix.url # , class: 'button-img'
-    = link_to (letter_appendix.name.blank? ? letter_appendix.appendix_file_name.to_s : letter_appendix.name.to_s), letter_appendix.appendix.url
-  - else
-    = letter_appendix.name
-  = " (#{letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S')}  #{letter_appendix.appendix_file_size})"
-  %br
+  .floating-box
+    - if File.exist?(letter_appendix.appendix.path) # есть исходный файл документа
+      = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), letter_appendix.appendix.url # , class: 'button-img'
+      = link_to (letter_appendix.name.blank? ? letter_appendix.appendix_file_name.to_s : letter_appendix.name.to_s), letter_appendix.appendix.url
+    - else
+      = letter_appendix.name
+    %br= " (#{letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S')}  #{letter_appendix.appendix_file_size})"
 - if can? :update, @letter
-  #appendix_update
-    = link_to 'Добавить файл приложения', appendix_create_letter_path(@letter), remote: true
+  = link_to 'Добавить файл приложения', appendix_create_letter_path(@letter), remote: true, class: 'floating-box'
+
 
 %hr
 

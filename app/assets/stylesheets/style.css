@@ -278,3 +278,14 @@ a.groups:hover, a.groups-s:hover {
   position:relative;
   float:right;
 }
+.floating-box {
+  display: inline-block;
+  min-height: 1.5em;
+  border: 1px solid grey;
+  padding: 0.5em;
+  margin: 5px;
+  border-radius: 10px;
+}
+.floating-text {
+  display: inline-block;
+}
