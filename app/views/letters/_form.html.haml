@@ -1,38 +1,49 @@
 = simple_form_for(@letter) do |f|
   = f.error_notification
   = f.hidden_field :author_id
-  = f.input :number
-  - if @letter.date
-    = f.input :date, as: :string, input_html: {class: 'datepicker', value: @letter.date.strftime("%d.%m.%Y")}
-  - else
-    = f.input :date, as: :string, input_html: { class: 'datepicker', value: Time.current.strftime("%d.%m.%Y")}
+  %table
+    %tr
+      %td
+        - if @letter.status < 5 and can? :create, @letter
+          = f.collection_radio_buttons :in_out, [[1, 'Входящее'], [2, 'Исходящее']], :first, :last
+        - else
+          = f.hidden_field :in_out
+          = LETTER_DIRECTION.key(@letter.in_out)
+        = f.input :number
+        - if @letter.date
+          = f.input :date, as: :string, input_html: {class: 'datepicker', value: @letter.date.strftime("%d.%m.%Y")}
+        - else
+          = f.input :date, as: :string, input_html: { class: 'datepicker', value: Time.current.strftime("%d.%m.%Y")}
 
-  - if can? :create, @letter
-    - if !@letter.id.blank?
-      = f.input :regnumber
-      = f.input :regdate, as: :string, input_html: { class: 'datepicker'}
-  - else
-    Зарегистрирован: #{@letter.in_out == 1?'Вх.№': 'Исх.№'}
-    %b #{@letter.regnumber}
-    - if @letter.regdate
-      от
-      %b= @letter.regdate.strftime("%d.%m.%Y")
-
-
-  - if @letter.status < 5 and can? :create, @letter
-    = f.collection_radio_buttons :in_out, [[1, 'Входящее'], [2, 'Исходящее']], :first, :last
-  - else
-    = f.hidden_field :in_out
-    = LETTER_DIRECTION.key(@letter.in_out)
-
-  = f.input :subject, as: :text
-  = f.input :source
-  = f.input :sender, as: :text
-  = f.input :duedate, :as => :string, input_html: { class: 'datepicker'}
-  = f.input :body, as: :text
-  = f.hidden_field :status
-  = f.label :Статус
-  = f.select :status_name, LETTER_STATUS.keys
+        - if can? :create, @letter
+          - if !@letter.id.blank?
+            = f.input :regnumber
+            = f.input :regdate, as: :string, input_html: { class: 'datepicker'}
+        - else
+          Зарегистрирован: #{@letter.in_out == 1?'Вх.№': 'Исх.№'}
+          %b #{@letter.regnumber}
+          - if @letter.regdate
+            от
+            %b= @letter.regdate.strftime("%d.%m.%Y")
+      %td
+        = f.input :sender, as: :text
+    %tr
+      %td
+        = f.input :subject, as: :text
+      %td
+        &nbsp;
+    %tr
+      %td
+        = f.input :body, as: :text
+      %td
+        = f.input :source
+    %tr
+      %td
+        = f.input :duedate, :as => :string, input_html: { class: 'datepicker'}
+        = f.hidden_field :status
+      %td
+        = f.label :Статус
+        = f.select :status_name, LETTER_STATUS.keys
   = f.hidden_field :result
   = f.hidden_field :completion_date
   = f.hidden_field :letter_id
