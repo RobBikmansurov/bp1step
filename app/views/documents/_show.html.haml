@@ -39,13 +39,12 @@
   Место хранения оригинала:
   %b= link_to @document.place, documents_path(place: @document.place), class: 'groups', title: DOCUMENT_PLACE.key(@document.place) if !@document.place.blank?
 
-%h4
-  -if @document.document_file_file_name
+-if @document.document_file_file_name
+  .floating-box
     электронный документ:
     %b
       =@document.document_file_file_name
     - if can? :edit_document, @document
-      = link_to '| Удалить', file_delete_document_path(@document), :remote => true
       %br
       размер:
       =@document.document_file_file_size
@@ -53,34 +52,36 @@
       =@document.document_file_updated_at.strftime('%d.%m.%Y %H:%M:%S')
       | MD5:
       =@document.document_file_fingerprint
-      #update_file
-      = link_to '| Заменить', file_create_document_path(@document), :remote => true
 
     -# автору документа показать все файлы документа
     -# автору документа разрешить взять исходник
     -# кому можно - смотреть PDF
 
-    - if can? :view_document, @document
-      %br
-      - if File.exist?(@document.document_file.path)  # есть исходный файл документа
-        - if File.exist?(@document.pdf_path)  # есть PDF для просмотра
-          смотреть:
-          = link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), @document.pdf_url, class: 'button-img'
-        \|
-        - if can? :edit_document, @document
-          - if File.extname(@document.document_file.path) == '.pdf'
-          - else
-            взять на редактирование:
-            = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), @document.document_file.url, class: 'button-img'
-      - else
-        файл отсутствует - 
-        %b
-          = @document.document_file_file_name
-  -else
-    - if can? :edit_document, @document
-      Электронный документ отсутствует! 
+  - if can? :edit_document, @document
+    = link_to '| Удалить', file_delete_document_path(@document), :remote => true, class: 'floating-text'
+    .floating-text
       #update_file
-        = link_to 'Добавить', file_create_document_path(@document), :remote => true   #, class: 'button'
+        = link_to '| Заменить', file_create_document_path(@document), :remote => true, class: 'floating-text'
+  - if can? :view_document, @document
+    %br
+    - if File.exist?(@document.document_file.path)  # есть исходный файл документа
+      - if File.exist?(@document.pdf_path)  # есть PDF для просмотра
+        смотреть:
+        = link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), @document.pdf_url, class: 'button-img'
+      \|
+      - if can? :edit_document, @document
+        - if File.extname(@document.document_file.path) == '.pdf'
+        - else
+          взять на редактирование:
+          = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), @document.document_file.url, class: 'button-img'
+    - else
+      файл отсутствует - 
+      %b
+        = @document.document_file_file_name
+-else
+  - if can? :edit_document, @document
+    #update_file
+      = link_to 'Добавить', file_create_document_path(@document), :remote => true, class: 'floating-box'
 
 - if can? :edit_document, @document
   #show_files
