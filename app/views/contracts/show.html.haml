@@ -79,12 +79,12 @@
 - @contract.contract_scan.each do |contract_scan|
   .floating-box
     - if File.exist?(contract_scan.scan.path) # есть исходный файл документа
-      = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), contract_scan.scan.url # , class: 'button-img'
-      = link_to contract_scan.name, contract_scan.scan.url
+      = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить') + "#{contract_scan.name}: #{contract_scan.scan_file_name}", contract_scan.scan.url
     - else
-      = contract_scan.name
-    (#{contract_scan.scan_file_name}:
-    #{contract_scan.scan_updated_at.strftime('%d.%m.%Y %H:%M:%S')}
+      #{contract_scan.name} #{contract_scan.scan_file_name}
+
+    %br
+    (#{contract_scan.scan_updated_at.strftime('%d.%m.%Y %H:%M:%S')}
     #{contract_scan.scan_file_size})
 .floating-box
   - if can? :update, @contract

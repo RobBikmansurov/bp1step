@@ -14,13 +14,13 @@
 
 -if @requirement.letter
   %h3
-    Основание: Вх.№  
-    = link_to  "#{@requirement.letter.number}", letter_path(@requirement.letter)
+    Основание:
+    = link_to image_tag('in_mail.png', size: "32x32") + "Исх.№#{@requirement.letter.number}", letter_path(@requirement.letter)
     от #{@requirement.letter.date.strftime('%d.%m.%Y')}
 -else
   %h3 Источник: #{@requirement.source}
 
-%h3 
+%h3
   Срок исполнения:
   -if @requirement.duedate
     %b= @requirement.duedate.strftime("%d.%m.%Y")

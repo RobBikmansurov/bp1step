@@ -21,7 +21,7 @@
           - if letter.in_out > 1
             %div.h2{style: 'display: inline; color: #eee; background-color: #000;'}
               #{LETTER_DIRECTION.key(letter.in_out)[0..2]}:
-            = link_to "№#{letter.regnumber}", letter
+            = link_to image_tag('out_mail.png', size: "24") + "№#{letter.regnumber}", letter
             = "от #{letter.regdate.strftime('%d.%m.%y')}" if letter.regdate
             на
           = link_to "№#{letter.number}", letter
