@@ -7,7 +7,7 @@
         - regnumber = (letter.in_out == 1 ? 'Вх.' : 'Исх.')
         - regnumber += "№ #{letter.regnumber}"
         - regnumber += " от #{letter.regdate.strftime('%d.%m.%y')}" if letter.regdate
-        = link_to regnumber, letter
+        = link_to link_to image_tag('out_mail.png', size: "16x16") + regnumber, letter
       %td= letter.subject
       %td
         - if letter.duedate

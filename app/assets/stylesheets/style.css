@@ -282,7 +282,7 @@ a.groups:hover, a.groups-s:hover {
   display: inline-block;
   min-height: 1.5em;
   border: 1px solid grey;
-  padding: 0.5em;
+  padding: 0.25em;
   margin: 5px;
   border-radius: 10px;
 }
