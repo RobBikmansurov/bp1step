@@ -3,7 +3,7 @@
 .id_
   \#
   = @document.id
-%h2= @document.name 
+%h2= @document.name
 %h3 Описание:
 = markdown(@document.description)
 %h3
@@ -75,13 +75,13 @@
           взять на редактирование:
           = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), @document.document_file.url, class: 'button-img'
     - else
-      файл отсутствует - 
+      файл отсутствует -
       %b
         = @document.document_file_file_name
 -else
   - if can? :edit_document, @document
     #update_file
-      = link_to 'Добавить', file_create_document_path(@document), :remote => true, class: 'floating-box'
+      = link_to 'Добавить файл', file_create_document_path(@document), :remote => true, class: 'floating-box'
 
 - if can? :edit_document, @document
   #show_files
