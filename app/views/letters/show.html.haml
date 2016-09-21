@@ -92,8 +92,8 @@
 - @letter.letter_appendix.each do |letter_appendix|
   .floating-box
     - if File.exist?(letter_appendix.appendix.path) # есть исходный файл документа
-      = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), letter_appendix.appendix.url
-      = link_to "#{letter_appendix.name}: #{letter_appendix.appendix_file_name}", letter_appendix.appendix.url
+      - appendix_name = "#{letter_appendix.name}:" unless letter_appendix.name.empty?
+      = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть') + "#{appendix_name} #{letter_appendix.appendix_file_name}", letter_appendix.appendix.url
     - else
       #{letter_appendix.appendix_file_name}
     %br (#{letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S')}  #{letter_appendix.appendix_file_size})
