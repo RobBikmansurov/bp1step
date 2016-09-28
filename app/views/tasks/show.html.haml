@@ -17,7 +17,7 @@
 - if @task.letter
   %h3
     Основание:
-    = link_to image_tag('in_mail.png', size: "24x24") + " Исх.№ #{@task.letter.number}", letter_path(@task.letter)
+    = link_to image_tag('in_mail.png', size: "32x32") + " Исх.№ #{@task.letter.number}", letter_path(@task.letter)
     от #{@task.letter.date.strftime('%d.%m.%Y')}
 %h3
   Срок исполнения:
