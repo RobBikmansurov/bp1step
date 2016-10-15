@@ -2,4 +2,5 @@ language: ruby
 rvm:
   - 2.2.2
 cache: bundler
-
+before_script: "bundle exec rake db:drop db:create db:migrate"
+script: "bundle exec rspec spec/"
