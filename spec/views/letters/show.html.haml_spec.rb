@@ -1,4 +1,3 @@
-require 'rails_helper'
 
 RSpec.describe "letters/show", :type => :view do
   before(:each) do
