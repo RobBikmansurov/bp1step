@@ -14,7 +14,7 @@ class CreateLetters < ActiveRecord::Migration
       t.text :result
       t.references :letter, index: true
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :letters, :regdate, unique: true
     add_index :letters, :number

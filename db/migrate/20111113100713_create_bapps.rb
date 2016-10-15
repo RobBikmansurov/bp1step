@@ -5,7 +5,7 @@ class CreateBapps < ActiveRecord::Migration
       t.string :type
       t.string :description
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

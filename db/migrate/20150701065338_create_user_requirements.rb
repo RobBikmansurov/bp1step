@@ -5,7 +5,7 @@ class CreateUserRequirements < ActiveRecord::Migration
       t.references :requirement, index: true
       t.integer :status
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

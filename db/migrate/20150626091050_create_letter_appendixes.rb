@@ -4,7 +4,7 @@ class CreateLetterAppendixes < ActiveRecord::Migration
       t.references :letter, index: true
       t.string :name
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

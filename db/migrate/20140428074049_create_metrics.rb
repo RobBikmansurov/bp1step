@@ -8,7 +8,7 @@ class CreateMetrics < ActiveRecord::Migration
       t.text :note
       t.integer :depth
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end
