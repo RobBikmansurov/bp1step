@@ -2,5 +2,11 @@ language: ruby
 rvm:
   - 2.2.2
 cache: bundler
-before_script: "bundle exec rake db:drop db:create db:migrate"
-script: "bundle exec rspec spec/"
+before_script:
+  - cp config/application{.example,}.yml
+  - cp config/database{.example,}.yml
+  - bundle exec rake db:setup
+  - npm install bower
+  - bundle exec rake bower:install
+script:
+  - bundle exec rspec spec/
