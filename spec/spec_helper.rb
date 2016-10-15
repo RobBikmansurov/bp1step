@@ -12,12 +12,11 @@
 #
 # The `.rspec` file also contains a few flags that are not defaults but that
 # users commonly want.
-ENV["RAILS_ENV"] ||= 'test'
-require File.expand_path("../../config/environment", __FILE__)
-abort("The Rails environment is running in production mode!") if Rails.env.production?
-#require 'rspec/rails'
+ENV['RAILS_ENV'] ||= 'test'
+require File.expand_path('../../config/environment', __FILE__)
+abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'factory_girl_rails'
-require "paperclip/matchers"
+require 'paperclip/matchers'
 require 'rspec/rails'
 require 'shoulda/matchers'
 require 'capybara/rails'
@@ -27,8 +26,8 @@ Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.include Rails.application.routes.url_helpers
-# The settings below are suggested to provide a good initial experience
-# with RSpec, but feel free to customize to your heart's content.
+  # The settings below are suggested to provide a good initial experience
+  # with RSpec, but feel free to customize to your heart's content.
   # These two settings work together to allow you to limit a spec run
   # to individual examples or groups you care about by tagging them with
   # `:focus` metadata. When nothing is tagged with `:focus`, all examples
@@ -102,5 +101,4 @@ end
 
   config.include FactoryGirl::Syntax::Methods
   config.include Paperclip::Shoulda::Matchers
-
 end
