@@ -20,6 +20,8 @@ require 'paperclip/matchers'
 require 'rspec/rails'
 require 'shoulda/matchers'
 require 'capybara/rails'
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
