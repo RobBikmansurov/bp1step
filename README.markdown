@@ -10,6 +10,7 @@ Business processes documentation organization and generation, the 1st step of in
 
 [![Build Status](https://travis-ci.org/RobBikmansurov/bp1step.svg?branch=master)](https://travis-ci.org/RobBikmansurov/bp1step)
 [![Code Climate](https://codeclimate.com/github/RobBikmansurov/bp1step/badges/gpa.svg)](https://codeclimate.com/github/RobBikmansurov/bp1step)
+[![Test Coverage](https://codeclimate.com/github/RobBikmansurov/bp1step/badges/coverage.svg)](https://codeclimate.com/github/RobBikmansurov/bp1step/coverage)
 
 Язык: русский
 
