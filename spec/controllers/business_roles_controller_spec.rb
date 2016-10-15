@@ -1,5 +1,5 @@
 RSpec.describe BusinessRolesController, type: :controller do
-  render_views
+  #render_views
   let(:valid_attributes) { { id: 1, name: "MyString1", description: 'description1', bproce_id: 1 } }
   let(:valid_session) { {} }
 
