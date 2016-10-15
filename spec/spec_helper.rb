@@ -99,6 +99,11 @@ end
     mocks.verify_partial_doubles = true
   end
 
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
   config.include FactoryGirl::Syntax::Methods
   config.include Paperclip::Shoulda::Matchers
 end

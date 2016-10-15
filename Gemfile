@@ -49,7 +49,7 @@ group :development do
   gem 'capistrano'  # Deploy with Capistrano
   gem 'rvm-capistrano',  require: false
   gem 'capistrano-deploy', require: false
-  #gem 'rubocop', require: false
+  gem 'rubocop', require: false
   #gem "rails-erd"
   gem 'guard-rspec', require: false
 end
@@ -62,4 +62,5 @@ group :test do
   gem 'shoulda-matchers', '~> 3.1'
   gem 'rspec-rails', '~> 3.0'
   gem 'factory_girl_rails'
+  gem 'database_cleaner'
 end
