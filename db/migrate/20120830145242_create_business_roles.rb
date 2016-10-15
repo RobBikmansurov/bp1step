@@ -5,7 +5,7 @@ class CreateBusinessRoles < ActiveRecord::Migration
       t.string :description
       t.references :bproce
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :business_roles, :bproce_id
   end

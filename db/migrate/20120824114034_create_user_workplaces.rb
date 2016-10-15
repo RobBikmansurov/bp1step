@@ -7,7 +7,7 @@ class CreateUserWorkplaces < ActiveRecord::Migration
       t.references :user
       t.references :workplace
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :user_workplaces, :user_id
     add_index :user_workplaces, :workplace_id

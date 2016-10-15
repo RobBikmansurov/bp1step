@@ -4,7 +4,7 @@ class CreateContractScans < ActiveRecord::Migration
       t.string :name
       t.references :contract, index: true
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end
