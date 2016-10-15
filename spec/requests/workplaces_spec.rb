@@ -1,11 +1,10 @@
 require 'spec_helper'
 
-describe "Workplaces" do
-  describe "GET /workplaces" do
-    it "works! (now write some real specs)" do
-      # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
+RSpec.describe 'Workplaces', type: :request do
+  describe 'GET /workplaces' do
+    it 'works! (now write some real specs)' do
       get workplaces_path
-      response.status.should be(200)
+      expect(response).to have_http_status(200)
     end
   end
 end
