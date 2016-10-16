@@ -11,7 +11,7 @@ class BprocesController < ApplicationController
   before_filter :authenticate_user!, :only => [:edit, :new, :create, :update]
 
   def list  # плоский список процессов без дерева
-    @bproces = Bproce.search(params[:search]).order(sort_column + ' ' + sort_direction).find(:all, :include => :user)
+    @bproces = Bproce.search('?', params[:search]).order(sort_column + ' ' + sort_direction).find(:all, :include => :user)
     respond_to do |format|
       format.html
       format.pdf { print_list }
