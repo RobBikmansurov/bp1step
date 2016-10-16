@@ -2,7 +2,9 @@ language: ruby
 rvm:
   - 2.2.2
 cache: bundler
-before_script:
+before_script
+  - sed -i "s/ruby '2.3.1/ruby '2.2.2/" Gemfile
+  - head Gemfile
   - cp config/database.yml{.example,}
   - cp config/ldap.yml{.example,}
   - bundle exec rake db:create db:migrate
