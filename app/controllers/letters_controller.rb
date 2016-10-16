@@ -283,7 +283,7 @@ class LettersController < ApplicationController
   private
     def set_letter
       if params[:search].present? # это поиск
-        @letters = Letter.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        @letters = Letter.search('?', params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
         render :index # покажем список найденного
       else
         @letter = Letter.find(params[:id])
