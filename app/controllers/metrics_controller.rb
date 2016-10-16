@@ -135,7 +135,7 @@ class MetricsController < ApplicationController
         when 3 then "'#{Time.current.beginning_of_day}' AND '#{Time.current.end_of_day}'"     # текущий день
         else "'#{Time.current.beginning_of_hour}' AND '#{Time.current.end_of_hour}'"          # текущий час
       end
-      value = MetricValue.where(metric_id: @metric.id).where("dtime BETWEEN #{where_datetime}").first
+      value = MetricValue.where('metric_id = ?', @metric.id).where("dtime BETWEEN #{where_datetime}").first
       if !value  # не нашли?
         value = MetricValue.new()  # новое значение
         value.metric_id = @metric.id
