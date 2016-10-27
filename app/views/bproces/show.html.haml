@@ -8,7 +8,7 @@
     = "взят в управление #{@bproce.checked_at.strftime('%d.%m.%Y')}"
 %h2
   %b
-    = "[ #{@bproce.shortname} ]:"
+    [#{@bproce.shortname}]
   = @bproce.name
 -if @bproce.parent_id
   %h3
