@@ -54,6 +54,7 @@ end
 
 group :production do
   gem 'pg'
+  gem 'puma'
 end
 
 group :test do
@@ -65,3 +66,4 @@ group :test do
 end
 
 gem 'rails_12factor', group: :production
+ruby "2.3.1"
