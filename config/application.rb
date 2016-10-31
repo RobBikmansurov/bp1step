@@ -36,13 +36,9 @@ module BPDoc
     #config.active_record.default_timezone = :local # так не работают графики - ActiveRecord::Base.default_timezone must be :utc to use Groupdate 
     config.active_record.default_timezone = :utc
 
-    # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-    # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
     config.i18n.default_locale = :ru
-    config.i18n.locale = :ru
-    #config.i18n.enforce_available_locales = false
-    #I18n.config.enforce_available_locales = false
+    config.i18n.available_locales = [:ru, :en]
+    config.i18n.enforce_available_locales = true
 
     # JavaScript files you want as :defaults (application.js is always included).
     #config.action_view.javascript_expansions[:defaults] = %w(jquery rails)

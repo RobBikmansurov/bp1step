@@ -29,6 +29,7 @@ gem 'chartkick'
 gem 'groupdate'
 gem 'jcrop-rails-v2'
 gem 'tiny_tds'
+gem 'tzinfo-data'
 gem 'pg_search'
 
 group :development do

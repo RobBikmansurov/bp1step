@@ -38,7 +38,7 @@ class Document < ActiveRecord::Base
   #validates :description, :length => {:maximum => 255}  # описание - не длиннее 255 символов
 
   include PublicActivity::Model
-  tracked owner: Proc.new { |controller, model| controller.current_user }
+  tracked owner: Proc.new { |controller, _model| controller.current_user }
 
   # документ относится к процессу
   #belongs_to :bproce
@@ -51,7 +51,8 @@ class Document < ActiveRecord::Base
   has_many :user, through: :user_document
   has_many :user_document, dependent: :destroy
 
-  attr_accessible  :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :document_file, :file_delete, :bproce_id
+  attr_accessible :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, 
+                  :note, :place, :document_file, :file_delete, :bproce_id
 
   def owner_name
     owner.try(:displayname)
@@ -65,9 +66,9 @@ class Document < ActiveRecord::Base
     if self.document_file
       extention = File.extname(self.document_file.path)
       if extention != ".pdf"
-        pdf_path = self.document_file.path[0, self.document_file.path.length - extention.length] + '.pdf'  # путь к файлу PDF для просмотра
+        self.document_file.path[0, self.document_file.path.length - extention.length] + '.pdf'  # путь к файлу PDF для просмотра
       else
-        pdf_path = self.document_file.path
+        self.document_file.path
       end
     end
   end
@@ -76,9 +77,9 @@ class Document < ActiveRecord::Base
     if self.document_file
       extention = File.extname(self.document_file.path)
       if extention != ".pdf"
-        pdf_url = self.document_file.url.gsub(extention, ".pdf")  # url файла PDF для просмотра
+        self.document_file.url.gsub(extention, ".pdf")  # url файла PDF для просмотра
       else
-        pdf_url = self.document_file.url
+        self.document_file.url
       end
     end
   end
@@ -90,21 +91,21 @@ class Document < ActiveRecord::Base
   private
 
   # интерполяция для paperclip - вернуть дату последней загрузки файла документа в формате ГГГГММДД
-  Paperclip.interpolates :ymd do |attachment, style|
+  Paperclip.interpolates :ymd do |attachment, _style|
     attachment.instance_read(:updated_at).strftime('%Y%m%d')
   end
 
   def copy_to_pdf
     if  self.document_file_file_name?  # задано имя файла
-      if File.exist?(document_file.path.to_s)
-        params = "-f pdf #{document_file.path.to_s}"
+      if File.exist?(document_file.path)
+        params = "-f pdf #{document_file.path}"
         begin
-          success = Paperclip.run('unoconv', params)
+          Paperclip.run('unoconv', params)
         rescue
-          puts  "error!"
+          puts 'error!'
         end
       else
-        puts "***model/document.rb*** file not found " + self.document_file.path.to_s
+        puts "***model/document.rb*** file not found #{self.document_file.path}"
       end
     end
   end
