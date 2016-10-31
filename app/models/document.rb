@@ -1,8 +1,12 @@
 # encoding: utf-8
 class Document < ActiveRecord::Base
-  # FIXME разобраться со статусами на русском
-  # STATUSES = %w[Проект Согласование Утвержден]
-  # validates_inclusion_of :status, in: STATUSES
+  include PgSearch
+  pg_search_scope :full_search, against: [
+    [:name, 'A'],
+    [:description, 'B'],
+    :note, :id, :text
+  ]
+
   scope :active, -> { where.not(status: 'НеДействует') } # действующие документы
 
   acts_as_taggable
@@ -81,18 +85,6 @@ class Document < ActiveRecord::Base
 
   def shortname
     return name.split(//u)[0..50].join
-  end
-
-  def self.search(search)
-    if search
-      if search.to_i > 0
-        where('name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search.to_i}")
-      else
-        where('name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%")
-      end
-    else
-      where(nil)
-    end
   end
 
   private

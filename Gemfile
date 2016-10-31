@@ -1,8 +1,5 @@
 source 'https://rubygems.org'
 
-ruby '2.3.1'
-#gem 'rails', '4.2.7.1'
-
 gem 'will_paginate', '~> 3.0'
 gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
@@ -10,7 +7,6 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'therubyracer'
-gem 'unicorn'
 
 gem "devise", "~> 3.5.2"#, git: "https://github.com/plataformatec/devise"
 gem "devise_ldap_authenticatable"
@@ -33,13 +29,7 @@ gem 'chartkick'
 gem 'groupdate'
 gem 'jcrop-rails-v2'
 gem 'tiny_tds'
-
-group :test, :development do
-  gem 'sqlite3'
-  gem 'capybara'
-  gem 'webrat'
-  gem "selenium-webdriver"
-end
+gem 'pg_search'
 
 group :development do
   gem "better_errors"
@@ -55,12 +45,18 @@ end
 group :production do
   gem 'pg'
   gem 'puma'
+  gem 'unicorn'
 end
 
 group :test do
-  gem 'shoulda-matchers', '~> 3.1'
-  gem 'rspec-rails', '~> 3.0'
+  gem 'rspec-rails'
+  gem 'shoulda-matchers'
+  gem 'sqlite3'
+  gem 'capybara'
   gem 'factory_girl_rails'
+  gem 'webrat'
+  gem "selenium-webdriver"
+  gem 'fuubar'
   gem 'database_cleaner'
   gem "codeclimate-test-reporter", require: nil
 end
