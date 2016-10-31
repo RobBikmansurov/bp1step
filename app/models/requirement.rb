@@ -12,7 +12,8 @@ class Requirement < ActiveRecord::Base
   has_many :user_requirement, dependent: :destroy # ответственные за Требование
   has_many :task
 
-  attr_accessible :label, :date, :source, :duedate, :body, :status, :status_name, :result, :author_name, :letter_id
+  attr_accessible :label, :date, :source, :duedate, :body, :status, :status_name, :result,
+                  :author_name, :user_id, :letter_id
 
   def author_name
     author.try(:displayname)
