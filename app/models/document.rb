@@ -1,5 +1,18 @@
 # encoding: utf-8
 class Document < ActiveRecord::Base
+
+  belongs_to :user
+  belongs_to :owner, :class_name => 'User'
+  has_many :directive, :through => :document_directive
+  has_many :document_directive, :dependent => :destroy
+  has_many :bproce, through: :bproce_document
+  has_many :bproce_document, dependent: :destroy
+  has_many :user, through: :user_document
+  has_many :user_document, dependent: :destroy
+
+  attr_accessible :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, 
+                  :note, :place, :document_file, :file_delete, :bproce_id
+
   include PgSearch
   pg_search_scope :full_search, against: [
     [:name, 'A'],
@@ -11,6 +24,9 @@ class Document < ActiveRecord::Base
 
   acts_as_taggable
   #acts_as_taggable_on :category
+
+  #after_document_file_post_process :test
+  after_save :copy_to_pdf
 
   #before_validation { document_file.clear if delete_file == '1' }
   has_attached_file :document_file,
@@ -27,9 +43,6 @@ class Document < ActiveRecord::Base
                                                       'application/doc', 'application/rtf',
                                                       'application/vnd.oasis.opendocument.graphics',
                                                       'application/octet-stream', 'application/force-download']
-  #after_document_file_post_process :test
-  after_save :copy_to_pdf
-
   validates :name, presence: true, length: {minimum: 10, maximum: 200}
   #validates :bproce_id, :presence => true # документ относится к процессу
   validates :dlevel, presence: true, numericality: {less_than: 5, greater_than: 0}
@@ -39,20 +52,6 @@ class Document < ActiveRecord::Base
 
   include PublicActivity::Model
   tracked owner: Proc.new { |controller, _model| controller.current_user }
-
-  # документ относится к процессу
-  #belongs_to :bproce
-  belongs_to :user
-  belongs_to :owner, :class_name => 'User'
-  has_many :directive, :through => :document_directive
-  has_many :document_directive, :dependent => :destroy
-  has_many :bproce, through: :bproce_document
-  has_many :bproce_document, dependent: :destroy
-  has_many :user, through: :user_document
-  has_many :user_document, dependent: :destroy
-
-  attr_accessible :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, 
-                  :note, :place, :document_file, :file_delete, :bproce_id
 
   def owner_name
     owner.try(:displayname)
