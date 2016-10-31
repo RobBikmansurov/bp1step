@@ -1,4 +1,6 @@
-RSpec.describe DirectivesController, type: :controller do
+require 'rails_helper'
+
+RSpec.describe DirectivesController do
 
   #let(:valid_attributes) { FactoryGirl.create :directive }
   let(:valid_attributes) { {approval: "01.01.2013",
@@ -9,9 +11,6 @@ RSpec.describe DirectivesController, type: :controller do
   let(:valid_session) { { "warden.user.user.key" => session["warden.user.user.key"] } }
 
   before(:each) do
-    #@user = FactoryGirl.create(:user)
-    #@user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
-    #sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
   end
   
@@ -34,6 +33,7 @@ RSpec.describe DirectivesController, type: :controller do
 
   describe "GET show" do
     it "assigns the requested directive as @directive" do
+      @bproce = FactoryGirl.create(:bproce)
       directive = Directive.create! valid_attributes
       get :show, {:id => directive.to_param}, valid_session
       expect(assigns(:directive)).to eq(directive)

@@ -8,6 +8,7 @@ require 'rspec/rails'
 require "paperclip/matchers"
 #require 'shoulda/matchers'
 #require 'capybara/rails'
+require 'public_activity/testing'
 
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
@@ -39,6 +40,8 @@ RSpec.configure do |config|
 
 end
 
+PublicActivity.enabled = false
+
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
     with.test_framework :rspec
@@ -48,4 +51,9 @@ end
 
 RSpec.configure do |config|
   config.include Paperclip::Shoulda::Matchers
+end
+
+RSpec.configure do |config|
+  config.include Devise::TestHelpers, :type => :controller
+  config.include ControllerHelpers, :type => :controller
 end
