@@ -13,7 +13,7 @@ class Requirement < ActiveRecord::Base
   has_many :task
 
   attr_accessible :label, :date, :source, :duedate, :body, :status, :status_name, :result,
-                  :author_name, :user_id, :letter_id
+                  :author_name, :author, :letter_id
 
   def author_name
     author.try(:displayname)
