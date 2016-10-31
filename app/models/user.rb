@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :username, :email, :password, :password_confirmation, :remember_me, 
     :firstname, :lastname, :displayname, :role_ids,
-    :middlename, :office, :position, :phone,
+    :middlename, :office, :position, :phone, :department,
     :avatar, 
     :crop_x, :crop_y, :crop_w, :crop_h,
     :middlename, :office, :position, :phone
