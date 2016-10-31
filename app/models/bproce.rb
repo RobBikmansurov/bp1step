@@ -3,6 +3,9 @@ class Bproce < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: Proc.new { |controller, model| controller.current_user }
 
+  include PgSearch
+  pg_search_scope :search__by_all_column, against: [:description, :goal, :id, :name, :fullname, :shortname]
+
   acts_as_taggable
 
   validates :shortname, :presence => true,
@@ -45,15 +48,6 @@ class Bproce < ActiveRecord::Base
 
   def parent_name=(name)
     self.parent_id = Bproce.find_by_name(name).id if name.present?
-  end
-
-  def self.search(search)
-    if search
-      where('shortname ILIKE ? or name ILIKE ? or fullname ILIKE ? or bproces.id = ?',
-            "%#{search}%", "%#{search}%", "%#{search}%", "#{search.to_i}")
-    else
-      where(nil)
-    end
   end
 
   def bproces_of_directive(directive_id) # процессы директивы (все процессы, связанные с директивой через документы) @bproces_of_directive = Bproce.last.bproces_of_directive(@directive.id)  # процессы, документы которых ссылаются на директиву
