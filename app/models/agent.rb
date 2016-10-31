@@ -1,13 +1,14 @@
 # Agent
 class Agent < ActiveRecord::Base
+  attr_accessible :shortname, :name, :town, :address, :contacts, :agent_name, :note
+  
   has_many :contract, through: :agent_contract
   has_many :agent_contract, dependent: :destroy
+
   validates :name, presence: true,
                    length: { minimum: 3, maximum: 255 }
   validates :town, length: { maximum: 30 }
-  attr_accessible :shortname, :name, :town, :address, :contacts, :agent_name, :note
-  include PublicActivity::Model
-  tracked owner: Proc.new { |controller, model| controller.current_user }
+
   def self.search(search)
     if search
       where('name ILIKE ? or shortname ILIKE ? or contacts ILIKE ? or id = ?',
@@ -16,4 +17,8 @@ class Agent < ActiveRecord::Base
       where(nil)
     end
   end
+
+  include PublicActivity::Model
+  tracked owner: Proc.new { |controller, _model| controller.current_user }
+
 end
