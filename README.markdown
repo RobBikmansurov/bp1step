@@ -18,7 +18,10 @@ Business processes documentation organization and generation, the 1st step of in
 
 Сайт: [bp1step.ru] (http://bp1step.ru)
 
-Demo: [bp1step.herokuapp.com](https://bp1step.herokuapp.com/about) - пока нельзя там логиниться, поэтому доступен не весь функционал
+Demo: [bp1step.herokuapp.com](https://bp1step.herokuapp.com/about) - без входа в систему будет доступен не весь функционал, поэтому смотрите список сотрудников в меню Сотрудники, выбирайте понравившегося и вводите, например, **ivanov@example.com**  в качестве логина и **ivanov** в качестве пароля.
+
+Это приложение внедрено и работает, вот информация о статистике: 
+![bp1step статистика](https://cloud.githubusercontent.com/assets/847150/20169830/d3917074-a753-11e6-814f-10d699d069e0.png)
 
 ---
 Все понимают, что надо наводить порядок в процессах на предпрятии, внедрять процессный подход в организации, выделять и документировать процессы.
