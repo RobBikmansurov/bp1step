@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby "2.3.1"
+
 gem 'will_paginate', '~> 3.0'
 gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
@@ -31,6 +33,7 @@ gem 'jcrop-rails-v2'
 gem 'tiny_tds'
 gem 'tzinfo-data'
 gem 'pg_search'
+gem 'pdf-reader'
 
 group :development do
   gem "better_errors"
@@ -63,4 +66,8 @@ group :test do
 end
 
 gem 'rails_12factor', group: :production
-ruby "2.3.1"
+
+group :development, :test do
+  gem 'pry-byebug'
+  gem 'pry-rails'
+end
