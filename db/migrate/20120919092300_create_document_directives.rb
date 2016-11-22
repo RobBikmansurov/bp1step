@@ -5,7 +5,7 @@ class CreateDocumentDirectives < ActiveRecord::Migration
       t.references :directive
       t.string :note
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

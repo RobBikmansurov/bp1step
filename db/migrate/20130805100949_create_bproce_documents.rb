@@ -5,7 +5,7 @@ class CreateBproceDocuments < ActiveRecord::Migration
       t.references :document
       t.string :purpose
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :bproce_documents, :bproce_id
     add_index :bproce_documents, :document_id

@@ -1,12 +1,32 @@
 # encoding: utf-8
 class Document < ActiveRecord::Base
-  # FIXME разобраться со статусами на русском
-  # STATUSES = %w[Проект Согласование Утвержден]
-  # validates_inclusion_of :status, in: STATUSES
+
+  belongs_to :user
+  belongs_to :owner, :class_name => 'User'
+  has_many :directive, :through => :document_directive
+  has_many :document_directive, :dependent => :destroy
+  has_many :bproce, through: :bproce_document
+  has_many :bproce_document, dependent: :destroy
+  has_many :user, through: :user_document
+  has_many :user_document, dependent: :destroy
+
+  attr_accessible :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, 
+                  :note, :place, :document_file, :file_delete, :bproce_id
+
+  include PgSearch
+  pg_search_scope :full_search, against: [
+    [:name, 'A'],
+    [:description, 'B'],
+    :note, :id, :text
+  ]
+
   scope :active, -> { where.not(status: 'НеДействует') } # действующие документы
 
   acts_as_taggable
   #acts_as_taggable_on :category
+
+  #after_document_file_post_process :test
+  after_save :copy_to_pdf
 
   #before_validation { document_file.clear if delete_file == '1' }
   has_attached_file :document_file,
@@ -23,9 +43,6 @@ class Document < ActiveRecord::Base
                                                       'application/doc', 'application/rtf',
                                                       'application/vnd.oasis.opendocument.graphics',
                                                       'application/octet-stream', 'application/force-download']
-  #after_document_file_post_process :test
-  after_save :copy_to_pdf
-
   validates :name, presence: true, length: {minimum: 10, maximum: 200}
   #validates :bproce_id, :presence => true # документ относится к процессу
   validates :dlevel, presence: true, numericality: {less_than: 5, greater_than: 0}
@@ -34,20 +51,7 @@ class Document < ActiveRecord::Base
   #validates :description, :length => {:maximum => 255}  # описание - не длиннее 255 символов
 
   include PublicActivity::Model
-  tracked owner: Proc.new { |controller, model| controller.current_user }
-
-  # документ относится к процессу
-  #belongs_to :bproce
-  belongs_to :user
-  belongs_to :owner, :class_name => 'User'
-  has_many :directive, :through => :document_directive
-  has_many :document_directive, :dependent => :destroy
-  has_many :bproce, through: :bproce_document
-  has_many :bproce_document, dependent: :destroy
-  has_many :user, through: :user_document
-  has_many :user_document, dependent: :destroy
-
-  attr_accessible  :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :document_file, :file_delete, :bproce_id
+  tracked owner: Proc.new { |controller, _model| controller.current_user }
 
   def owner_name
     owner.try(:displayname)
@@ -61,9 +65,9 @@ class Document < ActiveRecord::Base
     if self.document_file
       extention = File.extname(self.document_file.path)
       if extention != ".pdf"
-        pdf_path = self.document_file.path[0, self.document_file.path.length - extention.length] + '.pdf'  # путь к файлу PDF для просмотра
+        self.document_file.path[0, self.document_file.path.length - extention.length] + '.pdf'  # путь к файлу PDF для просмотра
       else
-        pdf_path = self.document_file.path
+        self.document_file.path
       end
     end
   end
@@ -72,9 +76,9 @@ class Document < ActiveRecord::Base
     if self.document_file
       extention = File.extname(self.document_file.path)
       if extention != ".pdf"
-        pdf_url = self.document_file.url.gsub(extention, ".pdf")  # url файла PDF для просмотра
+        self.document_file.url.gsub(extention, ".pdf")  # url файла PDF для просмотра
       else
-        pdf_url = self.document_file.url
+        self.document_file.url
       end
     end
   end
@@ -83,36 +87,24 @@ class Document < ActiveRecord::Base
     return name.split(//u)[0..50].join
   end
 
-  def self.search(search)
-    if search
-      if search.to_i > 0
-        where('name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", "#{search.to_i}")
-      else
-        where('name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%")
-      end
-    else
-      where(nil)
-    end
-  end
-
   private
 
   # интерполяция для paperclip - вернуть дату последней загрузки файла документа в формате ГГГГММДД
-  Paperclip.interpolates :ymd do |attachment, style|
+  Paperclip.interpolates :ymd do |attachment, _style|
     attachment.instance_read(:updated_at).strftime('%Y%m%d')
   end
 
   def copy_to_pdf
     if  self.document_file_file_name?  # задано имя файла
-      if File.exist?(document_file.path.to_s)
-        params = "-f pdf #{document_file.path.to_s}"
+      if File.exist?(document_file.path)
+        params = "-f pdf #{document_file.path}"
         begin
-          success = Paperclip.run('unoconv', params)
+          Paperclip.run('unoconv', params)
         rescue
-          puts  "error!"
+          puts 'error!'
         end
       else
-        puts "***model/document.rb*** file not found " + self.document_file.path.to_s
+        puts "***model/document.rb*** file not found #{self.document_file.path}"
       end
     end
   end

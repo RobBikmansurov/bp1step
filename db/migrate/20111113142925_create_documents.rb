@@ -11,7 +11,7 @@ class CreateDocuments < ActiveRecord::Migration
       t.date :approved
       t.string :place
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

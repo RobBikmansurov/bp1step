@@ -36,7 +36,7 @@ li {
 .nav{
     display: block;
     white-space: nowrap;
-    position: relatove;
+    position: relative;
     text-transform: uppercase;
     line-height: 22px;
     font-weight:bold;
@@ -54,7 +54,7 @@ li {
     text-decoration:none;
 }
 .nav li:hover a {
-    border-radius: 0px;
+    border-radius: 0;
     color:#fff;
     background-color: #000;
     text-decoration:none;
@@ -64,7 +64,7 @@ li {
 .nav ul{
     background: #FFCC99;
     background: linear-gadient(top, #efefef 0%, #bbbbbb 100%);
-    border-radius: 0px;
+    border-radius: 0;
     list-style:none;
     position:absolute;
     left: -9999px;
@@ -112,7 +112,7 @@ a.button,
   text-align:center;
   text-decoration:none;
   border-radius:3px;
-  box-shadow:rgba(0, 0, 0, 0.8) 0px 2px 3px;
+  box-shadow:rgba(0, 0, 0, 0.8) 0 2px 3px;
   background:#fff;
   background:linear-gradient(#fff, #e2e2e2);
   color:#111;
@@ -128,7 +128,7 @@ a.button:hover,
 a.button:active,
 .button:active {
   color:#666;
-  box-shadow:#5a5a5a 0px 3px 5px inset;
+  box-shadow:#5a5a5a 0 3px 5px inset;
 }
 
 logo {
@@ -191,7 +191,7 @@ a.groups:hover, a.groups-s:hover {
 }
 
 .button-img, a.button-img, a.button-img:hover {
-  padding: 0px 0px;
+  padding: 0 0;
   background: transparent;
 }
 
@@ -266,7 +266,7 @@ a.groups:hover, a.groups-s:hover {
   overflow: hidden;
   text-align: center;
   img { width: 100% };
-  top: 0px;
+  top: 0;
 }
 
 

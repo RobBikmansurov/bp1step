@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :user_role do
-    user
     role
+    user
     note 'user_role'
   end
 end

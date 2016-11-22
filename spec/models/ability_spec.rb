@@ -1,23 +1,17 @@
-require "cancan/matchers"
-require "spec_helper"
+require 'rails_helper'
+require 'cancan/matchers'
+require 'devise'
 
 describe Ability do
-  before (:all) do
-    [UserRole, Role, User].each do | model |
-      model.all.each { |r| r.destroy }
-    end
-    @role = FactoryGirl.create(:role)
-    @role.name = 'user'
-    @role.save
-  end
-  before (:each) do
-    @role = Role.create(name: 'user', description: 'default role') # создать роль по умолчанию
-    @role.save
-    @user = FactoryGirl.create(:user) # создать пользователя с ролью по умолчанию
-  end
 
   context "unauthorized user or user without roles" do   # незарегистрированный пользователь
+    #@role = Role.create(name: 'user', description: 'default role') # создать роль по умолчанию
+    #@role = FactoryGirl.create(:role)
+    #puts @role.inspect
+    @user = FactoryGirl.create(:user) # создать пользователя с ролью по умолчанию
+    puts @user.inspect
     ability = Ability.new(@user)
+
     [Bapp, Bproce, BproceBapp, BusinessRole, Directive, Document, Role, Workplace, Iresource, Term, User].each do |model|
       it "can :read '#{model.to_s}' but can't :manage them" do
         expect(ability).to be_able_to(:read, model.new)

@@ -2,4 +2,10 @@ language: ruby
 rvm:
   - 2.2.2
 cache: bundler
-
+before_script:
+  - cp config/database.yml{.example,}
+  - cp config/ldap.yml{.example,}
+  - bundle exec rake db:create db:migrate
+script:
+  - bundle exec rspec spec/
+  - bundle exec rubocop

@@ -4,7 +4,7 @@ class CreateBproceBapps < ActiveRecord::Migration
       t.integer :bproce_id
       t.integer :bapp_id
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

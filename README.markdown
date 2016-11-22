@@ -8,13 +8,20 @@ Business processes documentation organization and generation, the 1st step of in
 **BP1Step** - простой инструмент для документирования процессов, ресурсов, действий сотрудников, это web-приложение на базе Ruby on Rails с несколькими сервисными rake-задачами (например: синхронизация списка пользователей из LDAP, контроль бизнес-правил).
 Аутентификация пользователей с помощью Devise, ограничения ролей доступа на базе CanCanCan.
 
-[![Build Status](https://travis-ci.org/RobBikmansurov/BPDoc.svg?branch=master)](https://travis-ci.org/RobBikmansurov/BPDoc)
+[![Build Status](https://travis-ci.org/RobBikmansurov/bp1step.svg?branch=master)](https://travis-ci.org/RobBikmansurov/bp1step)
+[![Code Climate](https://codeclimate.com/github/RobBikmansurov/bp1step/badges/gpa.svg)](https://codeclimate.com/github/RobBikmansurov/bp1step)
+[![Test Coverage](https://codeclimate.com/github/RobBikmansurov/bp1step/badges/coverage.svg)](https://codeclimate.com/github/RobBikmansurov/bp1step/coverage)
 
 Язык: русский
 
 Автор: [Rob Bikmansurov](mailto:robb@mail.ru)
 
 Сайт: [bp1step.ru] (http://bp1step.ru)
+
+Demo: [bp1step.herokuapp.com](https://bp1step.herokuapp.com/about) - без входа в систему будет доступен не весь функционал, поэтому смотрите список сотрудников в меню Сотрудники, выбирайте понравившегося и вводите, например, **ivanov@example.com**  в качестве логина и **ivanov** в качестве пароля.
+
+Это приложение внедрено и работает, вот информация о статистике: 
+![bp1step статистика](https://cloud.githubusercontent.com/assets/847150/20169830/d3917074-a753-11e6-814f-10d699d069e0.png)
 
 ---
 Все понимают, что надо наводить порядок в процессах на предпрятии, внедрять процессный подход в организации, выделять и документировать процессы.

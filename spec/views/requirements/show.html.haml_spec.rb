@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe "requirements/show", :type => :view do
   before(:each) do
     @requirement = assign(:requirement, Requirement.create!(

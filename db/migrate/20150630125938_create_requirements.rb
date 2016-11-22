@@ -11,7 +11,7 @@ class CreateRequirements < ActiveRecord::Migration
       t.references :letter, index: true
       t.references :author, index: true
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :requirements, :label
     add_index :requirements, :date

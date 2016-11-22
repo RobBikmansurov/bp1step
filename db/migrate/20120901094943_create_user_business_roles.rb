@@ -7,7 +7,7 @@ class CreateUserBusinessRoles < ActiveRecord::Migration
       t.references :user, :null => false
       t.references :business_role, :null => false
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :user_business_roles, :user_id
     add_index :user_business_roles, :business_role_id

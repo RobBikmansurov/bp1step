@@ -4,7 +4,7 @@ class CreateAgentContracts < ActiveRecord::Migration
       t.references :agent, index: true
       t.references :contract, index: true
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

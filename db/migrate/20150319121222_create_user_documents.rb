@@ -5,7 +5,7 @@ class CreateUserDocuments < ActiveRecord::Migration
       t.references :document, index: true
       t.integer :link
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

@@ -5,7 +5,7 @@ class CreateBproceContracts < ActiveRecord::Migration
       t.references :contract, index: true
       t.string :purpose
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

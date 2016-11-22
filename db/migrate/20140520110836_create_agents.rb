@@ -6,7 +6,7 @@ class CreateAgents < ActiveRecord::Migration
       t.string :address, limit: 255
       t.text :contacts
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

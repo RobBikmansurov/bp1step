@@ -5,7 +5,7 @@ class CreateUserLetters < ActiveRecord::Migration
       t.references :letter, index: true
       t.integer :status
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

@@ -4,7 +4,7 @@ class CreateBproceWorkplaces < ActiveRecord::Migration
       t.integer :bproce_id
       t.integer :workplace_id
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

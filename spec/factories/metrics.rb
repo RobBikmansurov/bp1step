@@ -2,7 +2,7 @@
 FactoryGirl.define do
   factory :metrics do
     sequence(:name) { |n| "metric#{n}" }
-    description { "metric#{id}_desscription" }
+    description { "#{name}_desscription" }
     depth
     bproce
   end
