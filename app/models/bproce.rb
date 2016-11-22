@@ -3,6 +3,9 @@ class Bproce < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: Proc.new { |controller, model| controller.current_user }
 
+  include PgSearch
+  pg_search_scope :search__by_all_column, against: [:description, :goal, :id, :name, :fullname, :shortname]
+
   acts_as_taggable
 
   validates :shortname, :presence => true,
@@ -14,7 +17,9 @@ class Bproce < ActiveRecord::Base
   validates :fullname, :length => {:minimum => 10, :maximum => 250}
 
   acts_as_nested_set
-  attr_accessible :shortname, :name, :fullname, :goal, :description, :user_name, :parent_id, :parent_name, :tag_list, :tag_id, :context, :taggable, :checked_at
+  attr_accessible :shortname, :name, :fullname, :goal, :description, :user_name,
+                  :parent_id, :parent_name, :tag_list, :tag_id, :context,
+                  :user_id, :taggable, :checked_at
 
   has_many :bapps, :through => :bproce_bapps, :dependent => :destroy
   has_many :bproce_bapps, :dependent => :destroy
@@ -45,15 +50,6 @@ class Bproce < ActiveRecord::Base
 
   def parent_name=(name)
     self.parent_id = Bproce.find_by_name(name).id if name.present?
-  end
-
-  def self.search(search)
-    if search
-      where('shortname ILIKE ? or name ILIKE ? or fullname ILIKE ? or bproces.id = ?',
-            "%#{search}%", "%#{search}%", "%#{search}%", "#{search.to_i}")
-    else
-      where(nil)
-    end
   end
 
   def bproces_of_directive(directive_id) # процессы директивы (все процессы, связанные с директивой через документы) @bproces_of_directive = Bproce.last.bproces_of_directive(@directive.id)  # процессы, документы которых ссылаются на директиву

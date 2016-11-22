@@ -1,4 +1,6 @@
-RSpec.describe AgentsController, :type => :controller do
+require 'rails_helper'
+
+RSpec.describe AgentsController do
 
   let(:valid_attributes) { { "name" => "Agent name" } }
   let(:valid_session) { {} }
@@ -7,6 +9,7 @@ RSpec.describe AgentsController, :type => :controller do
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
+    current_user = FactoryGirl.create(:user)
   end
 
   describe "GET index" do

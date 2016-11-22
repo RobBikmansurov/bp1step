@@ -1,20 +1,17 @@
 # coding: utf-8
 class User < ActiveRecord::Base
   scope :active, -> { where(active: true) }
-  validates :username, :presence => true, :uniqueness => true
-  validates :email, :presence => true, :uniqueness => true
-  
+
   has_attached_file :avatar, 
-    styles: { medium: "300x300>", mini: "50x50>" }, 
-    :presence  => false,
-    processors: [:cropper],
+    styles: { medium: "300x300>", mini: "50x50#" }, processors: [:cropper],
     default_url: "/store/images/:style/missing.png",
-    url: "/store/images/:id.:style.:extension", 
-    :path => ":rails_root/public/store/images/:id.:style.:extension"
-  validates :avatar, :attachment_presence => false
+    url: "/store/images/:id.:style.:extension"
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
   do_not_validate_attachment_file_type :avatar  #paperclip >4.0
 
+  validates :username, :presence => true, :uniqueness => true
+  validates :email, :presence => true, :uniqueness => true
+  
   has_many :user_business_role  # бизнес-роли пользователя
   has_many :business_roles, :through => :user_business_role
   has_many :user_workplace # рабочие места пользователя
@@ -26,20 +23,22 @@ class User < ActiveRecord::Base
   has_many :document, through: :user_document
   has_many :user_document, dependent: :destroy
 
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   # аутентификация - через БД
-  #devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
   # аутентификация - через LDAP
-  devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  #devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
    
-  after_create :create_role
-  before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
+  before_create :create_role
 
   attr_accessible :username, :email, :password, :password_confirmation, :remember_me, 
-    :firstname, :lastname, :displayname, :role_ids, 
+    :firstname, :lastname, :displayname, :role_ids,
+    :middlename, :office, :position, :phone, :department,
     :avatar, 
-    :crop_x, :crop_y, :crop_w, :crop_h
+    :crop_x, :crop_y, :crop_w, :crop_h,
+    :middlename, :office, :position, :phone
   attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
 
   #after_update :reprocess_pic, :if => :cropping?
@@ -57,40 +56,44 @@ class User < ActiveRecord::Base
     avatar.reprocess!
   end
 
+  #before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
+
   def has_role?(role_sym)
     roles.any? { |r| r.name.underscore.to_sym == role_sym }
   end
 
   def get_ldap_lastname
     #Rails::logger.info("### Getting the users last name")
-    tempname = Devise::LDAP::Adapter.get_ldap_param(self.username,"sn")
-    tempname = tempname.first.force_encoding("UTF-8") if tempname
+    tempname = Devise::LdapAdapter.get_ldap_param(self.username,"sn").to_s
+    tempname = tempname.force_encoding("UTF-8")
     #puts "\tLDAP returned lastname of " + tempname
     self.lastname = tempname
   end 
 
   def get_ldap_firstname
     #Rails::logger.info("### Getting the users first name")
-    tempname = Devise::LDAP::Adapter.get_ldap_param(self.username,"givenname")
-    tempname = tempname.first.force_encoding("UTF-8") if tempname
+    tempname = Devise::LdapAdapter.get_ldap_param(self.username,"givenname").to_s
+    tempname = tempname.force_encoding("UTF-8")
     #puts "\tLDAP returned firstname of " + tempname
     self.firstname = tempname
   end 
 
   def get_ldap_displayname
     #Rails::logger.info("### Getting the users display name")
-    tempname = Devise::LDAP::Adapter.get_ldap_param(self.username,"displayname")
-    self.displayname = tempname.first.force_encoding("UTF-8") if tempname
+    tempname = Devise::LdapAdapter.get_ldap_param(self.username,"displayname").to_s
+    self.displayname = tempname.force_encoding("UTF-8")
   end 
 
   def get_ldap_email
     #Rails::logger.info("### Getting the users email address")
-    tempmail = Devise::LDAP::Adapter.get_ldap_param(self.username,"mail") if self.id
-    if tempmail
-      tempmail = tempmail.first
-      self.email = tempmail
-    end
+    tempmail = Devise::LdapAdapter.get_ldap_param(self.username,"mail").to_s
+    self.email = tempmail
   end
+
+  
+  #def get_ldap_email
+  #  self.email = Devise::LdapAdapter get_ldap_param(self.username,"mail")
+  #end
 
   def self.search(search)
     if search
@@ -106,6 +109,6 @@ class User < ActiveRecord::Base
 
   private
     def create_role
-      self.roles << Role.find_by_name(:user)  if self.id  #  if ENV["RAILS_ENV"] != 'test' 
+      #self.roles << Role.find_by_name(:user)  #  if ENV["RAILS_ENV"] != 'test' 
     end
 end

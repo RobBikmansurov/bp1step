@@ -27,7 +27,7 @@ class Letter < ActiveRecord::Base
 
   attr_accessible :number, :date, :regnumber, :regdate, :subject, :source, :sender, \
    :duedate, :body, :status, :status_name, :result, :author_id, :author_name, :action, \
-   :completion_date, :in_out, :letter_id
+   :completion_date, :in_out, :letter_id, :author
 
   before_save :check_status, :check_regdate
 

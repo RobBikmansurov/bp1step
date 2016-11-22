@@ -7,7 +7,7 @@ class CreateTerms < ActiveRecord::Migration
       t.text :note
       t.text :source
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :terms, :shortname, :unique => true
     add_index :terms, :name, :unique => true

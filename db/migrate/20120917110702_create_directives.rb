@@ -8,7 +8,7 @@ class CreateDirectives < ActiveRecord::Migration
       t.string :note
       t.string :body
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

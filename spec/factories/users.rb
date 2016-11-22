@@ -1,8 +1,8 @@
 FactoryGirl.define do
   factory :user do
     sequence(:id) { |n| "#{n}" }
-    sequence(:username) { |n| "Person #{n}" }
-    sequence(:email) { |n| "person#{n}@example.com" }
+    username      { "u#{id}" }
+    email         { "person#{id}@example.com" }
     displayname	  { "displayname#{id}" }
     lastname      { "lastname#{id}" }
     firstname     { "firstname#{id}" }
@@ -10,6 +10,7 @@ FactoryGirl.define do
     password_confirmation "password"
     encrypted_password 'secret'
     last_sign_in_at 1.month.ago
+    active { true }
     #User.new :avatar => Rails.root.join("spec/factories/images/rails.png").open
     #avatar { fixture_file_upload(Rails.root.join('spec/factories/images/rails.png'), 'image/png') }
     #avatar { Rails.root.join("spec/factories/images/rails.png").open }

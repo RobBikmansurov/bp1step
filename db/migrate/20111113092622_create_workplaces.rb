@@ -7,7 +7,7 @@ class CreateWorkplaces < ActiveRecord::Migration
       t.boolean :typical
       t.string :location
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

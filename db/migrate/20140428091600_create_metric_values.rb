@@ -5,7 +5,7 @@ class CreateMetricValues < ActiveRecord::Migration
       t.datetime :dtime
       t.integer :value
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

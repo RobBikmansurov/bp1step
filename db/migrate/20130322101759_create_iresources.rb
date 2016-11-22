@@ -13,7 +13,7 @@ class CreateIresources < ActiveRecord::Migration
       t.string :risk_category
       t.references :user
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :iresources, :label, :unique => true
     add_index :iresources, :user_id

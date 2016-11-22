@@ -4,7 +4,7 @@ class CreateBproceIresources < ActiveRecord::Migration
       t.references :bproce
       t.references :iresource
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :bproce_iresources, :bproce_id
     add_index :bproce_iresources, :iresource_id

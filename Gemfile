@@ -1,9 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.2.2'
-gem 'rails', '4.2.3'
-
-#gem 'yaml_db', github: 'jetthoughts/yaml_db', ref: 'fb4b6bd7e12de3cffa93e0a298a1e5253d7e92ba'
+ruby "2.3.1"
 
 gem 'will_paginate', '~> 3.0'
 gem 'sass-rails', '~> 4.0.0'
@@ -12,7 +9,6 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'therubyracer'
-gem 'unicorn'
 
 gem "devise", "~> 3.5.2"#, git: "https://github.com/plataformatec/devise"
 gem "devise_ldap_authenticatable"
@@ -35,13 +31,9 @@ gem 'chartkick'
 gem 'groupdate'
 gem 'jcrop-rails-v2'
 gem 'tiny_tds'
-
-group :test, :development do
-  gem 'sqlite3'
-  gem 'capybara'
-  gem 'webrat'
-  gem "selenium-webdriver"
-end
+gem 'tzinfo-data'
+gem 'pg_search'
+gem 'pdf-reader'
 
 group :development do
   gem "better_errors"
@@ -49,17 +41,33 @@ group :development do
   gem 'capistrano'  # Deploy with Capistrano
   gem 'rvm-capistrano',  require: false
   gem 'capistrano-deploy', require: false
-  #gem 'rubocop', require: false
+  gem 'rubocop', require: false
   #gem "rails-erd"
   gem 'guard-rspec', require: false
 end
 
 group :production do
   gem 'pg'
+  gem 'puma'
+  gem 'unicorn'
 end
 
 group :test do
-  gem 'shoulda-matchers', '~> 3.1'
-  gem 'rspec-rails', '~> 3.0'
+  gem 'rspec-rails'
+  gem 'shoulda-matchers'
+  gem 'sqlite3'
+  gem 'capybara'
   gem 'factory_girl_rails'
+  gem 'webrat'
+  gem "selenium-webdriver"
+  gem 'fuubar'
+  gem 'database_cleaner'
+  gem "codeclimate-test-reporter", require: nil
+end
+
+gem 'rails_12factor', group: :production
+
+group :development, :test do
+  gem 'pry-byebug'
+  gem 'pry-rails'
 end

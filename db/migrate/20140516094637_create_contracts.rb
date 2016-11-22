@@ -11,7 +11,7 @@ class CreateContracts < ActiveRecord::Migration
       t.text :text
       t.text :note
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

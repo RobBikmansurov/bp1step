@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe "requirements/index", :type => :view do
   before(:each) do
     assign(:requirements, [

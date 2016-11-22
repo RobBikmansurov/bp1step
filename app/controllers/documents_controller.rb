@@ -1,4 +1,3 @@
-# coding: utf-8
 class DocumentsController < ApplicationController
   respond_to :odt, only: :index
   respond_to :pdf, only: :show
@@ -52,7 +51,7 @@ class DocumentsController < ApplicationController
                 end
                 if params[:search].present?
                   @title_doc += ", содержащих [#{params[:search]}]"
-                  @documents = @documents.search(params[:search])
+                  @documents = @documents.full_search(params[:search])
                 end
                 if params[:status].present? #  список документов, имеющих конкретный статус
                   @documents = @documents.where(status: params[:status])
@@ -333,7 +332,7 @@ private
 
   def get_document
     if params[:search].present? # это поиск
-      @documents = Document.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      @documents = Document.full_search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     elsif params[:id].present?
       @document = Document.find(params[:id])

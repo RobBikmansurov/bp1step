@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 #TODO: не проверяется уникальность :username и :email! (не решена техническая проблема с возникающей ошибкой)
 
 describe User do
