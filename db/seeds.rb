@@ -14,7 +14,7 @@ Role.create!(:note => 'Управляет пользователями: прик
 Role.create!(:note => 'Создает и регистрирует письма', :name => 'secretar', :description => 'Секретарь')
 
 puts "access roles created"
-Role.all.pluck(:name)
+Role.pluck(:name)
 puts
 # users
 User.destroy_all
@@ -24,27 +24,34 @@ user1 = User.create(displayname: 'Иванов И.И.', username: 'ivanov', emai
 user1.roles << Role.find_by_name(:author)
 user1.roles << Role.find_by_name(:analitic)
 user1.roles << Role.find_by_name(:owner)
+
 user2 = User.create(:displayname => 'Петров П.П.', :username => 'petrov', :email => 'petrov@example.com', :password => 'petrov', firstname: 'Петр', middlename: 'Петрович', lastname: 'Петров')
 user2.roles << Role.find_by_name(:author)
-user3 = User.create(:displayname => 'Администратор', :username => 'admin', :email => 'admin@example.com', :password => 'admin')
+
+user3 = User.create(:displayname => 'Администратор', :username => 'admin', :email => 'admin@example.com', :password => 'admin', firstname: 'Admin', middlename: 'Adminович', lastname: 'Adminов')
 user3.roles << Role.find_by_name(:admin)
 user3.roles << Role.find_by_name(:security)
+
 user4 = User.create(displayname: 'Сидоров С.С.', username: 'sidorov', email: 'sidorov@example.com', password: 'sidorov', firstname: 'Сидор', middlename: 'Сидорович', lastname: 'Сидоров')
 user4.roles << Role.find_by_name(:author)
+
 user5 = User.create(displayname: 'Путин В.В.', username: 'putinx', email: 'putinx@example.com', password: 'putinx', department: 'Библиотека', position: 'Юрист', office: '201', phone: '2201')
 user5.roles << Role.find_by_name(:keeper)
 user5.roles << Role.find_by_name(:user)
+
 user6 = User.create(:displayname => 'Кудрин А.В.', :username => 'kudrin', :email => 'kudrin@example.com', :password => 'kudrin', position: 'Финансист')
 user6.roles << Role.find_by_name(:author)
 user6.roles << Role.find_by_name(:owner)
 user6.roles << Role.find_by_name(:analitic)
 user6.roles << Role.find_by_name(:security)
+
 user7 = User.create(displayname: 'Яровая И.Й.', username: 'shapoklyak', email: 'shapoklyak@example.com',
 	password: 'shapoklyak', phone: '8-800-0001234', position: 'старший менеджер')
 user7.roles << Role.find_by_name(:secretar)
 user7.roles << Role.find_by_name(:author)
 puts "users created"
-
+User.pluck(:displayname)
+p
 # applications
 ['Office', 'Notepad', "Excel", 'Word', 'Powerpoint'].each do |name |
 	Bapp.create(:name => name,
@@ -182,7 +189,7 @@ dd = di.document_directive.create(document_id: d.id)
 di = Directive.create(title: 'Основной закон', number: '00', approval: '2011-09-11', name: 'Конституция', 
   status: 'Действует', body: 'РФ', note: 'Основной и самый главный')
 dd = di.document_directive.create(document_id: Document.last.id)
-p "directives created"
+p 'directives created'
 
 
 l1 = Letter.create(number: "12-34/123", date: Date.current - 10, subject: "о предоставлении информации", source: "фельдпочта", 
