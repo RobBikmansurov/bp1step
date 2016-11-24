@@ -93,7 +93,7 @@
       -if @user_documents.count > 0
         В Избранном:
         - @user_documents.each do |user_document|
-          = link_to user_document.user.displayname, user_path(user_document.user_id, :anchor => 'Documents')
+          = link_to user_document.user.displayname, user_path(user_document.user_id, :anchor => 'Documents') if user_document.user
         %br
     -if @user_document && @user_document.document_id == @document.id
       = link_to 'Удалить из Избранного', user_document_path, :method => :delete if @user_document.link >= 10 # если документ не добавил менеджер по персоналу

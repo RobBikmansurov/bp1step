@@ -18,7 +18,7 @@ Role.pluck(:name)
 puts
 # users
 User.destroy_all
-user1 = User.create(displayname: 'Иванов И.И.', username: 'ivanov', email: 'ivanov@example.com', password: 'ivanov', 
+user1 = User.create(displayname: 'Иванов И.И.', username: 'ivanov', email: 'ivanov@example.com', password: 'ivanov',
 	                 firstname: 'Иван', middlename: 'Иванович', lastname: 'Иванов', office: '101', position: 'Экономист',
 	                 phone: '+7(342)212-34-56')
 user1.roles << Role.find_by_name(:author)
@@ -85,7 +85,7 @@ end
 puts "workplaces created"
 
 # terms
-term = Term.create(:name => 'электронная подпись', :shortname => 'ЭП', source: 'договор на обслуживание в системе Банк-Клиент', 
+term = Term.create(:name => 'электронная подпись', :shortname => 'ЭП', source: 'договор на обслуживание в системе Банк-Клиент',
 					:description => 'Информация в электронной форме, которая присоединена к другой информации в электронной форме (подписываемой информации) или иным образом связана с такой информацией и которая используется для определения лица, подписывающего информацию')
 term = Term.create(name: 'Авторизация', shortname: 'Авторизация',  description: 'Предоставление прав доступа')
 term = Term.create(name: 'Аутентификация', shortname: 'Аутентификация',  description: 'Проверка принадлежности субъекту доступа предъявленного им идентификатора (подтверждение подлинности)')
@@ -102,7 +102,7 @@ term = Term.create(name: 'Актив', shortname: 'Актив', description: 'В
 puts 'terms created'
 
 #processes
-bp1 = Bproce.create(name: 'Предоставление сервисов', shortname: 'B.4.1', 
+bp1 = Bproce.create(name: 'Предоставление сервисов', shortname: 'B.4.1',
 	fullname: 'Предоставление сервисов', user_id: 1)
 bp1.user_id = user1.id
 bp1.save
@@ -145,12 +145,12 @@ d.save
 puts 'documents created'
 
 ag1 = Agent.create(name: 'ООО 1С в помощь', town: 'Урюпинск', address: '123000. г.Урюпинск, ул.Ленина,2-101', contacts: 'Оля, +7(900)1234567')
-ag2 = Agent.create(name: 'ООО Рога и копыта', town: '', address: '614000. г.Пермь, ул.Ленина, 1', contacts: 'info@example.com')
+ag2 = Agent.create(name: 'ООО Рога и копыта', town: '', address: '614000. г.Сыктывкар, ул.Ленина, 1', contacts: 'info@example.com')
 12.times.map do |i|
-	Agent.create!(name: ['ООО "Развитие"', 'ПАО "Газпромбанк"', 'ОАО "Открытые технологии"', 'ИП Иванов Иван Иванович', 'ООО "1С"', 
+	Agent.create!(name: ['ООО "Развитие"', 'ПАО "Газпромбанк"', 'ОАО "Открытые технологии"', 'ИП Иванов Иван Иванович', 'ООО "1С"',
 	  'ООО "Вектор Плюс"', 'ИП Петров Петр Петрович', 'ООО "Строитель"', 'ОАО "Коммунальщик-3"', 'ПАО "Сетевая компания"',
 	  'ООО "Кудесник"', 'АО "Жилищник ХЗ"'][i],
-	  shortname: ['Развитие', 'Газпромбанк', 'Открытые технологии', 'Иванов И.И.', '1С', 
+	  shortname: ['Развитие', 'Газпромбанк', 'Открытые технологии', 'Иванов И.И.', '1С',
 	  'Вектор+', 'Петров П.П.', 'Строитель', 'Коммунальщик-3', 'Сетевая компания',
 	  'Кудесник', 'Жилищник'][i],
 	  town: ['Пермь', 'Сочи', 'Москва', 'Екатеринбург', 'Орел'][rand(5)],
@@ -160,19 +160,19 @@ ag2 = Agent.create(name: 'ООО Рога и копыта', town: '', address: '
 end
 puts 'agents created'
 
-co = Contract.new(number: '2-2014', name: 'предоставления услуг', status: 'Действует', 
+co = Contract.new(number: '2-2014', name: 'предоставления услуг', status: 'Действует',
 	date_begin: Date.current - 6.month, text: 'text', contract_type: 'Договор', description: 'о предоставлении услуг связи')
 co.agent_id = ag2.id
 co.owner_id = user1.id
 co.payer_id = user2.id
 co.save
-co = Contract.new(number: '1', name: 'оказания услуг', status: 'Действует', 
+co = Contract.new(number: '1', name: 'оказания услуг', status: 'Действует',
 	date_begin: Date.current - 1.year, text: 'text', contract_type: 'Договор', description: 'о технической поддержке')
 co.agent_id = ag1.id
 co.owner_id = user3.id
 co.payer_id = user2.id
 co.save
-co = Contract.new(number: '3', name: 'оказания услуг', status: 'Согласование', 
+co = Contract.new(number: '3', name: 'оказания услуг', status: 'Согласование',
 	date_begin: Date.current , text: 'text', contract_type: 'Договор', description: 'поставки')
 co.agent_id = ag1.id
 co.owner_id = user3.id
@@ -182,22 +182,22 @@ puts 'contracts created'
 m = Metric.create(name: 'ИнцидентовВсего', description: 'количество инцидентов, зарегистрированных в системе', depth: '3', bproce_id: bp211.id)
 puts "metrics created"
 
-di = Directive.create(title: 'Положение', number: '123-П', approval: Date.current - 1.month, 
-  name: 'Краткий порядок управления финансами', 
+di = Directive.create(title: 'Положение', number: '123-П', approval: Date.current - 1.month,
+  name: 'Краткий порядок управления финансами',
 	status: 'Действует', body: 'ЦБ РФ', note: 'Об управлении финансами')
 dd = di.document_directive.create(document_id: d.id)
-di = Directive.create(title: 'Основной закон', number: '00', approval: '2011-09-11', name: 'Конституция', 
+di = Directive.create(title: 'Основной закон', number: '00', approval: '2011-09-11', name: 'Конституция',
   status: 'Действует', body: 'РФ', note: 'Основной и самый главный')
 dd = di.document_directive.create(document_id: Document.last.id)
 p 'directives created'
 
 
-l1 = Letter.create(number: "12-34/123", date: Date.current - 10, subject: "о предоставлении информации", source: "фельдпочта", 
+l1 = Letter.create(number: "12-34/123", date: Date.current - 10, subject: "о предоставлении информации", source: "фельдпочта",
 	               sender: "Администрация президента", body: "срочно предоставить", duedate: Date.current - 1, author: user7,
 	               status: 5)
 l1.user_letter.create(user_id: user5.id, status: 1)
 l1.user_letter.create(user_id: user6.id)
-l1 = Letter.create(number: "99/2", date: Date.current - 1.month, subject: "о согласовании митинга", source: "курьер", 
+l1 = Letter.create(number: "99/2", date: Date.current - 1.month, subject: "о согласовании митинга", source: "курьер",
 	               sender: "ФБК", body: "хотят согласовать", duedate: Date.current - 20, author: user7,
 	               status: 5)
 l1.user_letter.create(user_id: user2.id, status: 1)
@@ -219,3 +219,20 @@ t2.user_task.create(user_id: user2.id)
 puts 'Tasks created'
 
 PublicActivity.enabled = true
+
+
++#<Directive id: 173, title: "Указ", number: "1009", approval: "2004-08-04", name: " Об утверждении перечня стратегических предприятий и стратегических акционерных обществ", note: "", body: "Президент РФ", created_at: "2015-03-26 07:51:41", updated_at: "2015-03-26 09:04:56", annotation: "", status: "Действует", action: nil>
++#<Directive id: 120, title: "Стандарт", number: "1.0-2014", approval: "2014-06-01", name: "Стандарт Банка России СТО БР ИББС-1.0–2014 “Обеспе...", note: "Взамен СТО БР ИББС 1.0-2010", body: "Банк России", created_at: "2014-06-03 04:32:19", updated_at: "2014-10-16 09:54:01", annotation: "", status: "Действует", action: nil>
++
++ Стандарт Банк России № 1.0-2014 от 01.06.2014 "Действует"
++Стандарт Банка России СТО БР ИББС-1.0–2014 “Обеспечение информационной безопасности организаций банковской системы Российской Федерации. Общие положения»
++примечание: Взамен СТО БР ИББС 1.0-2010
++ Постановление Правительство РФ № 1119 от 01.11.2012 "Действует"
++Об утверждении требований к защите персональных данных при их обработке в информационных системах персональных данных
++ Постановление РФ № №1137 от 26.12.2011
++О формах и правилах заполнения (ведения)документов, применяемых при расчетах по налогу на добавленную стоимость
++примечание: см. редакцию с последними изменениями
++ Федеральный закон Государственная Дума № 129-ФЗ от 08.08.2001 "Действует"
++"О государственной регистрации юридических лиц и индивидуальных предпринимателей"
++примечание: Для Банка актуален вопрос раскрытия информации в ЕФРС, который определен данным законом (Статья 7.1.).
+

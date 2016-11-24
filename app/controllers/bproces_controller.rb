@@ -101,8 +101,11 @@ class BprocesController < ApplicationController
       @document = Document.new(params[:document])
       @document.save if !@document.nil?
     end
-    flash[:notice] = "Successfully updated Bproce." if @bproce.update_attributes(params[:bproce])
-    respond_with(@bproce)
+    if @bproce.update_attributes(params[:bproce])
+      redirect_to @bproce, notice: "Successfully updated Bproce."
+    else
+      render action: 'edit'
+    end
   end
 
   def destroy
