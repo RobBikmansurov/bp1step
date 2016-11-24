@@ -2,8 +2,8 @@
 require 'rails_helper'
 
 RSpec.describe DocumentsController, type: :controller do
-  let(:owner) { { username: 'name', email: 'person#{id}@example.com' } }
-  let(:valid_attributes) { { name: 'document name', place: 'place', dlevel: 3, owner: owner } }
+  # let(:owner) { { username: 'name', email: 'person#{id}@example.com' } }
+  let(:valid_attributes) { { name: 'document name', place: 'place', dlevel: 3, owner_id: owner } }
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
   before(:each) do
@@ -22,8 +22,8 @@ RSpec.describe DocumentsController, type: :controller do
     end
 
     it 'loads all of the documents into @documents' do
-      document1 = Document.create! valid_attributes
-      document2 = Document.create! valid_attributes
+      document1 = FactoryGirl.create(:document)
+      document2 = FactoryGirl.create(:document)
       get :index
       expect(assigns(:documents)).to match_array([document1, document2])
     end

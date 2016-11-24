@@ -4,7 +4,6 @@ FactoryGirl.define do
     name 'document_name'
     dlevel '1'
     place 'office1'
-    owner_id '1'
-    user
+    owner_id user
   end
 end
