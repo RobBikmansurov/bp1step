@@ -19,6 +19,6 @@ Style/AsciiComments:
 Style/ClassAndModuleChildren:
   Enabled: false
 
-Rails/HttpPositionalArguments:
+Rails/HttpPositionalArguments: # удалить этот запрет для Rails 5
   Exclude:
     - 'spec/controllers/*'
