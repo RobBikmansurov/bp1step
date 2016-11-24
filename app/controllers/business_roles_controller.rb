@@ -23,7 +23,7 @@ class BusinessRolesController < ApplicationController
       format.odt { print }
     end
   end
-  
+
   def new
     @business_role = BusinessRole.new
     if params[:bproce_id].present?
@@ -82,7 +82,7 @@ class BusinessRolesController < ApplicationController
     @user_business_role = UserBusinessRole.new(:business_role_id => @business_role.id)
     flash[:notice] = "Successfully updated role." if @business_role.update_attributes(params[:business_role])
     begin
-      BusinessRoleMailer.update_business_role(@business_role, current_user).deliver    # оповестим исполнителей роли об изменениях
+      BusinessRoleMailer.update_business_role(@business_role, current_user).deliver_now    # оповестим исполнителей роли об изменениях
     rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
       flash[:alert] = "Error sending mail to business role workers"
     end
@@ -107,7 +107,7 @@ private
   def sort_direction
     params[:direction] || "asc"
   end
-  
+
   def get_business_role
     if params[:search].present? # это поиск
       @business_roles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page]).find(:all, :include => :users)
