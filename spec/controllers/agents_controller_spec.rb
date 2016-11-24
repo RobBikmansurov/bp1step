@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe AgentsController do
-  let(:valid_attributes) { { 'name' => 'Agent name' } }
+  let(:agent_attributes) { { 'name' => 'Agent name' } }
   let(:valid_session) { {} }
   before(:each) do
     @user = FactoryGirl.create(:user)
@@ -20,8 +20,8 @@ RSpec.describe AgentsController do
     end
 
     it 'loads all of the agents into @agents' do
-      agent1 = Agent.create! valid_attributes
-      agent2 = Agent.create! valid_attributes
+      agent1 = Agent.create! agent_attributes
+      agent2 = Agent.create! agent_attributes
       get :index
 
       expect(assigns(:agents)).to match_array([agent1, agent2])
@@ -30,7 +30,7 @@ RSpec.describe AgentsController do
 
   describe 'GET show' do
     it 'assigns the requested agent as @agent' do
-      agent = Agent.create! valid_attributes
+      agent = Agent.create! agent_attributes
       get :show, { id: agent.to_param }, valid_session
       expect(assigns(:agent)).to eq(agent)
     end
@@ -45,7 +45,7 @@ RSpec.describe AgentsController do
 
   describe 'GET edit' do
     it 'assigns the requested agent as @agent' do
-      agent = Agent.create! valid_attributes
+      agent = Agent.create! agent_attributes
       get :edit, { id: agent.to_param }, valid_session
       expect(assigns(:agent)).to eq(agent)
     end
@@ -55,18 +55,18 @@ RSpec.describe AgentsController do
     describe 'with valid params' do
       it 'creates a new Agent' do
         expect do
-          post :create, { agent: valid_attributes }, valid_session
+          post :create, { agent: agent_attributes }, valid_session
         end.to change(Agent, :count).by(1)
       end
 
       it 'assigns a newly created agent as @agent' do
-        post :create, { agent: valid_attributes }, valid_session
+        post :create, { agent: agent_attributes }, valid_session
         expect(assigns(:agent)).to be_a(Agent)
         expect(assigns(:agent)).to be_persisted
       end
 
       it 'redirects to the created agent' do
-        post :create, { agent: valid_attributes }, valid_session
+        post :create, { agent: agent_attributes }, valid_session
         expect(response).to redirect_to(Agent.last)
       end
     end
@@ -89,34 +89,34 @@ RSpec.describe AgentsController do
   describe 'PUT update' do
     describe 'with valid params' do
       it 'updates the requested agent' do
-        agent = Agent.create! valid_attributes
+        agent = Agent.create! agent_attributes
         expect_any_instance_of(Agent).to receive(:save).at_least(:once)
         put :update, { id: agent.to_param, agent: { 'name' => 'MyString' } }, valid_session
       end
 
       it 'assigns the requested agent as @agent' do
-        agent = Agent.create! valid_attributes
-        put :update, { id: agent.to_param, agent: valid_attributes }, valid_session
+        agent = Agent.create! agent_attributes
+        put :update, { id: agent.to_param, agent: agent_attributes }, valid_session
         expect(assigns(:agent)).to eq(agent)
       end
 
       it 'redirects to the agent' do
-        agent = Agent.create! valid_attributes
-        put :update, { id: agent.to_param, agent: valid_attributes }, valid_session
+        agent = Agent.create! agent_attributes
+        put :update, { id: agent.to_param, agent: agent_attributes }, valid_session
         expect(response).to redirect_to(agent)
       end
     end
 
     describe 'with invalid params' do
       it 'assigns the agent as @agent' do
-        agent = Agent.create! valid_attributes
+        agent = Agent.create! agent_attributes
         expect_any_instance_of(Agent).to receive(:save).and_return(false)
         put :update, { id: agent.to_param, agent: { 'name' => 'invalid value' } }, valid_session
         expect(assigns(:agent)).to eq(agent)
       end
 
       it "re-renders the 'edit' template" do
-        agent = Agent.create! valid_attributes
+        agent = Agent.create! agent_attributes
         expect_any_instance_of(Agent).to receive(:save).and_return(false)
         put :update, { id: agent.to_param, agent: { 'name' => 'invalid value' } }, valid_session
         expect(response).to render_template('edit')
@@ -126,14 +126,14 @@ RSpec.describe AgentsController do
 
   describe 'DELETE destroy' do
     it 'destroys the requested agent' do
-      agent = Agent.create! valid_attributes
+      agent = Agent.create! agent_attributes
       expect do
         delete :destroy, { id: agent.to_param }, valid_session
       end.to change(Agent, :count).by(-1)
     end
 
     it 'redirects to the agents list' do
-      agent = Agent.create! valid_attributes
+      agent = Agent.create! agent_attributes
       delete :destroy, { id: agent.to_param }, valid_session
       expect(response).to redirect_to(agents_url)
     end
