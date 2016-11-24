@@ -1,4 +1,5 @@
-require 'spec_helper'
+require 'rails_helper'
+
 RSpec.feature 'Managing agents', type: :feature do
 
   context 'Finding the list of agents' do
