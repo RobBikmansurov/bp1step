@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe WorkplacesController, :type => :controller do
 
   let(:valid_attributes) { {name: "workplace", description: 'workplace description', designation: "workplace designation" } }
@@ -79,8 +81,8 @@ RSpec.describe WorkplacesController, :type => :controller do
 
       it "re-renders the 'new' template" do
         expect_any_instance_of(Workplace).to receive(:save).and_return(false)
-        post :create, {:workplace => {} }, valid_session
-        expect(response).to_not render_template("new")
+        post :create, {workplace: { name: 'invalid name'} }, valid_session
+        expect(response).to render_template("new")
       end
     end
   end

@@ -48,9 +48,12 @@ class WorkplacesController < ApplicationController
   end
 
   def create
-    @workplace = Workplace.create(params[:workplace])
-    flash[:notice] = "Successfully created workplace." if @workplace.save
-    respond_with(@workplace)
+    @workplace = Workplace.new(params[:workplace])
+    if @workplace.save
+      redirect_to @workplace, notice: 'Workplace was successfully created.'
+    else
+      render action: 'new'
+    end
   end
 
   def create_user
