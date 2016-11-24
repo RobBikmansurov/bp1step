@@ -17,4 +17,8 @@ Metrics/LineLength:
 Style/AsciiComments:
   Enabled: false
 Style/ClassAndModuleChildren:
+  Enabled: false
+
+Rails/HttpPositionalArguments:
   Exclude:
+    - 'spec/controllers/*'
