@@ -1,11 +1,18 @@
-require 'spec_helper'
-RSpec.feature 'Managing letters', type: :feature do
+require 'rails_helper'
 
-  it "opens courses page after login" do
-    visit "/"
-    expect(page).to have_content "?"
-    click_link "?"
-    expect(page).to have_content('Легенда')
+describe Letter do
+ let!(:user) { create(:user) }
+
+  context 'As Guest' do
+    it 'do not see Letters' do
+      expect(page).not_to have_link('letters')
+    end
+  end
+
+  context 'As User' do
+    it 'do not see Letters' do
+      expect(page).to have_link('letters')
+    end
   end
 
 end
