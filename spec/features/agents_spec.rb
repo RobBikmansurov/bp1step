@@ -1,4 +1,5 @@
-require 'spec_helper'
+require 'rails_helper'
+
 RSpec.feature 'Managing agents', type: :feature do
 
   context 'Finding the list of agents' do
@@ -10,7 +11,7 @@ RSpec.feature 'Managing agents', type: :feature do
         expect(page).to have_content("Войти")
       end
     end
-    
+
     describe 'logged users' do
       it "can see Agents" do
         user = User.last
@@ -21,4 +22,5 @@ RSpec.feature 'Managing agents', type: :feature do
       end
     end
   end
+
 end

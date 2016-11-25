@@ -1,3 +1,5 @@
+require "rails_helper"
+
 RSpec.describe 'Directives', type: :request do
   describe 'GET /directives' do
     it 'works! (now write some real specs)' do
