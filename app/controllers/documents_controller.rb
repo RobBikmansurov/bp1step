@@ -181,6 +181,7 @@ class DocumentsController < ApplicationController
 
   def create
     @document = Document.new(document_params)
+    @document.owner_id = current_user.id if current_user  # владелец документа - пользователь
     if @document.save
       flash[:notice] = 'Документ создан'
       bproce = Bproce.find(@document.bproce_id) if @document.bproce_id  # добавляем документ из процесса?
@@ -190,8 +191,10 @@ class DocumentsController < ApplicationController
         bproce_document.bproce = bproce
         flash[:notice] = "Создан документ процесса ##{bproce.id}" if bproce_document.save
       end
+      redirect_to document_path(@document)
+    else
+      render :new
     end
-    render :show
   end
 
   def destroy
@@ -220,10 +223,10 @@ class DocumentsController < ApplicationController
       approval_sheet_odt
   end
 
-private
+  private
 
   def document_params
-    params.require(:document).permit(:name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :file_delete, :bproce_id)
+    params.require(:document).permit( :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :file_delete, :bproce_id)
   end
 
   def document_file_params
