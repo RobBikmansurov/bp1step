@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-RSpec.describe DocumentsController, type: :controller do
-  let!(:owner) { FactoryGirl.create(:user) }
-  let!(:document) { { name: 'document name', place: 'place', dlevel: 3, owner_id: owner.id } }
-  let(:invalid_document) { { name: 'invalid value' } }
+RSpec.describe DocumentsController do
+  let!(:owner) { create(:user) }
+  let!(:document_attributes) { { name: 'Document name', dlevel: 2, place: 'office1', owner: owner } }
   let(:valid_session) { {} }
+
   before(:each) do
     @user = FactoryGirl.create(:user)
-    @user.roles << Role.find_or_create_by(name: 'author', description: 'Автор')
+    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
   end
@@ -22,16 +22,17 @@ RSpec.describe DocumentsController, type: :controller do
     end
 
     it 'loads all of the documents into @documents' do
-      owner = FactoryGirl.create(:user)
-      document1 = FactoryGirl.create(:document)
-      document2 = FactoryGirl.create(:document)
+      document1 = Document.create! document_attributes
+      document2 = Document.create! document_attributes
       get :index
+
       expect(assigns(:documents)).to match_array([document1, document2])
     end
   end
 
   describe 'GET show' do
     it 'assigns the requested document as @document' do
+      document = Document.create! document_attributes
       get :show, { id: document.to_param }, valid_session
       expect(assigns(:document)).to eq(document)
     end
@@ -39,14 +40,14 @@ RSpec.describe DocumentsController, type: :controller do
 
   describe 'GET new' do
     it 'assigns a new document as @document' do
-      get :new, valid_session
+      get :new, {}, valid_session
       expect(assigns(:document)).to be_a_new(Document)
     end
   end
 
   describe 'GET edit' do
     it 'assigns the requested document as @document' do
-      document = Document.create! document
+      document = Document.create! document_attributes
       get :edit, { id: document.to_param }, valid_session
       expect(assigns(:document)).to eq(document)
     end
@@ -56,30 +57,32 @@ RSpec.describe DocumentsController, type: :controller do
     describe 'with valid params' do
       it 'creates a new Document' do
         expect do
-          post :create, { document: document }, valid_session
+          post :create, { document: document_attributes }, valid_session
         end.to change(Document, :count).by(1)
       end
 
       it 'assigns a newly created document as @document' do
-        post :create, { document: document }, valid_session
+        post :create, { document: document_attributes }, valid_session
         expect(assigns(:document)).to be_a(Document)
         expect(assigns(:document)).to be_persisted
       end
 
       it 'redirects to the created document' do
-        post :create, { document: document }, valid_session
+        post :create, { document: document_attributes }, valid_session
         expect(response).to redirect_to(Document.last)
       end
     end
 
     describe 'with invalid params' do
       it 'assigns a newly created but unsaved document as @document' do
-        post :create, { document: invalid_document }, valid_session
+        expect_any_instance_of(Document).to receive(:save).and_return(false)
+        post :create, { document: { 'name' => 'invalid value' } }, valid_session
         expect(assigns(:document)).to be_a_new(Document)
       end
 
       it "re-renders the 'new' template" do
-        post :create, { document: invalid_document }, valid_session
+        expect_any_instance_of(Document).to receive(:save).and_return(false)
+        post :create, { document: { 'name' => 'invalid value' } }, valid_session
         expect(response).to render_template('new')
       end
     end
@@ -88,36 +91,36 @@ RSpec.describe DocumentsController, type: :controller do
   describe 'PUT update' do
     describe 'with valid params' do
       it 'updates the requested document' do
-        document = Document.create! document
+        document = Document.create! document_attributes
         expect_any_instance_of(Document).to receive(:save).at_least(:once)
-        put :update, { id: document.to_param, document: document }, valid_session
+        put :update, { id: document.to_param, document: { 'name' => 'MyString' } }, valid_session
       end
 
       it 'assigns the requested document as @document' do
-        document = Document.create! document
-        put :update, { id: document.to_param, document: document }, valid_session
+        document = Document.create! document_attributes
+        put :update, { id: document.to_param, document: document_attributes }, valid_session
         expect(assigns(:document)).to eq(document)
       end
 
       it 'redirects to the document' do
-        document = Document.create! document
-        put :update, { id: document.to_param, document: document }, valid_session
+        document = Document.create! document_attributes
+        put :update, { id: document.to_param, document: document_attributes }, valid_session
         expect(response).to redirect_to(document)
       end
     end
 
     describe 'with invalid params' do
       it 'assigns the document as @document' do
-        document = Document.create! document
+        document = Document.create! document_attributes
         expect_any_instance_of(Document).to receive(:save).and_return(false)
-        put :update, { id: document.to_param, document: invalid_document }, valid_session
+        put :update, { id: document.to_param, document: { 'name' => 'invalid value' } }, valid_session
         expect(assigns(:document)).to eq(document)
       end
 
       it "re-renders the 'edit' template" do
-        document = Document.create! document
+        document = Document.create! document_attributes
         expect_any_instance_of(Document).to receive(:save).and_return(false)
-        put :update, { id: document.to_param, document: invalid_document }, valid_session
+        put :update, { id: document.to_param, document: { 'name' => 'invalid value' } }, valid_session
         expect(response).to render_template('edit')
       end
     end
@@ -125,14 +128,14 @@ RSpec.describe DocumentsController, type: :controller do
 
   describe 'DELETE destroy' do
     it 'destroys the requested document' do
-      document = Document.create! document
+      document = Document.create! document_attributes
       expect do
         delete :destroy, { id: document.to_param }, valid_session
       end.to change(Document, :count).by(-1)
     end
 
     it 'redirects to the documents list' do
-      document = Document.create! document
+      document = Document.create! document_attributes
       delete :destroy, { id: document.to_param }, valid_session
       expect(response).to redirect_to(documents_url)
     end

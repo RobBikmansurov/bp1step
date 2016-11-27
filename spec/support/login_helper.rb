@@ -1,4 +1,5 @@
 def login(email, password)
+  # visit new_user_session_path
   visit root_path
   click_link "Войти"
   fill_in :user_email, with: email

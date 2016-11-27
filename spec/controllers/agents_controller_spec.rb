@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe AgentsController do
-  let(:agent_attributes) { { 'name' => 'Agent name' } }
+  let(:agent_attributes) { { name: 'Agent name' } }
   let(:valid_session) { {} }
   before(:each) do
     @user = FactoryGirl.create(:user)
