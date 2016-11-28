@@ -11,6 +11,8 @@ FactoryGirl.define do
     access_write	'WRITE'
     access_other	'OTHER'
     risk_category	'risk 00'
-    user_id 0
+    trait :invalid do
+      label ''
+    end
   end
 end
