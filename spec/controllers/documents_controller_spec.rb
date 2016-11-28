@@ -7,12 +7,6 @@ RSpec.describe DocumentsController, type: :controller do
   let(:valid_documents)  { FactoryGirl.create_list(:document, 2, owner: owner) }
   let(:invalid_document) { FactoryGirl.create(:document, :invalid) }
 
-  before(:each) do
-    #owner.roles << role
-    sign_in owner
-    #allow(controller).to receive(:authenticate_user!).and_return(true)
-  end
-
   describe 'GET index' do
     it 'assigns all documents as @documents' do
       get :index

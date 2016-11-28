@@ -226,7 +226,7 @@ class DocumentsController < ApplicationController
   private
 
   def document_params
-    params.require(:document).permit( :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :file_delete, :bproce_id)
+    params.require(:document).permit(:name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :file_delete, :bproce_id)
   end
 
   def document_file_params
