@@ -4,7 +4,7 @@ db/*.sqlite3
 db/*.sql
 log/*
 tmp/*
-config/database.yml
+config/database.yml*
 config/ldap.yml
 config/secret/*
 secret/*
@@ -27,3 +27,4 @@ store/*
 mount-bp1step
 .rvmrc
 test*
+doc/
