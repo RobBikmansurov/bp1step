@@ -51,6 +51,7 @@ RSpec.describe BusinessRolesController, type: :controller do
     end
 
     describe 'POST create' do
+      let(:bproce)        { build(:bproce) }
       let(:business_role) { build(:business_role) }
       before { sign_in(user) } # для создания бизнес-роли юзер должен быть авторизован
 
@@ -138,7 +139,7 @@ RSpec.describe BusinessRolesController, type: :controller do
     it 'redirects to the business_roles list' do
       business_role = valid_business_roles.first
       delete :destroy, { id: business_role.id }
-      expect(response).to redirect_to(business_roles_url)
+      expect(response).to redirect_to(bproce_business_role_path(bproce))
     end
   end
 end
