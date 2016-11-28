@@ -4,6 +4,9 @@ FactoryGirl.define do
     name 'document_name'
     dlevel '1'
     place 'office1'
-    owner_id user
+    #owner_id user
+    trait :invalid do
+      name ''
+    end
   end
 end
