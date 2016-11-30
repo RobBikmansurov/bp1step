@@ -1,6 +1,13 @@
 require "rails_helper"
 
 RSpec.describe 'Directives', type: :request do
+  let(:user) { create(:user) }
+
+  before(:each) do
+    allow(controller).to receive(:authenticate_user!).and_return(true)
+  end
+  
+
   describe 'GET /directives' do
     it 'works! (now write some real specs)' do
       get directives_path
@@ -8,6 +15,7 @@ RSpec.describe 'Directives', type: :request do
     end
 
     it "creates a Directive and redirects to the Directive's page" do
+      login(user.email, user.password)
       get new_directive_path
       expect(response).to render_template(:new)
 
