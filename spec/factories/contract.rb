@@ -6,8 +6,8 @@ FactoryGirl.define do
     contract_type  'Contract'
     status 'Действует'
     description    'contract_description'
-    owner user
-    payer user
-    agent_id '1'
+    trait :invalid do
+      name ''
+    end
   end
 end

@@ -1,17 +1,18 @@
 # coding: utf-8
+# frozen_string_literal: true
 class ContractsController < ApplicationController
   respond_to :odt, only: :index
   respond_to :pdf, only: :show
   respond_to :html
   respond_to :xml, :json, only: [:index, :show]
   helper_method :sort_column, :sort_direction
-  before_filter :authenticate_user!, only: [:edit, :new]
+  before_action :authenticate_user!, only: [:edit, :new]
   before_action :set_contract, only: [:show, :edit, :update, :destroy, :new, :approval_sheet]
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def autocomplete
-    @contracts = Contract.order(:number).where('name ilike ? or number ilike ? or id = ?', "%#{params[:term]}%", "%#{params[:term]}%", "#{params[:term].to_i}")
+    @contracts = Contract.order(:number).where('name ilike ? or number ilike ? or id = ?', "%#{params[:term]}%", "%#{params[:term]}%", params[:term].to_i.to_s)
     render json: @contracts.map(&:autoname)
   end
 
@@ -26,11 +27,11 @@ class ContractsController < ApplicationController
         @title_doc = "Договоры процесса [ #{@bproce.shortname} ]"
       end
       if params[:status].present? # список договоров, имеющих конкретный статус
-        if @contracts.nil?
-          @contracts = Contract.where(status: params[:status])
-        else
-          @contracts = @contracts.where(status: params[:status])
-        end
+        @contracts = if @contracts.nil?
+                       Contract.where(status: params[:status])
+                     else
+                       @contracts.where(status: params[:status])
+                     end
         @title_doc += " статус [#{params[:status]}]"
       end
       if @contracts.nil?
@@ -38,7 +39,7 @@ class ContractsController < ApplicationController
           @contracts = Contract.where(contract_type: params[:type])
           @title_doc += ' тип [' + params[:type] + ']'
         elsif params[:place].present? # список договоров, хранящихся в конкретном месте
-          if params[:place].size == 0
+          if params[:place].empty?
             @contracts = Contract.where('contract_place = ""')
             @title_doc += ' место хранения оригинала [не указано]'
           else
@@ -55,18 +56,18 @@ class ContractsController < ApplicationController
           @title_doc += ' ответственный за оплату [' + @user.displayname + ']'
         else
           @title_doc += ' поиск [' + params[:search] + ']' if params[':search'].present?
-          if sort_column == 'lft'
-            @contracts = Contract.search(params[:search]).order(:lft).paginate(per_page: 10, page: params[:page])
-          else
-            @contracts = Contract.search(params[:search])
-          end
+          @contracts = if sort_column == 'lft'
+                         Contract.search(params[:search]).order(:lft).paginate(per_page: 10, page: params[:page])
+                       else
+                         Contract.search(params[:search])
+                       end
         end
       end
     end
     respond_to do |format|
-      format.html { 
+      format.html do
         @contracts = @contracts.includes(:agent).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-      }
+      end
       format.odt  { print }
       format.json { render json: @contracts }
       format.xml  { render xml: @contracts }
@@ -85,7 +86,7 @@ class ContractsController < ApplicationController
   def new
     @contract.agent_id = params[:agent_id] if params[:agent_id].present?
     @contract.owner_id = current_user.id if user_signed_in?
-    @contract.date_begin = Date.today
+    @contract.date_begin = Date.current
     @contract.status = 'Согласование'
     @contract.contract_type = 'Договор'
   end
@@ -109,8 +110,8 @@ class ContractsController < ApplicationController
     if @contract.update(contract_params)
       redirect_to @contract, notice: 'Contract was successfully updated.'
       begin
-        ContractMailer.update_contract(@contract, current_user, nil, '').deliver # оповестим ответственных об изменениях договора
-      rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+        ContractMailer.update_contract(@contract, current_user, nil, '').deliver_now # оповестим ответственных об изменениях договора
+      rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
         flash[:alert] = 'Error sending mail to contract owner'
       end
     else
@@ -129,7 +130,7 @@ class ContractsController < ApplicationController
 
   def scan_create
     @contract = Contract.find(params[:id])
-    @contract_scan = ContractScan.new()
+    @contract_scan = ContractScan.new
     @contract_scan.contract = @contract
     render :scan_create
   end
@@ -144,7 +145,7 @@ class ContractsController < ApplicationController
         flash[:notice] = 'Файл "' + contract_scan.name + '" загружен.' if contract_scan.save
         begin
           ContractMailer.update_contract(@contract, current_user, contract_scan, 'добавлен').deliver # оповестим ответственных об изменениях скана
-        rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+        rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
           flash[:alert] = 'Error sending mail to contract owner'
         end
       end
@@ -197,21 +198,21 @@ class ContractsController < ApplicationController
       nn = 0 # порядковый номер документа
       nnp = 0
       first_part = 0 # номер раздела для сброса номера документа в разделе
-      r.add_field 'REPORT_DATE', Date.today.strftime('%d.%m.%Y')
-      @title_doc = '' if !@title_doc
+      r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
+      @title_doc = '' unless @title_doc
       @title_doc += '  стр.' + params[:page] if params[:page].present?
       r.add_field 'REPORT_TITLE', @title_doc
       r.add_table('TABLE_01', @contracts, header: true) do |t|
-        t.add_column(:nn) do |n1|
+        t.add_column(:nn) do |_n1|
           nn += 1
           "#{nn}."
         end
         t.add_column(:name) do |contract|
-          if contract.date_begin
-            d = ' от ' + contract.date_begin.strftime('%d.%m.%Y')
-          else
-            d = ' без даты'
-          end
+          d = if contract.date_begin
+                ' от ' + contract.date_begin.strftime('%d.%m.%Y')
+              else
+                ' без даты'
+              end
           "#{contract.contract_type} №#{contract.number} #{contract.name} #{d} #{contract.status}"
         end
         t.add_column(:agent, :agent_name)
@@ -230,8 +231,8 @@ class ContractsController < ApplicationController
 
   def approval_sheet_odt # Лист согласования
     report = ODFReport::Report.new('reports/approval-sheet-contract.odt') do |r|
-      r.add_field 'REPORT_DATE', Date.today.strftime('%d.%m.%Y')
-      r.add_field 'REPORT_DATE1', (Date.today + 10.days).strftime('%d.%m.%Y')
+      r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
+      r.add_field 'REPORT_DATE1', (Date.current + 10.days).strftime('%d.%m.%Y')
       r.add_field :id, @contract.id
       r.add_field :type, @contract.contract_type
       r.add_field :number, @contract.number
@@ -258,7 +259,7 @@ class ContractsController < ApplicationController
       if !@contract.bproce.blank? # есть ссылки из документа на другие процессы?
         r.add_field :bp, 'Относится к процессам:'
         r.add_table('BPROCS', @contract.bproce_contract.all, header: false, skip_if_empty: true) do |t|
-          t.add_column(:rr) do |r1| # порядковый номер строки таблицы
+          t.add_column(:rr) do |_r1| # порядковый номер строки таблицы
             rr += 1
           end
           t.add_column(:process_name) do |bp|
