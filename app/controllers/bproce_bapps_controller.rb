@@ -31,7 +31,7 @@ class BproceBappsController < ApplicationController
   end
 
   def show
-    @bp = Bproce.find(@bproce_bapp.bproce)
+    @bp = Bproce.find(@bproce_bapp.bproce.id)
     respond_with(@bproce_bapp)
   end
 

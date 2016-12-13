@@ -1,6 +1,11 @@
+# frozen_string_literal: true
+require 'rails_helper'
 RSpec.describe BproceBappsController, type: :controller do
-
-  let(:valid_attributes) { { bproce_id: '1', bapp_id: '1', apurpose: "Purpose" } }
+  let(:owner)            { FactoryGirl.create(:user) }
+  let(:role)             { FactoryGirl.create(:role, name: 'author', description: 'Автор' ) }
+  let!(:bproce)          { FactoryGirl.create(:bproce) }
+  let!(:bapp)            { FactoryGirl.create(:bapp) }
+  let(:valid_attributes) { { bproce_id: bproce.id, bapp_id: bapp.id, apurpose: "Purpose" } }
   let(:valid_session) { {} }
 
   before(:each) do
@@ -16,7 +21,7 @@ RSpec.describe BproceBappsController, type: :controller do
   describe "GET show" do
     it "assigns the requested bproce_bapp as @bproce_bapp" do
       bproce_bapp = BproceBapp.create! valid_attributes
-      get :show, {:id => bproce_bapp.to_param}, valid_session
+      get :show, {:id => bproce_bapp.id.to_param}, valid_session
       expect(assigns(:bproce_bapp)).to eq(bproce_bapp)
     end
   end
