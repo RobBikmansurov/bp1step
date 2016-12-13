@@ -2,145 +2,147 @@
 require 'rails_helper'
 
 RSpec.describe DocumentDirectivesController, type: :controller do
-  let(:document) { FactoryGirl.create :document }
-  let(:directive) { FactoryGirl.create :directive }
-  let(:valid_attributes) { { directive_id: directive.id, document_id: document.id, note: 'note' } }
-  let(:invalid_attributes) { { name: 'invalid value' } }
-  let(:valid_session) { {} }
-  before(:each) do
-    @user = FactoryGirl.create(:user)
-    @user.roles << Role.find_or_create_by(name: 'author', description: 'Автор')
-    sign_in @user
-    allow(controller).to receive(:authenticate_user!).and_return(true)
-  end
+  let(:owner)            { FactoryGirl.create(:user) }
+  let(:role)             { FactoryGirl.create(:role, name: 'author', description: 'Автор' ) }
+  let(:document)         { create(:document, owner: owner)}
+  let(:directive)        { create(:directive)}
+  let(:valid_document_directives)  { FactoryGirl.create_list(:document_directive, 2, 
+                                                              document: document,
+                                                              directive: directive) }
+  let(:invalid_document_directive) { FactoryGirl.create(:document_directive, :invalid) }
 
   describe 'GET index' do
     it 'assigns all document_directives as @document_directives' do
-      get :index, {}, valid_session
+      get :index
       expect(response).to be_success
       expect(response).to have_http_status(:success)
       expect(response).to render_template('document_directives/index')
     end
+
     it 'loads all of the document_directives into @document_directives' do
-      dd1 = FactoryGirl.create(:document_directive)
-      dd2 = FactoryGirl.create(:document_directive)
+      document_directives = valid_document_directives
       get :index
-      expect(assigns(:document_directives)).to match_array([dd1, dd2])
+      expect(assigns(:document_directives)).to match_array(document_directives)
     end
   end
 
   describe 'GET show' do
     it 'assigns the requested document_directive as @document_directive' do
-      document_directive = DocumentDirective.create! valid_attributes
-      get :show, { id: document_directive.to_param }, valid_session
+      document_directive = valid_document_directives.first
+      get :show, { id: document_directive.to_param }
       expect(assigns(:document_directive)).to eq(document_directive)
     end
   end
 
-  describe 'GET new' do
-    it 'assigns a new document_directive as @document_directive' do
-      get :new, {}, valid_session
-      expect(assigns(:document_directive)).to be_a_new(DocumentDirective)
-    end
-  end
-
-  describe 'GET edit' do
-    it 'assigns the requested document_directive as @document_directive' do
-      document_directive = DocumentDirective.create! valid_attributes
-      get :edit, { id: document_directive.to_param }, valid_session
-      expect(assigns(:document_directive)).to eq(document_directive)
-    end
-  end
-
-  describe 'POST create' do
-    describe 'with valid params' do
-      it 'creates a new DocumentDirective' do
-        expect do
-          post :create, { document_directive: valid_attributes }, valid_session
-        end.to change(DocumentDirective, :count).by(1)
-      end
-
-      it 'assigns a newly created document_directive as @document_directive' do
-        post :create, { document_directive: valid_attributes }, valid_session
-        expect(assigns(:document_directive)).to be_a(DocumentDirective)
-        expect(assigns(:document_directive)).to be_persisted
-      end
-
-      it 'redirects to the created document_directive' do
-        post :create, { document_directive: valid_attributes }, valid_session
-        expect(response).to redirect_to(DocumentDirective.last)
-      end
+  context 'with mocked authentication' do
+    before do
+      allow(controller).to receive(:authenticate_user!).and_return(true)
     end
 
-    describe 'with invalid params' do
-      it 'assigns a newly created but unsaved document_directive as @document_directive' do
-        expect_any_instance_of(DocumentDirective).to receive(:save).and_return(false)
-        post :create, { document_directive: {} }, valid_session
+    describe 'GET new' do
+      it 'assigns a new document_directive as @document_directive' do
+        get :new
         expect(assigns(:document_directive)).to be_a_new(DocumentDirective)
       end
-
-      it "re-renders the 'new' template" do
-        expect_any_instance_of(DocumentDirective).to receive(:save).and_return(false)
-        # DocumentDirective.any_instance.stub(:save).and_return(false)
-        post :create, { document_directive: {} }, valid_session
-        expect(response).to render_template('new')
-      end
     end
-  end
 
-  describe 'PUT update' do
-    describe 'with valid params' do
-      it 'updates the requested document_directive' do
-        document_directive = DocumentDirective.create! valid_attributes
-        expect_any_instance_of(DocumentDirective).to receive(:save).and_return(false)
-        # DocumentDirective.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, { id: document_directive.to_param, document_directive: { 'these' => 'params' } }, valid_session
-      end
-
+    describe 'GET edit' do
       it 'assigns the requested document_directive as @document_directive' do
-        document_directive = DocumentDirective.create! valid_attributes
-        put :update, { id: document_directive.to_param, document_directive: valid_attributes }, valid_session
+        document_directive = valid_document_directives.first
+        get :edit, { id: document_directive.to_param }
         expect(assigns(:document_directive)).to eq(document_directive)
-      end
-
-      it 'redirects to the document_directive' do
-        document_directive = DocumentDirective.create! valid_attributes
-        put :update, { id: document_directive.to_param, document_directive: valid_attributes }, valid_session
-        expect(response).to redirect_to(document_directive)
       end
     end
 
-    describe 'with invalid params' do
-      it 'assigns the document_directive as @document_directive' do
-        document_directive = DocumentDirective.create! valid_attributes
-        expect_any_instance_of(DocumentDirective).to receive(:save).and_return(false)
-        # DocumentDirective.any_instance.stub(:save).and_return(false)
-        put :update, { id: document_directive.to_param, document_directive: {} }, valid_session
-        expect(assigns(:document_directive)).to eq(document_directive)
+    describe 'POST create' do
+      let(:document_directive) { build(:document_directive) }
+      before { sign_in(owner) } # для создания документа юзер должен быть авторизован
+
+      describe 'with valid params' do
+        it 'creates a new DocumentDirective' do
+          expect do
+            post :create, { document_directive: document_directive.as_json }
+          end.to change(DocumentDirective, :count).by(1)
+        end
+
+        it 'assigns a newly created document_directive as @document_directive' do
+          post :create, { document_directive: document_directive.as_json }
+          expect(assigns(:document_directive)).to be_a(DocumentDirective)
+          expect(assigns(:document_directive)).to be_persisted
+        end
+
+        it 'redirects to the created document_directive' do
+          post :create, { document_directive: document_directive.as_json }
+          expect(response).to redirect_to(DocumentDirective.last)
+        end
       end
 
-      it "re-renders the 'edit' template" do
-        document_directive = DocumentDirective.create! valid_attributes
-        expect_any_instance_of(DocumentDirective).to receive(:save).and_return(false)
-        # DocumentDirective.any_instance.stub(:save).and_return(false)
-        put :update, { id: document_directive.to_param, document_directive: {} }, valid_session
-        expect(response).to_not render_template('edit')
+      describe 'with invalid params' do
+        let(:invalid_document_directive) {build(:document_directive, :invalid)}
+        it 'assigns a newly created but unsaved document_directive as @document_directive' do
+          post :create, { document_directive: invalid_document_directive.as_json }
+          expect(assigns(:document_directive)).to be_a_new(DocumentDirective)
+        end
+
+        it "re-renders the 'new' template" do
+          post :create, { document_directive: invalid_document_directive.as_json }
+          expect(response).to render_template('new')
+        end
+      end
+    end
+
+    describe 'PUT update' do
+      describe 'with valid params' do
+        it 'updates the requested document_directive' do
+          document_directive = valid_document_directives.first
+          document_directive.name = 'New valid name'
+          put :update, { id: document_directive.id, document_directive: document_directive.as_json }
+          expect(document_directive.reload.name).to eq 'New valid name'
+        end
+
+        it 'assigns the requested document_directive as @document_directive' do
+          document_directive = valid_document_directives.first
+          put :update, { id: document_directive.to_param, document_directive: document_directive.as_json }
+          expect(assigns(:document_directive)).to eq(document_directive)
+        end
+
+        it 'redirects to the document_directive' do
+          document_directive = valid_document_directives.first
+          put :update, { id: document_directive.to_param, document_directive: document_directive.as_json }
+          expect(response).to redirect_to(document_directive)
+        end
+      end
+
+      describe 'with invalid params' do
+        it 'assigns the document_directive as @document_directive' do
+          document_directive = valid_document_directives.first
+          document_directive.name = '' #  not valid
+          put :update, { id: document_directive.id, document_directive: document_directive.as_json }
+          expect(assigns(:document_directive)).to eq(document_directive)
+        end
+
+        it "re-renders the 'edit' template" do
+          document_directive = valid_document_directives.first
+          document_directive.name = '' #  not valid
+          put :update, { id: document_directive.id, document_directive: document_directive.as_json }
+          expect(response).to render_template('edit')
+        end
       end
     end
   end
 
   describe 'DELETE destroy' do
     it 'destroys the requested document_directive' do
-      document_directive = DocumentDirective.create! valid_attributes
+      document_directive = valid_document_directives.first
       expect do
-        delete :destroy, { id: document_directive.to_param }, valid_session
+        delete :destroy, { id: document_directive.id }
       end.to change(DocumentDirective, :count).by(-1)
     end
 
     it 'redirects to the document_directives list' do
-      document_directive = DocumentDirective.create! valid_attributes
-      delete :destroy, { id: document_directive.to_param }, valid_session
-      expect(response).to redirect_to(document_url)
+      document_directive = valid_document_directives.first
+      delete :destroy, { id: document_directive.id }
+      expect(response).to redirect_to(document_directives_url)
     end
   end
 end

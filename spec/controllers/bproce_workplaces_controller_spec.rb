@@ -1,35 +1,25 @@
+# frozen_string_literal: true
+require 'rails_helper'
 RSpec.describe BproceWorkplacesController, type: :controller do
-
-  def valid_attributes
-    {
-      id: 1,
-      bproce_id: 1,
-      workplace_id: 1
-    }
-  end
-
-  def valid_session
-    {}
-  end
+  let(:owner)            { FactoryGirl.create(:user) }
+  let(:role)             { FactoryGirl.create(:role, name: 'author', description: 'Автор' ) }
+  let!(:bproce)          { FactoryGirl.create(:bproce) }
+  let!(:workplace)       { FactoryGirl.create(:workplace) }
+  let(:valid_attributes) { { bproce_id: bproce.id, workplace_id: workplace.id } }
+  let(:valid_session) { {} }
 
   before(:each) do
     @user = FactoryGirl.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
-
-    @bproce = create(:bproce)
-    @workplace = create(:workplace)
+    allow(controller).to receive(:authenticate_user!).and_return(true)
   end
 
-  #  resources :bproce_workplaces, :only => [:create, :destroy, :show]
-
   describe "GET show" do
-    it "assigns the requested bproce_workplace as @bproce_workplace" do
+    it "assigns the requested bproce_workplace.workplace as @workplace" do
       bproce_workplace = BproceWorkplace.create! valid_attributes
-      bproce_workplace.bproce_id = @bproce.id
-      bproce_workplace.workplace_id = @workplace.id
-      get :show, {:id => @bproce.to_param}, valid_session
-      expect(assigns(:workplaces)).to eq(@bproce.workplaces)
+      get :show, {id: bproce_workplace.bproce.id.to_param}, valid_session
+      expect(assigns(workplace)).to eq(bproce_workplace.workplace)
     end
   end
 
@@ -43,38 +33,42 @@ RSpec.describe BproceWorkplacesController, type: :controller do
 
       it "assigns a newly created bproce_workplace as @bproce_workplace" do
         post :create, {:bproce_workplace => valid_attributes}, valid_session
-        assigns(:bproce_workplace).should be_a(BproceWorkplace)
-        assigns(:bproce_workplace).should be_persisted
+        expect(assigns(:bproce_workplace)).to be_a(BproceWorkplace)
+        expect(assigns(:bproce_workplace)).to be_persisted
       end
 
       it "redirects to the created bproce_workplace" do
         post :create, {:bproce_workplace => valid_attributes}, valid_session
-        response.should redirect_to(@workplace)
+        expect(response).to redirect_to(BproceWorkplace.last.workplace)
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved bproce_workplace as @bproce_workplace" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        BproceWorkplace.any_instance.stub(:save).and_return(false)
-        post :create, {:bproce_workplace => {bproce_id: 1, workplace_id: 1}}, valid_session
-        assigns(:bproce_workplace).should be_a_new(BproceWorkplace)
+        expect_any_instance_of(BproceWorkplace).to receive(:save).and_return(false)
+        post :create, {:bproce_workplace => {  }}, valid_session
+        expect(assigns(:bproce_workplace)).to be_a_new(BproceWorkplace)
       end
+
     end
   end
 
   describe "DELETE destroy" do
     it "destroys the requested bproce_workplace" do
       bproce_workplace = BproceWorkplace.create! valid_attributes
+      bproce = create(:bproce)
+      workplace = create(:workplace)
+      bproce_workplace.bproce_id = bproce.id
+      bproce_workplace.workplace_id = workplace.id
       expect {
-        delete :destroy, {:id => bproce_workplace.to_param}, valid_session
+        delete :destroy, {:id => bproce_workplace.to_param, :bproce_id => bproce.to_param}, valid_session
       }.to change(BproceWorkplace, :count).by(-1)
     end
 
     it "redirects to the bproce_workplaces list" do
       bproce_workplace = BproceWorkplace.create! valid_attributes
       delete :destroy, {:id => bproce_workplace.to_param}, valid_session
-      response.should redirect_to(workplace_url(1))
+      expect(response).to redirect_to workplace_url
     end
   end
 
