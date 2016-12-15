@@ -4,11 +4,14 @@ require 'rails_helper'
 RSpec.describe DocumentDirectivesController, type: :controller do
   let(:owner)            { FactoryGirl.create(:user) }
   let(:role)             { FactoryGirl.create(:role, name: 'author', description: 'Автор' ) }
-  let(:document)         { create(:document, owner: owner)}
-  let(:directive)        { create(:directive)}
-  let(:valid_document_directives)  { FactoryGirl.create_list(:document_directive, 2, 
+  let!(:document)        { create(:document, owner: owner)}
+  let!(:directive)       { create(:directive)}
+  let(:valid_document_directive)  { FactoryGirl.create(:document_directive,
                                                               document: document,
-                                                              directive: directive) }
+                                                              directive: FactoryGirl.create(:directive)) }
+  let(:valid_document_directives)  { 2.times FactoryGirl.create(:document_directive,
+                                                              document: document,
+                                                              directive: FactoryGirl.create(:directive)) }
   let(:invalid_document_directive) { FactoryGirl.create(:document_directive, :invalid) }
 
   describe 'GET index' do
@@ -28,7 +31,7 @@ RSpec.describe DocumentDirectivesController, type: :controller do
 
   describe 'GET show' do
     it 'assigns the requested document_directive as @document_directive' do
-      document_directive = valid_document_directives.first
+      document_directive = valid_document_directive
       get :show, { id: document_directive.to_param }
       expect(assigns(:document_directive)).to eq(document_directive)
     end
@@ -66,7 +69,7 @@ RSpec.describe DocumentDirectivesController, type: :controller do
         end
 
         it 'assigns a newly created document_directive as @document_directive' do
-          post :create, { document_directive: document_directive.as_json }
+          post :create, { document_directive: valid_document_directive.as_json }
           expect(assigns(:document_directive)).to be_a(DocumentDirective)
           expect(assigns(:document_directive)).to be_persisted
         end
@@ -94,20 +97,20 @@ RSpec.describe DocumentDirectivesController, type: :controller do
     describe 'PUT update' do
       describe 'with valid params' do
         it 'updates the requested document_directive' do
-          document_directive = valid_document_directives.first
-          document_directive.name = 'New valid name'
+          document_directive = valid_document_directive
+          document_directive.note = 'New valid name'
           put :update, { id: document_directive.id, document_directive: document_directive.as_json }
-          expect(document_directive.reload.name).to eq 'New valid name'
+          expect(document_directive.reload.note).to eq 'New valid name'
         end
 
         it 'assigns the requested document_directive as @document_directive' do
-          document_directive = valid_document_directives.first
+          document_directive = valid_document_directive
           put :update, { id: document_directive.to_param, document_directive: document_directive.as_json }
           expect(assigns(:document_directive)).to eq(document_directive)
         end
 
         it 'redirects to the document_directive' do
-          document_directive = valid_document_directives.first
+          document_directive = valid_document_directive
           put :update, { id: document_directive.to_param, document_directive: document_directive.as_json }
           expect(response).to redirect_to(document_directive)
         end
@@ -115,15 +118,15 @@ RSpec.describe DocumentDirectivesController, type: :controller do
 
       describe 'with invalid params' do
         it 'assigns the document_directive as @document_directive' do
-          document_directive = valid_document_directives.first
-          document_directive.name = '' #  not valid
+          document_directive = valid_document_directive
+          document_directive.note = '' #  not valid
           put :update, { id: document_directive.id, document_directive: document_directive.as_json }
           expect(assigns(:document_directive)).to eq(document_directive)
         end
 
         it "re-renders the 'edit' template" do
-          document_directive = valid_document_directives.first
-          document_directive.name = '' #  not valid
+          document_directive = valid_document_directive
+          document_directive.note = '' #  not valid
           put :update, { id: document_directive.id, document_directive: document_directive.as_json }
           expect(response).to render_template('edit')
         end
@@ -133,14 +136,14 @@ RSpec.describe DocumentDirectivesController, type: :controller do
 
   describe 'DELETE destroy' do
     it 'destroys the requested document_directive' do
-      document_directive = valid_document_directives.first
+      document_directive = valid_document_directive
       expect do
         delete :destroy, { id: document_directive.id }
       end.to change(DocumentDirective, :count).by(-1)
     end
 
     it 'redirects to the document_directives list' do
-      document_directive = valid_document_directives.first
+      document_directive = valid_document_directive
       delete :destroy, { id: document_directive.id }
       expect(response).to redirect_to(document_directives_url)
     end
