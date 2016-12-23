@@ -1,5 +1,5 @@
 class AgentsController < ApplicationController
-  before_filter :authenticate_user!, :only => [:edit, :new]
+  before_filter :authenticate_user! # , :only => [:edit, :new, :create, :show]
   before_action :set_agent, only: [:show, :edit, :update, :destroy, :new_contract, :new]
   autocomplete :bproce, :name, :extra_data => [:id]
 
