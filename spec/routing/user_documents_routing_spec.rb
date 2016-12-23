@@ -1,3 +1,5 @@
+require "rails_helper"
+
 RSpec.describe UserDocumentsController, :type => :routing do
   describe "routing" do
     it "routes to #destroy" do

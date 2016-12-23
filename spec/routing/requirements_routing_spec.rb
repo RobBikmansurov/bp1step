@@ -1,3 +1,5 @@
+require "rails_helper"
+
 RSpec.describe RequirementsController, :type => :routing do
   describe "routing" do
 

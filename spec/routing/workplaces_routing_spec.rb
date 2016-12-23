@@ -1,3 +1,5 @@
+require "rails_helper"
+
 RSpec.describe WorkplacesController, :type => :routing do
   describe "routing" do
 
