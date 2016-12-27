@@ -125,9 +125,6 @@ class MetricsController < ApplicationController
 
   def set   # http: GET /metrics/ID/set?v=VALUE&h=HASH
     @metric = Metric.find(params[:id])
-    p params.inspect
-    p params[:v].presence
-    p params[:h].presence
     if @metric and params[:v].presence and params[:h].presence
       where_datetime = case @metric.depth
         when 1 then "'#{Time.current.beginning_of_year}' AND '#{Time.current.end_of_year}'"   # текущий год
@@ -141,7 +138,6 @@ class MetricsController < ApplicationController
         value.metric_id = @metric.id
       end
       value.dtime = Time.current  # обновим время записи значения
-      p value.inspect
       if Digest::MD5.hexdigest(@metric.mhash) == params[:h]
         value.value = params[:v]
         value.save
@@ -151,6 +147,59 @@ class MetricsController < ApplicationController
       end
     else
       render :nothing => true, :status => 404, :content_type => 'text/html'
+    end
+  end
+
+  def test
+    @metric = Metric.find(params[:id])
+    test_date = case @metric.depth
+      when 1 then Time.current.beginning_of_year # текущий год
+      when 2 then Time.current.beginning_of_month # текущий месяц
+      when 3 then Time.current.beginning_of_day # текущий день
+      else Time.current.beginning_of_hour # текущий час
+    end
+
+    if @metric.mtype == 'MSSQL'
+      require "tiny_tds"
+      c = ActiveRecord::Base.configurations['production_MSSQL']
+      mssql = TinyTds::Client.new username: c['username'], password: c['password'], host: c['host'], database: c['database']
+    end
+    @sql = @metric.msql
+    @test = 'запрос не указан!'
+    if @sql
+      @sql.gsub!(/\r\n?/, " ") #заменим \n \r на пробелы
+      sql_period = case @metric.depth
+        when 1 then "'#{test_date.beginning_of_year.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{test_date.end_of_year.strftime("%Y-%m-%d %H:%M:%S")}'"   # текущий год
+        when 2 then "'#{test_date.beginning_of_month.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{test_date.end_of_month.strftime("%Y-%m-%d %H:%M:%S")}'" # текущий месяц
+        when 3 then "'#{test_date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{test_date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")}'"     # текущий день
+        else "'#{test_date.beginning_of_hour.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{test_date.end_of_hour.strftime("%Y-%m-%d %H:%M:%S")}'"          # текущий час
+      end
+      @sql.gsub!(/##PERIOD##/, sql_period) #заменим период
+      sql_date = case @metric.depth
+        when 1 then "'#{test_datev.beginning_of_year.strftime("%Y-%m-%d")}'"   # текущий год
+        when 2 then "'#{test_date.beginning_of_month.strftime("%Y-%m-%d")}'" # текущий месяц
+        when 3 then "'#{test_date.beginning_of_day.strftime("%Y-%m-%d")}'"     # текущий день
+        else "'#{test_date.beginning_of_hour.strftime("%Y-%m-%d %H")}'"          # текущий час
+      end
+      @sql.gsub!(/##DATE##/, sql_date) #заменим дату
+
+      begin
+        @test = ''
+        if @metric.mtype == 'MSSQL'
+          results = mssql.execute(@sql)
+        elsif @metric.mtype == 'localPG'
+          results = ActiveRecord::Base.connection.execute(@sql)
+        end
+        results.each do |row|
+          @test << row.inspect
+        end
+      rescue => error
+        logger.info "      ERR: #{@sql}"
+        @test << "ERR: #{@sql}\n"
+        @test << error.inspect
+      ensure
+        mssql.close if mssql
+      end
     end
   end
 

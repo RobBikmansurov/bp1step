@@ -50,7 +50,7 @@
   - @metrics.each do |metr|
     -if @metric.id != metr.id
       -if @current_period_date
-        = link_to metr.name, metric_path(metr, {date: @current_period_date.strftime('%Y-%m-01')}) 
+        = link_to metr.name, metric_path(metr, {date: @current_period_date.strftime('%Y-%m-01')})
       -else
         = link_to metr.name, metric_path(metr)
       &nbsp;
@@ -65,6 +65,7 @@
 %p
 - if can? :update, @metric
   = link_to 'Edit', edit_metric_path(@metric), :class => 'button'
+  = link_to 'Test', test_metric_path(@metric), :class => 'button' if @metric.mtype
   = link_to 'Значения', metric_path(@metric) + '/values?' + 'date=' + @current_period_date.strftime('%Y-%m-01'), :class => 'button'
 = link_to 'Back', metrics_path, :class => 'button'
 :javascript

@@ -123,6 +123,7 @@ BPDoc::Application.routes.draw do
       get :values
       get :new_value
       get :set
+      get :test
     end
   end
   resources :metric_values, only: [:edit, :update, :new, :create, :destroy]
