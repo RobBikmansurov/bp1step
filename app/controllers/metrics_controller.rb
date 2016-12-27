@@ -152,12 +152,7 @@ class MetricsController < ApplicationController
 
   def test
     @metric = Metric.find(params[:id])
-    test_date = case @metric.depth
-      when 1 then Time.current.beginning_of_year # текущий год
-      when 2 then Time.current.beginning_of_month # текущий месяц
-      when 3 then Time.current.beginning_of_day # текущий день
-      else Time.current.beginning_of_hour # текущий час
-    end
+    test_date = @metric.sql_period_beginning_of
 
     if @metric.mtype == 'MSSQL'
       require "tiny_tds"
@@ -168,19 +163,10 @@ class MetricsController < ApplicationController
     @test = 'запрос не указан!'
     if @sql
       @sql.gsub!(/\r\n?/, " ") #заменим \n \r на пробелы
-      sql_period = case @metric.depth
-        when 1 then "'#{test_date.beginning_of_year.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{test_date.end_of_year.strftime("%Y-%m-%d %H:%M:%S")}'"   # текущий год
-        when 2 then "'#{test_date.beginning_of_month.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{test_date.end_of_month.strftime("%Y-%m-%d %H:%M:%S")}'" # текущий месяц
-        when 3 then "'#{test_date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{test_date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")}'"     # текущий день
-        else "'#{test_date.beginning_of_hour.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{test_date.end_of_hour.strftime("%Y-%m-%d %H:%M:%S")}'"          # текущий час
-      end
+
+      sql_period = @metric.sql_period
       @sql.gsub!(/##PERIOD##/, sql_period) #заменим период
-      sql_date = case @metric.depth
-        when 1 then "'#{test_datev.beginning_of_year.strftime("%Y-%m-%d")}'"   # текущий год
-        when 2 then "'#{test_date.beginning_of_month.strftime("%Y-%m-%d")}'" # текущий месяц
-        when 3 then "'#{test_date.beginning_of_day.strftime("%Y-%m-%d")}'"     # текущий день
-        else "'#{test_date.beginning_of_hour.strftime("%Y-%m-%d %H")}'"          # текущий час
-      end
+      sql_date = @metric.sql_period_beginning_of
       @sql.gsub!(/##DATE##/, sql_date) #заменим дату
 
       begin
@@ -192,6 +178,7 @@ class MetricsController < ApplicationController
         end
         results.each do |row|
           @test << row.inspect
+          @test_value = row['count']
         end
       rescue => error
         logger.info "      ERR: #{@sql}"

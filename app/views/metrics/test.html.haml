@@ -22,8 +22,11 @@
 
 %h4Запрос
 = @sql
-%h4Результат:
+%h4Результат запроса:
 = @test
+%h3
+  Значение ['count']:
+  = @test_value
 
 %p
 = link_to 'Edit', edit_metric_path(@metric), :class => 'button' if can? :update, @metric

@@ -13,13 +13,7 @@ namespace :bp1step do
         #sql = Metric.find(metric.id).msql
       sql = metric.msql
       sql.gsub!(/\r\n?/, " ") #заменим \n \r на пробелы
-      date = Time.current
-      sql_period = case metric.depth
-        when 1 then "'#{date.beginning_of_year}' AND '#{date.end_of_year}'"   # текущий год
-        when 2 then "'#{date.beginning_of_month}' AND '#{date.end_of_month}'" # текущий месяц
-        when 3 then "'#{date.beginning_of_day}' AND '#{date.end_of_day}'"     # текущий день
-        else "'#{date.beginning_of_hour}' AND '#{date.end_of_hour}'"          # текущий час
-      end
+      sql_period = metric.sql_period (Time.current)
       sql.gsub!(/##PERIOD##/, sql_period) #заменим период
       begin
         results = ActiveRecord::Base.connection.execute(sql)
@@ -31,11 +25,8 @@ namespace :bp1step do
         if result['count'].present?
           new_value = result['count']
           value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{sql_period}").first
-          if !value  # не нашли?
-            value = MetricValue.new()  # новое значение
-            value.metric_id = metric.id
-          end
-          value.dtime = date  # обновим время записи значения
+          value = MetricValue.new(metric_id: metric.id) if !value  # не нашли?
+          value.dtime = Time.current.utc  # обновим время записи значения
           value.value = new_value
           value.save if new_value.to_i > 0
         end
@@ -55,32 +46,21 @@ namespace :bp1step do
     c = ActiveRecord::Base.configurations['production_MSSQL']
     mssql = TinyTds::Client.new username: c['username'], password: c['password'], host: c['host'], database: c['database']
 
-    metrics_type = 'MSSQL'
     count = 0
     errors = 0
     #Metric.where(mtype: metrics_type).where(id: 8).each do | metric |  # метрики с типом 'MSSQL'
-    Metric.where(mtype: metrics_type).each do | metric |  # метрики с типом 'MSSQL'
+    Metric.where(mtype: 'MSSQL').each do | metric |  # метрики с типом 'MSSQL'
       count += 1
       #('2016-02-01'.to_datetime.to_i .. '2016-02-09'.to_datetime.to_i).step(1.day) do |datei|
       (Time.current.to_i .. Time.current.to_i).step(1.day) do |datei|
-        date = Time.at(datei)
-        #date = Time.current
+        date = Time.at(datei).utc
         sql = Metric.find(metric.id).msql
         sql.gsub!(/\r\n?/, " ") #заменим \n \r на пробелы
 
-        sql_period = case metric.depth
-          when 1 then "'#{date.beginning_of_year.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{date.end_of_year.strftime("%Y-%m-%d %H:%M:%S")}'"   # текущий год
-          when 2 then "'#{date.beginning_of_month.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{date.end_of_month.strftime("%Y-%m-%d %H:%M:%S")}'" # текущий месяц
-          when 3 then "'#{date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")}'"     # текущий день
-          else "'#{date.beginning_of_hour.strftime("%Y-%m-%d %H:%M:%S")}' AND '#{date.end_of_hour.strftime("%Y-%m-%d %H:%M:%S")}'"          # текущий час
-        end
-        sql_date = case metric.depth
-          when 1 then "'#{date.beginning_of_year.strftime("%Y-%m-%d")}'"   # текущий год
-          when 2 then "'#{date.beginning_of_month.strftime("%Y-%m-%d")}'" # текущий месяц
-          when 3 then "'#{date.beginning_of_day.strftime("%Y-%m-%d")}'"     # текущий день
-          else "'#{date.beginning_of_hour.strftime("%Y-%m-%d %H")}'"          # текущий час
-        end
+        sql_period = metric.sql_period (date)
         sql.gsub!(/##PERIOD##/, sql_period) #заменим период
+
+        sql_date = metric.sql_period_beginning_of date
         sql.gsub!(/##DATE##/, sql_date) #заменим дату
         begin
           results = mssql.execute(sql)
@@ -89,22 +69,23 @@ namespace :bp1step do
           puts "ERR: #{sql}"
           errors += 1
         end
-        if results
-          result = results.first
-          if result['count'].present?
-            new_value = result['count']
+        new_value = nil
+        results.each do |row|
+          new_value = row['count']
+        end
+
+        if new_value
+          if new_value.to_i > 0
             value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{sql_period}").first
             value = MetricValue.new(metric_id: metric.id) if !value  # не нашли? - новое значение
-            value.dtime = date  # обновим время записи значения
-            value.value = new_value if new_value.to_i > 0
+            value.dtime = Time.current.utc  # обновим время записи значения
             value.save
           end
         end
-        results.cancel
       end
     end
     mssql.close
-    inf = "      #{metrics_type}: #{count} metrics"
+    inf = "      MSSQL: #{count} metrics"
     inf += ", #{errors} errors" if errors > 0
     logger.info inf
   end
