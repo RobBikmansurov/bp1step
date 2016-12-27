@@ -184,3 +184,5 @@ ru:
         location: Местоположение
         description: Описание
         typical: Типовое рабочее место
+    error_notification:
+      default_message: 'Упс, ошибки! Исправьте, пожалуйста:'
