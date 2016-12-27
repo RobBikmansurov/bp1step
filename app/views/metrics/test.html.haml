@@ -1,0 +1,30 @@
+-title 'Метрика ' + @metric.name + '. ' + @metric.bproce.shortname if @metric.bproce
+-search "Метрику"
+
+.id_
+  \#
+  =@metric.id
+%h2
+  = "[#{@metric.shortname}] #{@metric.name} за"
+  %b= "#{@current_period_name}: "
+  = " ср.#{number_with_precision(@average_value, precision: 2)}" if @average_value and @average_value > 0
+
+%h4
+  -if @metric.bproce
+    =link_to 'Метрика', metrics_bproce_path(@metric.bproce)
+  -else
+    =link_to 'Метрики', metrics_path
+  процесса
+  = link_to @metric.bproce.name, bproce_path(@metric.bproce) if @metric.bproce
+%h4= @metric.description
+= "[#{@metric.note}]" if @metric.note
+%p
+
+%h4Запрос
+= @sql
+%h4Результат:
+= @test
+
+%p
+= link_to 'Edit', edit_metric_path(@metric), :class => 'button' if can? :update, @metric
+= link_to 'Show', @metric, :class => 'button'
