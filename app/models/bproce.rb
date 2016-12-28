@@ -4,7 +4,9 @@ class Bproce < ActiveRecord::Base
   tracked owner: Proc.new { |controller, model| controller.current_user }
 
   include PgSearch
-  pg_search_scope :search__by_all_column, against: [:description, :goal, :id, :name, :fullname, :shortname]
+  pg_search_scope :search__by_all_column,
+    against: [:description, :goal, :id, :name, :fullname, :shortname],
+    using: {tsearch: { prefix: true } }
 
   acts_as_taggable
 
