@@ -44,10 +44,10 @@ class Metric < ActiveRecord::Base
   # возвращает период от первой его секунды до последней - для замены ##PERIOD## в условии between
   def sql_period(date = Date.current)
     case depth
-    when 1 then "'#{date.beginning_of_year}' AND '#{date.end_of_year}'" # текущий год
-    when 2 then "'#{date.beginning_of_month}' AND '#{date.end_of_month}'" # текущий месяц
-    when 3 then "'#{date.beginning_of_day}' AND '#{date.end_of_day}'" # текущий день
-    else "'#{date.beginning_of_hour}' AND '#{date.end_of_hour}'" # текущий час
+    when 1 then "'#{date.beginning_of_year.to_s(:db)}' AND '#{date.end_of_year.to_s(:db)}'" # текущий год
+    when 2 then "'#{date.beginning_of_month.to_s(:db)}' AND '#{date.end_of_month.to_s(:db)}'" # текущий месяц
+    when 3 then "'#{date.beginning_of_day.to_s(:db)}' AND '#{date.end_of_day.to_s(:db)}'" # текущий день
+    else "'#{date.beginning_of_hour.to_s(:db)}' AND '#{date.end_of_hour.to_s(:db)}'" # текущий час
     end
   end
 

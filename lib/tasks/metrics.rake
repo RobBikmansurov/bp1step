@@ -65,26 +65,26 @@ namespace :bp1step do
       sql.gsub!(/##DATE##/, sql_date) #заменим дату
       begin
         results = mssql.execute(sql)
-      rescue
-        logger.info "      ERR: #{sql}"
-        puts "ERR: #{sql}"
+        new_value = nil
+        results.each do |row|
+          new_value = row['count']
+        end
+        if new_value
+          if new_value.to_i > 0
+            value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{sql_period}").first
+            value = MetricValue.new(metric_id: metric.id) if !value  # не нашли? - новое значение
+            value.dtime = Time.current.utc  # обновим время записи значения
+            value.save
+          end
+        end
+      rescue => e
+        logger.info "      ERR: #{sql}\n#{e}"
+        #puts "ERR: #{sql}\n#{e}"
         errors += 1
       end
-      new_value = nil
-      results.each do |row|
-        new_value = row['count']
-      end
 
-      if new_value
-        if new_value.to_i > 0
-          value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{sql_period}").first
-          value = MetricValue.new(metric_id: metric.id) if !value  # не нашли? - новое значение
-          value.dtime = Time.current.utc  # обновим время записи значения
-          value.save
-        end
-      end
     end
-    mssql.close
+        mssql.close
     inf = "      MSSQL: #{count} metrics"
     inf += ", #{errors} errors" if errors > 0
     logger.info inf
