@@ -13,8 +13,10 @@ namespace :bp1step do
         #sql = Metric.find(metric.id).msql
       sql = metric.msql
       sql.gsub!(/\r\n?/, " ") #заменим \n \r на пробелы
-      sql_period = metric.sql_period (Time.current)
+      sql_period = metric.sql_period Time.current.utc
       sql.gsub!(/##PERIOD##/, sql_period) #заменим период
+      sql_date = metric.sql_period_beginning_of Time.current.utc
+      sql.gsub!(/##DATE##/, sql_date) #заменим дату
       begin
         results = ActiveRecord::Base.connection.execute(sql)
       rescue
@@ -52,35 +54,33 @@ namespace :bp1step do
     Metric.where(mtype: 'MSSQL').each do | metric |  # метрики с типом 'MSSQL'
       count += 1
       #('2016-02-01'.to_datetime.to_i .. '2016-02-09'.to_datetime.to_i).step(1.day) do |datei|
-      (Time.current.to_i .. Time.current.to_i).step(1.day) do |datei|
-        date = Time.at(datei).utc
-        sql = Metric.find(metric.id).msql
-        sql.gsub!(/\r\n?/, " ") #заменим \n \r на пробелы
+      date = Time.current.utc
+      sql = Metric.find(metric.id).msql
+      sql.gsub!(/\r\n?/, " ") #заменим \n \r на пробелы
 
-        sql_period = metric.sql_period (date)
-        sql.gsub!(/##PERIOD##/, sql_period) #заменим период
+      sql_period = metric.sql_period (date)
+      sql.gsub!(/##PERIOD##/, sql_period) #заменим период
 
-        sql_date = metric.sql_period_beginning_of date
-        sql.gsub!(/##DATE##/, sql_date) #заменим дату
-        begin
-          results = mssql.execute(sql)
-        rescue
-          logger.info "      ERR: #{sql}"
-          puts "ERR: #{sql}"
-          errors += 1
-        end
-        new_value = nil
-        results.each do |row|
-          new_value = row['count']
-        end
+      sql_date = metric.sql_period_beginning_of date
+      sql.gsub!(/##DATE##/, sql_date) #заменим дату
+      begin
+        results = mssql.execute(sql)
+      rescue
+        logger.info "      ERR: #{sql}"
+        puts "ERR: #{sql}"
+        errors += 1
+      end
+      new_value = nil
+      results.each do |row|
+        new_value = row['count']
+      end
 
-        if new_value
-          if new_value.to_i > 0
-            value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{sql_period}").first
-            value = MetricValue.new(metric_id: metric.id) if !value  # не нашли? - новое значение
-            value.dtime = Time.current.utc  # обновим время записи значения
-            value.save
-          end
+      if new_value
+        if new_value.to_i > 0
+          value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{sql_period}").first
+          value = MetricValue.new(metric_id: metric.id) if !value  # не нашли? - новое значение
+          value.dtime = Time.current.utc  # обновим время записи значения
+          value.save
         end
       end
     end
