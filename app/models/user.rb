@@ -102,6 +102,6 @@ class User < ActiveRecord::Base
   private
 
   def create_role
-    roles << Role.find_by(name: :user) if ENV["RAILS_ENV"] != 'test'
+    roles << Role.find_by(name: :user) if ENV['RAILS_ENV'] != 'test'
   end
 end
