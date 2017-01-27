@@ -124,6 +124,7 @@ BPDoc::Application.routes.draw do
       get :new_value
       get :set
       get :test
+      get :set_values
     end
   end
   resources :metric_values, only: [:edit, :update, :new, :create, :destroy]
@@ -164,6 +165,7 @@ BPDoc::Application.routes.draw do
   resources :users, only: [:index, :show, :edit, :update] do
     member do
       get :order # распоряжение о назначении исполнителя на роли в процессах
+      get :pass # пропуск
       get :uworkplaces
       get :uroles
       get :documents
