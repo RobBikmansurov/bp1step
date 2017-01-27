@@ -21,6 +21,9 @@ RSpec.describe UsersController, :type => :routing do
     it "routes to #order" do
       expect(get: "/users/1/order").to route_to("users#order", :id => "1")
     end
+    it "routes to #pass" do
+      expect(get: "/users/1/pass").to route_to("users#pass", :id => "1")
+    end
 
     it "routes to #autocomplete" do
       expect(get: "/users/autocomplete").to route_to("users#autocomplete")
