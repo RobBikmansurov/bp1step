@@ -92,9 +92,7 @@ class TasksController < ApplicationController
     status_was = @task.status # старые значения записи
     duedate_was = @task.duedate
     if @task.update(task_params)
-      if @task.duedate > duedate_was # срок отодвинут
-        @task.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{current_user.displayname} увеличил срок исполнения (с #{duedate_was.strftime('%d.%m.%Y')})"
-      end
+      @task.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{current_user.displayname} изменил срок исполнения (с #{duedate_was.strftime('%d.%m.%Y')} на #{@task.duedate.strftime('%d.%m.%Y')})" unless @task.duedate == duedate_was
       @task.result += "\r\n#{Time.current.strftime('%d.%m.%Y %H:%M:%S')}: #{current_user.displayname} - #{params[:task][:action]}" if params[:task][:action].present?
       @task.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{current_user.displayname} считает задачу полностью исполненной" if (@task.status >= 90) && status_was < 90 # стало завершено
       @task.update_column(:result, @task.result.to_s)
