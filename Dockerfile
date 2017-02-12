@@ -4,7 +4,8 @@ RUN apt-get update -q && apt-get install -yqq \
   build-essential \
   nodejs \
   libpq-dev postgresql-client \
-  libxml2-dev libxslt1-dev
+    libxml2-dev libxslt1-dev \
+  && apt-get autoremove && apt-get clean
 
 # for capybara-webkit
 #RUN apt-get install -y libqt4-webkit libqt4-dev xvfb
