@@ -9,6 +9,9 @@ Business processes documentation organization and generation, the 1st step of in
 Аутентификация пользователей с помощью Devise, ограничения ролей доступа на базе CanCanCan.
 
 [![Build Status](https://travis-ci.org/RobBikmansurov/bp1step.svg?branch=master)](https://travis-ci.org/RobBikmansurov/bp1step)
+
+[![build status](https://gitlab.com/RobBikmansurov/bp1step/badges/master/build.svg)](https://gitlab.com/RobBikmansurov/bp1step/commits/master)
+
 [![Code Climate](https://codeclimate.com/github/RobBikmansurov/bp1step/badges/gpa.svg)](https://codeclimate.com/github/RobBikmansurov/bp1step)
 [![Test Coverage](https://codeclimate.com/github/RobBikmansurov/bp1step/badges/coverage.svg)](https://codeclimate.com/github/RobBikmansurov/bp1step/coverage)
 

@@ -54,6 +54,6 @@ rails:
 
   - bundle exec rake RAILS_ENV=production db:create
   - bundle exec rake RAILS_ENV=production db:migrate
-  - bundle exec rake db:seed
+  - bundle exec rake RAILS_ENV=production db:seed
   only:
     - master
