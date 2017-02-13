@@ -11,7 +11,6 @@ variables:
 stages:
   - install
   - test
-  # - rubocop
 
 install:
   stage: install
@@ -26,16 +25,6 @@ install:
     # check postgres
     - export PGPASSWORD=$POSTGRES_PASSWORD
     - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
-
-rubocop:
-  stage: rubocop
-  script:
-    - gem install rubocop
-    - rubocop -V
-    - cat .rubocop.yml
-    - rubocop app/
-    - rubocop app/ -fo
-  allow_failure: true
 
 rspec:
   stage: test
@@ -52,19 +41,19 @@ rspec:
 rails:
   stage: test
   script:
-    - apt-get update -q && apt-get install nodejs -yqq
-    - cp config/database.yml{.example,}
-    - cp config/ldap.yml{.example,}
-    - gem install bundler --no-ri --no-rdoc    # Bundler is not installed with the image
-    - bundle install --jobs=3 --without test development -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
+  - apt-get update -q && apt-get install nodejs -yqq
+  - cp config/database.yml{.example,}
+  - cp config/ldap.yml{.example,}
+  - gem install bundler --no-ri --no-rdoc    # Bundler is not installed with the image
+  - bundle install --jobs=3 --without test development -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
 
-    # change ldap-auth to database-auth 
-    - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
-    - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
-    - sed -i 's/before_save :get_ldap_lastname/# before_save :get_ldap_lastname/g' app/models/user.rb
+  # change ldap-auth to database-auth 
+  - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
+  - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
+  - sed -i 's/before_save :get_ldap_lastname/# before_save :get_ldap_lastname/g' app/models/user.rb
 
-    - bundle exec rake RAILS_ENV=production db:create
-    - bundle exec rake RAILS_ENV=production db:migrate
-    - bundle exec rake db:seed
-    only:
+  - bundle exec rake RAILS_ENV=production db:create
+  - bundle exec rake RAILS_ENV=production db:migrate
+  - bundle exec rake db:seed
+  only:
     - master
