@@ -1,14 +1,70 @@
-before_script:
-  - apt-get update -qq && apt-get install -y -qq postresql nodejs
-  - ruby -v
-  - which ruby
-  - gem install bundler --no-ri --no-rdoc
-  - bundle install --jobs $(nproc)  "${FLAGS[@]}"
+image: "ruby:2.3.1"
+
+services:
+  - postgres # :latest
+
+variables:
+  POSTGRES_DB: bp1step
+  POSTGRES_USER: bp1step-user
+  POSTGRES_PASSWORD: 'bp1step-password'
+
+stages:
+  - install
+  - test
+  # - rubocop
+
+install:
+  stage: install
+  script:
+    - ruby -v                                   # Print out ruby version for debugging
+    - apt-get update -q && apt-get install libpq-dev postgresql-client nodejs -yqq
+    - cp config/database.yml{.example,}
+    - cp config/ldap.yml{.example,}
+    - bundle install --jobs=3 --without development production -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
+    - bundle exec rake db:create RAILS_ENV=test
+    - uname -a
+    # check postgres
+    - export PGPASSWORD=$POSTGRES_PASSWORD
+    - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
 
 rubocop:
+  stage: rubocop
   script:
-    - bundle exec rubocop
+    - gem install rubocop
+    - rubocop -V
+    - cat .rubocop.yml
+    - rubocop app/
+    - rubocop app/ -fo
+  allow_failure: true
 
 rspec:
+  stage: test
   script:
-    - bundle exec rspec
+    - apt-get update -q && apt-get install nodejs -yqq
+    - cp config/database.yml{.example,}
+    - cp config/ldap.yml{.example,}
+    - bundle install --jobs=3 --without development staging production -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
+    - bundle exec rake RAILS_ENV=test db:create
+    - bundle exec rake RAILS_ENV=test db:migrate
+    - bundle exec rspec spec/routing/
+    - bundle exec rspec spec/models/
+  
+rails:
+  stage: test
+  script:
+    - apt-get update -q && apt-get install nodejs -yqq
+    - cp config/database.yml{.example,}
+    - cp config/ldap.yml{.example,}
+    - gem install bundler --no-ri --no-rdoc    # Bundler is not installed with the image
+    - bundle install --jobs=3 --without test development -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
+
+    # change ldap-auth to database-auth 
+    - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
+    - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
+    - sed -i 's/before_save :get_ldap_lastname/# before_save :get_ldap_lastname/g' app/models/user.rb
+
+    - bundle exec rake RAILS_ENV=production db:create
+    - bundle exec rake RAILS_ENV=production db:migrate
+    - bundle exec rake db:seed
+    only:
+    - master
