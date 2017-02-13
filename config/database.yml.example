@@ -19,12 +19,12 @@ default: &default
 
 development:
   <<: *default
-  host: postgres
+  host: localhost
   database: bp1step
 
 production:
   <<: *default
-  host:     localhost
+  host:     postgres
   database: bp1step
 
 test:
