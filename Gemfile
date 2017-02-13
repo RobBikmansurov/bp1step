@@ -62,7 +62,8 @@ group :test do
   gem "selenium-webdriver"
   gem 'fuubar'
   gem 'database_cleaner'
-  gem "codeclimate-test-reporter", require: nil
+  gem "codeclimate-test-reporter", require: false
+  gem 'codecov', require: false, group: :test
 end
 
 gem 'rails_12factor', group: :production

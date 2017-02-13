@@ -1,20 +1,23 @@
-FROM ruby:2.2
+FROM ruby:2.3
 
-# throw errors if Gemfile has been modified since Gemfile.lock
-RUN bundle config --global frozen 1
+RUN apt-get update -q && apt-get install -yqq \
+  build-essential \
+  nodejs \
+  libpq-dev postgresql-client \
+    libxml2-dev libxslt1-dev \
+  && apt-get autoremove && apt-get clean
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+# for capybara-webkit
+#RUN apt-get install -y libqt4-webkit libqt4-dev xvfb
 
-ONBUILD COPY Gemfile /usr/src/app/
-ONBUILD COPY Gemfile.lock /usr/src/app/
-ONBUILD RUN bundle install
+ENV APP_HOME /bp1step
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
 
-ONBUILD COPY . /usr/src/app
+ADD Gemfile* $APP_HOME/
+ADD config/database.yml.example config/database.yml
+RUN bundle install --jobs=3 --without staging production
 
-RUN apt-get update && apt-get install -y nodejs --no-install-recommends && rm -rf /var/lib/apt/lists/*
-RUN apt-get update && apt-get install -y postgresql-client sqlite3 --no-install-recommends && rm -rf /var/lib/apt/lists/*
-
-EXPOSE 3000
-CMD ["rails", "server", "-b", "0.0.0.0"]
-
+ADD . $APP_HOME
+# RUN ls -hal && rubocop & rubocop -fo
+# RUN ls -hal && rspec spec/model

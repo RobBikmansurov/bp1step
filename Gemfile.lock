@@ -80,6 +80,10 @@ GEM
       climate_control (>= 0.0.3, < 1.0)
     codeclimate-test-reporter (0.6.0)
       simplecov (>= 0.7.1, < 1.0.0)
+    codecov (0.1.9)
+      json
+      simplecov
+      url
     coderay (1.1.1)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
@@ -363,6 +367,7 @@ GEM
     unicorn (5.1.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
+    url (0.3.2)
     warden (1.2.6)
       rack (>= 1.0)
     webrat (0.7.3)
@@ -389,6 +394,7 @@ DEPENDENCIES
   capybara
   chartkick
   codeclimate-test-reporter
+  codecov
   coffee-rails (~> 4.0.0)
   database_cleaner
   devise (~> 3.5.2)
