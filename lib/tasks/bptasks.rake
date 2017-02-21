@@ -1,11 +1,13 @@
 # encoding: utf-8
 # frozen_string_literal: true
 # утилиты для поддержки работы BP1Step
+# rubocop:disable Metrics/LineLength
+# rubocop:disable Lint/UselessAssignment
 namespace :bp1step do
   desc 'Email testing'
   task test_email: :environment do # тестирование отправки email в production
     logger = Logger.new('log/bp1step.log') # протокол работы
-    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :test_email'
+    logger.info '===== ' + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ' :test_email'
     u = User.find(97) # пользователь по умолчанию
     mail_to = u # DEBUG dlevel <2 - только документы 1 уровня
     document = Document.last
@@ -84,13 +86,14 @@ namespace :bp1step do
 
   desc 'Sync users from ActiveDirectory'
   # отбирает пользователей - членов группы rl_bp1step_users
+  # rubocop:disable Metrics/BlockNesting
   task sync_active_directory_users: :environment do # синхронизация списка пользователей LDAP -> User
     require 'rubygems'
     require 'net/ldap'
 
     PublicActivity.enabled = false # отключить протоколирование изменений
     logger = Logger.new('log/bp1step.log') # протокол работы
-    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :sync_active_directory_users'
+    logger.info '===== ' + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ' :sync_active_directory_users'
 
     LDAP_CONFIG = YAML.load_file(Devise.ldap_config) # считаем конфиги доступа к LDAP
     ldap = Net::LDAP.new host: LDAP_CONFIG['development']['host'],
@@ -108,13 +111,11 @@ namespace :bp1step do
 
     i = 0
     new_users = 0
-    upd_users = 0
     not_found_users = 0
     disabled_users = 0 # счетчики
     ldap.search(base: treebase, attributes: attrs, filter: filter) do |entry|
       i += 1
-      next if i < 99
-      # attrs.each {|ma| puts ma, entry[ma]} if debug_flag
+      # next if i < 99
 
       username = entry['sAMAccountName'].first.downcase
       email = entry['mail'].first # это обязательные параметры + к ним левые уникальные password и reset_password_token
@@ -136,7 +137,7 @@ namespace :bp1step do
       # logger.info "#{i}. #{name}\t#{email}\t#{position} - #{department}" if debug_flag
       puts "#{i}. #{username}\t#{email}\t#{displayname}" if debug_flag
 
-      if (uac & 2 == 0) || !entry['mail'].first.to_s.empty? # пользователь не заблокирован и имеет не пустой e-mail
+      if (uac & 2).zero? || !entry['mail'].first.to_s.empty? # пользователь не заблокирован и имеет не пустой e-mail
         usr = User.find_or_create_by(username: username)
         if usr.new_record?
           logger.info "#{i}!#{new_users}. #{entry.sAMAccountName} #{entry.dn} \t- email is NULL!" if email.to_s.empty?
@@ -217,19 +218,19 @@ namespace :bp1step do
             user.update_attribute(:active, false) # делаем неактивным
             disabled_users += 1
             # если нет связи с ролями, рабочими местами, процессами
-            if (user.workplaces.count == 0) && (user.business_roles.count == 0) && (user.bproce_ids.count == 0)
+            if user.workplaces.count.zero? && user.business_roles.count.zero? && user.bproce_ids.count.zero?
               user.delete # удалим
               logger.info "#{i}!#{disabled_users}. ##{user.id} #{user.username}\t #{user.displayname} \t- DELETE user!"
             else
               logger.info "#{i}!#{disabled_users}. ##{user.id} #{user.username}\t #{user.displayname}\t - need DELETE:"
               s = ''
               user.workplaces.each do |wp|
-                s = s + wp.name + '  '
+                s += wp.name + '  '
               end
               logger.info "\t workplaces: #{s}"
               s = ''
               user.business_roles.each do |brole|
-                s = s + brole.name + '  '
+                s += brole.name + '  '
               end
               logger.info "\t business roles: #{s}"
             end
@@ -240,7 +241,7 @@ namespace :bp1step do
           user.update_attribute(:active, false) # делаем активным - нет групп
         end
       end
-      logger.info "#{i} #{user.displayname} - not found in LDAP!" if i == 0
+      logger.info "#{i} #{user.displayname} - not found in LDAP!" if i.zero?
     end
     logger.info "  DB users total: #{i}, not found in LDAP: #{not_found_users}, disable: #{disabled_users} users"
     logger.info "  #{ldap.get_operation_result}" if debug_flag
@@ -251,7 +252,7 @@ namespace :bp1step do
     # TODO добавить конфиги для константы "files"
 
     logger = Logger.new('log/bp1step.log') # протокол работы
-    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_document_files'
+    logger.info '===== ' + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ' :check_document_files'
 
     nn = 1
     nf = 0
@@ -281,7 +282,7 @@ namespace :bp1step do
   task check_document_files: :environment do # проверка наличия файла документа для документов уровня 1-3 (кроме 4 - Свидетельства)
     # TODO контролировать все уровни документов кроме 4
     logger = Logger.new('log/bp1step.log') # протокол работы
-    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_document_files'
+    logger.info '===== ' + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ' :check_document_files'
     documents_count = 0
     documents_file_missing = 0
     files_missing = 0
@@ -297,7 +298,7 @@ namespace :bp1step do
       else
         mail_to = u
       end
-      next unless document.bproce.count == 0
+      next unless document.bproce.count.zero?
       processes_missing += 1
       logger.info "process missing ##{document.id}: \t #{mail_to.email}"
       DocumentMailer.process_is_missing_email(document, mail_to).deliver # рассылка о необходимости указания процесса для документа
@@ -310,7 +311,7 @@ namespace :bp1step do
       else
         mail_to = u
       end
-      if document.bproce.count == 0
+      if document.bproce.count.zero?
         processes_missing += 1
         logger.info "process missing ##{document.id}: \t #{mail_to.email}"
         DocumentMailer.process_is_missing_email(document, mail_to).deliver # рассылка о необходимости указания процесса для документа
@@ -347,7 +348,7 @@ namespace :bp1step do
     require 'find'
 
     logger = Logger.new('log/bp1step.log') # протокол работы
-    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :create_documents_from_files'
+    logger.info '===== ' + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ' :create_documents_from_files'
 
     nn = 1
     nf = 0
@@ -366,13 +367,13 @@ namespace :bp1step do
   desc 'Check_bproces_roles'
   task check_bproces_roles: :environment do # рассылка о процессах, в которых не выделены роли
     logger = Logger.new('log/bp1step.log') # протокол работы
-    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_bproces_roles'
+    logger.info '===== ' + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ' :check_bproces_roles'
     processes_count = 0
     processes_without_roles = 0
     u = User.find(97) # пользователь по умолчанию
     Bproce.all.each do |bproce| # все процессы
-      if Bproce.where('lft>? and rgt<?', bproce.lft, bproce.rgt).count == 0 # если это конечный процесс - без подпроцессов
-        if bproce.business_roles.count == 0
+      if Bproce.where('lft>? and rgt<?', bproce.lft, bproce.rgt).count.zero? # если это конечный процесс - без подпроцессов
+        if bproce.business_roles.count.zero?
           processes_without_roles += 1
           mail_to = u # DEBUG
           mail_to = bproce.user if bproce.user # владелец процесса
@@ -387,7 +388,7 @@ namespace :bp1step do
   desc 'Check bproces_owner access roles'
   task check_bproces_owners: :environment do # рассылка о владельцах процессов, не имеющих необходимых ролей доступа
     logger = Logger.new('log/bp1step.log') # протокол работы
-    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_bproces_owners'
+    logger.info '===== ' + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ' :check_bproces_owners'
     owners_count = 0
     users_without_roles = 0
     u = User.find(97) # пользователь по умолчанию
@@ -406,7 +407,7 @@ namespace :bp1step do
   desc 'Migrate document.bproce_id to BproceDocuments: document can related to many bprocesses'
   task migrate_bproce_id_to_bprocedocument: :environment do # перенос ссылок на процесс из документа Document.bproce_id в BproceDocument
     logger = Logger.new('log/bp1step.log') # протокол работы
-    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :bproce_id_to_bprocedocument'
+    logger.info '===== ' + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ' :bproce_id_to_bprocedocument'
     document_count = 0
     bproce_count = 0
     Document.all.each do |document| # все документы
@@ -422,7 +423,7 @@ namespace :bp1step do
   desc 'Each documents must have link to bproces'
   task check_bproce_document_for_all_documents: :environment do # проверить наличие процесса для каждого документа
     logger = Logger.new('log/bp1step.log') # протокол работы
-    logger.info '===== ' + Time.now.strftime('%d.%m.%Y %H:%M:%S') + ' :check_bproce_document_for_all_documents'
+    logger.info '===== ' + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ' :check_bproce_document_for_all_documents'
     document_count = 0
     wo_bproce_count = 0
     Document.all.each do |document| # все документы
@@ -475,3 +476,4 @@ namespace :bp1step do
     end
   end
 end
+# rubocop:enable
