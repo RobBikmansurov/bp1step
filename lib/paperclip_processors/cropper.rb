@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Paperclip
   class Cropper < Thumbnail
     def transformation_command
@@ -26,13 +27,13 @@ module Paperclip
             crop_w = target.crop_w.to_i
             crop_h = target.crop_w.to_i
             crop_x = target.crop_x.to_i
-            crop_y = target.crop_y.to_i - ((target.crop_w.to_i-target.crop_h.to_i)/2).to_i
+            crop_y = target.crop_y.to_i - ((target.crop_w.to_i - target.crop_h.to_i) / 2).to_i
             crop_x = 0 if crop_x < 0
             crop_y = 0 if crop_y < 0
           elsif target.crop_w < target.crop_h
             crop_w = target.crop_h.to_i
             crop_h = target.crop_h.to_i
-            crop_x = target.crop_x.to_i - ((target.crop_h.to_i-target.crop_w.to_i)/2).to_i
+            crop_x = target.crop_x.to_i - ((target.crop_h.to_i - target.crop_w.to_i) / 2).to_i
             crop_y = target.crop_y.to_i
             crop_x = 0 if crop_x < 0
             crop_y = 0 if crop_y < 0
@@ -42,9 +43,9 @@ module Paperclip
             crop_x = target.crop_x.to_i
             crop_y = target.crop_y.to_i
           end
-          ["-crop", "#{crop_w}x#{crop_h}+#{crop_x}+#{crop_y}", "+repage"]
+          ['-crop', "#{crop_w}x#{crop_h}+#{crop_x}+#{crop_y}", '+repage']
         else
-          ["-crop", "#{target.crop_w.to_i}x#{target.crop_h.to_i}+#{target.crop_x.to_i}+#{target.crop_y.to_i}", "+repage"]
+          ['-crop', "#{target.crop_w.to_i}x#{target.crop_h.to_i}+#{target.crop_x.to_i}+#{target.crop_y.to_i}", '+repage']
         end
       end
     end
