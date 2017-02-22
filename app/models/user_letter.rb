@@ -1,11 +1,12 @@
+# frozen_string_literal: true
 class UserLetter < ActiveRecord::Base
   include PublicActivity::Model
-  tracked owner: Proc.new { |controller, model| controller.current_user }
+  tracked owner: proc { |controller, _model| controller.current_user }
 
   default_scope { order('status DESC') }
 
-  validates :letter, :presence => true
-  validates :user, :presence => true
+  validates :letter, presence: true
+  validates :user, presence: true
 
   belongs_to :user
   belongs_to :letter
@@ -17,7 +18,6 @@ class UserLetter < ActiveRecord::Base
   end
 
   def user_name=(name)
-    self.user_id = User.find_by_displayname(name).id if name.present?
+    self.user_id = User.find_by(displayname: name).id if name.present?
   end
-
 end

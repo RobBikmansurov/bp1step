@@ -1,11 +1,12 @@
+# frozen_string_literal: true
 class Role < ActiveRecord::Base
-  validates :name, :uniqueness => true,
-                   :presence => true,
-                   :length => {:minimum => 4}
-  validates :description, :presence => true
+  validates :name, uniqueness: true,
+                   presence: true,
+                   length: { minimum: 4 }
+  validates :description, presence: true
 
   has_many :user_roles
-  has_many :users, :through => :user_roles
+  has_many :users, through: :user_roles
 
   attr_accessible :name, :description, :note
 
@@ -16,5 +17,4 @@ class Role < ActiveRecord::Base
       where(nil)
     end
   end
-
 end

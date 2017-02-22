@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class BproceIresource < ActiveRecord::Base
-  validates :bproce_id, :presence => true
-  validates :iresource_id, :presence => true
+  validates :bproce_id, presence: true
+  validates :iresource_id, presence: true
 
   belongs_to :bproce
   belongs_to :iresource
@@ -12,7 +13,7 @@ class BproceIresource < ActiveRecord::Base
   end
 
   def bproce_name=(name)
-    self.bproce_id = Bproce.find_by_name(name).id if name.present?
+    self.bproce_id = Bproce.find_by(name: name).id if name.present?
   end
 
   def iresource_label
@@ -20,7 +21,6 @@ class BproceIresource < ActiveRecord::Base
   end
 
   def iresource_label=(name)
-    self.iresource_id = Iresource.find_by_label(name).id if name.present?
+    self.iresource_id = Iresource.find_by(label: name).id if name.present?
   end
-
 end

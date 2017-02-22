@@ -1,55 +1,49 @@
+# frozen_string_literal: true
 class Directive < ActiveRecord::Base
   include PublicActivity::Model
-  tracked owner: Proc.new { |controller, model| controller.current_user }
+  tracked owner: proc { |controller, _model| controller.current_user }
 
-  validates :approval, :presence => true
-  validates :number, :presence => true
-  validates :name, :presence => true, :length => {:minimum => 10}
-  validates :body, :length => {:minimum => 2, :maximum => 100}	# орган, утвердивший документ
-  validates :status, length: {maximum: 30}
-  validates :note, length: {maximum: 255}
+  validates :approval, presence: true
+  validates :number, presence: true
+  validates :name, presence: true, length: { minimum: 10 }
+  validates :body, length: { minimum: 2, maximum: 100 }	# орган, утвердивший документ
+  validates :status, length: { maximum: 30 }
+  validates :note, length: { maximum: 255 }
 
-  has_many :document, :through => :document_directive
-  has_many :document_directive, :dependent => :destroy
+  has_many :document, through: :document_directive
+  has_many :document_directive, dependent: :destroy
 
   attr_accessible :name, :body, :number, :approval, :title, :annotation, :note, :status, :action
 
   def shortname
     if approval
-      return title + ' ' + number + ' от ' + approval.strftime('%d.%m.%Y')
+      title + ' ' + number + ' от ' + approval.strftime('%d.%m.%Y')
     else
-      return title + ' ' + number
+      title + ' ' + number
     end
   end
 
   def midname
-    if approval
-      return title + ' ' + body + ' №' + number + ' ' + approval.strftime('%d.%m.%Y')
-    else
-      return title + ' ' + body + ' №' + number
-    end
+    title + ' ' + body + ' №' + number + approval ? ' ' + approval.strftime('%d.%m.%Y') : ''
   end
 
   def directive_name
-    #self.try(:shortname + '  #' + :id)
-    return self.midname + '   #' + id.to_s
+    midname + '   #' + id.to_s
   end
 
   def directive_name=(name)
-    if name.present?
-      i = name.rindex('#')
-      self.directive_id = name.slice(i + 1, 5).to_i if i.to_i > 0
-    end
+    return unless name.present?
+    i = name.rindex('#')
+    self.directive_id = name.slice(i + 1, 5).to_i if i.positive?
   end
 
   def directives_of_bproce(bproce_id) # все директивы процесса (связаны с ним через документы процесса)
-    Directive.find_by_sql [ "select directives.* from directives, document_directives, bproce_documents 
+    Directive.find_by_sql ["select directives.* from directives, document_directives, bproce_documents
       where bproce_documents.bproce_id = ?
       and bproce_documents.document_id = document_directives.document_id
       and directives.id = document_directives.directive_id
-      group by directives.id", bproce_id ]
+      group by directives.id", bproce_id]
   end
-
 
   def self.search(search)
     if search
@@ -59,5 +53,4 @@ class Directive < ActiveRecord::Base
       where(nil)
     end
   end
-
 end

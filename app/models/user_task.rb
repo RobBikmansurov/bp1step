@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class UserTask < ActiveRecord::Base
-  validates :task, :presence => true
-  validates :user, :presence => true
+  validates :task, presence: true
+  validates :user, presence: true
 
   belongs_to :user
   belongs_to :task
@@ -14,14 +15,12 @@ class UserTask < ActiveRecord::Base
   end
 
   def user_name=(name)
-    if name.present?
-      user = User.find_by_displayname(name)
-      self.user_id = user.id if user
-    end
+    return unless name.present?
+    user = User.find_by(displayname: name)
+    self.user_id = user.id if user
   end
 
   def responsible? # ответственный исполнитель, если задан статус, отличный от 0
-    (status.nil? || status == 0 ? false : true)
+    !(status.nil? || status.zero?)
   end
-
 end

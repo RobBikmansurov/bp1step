@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Agent
 class Agent < ActiveRecord::Base
   attr_accessible :shortname, :name, :town, :address, :contacts, :agent_name, :note
@@ -8,19 +9,18 @@ class Agent < ActiveRecord::Base
   validates :name, presence: true,
                    length: { minimum: 3, maximum: 255 }
   validates :town, length: { maximum: 30 }
-  validates :shortname, length: { maximum:255 }
-  validates :address, length: { maximum:255 }
+  validates :shortname, length: { maximum: 255 }
+  validates :address, length: { maximum: 255 }
 
   def self.search(search)
     if search
       where('name ILIKE ? or shortname ILIKE ? or contacts ILIKE ? or id = ?',
-            "%#{search}%", "%#{search}%", "%#{search}%", "#{search.to_i}")
+            "%#{search}%", "%#{search}%", "%#{search}%", search.to_i.to_s)
     else
       where(nil)
     end
   end
 
   include PublicActivity::Model
-  tracked owner: Proc.new { |controller, _model| controller.current_user }
-
+  tracked owner: proc { |controller, _model| controller.current_user }
 end

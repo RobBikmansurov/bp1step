@@ -1,9 +1,10 @@
+# frozen_string_literal: true
 class UserBusinessRole < ActiveRecord::Base
   include PublicActivity::Model
-  tracked owner: Proc.new { |controller, model| controller.current_user }
+  tracked owner: proc { |controller, _model| controller.current_user }
 
-  validates :user_id, :presence => true
-  validates :business_role_id, :presence => true
+  validates :user_id, presence: true
+  validates :business_role_id, presence: true
 
   belongs_to :user
   belongs_to :business_role
@@ -15,7 +16,6 @@ class UserBusinessRole < ActiveRecord::Base
   end
 
   def user_name=(name)
-    self.user_id = User.find_by(:displayname => name).id if name.present?
+    self.user_id = User.find_by(displayname: name).id if name.present?
   end
-
 end
