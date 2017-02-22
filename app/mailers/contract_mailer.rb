@@ -6,14 +6,15 @@ class ContractMailer < ActionMailer::Base
     @contract = contract
     @scan = scan
     @action = action
-    address = @contract.owner.email if @contract.owner.email  # ответственный за договор
-    if @contract.payer
-      address.concat(', ' + @contract.payer.email.to_s) if !@contract.payer.email.empty?  # отвественный за оплату договора
-      address.concat(', bard@bankperm.ru')  # добавим в получатели Бардина для контроля
-    end
+    owner_email = @contract.owner&.email # ответственный за договор
+    payer_email = @contract.payer&.email # ответственный за оплату договора
+    address = []
+    address << owner_email unless owner_email.blank?
+    address << payer_email unless payer_email.blank?
+    address << 'bard@bankperm.ru' if @contract.payer # добавим в получатели Бардина для контроля
     @current_user = current_user
     if @scan
-      mail(to: address, 
+      mail(to: address.join(', '), 
            subject: "BP1Step: #{@action} файл договора ##{@contract.id.to_s}",
            template_name: "update_contract_scan")
     else
