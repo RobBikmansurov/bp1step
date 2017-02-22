@@ -22,8 +22,7 @@ PublicActivity.without_tracking do
         post "/users", { user: user_attributes }
       }.to_not change(User, :count)
 
-      expect(response).to
-       render_template :new
+      expect(response).to render_template :new
     end
   end
 end

@@ -35,7 +35,7 @@ rspec:
     - bundle install --jobs=3 --without development staging production -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
     - bundle exec rake RAILS_ENV=test db:create
     - bundle exec rake RAILS_ENV=test db:migrate
-    - bundle exec rspec spec/routing/
+    - bundle exec rspec spec/r*
     - bundle exec rspec spec/models/
   
 rails:
