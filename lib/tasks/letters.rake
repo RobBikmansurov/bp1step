@@ -56,6 +56,11 @@ namespace :bp1step do
         l_number = "#{l_number[0..l_number.size - 2]}-МР"
         l_sender = 'Банк России'
         l_subject = "Методические рекомендации № #{l_number} от #{l_date}"
+      when /\A\d+_IN\d+/                                  # Информационное письмо
+        l_number = name[/\A\d+_?f?/]
+        l_number = "ИН/#{l_number[0..l_number.size - 2]}"
+        l_sender = 'Банк России'
+        l_subject = "Информационное письмо № #{l_number} от #{l_date}"
       end
 
       next if l_number.blank? # удалось идентифицировать файл
