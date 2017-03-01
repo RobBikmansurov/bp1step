@@ -12,8 +12,6 @@ engines:
       languages:
       - ruby
       - javascript
-      - python
-      - php
   eslint:
     enabled: true
   fixme:
@@ -32,10 +30,6 @@ ratings:
   - "**.coffee"
   - "**.inc"
   - "**.js"
-  - "**.jsx"
-  - "**.module"
-  - "**.php"
-  - "**.py"
 exclude_paths:
 - config/
 - db/

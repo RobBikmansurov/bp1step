@@ -10,6 +10,8 @@ variables:
 
 stages:
   - install
+  - rspec
+  - rubocop
   - test
 
 install:
@@ -37,6 +39,16 @@ rspec:
     - bundle exec rake RAILS_ENV=test db:migrate
     - bundle exec rspec spec/r*
     - bundle exec rspec spec/models/
+  
+rubocop:
+  stage: test
+  script:
+    - apt-get update -q && apt-get install nodejs -yqq
+    - cp config/database.yml{.example,}
+    - cp config/ldap.yml{.example,}
+    - bundle install --jobs=3 --without development staging production -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
+    - rubocop app/models/
+    - rubocop lib/tasks/
   
 rails:
   stage: test

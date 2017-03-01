@@ -15,3 +15,4 @@ script:
   - bundle exec rspec spec/r*
   - bundle exec rspec spec/models/
   - bundle exec rake db:seed
+  - rubocop app/models/
