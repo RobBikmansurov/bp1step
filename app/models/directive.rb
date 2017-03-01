@@ -24,7 +24,7 @@ class Directive < ActiveRecord::Base
   end
 
   def midname
-    title + ' ' + body + ' №' + number + approval ? ' ' + approval.strftime('%d.%m.%Y') : ''
+    title + ' ' + body + ' №' + number + (approval ? ' ' + approval.strftime('%d.%m.%Y') : '')
   end
 
   def directive_name
