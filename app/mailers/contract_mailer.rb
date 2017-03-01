@@ -1,8 +1,12 @@
 # coding: utf-8
+# frozen_string_literal: true
 class ContractMailer < ActionMailer::Base
-  default from: "BP1Step <bp1step@bankperm.ru>"
+  default from: 'BP1Step <bp1step@bankperm.ru>'
 
-  def update_contract(contract, current_user, scan, action)   # рассылка ответственным об изменении договора или скана
+  # рассылка ответственным об изменении договора или скана
+  # rubocop: disable Metrics/AbcSize
+  # rubocop: disable Metrics/MethodLength
+  def update_contract(contract, current_user, scan, action)
     @contract = contract
     @scan = scan
     @action = action
@@ -14,31 +18,30 @@ class ContractMailer < ActionMailer::Base
     address << 'bard@bankperm.ru' if @contract.payer # добавим в получатели Бардина для контроля
     @current_user = current_user
     if @scan
-      mail(to: address.join(', '), 
-           subject: "BP1Step: #{@action} файл договора ##{@contract.id.to_s}",
-           template_name: "update_contract_scan")
+      mail(to: address.join(', '),
+           subject: "BP1Step: #{@action} файл договора ##{@contract.id}",
+           template_name: 'update_contract_scan')
     else
       mail(to: address,
-           subject: "BP1Step: изменен договор ##{@contract.id.to_s}",
-           template_name: "update_contract")
+           subject: "BP1Step: изменен договор ##{@contract.id}",
+           template_name: 'update_contract')
     end
   end
 
-  def process_is_missing_email(contract, user)		# рассылка о необходимости указания процесса для договора
+  def process_is_missing_email(contract, user)	# рассылка о необходимости указания процесса для договора
     @contract = contract
     @user = user
-    mail(:to => user.email, :subject => "BP1Step: укажите процессы договора ##{@contract.id.to_s}")
+    mail(to: user.email, subject: "BP1Step: укажите процессы договора ##{@contract.id}")
   end
 
-  def check_outdated_contracts(contract, emails, text)   # рассылка о просроченных договорах
+  def check_outdated_contracts(contract, emails, text) # рассылка о просроченных договорах
     @contract = contract
     @text = text
-    mail(:to => emails, :subject => "BP1Step: #{@text} договор ##{@contract.id.to_s}")
+    mail(to: emails, subject: "BP1Step: #{@text} договор ##{@contract.id}")
   end
 
-  def check_contracts_status(contract, emails)  # оповещение о договорах в статусе "Согласование"
+  def check_contracts_status(contract, emails) # оповещение о договорах в статусе "Согласование"
     @contract = contract
-    mail(:to => emails, :subject => "BP1Step: согласование договора ##{@contract.id.to_s}")
+    mail(to: emails, subject: "BP1Step: согласование договора ##{@contract.id}")
   end
-  
 end

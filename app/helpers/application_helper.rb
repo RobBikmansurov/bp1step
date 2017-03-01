@@ -64,4 +64,7 @@ module ApplicationHelper
     return class_name
   end    
 
+  def status(status)
+    status && status.positive? ? 'отв.' : ''
+  end
 end  

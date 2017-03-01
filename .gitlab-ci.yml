@@ -45,6 +45,7 @@ rubocop:
     - rubocop -V
     - rubocop app/models/
     - rubocop lib/tasks/
+    - rubocop app/mailers
     # - rubocop -fo
   allow_failure: true
   
@@ -60,7 +61,7 @@ rails:
   # change ldap-auth to database-auth 
   - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
   - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
-  - sed -i 's/before_save :ldap_lastname/# before_save :ldap_lastname/g' app/models/user.rb
+  - sed -i 's/before_save :ldap_email/# before_save :ldap_email/g' app/models/user.rb
 
   - bundle exec rake RAILS_ENV=production db:create
   - bundle exec rake RAILS_ENV=production db:migrate
