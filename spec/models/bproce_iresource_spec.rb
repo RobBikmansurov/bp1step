@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe BproceIresource do
@@ -6,9 +7,8 @@ describe BproceIresource do
     it { should validate_presence_of(:iresource_id) }
   end
 
-  context "associations" do
+  context 'associations' do
     it { should belong_to(:bproce) }
     it { should belong_to(:iresource) }
   end
-
 end

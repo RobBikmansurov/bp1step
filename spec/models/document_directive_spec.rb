@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe DocumentDirective do
@@ -6,9 +7,8 @@ describe DocumentDirective do
     it { should validate_presence_of(:directive_id) }
   end
 
-  context "associations" do
+  context 'associations' do
     it { should belong_to(:document) }
     it { should belong_to(:directive) }
   end
-
 end

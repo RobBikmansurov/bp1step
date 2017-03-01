@@ -25,7 +25,7 @@ RSpec.describe BusinessRolesController, type: :controller do
   describe 'GET show' do
     it 'assigns the requested business_role as @business_role' do
       business_role = valid_business_roles.first
-      get :show, { id: business_role.to_param }
+      get :show, id: business_role.to_param
       expect(assigns(:business_role)).to eq(business_role)
     end
   end
@@ -45,7 +45,7 @@ RSpec.describe BusinessRolesController, type: :controller do
     describe 'GET edit' do
       it 'assigns the requested business_role as @business_role' do
         business_role = valid_business_roles.first
-        get :edit, { id: business_role.to_param }
+        get :edit, id: business_role.to_param
         expect(assigns(:business_role)).to eq(business_role)
       end
     end
@@ -58,31 +58,31 @@ RSpec.describe BusinessRolesController, type: :controller do
       describe 'with valid params' do
         it 'creates a new BusinessRole' do
           expect do
-            post :create, { business_role: business_role.as_json }
+            post :create, business_role: business_role.as_json
           end.to change(BusinessRole, :count).by(1)
         end
 
         it 'assigns a newly created business_role as @business_role' do
-          post :create, { business_role: business_role.as_json }
+          post :create, business_role: business_role.as_json
           expect(assigns(:business_role)).to be_a(BusinessRole)
           expect(assigns(:business_role)).to be_persisted
         end
 
         it 'redirects to the created business_role' do
-          post :create, { business_role: business_role.as_json }
+          post :create, business_role: business_role.as_json
           expect(response).to redirect_to(BusinessRole.last)
         end
       end
 
       describe 'with invalid params' do
-        let(:invalid_business_role) {build(:business_role, :invalid)}
+        let(:invalid_business_role) { build(:business_role, :invalid) }
         it 'assigns a newly created but unsaved business_role as @business_role' do
-          post :create, { business_role: invalid_business_role.as_json }
+          post :create, business_role: invalid_business_role.as_json
           expect(assigns(:business_role)).to be_a_new(BusinessRole)
         end
 
         it "re-renders the 'new' template" do
-          post :create, { business_role: invalid_business_role.as_json }
+          post :create, business_role: invalid_business_role.as_json
           expect(response).to render_template('new')
         end
       end
@@ -93,19 +93,19 @@ RSpec.describe BusinessRolesController, type: :controller do
         it 'updates the requested business_role' do
           business_role = valid_business_roles.first
           business_role.name = 'New valid name'
-          put :update, { id: business_role.id, business_role: business_role.as_json }
+          put :update, id: business_role.id, business_role: business_role.as_json
           expect(business_role.reload.name).to eq 'New valid name'
         end
 
         it 'assigns the requested business_role as @business_role' do
           business_role = valid_business_roles.first
-          put :update, { id: business_role.to_param, business_role: business_role.as_json }
+          put :update, id: business_role.to_param, business_role: business_role.as_json
           expect(assigns(:business_role)).to eq(business_role)
         end
 
         it 'redirects to the business_role' do
           business_role = valid_business_roles.first
-          put :update, { id: business_role.to_param, business_role: business_role.as_json }
+          put :update, id: business_role.to_param, business_role: business_role.as_json
           expect(response).to redirect_to(business_role)
         end
       end
@@ -114,14 +114,14 @@ RSpec.describe BusinessRolesController, type: :controller do
         it 'assigns the business_role as @business_role' do
           business_role = valid_business_roles.first
           business_role.name = '' #  not valid
-          put :update, { id: business_role.id, business_role: business_role.as_json }
+          put :update, id: business_role.id, business_role: business_role.as_json
           expect(assigns(:business_role)).to eq(business_role)
         end
 
         it "re-renders the 'edit' template" do
           business_role = valid_business_roles.first
           business_role.name = '' #  not valid
-          put :update, { id: business_role.id, business_role: business_role.as_json }
+          put :update, id: business_role.id, business_role: business_role.as_json
           expect(response).to render_template('edit')
         end
       end
@@ -132,13 +132,13 @@ RSpec.describe BusinessRolesController, type: :controller do
     it 'destroys the requested business_role' do
       business_role = valid_business_roles.first
       expect do
-        delete :destroy, { id: business_role.id }
+        delete :destroy, id: business_role.id
       end.to change(BusinessRole, :count).by(-1)
     end
 
     it 'redirects to the business_roles list' do
       business_role = valid_business_roles.first
-      delete :destroy, { id: business_role.id }
+      delete :destroy, id: business_role.id
       # expect(response).to redirect_to(business_roles_url)
       expect(response).to redirect_to(bproce_business_role_path(bproce))
     end

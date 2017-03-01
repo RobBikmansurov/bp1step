@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe Letter do
-  context "validates" do
+  context 'validates' do
     it { should validate_presence_of(:subject) }
     it { should validate_length_of(:subject).is_at_least(3).is_at_most(200) }
     it { should validate_presence_of(:number) }
@@ -12,11 +13,10 @@ describe Letter do
     it { should validate_presence_of(:date) }
   end
 
-  context "associations" do
+  context 'associations' do
     it { should belong_to(:letter) }
     it { should belong_to(:author) }
     it { should have_many(:user_letter).dependent(:destroy) }
     it { should have_many(:letter_appendix).dependent(:destroy) }
   end
-
 end

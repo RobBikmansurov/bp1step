@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe Letter do
@@ -18,5 +19,4 @@ describe Letter do
       expect(page).to have_link('letters')
     end
   end
-
 end

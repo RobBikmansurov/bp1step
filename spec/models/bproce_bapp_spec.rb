@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe BproceBapp do
@@ -7,9 +8,8 @@ describe BproceBapp do
     it { should validate_presence_of(:apurpose) }
   end
 
-  context "associations" do
+  context 'associations' do
     it { should belong_to(:bproce) }
     it { should belong_to(:bapp) }
   end
-
 end

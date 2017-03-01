@@ -24,7 +24,7 @@ RSpec.describe IresourcesController, type: :controller do
   describe 'GET show' do
     it 'assigns the requested iresource as @iresource' do
       iresource = valid_iresources.first
-      get :show, { id: iresource.to_param }
+      get :show, id: iresource.to_param
       expect(assigns(:iresource)).to eq(iresource)
     end
   end
@@ -44,7 +44,7 @@ RSpec.describe IresourcesController, type: :controller do
     describe 'GET edit' do
       it 'assigns the requested iresource as @iresource' do
         iresource = valid_iresources.first
-        get :edit, { id: iresource.to_param }
+        get :edit, id: iresource.to_param
         expect(assigns(:iresource)).to eq(iresource)
       end
     end
@@ -56,31 +56,31 @@ RSpec.describe IresourcesController, type: :controller do
       describe 'with valid params' do
         it 'creates a new Iresource' do
           expect do
-            post :create, { iresource: iresource.as_json }
+            post :create, iresource: iresource.as_json
           end.to change(Iresource, :count).by(1)
         end
 
         it 'assigns a newly created iresource as @iresource' do
-          post :create, { iresource: iresource.as_json }
+          post :create, iresource: iresource.as_json
           expect(assigns(:iresource)).to be_a(Iresource)
           expect(assigns(:iresource)).to be_persisted
         end
 
         it 'redirects to the created iresource' do
-          post :create, { iresource: iresource.as_json }
+          post :create, iresource: iresource.as_json
           expect(response).to redirect_to(Iresource.last)
         end
       end
 
       describe 'with invalid params' do
-        let(:invalid_iresource) {build(:iresource, :invalid)}
+        let(:invalid_iresource) { build(:iresource, :invalid) }
         it 'assigns a newly created but unsaved iresource as @iresource' do
-          post :create, { iresource: invalid_iresource.as_json }
+          post :create, iresource: invalid_iresource.as_json
           expect(assigns(:iresource)).to be_a_new(Iresource)
         end
 
         it "re-renders the 'new' template" do
-          post :create, { iresource: invalid_iresource.as_json }
+          post :create, iresource: invalid_iresource.as_json
           expect(response).to render_template('new')
         end
       end
@@ -91,19 +91,19 @@ RSpec.describe IresourcesController, type: :controller do
         it 'updates the requested iresource' do
           iresource = valid_iresources.first
           iresource.label = 'New valid label'
-          put :update, { id: iresource.id, iresource: iresource.as_json }
+          put :update, id: iresource.id, iresource: iresource.as_json
           expect(iresource.reload.label).to eq 'New valid label'
         end
 
         it 'assigns the requested iresource as @iresource' do
           iresource = valid_iresources.first
-          put :update, { id: iresource.to_param, iresource: iresource.as_json }
+          put :update, id: iresource.to_param, iresource: iresource.as_json
           expect(assigns(:iresource)).to eq(iresource)
         end
 
         it 'redirects to the iresource' do
           iresource = valid_iresources.first
-          put :update, { id: iresource.to_param, iresource: iresource.as_json }
+          put :update, id: iresource.to_param, iresource: iresource.as_json
           expect(response).to redirect_to(iresource)
         end
       end
@@ -112,14 +112,14 @@ RSpec.describe IresourcesController, type: :controller do
         it 'assigns the iresource as @iresource' do
           iresource = valid_iresources.first
           iresource.label = '' #  not valid
-          put :update, { id: iresource.id, iresource: iresource.as_json }
+          put :update, id: iresource.id, iresource: iresource.as_json
           expect(assigns(:iresource)).to eq(iresource)
         end
 
         it "re-renders the 'edit' template" do
           iresource = valid_iresources.first
           iresource.label = '' #  not valid
-          put :update, { id: iresource.id, iresource: iresource.as_json }
+          put :update, id: iresource.id, iresource: iresource.as_json
           expect(response).to render_template('edit')
         end
       end
@@ -130,13 +130,13 @@ RSpec.describe IresourcesController, type: :controller do
     it 'destroys the requested iresource' do
       iresource = valid_iresources.first
       expect do
-        delete :destroy, { id: iresource.id }
+        delete :destroy, id: iresource.id
       end.to change(Iresource, :count).by(-1)
     end
 
     it 'redirects to the iresources list' do
       iresource = valid_iresources.first
-      delete :destroy, { id: iresource.id }
+      delete :destroy, id: iresource.id
       expect(response).to redirect_to(iresources_url)
     end
   end

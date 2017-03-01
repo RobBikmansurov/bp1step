@@ -1,8 +1,8 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe Directive do
-
-  context "validates" do
+  context 'validates' do
     it { should validate_presence_of(:approval) }
     it { should validate_presence_of(:number) }
     it { should validate_presence_of(:name) }
@@ -12,9 +12,8 @@ describe Directive do
     it { should validate_length_of(:note).is_at_most(255) }
   end
 
-  context "associations" do
+  context 'associations' do
     it { should have_many(:document).through(:document_directive) } # на основании директивы может быть несколько документов
     it { should have_many(:document_directive).dependent(:destroy) }
-  end  
-
+  end
 end

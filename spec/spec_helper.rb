@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'factory_girl_rails'
 
 RSpec.configure do |config|
-
   config.before :all do
     FactoryGirl.reload
     FactoryGirl.factories.clear
@@ -23,7 +23,7 @@ RSpec.configure do |config|
 
   config.filter_run_when_matching :focus
 
-  config.example_status_persistence_file_path = "spec/example_status.txt"
+  config.example_status_persistence_file_path = 'spec/example_status.txt'
   config.order = :random
   Kernel.srand config.seed
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
 # Specs in this file have access to a helper object that includes
@@ -11,8 +12,8 @@ require 'spec_helper'
 #   end
 # end
 describe DocumentDirectivesHelper do
-  describe "#format_content" do
-    it "truncate long string" do
+  describe '#format_content' do
+    it 'truncate long string' do
     end
   end
 end

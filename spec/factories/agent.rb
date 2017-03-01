@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 FactoryGirl.define do
   factory :agent do
-    sequence(:id)  { |n| "#{n}" }
-    name           { "agent-#{id}" }
+    sequence(:id, &:to_s)
+    name { "agent-#{id}" }
   end
-
 end

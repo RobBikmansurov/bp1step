@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe Contract do
-  context "validates" do
+  context 'validates' do
     it { should validate_presence_of(:number) }
     it { should validate_length_of(:number).is_at_least(1).is_at_most(20) }
     it { should validate_presence_of(:name) }
@@ -14,7 +15,7 @@ describe Contract do
     it { should validate_length_of(:contract_place).is_at_most(30) }
   end
 
-  context "associations" do
+  context 'associations' do
     it { should belong_to(:parent).class_name('Contract') }
     it { should belong_to(:owner).class_name('User') }
     it { should belong_to(:payer).class_name('User') }
