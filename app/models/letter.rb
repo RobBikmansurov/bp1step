@@ -75,8 +75,8 @@ class Letter < ActiveRecord::Base
   def check_status
     if user_letter.first # если есть исполнители
       self.status = 5 if status < 1 # Назначено, если есть исполнители
-    else
-      self.status = 0 if status < 90 # Новое, т.к. нет исполнителей и не завершено
+    elsif status < 90
+      self.status = 0 # Новое, т.к. нет исполнителей и не завершено
     end
     return unless status >= 90 # завершено
     self.completion_date = Date.current.strftime('%d.%m.%Y') if status_was < 90 # дата исполения, если стал - "Завершено"

@@ -42,22 +42,23 @@ class Metric < ActiveRecord::Base
   end
 
   # возвращает период от первой его секунды до последней - для замены ##PERIOD## в условии between
-  def sql_period(date = Date.current)
-    case depth
+  # rubocop:disable Metrics/AbcSize
+  def sql_period(date = Date.current, dpth = depth)
+    case dpth
     when 1 then "'#{date.beginning_of_year.to_s(:db)}' AND '#{date.end_of_year.to_s(:db)}'" # текущий год
     when 2 then "'#{date.beginning_of_month.to_s(:db)}' AND '#{date.end_of_month.to_s(:db)}'" # текущий месяц
     when 3 then "'#{date.beginning_of_day.to_s(:db)}' AND '#{date.end_of_day.to_s(:db)}'" # текущий день
-    else "'#{date.beginning_of_hour.to_s(:db)}' AND '#{date.end_of_hour.to_s(:db)}'" # текущий час
+    else "'#{date.strftime('%Y-%m-%d %H:00:00.0')}' AND '#{date.strftime('%Y-%m-%d %H:59:59.999')}'" # текущий час
     end
   end
 
   # возвращает начало периода - для замены ##DATE## в условии where
-  def sql_period_beginning_of(date = Date.current)
-    case depth
+  def sql_period_beginning_of(date = Date.current, dpth = depth)
+    case dpth
     when 1 then "'#{date.beginning_of_year.strftime('%Y-%m-%d')}'" # начало года
     when 2 then "'#{date.beginning_of_month.strftime('%Y-%m-%d')}'" # начало месяц
     when 3 then "'#{date.beginning_of_day.strftime('%Y-%m-%d')}'" # начало дня
-    else "'#{date.beginning_of_hour.strftime('%Y-%m-%d %H')}'" # начало часа
+    else "'#{date.strftime('%Y-%m-%d %H')}'" # начало часа
     end
   end
 end

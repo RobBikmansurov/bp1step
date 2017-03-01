@@ -2,12 +2,16 @@
 class Ability
   include CanCan::Ability
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def initialize(user)
     user ||= User.new # guest user (not logged in)
 
     alias_action :create, :read, :update, :destroy, to: :crud
 
-    if user.roles.count == 0
+    if user.roles.count.zero?
       can :read, :all # for guest without roles
       cannot :show, User
     else # зарегистрированные пользователи хотя бы с одной ролью могут:
@@ -15,11 +19,11 @@ class Ability
       cannot :edit_document_place, Document
       cannot :edit_place, Contract
 
-      if user.has_role? :user
+      if user.role? :user
         can :view_document, Document # просматривать файл с документомu.
       end
 
-      if user.has_role? :author
+      if user.role? :author
         can :create, Document
         can [:update, :destroy, :clone], Document, owner_id: user.id # документ владельца
         can :manage, [Directive, Term]
@@ -29,12 +33,12 @@ class Ability
         can [:create_user, :update], Letter # назначать исполнителей писем
       end
 
-      if user.has_role? :keeper
+      if user.role? :keeper
         can :edit_contract_place, Contract  # может изменять место хранения договора
         can :edit_document_place, Document  # может изменять место хранения документа
       end
 
-      if user.has_role? :owner # владелец процесса
+      if user.role? :owner # владелец процесса
         can [:update, :create, :clone], Document
         can :manage, [Directive, Term]
         can :crud, [BproceBapp, BproceIresource]
@@ -45,7 +49,7 @@ class Ability
         can :crud, [Task, Requirement]
       end
 
-      if user.has_role? :analitic
+      if user.role? :analitic
         can [:update, :create, :clone], Document
         can :crud, [Bproce, Bapp, BusinessRole, BproceBapp, Term, Contract, Agent, ContractScan]
         can :manage_tag, [Bproce] # может редактировать теги процессов
@@ -54,20 +58,20 @@ class Ability
         can :crud, [Task, Requirement]
       end
 
-      if user.has_role? :secretar
+      if user.role? :secretar
         can [:create_user, :create, :update], Letter # назначать исполнителей писем, создать, изменить письмо
         can :registr, Letter # регистрирует корреспонденцию
         can :create_outgoing, Letter # создает исходящее по входящему
       end
 
-      if user.has_role? :admin
+      if user.role? :admin
         can :assign_roles, User # администратор может изменять роли доступа пользователям
         can :manage, [User, Workplace, Bapp, Iresource, Term]
         can :crud, [MetricValue]
         can :manage_tag, [Bproce, Bapp] # может редактировать теги процессов, приложений
       end
 
-      if user.has_role? :security
+      if user.role? :security
         can :assign_roles, User # администратор доступа может изменять роли доступа пользователям
       end
     end

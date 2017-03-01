@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
                     default_url: '/store/images/:style/missing.png',
                     url: '/store/images/:id.:style.:extension',
                     path: ':rails_root/public/store/images/:id.:style.:extension'
-  validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\Z/
+  validates_attachment_content_type :avatar, content_type: %r{\Aimage\/.*\Z}
   do_not_validate_attachment_file_type :avatar # paperclip >4.0
   validates :avatar, attachment_presence: false
 
@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
 
   # before_create :create_role
   after_create :create_role
-  before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
+  before_save :ldap_email, :ldap_firstname, :ldap_displayname, :ldap_email
 
   attr_accessible :username, :email, :password, :password_confirmation, :remember_me,
                   :firstname, :lastname, :displayname, :role_ids,
@@ -62,28 +62,27 @@ class User < ActiveRecord::Base
     avatar.reprocess!
   end
 
-  # before_save :get_ldap_lastname, :get_ldap_firstname, :get_ldap_displayname, :get_ldap_email
+  # before_save :ldap_email, :ldap_firstname, :ldap_displayname, :ldap_email
 
-  def has_role?(role_sym)
+  def role?(role_sym)
     roles.any? { |r| r.name.underscore.to_sym == role_sym }
   end
 
-  def get_ldap_lastname
+  def ldap_lastname
     lastname = Devise::LDAP::Adapter.get_ldap_param(username, 'sn')
-    lastname = lastname.first.force_encoding('UTF-8') if lastname
+    lastname.first.force_encoding('UTF-8') if lastname
   end
 
-  def get_ldap_firstname
+  def ldap_firstname
     tempname = Devise::LDAP::Adapter.get_ldap_param(username, 'givenname')
-    tempname = tempname.first.force_encoding('UTF-8') if tempname
+    tempname.first.force_encoding('UTF-8') if tempname
   end
 
-  def get_ldap_displayname
-    s = Devise::LDAP::Adapter.get_ldap_param(username, 'displayname')
-    s = s.first if s
+  def ldap_displayname
+    Devise::LDAP::Adapter.get_ldap_param(username, 'displayname')
   end
 
-  def get_ldap_email
+  def ldap_email
     Devise::LDAP::Adapter.get_ldap_param(username, 'mail')
   end
 
@@ -93,10 +92,6 @@ class User < ActiveRecord::Base
     else
       where(nil)
     end
-  end
-
-  def role?(role)
-    !roles.find_by(name: role).nil? # return boolean
   end
 
   private

@@ -35,12 +35,4 @@ class BusinessRole < ActiveRecord::Base
     paginate page: page,
              conditions: ['name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", search.to_i.to_s]
   end
-
-  def self.search(search)
-    if search
-      where('name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", search.to_i.to_s)
-    else
-      where(nil)
-    end
-  end
 end

@@ -39,12 +39,14 @@ class Document < ActiveRecord::Base
   validates :document_file, attachment_presence: false
   do_not_validate_attachment_file_type :document_file # paperclip >4.0
   validates_attachment_content_type :document_file,
-    content_type: ['application/pdf', 'applications/vnd.pdf', 'binary/octet-stream',
-                   'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.spreadsheet',
-                   'application/vnd.ms-excel', 'application/msword',
-                   'application/doc', 'application/rtf',
-                   'application/vnd.oasis.opendocument.graphics',
-                   'application/octet-stream', 'application/force-download']
+                                    content_type: [
+                                      'application/pdf', 'applications/vnd.pdf', 'binary/octet-stream',
+                                      'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.spreadsheet',
+                                      'application/vnd.ms-excel', 'application/msword',
+                                      'application/doc', 'application/rtf',
+                                      'application/vnd.oasis.opendocument.graphics',
+                                      'application/octet-stream', 'application/force-download'
+                                    ]
   validates :name, presence: true, length: { minimum: 10, maximum: 200 }
   # validates :bproce_id, :presence => true # документ относится к процессу
   validates :dlevel, presence: true, numericality: { less_than: 5, greater_than: 0 }
@@ -63,6 +65,7 @@ class Document < ActiveRecord::Base
     self.owner = User.find_by(displayname: name) if name.present?
   end
 
+  # rubocop:disable Metrics/AbcSize
   def pdf_path
     return unless document_file
     extention = File.extname(document_file.path)
@@ -97,14 +100,13 @@ class Document < ActiveRecord::Base
   def copy_to_pdf
     return unless document_file_file_name? # задано имя файла
     if File.exist?(document_file.path)
-      params = "-f pdf #{document_file.path}"
       begin
-        Paperclip.run('unoconv', params)
+        Paperclip.run('unoconv', "-f pdf #{document_file.path}")
       rescue
-        puts 'error!'
+        logger.error "      ERR: #{document_file_file_name}"
       end
     else
-      puts "***model/document.rb*** file not found #{document_file.path}"
+      logger.error "      ERR: file not found #{document_file.path}"
     end
   end
 end
