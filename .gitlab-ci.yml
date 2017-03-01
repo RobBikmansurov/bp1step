@@ -10,7 +10,6 @@ variables:
 
 stages:
   - install
-  - rspec
   - rubocop
   - test
 
@@ -37,18 +36,17 @@ rspec:
     - bundle install --jobs=3 --without development staging production -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
     - bundle exec rake RAILS_ENV=test db:create
     - bundle exec rake RAILS_ENV=test db:migrate
-    - bundle exec rspec spec/r*
-    - bundle exec rspec spec/models/
+    - bundle exec rspec spec/requests/ spec/routing/ spec/models/
   
 rubocop:
-  stage: test
+  stage: rubocop
   script:
-    - apt-get update -q && apt-get install nodejs -yqq
-    - cp config/database.yml{.example,}
-    - cp config/ldap.yml{.example,}
-    - bundle install --jobs=3 --without development staging production -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
+    - gem install rubocop
+    - rubocop -V
     - rubocop app/models/
     - rubocop lib/tasks/
+    # - rubocop -fo
+  allow_failure: true
   
 rails:
   stage: test
@@ -64,8 +62,8 @@ rails:
   - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
   - sed -i 's/before_save :get_ldap_lastname/# before_save :get_ldap_lastname/g' app/models/user.rb
 
-  - bundle exec rake RAILS_ENV=production db:create
-  - bundle exec rake RAILS_ENV=production db:migrate
-  - bundle exec rake RAILS_ENV=production db:seed
+  - bundle exec rake RAILS_ENV=development db:create
+  - bundle exec rake RAILS_ENV=development db:migrate
+  - bundle exec rake RAILS_ENV=development db:seed
   only:
     - master
