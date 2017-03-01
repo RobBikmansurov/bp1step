@@ -116,9 +116,12 @@ autocomlete. Для решения этой проблемы можно испр
 Далее в браузере http://localhost:3000
 
 ##Testing#
-Пока есть тесты только для моделей
 
 >rspec spec/models/
+>rspec spec/routing/
+>rspec spec/requests/
+
+Автор будет безмерно благодарен за отзывы и помощь в написании тестов для Rspec.
 
 ## Contributing
 
@@ -132,7 +135,7 @@ autocomlete. Для решения этой проблемы можно испр
 MIT
  see in LICENSE file.
 
- Copyright &copy; 2012-2015 Rob Bikmansurov. All rights reserved.
+ Copyright &copy; 2012-2017 Rob Bikmansurov. All rights reserved.
  
  Author: Rob Bikmansurov, contacts: robb@mail.ru
 
