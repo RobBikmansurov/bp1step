@@ -60,10 +60,10 @@ rails:
   # change ldap-auth to database-auth 
   - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
   - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
-  - sed -i 's/before_save :get_ldap_lastname/# before_save :get_ldap_lastname/g' app/models/user.rb
+  - sed -i 's/before_save :ldap_lastname/# before_save :ldap_lastname/g' app/models/user.rb
 
-  - bundle exec rake RAILS_ENV=development db:create
-  - bundle exec rake RAILS_ENV=development db:migrate
-  - bundle exec rake RAILS_ENV=development db:seed
+  - bundle exec rake RAILS_ENV=production db:create
+  - bundle exec rake RAILS_ENV=production db:migrate
+  - bundle exec rake RAILS_ENV=production db:seed
   only:
     - master
