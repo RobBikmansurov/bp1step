@@ -22,7 +22,7 @@ namespace :bp1step do
       l_source = 'СВК'
 
       case name
-      when /\AOD\d{2,}\z/                                 # ODNNNN.PDF
+      when /\AОД-\d{2,}\z/ || /\AOD\d{2,}\z/              # OD-NNNN.PDF
         l_number = 'ОД-' + name[2..name.size]
         l_sender = 'ЦБ РФ'
         l_subject = 'Об отзыве лицензии / Об уточнении'
