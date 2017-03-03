@@ -10,9 +10,12 @@ script:
   # change ldap-auth to database-auth 
   - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
   - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
-  - sed -i 's/before_save :get_ldap_lastname/# before_save :get_ldap_lastname/g' app/models/user.rb
+  - sed -i 's/before_save :ldap_email/# before_save :ldap_email/g' app/models/user.rb
 
-  - bundle exec rspec spec/r*
-  - bundle exec rspec spec/models/
+  - bundle exec rspec spec/requests/ spec/routing/ spec/models/
   - bundle exec rake db:seed
+  - gem install rubocop
+  - rubocop -V
   - rubocop app/models/
+  - rubocop lib/tasks/
+  - rubocop app/mailers
