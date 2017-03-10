@@ -3,9 +3,7 @@
 %h1
   Каталог Процессов 
   -if params[:search].present?
-    [ 
-    = params[:search]
-    ]
+    [ #{params[:search]} ]
   -else
     -if params[:tag].present?
       %sup
@@ -25,34 +23,7 @@
     - if can? :destroy, Bproce
       %th
 
-  -@bproces.order(:lft).each do |bproce|
-    %tr
-      %td
-        = '—' * (bproce.depth) + '[' + bproce.shortname + '] '
-        - if bproce.checked_at
-          = "\u2713".html_safe
-        = link_to bproce.name, bproce_path(bproce)
-        .id_show_
-          = "##{bproce.id}"
-        -#if can? :manage_tag, bproce
-          %sup= bproce.tag_list
-        -if !params[:user].present?
-          -if bproce.user
-            = ' ... '
-            %small= link_to bproce.user.displayname, user_path(bproce.user)
-      - if can? :modify, bproce
-        %td
-          = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_bproce_path(bproce), class: 'button-img'
-      - if can? :destroy, bproce
-        %td
-          -if !Bproce.where(parent_id: bproce.id).first
-            = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bproce, data: { confirm: 'Процесс "' + bproce.name + "\"\nДействительно хотите удалить?"}, :method => 'delete', class: 'button-img'
-        -#%td
-          = bproce.lft
-          = ' - '         
-          = bproce.rgt
-          = ' : '
-          = bproce.depth
+  = render partial: 'bproces/bproce', collection: @bproces, cached: true
 
 %p
 - if can? :create, @bproces.first

@@ -36,6 +36,9 @@ gem 'tzinfo-data'
 gem 'pg_search'
 gem 'pdf-reader'
 
+gem 'actionpack-page_caching' # кеширование
+gem 'actionpack-action_caching'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
@@ -43,6 +46,7 @@ group :development do
   gem 'rvm-capistrano', require: false
   gem 'capistrano-deploy', require: false
   gem 'rubocop', require: false
+  gem 'haml_lint', require: false
   # gem "rails-erd"
   gem 'guard-rspec', require: false
 end
