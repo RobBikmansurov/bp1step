@@ -6,6 +6,9 @@ class LettersController < ApplicationController
   helper_method :sort_column, :sort_direction
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/LineLength
+  # rubocop:disable Metrics/MethodLength
   def index
     @title_letter = 'Письма '
     if params[:user].present?
@@ -19,33 +22,23 @@ class LettersController < ApplicationController
         @letters = @letters.where('letters.status < 90', params[:status])
         @title_letter += ' не завершенные'
       end
+    elsif params[:date].present? # письма за дату
+      @letters = Letter.where(date: params[:date])
+      @title_letter += 'за ' + params[:date]
+    elsif params[:regdate].present? # письма за дату регистрации
+      @letters = Letter.where(regdate: params[:regdate])
+      @title_letter += 'зарегистрированные ' + params[:regdate]
+    elsif params[:addresse].present? # письма от адресанта + письма адресату
+      @letters = Letter.where('sender ILIKE ?', params[:addresse].strip)
+      @title_letter += 'адреса[н]та ' + params[:addresse]
+    elsif params[:status].present?
+      @letters = Letter.status(params[:status])
+      @title_letter += "в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
+    elsif params[:search].present?
+      @letters = Letter.search(params[:search]).includes(:user_letter, :letter_appendix)
     else
-      if params[:date].present? # письма за дату
-        @letters = Letter.where(date: params[:date])
-        @title_letter += 'за ' + params[:date]
-      else
-        if params[:regdate].present? # письма за дату регистрации
-          @letters = Letter.where(regdate: params[:regdate])
-          @title_letter += 'зарегистрированные ' + params[:regdate]
-        else
-          if params[:addresse].present? # письма от адресанта + письма адресату
-            @letters = Letter.where('sender ILIKE ?', params[:addresse].strip)
-            @title_letter += 'адреса[н]та ' + params[:addresse]
-          else
-            if params[:status].present?
-              @letters = Letter.where('status = ?', params[:status])
-              @title_letter += "в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
-            else
-              if params[:search].present?
-                @letters = Letter.search(params[:search]).includes(:user_letter, :letter_appendix)
-              else
-                @letters = Letter.search(params[:search]).where('status < 90').includes(:user_letter, :letter_appendix)
-                @title_letter += 'не завершенные'
-              end
-            end
-          end
-        end
-      end
+      @letters = Letter.search(params[:search]).where('status < 90').includes(:user_letter, :letter_appendix)
+      @title_letter += 'не завершенные'
     end
     unless params[:search].present?
       if params[:out].present?
@@ -79,7 +72,8 @@ class LettersController < ApplicationController
 
   def edit
     @user_letter = UserLetter.new(letter_id: @letter.id) # заготовка для ответственного
-    @letter.author_id = current_user.id if @letter.author_id.blank? && user_signed_in? # если автора нет - назначим первого, кто внес изменения
+    # если автора нет - назначим первого, кто внес изменения
+    @letter.author_id = current_user.id if @letter.author_id.blank? && user_signed_in?
   end
 
   def create
@@ -88,12 +82,11 @@ class LettersController < ApplicationController
       redirect_to @letter, notice: 'Письмо создано.'
     else
       render action: 'new'
-     end
+    end
   end
 
   def update
     status_was = @letter.status # старые значения
-    result_was = @letter.result
     if @letter.update(letter_params)
       @letter.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{current_user.displayname} - " + params[:letter][:action] if params[:letter][:action].present?
       if @letter.status >= 90 && status_was < 90 # стало завершено
@@ -103,12 +96,7 @@ class LettersController < ApplicationController
       end
       if params[:letter][:action].present? || (status_was != @letter.status)
         @letter.update_column(:result, @letter.result.to_s)
-        text = params[:letter][:action].to_s
-        # begin
-        #   LetterMailer.update_letter(@letter, current_user, text).deliver # оповестим Исполнителей об изменении Письма
-        # rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-        #   flash[:alert] = "Error sending mail to responsible for the letter"
-        # end
+        params[:letter][:action]
       end
       redirect_to @letter, notice: 'Письмо сохранено.'
     else
@@ -267,11 +255,11 @@ class LettersController < ApplicationController
     if params[:addresse].present? # письма от адресанта + письма алресату
       @senders = @senders.where('sender ILIKE ?', params[:addresse].strip)
       @title_senders += 'адреса[н]та ' + params[:addresse]
-    else
-      @senders = @senders.where('sender ILIKE ?', "%#{params[:search]}%") if params[:search].present?
+    elsif params[:search].present?
+      @senders = @senders.where('sender ILIKE ?', "%#{params[:search]}%")
     end
-    _direction = params[:direction] || 'asc'
-    @senders = if _direction == 'asc'
+    direction = params[:direction] || 'asc'
+    @senders = if direction == 'asc'
                  @senders.group(:sender, :status).order('sender DESC, status ASC').count
                else
                  @senders.group(:sender, :status).order('sender ASC, status ASC').count
@@ -283,7 +271,9 @@ class LettersController < ApplicationController
 
   def set_letter
     if params[:search].present? # это поиск
-      @letters = Letter.search('?', params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      @letters = Letter.search('?', params[:search])
+                       .order(sort_column + ' ' + sort_direction)
+                       .paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
       @letter = Letter.find(params[:id])
@@ -291,13 +281,13 @@ class LettersController < ApplicationController
   end
 
   def letter_params
-    params.require(:letter).permit(:regnumber, :regdate, :number, :date, :subject, :source, :sender, \
-                                   :duedate, :body, :status, :status_name, :result, :letter_id, :author_id, :author_name, \
-                                   :letter_appendix, :letter_id, :name, :appendix, :completion_date, :in_out)
+    params.require(:letter)
+          .permit(:regnumber, :regdate, :number, :date, :subject, :source, :sender,
+                  :duedate, :body, :status, :status_name, :result, :letter_id, :author_id, :author_name,
+                  :letter_appendix, :letter_id, :name, :appendix, :completion_date, :in_out)
   end
 
   def sort_column
-    # params[:sort] || "date"
     params[:sort] || 'id' # вверху - самые новые письма
   end
 
@@ -324,7 +314,7 @@ class LettersController < ApplicationController
           "#{letter.in_out == 1 ? 'Вх.№' : 'Исх.№'} #{letter.regnumber}"
         end
         t.add_column(:regdate) do |letter|
-          letter.regdate.strftime('%d.%m.%y').to_s if letter.regdate
+          letter.regdate&.strftime('%d.%m.%y')
         end
         t.add_column(:number) do |letter|
           if letter.regnumber == letter.number
@@ -343,7 +333,7 @@ class LettersController < ApplicationController
         t.add_column(:source)
         t.add_column(:duedate) do |letter|
           days = letter.duedate - Date.current
-          letter.duedate.strftime('%d.%m.%y').to_s + (days < 0 ? " (+ #{(-days).to_i} дн.)" : '')
+          letter.duedate.strftime('%d.%m.%y') + (days.negative? ? " (+ #{-days} дн.)" : '')
         end
         t.add_column(:status) do |letter|
           LETTER_STATUS.key(letter.status)
@@ -371,7 +361,7 @@ class LettersController < ApplicationController
     report = ODFReport::Report.new('reports/letters_reestr.odt') do |r|
       nn = 0
       # r.add_field "REPORT_DATE", Date.current.strftime('%d.%m.%Y')
-      if @in_out == 1 # журнал воходящей корресподенции
+      if @in_out == 1 # журнал входящей корресподенции
         r.add_field 'HEADER1', 'Вх.№ и дата регистрации'
         r.add_field 'HEADER2', 'Исх.№ и дата'
         r.add_field 'HEADER3', 'Отправитель'
