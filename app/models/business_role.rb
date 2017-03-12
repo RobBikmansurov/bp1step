@@ -20,9 +20,6 @@ class BusinessRole < ActiveRecord::Base
 
   default_scope { order(:name) }
 
-  # бизнес-роль может исполняется на нескольких рабочих местах
-  # has_and_belongs_to_many :workplaces
-
   def bproce_name
     bproce.try(:name)
   end

@@ -9,10 +9,10 @@ class BusinessRolesController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
-    if params[:all].present?
-      @business_roles = BusinessRole.order(sort_column + ' ' + sort_direction)
-    else
-      @business_roles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).page(params[:page])
+    @business_roles = BusinessRole.order(sort_column + ' ' + sort_direction)
+    unless params[:all].present?
+      @business_roles = @business_roles.search(params[:search]) if params[:search].present?
+      @business_roles = @business_roles.order(sort_column + ' ' + sort_direction).page(params[:page])
       #@business_roles = BusinessRole.page(params[:page]).search(params[:search])
       #@business_roles = BusinessRole.paginate(:per_page => 10, :page => params[:page])
     end
@@ -81,8 +81,8 @@ class BusinessRolesController < ApplicationController
   def update
     @user_business_role = UserBusinessRole.new(:business_role_id => @business_role.id)
     flash[:notice] = "Successfully updated role." if @business_role.update_attributes(params[:business_role])
-    begin
-      BusinessRoleMailer.update_business_role(@business_role, current_user).deliver_now    # оповестим исполнителей роли об изменениях
+    begin # оповестим исполнителей роли об изменениях
+      BusinessRoleMailer.update_business_role(@business_role, current_user).deliver_now
     rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
       flash[:alert] = "Error sending mail to business role workers"
     end
