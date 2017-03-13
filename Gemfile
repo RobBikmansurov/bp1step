@@ -58,7 +58,6 @@ group :production do
 end
 
 group :test do
-  gem 'rspec-rails'
   gem 'shoulda-matchers'
   gem 'sqlite3'
   gem 'capybara'
@@ -74,6 +73,7 @@ end
 gem 'rails_12factor', group: :production
 
 group :development, :test do
+  gem 'rspec-rails'
   gem 'pry-byebug'
   gem 'pry-rails'
 end
