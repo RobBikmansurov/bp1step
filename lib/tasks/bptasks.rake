@@ -54,6 +54,8 @@ namespace :bp1step do
         s = ''
       end
     end
+    puts "#{i - 4}. #{s}" unless j.positive?
+
   end
 
   desc 'LDAP authentificate testing'
@@ -115,7 +117,7 @@ namespace :bp1step do
     disabled_users = 0 # счетчики
     ldap.search(base: treebase, attributes: attrs, filter: filter) do |entry|
       i += 1
-      # next if i < 99
+      # next if i < 95
 
       username = entry['sAMAccountName'].first.downcase
       email = entry['mail'].first # это обязательные параметры + к ним левые уникальные password и reset_password_token
@@ -128,8 +130,10 @@ namespace :bp1step do
       office = entry['physicaldeliveryofficename'].first
       sn = entry['sn'].first
       # givenname = entry['givenname'].first
-      firstname = entry['givenname'].first.force_encoding('UTF-8')
-      middlename = entry['middlename'].first.force_encoding('UTF-8')
+      firstname = entry['givenname'].first
+      firstname = firstname.force_encoding('UTF-8') if firstname
+      middlename = entry['middlename'].first
+      middlename = middlename.force_encoding('UTF-8') if middlename
       lastname = entry['sn'].first.force_encoding('UTF-8')
       displayname = entry['name'].first.force_encoding('UTF-8')
       physicaldeliveryofficename = entry['physicaldeliveryofficename'].first
