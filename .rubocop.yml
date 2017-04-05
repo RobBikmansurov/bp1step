@@ -18,6 +18,9 @@ Style/AsciiComments:
   Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - 'app/models/*'
 
 Rails/HttpPositionalArguments: # удалить этот запрет для Rails 5
   Exclude:

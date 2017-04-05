@@ -16,6 +16,6 @@ script:
   - bundle exec rake db:seed
   - gem install rubocop
   - rubocop -V
-  # - rubocop app/models/
+  - rubocop app/models/
   # - rubocop lib/tasks/
   - rubocop app/mailers
