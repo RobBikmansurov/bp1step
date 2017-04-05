@@ -1,6 +1,6 @@
-# coding: utf-8
 # frozen_string_literal: true
 class UserLetterMailer < ActionMailer::Base
+
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   # рассылка о назначении исполнителя ответственным за письмо

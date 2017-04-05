@@ -1,6 +1,6 @@
-# coding: utf-8
 # frozen_string_literal: true
 class BproceMailer < ActionMailer::Base
+
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   def process_without_roles(bproce, user)	# рассылка об отстутствии ролей в процессе

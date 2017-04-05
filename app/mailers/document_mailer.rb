@@ -1,6 +1,6 @@
-# coding: utf-8
 # frozen_string_literal: true
 class DocumentMailer < ActionMailer::Base
+
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   def file_not_found_email(document, user)	# рассылка об отсутствии файла документа

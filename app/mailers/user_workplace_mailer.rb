@@ -1,6 +1,6 @@
-# coding: utf-8
 # frozen_string_literal: true
 class UserWorkplaceMailer < ActionMailer::Base
+
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   def user_workplace_create(user_workplace, current_user)	# рассылка о назначении сотрунику РМ

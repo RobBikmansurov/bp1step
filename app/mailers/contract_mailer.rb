@@ -1,6 +1,6 @@
-# coding: utf-8
 # frozen_string_literal: true
 class ContractMailer < ActionMailer::Base
+
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   # рассылка ответственным об изменении договора или скана
@@ -13,8 +13,8 @@ class ContractMailer < ActionMailer::Base
     owner_email = @contract.owner&.email # ответственный за договор
     payer_email = @contract.payer&.email # ответственный за оплату договора
     address = []
-    address << owner_email unless owner_email.blank?
-    address << payer_email unless payer_email.blank?
+    address << owner_email unless owner_email.present?
+    address << payer_email unless payer_email.present?
     address << 'bard@bankperm.ru' if @contract.payer # добавим в получатели Бардина для контроля
     @current_user = current_user
     if @scan

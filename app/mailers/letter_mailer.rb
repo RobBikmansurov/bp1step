@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class LetterMailer < ActionMailer::Base
+
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   def check_overdue_letters(letter, emails) # рассылка исполнителям о просроченных письмах
