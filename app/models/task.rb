@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Task < ActiveRecord::Base
   validates :name, presence: true,
                    length: { minimum: 5, maximum: 255 }
@@ -11,7 +12,7 @@ class Task < ActiveRecord::Base
   has_many :user, through: :user_task
   has_many :user_task, dependent: :destroy # ответственные
 
-  scope :status, -> (status) { where status: status }
+  scope :status, ->(status) { where status: status }
   scope :unfinished, -> { where('tasks.status < 90') } # незавершенные
   scope :overdue, -> { unfinished.where('duedate <= ?', Date.current) } # не исполненные в срок
   scope :soon_deadline, -> { unfinished.where('duedate > ?', Date.current - 5.days) } # с наступающим сроком исполнения
@@ -40,7 +41,7 @@ class Task < ActiveRecord::Base
   end
 
   def action=(action)
-    self.result += action unless action.blank?
+    self.result += action if action.present?
   end
 
   def self.search(search)

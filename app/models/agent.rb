@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Agent
 class Agent < ActiveRecord::Base
   attr_accessible :shortname, :name, :town, :address, :contacts, :agent_name, :note

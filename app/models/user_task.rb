@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class UserTask < ActiveRecord::Base
   validates :task, presence: true
   validates :user, presence: true
@@ -15,7 +16,7 @@ class UserTask < ActiveRecord::Base
   end
 
   def user_name=(name)
-    return unless name.present?
+    return if name.blank?
     user = User.find_by(displayname: name)
     self.user_id = user.id if user
   end

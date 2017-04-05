@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class MetricValue < ActiveRecord::Base
   validates :value, presence: true
   validates :dtime, presence: true

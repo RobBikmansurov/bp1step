@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
+
 # утилиты для поддержки работы BP1Step
 # rubocop:disable Metrics/LineLength
 # rubocop:disable Lint/UselessAssignment
@@ -38,7 +39,7 @@ namespace :bp1step do
 
     filter = Net::LDAP::Filter.eq('memberOf', 'CN=rl_bp1step_users,OU=roles,DC=ad,DC=bankperm,DC=ru') # выбирать членов группы rl_bp1step_users
     treebase = LDAP_CONFIG['development']['base']
-    attrs = %w(sn givenname middleName cn telephonenumber sAMAccountName title physicaldeliveryofficename department name mail description userAccountControl)
+    attrs = %w[sn givenname middleName cn telephonenumber sAMAccountName title physicaldeliveryofficename department name mail description userAccountControl]
 
     i = 0
     j = 0 # счетчики
@@ -54,8 +55,7 @@ namespace :bp1step do
         s = ''
       end
     end
-    puts "#{i}. #{s}" if j.positive?
-
+    puts "#{i - 1}. #{s}" if j.positive?
   end
 
   desc 'LDAP authentificate testing'
@@ -109,7 +109,7 @@ namespace :bp1step do
 
     filter = Net::LDAP::Filter.eq('memberOf', 'CN=rl_bp1step_users,OU=roles,DC=ad,DC=bankperm,DC=ru') # выбирать членов группы rl_bp1step_users
     treebase = LDAP_CONFIG['development']['base']
-    attrs = %w(sn givenname middleName cn telephonenumber sAMAccountName title physicaldeliveryofficename department name mail description userAccountControl)
+    attrs = %w[sn givenname middleName cn telephonenumber sAMAccountName title physicaldeliveryofficename department name mail description userAccountControl]
 
     i = 0
     new_users = 0
@@ -457,7 +457,7 @@ namespace :bp1step do
                          }
     filter = Net::LDAP::Filter.eq('memberOf', 'CN=rl_bp1step_users,OU=roles,DC=ad,DC=bankperm,DC=ru') # выбирать членов группы rl_bp1step_users
     treebase = LDAP_CONFIG['development']['base']
-    attrs = %w(sn givenname middleName cn telephonenumber sAMAccountName title physicaldeliveryofficename department name mail description userAccountControl)
+    attrs = %w[sn givenname middleName cn telephonenumber sAMAccountName title physicaldeliveryofficename department name mail description userAccountControl]
 
     i = 0 # счетчики
     ldap.search(base: treebase, attributes: attrs, filter: filter) do |entry|

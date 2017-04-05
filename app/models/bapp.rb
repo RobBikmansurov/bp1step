@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Bapp < ActiveRecord::Base
   acts_as_taggable
 

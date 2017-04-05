@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
+
 namespace :bp1step do
   desc 'Set values metrics from local PG SQL'
   task set_values_PG: :environment do # заполнить значения метрик, получаемых из локального pgSQL
@@ -24,7 +25,7 @@ namespace :bp1step do
       end
       next unless results
       result = results.first
-      next unless result['count'].present?
+      next if result['count'].blank?
       new_value = result['count'].to_i
       value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{sql_period}").first
       value = MetricValue.new(metric_id: metric.id) unless value # не нашли?

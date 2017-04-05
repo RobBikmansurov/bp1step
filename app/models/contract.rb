@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
+
 class Contract < ActiveRecord::Base
   acts_as_taggable
   acts_as_nested_set

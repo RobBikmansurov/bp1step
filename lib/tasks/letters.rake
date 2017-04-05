@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
+
 namespace :bp1step do
   desc 'Create Letters from files in  SVK'
   task create_letters_from_files: :environment do # создание новых писем из файов в каталоге СВК
@@ -105,7 +106,7 @@ namespace :bp1step do
       users = ''
       letter.user_letter.each do |user_letter| # исполнители
         next unless user_letter.user
-        emails += ', ' unless emails.blank?
+        emails += ', ' if emails.present?
         emails += user_letter.user.email.to_s
         users += user_letter.user.displayname.to_s
       end
@@ -113,11 +114,11 @@ namespace :bp1step do
       if days.negative?
         count += 1
         logger.info "      ##{letter.id}\tсрок! #{letter.duedate.strftime('%d.%m.%y')}: #{(-days).to_i}\t#{emails}"
-        LetterMailer.check_overdue_letters(letter, emails).deliver_current unless emails.blank?
+        LetterMailer.check_overdue_letters(letter, emails).deliver_current if emails.present?
       elsif [0, 1, 2, 5].include?(days)
         count_soon_deadline += 1
         logger.info "      ##{letter.id}\tскоро #{letter.duedate.strftime('%d.%m.%y')}: #{days.to_i}\t#{emails}"
-        LetterMailer.soon_deadline_letters(letter, emails, days, users).deliver_current unless emails.blank?
+        LetterMailer.soon_deadline_letters(letter, emails, days, users).deliver_current if emails.present?
       end
     end
     logger.info "      #{count} letters is duedate and #{count_soon_deadline} soon deadlineletters"

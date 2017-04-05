@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class Requirement < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
-  scope :status, -> (status) { where status: status }
+  scope :status, ->(status) { where status: status }
   scope :unfinished, -> { where('requirements.status < 90') } # незавершенные
 
   validates :label, presence: true,

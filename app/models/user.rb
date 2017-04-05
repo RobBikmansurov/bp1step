@@ -1,5 +1,6 @@
 # coding: utf-8
 # frozen_string_literal: true
+
 class User < ActiveRecord::Base
   scope :active, -> { where(active: true) }
 
@@ -50,7 +51,7 @@ class User < ActiveRecord::Base
   # after_update :reprocess_pic, :if => :cropping?
 
   def cropping?
-    !crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
+    crop_x.present? && crop_y.present? && crop_w.present? && crop_h.present?
   end
 
   def avatar_geometry(style = :original)

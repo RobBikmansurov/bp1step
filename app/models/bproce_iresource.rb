@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class BproceIresource < ActiveRecord::Base
   validates :bproce_id, presence: true
   validates :iresource_id, presence: true

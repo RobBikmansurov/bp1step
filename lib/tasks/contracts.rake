@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 namespace :bp1step do
   desc 'Сontrol executed (outdated) contracts'

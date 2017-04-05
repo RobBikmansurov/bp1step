@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
+
 namespace :bp1step do
   desc 'Сontrol of expiring duedate or soon deadline tasks'
   task check_tasks_duedate: :environment do # проверить задачи, не исполненные в срок
@@ -16,7 +17,7 @@ namespace :bp1step do
       users = ''
       task.user_task.each do |user_task| # исполнители
         next unless user_task.user
-        emails += ', ' unless emails.blank?
+        emails += ', ' if emails.present?
         emails += user_task.user.email.to_s
         users += user_task.user.displayname.to_s
       end
@@ -24,11 +25,11 @@ namespace :bp1step do
       if days.negative?
         count += 1
         logger.info "      ##{task.id}\tсрок! #{task.duedate.strftime('%d.%m.%y')}: #{(-days).to_i}\t#{emails}"
-        TaskMailer.check_overdue_tasks(task, emails).deliver_now unless emails.blank?
+        TaskMailer.check_overdue_tasks(task, emails).deliver_now if emails.present?
       elsif [0, 1, 2, 5].include?(days)
         count_soon_deadline += 1
         logger.info "      ##{task.id}\tскоро #{task.duedate.strftime('%d.%m.%y')}: #{days.to_i}\t#{emails}"
-        TaskMailer.soon_deadline_tasks(task, emails, days, users).deliver_now unless emails.blank?
+        TaskMailer.soon_deadline_tasks(task, emails, days, users).deliver_now if emails.present?
       end
     end
     logger.info "      #{count} tasks is duedate and #{count_soon_deadline} soon deadlinetasks"

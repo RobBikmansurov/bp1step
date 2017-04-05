@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Letter < ActiveRecord::Base
   # acts_as_taggable
   # acts_as_nested_set
@@ -16,7 +17,7 @@ class Letter < ActiveRecord::Base
                      length: { minimum: 3 }
   validates :date, presence: true
 
-  scope :status, -> (status) { where status: status }
+  scope :status, ->(status) { where status: status }
   scope :overdue, -> { where('duedate <= ? and status < 90', Date.current) } # не исполненные в срок письма
   scope :soon_deadline, -> { where('duedate > ? and status < 90', Date.current - 5.days) } # с наступающим сроком исполнения
   scope :not_assigned, -> { where('status < 5 and author_id IS NOT NULL') } # не назначенные, нет исполнителя
@@ -54,7 +55,7 @@ class Letter < ActiveRecord::Base
   end
 
   def action=(action)
-    self.result += action unless action.blank?
+    self.result += action if action.present?
   end
 
   def name

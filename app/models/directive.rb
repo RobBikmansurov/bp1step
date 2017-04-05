@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Directive < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
@@ -32,7 +33,7 @@ class Directive < ActiveRecord::Base
   end
 
   def directive_name=(name)
-    return unless name.present?
+    return if name.blank?
     i = name.rindex('#')
     self.directive_id = name.slice(i + 1, 5).to_i if i.positive?
   end

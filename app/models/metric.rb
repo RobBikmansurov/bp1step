@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Metric < ActiveRecord::Base
   validates :name, presence: true,
                    length: { minimum: 5, maximum: 50 }

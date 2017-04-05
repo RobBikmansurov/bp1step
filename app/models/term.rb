@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Term < ActiveRecord::Base
   include PublicActivity::Common
   # include PublicActivity::Model

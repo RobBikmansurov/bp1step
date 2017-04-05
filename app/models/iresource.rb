@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Iresource < ActiveRecord::Base
   validates :label, presence: true,
                     uniqueness: true,

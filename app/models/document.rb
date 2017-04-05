@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
+
 class Document < ActiveRecord::Base
   belongs_to :user
   belongs_to :owner, class_name: 'User'

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Ability
   include CanCan::Ability
 
@@ -25,12 +26,12 @@ class Ability
 
       if user.role? :author
         can :create, Document
-        can [:update, :destroy, :clone], Document, owner_id: user.id # документ владельца
+        can %i[update destroy clone], Document, owner_id: user.id # документ владельца
         can :manage, [Directive, Term]
         can :view_document, Document # просматривать файл с документом
         can :edit_document, [Document] # может брать исходник документа
         can [:read], [Agent, Contract]
-        can [:create_user, :update], Letter # назначать исполнителей писем
+        can %i[create_user update], Letter # назначать исполнителей писем
       end
 
       if user.role? :keeper
@@ -39,7 +40,7 @@ class Ability
       end
 
       if user.role? :owner # владелец процесса
-        can [:update, :create, :clone], Document
+        can %i[update create clone], Document
         can :manage, [Directive, Term]
         can :crud, [BproceBapp, BproceIresource]
         can :update, Bproce, user_id: user.id # процесс владельца
@@ -50,7 +51,7 @@ class Ability
       end
 
       if user.role? :analitic
-        can [:update, :create, :clone], Document
+        can %i[update create clone], Document
         can :crud, [Bproce, Bapp, BusinessRole, BproceBapp, Term, Contract, Agent, ContractScan]
         can :manage_tag, [Bproce] # может редактировать теги процессов
         can :edit_document, [Document] # может брать исходник документа
@@ -59,7 +60,7 @@ class Ability
       end
 
       if user.role? :secretar
-        can [:create_user, :create, :update], Letter # назначать исполнителей писем, создать, изменить письмо
+        can %i[create_user create update], Letter # назначать исполнителей писем, создать, изменить письмо
         can :registr, Letter # регистрирует корреспонденцию
         can :create_outgoing, Letter # создает исходящее по входящему
       end

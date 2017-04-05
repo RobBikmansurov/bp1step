@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class BproceBapp < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }

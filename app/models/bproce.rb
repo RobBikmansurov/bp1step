@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Bproce < ActiveRecord::Base
   include TheSortableTree::Scopes
   include PublicActivity::Model
@@ -6,7 +7,7 @@ class Bproce < ActiveRecord::Base
 
   include PgSearch
   pg_search_scope :search__by_all_column,
-                  against: [:description, :goal, :id, :name, :fullname, :shortname],
+                  against: %i[description goal id name fullname shortname],
                   using: { tsearch: { prefix: true } }
 
   acts_as_taggable
