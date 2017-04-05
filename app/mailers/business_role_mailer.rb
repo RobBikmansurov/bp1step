@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-class BusinessRoleMailer < ActionMailer::Base
 
+class BusinessRoleMailer < ActionMailer::Base
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   # rubocop: disable Metrics/AbcSize

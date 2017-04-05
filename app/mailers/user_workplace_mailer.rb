@@ -19,4 +19,3 @@ class UserWorkplaceMailer < ActionMailer::Base
     mail(to: @user.email, subject: "BP1Step: Рабочее место #{@workplace.designation}")
   end
 end
-

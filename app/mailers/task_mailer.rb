@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-class TaskMailer < ActionMailer::Base
 
+class TaskMailer < ActionMailer::Base
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   def check_overdue_tasks(task, emails) # рассылка исполнителям о просроченных письмах

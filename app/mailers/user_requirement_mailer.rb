@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-class UserRequirementMailer < ActionMailer::Base
 
+class UserRequirementMailer < ActionMailer::Base
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   def user_requirement_create(user_requirement, current_user)	# рассылка о назначении исполнителя

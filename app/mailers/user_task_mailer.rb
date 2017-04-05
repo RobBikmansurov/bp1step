@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-class UserTaskMailer < ActionMailer::Base
 
+class UserTaskMailer < ActionMailer::Base
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   def user_task_create(user_task, current_user)	# рассылка о назначении исполнителя

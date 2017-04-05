@@ -9,4 +9,3 @@ class BproceMailer < ActionMailer::Base
     mail(to: user.email, subject: "BP1Step: не выделены роли в процессе ##{@bproce.id}")
   end
 end
-
