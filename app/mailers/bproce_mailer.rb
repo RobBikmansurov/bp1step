@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-class BproceMailer < ActionMailer::Base
 
+class BproceMailer < ActionMailer::Base
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   def process_without_roles(bproce, user)	# рассылка об отстутствии ролей в процессе
@@ -9,3 +9,4 @@ class BproceMailer < ActionMailer::Base
     mail(to: user.email, subject: "BP1Step: не выделены роли в процессе ##{@bproce.id}")
   end
 end
+

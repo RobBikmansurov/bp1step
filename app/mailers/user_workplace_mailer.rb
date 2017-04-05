@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-class UserWorkplaceMailer < ActionMailer::Base
 
+class UserWorkplaceMailer < ActionMailer::Base
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   def user_workplace_create(user_workplace, current_user)	# рассылка о назначении сотрунику РМ
@@ -19,3 +19,4 @@ class UserWorkplaceMailer < ActionMailer::Base
     mail(to: @user.email, subject: "BP1Step: Рабочее место #{@workplace.designation}")
   end
 end
+
