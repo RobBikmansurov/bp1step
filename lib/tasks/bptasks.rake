@@ -54,7 +54,7 @@ namespace :bp1step do
         s = ''
       end
     end
-    puts "#{i - 4}. #{s}" unless j.positive?
+    puts "#{i}. #{s}" if j.positive?
 
   end
 

@@ -6,15 +6,15 @@ load "config/recipes/nginx"
 load "config/recipes/unicorn"
 load "config/recipes/monit"
 
-srv = 'vrdev'
+srv = 'vrdev1'
 server "#{srv}.ad.bankperm.ru", :app, :web, :db, :primary => true
 set :serverFQDN, "#{srv}.ad.bankperm.ru"
 #server 'vrdev.ad.bankperm.ru', :app, :web, :db, :primary => true
 #set :serverFQDN, 'vrdev.ad.bankperm.ru'
 
 # http and https proxy
-default_environment['http_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
-default_environment['https_proxy'] = 'http://vstorage.ad.bankperm.ru:3128'
+default_environment['http_proxy'] = 'http://proxy.ad.bankperm.ru:3129'
+default_environment['https_proxy'] = 'http://proxy.ad.bankperm.ru:3129'
 
 set :application, "bp1step"
 set :user, 'rubydev'
@@ -26,7 +26,7 @@ set :unicorn_conf, "#{deploy_to}/config/unicorn.rb"
 set :unicorn_pid, "#{deploy_to}/tmp/pids/unicorn.pid"
 
 #set :rvm_ruby_string, "ruby-1.9.3-p448@#{application}"
-set :rvm_ruby_string, "ruby-2.2.2@#{application}"
+set :rvm_ruby_string, "ruby-2.3.1@#{application}"
 set :rvm_type, :user
 
 set :scm, :git
