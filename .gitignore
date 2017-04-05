@@ -21,6 +21,7 @@ Gemfile~
 *.sublime*
 files/*
 public/*
+coverage/*
 bp1step.store/*
 store/*
 .sass-cache/*
