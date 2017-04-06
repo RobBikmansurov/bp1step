@@ -37,7 +37,8 @@ class RolesController < ApplicationController
     respond_with(@role)
   end
 
-private
+  private
+
   def sort_column
     params[:sort] || 'name'
   end

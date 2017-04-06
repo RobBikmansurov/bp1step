@@ -111,7 +111,8 @@ class IresourcesController < ApplicationController
   end
 
 
-private
+  private
+
   def sort_column
     params[:sort] || 'label'
   end

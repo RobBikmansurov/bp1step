@@ -32,6 +32,7 @@ class MetricValuesController < ApplicationController
   end
 
   private
+
   def set_metric_value
     @metric_value = MetricValue.find(params[:id])
     @metric = Metric.find(@metric_value.metric_id)

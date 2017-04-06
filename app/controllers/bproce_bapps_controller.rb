@@ -49,7 +49,8 @@ class BproceBappsController < ApplicationController
     respond_with(@bproce_bapp)
   end
 
-private
+  private
+
   def sort_column
     params[:sort] || 'name'
   end

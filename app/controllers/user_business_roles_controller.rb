@@ -42,7 +42,8 @@ class UserBusinessRolesController < ApplicationController
     respond_with(@business_role)
   end
 
-private
+  private
+
   def get_user_business_role
     @user_business_role = UserBusinessRole.find(params[:id])
     @business_role = BusinessRole.find(@user_business_role.business_role_id)

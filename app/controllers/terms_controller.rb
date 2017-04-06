@@ -86,7 +86,8 @@ class TermsController < ApplicationController
     end
   end
 
-private
+  private
+
   def sort_column
     params[:sort] || 'name'
   end

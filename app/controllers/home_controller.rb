@@ -1,7 +1,7 @@
 class HomeController < ApplicationController
   def index
-	  redirect_to current_user if user_signed_in?
-	end
+    redirect_to current_user if user_signed_in?
+  end
 
   def create_letter # официальное письмо
     phone = '+7(342)291-03-00'

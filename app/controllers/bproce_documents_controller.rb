@@ -43,7 +43,7 @@ class BproceDocumentsController < ApplicationController
   end
 
 
-private
+  private
 
   def get_bproce_document
     @bproce = Bproce.find(params[:bproce_id]) if params[:bproce_id].present?

@@ -47,7 +47,7 @@ class BproceContractsController < ApplicationController
   end
 
 
-private
+  private
 
   def get_bproce_contract
     @bproce = Bproce.find(params[:bproce_id]) if params[:bproce_id].present?

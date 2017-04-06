@@ -20,13 +20,13 @@ class BproceIresourcesController < ApplicationController
   def destroy
     @iresource = @bproce_iresource.iresource
     # @iresource = @bproce_iresource.iresource
-  	 flash[:notice] = 'Successfully destroyed bproce_iresource.' if @bproce_iresource.destroy
+     flash[:notice] = 'Successfully destroyed bproce_iresource.' if @bproce_iresource.destroy
     # respond_with(@bproce_iresource.bproce)
     respond_with(@bproce_iresource.iresource) # удаляем процесс из ресурса - поэтому возврат в ресурс
   end
 
   def show
-  	@iresource = @bproce_iresource.iresource
+    @iresource = @bproce_iresource.iresource
   end
 
   def edit
@@ -38,7 +38,7 @@ class BproceIresourcesController < ApplicationController
     respond_with(@bproce_iresource)
   end
 
-private
+  private
 
   def get_bproce_iresource
     @bproce = Bproce.find(params[:bproce_id]) if params[:bproce_id].present?

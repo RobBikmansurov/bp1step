@@ -50,6 +50,7 @@ class AgentsController < ApplicationController
   end
 
   private
+
   def set_agent
     if params[:search].present? # это поиск
       @agents = Agent.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])

@@ -65,7 +65,8 @@ class DirectivesController < ApplicationController
     render :document_create
   end
 
-private
+  private
+
   def sort_column
     params[:sort] || 'number'
   end
