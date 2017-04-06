@@ -102,7 +102,7 @@ namespace :bp1step do
     letters.each do |letter| # письма в статусе < Завершено с наступающим сроком исполнения или просроченные
       days = letter.duedate - Date.current
       emails = ''
-      emails = letter.author.email.to_s if daysnegative? && letter.author # автор
+      emails = letter.author.email.to_s if days.negative? && letter.author # автор
       users = ''
       letter.user_letter.each do |user_letter| # исполнители
         next unless user_letter.user
@@ -114,11 +114,11 @@ namespace :bp1step do
       if days.negative?
         count += 1
         logger.info "      ##{letter.id}\tсрок! #{letter.duedate.strftime('%d.%m.%y')}: #{(-days).to_i}\t#{emails}"
-        LetterMailer.check_overdue_letters(letter, emails).deliver_current if emails.present?
+        LetterMailer.check_overdue_letters(letter, emails).deliver if emails.present?
       elsif [0, 1, 2, 5].include?(days)
         count_soon_deadline += 1
         logger.info "      ##{letter.id}\tскоро #{letter.duedate.strftime('%d.%m.%y')}: #{days.to_i}\t#{emails}"
-        LetterMailer.soon_deadline_letters(letter, emails, days, users).deliver_current if emails.present?
+        LetterMailer.soon_deadline_letters(letter, emails, days, users).deliver if emails.present?
       end
     end
     logger.info "      #{count} letters is duedate and #{count_soon_deadline} soon deadlineletters"
