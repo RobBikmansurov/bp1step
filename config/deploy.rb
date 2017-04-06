@@ -1,5 +1,6 @@
 require 'rvm/capistrano'
-#require 'bundler/capistrano'
+#require 'capistrano/rvm'
+require 'bundler/capistrano'
 
 load "config/recipes/base"
 load "config/recipes/nginx"
@@ -25,7 +26,6 @@ set :use_sudo, false
 set :unicorn_conf, "#{deploy_to}/config/unicorn.rb"
 set :unicorn_pid, "#{deploy_to}/tmp/pids/unicorn.pid"
 
-#set :rvm_ruby_string, "ruby-1.9.3-p448@#{application}"
 set :rvm_ruby_string, "ruby-2.3.1@#{application}"
 set :rvm_type, :user
 
@@ -36,7 +36,7 @@ set :deploy_via, :remote_cache # Указание на то, что стоит �
 default_run_options[:pty]        = true
 ssh_options[:forward_agent] = true
 
-set :keep_releases, 5 	# количество каталогов релизов, хранящихся на сервере
+set :keep_releases, 3 	# количество каталогов релизов, хранящихся на сервере
 
 set :maintenance_template_path, File.expand_path("../recipes/templates/maintenance.html.erb", __FILE__)
 

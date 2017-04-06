@@ -43,8 +43,8 @@ gem 'actionpack-action_caching'
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'capistrano' # Deploy with Capistrano
-  gem 'rvm-capistrano', require: false
+  gem 'capistrano'
+  gem 'rvm-capistrano'
   gem 'capistrano-deploy', require: false
   gem 'rubocop', require: false
   gem 'haml_lint', require: false
