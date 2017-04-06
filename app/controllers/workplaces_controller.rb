@@ -1,13 +1,14 @@
 # frozen_string_literal: true
+
 class WorkplacesController < ApplicationController
   respond_to :html
-  respond_to :pdf, :odt, :xml, :json, only: [:index, :switch]
+  respond_to :pdf, :odt, :xml, :json, only: %i[index switch]
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   helper_method :sort_column, :sort_direction
-  before_action :authenticate_user!, only: [:edit, :update, :new, :create]
-  before_action :get_workplace, except: [:index, :switch]
+  before_action :authenticate_user!, only: %i[edit update new create]
+  before_action :get_workplace, except: %i[index switch]
   # load_and_authorize_resource
   autocomplete :bproce, :name, extra_data: [:id]
 
@@ -29,7 +30,7 @@ class WorkplacesController < ApplicationController
     respond_to do |format|
       format.html
       format.odt { print }
-      format.json { render json: @workplaces, except: [:description, :name, :created_at, :updated_at] }
+      format.json { render json: @workplaces, except: %i[description name created_at updated_at] }
     end
   end
 

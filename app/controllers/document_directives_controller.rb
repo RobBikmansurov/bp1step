@@ -1,10 +1,10 @@
 class DocumentDirectivesController < ApplicationController
   respond_to :html, :json, :js
-  before_filter :authenticate_user!, :only => [:edit, :new, :create, :update]
-  before_filter :get_document_directive, :except => :index
+  before_action :authenticate_user!, only: %i[edit new create update]
+  before_action :get_document_directive, except: :index
 
   def index
-    @document_directives = DocumentDirective.paginate(:per_page => 10, :page => params[:page])
+    @document_directives = DocumentDirective.paginate(per_page: 10, page: params[:page])
   end
 
   def show
@@ -32,13 +32,13 @@ class DocumentDirectivesController < ApplicationController
           puts "===\nto_directive"
           @directive = Directive.find(@document_directive.directive_id)
           format.html { redirect_to directive_path(@directive), notice: 'Document directive was successfully created.' }
-          #format.html { render @directive, action: :show}
+          # format.html { render @directive, action: :show}
         else
           format.html { redirect_to @document_directive, notice: 'Document directive was successfully created.', format: :html }
           format.json { render json: @document_directive, status: :created, location: @document_directive }
         end
       else
-        format.html { render action: "new" }
+        format.html { render action: 'new' }
         format.json { render json: @document_directive.errors, status: :unprocessable_entity }
       end
     end
@@ -51,16 +51,16 @@ class DocumentDirectivesController < ApplicationController
         format.html { redirect_to @document_directive, notice: 'Document directive was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: "show" }
+        format.html { render action: 'show' }
         format.json { render json: @document_directive.errors, status: :unprocessable_entity }
       end
     end
   end
 
   def destroy
-    #@document_directive = DocumentDirective.find(params[:id])
-    #logger.debug "@document_directive = #{@document_directive.inspect}"
-    #logger.debug params
+    # @document_directive = DocumentDirective.find(params[:id])
+    # logger.debug "@document_directive = #{@document_directive.inspect}"
+    # logger.debug params
     @directive = Directive.find(@document_directive.directive_id) # запомнили директиву, для которой удаляется связь с документом
     @document = Document.find(@document_directive.document_id)    # запомнили документ, для которого удаляется связь с директивой
     @document_directive.destroy
@@ -73,6 +73,4 @@ class DocumentDirectivesController < ApplicationController
   def get_document_directive
     @document_directive = params[:id].present? ? DocumentDirective.find(params[:id]) : DocumentDirective.new
   end
-
-
 end

@@ -1,5 +1,6 @@
 # coding: utf-8
 # frozen_string_literal: true
+
 class BprocesController < ApplicationController
   include TheSortableTreeController::Rebuild
 
@@ -8,10 +9,10 @@ class BprocesController < ApplicationController
   caches_page :show, :new
 
   respond_to :html
-  respond_to :pdf, :xml, :json, only: [:index, :list]
+  respond_to :pdf, :xml, :json, only: %i[index list]
   helper_method :sort_column, :sort_direction
-  before_action :get_bproce, except: [:index, :list, :manage, :autocomplete]
-  before_action :authenticate_user!, only: [:edit, :new, :create, :update]
+  before_action :get_bproce, except: %i[index list manage autocomplete]
+  before_action :authenticate_user!, only: %i[edit new create update]
 
   def list # плоский список процессов без дерева
     @bproces = Bproce.search('?', params[:search]).order(sort_column + ' ' + sort_direction).find(:all, include: :user)
@@ -45,7 +46,7 @@ class BprocesController < ApplicationController
 
   def autocomplete
     @bproces = Bproce.order(:name)
-                     .where('id = ? or name ilike ? or shortname ilike ? ', 
+                     .where('id = ? or name ilike ? or shortname ilike ? ',
                        params[:term].to_i.to_s, "%#{params[:term]}%", "%#{params[:term]}%")
     render json: @bproces.map(&:name)
   end

@@ -9,5 +9,4 @@ class UserDocumentsController < ApplicationController
       respond_with @document, notice: '#' + @document.id.to_s + ' удален из Избранного.'
     end
   end
-
 end

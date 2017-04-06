@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class TasksController < ApplicationController
   respond_to :html, :json
-  before_action :set_task, only: [:show, :edit, :update, :destroy, :report]
+  before_action :set_task, only: %i[show edit update destroy report]
   helper_method :sort_column, :sort_direction
-  before_action :authenticate_user!, only: [:edit, :new, :create, :update, :check, :show]
+  before_action :authenticate_user!, only: %i[edit new create update check show]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index

@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class RequirementsController < ApplicationController
   respond_to :html, :json
   helper_method :sort_column, :sort_direction
-  before_action :set_requirement, only: [:show, :edit, :update, :destroy, :tasks_list, :tasks_report]
-  before_action :authenticate_user!, only: [:edit, :new, :create, :update, :check, :show]
+  before_action :set_requirement, only: %i[show edit update destroy tasks_list tasks_report]
+  before_action :authenticate_user!, only: %i[edit new create update check show]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
@@ -48,7 +49,7 @@ class RequirementsController < ApplicationController
 
   def create_task
     parent_requirement = Requirement.find(params[:id])
-    redirect_to(proc { new_task_url(requirement_id: parent_requirement.id) }) && return
+    redirect_to new_task_url(requirement_id: parent_requirement.id) and return
   end
 
   def create_user

@@ -1,9 +1,9 @@
 class MetricValuesController < ApplicationController
   respond_to :html, :xml, :json
 
-  before_action :set_metric_value, only: [:edit, :update, :destroy]
+  before_action :set_metric_value, only: %i[edit update destroy]
 
-  #rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+  # rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def edit
   end
@@ -32,18 +32,17 @@ class MetricValuesController < ApplicationController
   end
 
   private
-    def set_metric_value
-      @metric_value = MetricValue.find(params[:id])
-      @metric = Metric.find(@metric_value.metric_id)
-    end
+  def set_metric_value
+    @metric_value = MetricValue.find(params[:id])
+    @metric = Metric.find(@metric_value.metric_id)
+  end
 
-    def metric_value_params
-      params.require(:metric_value).permit(:id, :dtime, :value, :metric_id)
-    end
+  def metric_value_params
+    params.require(:metric_value).permit(:id, :dtime, :value, :metric_id)
+  end
 
-    def record_not_found
-      flash[:alert] = "Неверный #id, Метрика не найдена."
-      redirect_to action: :index
-    end
-
+  def record_not_found
+    flash[:alert] = 'Неверный #id, Метрика не найдена.'
+    redirect_to action: :index
+  end
 end

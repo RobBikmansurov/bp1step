@@ -1,20 +1,20 @@
 class UserBusinessRolesController < ApplicationController
   respond_to :html, :xml, :json
-  before_filter :get_user_business_role, :only => [:destroy, :edit, :update, :show]
-  before_filter :authenticate_user!, :except => [:show, :create]
-  
+  before_action :get_user_business_role, only: %i[destroy edit update show]
+  before_action :authenticate_user!, except: %i[show create]
+
   def show
     redirect_to business_role_path(@user_business_role.business_role_id) and return
   end
 
   def new
-    @user_business_role = UserBusinessRole.new(date_from:  Date.today.strftime("%d.%m.%Y"), date_to: Date.today.change(:month => 12, :day => 31).strftime("%d.%m.%Y"))
+    @user_business_role = UserBusinessRole.new(date_from: Date.today.strftime('%d.%m.%Y'), date_to: Date.today.change(month: 12, day: 31).strftime('%d.%m.%Y'))
   end
 
   def create
     @user_business_role = UserBusinessRole.create(params[:user_business_role])
     @business_role = BusinessRole.find(@user_business_role.business_role_id)
-    flash[:notice] = "Successfully created user_business_role." if @user_business_role.save
+    flash[:notice] = 'Successfully created user_business_role.' if @user_business_role.save
     begin
       UserBusinessRoleMailer.user_create_role(@user_business_role, current_user).deliver    # оповестим нового исполнителя
     rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
@@ -38,7 +38,7 @@ class UserBusinessRolesController < ApplicationController
   end
 
   def update
-    flash[:notice] = "Successfully updated user_business_role." if @user_business_role.update_attributes(params[:user_business_role])
+    flash[:notice] = 'Successfully updated user_business_role.' if @user_business_role.update_attributes(params[:user_business_role])
     respond_with(@business_role)
   end
 
@@ -47,5 +47,4 @@ private
     @user_business_role = UserBusinessRole.find(params[:id])
     @business_role = BusinessRole.find(@user_business_role.business_role_id)
   end
-
 end

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
+
 class BappsController < ApplicationController
   respond_to :html
   respond_to :pdf, :odf, :xml, :json, only: :index
   helper_method :sort_column, :sort_direction
-  before_action :set_app, except: [:index, :print]
-  before_action :authenticate_user!, only: [:edit, :new]
+  before_action :set_app, except: %i[index print]
+  before_action :authenticate_user!, only: %i[edit new]
 
   autocomplete :bproce, :name, extra_data: [:id]
 

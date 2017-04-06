@@ -1,8 +1,9 @@
 # frozen_string_literal: true
+
 class LettersController < ApplicationController
   respond_to :html, :json
-  before_action :authenticate_user!, only: [:edit, :new, :create, :update, :destroy, :register, :show]
-  before_action :set_letter, only: [:show, :edit, :update, :destroy, :register, :reestr]
+  before_action :authenticate_user!, only: %i[edit new create update destroy register show]
+  before_action :set_letter, only: %i[show edit update destroy register reestr]
   helper_method :sort_column, :sort_direction
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
@@ -139,12 +140,12 @@ class LettersController < ApplicationController
     letter = Letter.find(params[:id]) # письмо - прототип
     @requirement = Requirement.new(letter_id: letter.id, author_id: current_user.id)
     # redirect_to requirements_new(@requirement) and return
-    redirect_to(proc { new_requirement_url(letter_id: letter.id) }) && return
+    redirect_to new_requirement_url(letter_id: letter.id) and return
   end
 
   def create_task
     parent_letter = Letter.find(params[:id])
-    redirect_to(proc { new_task_url(letter_id: parent_letter.id) }) && return
+    redirect_to new_task_url(letter_id: parent_letter.id) and return
   end
 
   def create_user
@@ -240,7 +241,7 @@ class LettersController < ApplicationController
         @letter.update(number: letter.number, date: letter.date) if letter
       end
     end
-    redirect_to(proc { letter_url(letter_id: @letter.id) }) && return
+    redirect_to letter_url(letter_id: @letter.id) and return
   end
 
   def senders

@@ -1,10 +1,11 @@
 # coding: utf-8
 # frozen_string_literal: true
+
 class UsersController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
-  before_action :authenticate_user!, only: [:edit, :update, :order]
-  before_action :find_user, except: [:index, :autocomplete]
+  before_action :authenticate_user!, only: %i[edit update order]
+  before_action :find_user, except: %i[index autocomplete]
 
   def index
     if params[:role].present?

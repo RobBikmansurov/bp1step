@@ -1,8 +1,8 @@
 class BproceContractsController < ApplicationController
   respond_to :html, :xml, :json, :js
-  before_filter :authenticate_user!, only: [:edit, :new, :destroy]
-  before_filter :get_bproce_contract, except: [:index, :show]
-  
+  before_action :authenticate_user!, only: %i[edit new destroy]
+  before_action :get_bproce_contract, except: %i[index show]
+
   def new
     @contract = Contract.find(params[:contract_id])
     @contract_bproce = @contract.bproce_contract.new # заготовка для новой связи с процессом
@@ -13,8 +13,8 @@ class BproceContractsController < ApplicationController
   end
 
   def create
-    #@bproce_contract = Bprocecontract.create(params[:bproce_contract])
-    flash[:notice] = "Successfully created bproce_contract." if @bproce_contract.save
+    # @bproce_contract = Bprocecontract.create(params[:bproce_contract])
+    flash[:notice] = 'Successfully created bproce_contract.' if @bproce_contract.save
     respond_with(@bproce_contract.contract)
   end
 
@@ -26,9 +26,9 @@ class BproceContractsController < ApplicationController
   def destroy
     contract = @bproce_contract.contract
     if contract.bproce.count > 1
-      flash[:notice] = "Доовор удален из процесса." if @bproce_contract.destroy
+      flash[:notice] = 'Доовор удален из процесса.' if @bproce_contract.destroy
     else
-      flash[:alert] = "Отмена удаления: Договор должен ссылаться хотя бы на один процесс."
+      flash[:alert] = 'Отмена удаления: Договор должен ссылаться хотя бы на один процесс.'
     end
     if !@bproce.blank?
       respond_with(@bproce)
@@ -42,7 +42,7 @@ class BproceContractsController < ApplicationController
   end
 
   def update
-    flash[:notice] = "Successfully updated bproce_contract." if @bproce_contract.update_attributes(params[:bproce_contract])
+    flash[:notice] = 'Successfully updated bproce_contract.' if @bproce_contract.update_attributes(params[:bproce_contract])
     respond_with(@bproce_contract)
   end
 
@@ -54,6 +54,4 @@ private
     @contract = Contract.find(params[:contract_id]) if params[:contract_id].present?
     @bproce_contract = params[:id].present? ? BproceContract.find(params[:id]) : BproceContract.new(params[:bproce_contract])
   end
-
-
 end

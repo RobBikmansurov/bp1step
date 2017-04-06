@@ -1,20 +1,20 @@
 class RolesController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
-  before_filter :authenticate_user!, :only => [:edit, :update, :new, :create]
-  before_filter :get_role, :except => :index
+  before_action :authenticate_user!, only: %i[edit update new create]
+  before_action :get_role, except: :index
 
   def index
-    @roles = Role.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+    @roles = Role.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
   end
-  
+
   def new
     respond_with(@role)
   end
 
   def create
     @role = Role.new(params[:role])
-    flash[:notice] = "Successfully created role." if @role.save
+    flash[:notice] = 'Successfully created role.' if @role.save
     respond_with(@role)
   end
 
@@ -27,27 +27,26 @@ class RolesController < ApplicationController
   end
 
   def update
-    flash[:notice] = "Successfully updated role." if @role.update_attributes(params[:role])
+    flash[:notice] = 'Successfully updated role.' if @role.update_attributes(params[:role])
     respond_with(@role)
   end
 
   def destroy
     @role.destroy
-    flash[:notice] = "Successfully destroyed role." if @role.save
+    flash[:notice] = 'Successfully destroyed role.' if @role.save
     respond_with(@role)
   end
 
 private
   def sort_column
-    params[:sort] || "name"
+    params[:sort] || 'name'
   end
 
   def sort_direction
-    params[:direction] || "asc"
+    params[:direction] || 'asc'
   end
-  
+
   def get_role
     @role = params[:id].present? ? Role.find(params[:id]) : Role.new
   end
-
 end

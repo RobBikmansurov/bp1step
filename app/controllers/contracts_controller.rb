@@ -1,13 +1,14 @@
 # coding: utf-8
 # frozen_string_literal: true
+
 class ContractsController < ApplicationController
   respond_to :odt, only: :index
   respond_to :pdf, only: :show
   respond_to :html
-  respond_to :xml, :json, only: [:index, :show]
+  respond_to :xml, :json, only: %i[index show]
   helper_method :sort_column, :sort_direction
-  before_action :authenticate_user!, only: [:edit, :new]
-  before_action :set_contract, only: [:show, :edit, :update, :destroy, :new, :approval_sheet]
+  before_action :authenticate_user!, only: %i[edit new]
+  before_action :set_contract, only: %i[show edit update destroy new approval_sheet]
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 

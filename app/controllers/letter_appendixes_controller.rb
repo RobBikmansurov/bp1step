@@ -1,9 +1,10 @@
 # coding: utf-8
+
 class LetterAppendixesController < ApplicationController
   respond_to :html
-  before_filter :authenticate_user!, :only => [:edit, :new]
-  before_action :set_letter_appendix, only: [:show, :edit, :update, :destroy]
-  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+  before_action :authenticate_user!, only: %i[edit new]
+  before_action :set_letter_appendix, only: %i[show edit update destroy]
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def show
   end
@@ -40,21 +41,20 @@ class LetterAppendixesController < ApplicationController
 
   private
 
-    def set_letter_appendix
-      if params[:id].present?
-        @letter_appendix = LetterAppendix.find(params[:id])
-      else
-        @letter = Letter.new
-      end
+  def set_letter_appendix
+    if params[:id].present?
+      @letter_appendix = LetterAppendix.find(params[:id])
+    else
+      @letter = Letter.new
     end
+  end
 
-    def letter_appendix_params
-      params.require(:letter_appendix).permit(:letter_id, :name, :appendix)
-    end
+  def letter_appendix_params
+    params.require(:letter_appendix).permit(:letter_id, :name, :appendix)
+  end
 
-    def record_not_found
-      flash[:alert] = "Неверный #id, Скан договора не найден."
-      redirect_to action: :index
-    end
-
+  def record_not_found
+    flash[:alert] = 'Неверный #id, Скан договора не найден.'
+    redirect_to action: :index
+  end
 end

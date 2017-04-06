@@ -1,9 +1,9 @@
 class TermsController < ApplicationController
   respond_to :html
-  respond_to :xml, :json, :only => [:index, :show]
+  respond_to :xml, :json, only: %i[index show]
   helper_method :sort_column, :sort_direction
-  before_filter :authenticate_user!, :only => [:edit, :update, :new, :create]
-  before_filter :get_term, :except => [:index, :print]
+  before_action :authenticate_user!, only: %i[edit update new create]
+  before_action :get_term, except: %i[index print]
 
 
   def index
@@ -11,9 +11,9 @@ class TermsController < ApplicationController
       @terms = Term.all
     else
       if params[:apptype].present?
-        @terms = Term.searchtype(params[:apptype]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        @terms = Term.searchtype(params[:apptype]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
       else
-        @terms = Term.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+        @terms = Term.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
       end
     end
     respond_to do |format|
@@ -52,7 +52,7 @@ class TermsController < ApplicationController
         format.html { redirect_to @term, notice: 'Term was successfully created.' }
         format.json { render json: @term, status: :created, location: @term }
       else
-        format.html { render action: "new" }
+        format.html { render action: 'new' }
         format.json { render json: @term.errors, status: :unprocessable_entity }
       end
     end
@@ -68,7 +68,7 @@ class TermsController < ApplicationController
         format.html { redirect_to @term, notice: 'Term was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: "edit" }
+        format.html { render action: 'edit' }
         format.json { render json: @term.errors, status: :unprocessable_entity }
       end
     end
@@ -88,20 +88,19 @@ class TermsController < ApplicationController
 
 private
   def sort_column
-    params[:sort] || "name"
+    params[:sort] || 'name'
   end
 
   def sort_direction
-    params[:direction] || "asc"
+    params[:direction] || 'asc'
   end
-  
+
   def get_term
     if params[:search].present? # это поиск
-      @terms = Term.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(:per_page => 10, :page => params[:page])
+      @terms = Term.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
       @term = params[:id].present? ? Term.find(params[:id]) : Term.new
     end
   end
-
 end

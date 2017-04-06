@@ -1,8 +1,8 @@
 class BproceIresourcesController < ApplicationController
   respond_to :html, :xml, :json
-  before_filter :authenticate_user!, :only => [:edit, :create]
-  before_filter :get_bproce_iresource, :except => :index
-  
+  before_action :authenticate_user!, only: %i[edit create]
+  before_action :get_bproce_iresource, except: :index
+
   def create
     @bproce = Bproce.find_by_name(params[:bproce_iresource_bproce])
     @bproce_iresource = BproceIresource.new(params[:bproce_iresource])
@@ -11,7 +11,7 @@ class BproceIresourcesController < ApplicationController
         format.html { redirect_to @bproce_iresource, notice: 'BproceIresources was successfully created.' }
         format.json { render json: @bproce_iresource, status: :created, location: @bproce_iresource }
       else
-        format.html { render action: "new" }
+        format.html { render action: 'new' }
         format.json { render json: @bproce_iresource.errors, status: :unprocessable_entity }
       end
     end
@@ -19,9 +19,9 @@ class BproceIresourcesController < ApplicationController
 
   def destroy
     @iresource = @bproce_iresource.iresource
-    #@iresource = @bproce_iresource.iresource
-  	flash[:notice] = "Successfully destroyed bproce_iresource." if @bproce_iresource.destroy
-    #respond_with(@bproce_iresource.bproce)  
+    # @iresource = @bproce_iresource.iresource
+  	 flash[:notice] = 'Successfully destroyed bproce_iresource.' if @bproce_iresource.destroy
+    # respond_with(@bproce_iresource.bproce)
     respond_with(@bproce_iresource.iresource) # удаляем процесс из ресурса - поэтому возврат в ресурс
   end
 
@@ -34,7 +34,7 @@ class BproceIresourcesController < ApplicationController
   end
 
   def update
-    flash[:notice] = "Successfully updated bproce_iresource." if @bproce_iresource.update_attributes(params[:bproce_iresource])
+    flash[:notice] = 'Successfully updated bproce_iresource.' if @bproce_iresource.update_attributes(params[:bproce_iresource])
     respond_with(@bproce_iresource)
   end
 
@@ -44,6 +44,4 @@ private
     @bproce = Bproce.find(params[:bproce_id]) if params[:bproce_id].present?
     @bproce_iresource = params[:id].present? ? BproceIresource.find(params[:id]) : BproceIresource.new(params[:bproce_bapp])
   end
-
-
 end
