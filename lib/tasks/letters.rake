@@ -1,6 +1,5 @@
 # encoding: utf-8
 # frozen_string_literal: true
-
 namespace :bp1step do
   desc 'Create Letters from files in  SVK'
   task create_letters_from_files: :environment do # создание новых писем из файов в каталоге СВК
@@ -49,6 +48,11 @@ namespace :bp1step do
       when /\A\d+_U/                                      # Указание БР
         l_number = name[/\A\d+_?f?/]
         l_number = "#{l_number[0..l_number.size - 2]}-У"
+        l_sender = 'Банк России'
+        l_subject = "Указание Банка России № #{l_number} от #{l_date}"
+      when /\A\d+-У/                                      # Указание БР
+        l_number = name[/\A\d+_?f?/]
+        l_number = "#{l_number[0..l_number.size - 1]}-У"
         l_sender = 'Банк России'
         l_subject = "Указание Банка России № #{l_number} от #{l_date}"
       when /\A\d+_P/                                      # Положение БР
@@ -106,7 +110,7 @@ namespace :bp1step do
       users = ''
       letter.user_letter.each do |user_letter| # исполнители
         next unless user_letter.user
-        emails += ', ' if emails.present?
+        emails += ', ' unless emails.blank?
         emails += user_letter.user.email.to_s
         users += user_letter.user.displayname.to_s
       end
@@ -114,11 +118,11 @@ namespace :bp1step do
       if days.negative?
         count += 1
         logger.info "      ##{letter.id}\tсрок! #{letter.duedate.strftime('%d.%m.%y')}: #{(-days).to_i}\t#{emails}"
-        LetterMailer.check_overdue_letters(letter, emails).deliver if emails.present?
+        LetterMailer.check_overdue_letters(letter, emails).deliver unless emails.blank?
       elsif [0, 1, 2, 5].include?(days)
         count_soon_deadline += 1
         logger.info "      ##{letter.id}\tскоро #{letter.duedate.strftime('%d.%m.%y')}: #{days.to_i}\t#{emails}"
-        LetterMailer.soon_deadline_letters(letter, emails, days, users).deliver if emails.present?
+        LetterMailer.soon_deadline_letters(letter, emails, days, users).deliver unless emails.blank?
       end
     end
     logger.info "      #{count} letters is duedate and #{count_soon_deadline} soon deadlineletters"
