@@ -140,7 +140,6 @@ class DocumentsController < ApplicationController
     render :bproce_create
   end
 
-
   def show_files
   end
 

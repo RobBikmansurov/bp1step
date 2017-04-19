@@ -46,7 +46,6 @@ class BproceContractsController < ApplicationController
     respond_with(@bproce_contract)
   end
 
-
   private
 
   def get_bproce_contract
