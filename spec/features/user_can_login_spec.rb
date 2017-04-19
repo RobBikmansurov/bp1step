@@ -2,11 +2,11 @@ require 'rails_helper'
 
 feature 'User login' do
   given!(:user) { FactoryGirl.create(:user) }
-  
+
   before(:each) do
     Capybara.reset_sessions!
   end
-  
+
   scenario 'with valid credentions' do
     visit '/users/sign_in'
     fill_in 'user_email', with: user.email
@@ -15,7 +15,7 @@ feature 'User login' do
     # expect(page).to have_content(user.email)
     expect(page).to have_content('Выйти')
   end
-  
+
   scenario 'with invalid credentions' do
     visit '/users/sign_in'
     fill_in 'user_email', with: user.email

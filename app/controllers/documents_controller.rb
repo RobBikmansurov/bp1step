@@ -65,7 +65,7 @@ class DocumentsController < ApplicationController
     end
     respond_to do |format|
       format.html {
-        @documents = @documents.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page]) if !params[:all].present?
+        @documents = @documents.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page]) if params[:all].blank?
       }
       format.odt { print }
     end

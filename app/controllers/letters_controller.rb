@@ -41,7 +41,7 @@ class LettersController < ApplicationController
       @letters = Letter.search(params[:search]).where('status < 90').includes(:user_letter, :letter_appendix)
       @title_letter += 'не завершенные'
     end
-    unless params[:search].present?
+    if params[:search].blank?
       if params[:out].present?
         @letters = @letters.where('in_out <> 1')
         @title_letter += ' Исходящие'
