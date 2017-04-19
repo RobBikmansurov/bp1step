@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Paperclip
   class Cropper < Thumbnail
     def transformation_command

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 RSpec.describe BproceDocumentsController, type: :controller do
   let(:owner)            { FactoryGirl.create(:user) }

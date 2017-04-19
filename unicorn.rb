@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 deploy_to = '/home/www/domain'
 rails_root = "#{deploy_to}/current"
 pid_file = "#{deploy_to}/shared/pids/unicorn.pid"

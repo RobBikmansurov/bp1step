@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe RolesController, type: :controller do
   def valid_attributes
     {

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 def login(email, password)
   # visit new_user_session_path
   visit root_path

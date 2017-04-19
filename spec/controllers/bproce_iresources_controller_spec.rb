@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe BproceIresourcesController, type: :controller do
   let(:valid_attributes) { { bproce_id: '1', iresource_id: '1', rpurpose: 'Purpose' } }
   let(:valid_session) { {} }

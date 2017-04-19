@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 # TODO: не проверяется уникальность :username и :email! (не решена техническая проблема с возникающей ошибкой)
 
