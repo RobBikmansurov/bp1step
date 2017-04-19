@@ -47,10 +47,11 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-deploy', require: false
   gem 'haml_lint', require: false
-  gem 'rubocop', require: false
+  gem 'rubocop'
   gem 'rvm-capistrano'
   # gem "rails-erd"
-  gem 'guard-rspec', require: false
+  gem 'guard-rspec'
+  gem 'guard-rubocop'
 end
 
 group :production do
