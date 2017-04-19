@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
-require 'simplecov'
 require 'capybara/rspec'
 require 'factory_girl_rails'
-
-SimpleCov.start 'rails' do
-  add_group 'Resources', "app/resources"
-  add_group 'Forms', "app/forms"
-end
+require "simplecov"
+SimpleCov.start
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

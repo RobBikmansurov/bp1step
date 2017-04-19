@@ -407,7 +407,7 @@ DEPENDENCIES
   capistrano-deploy
   capybara
   chartkick
-  codeclimate-test-reporter
+  codeclimate-test-reporter (~> 1.0.0)
   codecov
   coffee-rails (~> 4.0.0)
   database_cleaner
@@ -443,6 +443,7 @@ DEPENDENCIES
   selenium-webdriver
   shoulda-matchers
   simple_form
+  simplecov
   sqlite3
   the_sortable_tree (>= 2.4.0)
   therubyracer
