@@ -248,7 +248,7 @@ class ContractsController < ApplicationController
       end
       r.add_field :parent, parent
       if @contract.agent
-        if !@contract.agent.town.blank?
+        if @contract.agent.town.present?
           r.add_field :agent, @contract.agent_name + ', г. ' + @contract.agent.town
         else
           r.add_field :agent, @contract.agent_name
@@ -257,7 +257,7 @@ class ContractsController < ApplicationController
         r.add_field :agent, 'Контрагент не выбран!'
       end
       rr = 0
-      if !@contract.bproce.blank? # есть ссылки из документа на другие процессы?
+      if @contract.bproce.present? # есть ссылки из документа на другие процессы?
         r.add_field :bp, 'Относится к процессам:'
         r.add_table('BPROCS', @contract.bproce_contract.all, header: false, skip_if_empty: true) do |t|
           t.add_column(:rr) do |_r1| # порядковый номер строки таблицы

@@ -185,7 +185,7 @@ class TasksController < ApplicationController
       r.add_field 'AUTHOR', @task.author.displayname.to_s
       s = ''
       @task.user_task.find_each do |user_task|
-        s += ', ' unless s.blank?
+        s += ', ' if s.present?
         s += user_task.user.displayname
         s += '-отв.' if user_task.status && user_task.status.positive?
       end
@@ -255,7 +255,7 @@ class TasksController < ApplicationController
         t.add_column(:users) do |task| # исполнители
           s = ''
           task.user_task.find_each do |user_task|
-            s += ', ' unless s.blank?
+            s += ', ' if s.present?
             s += user_task.user.displayname
             s += '-отв.' if user_task.status && user_task.status.positive?
           end

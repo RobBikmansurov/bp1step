@@ -90,7 +90,7 @@ class DocumentsController < ApplicationController
 
   def update_file
     d_file = params[:document][:document_file] if params[:document].present?
-    if !d_file.blank?
+    if d_file.present?
       flash[:notice] = 'Файл "' + d_file.original_filename + '" загружен.' if @document.update_attributes(document_file_params)
     else
       flash[:alert] = 'Ошибка - имя файла не указано.'
@@ -284,9 +284,9 @@ class DocumentsController < ApplicationController
   def view
     fname = 'files' + @document.file_name # добавим путь к файлам
     type = case File.extname(fname) # определим по расширению файла его mime-тип
-      when '.pdf'
+           when '.pdf'
         'application/pdf'
-      when '.doc'
+           when '.doc'
         'application/msword'
       else
         'application/vnd.oasis.opendocument.text'
@@ -304,7 +304,7 @@ class DocumentsController < ApplicationController
       r.add_field :approve_organ, @document.approveorgan
       r.add_field :document_owner, @document.owner_name
       rr = 0
-      if !@document.bproce.blank? # есть ссылки из документа на другие процессы?
+      if @document.bproce.present? # есть ссылки из документа на другие процессы?
         r.add_field :bp, 'Относится к процессам:'
         r.add_table('BPROCS', @document.bproce_document.all, header: false, skip_if_empty: true) do |t|
           t.add_column(:rr) do |n1| # порядковый номер строки таблицы

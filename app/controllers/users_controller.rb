@@ -138,7 +138,7 @@ class UsersController < ApplicationController
 
   def update_avatar
     ava_file = params[:user][:avatar] if params[:user].present?
-    if !ava_file.blank?
+    if ava_file.present?
       flash[:notice] = 'Изображение "' + ava_file.original_filename + '" загружено.' if @usr.update_attributes(avatar_params)
     else
       flash[:alert] = 'Ошибка - имя файла не указано.'
