@@ -16,7 +16,7 @@ class FactoryGirlProfiler
   end
 
   def subscribe
-    ActiveSupport::Notifications.subscribe("factory_girl.run_factory") do |name, start, finish, id, payload|
+    ActiveSupport::Notifications.subscribe('factory_girl.run_factory') do |name, start, finish, id, payload|
       factory, strategy = payload.values_at(:name, :strategy)
 
       factory_result = results[factory] ||= {}

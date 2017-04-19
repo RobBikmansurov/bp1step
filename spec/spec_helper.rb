@@ -2,7 +2,7 @@
 
 require 'capybara/rspec'
 require 'factory_girl_rails'
-require "simplecov"
+require 'simplecov'
 SimpleCov.start
 
 RSpec.configure do |config|
