@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe BusinessRolesController, type: :controller do
@@ -138,7 +139,7 @@ RSpec.describe BusinessRolesController, type: :controller do
       business_role = BusinessRole.create! valid_attributes
       business_role.bproce_id = bproce.id
       delete :destroy, { id: business_role.to_param }, valid_session
-      expect(response).to redirect_to(bproce_business_role_url bproce)
+      expect(response).to redirect_to(bproce_business_role_url(bproce))
     end
   end
 end

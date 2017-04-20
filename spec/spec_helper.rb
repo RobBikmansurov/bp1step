@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
-require 'simplecov'
 require 'capybara/rspec'
 require 'factory_girl_rails'
-
-SimpleCov.start 'rails' do
-  add_group 'Resources', "app/resources"
-  add_group 'Forms', "app/forms"
-end
+require 'simplecov'
+SimpleCov.start
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -17,7 +13,7 @@ RSpec.configure do |config|
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
   end
-  
+
   config.include Capybara::DSL
 
   config.before :all do

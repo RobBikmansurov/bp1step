@@ -42,7 +42,6 @@ class BproceDocumentsController < ApplicationController
     respond_with(@bproce_document)
   end
 
-
   private
 
   def get_bproce_document

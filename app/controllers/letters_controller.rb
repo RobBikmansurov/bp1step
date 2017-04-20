@@ -41,7 +41,7 @@ class LettersController < ApplicationController
       @letters = Letter.search(params[:search]).where('status < 90').includes(:user_letter, :letter_appendix)
       @title_letter += 'не завершенные'
     end
-    unless params[:search].present?
+    if params[:search].blank?
       if params[:out].present?
         @letters = @letters.where('in_out <> 1')
         @title_letter += ' Исходящие'
@@ -342,7 +342,7 @@ class LettersController < ApplicationController
         t.add_column(:users) do |letter| # исполнители
           s = ''
           letter.user_letter.find_each do |user_letter|
-            s += ', ' unless s.blank?
+            s += ', ' if s.present?
             s += user_letter.user.displayname
             s += '-отв.' if user_letter.status && user_letter.status.positive?
           end

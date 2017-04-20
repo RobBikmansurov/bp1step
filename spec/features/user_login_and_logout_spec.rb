@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.feature 'User logs in and logs out', type: :feature do
@@ -33,7 +34,7 @@ RSpec.feature 'User logs in and logs out', type: :feature do
     visit new_user_session_path
 
     login email, '1st-try-wrong-password'
-    expect(page).to have_content 'Invalid email or password'
+    expect(page).to have_content 'Неверный e-mail или пароль'
 
     login email, '2nd-try-wrong-password'
     expect(page).to have_content 'You have one more attempt before your account is locked'

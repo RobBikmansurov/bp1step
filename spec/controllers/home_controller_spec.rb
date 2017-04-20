@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe HomeController, type: :controller do
   before(:each) do
     # @user = FactoryGirl.create(:user)

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 include Warden::Test::Helpers
 Warden.test_mode!

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe MetricsController, type: :controller do
   let(:valid_attributes) { { 'name' => 'Metric name', description: 'description1', bproce_id: 1, depth: 1 } }
   let(:valid_session) { {} }

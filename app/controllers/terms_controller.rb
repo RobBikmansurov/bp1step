@@ -5,7 +5,6 @@ class TermsController < ApplicationController
   before_action :authenticate_user!, only: %i[edit update new create]
   before_action :get_term, except: %i[index print]
 
-
   def index
     if params[:all].present?
       @terms = Term.all

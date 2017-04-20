@@ -1,80 +1,82 @@
 # frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 ruby '2.3.1'
 
-gem 'rails', '4.2.7.1'
-gem 'will_paginate', '~> 3.0'
-gem 'sass-rails', '~> 4.0.0'
-gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+gem 'rails', '4.2.7.1'
+gem 'sass-rails', '~> 4.0.0'
 gem 'therubyracer'
+gem 'uglifier', '>= 1.3.0'
+gem 'will_paginate', '~> 3.0'
 
+gem 'alphabetical_paginate'
+gem 'cancancan', '~> 1.10'
 gem 'devise', '~> 3.5.2' # , git: "https://github.com/plataformatec/devise"
 gem 'devise_ldap_authenticatable'
-gem 'cancancan', '~> 1.10'
-gem 'alphabetical_paginate'
-gem 'haml-rails'
 gem 'execjs'
+gem 'haml-rails'
 
-gem 'rails3-jquery-autocomplete' # , git: 'https://github.com/francisd/rails3-jquery-autocomplete'
 gem 'awesome_nested_set' # , :git => 'git://github.com/collectiveidea/awesome_nested_set'
-gem 'the_sortable_tree', '>= 2.4.0'
-gem 'simple_form'
 gem 'odf-report'
-gem 'public_activity'
 gem 'paperclip', '~> 4.2'
+gem 'public_activity'
+gem 'rails3-jquery-autocomplete' # , git: 'https://github.com/francisd/rails3-jquery-autocomplete'
+gem 'simple_form'
+gem 'the_sortable_tree', '>= 2.4.0'
 # gem "paperclip", git: "git://github.com/thoughtbot/paperclip.git"
 gem 'acts-as-taggable-on'
-gem 'protected_attributes'
 gem 'chartkick'
 gem 'groupdate'
 gem 'jcrop-rails-v2'
+gem 'pdf-reader'
+gem 'pg_search'
+gem 'protected_attributes'
 gem 'tiny_tds'
 gem 'tzinfo-data'
-gem 'pg_search'
-gem 'pdf-reader'
 
-gem 'actionpack-page_caching' # кеширование
 gem 'actionpack-action_caching'
+gem 'actionpack-page_caching' # кеширование
 
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'capistrano'
-  gem 'rvm-capistrano'
   gem 'capistrano-deploy', require: false
-  gem 'rubocop', require: false
   gem 'haml_lint', require: false
+  gem 'rubocop'
+  gem 'rvm-capistrano'
   # gem "rails-erd"
-  gem 'guard-rspec', require: false
+  gem 'guard-rspec'
+  gem 'guard-rubocop'
 end
 
 group :production do
   gem 'pg'
   gem 'puma'
+  gem 'rails_12factor'
   gem 'unicorn'
 end
 
 group :test do
-  gem 'shoulda-matchers'
-  gem 'sqlite3'
   gem 'capybara'
-  gem 'factory_girl_rails'
-  gem 'webrat'
-  gem 'selenium-webdriver'
-  gem 'fuubar'
+  gem 'codeclimate-test-reporter', '~> 1.0.0'
+  gem 'codecov', require: false
   gem 'database_cleaner'
-  gem 'codeclimate-test-reporter', require: false
-  gem 'codecov', require: false, group: :test
+  gem 'factory_girl_rails'
+  gem 'fuubar'
+  gem 'selenium-webdriver'
+  gem 'shoulda-matchers'
+  gem 'simplecov'
+  gem 'sqlite3'
+  gem 'webrat'
 end
 
-gem 'rails_12factor', group: :production
-
 group :development, :test do
-  gem 'rspec-rails'
   gem 'pry-byebug'
   gem 'pry-rails'
+  gem 'rspec-rails'
 end

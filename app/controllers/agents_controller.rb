@@ -15,7 +15,7 @@ class AgentsController < ApplicationController
   end
 
   def new_contract # новый договор контрагента
-    redirect_to new_contract_path({agent_id: @agent.id})
+    redirect_to new_contract_path({ agent_id: @agent.id })
   end
 
   def edit

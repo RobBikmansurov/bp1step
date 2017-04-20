@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe TermsController, type: :controller do
   let(:valid_attributes) { { shortname: 'term', name: 'term_name', description: 'term_description' } }
   let(:valid_session) { {} }

@@ -147,7 +147,7 @@ class RequirementsController < ApplicationController
       r.add_field 'REQUIREMENT_AUTHOR', @requirement.author.displayname.to_s
       s = ''
       @requirement.user_requirement.find_each do |user_requirement|
-        s += ', ' unless s.blank?
+        s += ', ' if s.present?
         s += user_requirement.user.displayname
         s += '-отв.' if user_requirement.status && user_requirement.status > 0
       end
@@ -180,7 +180,7 @@ class RequirementsController < ApplicationController
         t.add_column(:users) do |task| # исполнители задачи
           s = ''
           task.user_task.find_each do |user_task|
-            s += ', ' unless s.blank?
+            s += ', ' if s.present?
             s += user_task.user.displayname
             s += '-отв.' if user_task.status && user_task.status > 0
           end
@@ -215,7 +215,7 @@ class RequirementsController < ApplicationController
       r.add_field 'REQUIREMENT_AUTHOR', @requirement.author.displayname.to_s
       s = ''
       @requirement.user_requirement.find_each do |user_requirement|
-        s += ', ' unless s.blank?
+        s += ', ' if s.present?
         s += user_requirement.user.displayname
         s += '-отв.' if user_requirement.status && user_requirement.status > 0
       end
@@ -257,7 +257,7 @@ class RequirementsController < ApplicationController
         t.add_column(:users) do |task| # исполнители задачи
           s = ''
           task.user_task.find_each do |user_task|
-            s += ', ' unless s.blank?
+            s += ', ' if s.present?
             s += user_task.user.displayname
             s += '-отв.' if user_task.status && user_task.status > 0
           end

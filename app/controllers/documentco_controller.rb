@@ -9,7 +9,7 @@ class DocumentcoController < ApplicationController
     @documents = Document.search(params[:search]).paginate(per_page: 10, page: params[:page])
     logger.debug(@documents.to_yaml)
     logger.debug(params[:id], @id)
-    if @documents.any? {|d| d.id == params[:id]}
+    if @documents.any? { |d| d.id == params[:id] }
       logger.debug(params[:id])
       @document = Document.find(params[:id])
     else

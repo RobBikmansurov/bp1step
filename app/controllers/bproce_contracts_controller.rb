@@ -8,7 +8,7 @@ class BproceContractsController < ApplicationController
     @contract_bproce = @contract.bproce_contract.new # заготовка для новой связи с процессом
     respond_to do |format|
       format.html { render 'new' } # view.html.erb
-      format.js { } # view.js.erb
+      format.js {} # view.js.erb
     end
   end
 
@@ -30,7 +30,7 @@ class BproceContractsController < ApplicationController
     else
       flash[:alert] = 'Отмена удаления: Договор должен ссылаться хотя бы на один процесс.'
     end
-    if !@bproce.blank?
+    if @bproce.present?
       respond_with(@bproce)
     else
       respond_with(contract)
@@ -45,7 +45,6 @@ class BproceContractsController < ApplicationController
     flash[:notice] = 'Successfully updated bproce_contract.' if @bproce_contract.update_attributes(params[:bproce_contract])
     respond_with(@bproce_contract)
   end
-
 
   private
 

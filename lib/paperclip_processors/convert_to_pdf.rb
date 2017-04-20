@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Paperclip
   class ConvertToPdf < Processor
     def initialize(file, options = {}, attachment = nil)

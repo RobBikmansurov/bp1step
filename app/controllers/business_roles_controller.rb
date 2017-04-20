@@ -10,7 +10,7 @@ class BusinessRolesController < ApplicationController
 
   def index
     @business_roles = BusinessRole.order(sort_column + ' ' + sort_direction)
-    unless params[:all].present?
+    if params[:all].blank?
       @business_roles = @business_roles.search(params[:search]) if params[:search].present?
       @business_roles = @business_roles.order(sort_column + ' ' + sort_direction).page(params[:page])
       # @business_roles = BusinessRole.page(params[:page]).search(params[:search])

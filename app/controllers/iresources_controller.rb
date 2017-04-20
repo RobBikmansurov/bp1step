@@ -110,7 +110,6 @@ class IresourcesController < ApplicationController
       disposition: 'inline'
   end
 
-
   private
 
   def sort_column
