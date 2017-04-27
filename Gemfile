@@ -44,21 +44,26 @@ gem 'actionpack-page_caching' # кеширование
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'capistrano'
-  gem 'capistrano-deploy', require: false
+  gem 'capistrano', '~>3.8.1'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rails'
+  gem 'capistrano-rvm'
   gem 'haml_lint', require: false
-  gem 'rubocop'
-  gem 'rvm-capistrano'
   # gem "rails-erd"
+  gem 'capistrano-rails-db'
+  gem 'capistrano3-puma'
   gem 'guard-rspec'
   gem 'guard-rubocop'
+  gem 'rubocop', require: false
+  gem 'rubocop-rspec', require: false
+  gem 'sshkit-sudo'
 end
 
 group :production do
   gem 'pg'
   gem 'puma'
-  gem 'rails_12factor'
-  gem 'unicorn'
+  gem 'rails_12factor', require: false
+  # gem 'unicorn'
 end
 
 group :test do

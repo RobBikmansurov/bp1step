@@ -1,86 +1,117 @@
-require 'rvm/capistrano'
-#require 'capistrano/rvm'
-require 'bundler/capistrano'
+# config valid only for current version of Capistrano
+lock '3.8.1'
 
-load "config/recipes/base"
-load "config/recipes/nginx"
-load "config/recipes/unicorn"
-load "config/recipes/monit"
+set :application, 'bp1step'
+set :user, 'rubydev'
+set :local_user , 'rubydev'
 
-srv = 'vrdev1'
-server "#{srv}.ad.bankperm.ru", :app, :web, :db, :primary => true
-set :serverFQDN, "#{srv}.ad.bankperm.ru"
-#server 'vrdev.ad.bankperm.ru', :app, :web, :db, :primary => true
-#set :serverFQDN, 'vrdev.ad.bankperm.ru'
+set :repo_url, 'git@github.com:RobBikmansurov/bp1step.git'
+
+set :rvm_type, :user                     # Defaults to: :auto
+set :rvm_ruby_version, "2.3.1@#{fetch(:application)}"
+set :rvm_roles, [:app, :web]
 
 # http and https proxy
-default_environment['http_proxy'] = 'http://proxy.ad.bankperm.ru:3129'
-default_environment['https_proxy'] = 'http://proxy.ad.bankperm.ru:3129'
+set :bundle_env_variables, { http_proxy: 'http://proxy.ad.bankperm.ru:3129', https_proxy: 'http://proxy.ad.bankperm.ru:3129' }
 
-set :application, "bp1step"
-set :user, 'rubydev'
-set :rails_env, "production"
-set :deploy_to, "/home/#{user}/#{application}"
-set :use_sudo, false
+# Default branch is :master
+# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
-set :unicorn_conf, "#{deploy_to}/config/unicorn.rb"
-set :unicorn_pid, "#{deploy_to}/tmp/pids/unicorn.pid"
+set :deploy_to, "/home/#{fetch(:user)}/#{fetch(:application)}"
 
-set :rvm_ruby_string, "ruby-2.3.1@#{application}"
-set :rvm_type, :user
+# Default value for :format is :airbrussh.
+set :format, :airbrussh
 
-set :scm, :git
-set :repository,  "http://github.com/RobBikmansurov/BPDoc.git"
-set :branch, "master"
-set :deploy_via, :remote_cache # Указание на то, что стоит хранить кеш репозитария локально и с каждым деплоем лишь подтягивать произведенные изменения. Очень актуально для больших и тяжелых репозитариев.
-default_run_options[:pty]        = true
-ssh_options[:forward_agent] = true
+# You can configure the Airbrussh format using :format_options.
+# These are the defaults.
+# set :format_options, command_output: true, log_file: 'log/capistrano.log', color: :auto, truncate: :auto
 
-set :keep_releases, 3 	# количество каталогов релизов, хранящихся на сервере
+# Default value for :pty is false
+# set :pty, true
 
-set :maintenance_template_path, File.expand_path("../recipes/templates/maintenance.html.erb", __FILE__)
+# Default value for :linked_files is []
+# set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
+set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml', 'config/ldap.yml')
 
-# if you want to clean up old releases on each deploy uncomment this:
-after "deploy:restart", "deploy:cleanup"
-#after "deploy:update_code", "rvm:trust_rvmrc"
-after "deploy:update_code", "deploy:create_symlink"
-# Create uploads directory and link
+# Default value for linked_dirs is []
+# set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system')
+set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'db')
+
+# Default value for default_env is {}
+# set :default_env, { path: "/opt/ruby/bin:$PATH" }
+
+# Default value for keep_releases is 5
+set :keep_releases, 3
+
+set :puma_nginx, :web
+set :puma_rackup, -> { File.join(current_path, 'config.ru') }
+
+set :puma_state, "#{shared_path}/tmp/pids/puma.state"
+set :puma_pid, "#{shared_path}/tmp/pids/puma.pid"
+set :puma_access_log, "#{shared_path}/log/puma.log"
+set :puma_error_log, "#{shared_path}/log/puma.log"
+
+set :puma_role, :app
+set :puma_tag, "#{fetch(:application)}"
+set :puma_threads, [2, 16]
+set :puma_workers, 1
+set :puma_preload_app, true
+set :puma_daemonize, true
+
+set :puma_init_active_record, true
+
 namespace :deploy do
-  task :create_symlink do
-    #run "cp #{shared_path}/config/database.yml #{release_path}/config/database.yml"
-    # run "ln -s #{shared_path}/db/sphinx #{release_path}/db/sphinx"
-    # run "ln -s #{shared_path}/config/unicorn.rb #{release_path}/config/unicorn.rb"
-    run "rm -rf #{deploy_to}/current"
-    run "ln -s -- #{release_path}/ #{deploy_to}/current"
-    run "rm -rf #{deploy_to}/current/public/store"
-    run "ln -s -- #{deploy_to}/public/store/ #{deploy_to}/current/public/store" #    app/models/document.rb :path => ":rails_root/public/store/:id.:ymd.:basename.:extension",
-    run "rm -rf #{deploy_to}/current/db"
-    run "ln -s -- #{deploy_to}/db/ #{deploy_to}/current/db"
-    run "rm -rf #{deploy_to}/current/files"
-    run "ln -s -- #{deploy_to}/files/ #{deploy_to}/current/files"
-    run "rm -rf #{deploy_to}/lib"
-    run "ln -s -- #{deploy_to}/current/lib/ #{deploy_to}/lib"
-    run "rm -rf #{deploy_to}/config/routes.rb"                                              # а может надо весь config заменять?
-    run "ln -s -- #{deploy_to}/current/config/routes.rb #{deploy_to}/config/routes.rb"
-    #run "rm -rf #{deploy_to}/config"
+  desc 'Setup'
+  task :setup do
+    on roles(:all) do
+      execute "mkdir -p #{shared_path}/"
+      execute "mkdir -p #{shared_path}/config/"
+      execute "mkdir -p #{shared_path}/db/"
+      execute "mkdir -p #{shared_path}/log/"
+      # execute "mkdir -p #{shared_path}/reports/"
+      #execute "mkdir #{shared_path}/system"
+      #sudo "ln -s /var/log/upstart /var/www/log/upstart"
 
-    # скопируем конфигурационый файл
-    run "cp #{deploy_to}/config/environments/production.rb #{deploy_to}/current/config/environments/production.rb"
+      #upload!('shared/database.yml', "#{shared_path}/config/database.yml")
 
-    # скопируем конфигурационые файлы с секретами
-    run "cp #{deploy_to}/config/ldap.yml #{deploy_to}/current/config/ldap.yml"
-    run "cp #{deploy_to}/config/database.yml #{deploy_to}/current/config/database.yml"
-    # шаблоны документов с шапками или информацией об организации
-    run "cp #{deploy_to}/secret/*.odt #{deploy_to}/current/reports/"
-    # шаблон официального письма
-    run "cp #{deploy_to}/secret/bnk-letter.odt #{deploy_to}/current/reports/letter.odt"
+      #upload!('shared/Procfile', "#{shared_path}/Procfile")
+
+      #upload!('shared/nginx.conf', "#{shared_path}/nginx.conf")
+      #sudo 'stop nginx'
+      #sudo "rm -f /usr/local/nginx/conf/nginx.conf"
+      #sudo "ln -s #{shared_path}/nginx.conf /usr/local/nginx/conf/nginx.conf"
+      #sudo 'start nginx'
+
+      # скопируем конфигурационые файлы с секретами
+      #run "cp #{deploy_to}/config/ldap.yml #{deploy_to}/current/config/ldap.yml"
+      #run "cp #{deploy_to}/config/database.yml #{deploy_to}/current/config/database.yml"
+      # шаблоны документов с шапками или информацией об организации
+      #run "cp #{deploy_to}/secret/*.odt #{deploy_to}/current/reports/"
+      # шаблон официального письма
+      #run "cp #{deploy_to}/secret/bnk-letter.odt #{deploy_to}/current/reports/letter.odt"
+      #run "rm -rf #{deploy_to}/current/public/store"
+      #run "ln -s -- #{deploy_to}/public/store/ #{deploy_to}/current/public/store" #    app/models/document.rb :path => ":rails_root/public/store/:id.:ymd.:basename.:extension",
+      #run "rm -rf #{deploy_to}/current/files"
+      run "ln -s -- #{deploy_to}/files/ #{deploy_to}/current/files"
+
+
+      within release_path do
+        with rails_env: fetch(:rails_env) do
+          execute :rake, "db:create"
+        end
+      end
+    end
+  end
+
+  after :restart, :clear_cache do
+    on roles(:web), in: :groups, limit: 3, wait: 10 do
+      # Here we can do anything such as:
+      # within release_path do
+      #   execute :rake, 'cache:clear'
+      # end
+    end
   end
 
 end
 
-namespace :rvm do
-  desc 'Trust rvmrc file'
-  task :trust_rvmrc do
-    run "rvm rvmrc trust #{release_path}"
-  end
-end
+
