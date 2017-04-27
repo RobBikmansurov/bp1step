@@ -140,8 +140,7 @@ class DocumentsController < ApplicationController
     render :bproce_create
   end
 
-  def show_files
-  end
+  def show_files; end
 
   def new
     @document = Document.new(dlevel: 3, status: 'Проект', place: '?!') # место хранения не определено

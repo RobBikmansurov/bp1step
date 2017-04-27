@@ -5,8 +5,7 @@ class MetricValuesController < ApplicationController
 
   # rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @metric_value.update(metric_value_params)

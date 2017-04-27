@@ -6,8 +6,7 @@ class LetterAppendixesController < ApplicationController
   before_action :set_letter_appendix, only: %i[show edit update destroy]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
-  def show
-  end
+  def show; end
 
   def edit
     @letter = @letter_appendix.letter if @letter_appendix

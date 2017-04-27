@@ -66,8 +66,7 @@ class MetricsController < ApplicationController
     @metric = Metric.new
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @metric = Metric.new(metric_params)
@@ -254,7 +253,7 @@ class MetricsController < ApplicationController
     @bproce = Bproce.find(params[:bproce_id]) if params[:bproce_id].present?
   end
 
-    # Only allow a trusted parameter "white list" through.
+  # Only allow a trusted parameter "white list" through.
   def metric_params
     params.require(:metric).permit(:bproce_id, :name, :shortname, :description, :note, :depth, :depth_name, :bproce_name, :mtype, :msql)
   end
