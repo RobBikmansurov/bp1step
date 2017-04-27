@@ -31,10 +31,8 @@ module ApplicationHelper
   end
 
   def markdown_and_link(text, business_roles)
-    if business_roles
-      business_roles.each do |business_role| # заменим названия роли на ссылку
-        text.gsub!(/(^|\s|^\s)#{business_role.name}($|\s|\.|,)/, ' <a href="/business_roles/' + business_role.id.to_s + '">' + business_role.name + '</a> ')
-      end
+    business_roles&.each do |business_role| # заменим названия роли на ссылку
+      text.gsub!(/(^|\s|^\s)#{business_role.name}($|\s|\.|,)/, ' <a href="/business_roles/' + business_role.id.to_s + '">' + business_role.name + '</a> ')
     end
     text.gsub!(/\r\n?/, "\n")                       # \r\n and \r => \n
     text = "<p>#{text.gsub(/\n\n\s*/, '</p><p>')}"  # 2 newline   => p

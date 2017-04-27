@@ -173,7 +173,7 @@ class MetricsController < ApplicationController
         @test << "ERR: #{@sql}\n"
         @test << error.inspect
       ensure
-        mssql.close if mssql
+        mssql&.close
       end
     end
   end
@@ -241,7 +241,7 @@ class MetricsController < ApplicationController
           end
         end
       end
-      mssql.close if mssql
+      mssql&.close
     end
     redirect_to action: :show and return
   end
