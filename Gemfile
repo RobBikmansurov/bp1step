@@ -59,7 +59,7 @@ group :development do
   gem 'sshkit-sudo'
 end
 
-group :production do
+group :production, :staging do
   gem 'pg'
   gem 'puma'
   gem 'rails_12factor', require: false
