@@ -6,7 +6,7 @@ ruby '2.3.1'
 
 gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
+gem 'jquery-ui-rails' # , '~> 5.0.5'
 gem 'rails', '4.2.7.1'
 gem 'sass-rails', '~> 4.0.0'
 gem 'therubyracer'
@@ -17,7 +17,7 @@ gem 'alphabetical_paginate'
 gem 'cancancan', '~> 1.10'
 gem 'devise', '~> 3.5.2' # , git: "https://github.com/plataformatec/devise"
 gem 'devise_ldap_authenticatable'
-gem 'execjs'
+# gem 'execjs'
 gem 'haml-rails'
 
 gem 'awesome_nested_set' # , :git => 'git://github.com/collectiveidea/awesome_nested_set'
@@ -35,7 +35,7 @@ gem 'jcrop-rails-v2'
 gem 'pdf-reader'
 gem 'pg_search'
 gem 'protected_attributes'
-gem 'tiny_tds'
+gem 'tiny_tds' #, '~> 0.7.0' # MS SQL
 gem 'tzinfo-data'
 
 gem 'actionpack-action_caching'

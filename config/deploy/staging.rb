@@ -17,7 +17,6 @@ set :nginx_server_name, 'bp1step-dev.ad.bankperm.ru'
 
 set :rails_env, :staging
 set :conditionally_migrate, true
-set :unicorn_workers, 2
 
 # server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
