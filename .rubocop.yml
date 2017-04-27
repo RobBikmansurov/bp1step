@@ -7,6 +7,8 @@ AllCops:
     - 'config/**/*'
     - 'db/migrate/*'
     - 'features/**/*'
+    - 'coverage/*'
+    - 'Guardfile'
 Rails:
   Enabled: true
 
