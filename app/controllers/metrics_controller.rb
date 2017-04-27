@@ -104,13 +104,13 @@ class MetricsController < ApplicationController
     values = MetricValue.where(metric_id: @metric.id)
     @values = case @metric.depth # список значений за выбранный период
               when 1..2 then values.where(dtime: (@current_period_date.beginning_of_year..@current_period_date.end_of_year)).order(:dtime)
-      else values.where(dtime: (@current_period_date.beginning_of_month..@current_period_date.end_of_month)).order(:dtime)
-    end
+              else values.where(dtime: (@current_period_date.beginning_of_month..@current_period_date.end_of_month)).order(:dtime)
+              end
     @datetime_format = case @metric.depth # формат отображения даты значений выбранного периода
                        when 1 then '%Y'
                        when 2 then '%b %Y'
-      else '%d %m %Y'
-    end
+                       else '%d %m %Y'
+                       end
     @metrics = Metric.where(bproce_id: @metric.bproce).order(:name)
   end
 

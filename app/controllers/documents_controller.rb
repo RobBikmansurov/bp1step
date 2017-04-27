@@ -284,12 +284,12 @@ class DocumentsController < ApplicationController
     fname = 'files' + @document.file_name # добавим путь к файлам
     type = case File.extname(fname) # определим по расширению файла его mime-тип
            when '.pdf'
-        'application/pdf'
+             'application/pdf'
            when '.doc'
-        'application/msword'
-      else
-        'application/vnd.oasis.opendocument.text'
-    end
+             'application/msword'
+           else
+             'application/vnd.oasis.opendocument.text'
+           end
     send_file(fname, type: type, filename: File.basename(@document.file_name), disposition: 'inline')
   end
 
