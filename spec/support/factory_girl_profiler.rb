@@ -1,5 +1,4 @@
 class FactoryGirlProfiler
-
   attr_accessor :results
 
   def self.setup
@@ -40,7 +39,6 @@ class FactoryGirlProfiler
     end
     puts "\n Total FactoryGirl time #{total_in_secs.round(2)} seconds"
   end
-
 end
 
 RSpec.configure do |config|
