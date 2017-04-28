@@ -451,6 +451,7 @@ DEPENDENCIES
   public_activity
   puma
   rails (= 4.2.7.1)
+  rails-dom-testing
   rails3-jquery-autocomplete
   rails_12factor
   rspec-rails
