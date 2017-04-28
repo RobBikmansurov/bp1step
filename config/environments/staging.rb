@@ -35,9 +35,6 @@ BPDoc::Application.configure do
     #:authentication       => 'plain',
     :enable_starttls_auto => true  }
 
-   # Compress JavaScripts and CSS.
-  config.assets.js_compressor = :uglifier
-
   config.assets.digest = true
 
   config.eager_load = false
