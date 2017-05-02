@@ -64,6 +64,7 @@ group :production, :staging do
   gem 'puma'
   gem 'rails_12factor', require: false
   # gem 'unicorn'
+  gem 'rails-dom-testing'
 end
 
 group :test do
