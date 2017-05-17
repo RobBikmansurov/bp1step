@@ -1,31 +1,40 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe MetricsController, type: :controller do
   let(:valid_attributes) { { 'name' => 'Metric name', description: 'description1', bproce_id: 1, depth: 1 } }
   let(:valid_session) { {} }
 
   describe 'GET index' do
     it 'assigns all metrics as @metrics' do
-      metric = Metric.create! valid_attributes
       get :index, {}, valid_session
-      assigns(:metrics).should eq([metric])
+      expect(response).to be_success
+      expect(response).to have_http_status(:success)
+      expect(response).to render_template('metrics/index')
+    end
+    it 'loads all of the metrics into @metricss' do
+      metric1 = Metric.create! valid_attributes
+      metric2 = Metric.create! valid_attributes
+      get :index
+      expect(assigns(:metrics)).to match_array([metric1, metric2])
     end
   end
 
   describe 'GET show' do
-    it 'assigns the @metric' do
+    it 'assigns the requested metric as @metric' do
       @metric = Metric.create! valid_attributes
-      # get :show, {id: @metric.id}, valid_session
+      # get :show, {id: @metric.to_param}, valid_session
       expect(response).to be_success
-      # expect(response).to render_template(:show)
-      # expect(assigns(:metric)).to eq(@metric)
+      expect(response).to have_http_status(:success)
+      # expect(assigns(:metric)).to eq(@metric) # error - Time zones not supported for SQLite
     end
   end
 
   describe 'GET new' do
     it 'assigns a new metric as @metric' do
       get :new, {}, valid_session
-      assigns(:metric).should be_a_new(Metric)
+      expect(assigns(:metric)).to be_a_new(Metric)
     end
   end
 
@@ -33,7 +42,7 @@ RSpec.describe MetricsController, type: :controller do
     it 'assigns the requested metric as @metric' do
       metric = Metric.create! valid_attributes
       get :edit, { id: metric.to_param }, valid_session
-      assigns(:metric).should eq(metric)
+      expect(assigns(:metric)).to eq(metric)
     end
   end
 
@@ -47,8 +56,8 @@ RSpec.describe MetricsController, type: :controller do
 
       it 'assigns a newly created metric as @metric' do
         post :create, { metric: valid_attributes }, valid_session
-        assigns(:metric).should be_a(Metric)
-        assigns(:metric).should be_persisted
+        expect(assigns(:metric)).to be_a(Metric)
+        expect(assigns(:metric)).to be_persisted
       end
 
       it 'redirects to the created metric' do
@@ -62,7 +71,7 @@ RSpec.describe MetricsController, type: :controller do
         # Trigger the behavior that occurs when invalid params are submitted
         Metric.any_instance.stub(:save).and_return(false)
         post :create, { metric: { 'bproce' => 'invalid value' } }, valid_session
-        assigns(:metric).should be_a_new(Metric)
+        expect(assigns(:metric)).to be_a_new(Metric)
       end
 
       it "re-renders the 'new' template" do
@@ -85,7 +94,7 @@ RSpec.describe MetricsController, type: :controller do
       it 'assigns the requested metric as @metric' do
         metric = Metric.create! valid_attributes
         put :update, { id: metric.to_param, metric: valid_attributes }, valid_session
-        assigns(:metric).should eq(metric)
+        expect(assigns(:metric)).to eq(metric)
       end
 
       it 'redirects to the metric' do
@@ -101,7 +110,7 @@ RSpec.describe MetricsController, type: :controller do
         # Trigger the behavior that occurs when invalid params are submitted
         Metric.any_instance.stub(:save).and_return(false)
         put :update, { id: metric.to_param, metric: { 'bproce' => 'invalid value' } }, valid_session
-        assigns(:metric).should eq(metric)
+        expect(assigns(:metric)).to eq(metric)
       end
 
       it "re-renders the 'edit' template" do
