@@ -22,7 +22,7 @@ gem 'haml-rails'
 
 gem 'awesome_nested_set' # , :git => 'git://github.com/collectiveidea/awesome_nested_set'
 gem 'odf-report'
-gem 'paperclip', '~> 4.2'
+gem 'paperclip', '~> 5.1'
 gem 'public_activity'
 gem 'rails3-jquery-autocomplete' # , git: 'https://github.com/francisd/rails3-jquery-autocomplete'
 gem 'simple_form'
