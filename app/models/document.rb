@@ -33,9 +33,9 @@ class Document < ActiveRecord::Base
 
   # before_validation { document_file.clear if delete_file == '1' }
   has_attached_file :document_file,
-                    #url: '/store/:id.:ymd.:basename.:extension',
+                    url: '/store/:id.:ymd.:basename.:extension',
                     presence: false,
-                    path: ':rails_root/store/:id.:ymd.:basename.:extension',
+                    path: ':rails_root/public/store/:id.:ymd.:basename.:extension',
                     hash_secret: 'BankPermBP1Step'
   validates :document_file, attachment_presence: false
   do_not_validate_attachment_file_type :document_file # paperclip >4.0
