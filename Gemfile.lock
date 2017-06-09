@@ -93,7 +93,7 @@ GEM
     chartkick (2.2.3)
     childprocess (0.6.3)
       ffi (~> 1.0, >= 1.0.11)
-    climate_control (0.1.0)
+    climate_control (0.2.0)
     cocaine (0.5.8)
       climate_control (>= 0.0.3, < 1.0)
     codeclimate-test-reporter (1.0.8)
@@ -201,7 +201,7 @@ GEM
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
-    mimemagic (0.3.0)
+    mimemagic (0.3.2)
     mini_portile (0.6.2)
     mini_portile2 (2.1.0)
     minitest (5.10.1)
@@ -220,12 +220,12 @@ GEM
       nokogiri (>= 1.5.0)
       rubyzip (~> 1.1.0)
     orm_adapter (0.5.0)
-    paperclip (4.3.7)
-      activemodel (>= 3.2.0)
-      activesupport (>= 3.2.0)
+    paperclip (5.1.0)
+      activemodel (>= 4.2.0)
+      activesupport (>= 4.2.0)
       cocaine (~> 0.5.5)
       mime-types
-      mimemagic (= 0.3.0)
+      mimemagic (~> 0.3.0)
     parser (2.4.0.0)
       ast (~> 2.2)
     pdf-reader (2.0.0)
@@ -441,7 +441,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   odf-report
-  paperclip (~> 4.2)
+  paperclip (~> 5.1)
   pdf-reader
   pg
   pg_search
@@ -476,4 +476,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.14.6
+   1.15.1
