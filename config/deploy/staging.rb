@@ -5,7 +5,7 @@
 # You can define all roles on a single server, or split them:
 
 # set :deploy_via, :remote_cache
-set :use_sudo, true
+# set :use_sudo, true
 
 set :ssh_options,
   keys: %w(/home/DOMAIN_SQL/mr_rob/.ssh/id_rsa),

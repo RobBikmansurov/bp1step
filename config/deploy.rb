@@ -35,7 +35,7 @@ set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/
 
 # Default value for linked_dirs is []
 # set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system')
-set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'db')
+set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'db', 'store')
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -43,7 +43,6 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', '
 # Default value for keep_releases is 5
 set :keep_releases, 3
 
-set :puma_nginx, :web
 set :puma_rackup, -> { File.join(current_path, 'config.ru') }
 
 set :puma_state, "#{shared_path}/tmp/pids/puma.state"
@@ -60,6 +59,8 @@ set :puma_daemonize, true
 
 set :puma_init_active_record, true
 
+set :bundle_jobs, 4 # default: nil, only available for Bundler >= 1.4
+
 namespace :deploy do
   desc 'Setup'
   task :setup do
@@ -68,6 +69,16 @@ namespace :deploy do
       execute "mkdir -p #{shared_path}/config/"
       execute "mkdir -p #{shared_path}/db/"
       execute "mkdir -p #{shared_path}/log/"
+      execute "mkdir -p #{shared_path}/store/"
+      execute "mkdir -p #{shared_path}/store/db/" # копии БД
+      execute "mkdir -p #{shared_path}/store/appendix/" # приложения к Письмам
+      execute "mkdir -p #{shared_path}/store/scan/" # сканы договоров
+      execute "mkdir -p #{shared_path}/store/images/" # аватары пользователей
+
+
+      execute "mkdir -p #{deploy_to}/svk_in/"
+      execute "mkdir -p #{deploy_to}/bp1step.store/"
+
       # execute "mkdir -p #{shared_path}/reports/"
       #execute "mkdir #{shared_path}/system"
       #sudo "ln -s /var/log/upstart /var/www/log/upstart"
