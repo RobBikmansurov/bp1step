@@ -9,7 +9,7 @@ namespace :bp1step do
 
     nn = 0
     nf = 0
-    pathfrom =  Rails.root.join('svk_in')
+    pathfrom =  Rails.root.join('../../svk_in') # current/ = releases/YYYYMMDDHHMMSS/
     logger.info pathfrom.to_s
 
     Dir.glob(pathfrom.join('*.*')).each do |file| # обход всех файлов в каталоге с файлами для писем
