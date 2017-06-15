@@ -66,8 +66,7 @@ class MetricsController < ApplicationController
     @metric = Metric.new
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @metric = Metric.new(metric_params)
@@ -105,13 +104,13 @@ class MetricsController < ApplicationController
     values = MetricValue.where(metric_id: @metric.id)
     @values = case @metric.depth # список значений за выбранный период
               when 1..2 then values.where(dtime: (@current_period_date.beginning_of_year..@current_period_date.end_of_year)).order(:dtime)
-      else values.where(dtime: (@current_period_date.beginning_of_month..@current_period_date.end_of_month)).order(:dtime)
-    end
+              else values.where(dtime: (@current_period_date.beginning_of_month..@current_period_date.end_of_month)).order(:dtime)
+              end
     @datetime_format = case @metric.depth # формат отображения даты значений выбранного периода
                        when 1 then '%Y'
                        when 2 then '%b %Y'
-      else '%d %m %Y'
-    end
+                       else '%d %m %Y'
+                       end
     @metrics = Metric.where(bproce_id: @metric.bproce).order(:name)
   end
 
@@ -174,7 +173,7 @@ class MetricsController < ApplicationController
         @test << "ERR: #{@sql}\n"
         @test << error.inspect
       ensure
-        mssql.close if mssql
+        mssql&.close
       end
     end
   end
@@ -242,7 +241,7 @@ class MetricsController < ApplicationController
           end
         end
       end
-      mssql.close if mssql
+      mssql&.close
     end
     redirect_to action: :show and return
   end
@@ -254,7 +253,7 @@ class MetricsController < ApplicationController
     @bproce = Bproce.find(params[:bproce_id]) if params[:bproce_id].present?
   end
 
-    # Only allow a trusted parameter "white list" through.
+  # Only allow a trusted parameter "white list" through.
   def metric_params
     params.require(:metric).permit(:bproce_id, :name, :shortname, :description, :note, :depth, :depth_name, :bproce_name, :mtype, :msql)
   end

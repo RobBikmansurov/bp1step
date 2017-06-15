@@ -29,15 +29,15 @@ module Paperclip
             crop_h = target.crop_w.to_i
             crop_x = target.crop_x.to_i
             crop_y = target.crop_y.to_i - ((target.crop_w.to_i - target.crop_h.to_i) / 2).to_i
-            crop_x = 0 if crop_x < 0
-            crop_y = 0 if crop_y < 0
+            crop_x = 0 if crop_x.negative?
+            crop_y = 0 if crop_y.negative?
           elsif target.crop_w < target.crop_h
             crop_w = target.crop_h.to_i
             crop_h = target.crop_h.to_i
             crop_x = target.crop_x.to_i - ((target.crop_h.to_i - target.crop_w.to_i) / 2).to_i
             crop_y = target.crop_y.to_i
-            crop_x = 0 if crop_x < 0
-            crop_y = 0 if crop_y < 0
+            crop_x = 0 if crop_x.negative?
+            crop_y = 0 if crop_y.negative?
           else
             crop_w = target.crop_w.to_i
             crop_h = target.crop_h.to_i

@@ -20,7 +20,7 @@ class BproceIresourcesController < ApplicationController
   def destroy
     @iresource = @bproce_iresource.iresource
     # @iresource = @bproce_iresource.iresource
-     flash[:notice] = 'Successfully destroyed bproce_iresource.' if @bproce_iresource.destroy
+    flash[:notice] = 'Successfully destroyed bproce_iresource.' if @bproce_iresource.destroy
     # respond_with(@bproce_iresource.bproce)
     respond_with(@bproce_iresource.iresource) # удаляем процесс из ресурса - поэтому возврат в ресурс
   end

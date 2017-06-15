@@ -62,7 +62,7 @@ class TasksController < ApplicationController
     if (current_user.id == @task.author.id) || @task.user_task.where(status: 1).pluck(:user_id).include?(current_user.id)
       # @task_status_enabled = TASK_STATUS.select { |key, value| value > 5 }  # автору и ответственному можно переводить в любое состояние
     else
-      @task_status_enabled = TASK_STATUS.select { |_key, value| value > 0 }
+      @task_status_enabled = TASK_STATUS.select { |_key, value| value.positive? }
       @task_status_enabled = @task_status_enabled.select { |_key, value| value < 90 } if @task.status < 90
     end
   end

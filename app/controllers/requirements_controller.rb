@@ -149,7 +149,7 @@ class RequirementsController < ApplicationController
       @requirement.user_requirement.find_each do |user_requirement|
         s += ', ' if s.present?
         s += user_requirement.user.displayname
-        s += '-отв.' if user_requirement.status && user_requirement.status > 0
+        s += '-отв.' if user_requirement.status.positive?
       end
       r.add_field 'REQUIREMENT_USERS', s
 
@@ -172,7 +172,7 @@ class RequirementsController < ApplicationController
         # t.add_column(:source)
         t.add_column(:duedate) do |task|
           days = task.duedate - Date.current
-          task.duedate.strftime('%d.%m.%y').to_s + (days < 0 ? "  (+ #{(-days).to_i} дн.)" : '')
+          task.duedate.strftime('%d.%m.%y').to_s + (days.negative? ? "  (+ #{(-days).to_i} дн.)" : '')
         end
         t.add_column(:status) do |task|
           TASK_STATUS.key(task.status)
@@ -182,7 +182,7 @@ class RequirementsController < ApplicationController
           task.user_task.find_each do |user_task|
             s += ', ' if s.present?
             s += user_task.user.displayname
-            s += '-отв.' if user_task.status && user_task.status > 0
+            s += '-отв.' if user_task.status.positive?
           end
           s.to_s
         end
@@ -217,7 +217,7 @@ class RequirementsController < ApplicationController
       @requirement.user_requirement.find_each do |user_requirement|
         s += ', ' if s.present?
         s += user_requirement.user.displayname
-        s += '-отв.' if user_requirement.status && user_requirement.status > 0
+        s += '-отв.' if user_requirement.status.positive?
       end
       r.add_field 'REQUIREMENT_USERS', s
 
@@ -248,7 +248,7 @@ class RequirementsController < ApplicationController
         t.add_column(:completionalert) do |task|
           if task.completion_date
             days = task.completion_date - task.duedate if task.duedate
-            (days > 0 ? " (опоздание #{days.to_i} дн.)" : '')
+            (days.positive? ? " (опоздание #{days.to_i} дн.)" : '')
           end
         end
         t.add_column(:status) do |task|
@@ -259,7 +259,7 @@ class RequirementsController < ApplicationController
           task.user_task.find_each do |user_task|
             s += ', ' if s.present?
             s += user_task.user.displayname
-            s += '-отв.' if user_task.status && user_task.status > 0
+            s += '-отв.' if user_task.status.positive?
           end
           s.to_s
         end

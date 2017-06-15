@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
+
 namespace :bp1step do
   desc 'Create Letters from files in  SVK'
   task create_letters_from_files: :environment do # создание новых писем из файов в каталоге СВК

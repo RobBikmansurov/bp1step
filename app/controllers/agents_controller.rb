@@ -11,15 +11,13 @@ class AgentsController < ApplicationController
     @contracts = Contract.where(agent_id: @agent.id).order(:lft)
   end
 
-  def new
-  end
+  def new; end
 
   def new_contract # новый договор контрагента
     redirect_to new_contract_path({ agent_id: @agent.id })
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @agent = Agent.new(agent_params)
