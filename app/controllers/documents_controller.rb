@@ -115,8 +115,6 @@ class DocumentsController < ApplicationController
     if params[:user_document].present?
       user_id = User.where(displayname: params[:user_document][:user]).first.id
       @user_document = UserDocument.new(user_id: user_id, document_id: @document.id, link: params[:user_document][:link])
-      puts "\n\n...update_favorite..."
-      puts @user_document.inspect
       flash[:notice] = "##{@document.id} добавлен в Избранное для #{params[:user_document][:user]}." if @user_document.save
       @user_documents = UserDocument.where(document_id: @document.id).order('link, updated_at DESC').includes(:user).load # избранные документы пользователя
     end
