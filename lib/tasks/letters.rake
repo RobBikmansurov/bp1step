@@ -3,17 +3,19 @@
 
 namespace :bp1step do
   desc 'Create Letters from files in  SVK'
-  task create_letters_from_files: :environment do # создание новых писем из файов в каталоге СВК
+  # создание новых писем из файов в каталоге СВК
+  task create_letters_from_files: :environment do
     PublicActivity.enabled = false # отключить протоколирование изменений
     logger = Logger.new('log/bp1step.log') # протокол работы
     logger.info '===== ' + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ' :create_letters_from_files'
 
     nn = 0
     nf = 0
-    pathfrom =  Rails.root.join('../../svk_in') # current/ = releases/YYYYMMDDHHMMSS/
+    pathfrom =  Rails.root.join('..', '..', 'svk_in') # current/ = releases/YYYYMMDDHHMMSS/
     logger.info pathfrom.to_s
 
-    Dir.glob(pathfrom.join('*.*')).each do |file| # обход всех файлов в каталоге с файлами для писем
+    # обход всех файлов в каталоге с файлами для писем
+    Dir.glob(pathfrom.join('*.*')).each do |file|
       nf += 1
       ext = File.extname(file).upcase
       fname = File.basename(file).upcase            # расширение файла
@@ -74,13 +76,9 @@ namespace :bp1step do
       end
 
       next if l_number.blank? # удалось идентифицировать файл
-      letter = Letter.new(status: 0)
+      letter = Letter.new(status: 0, number: l_number, sender: l_sender, subject: l_subject, source: l_source)
       letter.date = Time.current.strftime('%d.%m.%Y')
       letter.duedate = (Time.current + 10.days).strftime('%d.%m.%Y') # срок исполнения - даем 10 дней по умолчанию
-      letter.number = l_number
-      letter.sender = l_sender
-      letter.subject = l_subject
-      letter.source = l_source
       next unless letter.save! # письмо создали, теперь присоедним файл
       nn += 1
       logger.info "##{letter.id} #{name}: \t№#{l_number}\t[#{l_subject}]"
@@ -111,7 +109,7 @@ namespace :bp1step do
       users = ''
       letter.user_letter.each do |user_letter| # исполнители
         next unless user_letter.user
-        emails += ', ' unless emails.blank?
+        emails += ', ' if emails.present?
         emails += user_letter.user.email.to_s
         users += user_letter.user.displayname.to_s
       end
@@ -119,11 +117,11 @@ namespace :bp1step do
       if days.negative?
         count += 1
         logger.info "      ##{letter.id}\tсрок! #{letter.duedate.strftime('%d.%m.%y')}: #{(-days).to_i}\t#{emails}"
-        LetterMailer.check_overdue_letters(letter, emails).deliver unless emails.blank?
+        LetterMailer.check_overdue_letters(letter, emails).deliver if emails.present?
       elsif [0, 1, 2, 5].include?(days)
         count_soon_deadline += 1
         logger.info "      ##{letter.id}\tскоро #{letter.duedate.strftime('%d.%m.%y')}: #{days.to_i}\t#{emails}"
-        LetterMailer.soon_deadline_letters(letter, emails, days, users).deliver unless emails.blank?
+        LetterMailer.soon_deadline_letters(letter, emails, days, users).deliver if emails.present?
       end
     end
     logger.info "      #{count} letters is duedate and #{count_soon_deadline} soon deadlineletters"
