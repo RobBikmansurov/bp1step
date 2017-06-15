@@ -10,7 +10,7 @@ class UserLetterMailer < ActionMailer::Base
     @user = user_letter.user
     @current_user = current_user
     mail(to: @user.email,
-         subject: "BP1Step: Вы - #{status(user_letter.status)}исполнитель Письма ##{@letter.name}")
+         subject: "BP1Step: Вы - #{@letter.status.positive? ? 'отв.' : ''}исполнитель Письма ##{@letter.name}")
   end
 
   def user_letter_destroy(user_letter, current_user)	# рассылка об удалении исполнителя из ответственных
