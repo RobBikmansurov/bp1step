@@ -106,6 +106,7 @@ namespace :deploy do
       run "ln -s -- #{deploy_to}/files/ #{deploy_to}/current/files"
 
 
+
       within release_path do
         with rails_env: fetch(:rails_env) do
           execute :rake, "db:create"
@@ -114,7 +115,14 @@ namespace :deploy do
     end
   end
 
-  after :restart, :clear_cache do
+  after deploy:symlink:shared do
+    # шаблоны документов с шапками или информацией об организации
+    # run "cp #{deploy_to}/secret/*.odt #{deploy_to}/current/reports/"
+    # шаблон официального письма
+    run "cp #{shared_path}/secret/bnk-letter.odt #{deploy_to}/current/reports/letter.odt"
+  end
+
+  after deploy:restart, deploy :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       # Here we can do anything such as:
       # within release_path do
