@@ -31,7 +31,7 @@ set :format, :airbrussh
 
 # Default value for :linked_files is []
 # set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
-set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml', 'config/ldap.yml')
+set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/ldap.yml', 'config/secrets.yml')
 
 # Default value for linked_dirs is []
 # set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system')
@@ -103,7 +103,7 @@ namespace :deploy do
       #run "rm -rf #{deploy_to}/current/public/store"
       #run "ln -s -- #{deploy_to}/public/store/ #{deploy_to}/current/public/store" #    app/models/document.rb :path => ":rails_root/public/store/:id.:ymd.:basename.:extension",
       #run "rm -rf #{deploy_to}/current/files"
-      run "ln -s -- #{deploy_to}/files/ #{deploy_to}/current/files"
+      execute "ln -s -- #{deploy_to}/files/ #{deploy_to}/current/files"
 
 
 
@@ -115,14 +115,16 @@ namespace :deploy do
     end
   end
 
-  after deploy:symlink:shared do
-    # шаблоны документов с шапками или информацией об организации
-    # run "cp #{deploy_to}/secret/*.odt #{deploy_to}/current/reports/"
-    # шаблон официального письма
-    run "cp #{shared_path}/secret/bnk-letter.odt #{deploy_to}/current/reports/letter.odt"
+  task :copy_reports do
+    on roles(:app) do
+      # шаблоны документов с шапками или информацией об организации
+      execute "cp #{shared_path}/secret/*.odt #{release_path}/reports/"
+      # шаблон официального письма
+      execute "cp #{shared_path}/secret/bnk-letter.odt #{release_path}/reports/letter.odt"
+    end
   end
 
-  after deploy:restart, deploy :clear_cache do
+  after 'deploy:restart', 'deploy:clear_cache' do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       # Here we can do anything such as:
       # within release_path do
@@ -130,6 +132,8 @@ namespace :deploy do
       # end
     end
   end
+
+  after 'deploy:publishing', 'deploy:copy_reports'
 
 end
 
