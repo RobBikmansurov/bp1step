@@ -31,7 +31,7 @@ set :format, :airbrussh
 
 # Default value for :linked_files is []
 # set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
-set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/ldap.yml', 'config/secrets.yml')
+set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/ldap.yml', 'config/secrets.yml', 'config/ldapldap.yml')
 
 # Default value for linked_dirs is []
 # set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system')
@@ -121,6 +121,8 @@ namespace :deploy do
       execute "cp #{shared_path}/secret/*.odt #{release_path}/reports/"
       # шаблон официального письма
       execute "cp #{shared_path}/secret/bnk-letter.odt #{release_path}/reports/letter.odt"
+      execute "rm #{release_path}/reports/bnk-letter.odt"
+      execute "ln -s #{shared_path}/config/ldap.yml #{release_path}/config/ldap.yml"
     end
   end
 
