@@ -56,7 +56,7 @@ class BprocesController < ApplicationController
     @directive_of_bproce = Directive.last.directives_of_bproce(@bproce.id) if @bproce
     # @contracts = Contract.where(:bproce_id => @bproce.id)  # договоры процесса
 
-    logger.debug "/n/n/tdescription:/n #{@bproce.description}/n/n"
+    logger.info "/n/n/tdescription:/n #{@bproce.description}/n/n"
 
     respond_with(@bproce)
   end
