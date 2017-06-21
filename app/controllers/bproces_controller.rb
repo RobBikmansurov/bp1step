@@ -55,6 +55,9 @@ class BprocesController < ApplicationController
     @metrics = Metric.where(bproce_id: @bproce.id).order(:name) if @bproce # метрики процесса
     @directive_of_bproce = Directive.last.directives_of_bproce(@bproce.id) if @bproce
     # @contracts = Contract.where(:bproce_id => @bproce.id)  # договоры процесса
+
+    logger.debug "/n/n/tdescription:/n #{@bproce.description}/n/n"
+
     respond_with(@bproce)
   end
 
