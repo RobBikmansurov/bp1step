@@ -399,7 +399,7 @@ namespace :bp1step do
     Bproce.group(:user_id).all.each do |bproce| # все владельцы процессов
       next unless bproce.user_id # есть владелец процесса?
       @user = bproce.user
-      unless @user.has_role? :owner
+      unless @user.role? :owner
         users_without_roles += 1
         logger.info "      #{@user.displayname} hasn't roles :owner"
       end
