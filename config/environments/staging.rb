@@ -65,6 +65,4 @@ BPDoc::Application.configure do
     :exception_recipients => %w{robb@bankperm.ru}
   }
 
-
 end
-
