@@ -38,6 +38,9 @@ gem 'protected_attributes'
 gem 'tiny_tds' # , '~> 0.7.0' # MS SQL
 gem 'tzinfo-data'
 
+gem 'exception_notification'
+gem 'whenever', require: false # cron jobs (crontab -l, crontab -e)
+
 gem 'actionpack-action_caching'
 gem 'actionpack-page_caching' # кеширование
 

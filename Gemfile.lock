@@ -93,6 +93,7 @@ GEM
     chartkick (2.2.3)
     childprocess (0.6.3)
       ffi (~> 1.0, >= 1.0.11)
+    chronic (0.10.2)
     climate_control (0.2.0)
     cocaine (0.5.8)
       climate_control (>= 0.0.3, < 1.0)
@@ -125,6 +126,9 @@ GEM
     diff-lcs (1.3)
     docile (1.1.5)
     erubis (2.7.0)
+    exception_notification (4.2.1)
+      actionmailer (>= 4.0, < 6)
+      activesupport (>= 4.0, < 6)
     execjs (2.7.0)
     factory_girl (4.8.0)
       activesupport (>= 3.0.0)
@@ -400,6 +404,8 @@ GEM
       rack (>= 1.0)
       rack-test (>= 0.5.3)
     websocket (1.2.4)
+    whenever (0.9.7)
+      chronic (>= 0.6.3)
     will_paginate (3.1.5)
     xpath (2.0.0)
       nokogiri (~> 1.3)
@@ -430,6 +436,7 @@ DEPENDENCIES
   database_cleaner
   devise (~> 3.5.2)
   devise_ldap_authenticatable
+  exception_notification
   factory_girl_rails
   fuubar
   groupdate
@@ -470,6 +477,7 @@ DEPENDENCIES
   tzinfo-data
   uglifier (>= 1.3.0)
   webrat
+  whenever
   will_paginate (~> 3.0)
 
 RUBY VERSION

@@ -56,5 +56,15 @@ BPDoc::Application.configure do
 
   Paperclip.options[:command_path] = "/usr/bin/"
 
+  # exeption notification
+  Rails.application.config.middleware.use ExceptionNotification::Rack,
+    :email => {
+    :email_prefix => "[bp1step] ",
+    :sender_address => %{"client-notifier" <client-local@bankperm.ru>},
+    # :exception_recipients => %w{help@bankperm.ru robb@bankperm.ru}
+    :exception_recipients => %w{robb@bankperm.ru}
+  }
+
+
 end
 
