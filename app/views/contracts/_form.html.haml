@@ -31,7 +31,7 @@
   = f.input :check
 
   -#-if can? :edit_contract_place, @contract - такая конструкция не работает!!!
-  -if current_user.has_role? :keeper  # только юрист может править место хранения
+  -if current_user.role? :keeper  # только юрист может править место хранения
     = f.input :contract_place, :hint => 'Место хранения оригиналов на бумаге (кратко: отдел папка)'
   -else
     - @contract.contract_place = '!?' if @contract.contract_place.blank?
