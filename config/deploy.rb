@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.8.1'
+lock '3.8.2'
 
 set :application, 'bp1step'
 set :user, 'rubydev'
@@ -31,7 +31,7 @@ set :format, :airbrussh
 
 # Default value for :linked_files is []
 # set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
-set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/ldap.yml', 'config/secrets.yml', 'config/ldapldap.yml', 'config/environments/production.rb')
+set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/ldap.yml', 'config/secrets.yml', 'config/environments/production.rb')
 
 # Default value for linked_dirs is []
 # set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system')

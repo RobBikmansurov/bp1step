@@ -47,7 +47,7 @@ gem 'actionpack-page_caching' # кеширование
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'capistrano', '~>3.8.1'
+  gem 'capistrano', '~>3.8.2'
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
