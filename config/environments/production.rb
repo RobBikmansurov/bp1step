@@ -4,6 +4,7 @@ BPDoc::Application.configure do
   # The production environment is meant for finished, "live" apps.
   # Code is not reloaded between requests
   config.cache_classes = true
+  config.action_controller.page_cache_directory = "#{Rails.root}/public/cached_pages"
 
   # Full error reports are disabled and caching is turned on
   config.consider_all_requests_local       = false
@@ -19,7 +20,7 @@ BPDoc::Application.configure do
   # just comment this out and Rails will serve the files
 
   # See everything in the log (default is :info)
-  # config.log_level = :debug
+  config.log_level = :info
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
@@ -31,6 +32,7 @@ BPDoc::Application.configure do
   # In production, Apache or nginx will already do this
   #config.serve_static_assets = true
   config.serve_static_files = true
+
   # Compress JavaScripts and CSS
   config.assets.compress = true
 
@@ -66,7 +68,6 @@ BPDoc::Application.configure do
   config.active_support.deprecation = :notify
   Paperclip.options[:command_path] = "/usr/bin/"
 
-  config.eager_load = false
-  config.log_level = :info
+  config.eager_load = true
 
 end

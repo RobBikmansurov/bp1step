@@ -6,7 +6,7 @@ class BprocesController < ApplicationController
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
-  caches_page :show, :new
+  # caches_page :show, :new
 
   respond_to :html
   respond_to :pdf, :xml, :json, only: %i[index list]
