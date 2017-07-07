@@ -40,11 +40,13 @@ BPDoc::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = false
 
-  config.eager_load = false
-
   I18n.enforce_available_locales = false
 
+  # Send deprecation notices to registered listeners
+  config.active_support.deprecation = :notify
   Paperclip.options[:command_path] = "/usr/bin/"
 
-end
+  config.eager_load = false
+  config.log_level = :info
 
+end

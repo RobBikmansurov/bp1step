@@ -122,7 +122,9 @@ namespace :deploy do
       # шаблон официального письма
       execute "cp #{shared_path}/secret/bnk-letter.odt #{release_path}/reports/letter.odt"
       execute "rm #{release_path}/reports/bnk-letter.odt"
-      execute "ln -s #{shared_path}/config/ldap.yml #{release_path}/config/ldap.yml"
+      if "#{fetch(:rails_env)}" != 'staging'
+        execute "ln -s #{shared_path}/config/ldap.yml #{release_path}/config/ldap.yml"
+      end 
       execute "rm #{release_path}/config/environments/production.rb"
       execute "ln -s #{shared_path}/config/environments/production.rb #{release_path}/config/environments/production.rb"
     end
