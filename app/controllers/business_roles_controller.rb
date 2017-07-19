@@ -1,13 +1,17 @@
+# frozen_string_literal: true
+
 class BusinessRolesController < ApplicationController
   require 'net/smtp'
   respond_to :html
   respond_to :odt, :xml, :json, only: :index
   helper_method :sort_column, :sort_direction
   before_action :authenticate_user!, only: %i[edit new create update]
-  before_action :get_business_role, except: %i[index print new]
+  before_action :business_role, except: %i[index print new]
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def index
     @business_roles = BusinessRole.order(sort_column + ' ' + sort_direction)
     if params[:all].blank?
@@ -40,7 +44,6 @@ class BusinessRolesController < ApplicationController
       @bproce = Bproce.where(name: name).first
       @business_role.bproce_id = @bproce.id
     end
-
     flash[:notice] = 'Successfully created role.' if @business_role.save
     respond_with(@business_role)
   end
@@ -58,7 +61,12 @@ class BusinessRolesController < ApplicationController
         flash[:notice] = "Новый исполнитель #{user_business_role.user_name} назначен"
         begin
           UserBusinessRoleMailer.user_create_role(user_business_role, current_user).deliver_now # оповестим нового исполнителя
-        rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+        rescue Net::SMTPAuthenticationError,
+               Net::SMTPServerBusy,
+               Net::SMTPSyntaxError,
+               Net::SMTPFatalError,
+               Net::SMTPUnknownError => e
+          logger.warn "Error - business_role.update_user: #{e}"
           flash[:alert] = "Error sending mail to #{user_business_role.user.email}"
         end
         @business_role = user_business_role.business_role
@@ -74,7 +82,9 @@ class BusinessRolesController < ApplicationController
   end
 
   def edit
-    @user_business_role = UserBusinessRole.new(business_role_id: @business_role.id, date_from: Date.today.strftime('%d.%m.%Y'), date_to: Date.today.change(month: 12, day: 31).strftime('%d.%m.%Y'))
+    @user_business_role = UserBusinessRole.new(business_role_id: @business_role.id,
+                                               date_from: Date.current.strftime('%d.%m.%Y'),
+                                               date_to: Date.current.change(month: 12, day: 31).strftime('%d.%m.%Y'))
     respond_with(@business_role, @user_business_role)
   end
 
@@ -84,6 +94,7 @@ class BusinessRolesController < ApplicationController
     begin # оповестим исполнителей роли об изменениях
       BusinessRoleMailer.update_business_role(@business_role, current_user).deliver_now
     rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+      logger.warn "Error - business_role.update: #{e}"
       flash[:alert] = 'Error sending mail to business role workers'
     end
     respond_with(@business_role)
@@ -109,9 +120,12 @@ class BusinessRolesController < ApplicationController
     params[:direction] || 'asc'
   end
 
-  def get_business_role
+  def business_role
     if params[:search].present? # это поиск
-      @business_roles = BusinessRole.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page]).find(:all, include: :users)
+      @business_roles = BusinessRole.search(params[:search])
+                                    .order(sort_column + ' ' + sort_direction)
+                                    .paginate(per_page: 10, page: params[:page])
+                                    .find(:all, include: :users)
       render :index # покажем список найденных бизнес-ролей
     else
       @business_role = params[:id].present? ? BusinessRole.find(params[:id]) : BusinessRole.new
@@ -121,15 +135,15 @@ class BusinessRolesController < ApplicationController
   def print
     report = ODFReport::Report.new('reports/broles.odt') do |r|
       nn = 0
-      r.add_field 'REPORT_DATE', Date.today
+      r.add_field 'REPORT_DATE', Date.current
       r.add_table('TABLE_01', @business_roles, header: true) do |t|
-        t.add_column(:nn) do |ca|
+        t.add_column(:nn) do |_ca|
           nn += 1
           "#{nn}."
         end
         t.add_column(:name)
         t.add_column(:bpname) do |br|
-          br.bproce.shortname.to_s if :bproce_id?
+          br.bproce.shortname.to_s if br.bproce
         end
         t.add_column(:description)
       end
@@ -137,8 +151,8 @@ class BusinessRolesController < ApplicationController
       r.add_field 'USER_NAME', current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-      filename: 'business_roles.odt',
-      disposition: 'inline'
+                               filename: 'business_roles.odt',
+                               disposition: 'inline'
   end
 
   def record_not_found

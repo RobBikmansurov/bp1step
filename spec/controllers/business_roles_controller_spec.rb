@@ -122,7 +122,7 @@ RSpec.describe BusinessRolesController, type: :controller do
         business_role = BusinessRole.create! valid_attributes
         expect_any_instance_of(BusinessRole).to receive(:save).and_return(false)
         put :update, { id: business_role.to_param, business_role: invalid_attributes }, valid_session
-        expect(response).to render_template('show')
+        expect(response).to render_template('business_role_mailer/update_business_role')
       end
     end
   end
