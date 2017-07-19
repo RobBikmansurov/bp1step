@@ -9,7 +9,7 @@ class UserTaskMailer < ActionMailer::Base
     @user = user_task.user
     @current_user = current_user
     mail(to: @user.email,
-         subject: "BP1Step: Вы - #{status(user_task.status) ? 'отв.' : ''}исполнитель Задачи ##{@task.id}")
+         subject: "BP1Step: Вы - #{user_task.status.positive? ? 'отв.' : ''}исполнитель Задачи ##{@task.id}")
   end
 
   def user_task_destroy(user_task, current_user)	# рассылка об удалении исполнителя
