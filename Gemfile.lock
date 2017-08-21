@@ -261,7 +261,7 @@ GEM
       i18n (>= 0.5.0)
       railties (>= 3.0.0)
     public_suffix (2.0.5)
-    puma (3.8.2)
+    puma (3.10.0)
     rack (1.6.5)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -484,4 +484,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.15.1
+   1.15.4
