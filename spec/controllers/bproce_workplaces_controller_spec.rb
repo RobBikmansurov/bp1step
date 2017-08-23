@@ -6,6 +6,7 @@ RSpec.describe BproceWorkplacesController, type: :controller do
   let(:role)             { FactoryGirl.create(:role, name: 'author', description: 'Автор') }
   let!(:bproce)          { FactoryGirl.create(:bproce) }
   let!(:workplace)       { FactoryGirl.create(:workplace) }
+  let(:bproce_workplace) { FactoryGirl.create(:bproce_workplace, bproce_id: bproce.id, workplace_id: workplace.id) }
   let(:valid_attributes) { { bproce_id: bproce.id, workplace_id: workplace.id } }
   let(:valid_session) { {} }
 
@@ -18,8 +19,7 @@ RSpec.describe BproceWorkplacesController, type: :controller do
 
   describe 'GET show' do
     it 'assigns the requested bproce_workplace.workplace as @workplace' do
-      bproce_workplace = BproceWorkplace.create! valid_attributes
-      get :show, { id: bproce_workplace.bproce.id.to_param }, valid_session
+      get :show, { id: bproce.to_param, bproce_id: bproce.to_param }, valid_session
       expect(assigns(workplace)).to eq(bproce_workplace.workplace)
     end
   end
