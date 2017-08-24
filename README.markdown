@@ -2,7 +2,8 @@ Business Processes First Step (BP1Step)
 ---
 Business processes documentation organization and generation, the 1st step of introduction of the processes approach in the small business
 
-##General Information
+## General Information
+
 **BP1Step** - первый шаг на небольшом предприятии для наведения порядка в процессах и повышения уровня зрелости организации.
 
 **BP1Step** - простой инструмент для документирования процессов, ресурсов, действий сотрудников, это web-приложение на базе Ruby on Rails с несколькими сервисными rake-задачами (например: синхронизация списка пользователей из LDAP, контроль бизнес-правил).
@@ -17,7 +18,7 @@ Business processes documentation organization and generation, the 1st step of in
 
 Автор: [Rob Bikmansurov](mailto:robb@mail.ru)
 
-Сайт: [bp1step.ru] (http://bp1step.ru)
+Сайт: [bp1step.ru](http://bp1step.ru) [Github Pages](https://robbikmansurov.github.io/bp1step/)
 
 Demo: [bp1step.herokuapp.com](https://bp1step.herokuapp.com/about) - без входа в систему будет доступен не весь функционал, поэтому смотрите список сотрудников в меню Сотрудники, выбирайте понравившегося и вводите, например, **ivanov@example.com**  в качестве логина и **ivanov** в качестве пароля.
 
