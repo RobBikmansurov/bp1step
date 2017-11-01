@@ -104,7 +104,17 @@ th .current {
 th .asc { background-image: url(up_arrow.gif); }
 th .desc { background-image: url(down_arrow.gif); }
 
-tbody tr:nth-child(even) td, tbody tr.even td {background: #DCE6EA;}
+
+tr:nth-child(even) {
+    background-color: #ccc;
+}
+
+tr.even td {
+  background-color: #DCE6EA;
+}
+tr:hover, tr.even:hover {
+  border: 0px solid black;
+}
 
 a.button,
 .button {

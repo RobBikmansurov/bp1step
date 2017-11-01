@@ -1,6 +1,6 @@
 AllCops:
   TargetRubyVersion: 2.3
-  TargetRailsVersion: 4.2
+  TargetRailsVersion: 5.1
   Exclude:
     - 'bin/*'
     - 'db/schema.rb'
@@ -28,3 +28,7 @@ Lint/AmbiguousBlockAssociation:
 Rails/HttpPositionalArguments: # удалить этот запрет для Rails 5
   Exclude:
     - 'spec/controllers/*'
+
+Metrics/ModuleLength:
+  Exclude:
+    - spec/**/*_spec.rb
