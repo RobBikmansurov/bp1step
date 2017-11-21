@@ -5,6 +5,7 @@ RSpec.describe BproceDocumentsController, type: :controller do
   let(:owner)            { FactoryGirl.create(:user) }
   let(:role)             { FactoryGirl.create(:role, name: 'author', description: 'Автор') }
   let!(:bproce)          { FactoryGirl.create(:bproce) }
+  let!(:bproce2)         { FactoryGirl.create(:bproce) }
   let!(:document)        { FactoryGirl.create(:document, owner: owner) }
   let(:bproce_document)  { FactoryGirl.create(:bproce_document, bproce_id: bproce.id, document_id: document.id) }
   let(:valid_attributes) { { bproce_id: bproce.id, document_id: document.id } }
@@ -104,10 +105,24 @@ RSpec.describe BproceDocumentsController, type: :controller do
   end
 
   describe 'DELETE destroy' do
-    it 'destroys the requested bproce_document' do
+    it 'destroys bproce_document if it has > 1 bproce' do
+      # документ должен ссылаться хотя бы на 1 процесс
+      bproce1 = FactoryGirl.create(:bproce)
+      bproce_document1 = FactoryGirl.create(:bproce_document, bproce_id: bproce1.id, document_id: document.id)
+      bproce_document2 = FactoryGirl.create(:bproce_document, bproce_id: bproce2.id, document_id: document.id)
       expect do
-        delete :destroy, { id: bproce_document.to_param }, valid_session
+        delete :destroy, id: bproce_document2.id
       end.to change(BproceDocument, :count).by(-1)
+      expect(flash[:notice]).to be_present
+    end
+
+    it 'do not destroys bproce_document if it has 1 bproce' do
+      # документ должен ссылаться хотя бы на 1 процесс
+      bproce_document2 = FactoryGirl.create(:bproce_document, bproce_id: bproce2.id, document_id: document.id)
+      expect do
+        delete :destroy, id: bproce_document2.id
+      end.to change(BproceDocument, :count).by(0)
+      expect(flash[:alert]).to be_present
     end
 
     it 'redirects to the bproce_documents list' do
