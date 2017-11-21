@@ -15,8 +15,14 @@ class DocumentsController < ApplicationController
       @directive = Directive.find(params[:directive_id])
       @documents = @directive.document.paginate(per_page: 100, page: params[:page])
     elsif params[:bproce_id].present?
+      @title_doc = ''
       @bproce = Bproce.find(params[:bproce_id])
-      @documents = @bproce.documents.paginate(per_page: 100, page: params[:page])
+      @documents = @bproce.documents
+      if params[:status].present? #  список документов, имеющих конкретный статус
+        @documents = @documents.where(status: params[:status])
+        @title_doc = " в статусе [#{params[:status]}]"
+      end
+      @documents = @documents.paginate(per_page: 100, page: params[:page])
     else
       @documents = Document.all
       if params[:all].present?

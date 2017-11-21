@@ -2,10 +2,11 @@
 - command_params = Hash.new
 - command_search = Hash.new
 - if @bproce
-  - title "Документы процесса ##{@bproce.id}"
+  - title "Документы процесса ##{@bproce.id}  #{@title_doc}"
   %h3
     Документы процесса
     = link_to @bproce.name, bproce_path(@bproce)
+    = @title_doc
 - elsif @directive
   - title "Документы директивы ##{@directive.id}"
   %h3
@@ -88,7 +89,10 @@
 - Document.select('status, count(id) as count').group(:status).order(:status).each do |d|
   - unless d.status.to_s.empty?
     - cl = (params[:status].present? && d.status == params[:status]) ? 'groups-s' : 'groups'
-    = link_to d.status, documents_path(command_search.merge(status: d.status)), class: cl
+    - if @bproce
+      = link_to d.status, bproce_path(@bproce) + "/documents?status=#{d.status}", class: cl
+    - else
+      = link_to d.status, documents_path(command_search.merge(status: d.status)), class: cl
     &nbsp;
 %br
 Уровень:
