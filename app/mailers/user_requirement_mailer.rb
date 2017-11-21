@@ -9,7 +9,7 @@ class UserRequirementMailer < ActionMailer::Base
     @user = user_requirement.user
     @current_user = current_user
     mail(to: @user.email,
-         subject: "BP1Step: Вы - #{status(user_requirement.status)}исполнитель Требования ##{@requirement.id}")
+         subject: "BP1Step: Вы - #{user_requirement.status.positive? ? 'отв.' : ''}исполнитель Требования ##{@requirement.id}")
   end
 
   def user_requirement_destroy(user_requirement, current_user)	# рассылка об удалении исполнителя
