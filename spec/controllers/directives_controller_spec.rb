@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe DirectivesController do
-  # let(:valid_attributes) { FactoryGirl.create :directive }
+  # let(:valid_attributes) { FactoryBot.create :directive }
   let(:valid_attributes) do
     { approval: '01.01.2013',
       number: '100',
@@ -26,8 +26,8 @@ RSpec.describe DirectivesController do
     end
 
     it 'loads all of the directives into @directives' do
-      directive1 = FactoryGirl.create(:directive)
-      directive2 = FactoryGirl.create(:directive)
+      directive1 = FactoryBot.create(:directive)
+      directive2 = FactoryBot.create(:directive)
       get :index
       expect(assigns(:directives)).to match_array([directive1, directive2])
     end
@@ -35,7 +35,7 @@ RSpec.describe DirectivesController do
 
   describe 'GET show' do
     it 'assigns the requested directive as @directive' do
-      @bproce = FactoryGirl.create(:bproce)
+      @bproce = FactoryBot.create(:bproce)
       directive = Directive.create! valid_attributes
       get :show, { id: directive.to_param }, valid_session
       expect(assigns(:directive)).to eq(directive)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :current_user do
     sequence(:username) { |n| "cname#{n}" }
     password 'foobar'

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :contract do
     sequence(:id, &:to_s)
     number { "10#{id}" }

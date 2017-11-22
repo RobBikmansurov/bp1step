@@ -2,7 +2,7 @@
 
 RSpec.describe UsersController, type: :controller do
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :business_role do
     name 'business_role_name'
     description 'business_role_description'

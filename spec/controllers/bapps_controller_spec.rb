@@ -7,7 +7,7 @@ RSpec.describe BappsController, type: :controller do
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'author', description: 'Автор')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
@@ -22,8 +22,8 @@ RSpec.describe BappsController, type: :controller do
     end
 
     it 'loads all of the bapps into @bapps' do
-      bapp1 = FactoryGirl.create(:bapp)
-      bapp2 = FactoryGirl.create(:bapp)
+      bapp1 = FactoryBot.create(:bapp)
+      bapp2 = FactoryBot.create(:bapp)
       get :index
       expect(assigns(:bapps)).to match_array([bapp1, bapp2])
     end

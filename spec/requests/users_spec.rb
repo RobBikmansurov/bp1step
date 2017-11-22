@@ -17,7 +17,7 @@ PublicActivity.without_tracking do
     end
 
     it 'denies access to users#create' do
-      user_attributes = FactoryGirl.attributes_for(:user)
+      user_attributes = FactoryBot.attributes_for(:user)
 
       expect do
         post '/users', params: { user: user_attributes }

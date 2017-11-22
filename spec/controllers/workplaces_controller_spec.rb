@@ -7,7 +7,7 @@ RSpec.describe WorkplacesController, type: :controller do
   let(:valid_session) { {} }
 
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
@@ -22,8 +22,8 @@ RSpec.describe WorkplacesController, type: :controller do
     end
 
     it 'loads all of the workplaces into @workplaces' do
-      workplace1 = FactoryGirl.create(:workplace)
-      workplace2 = FactoryGirl.create(:workplace)
+      workplace1 = FactoryBot.create(:workplace)
+      workplace2 = FactoryBot.create(:workplace)
       get :index
       expect(assigns(:workplaces)).to match_array([workplace1, workplace2])
     end
@@ -31,7 +31,7 @@ RSpec.describe WorkplacesController, type: :controller do
 
   describe 'GET show' do
     it 'assigns the requested workplace as @workplace' do
-      workplace = FactoryGirl.create(:workplace)
+      workplace = FactoryBot.create(:workplace)
       get :show, id: workplace.id
       expect(assigns(:workplace)).to eq(workplace)
     end
@@ -46,7 +46,7 @@ RSpec.describe WorkplacesController, type: :controller do
 
   describe 'GET edit' do
     it 'assigns the requested workplace as @workplace' do
-      workplace = FactoryGirl.create(:workplace)
+      workplace = FactoryBot.create(:workplace)
       get :edit, id: workplace.id
       expect(assigns(:workplace)).to eq(workplace)
     end
@@ -90,19 +90,19 @@ RSpec.describe WorkplacesController, type: :controller do
   describe 'PUT update' do
     describe 'with valid params' do
       it 'updates the requested workplace' do
-        workplace = FactoryGirl.create(:workplace)
+        workplace = FactoryBot.create(:workplace)
         expect_any_instance_of(Workplace).to receive(:save).at_least(:once)
         put :update, { id: workplace.to_param, workplace: { 'name' => 'test_name' } }, valid_session
       end
 
       it 'assigns the requested workplace as @workplace' do
-        workplace = FactoryGirl.create(:workplace)
+        workplace = FactoryBot.create(:workplace)
         put :update, id: workplace.id, workplace: valid_attributes
         expect(assigns(:workplace)).to eq(workplace)
       end
 
       it 'redirects to the workplace' do
-        workplace = FactoryGirl.create(:workplace)
+        workplace = FactoryBot.create(:workplace)
         put :update, id: workplace.id, workplace: valid_attributes
         expect(response).to redirect_to(workplace)
       end
@@ -110,14 +110,14 @@ RSpec.describe WorkplacesController, type: :controller do
 
     describe 'with invalid params' do
       it 'assigns the workplace as @workplace' do
-        workplace = FactoryGirl.create(:workplace)
+        workplace = FactoryBot.create(:workplace)
         expect_any_instance_of(Workplace).to receive(:save).and_return(false)
         put :update, { id: workplace.to_param, agent: { 'name' => 'invalid value' } }, valid_session
         expect(assigns(:workplace)).to eq(workplace)
       end
 
       it "re-renders the 'edit' template" do
-        workplace = FactoryGirl.create(:workplace)
+        workplace = FactoryBot.create(:workplace)
         expect_any_instance_of(Workplace).to receive(:save).and_return(false)
         put :update, { id: workplace.to_param, workplace: { 'name' => 'invalid value' } }, valid_session
         expect(response).to_not render_template('edit')
@@ -127,14 +127,14 @@ RSpec.describe WorkplacesController, type: :controller do
 
   describe 'DELETE destroy' do
     it 'destroys the requested workplace' do
-      workplace = FactoryGirl.create(:workplace)
+      workplace = FactoryBot.create(:workplace)
       expect do
         delete :destroy, id: workplace.id
       end.to change(Workplace, :count).by(-1)
     end
 
     it 'redirects to the workplaces list' do
-      workplace = FactoryGirl.create(:workplace)
+      workplace = FactoryBot.create(:workplace)
       delete :destroy, id: workplace.id
       expect(response).to redirect_to(workplaces_url)
     end

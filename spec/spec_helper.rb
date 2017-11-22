@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'capybara/rspec'
-require 'factory_girl_rails'
+require 'factory_bot_rails'
 require 'simplecov'
 SimpleCov.start
 
@@ -17,13 +17,13 @@ RSpec.configure do |config|
   config.include Capybara::DSL
 
   config.before :all do
-    FactoryGirl.reload
-    FactoryGirl.factories.clear
-    FactoryGirl.sequences.clear
-    FactoryGirl.find_definitions
+    FactoryBot.reload
+    FactoryBot.factories.clear
+    FactoryBot.sequences.clear
+    FactoryBot.find_definitions
   end
 
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
 

@@ -7,7 +7,7 @@ RSpec.describe RequirementsController, type: :controller do
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'author', description: 'Автор')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
@@ -22,8 +22,8 @@ RSpec.describe RequirementsController, type: :controller do
     end
 
     it 'loads all of the requirements into @requirements' do
-      requirement1 = FactoryGirl.create(:requirement)
-      requirement2 = FactoryGirl.create(:requirement)
+      requirement1 = FactoryBot.create(:requirement)
+      requirement2 = FactoryBot.create(:requirement)
       get :index
       expect(assigns(:requirements)).to match_array([requirement1, requirement2])
     end

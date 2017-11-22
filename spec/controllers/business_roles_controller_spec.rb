@@ -3,15 +3,15 @@
 require 'rails_helper'
 
 RSpec.describe BusinessRolesController, type: :controller do
-  let!(:user) { FactoryGirl.create(:user) }
-  let!(:bproce) { FactoryGirl.create(:bproce, user_id: user.id) }
+  let!(:user) { FactoryBot.create(:user) }
+  let!(:bproce) { FactoryBot.create(:bproce, user_id: user.id) }
   let(:valid_attributes) do
     { name: 'business_role name', description: 'description', bproce_id: bproce.id }
   end
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'author', description: 'Автор')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)

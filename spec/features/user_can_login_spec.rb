@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 feature 'User login' do
-  given!(:user) { FactoryGirl.create(:user) }
+  given!(:user) { FactoryBot.create(:user) }
 
   before(:each) do
     Capybara.reset_sessions!

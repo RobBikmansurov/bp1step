@@ -2,16 +2,16 @@
 
 require 'rails_helper'
 RSpec.describe BproceWorkplacesController, type: :controller do
-  let(:owner)            { FactoryGirl.create(:user) }
-  let(:role)             { FactoryGirl.create(:role, name: 'author', description: 'Автор') }
-  let!(:bproce)          { FactoryGirl.create(:bproce) }
-  let!(:workplace)       { FactoryGirl.create(:workplace) }
-  let(:bproce_workplace) { FactoryGirl.create(:bproce_workplace, bproce_id: bproce.id, workplace_id: workplace.id) }
+  let(:owner)            { FactoryBot.create(:user) }
+  let(:role)             { FactoryBot.create(:role, name: 'author', description: 'Автор') }
+  let!(:bproce)          { FactoryBot.create(:bproce) }
+  let!(:workplace)       { FactoryBot.create(:workplace) }
+  let(:bproce_workplace) { FactoryBot.create(:bproce_workplace, bproce_id: bproce.id, workplace_id: workplace.id) }
   let(:valid_attributes) { { bproce_id: bproce.id, workplace_id: workplace.id } }
   let(:valid_session) { {} }
 
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)

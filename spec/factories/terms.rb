@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :term do
     sequence(:id, &:to_s)
     name { "name#{id}" }

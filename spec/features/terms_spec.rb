@@ -22,7 +22,7 @@ RSpec.feature 'Managing terms', type: :feature do
   end
 
   describe 'logged user' do
-    # let!(:user) { FactoryGirl.create(:user) }
+    # let!(:user) { FactoryBot.create(:user) }
     it 'signs me in' do
       visit '/'
       click_link 'Войти'
@@ -36,7 +36,7 @@ RSpec.feature 'Managing terms', type: :feature do
       expect(page).to have_content 'Вход в систему выполнен.'
     end
     it 'can update Terms' do
-      # term = FactoryGirl.create(:term)
+      # term = FactoryBot.create(:term)
       visit '/'
       user = User.first
       login user.email, user.password

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :workplace do
     sequence(:name) { |n| "workplace#{n}" }
     description 'WP description'

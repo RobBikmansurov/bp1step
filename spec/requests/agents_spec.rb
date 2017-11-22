@@ -5,7 +5,7 @@ require 'rails_helper'
 PublicActivity.without_tracking do
   describe 'Public access to agents', type: :request do
     it 'denies access to agents#show' do
-      agent = FactoryGirl.create(:agent)
+      agent = FactoryBot.create(:agent)
       get agent_path(id: agent.id)
       expect(response).to redirect_to new_user_session_path # sign_in
       follow_redirect!
@@ -20,7 +20,7 @@ PublicActivity.without_tracking do
     end
 
     it 'denies access to agents#create' do
-      agent_attributes = FactoryGirl.attributes_for(:agent)
+      agent_attributes = FactoryBot.attributes_for(:agent)
       expect do
         post '/agents', params: { agent: agent_attributes }
       end.to_not change(Agent, :count)

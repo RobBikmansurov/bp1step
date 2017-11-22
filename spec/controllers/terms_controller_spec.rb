@@ -9,7 +9,7 @@ RSpec.describe TermsController, type: :controller do
   before do
     Term.destroy_all
     User.destroy_all
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
@@ -24,8 +24,8 @@ RSpec.describe TermsController, type: :controller do
       expect(response).to render_template('terms/index')
     end
     it 'loads all of the terms into @terms' do
-      term1 = FactoryGirl.create(:term)
-      term2 = FactoryGirl.create(:term)
+      term1 = FactoryBot.create(:term)
+      term2 = FactoryBot.create(:term)
       get :index
       expect(assigns(:terms)).to match_array([term1, term2])
     end

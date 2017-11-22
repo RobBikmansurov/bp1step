@@ -9,7 +9,6 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails', '5.0.5'
 gem 'rails', '4.2.7.1'
 gem 'sass-rails', '~> 4.0.0'
-gem 'therubyracer'
 gem 'uglifier', '>= 1.3.0'
 gem 'will_paginate', '~> 3.0'
 
@@ -35,7 +34,8 @@ gem 'jcrop-rails-v2'
 gem 'pdf-reader'
 gem 'pg_search'
 gem 'protected_attributes'
-gem 'tiny_tds' # , '~> 0.7.0' # MS SQL
+gem 'tiny_tds', '~> 0.7.0' # MS SQL
+
 gem 'tzinfo-data'
 
 gem 'exception_notification'
@@ -75,9 +75,8 @@ group :test do
   gem 'codeclimate-test-reporter', '~> 1.0.0'
   gem 'codecov', require: false
   gem 'database_cleaner'
-  gem 'factory_girl_rails'
   gem 'fuubar'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '~>3.7.0'
   gem 'shoulda-matchers'
   gem 'simplecov'
   gem 'sqlite3'
@@ -85,7 +84,6 @@ group :test do
 end
 
 group :development, :test do
-  gem 'pry-byebug'
-  gem 'pry-rails'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 3.7.0'
+  gem 'factory_bot_rails'
 end

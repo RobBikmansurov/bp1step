@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe DocumentsController, type: :controller do
-  let(:owner)            { FactoryGirl.create(:user) }
-  let(:role)             { FactoryGirl.create(:role, name: 'author', description: 'Автор') }
-  let(:valid_documents)  { FactoryGirl.create_list(:document, 2, owner: owner) }
-  let(:invalid_document) { FactoryGirl.create(:document, :invalid) }
+  let(:owner)            { FactoryBot.create(:user) }
+  let(:role)             { FactoryBot.create(:role, name: 'author', description: 'Автор') }
+  let(:valid_documents)  { FactoryBot.create_list(:document, 2, owner: owner) }
+  let(:invalid_document) { FactoryBot.create(:document, :invalid) }
 
   describe 'GET index' do
     it 'assigns all documents as @documents' do

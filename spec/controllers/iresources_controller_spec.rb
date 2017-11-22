@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe IresourcesController, type: :controller do
-  let(:user)              { FactoryGirl.create(:user) }
-  let(:valid_iresources)  { FactoryGirl.create_list(:iresource, 2) }
-  let(:invalid_iresource) { FactoryGirl.create(:iresource, :invalid) }
+  let(:user)              { FactoryBot.create(:user) }
+  let(:valid_iresources)  { FactoryBot.create_list(:iresource, 2) }
+  let(:invalid_iresource) { FactoryBot.create(:iresource, :invalid) }
 
   describe 'GET index' do
     it 'assigns all iresources as @iresources' do

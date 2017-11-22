@@ -6,15 +6,15 @@ require 'rails_helper'
 # UserLetterMailer.user_letter_create(user_letter, current_user).deliver_now    # оповестим нового исполнителя
 
 describe LetterMailer do
-  let(:letter) { FactoryGirl.create(:letter) }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:letter) { FactoryBot.create(:letter) }
+  let(:user) { FactoryBot.create(:user) }
 
   describe 'check_overdue_letters' do
     # check_overdue_letters(letter, emails) # рассылка исполнителям о просроченных письмах
     let(:mail) { LetterMailer.check_overdue_letters(letter, [user.email]) }
 
     it 'should send an email' do
-     # expect(ActionMailer::Base.deliveries.count).to eq 1
+      # expect(ActionMailer::Base.deliveries.count).to eq 1
     end
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: не исполнено Письмо #{letter.name}")
@@ -47,7 +47,7 @@ describe LetterMailer do
 
   describe 'update_letter' do
     # update_letter(letter, current_user, result) # рассылка об изменении письма
-    let(:current_user) { FactoryGirl.create(:user, displayname: 'user') }
+    let(:current_user) { FactoryBot.create(:user, displayname: 'user') }
     let(:mail) { LetterMailer.update_letter(letter, [current_user.email], 'updated') }
 
     it 'renders the subject' do
@@ -66,5 +66,4 @@ describe LetterMailer do
       expect(mail.body.encoded).to match('исполнить ВСЕ требования письма')
     end
   end
-
 end

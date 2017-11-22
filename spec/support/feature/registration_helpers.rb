@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Features
   module RegistrationHelpers
     def sign_up_with(email, password)

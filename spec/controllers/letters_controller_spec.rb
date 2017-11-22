@@ -10,7 +10,7 @@ RSpec.describe LettersController, type: :controller do
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'author', description: 'Автор')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)

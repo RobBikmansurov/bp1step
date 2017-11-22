@@ -1,8 +1,10 @@
-class FactoryGirlProfiler
+# frozen_string_literal: true
+
+class FactoryBotProfiler
   attr_accessor :results
 
   def self.setup
-    profiler = self.new
+    profiler = new
 
     RSpec.configure do |config|
       config.before(:suite) { profiler.subscribe }
@@ -15,7 +17,7 @@ class FactoryGirlProfiler
   end
 
   def subscribe
-    ActiveSupport::Notifications.subscribe('factory_girl.run_factory') do |name, start, finish, id, payload|
+    ActiveSupport::Notifications.subscribe('factory_bot.run_factory') do |_name, start, finish, _id, payload|
       factory, strategy = payload.values_at(:name, :strategy)
 
       factory_result = results[factory] ||= {}
@@ -28,7 +30,7 @@ class FactoryGirlProfiler
   end
 
   def dump
-    puts "\nFactoryGirl Profiles"
+    puts "\nFactoryBot Profiles"
     total_in_secs = 0.0
     results.each do |factory_name, factory_profile|
       puts "\n  #{factory_name}"
@@ -37,12 +39,12 @@ class FactoryGirlProfiler
         total_in_secs += profile[:duration_in_secs]
       end
     end
-    puts "\n Total FactoryGirl time #{total_in_secs.round(2)} seconds"
+    puts "\n Total FactoryBot time #{total_in_secs.round(2)} seconds"
   end
 end
 
 RSpec.configure do |config|
   config.add_setting :profile_factories, default: false
   config.profile_factories = config.profile_examples? || ARGV.include?('--profile') || ARGV.include?('-p')
-  FactoryGirlProfiler.setup if config.profile_factories?
+  FactoryBotProfiler.setup if config.profile_factories?
 end

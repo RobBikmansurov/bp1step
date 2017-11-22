@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :requirement do
     sequence(:id, &:to_s)
     label         { "requirement#{id}" }

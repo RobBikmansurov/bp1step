@@ -6,9 +6,9 @@ require 'rails_helper'
 
 describe DocumentMailer do
   describe 'check_documents_status' do
-    let(:owner)    { FactoryGirl.create(:user) }
-    let(:document) { FactoryGirl.create(:document, id: 100, owner: owner) }
-    let(:user)     { FactoryGirl.create(:user) }
+    let(:owner)    { FactoryBot.create(:user) }
+    let(:document) { FactoryBot.create(:document, id: 100, owner: owner) }
+    let(:user)     { FactoryBot.create(:user) }
     let(:mail)     { DocumentMailer.check_documents_status(document, [user.email], 'установите статус') }
 
     it 'renders the subject' do

@@ -3,18 +3,18 @@
 require 'rails_helper'
 
 RSpec.describe DocumentDirectivesController, type: :controller do
-  let(:owner)            { FactoryGirl.create(:user) }
-  let(:role)             { FactoryGirl.create(:role, name: 'author', description: 'Автор') }
-  let!(:bproce)          { FactoryGirl.create(:bproce) }
-  let!(:document)        { FactoryGirl.create(:document, owner: owner) }
-  let!(:directive)       { FactoryGirl.create(:directive) }
-  let(:document_directive) { FactoryGirl.create(:document_directive, document_id: document.id) }
+  let(:owner)            { FactoryBot.create(:user) }
+  let(:role)             { FactoryBot.create(:role, name: 'author', description: 'Автор') }
+  let!(:bproce)          { FactoryBot.create(:bproce) }
+  let!(:document)        { FactoryBot.create(:document, owner: owner) }
+  let!(:directive)       { FactoryBot.create(:directive) }
+  let(:document_directive) { FactoryBot.create(:document_directive, document_id: document.id) }
   let(:valid_attributes) { { directive_id: directive.id, document_id: document.id } }
   let(:invalid_attributes) { { directive_id: nil, document_id: document.id } }
   let(:valid_session) { {} }
 
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
@@ -129,8 +129,8 @@ RSpec.describe DocumentDirectivesController, type: :controller do
 
   describe 'DELETE destroy' do
     it 'destroys the requested document_directive' do
-      document1 = FactoryGirl.create(:document, owner: owner)
-      document_directive = FactoryGirl.create(:document_directive, document_id: document1.id)
+      document1 = FactoryBot.create(:document, owner: owner)
+      document_directive = FactoryBot.create(:document_directive, document_id: document1.id)
       expect do
         delete :destroy, id: document_directive.id
       end.to change(DocumentDirective, :count).by(-1)
@@ -138,8 +138,8 @@ RSpec.describe DocumentDirectivesController, type: :controller do
     end
 
     it 'redirects to the document_directives list' do
-      document1 = FactoryGirl.create(:document, owner: owner)
-      document_directive = FactoryGirl.create(:document_directive, document_id: document1.id)
+      document1 = FactoryBot.create(:document, owner: owner)
+      document_directive = FactoryBot.create(:document_directive, document_id: document1.id)
       delete :destroy, id: document_directive.id
       expect(response).to redirect_to(document_url(document1))
     end

@@ -2,21 +2,21 @@
 
 require 'rails_helper'
 RSpec.describe BproceBappsController, type: :controller do
-  let(:owner)            { FactoryGirl.create(:user) }
-  let(:role)             { FactoryGirl.create(:role, name: 'author', description: 'Автор') }
-  let!(:bproce)          { FactoryGirl.create(:bproce) }
-  let!(:bapp)            { FactoryGirl.create(:bapp) }
+  let(:owner)            { FactoryBot.create(:user) }
+  let(:role)             { FactoryBot.create(:role, name: 'author', description: 'Автор') }
+  let!(:bproce)          { FactoryBot.create(:bproce) }
+  let!(:bapp)            { FactoryBot.create(:bapp) }
   let(:valid_attributes) { { bproce_id: bproce.id, bapp_id: bapp.id, apurpose: 'Purpose' } }
   let(:valid_session) { {} }
 
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
 
-    bproce = FactoryGirl.create(:bproce)
-    bapp = FactoryGirl.create(:bapp)
+    bproce = FactoryBot.create(:bproce)
+    bapp = FactoryBot.create(:bapp)
   end
 
   describe 'GET show' do

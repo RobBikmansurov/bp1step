@@ -2,19 +2,19 @@
 
 require 'rails_helper'
 RSpec.describe BproceDocumentsController, type: :controller do
-  let(:owner)            { FactoryGirl.create(:user) }
-  let(:role)             { FactoryGirl.create(:role, name: 'author', description: 'Автор') }
-  let!(:bproce)          { FactoryGirl.create(:bproce) }
-  let!(:bproce2)         { FactoryGirl.create(:bproce) }
-  let!(:document)        { FactoryGirl.create(:document, owner: owner) }
-  let(:bproce_document)  { FactoryGirl.create(:bproce_document, bproce_id: bproce.id, document_id: document.id) }
+  let(:owner)            { FactoryBot.create(:user) }
+  let(:role)             { FactoryBot.create(:role, name: 'author', description: 'Автор') }
+  let!(:bproce)          { FactoryBot.create(:bproce) }
+  let!(:bproce2)         { FactoryBot.create(:bproce) }
+  let!(:document)        { FactoryBot.create(:document, owner: owner) }
+  let(:bproce_document)  { FactoryBot.create(:bproce_document, bproce_id: bproce.id, document_id: document.id) }
   let(:valid_attributes) { { bproce_id: bproce.id, document_id: document.id } }
   let(:invalid_attributes) { { bproce_id: nil, document_id: document.id } }
 
   let(:valid_session) { {} }
 
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
@@ -107,9 +107,9 @@ RSpec.describe BproceDocumentsController, type: :controller do
   describe 'DELETE destroy' do
     it 'destroys bproce_document if it has > 1 bproce' do
       # документ должен ссылаться хотя бы на 1 процесс
-      bproce1 = FactoryGirl.create(:bproce)
-      bproce_document1 = FactoryGirl.create(:bproce_document, bproce_id: bproce1.id, document_id: document.id)
-      bproce_document2 = FactoryGirl.create(:bproce_document, bproce_id: bproce2.id, document_id: document.id)
+      bproce1 = FactoryBot.create(:bproce)
+      bproce_document1 = FactoryBot.create(:bproce_document, bproce_id: bproce1.id, document_id: document.id)
+      bproce_document2 = FactoryBot.create(:bproce_document, bproce_id: bproce2.id, document_id: document.id)
       expect do
         delete :destroy, id: bproce_document2.id
       end.to change(BproceDocument, :count).by(-1)
@@ -118,7 +118,7 @@ RSpec.describe BproceDocumentsController, type: :controller do
 
     it 'do not destroys bproce_document if it has 1 bproce' do
       # документ должен ссылаться хотя бы на 1 процесс
-      bproce_document2 = FactoryGirl.create(:bproce_document, bproce_id: bproce2.id, document_id: document.id)
+      bproce_document2 = FactoryBot.create(:bproce_document, bproce_id: bproce2.id, document_id: document.id)
       expect do
         delete :destroy, id: bproce_document2.id
       end.to change(BproceDocument, :count).by(0)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :letter do
     sequence(:id, &:to_s)
     number { "LET--#{id}" }

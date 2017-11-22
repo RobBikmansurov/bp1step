@@ -7,11 +7,11 @@ Warden.test_mode!
 feature 'admin searching for a specific user' do
   context 'when logged in as admin' do
     before(:each) do
-      admin = FactoryGirl.create(:user)
+      admin = FactoryBot.create(:user)
       login_as(admin, scope: :user)
 
-      user1 = FactoryGirl.create(:user, email: 'foo@foo.com')
-      user2 = FactoryGirl.create(:user, email: 'bar@bar.com')
+      user1 = FactoryBot.create(:user, email: 'foo@foo.com')
+      user2 = FactoryBot.create(:user, email: 'bar@bar.com')
     end
 
     scenario 'admin searches for a specific user', js: true do
