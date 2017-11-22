@@ -7,7 +7,7 @@ require 'rails_helper'
 
 describe LetterMailer do
   let(:letter) { FactoryBot.create(:letter) }
-  let(:user) { FactoryBot.create(:user) }
+  let!(:user) { FactoryBot.create(:user) }
 
   describe 'check_overdue_letters' do
     # check_overdue_letters(letter, emails) # рассылка исполнителям о просроченных письмах
@@ -21,6 +21,9 @@ describe LetterMailer do
     end
     it 'renders the sender email' do
       expect(mail.from).to eql(['bp1step@bankperm.ru'])
+    end
+    it 'renders the receiver email' do
+      expect(mail.to).to eql([user.email])
     end
   end
 
@@ -47,14 +50,22 @@ describe LetterMailer do
 
   describe 'update_letter' do
     # update_letter(letter, current_user, result) # рассылка об изменении письма
-    let(:current_user) { FactoryBot.create(:user, displayname: 'user') }
-    let(:mail) { LetterMailer.update_letter(letter, [current_user.email], 'updated') }
+    let!(:user_letter) { FactoryBot.create(:user_letter, user_id: user.id, letter_id: letter.id) }
+    let(:mail) { LetterMailer.update_letter(letter, user, 'updated') }
 
     it 'renders the subject' do
-      expect(mail.subject).to eql("BP1Step: 1 дн. на Письмо #{letter.name}")
+      expect(mail.subject).to eql("BP1Step: Письмо #{letter.name} [#{LETTER_STATUS.key(letter.status)}] изменено" )
     end
 
     it 'renders the receiver email' do
+      user1 = FactoryBot.create(:user)
+      user_letter1 = FactoryBot.create(:user_letter, user_id: user1.id, letter_id: letter.id)
+      puts user_letter.inspect
+      puts user_letter1.inspect
+      puts user_letter.user.email
+      puts user_letter1.user.email
+      puts letter.user_letter.count
+      puts letter.user_letter.user.inspect
       expect(mail.to).to eql([user.email])
     end
 
@@ -63,7 +74,7 @@ describe LetterMailer do
     end
 
     it 'assigns @text' do
-      expect(mail.body.encoded).to match('исполнить ВСЕ требования письма')
+      expect(mail.body.encoded).to match('исполнитель')
     end
   end
 end
