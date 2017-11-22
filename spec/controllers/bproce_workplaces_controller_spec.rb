@@ -17,10 +17,10 @@ RSpec.describe BproceWorkplacesController, type: :controller do
     allow(controller).to receive(:authenticate_user!).and_return(true)
   end
 
-  describe 'GET show' do
+  describe 'GET show' do # show показывает список рабочих мест!
     it 'assigns the requested bproce_workplace.workplace as @workplace' do
-      get :show, { id: bproce.to_param, bproce_id: bproce.to_param }, valid_session
-      expect(assigns(workplace)).to eq(bproce_workplace.workplace)
+      get :show, { id: bproce.to_param }, valid_session
+      expect(assigns(:workplaces)).to eq(bproce.workplaces)
     end
   end
 
@@ -41,14 +41,6 @@ RSpec.describe BproceWorkplacesController, type: :controller do
       it 'redirects to the created bproce_workplace' do
         post :create, { bproce_workplace: valid_attributes }, valid_session
         expect(response).to redirect_to(BproceWorkplace.last.workplace)
-      end
-    end
-
-    describe 'with invalid params' do
-      it 'assigns a newly created but unsaved bproce_workplace as @bproce_workplace' do
-        expect_any_instance_of(BproceWorkplace).to receive(:save).and_return(false)
-        post :create, { bproce_workplace: {} }, valid_session
-        expect(assigns(:bproce_workplace)).to be_a_new(BproceWorkplace)
       end
     end
   end

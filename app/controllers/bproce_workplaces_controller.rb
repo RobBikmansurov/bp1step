@@ -19,8 +19,4 @@ class BproceWorkplacesController < ApplicationController
     respond_with(@workplaces = @bproce.workplaces)
   end
 
-  def index
-    @bproce = Bproce.find(params[:id])
-    respond_with(@workplaces = @bproce.workplaces)
-  end
 end

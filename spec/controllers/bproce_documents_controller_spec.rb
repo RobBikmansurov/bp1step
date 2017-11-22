@@ -58,7 +58,7 @@ RSpec.describe BproceDocumentsController, type: :controller do
       it 'assigns a newly created but unsaved bproce_document as @bproce_document' do
         expect_any_instance_of(BproceDocument).to receive(:save).and_return(false)
         post :create, { bproce_document: invalid_attributes }, valid_session
-        expect(assigns(:bproce_document)).to be_a(BproceDocument)
+        expect(assigns(:bproce_document)).to be_a_new(BproceDocument)
       end
     end
   end
