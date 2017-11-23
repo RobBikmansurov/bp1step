@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :user_letter do
-    user nil
-    letter nil
+    user
+    letter
     status 1
   end
 end
