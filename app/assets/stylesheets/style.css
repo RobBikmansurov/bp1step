@@ -279,7 +279,6 @@ a.groups:hover, a.groups-s:hover {
   top: 0;
 }
 
-
 .image_inline_left {
   position:relative;
   float:left;
@@ -291,10 +290,12 @@ a.groups:hover, a.groups-s:hover {
 .floating-box {
   display: inline-block;
   min-height: 1.5em;
+  max-width: 32%;
   border: 1px solid grey;
   padding: 0.25em;
-  margin: 5px;
-  border-radius: 10px;
+  margin-top: 5px;
+  border-radius: 7px;
+  background-color: #FEF5E7;
 }
 .floating-text {
   display: inline-block;

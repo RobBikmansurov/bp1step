@@ -57,15 +57,16 @@
       =link_to 'Метрики', bproce_path(@bproce) + '/metrics'
       процесса:
     -@metrics.each do | metric |
-      =link_to metric.name, metric
+      .floating-box
+        =link_to metric.name, metric
 
 - if @bproce.business_roles.count > 0
   %h4
     В процессе участвуют
     = link_to 'Роли:', bproce_business_role_path(@bproce)
   - @bproce.business_roles.order(:name).each do |business_role|
-    = link_to business_role.name, business_role_path(business_role)
-    &nbsp; &nbsp;
+    .floating-box
+      = link_to business_role.name, business_role_path(business_role)
 
 -if @bproce.documents.count > 0
   %h4
@@ -73,23 +74,24 @@
     =link_to 'Документы:', bproce_path(@bproce) + '/documents'
   -@bproce.documents.order(:name).each do |doc|
     -if doc.status == 'Утвержден' or doc.status == 'Согласование'
-      -if doc.document_file_file_name  #  если есть файл документа, загруженный через paperclip
-        -if can? :view_document, doc
-          - if File.exist?(doc.pdf_path)
-            = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), doc.pdf_url, class: 'button-img'
-      = link_to doc.name, document_path(doc)
-      .id_show_
-        = "##{doc.id}"
-      = doc.status
-      = ' ' + doc.approved.strftime('%d.%m.%Y') if doc.approved
-      %br
+      .floating-box
+        -if doc.document_file_file_name  #  если есть файл документа, загруженный через paperclip
+          -if can? :view_document, doc
+            - if File.exist?(doc.pdf_path)
+              = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), doc.pdf_url, class: 'button-img'
+        = link_to doc.name, document_path(doc)
+        %br
+        .id_show_
+          = "##{doc.id}"
+        = doc.status
+        = ' ' + doc.approved.strftime('%d.%m.%Y') if doc.approved
 
 -if @directive_of_bproce.count > 0
   %h4 Директивы, на основании которых разработаны документы процесса:
   -@directive_of_bproce.each do |directive|
-    = link_to directive.midname, directive_path(directive)
-    = "(#{directive.note}) " unless directive.note.blank?
-    &nbsp; &nbsp;
+    .floating-box
+      = link_to directive.midname, directive_path(directive)
+      = "(#{directive.note}) " unless directive.note.blank?
 
 
 -if @bproce.contracts.count > 0
@@ -102,23 +104,23 @@
     В процессе участвуют
     =link_to 'Рабочие Места:', bproce_workplace_path(@bproce)
   -@bproce.workplaces.order(:name).each do |wp|
-    = link_to wp.designation, workplace_path(wp)
-    &nbsp; &nbsp;
+    .floating-box
+      = link_to wp.designation, workplace_path(wp)
 
 - if @bproce.bapps.count > 0
   %h4
     В процессе используются
     =link_to 'Приложения:', bproce_path(@bproce) + '/bapps'
   -@bproce.bapps.order(:name).each do |ba|
-    = link_to ba.name, bapp_path(ba)
-    &nbsp; &nbsp;
-
+    .floating-box
+      = link_to ba.name, bapp_path(ba)
+  
 -if @bproce.iresource.count > 0
   %h4
     В процессе используются Ресурсы:
   -@bproce.iresource.order(:label).each do |iresource|
-    = link_to iresource.label, iresource_path(iresource)
-    &nbsp; &nbsp;
+    .floating-box
+      = link_to iresource.label, iresource_path(iresource)
 
 %p
 .info_
