@@ -3,8 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe MetricsController, type: :controller do
-  let(:valid_attributes) { { 'name' => 'Metric name', description: 'description1', bproce_id: 1, depth: 1 } }
-  let(:valid_session) { {} }
+  let(:valid_attributes)   { { name: 'Metric name', description: 'description1', bproce_id: 1, depth: 1 } }
+  let(:invalid_attributes) { { name: 'Metric name', description: 'description1', bproce_id: 1, depth: 1 } }
+  let(:valid_session)      { {} }
 
   describe 'GET index' do
     it 'assigns all metrics as @metrics' do
@@ -62,23 +63,21 @@ RSpec.describe MetricsController, type: :controller do
 
       it 'redirects to the created metric' do
         post :create, { metric: valid_attributes }, valid_session
-        response.should redirect_to(Metric.last)
+        expect(response).to redirect_to(Metric.last)
       end
     end
 
     describe 'with invalid params' do
       it 'assigns a newly created but unsaved metric as @metric' do
-        # Trigger the behavior that occurs when invalid params are submitted
-        Metric.any_instance.stub(:save).and_return(false)
-        post :create, { metric: { 'bproce' => 'invalid value' } }, valid_session
+        expect_any_instance_of(Metric).to receive(:save).and_return(false)
+        post :create, { metric: invalid_attributes }, valid_session
         expect(assigns(:metric)).to be_a_new(Metric)
       end
 
       it "re-renders the 'new' template" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        Metric.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Metric).to receive(:save).and_return(false)
         post :create, { metric: { 'bproce' => 'invalid value' } }, valid_session
-        response.should render_template('new')
+        expect(response).to render_template('new')
       end
     end
   end
@@ -100,25 +99,23 @@ RSpec.describe MetricsController, type: :controller do
       it 'redirects to the metric' do
         metric = Metric.create! valid_attributes
         put :update, { id: metric.to_param, metric: valid_attributes }, valid_session
-        response.should redirect_to(metric)
+        expect(response).to redirect_to(metric)
       end
     end
 
     describe 'with invalid params' do
       it 'assigns the metric as @metric' do
         metric = Metric.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        Metric.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Metric).to receive(:save).and_return(false)
         put :update, { id: metric.to_param, metric: { 'bproce' => 'invalid value' } }, valid_session
         expect(assigns(:metric)).to eq(metric)
       end
 
       it "re-renders the 'edit' template" do
         metric = Metric.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        Metric.any_instance.stub(:save).and_return(false)
+        expect_any_instance_of(Metric).to receive(:save).and_return(false)
         put :update, { id: metric.to_param, metric: { 'bproce' => 'invalid value' } }, valid_session
-        response.should render_template('edit')
+        expect(response).to render_template('edit')
       end
     end
   end
@@ -134,7 +131,7 @@ RSpec.describe MetricsController, type: :controller do
     it 'redirects to the metrics list' do
       metric = Metric.create! valid_attributes
       delete :destroy, { id: metric.to_param }, valid_session
-      response.should redirect_to(metrics_url)
+      expect(response).to redirect_to(metrics_url)
     end
   end
 end

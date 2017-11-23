@@ -6,8 +6,9 @@ require 'rails_helper'
 # UserLetterMailer.user_letter_create(user_letter, current_user).deliver_now    # оповестим нового исполнителя
 
 describe LetterMailer do
-  let(:letter) { FactoryBot.create(:letter) }
+  let!(:letter) { FactoryBot.create(:letter) }
   let!(:user) { FactoryBot.create(:user) }
+  let(:user_letter) { FactoryBot.create(:user_letter, user_id: user.id, letter_id: letter.id) }
 
   describe 'check_overdue_letters' do
     # check_overdue_letters(letter, emails) # рассылка исполнителям о просроченных письмах
@@ -60,13 +61,7 @@ describe LetterMailer do
     it 'renders the receiver email' do
       user1 = FactoryBot.create(:user)
       user_letter1 = FactoryBot.create(:user_letter, user_id: user1.id, letter_id: letter.id)
-      puts user_letter.inspect
-      puts user_letter1.inspect
-      puts user_letter.user.email
-      puts user_letter1.user.email
-      puts letter.user_letter.count
-      puts letter.user_letter.user.inspect
-      expect(mail.to).to eql([user.email])
+      expect(mail.to).to eql([user.email, user1.email])
     end
 
     it 'renders the sender email' do
@@ -75,6 +70,7 @@ describe LetterMailer do
 
     it 'assigns @text' do
       expect(mail.body.encoded).to match('исполнитель')
+      expect(mail.body.encoded).to match('в которое внесены изменения')
     end
   end
 end

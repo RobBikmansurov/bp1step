@@ -1,4 +1,3 @@
-# coding: utf-8
 # frozen_string_literal: true
 
 class BprocesController < ApplicationController
@@ -47,17 +46,13 @@ class BprocesController < ApplicationController
   def autocomplete
     @bproces = Bproce.order(:name)
                      .where('id = ? or name ilike ? or shortname ilike ? ',
-                       params[:term].to_i.to_s, "%#{params[:term]}%", "%#{params[:term]}%")
+                            params[:term].to_i.to_s, "%#{params[:term]}%", "%#{params[:term]}%")
     render json: @bproces.map(&:name)
   end
 
   def show
     @metrics = Metric.where(bproce_id: @bproce.id).order(:name) if @bproce # метрики процесса
     @directive_of_bproce = Directive.last.directives_of_bproce(@bproce.id) if @bproce
-    # @contracts = Contract.where(:bproce_id => @bproce.id)  # договоры процесса
-
-    logger.info "/n/n/tdescription:/n #{@bproce.description}/n/n"
-
     respond_with(@bproce)
   end
 

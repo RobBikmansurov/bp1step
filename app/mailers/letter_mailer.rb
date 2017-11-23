@@ -3,7 +3,8 @@
 class LetterMailer < ActionMailer::Base
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
-  def check_overdue_letters(letter, emails) # рассылка исполнителям о просроченных письмах
+  # рассылка исполнителям о просроченных письмах
+  def check_overdue_letters(letter, emails)
     @letter = letter
     mail(to: emails, subject: "BP1Step: не исполнено Письмо #{@letter.name}")
   end
@@ -16,20 +17,25 @@ class LetterMailer < ActionMailer::Base
     mail(to: emails, subject: "BP1Step: #{@days} дн. на Письмо #{@letter.name}")
   end
 
-  # rubocop: disable Metrics/AbcSize
-  # rubocop: disable Metrics/MethodLength
-  def update_letter(letter, current_user, result) # рассылка об изменении письма
+  # рассылка об изменении письма
+  def update_letter(letter, current_user, _result)
     @letter = letter
     @current_user = current_user
-    @result = result
+    mail(to: not_empty_emails_for(@letter),
+         subject: "BP1Step: Письмо #{@letter.name} [#{LETTER_STATUS.key(@letter.status)}] изменено")
+  end
+
+  private
+
+  # список не пустых email исполнителей
+  def not_empty_emails_for(letter)
     address = ''
-    @letter.user_letter.each do |user_letter|
-      if user_letter.user && !user_letter.user.email.empty?
+    letter.user_letter.all.each do |user_letter|
+      unless user_letter.user&.email&.empty?
         address += ', ' unless address.empty?
         address += user_letter.user.email
       end
     end
-    mail(to: address,
-         subject: "BP1Step: Письмо #{@letter.name} [#{LETTER_STATUS.key(@letter.status)}] изменено")
+    address
   end
 end

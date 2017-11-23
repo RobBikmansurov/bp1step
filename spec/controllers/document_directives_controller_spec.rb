@@ -94,34 +94,31 @@ RSpec.describe DocumentDirectivesController, type: :controller do
     describe 'PUT update' do
       describe 'with valid params' do
         it 'updates the requested document_directive' do
-          put :update, { document_directive: invalid_attributes }, valid_session
-          expect(document_directive.reload.note).to eq 'New valid name'
+          expect_any_instance_of(DocumentDirective).to receive(:save).and_return(false)
+          put :update, { id: document_directive.to_param }, valid_session
         end
 
         it 'assigns the requested document_directive as @document_directive' do
-          put :update, { document_directive: invalid_attributes }, valid_session
+          put :update, { id: document_directive.to_param }, valid_session
           expect(assigns(:document_directive)).to eq(document_directive)
         end
 
         it 'redirects to the document_directive' do
-          put :update, { document_directive: invalid_attributes }, valid_session
+          put :update, { id: document_directive.to_param }, valid_session
           expect(response).to redirect_to(document_directive)
         end
       end
 
       describe 'with invalid params' do
         it 'assigns the document_directive as @document_directive' do
-          document_directive = valid_document_directive
-          document_directive.note = '' #  not valid
-          put :update, id: document_directive.id, document_directive: document_directive.as_json
+          put :update, id: document_directive.id, document_directive: invalid_attributes
           expect(assigns(:document_directive)).to eq(document_directive)
         end
 
         it "re-renders the 'edit' template" do
-          document_directive = valid_document_directive
           document_directive.note = '' #  not valid
-          put :update, id: document_directive.id, document_directive: document_directive.as_json
-          expect(response).to render_template('edit')
+          put :update, id: document_directive.to_param, document_directive: invalid_attributes
+          expect(response).to render_template('show')
         end
       end
     end

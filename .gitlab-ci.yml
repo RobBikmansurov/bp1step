@@ -36,7 +36,7 @@ rspec:
     - bundle install --jobs=3 --without development staging production -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
     - bundle exec rake RAILS_ENV=test db:create
     - bundle exec rake RAILS_ENV=test db:migrate
-    - bundle exec rspec spec/requests/ spec/routing/ spec/models/
+    - bundle exec rspec --exclude-pattern "spec/features/*_spec.rb"
   
 rubocop:
   stage: rubocop
