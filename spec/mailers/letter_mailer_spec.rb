@@ -23,6 +23,9 @@ describe LetterMailer do
     it 'renders the sender email' do
       expect(mail.from).to eql(['bp1step@bankperm.ru'])
     end
+    it 'renders the receiver email' do
+      expect(mail.to).to eql([user.email])
+    end
   end
 
   describe 'soon_deadline_letters' do
@@ -48,18 +51,17 @@ describe LetterMailer do
 
   describe 'update_letter' do
     # update_letter(letter, current_user, result) # рассылка об изменении письма
-    let(:current_user) { FactoryBot.create(:user) }
-    let(:mail) { LetterMailer.update_letter(letter, current_user, 'updated') }
+    let!(:user_letter) { FactoryBot.create(:user_letter, user_id: user.id, letter_id: letter.id) }
+    let(:mail) { LetterMailer.update_letter(letter, user, 'updated') }
 
     it 'renders the subject' do
-      expect(mail.subject).to eql("BP1Step: Письмо #{letter.name} [#{LETTER_STATUS.key(letter.status)}] изменено")
+      expect(mail.subject).to eql("BP1Step: Письмо #{letter.name} [#{LETTER_STATUS.key(letter.status)}] изменено" )
     end
 
     it 'renders the receiver email' do
       user1 = FactoryBot.create(:user)
-      user_letter = FactoryBot.create(:user_letter, user_id: current_user.id, letter_id: letter.id)
       user_letter1 = FactoryBot.create(:user_letter, user_id: user1.id, letter_id: letter.id)
-      expect(mail.to).to eql([current_user.email, user1.email])
+      expect(mail.to).to eql([user.email, user1.email])
     end
 
     it 'renders the sender email' do
@@ -67,6 +69,7 @@ describe LetterMailer do
     end
 
     it 'assigns @text' do
+      expect(mail.body.encoded).to match('исполнитель')
       expect(mail.body.encoded).to match('в которое внесены изменения')
     end
   end
