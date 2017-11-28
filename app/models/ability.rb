@@ -32,6 +32,7 @@ class Ability
         can :edit_document, [Document] # может брать исходник документа
         can [:read], [Agent, Contract]
         can %i[create_user update], Letter # назначать исполнителей писем
+        can [:create], [Task] # создавать Задачи
       end
 
       if user.role? :keeper
