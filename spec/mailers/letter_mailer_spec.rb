@@ -26,6 +26,15 @@ describe LetterMailer do
     it 'renders the receiver email' do
       expect(mail.to).to eql([user.email])
     end
+    it '@text contains leter\'s subject' do
+      expect(mail.body.encoded).to match(letter.subject)
+    end
+    it '@text contains leter\'s sender' do
+      expect(mail.body.encoded).to match(letter.sender)
+    end
+    it '@text contains leter\'s body' do
+      expect(mail.body.encoded).to match(letter.body)
+    end
   end
 
   describe 'soon_deadline_letters' do
