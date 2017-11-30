@@ -4,7 +4,7 @@ class RequirementsController < ApplicationController
   respond_to :html, :json
   helper_method :sort_column, :sort_direction
   before_action :set_requirement, only: %i[show edit update destroy tasks_list tasks_report]
-  before_action :authenticate_user!, only: %i[edit new create update check show]
+  before_action :authenticate_user! # , only: %i[edit new create update check show]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index

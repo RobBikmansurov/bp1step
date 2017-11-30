@@ -4,7 +4,7 @@ class TasksController < ApplicationController
   respond_to :html, :json
   before_action :set_task, only: %i[show edit update destroy report]
   helper_method :sort_column, :sort_direction
-  before_action :authenticate_user!, only: %i[edit new create update check show]
+  before_action :authenticate_user! # , only: %i[edit new create update check show]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
@@ -187,7 +187,7 @@ class TasksController < ApplicationController
       @task.user_task.find_each do |user_task|
         s += ', ' if s.present?
         s += user_task.user.displayname
-        s += '-отв.' if user_task.status && user_task.status.positive?
+        s += '-отв.' if user_task.status&.positive?
       end
       r.add_field 'TASK_USERS', s.to_s
       r.add_field 'RESULT', @task.result.blank? ? 'Не исполнено!' : @task.result
@@ -238,7 +238,7 @@ class TasksController < ApplicationController
           task.duedate.strftime('%d.%m.%y').to_s
         end
         t.add_column(:completiondate) do |task|
-          task.completion_date.strftime('%d.%m.%y').to_s if task.completion_date
+          task.completion_date&.strftime('%d.%m.%y').to_s
         end
         t.add_column(:completionalert) do |task|
           if task.completion_date
@@ -257,7 +257,7 @@ class TasksController < ApplicationController
           task.user_task.find_each do |user_task|
             s += ', ' if s.present?
             s += user_task.user.displayname
-            s += '-отв.' if user_task.status && user_task.status.positive?
+            s += '-отв.' if user_task.status&.positive?
           end
           s
         end
