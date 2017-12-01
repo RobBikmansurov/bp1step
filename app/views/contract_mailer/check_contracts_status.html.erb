@@ -8,6 +8,7 @@
   <a href= <%=h contract_url(@contract) %>><%= @contract.shortname %></a>
   от <%= @contract.date_begin.strftime('%d.%m.%Y') if @contract.date_begin %>
   <br>создан <%= @contract.created_at.strftime('%d.%m.%Y') %>
+  <p>с <%= @contract.agent&.name %> </p>
   <br>О чем (краткое описание):
   <br><%= @contract.description%></p>
   <p>Пожалуйста, <strong>завершите процедуру согласования</strong> договора или удалите его.</p>

@@ -2,9 +2,6 @@
 
 require 'rails_helper'
 
-# app/controllers/letters_controller.rb:181
-# UserLetterMailer.user_letter_create(user_letter, current_user).deliver_now    # оповестим нового исполнителя
-
 describe LetterMailer do
   let!(:letter) { FactoryBot.create(:letter) }
   let!(:user) { FactoryBot.create(:user) }
@@ -62,14 +59,14 @@ describe LetterMailer do
     # update_letter(letter, current_user, result) # рассылка об изменении письма
     let!(:user_letter) { FactoryBot.create(:user_letter, user_id: user.id, letter_id: letter.id) }
     let(:mail) { LetterMailer.update_letter(letter, user, 'updated') }
+    let!(:user1) { FactoryBot.create(:user) }
+    let!(:user_letter1) { FactoryBot.create(:user_letter, user_id: user1.id, letter_id: letter.id) }
 
     it 'renders the subject' do
-      expect(mail.subject).to eql("BP1Step: Письмо #{letter.name} [#{LETTER_STATUS.key(letter.status)}] изменено" )
+      expect(mail.subject).to eql("BP1Step: Письмо #{letter.name} [#{LETTER_STATUS.key(letter.status)}] изменено")
     end
 
     it 'renders the receiver email' do
-      user1 = FactoryBot.create(:user)
-      user_letter1 = FactoryBot.create(:user_letter, user_id: user1.id, letter_id: letter.id)
       expect(mail.to).to eql([user.email, user1.email])
     end
 

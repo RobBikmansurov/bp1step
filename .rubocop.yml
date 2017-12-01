@@ -29,6 +29,9 @@ Rails/HttpPositionalArguments: # удалить этот запрет для Rai
   Exclude:
     - 'spec/controllers/*'
 
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*_spec.rb
 Metrics/ModuleLength:
   Exclude:
     - spec/**/*_spec.rb

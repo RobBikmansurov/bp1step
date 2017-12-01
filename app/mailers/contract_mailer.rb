@@ -28,19 +28,22 @@ class ContractMailer < ActionMailer::Base
     end
   end
 
-  def process_is_missing_email(contract, user)	# рассылка о необходимости указания процесса для договора
+  # рассылка о необходимости указания процесса для договора
+  def process_is_missing_email(contract, user)
     @contract = contract
     @user = user
     mail(to: user.email, subject: "BP1Step: укажите процессы договора ##{@contract.id}")
   end
 
-  def check_outdated_contracts(contract, emails, text) # рассылка о просроченных договорах
+  # рассылка о просроченных договорах
+  def check_outdated_contracts(contract, emails, text) 
     @contract = contract
     @text = text
     mail(to: emails, subject: "BP1Step: #{@text} договор ##{@contract.id}")
   end
 
-  def check_contracts_status(contract, emails) # оповещение о договорах в статусе "Согласование"
+  # оповещение о договорах в статусе "Согласование"
+  def check_contracts_status(contract, emails)
     @contract = contract
     mail(to: emails, subject: "BP1Step: согласование договора ##{@contract.id}")
   end
