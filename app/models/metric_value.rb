@@ -6,7 +6,7 @@ class MetricValue < ActiveRecord::Base
 
   belongs_to :metric
 
-  attr_accessible :metric_id, :dtime, :value
+  # attr_accessible :metric_id, :dtime, :value
 
   scope :by_time, ->(start, finish) { where(dtime: (start..finish)) }
 

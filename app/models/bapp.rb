@@ -13,9 +13,9 @@ class Bapp < ActiveRecord::Base
   accepts_nested_attributes_for :bproce_bapps, allow_destroy: true
   accepts_nested_attributes_for :bproces
 
-  attr_accessible :name, :description, :apptype, :purpose, :version_app,
-                  :directory_app, :distribution_app, :executable_file,
-                  :licence, :source_app, :note, :tag_list
+  # attr_accessible :name, :description, :apptype, :purpose, :version_app,
+  #                :directory_app, :distribution_app, :executable_file,
+  #                :licence, :source_app, :note, :tag_list
 
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }

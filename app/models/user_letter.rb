@@ -12,7 +12,7 @@ class UserLetter < ActiveRecord::Base
   belongs_to :user
   belongs_to :letter
 
-  attr_accessible :user_id, :letter_id, :status, :user_name
+  # attr_accessible :user_id, :letter_id, :status, :user_name
 
   def user_name
     user.try(:displayname)

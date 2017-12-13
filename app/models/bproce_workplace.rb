@@ -10,7 +10,7 @@ class BproceWorkplace < ActiveRecord::Base
   belongs_to :bproce
   belongs_to :workplace
 
-  attr_accessible :workplace_id, :bproce_id
+  # attr_accessible :workplace_id, :bproce_id
 
   def workplace_designation
     workplace.try(:designation)

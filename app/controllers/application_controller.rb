@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   include PublicActivity::StoreController
-  hide_action :current_user
+  # hide_action :current_user
 
   rescue_from DeviseLdapAuthenticatable::LdapException do |exception|
     render text: exception, status: 500
@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password) }
-    devise_parameter_sanitizer.for(:update_avatar) { |u| u.permit(:avatar) }
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :email, :password])
+    devise_parameter_sanitizer.permit(:update_avatar, keys: [:avatar])
   end
 end

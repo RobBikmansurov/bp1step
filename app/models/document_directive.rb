@@ -12,7 +12,7 @@ class DocumentDirective < ActiveRecord::Base
   belongs_to :directive
   belongs_to :document
 
-  attr_accessible :directive_id, :document_id, :note, :directive_number, :document_name
+  # attr_accessible :directive_id, :document_id, :note, :directive_number, :document_name
 
   def directive_number
     directive.try(:name)

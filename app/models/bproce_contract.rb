@@ -10,7 +10,7 @@ class BproceContract < ActiveRecord::Base
   validates :bproce_id, presence: true
   validates :contract_id, presence: true
 
-  attr_accessible :bproce_id, :contract_id, :purpose, :bproce_name
+  # attr_accessible :bproce_id, :contract_id, :purpose, :bproce_name
 
   def bproce_name
     bproce.try(:name)

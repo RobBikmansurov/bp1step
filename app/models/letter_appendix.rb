@@ -26,5 +26,5 @@ class LetterAppendix < ActiveRecord::Base
 
   belongs_to :letter
 
-  attr_accessible :letter_id, :name, :appendix
+  # attr_accessible :letter_id, :name, :appendix
 end

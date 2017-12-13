@@ -14,8 +14,8 @@ class Iresource < ActiveRecord::Base
   has_many :bproce_iresources
   has_many :bproces, through: :bproce_iresources
 
-  attr_accessible :label, :location, :level, :alocation, :volume, :note,
-                  :access_read, :access_write, :access_other, :risk_category, :owner_name
+  # attr_accessible :label, :location, :level, :alocation, :volume, :note,
+  #                :access_read, :access_write, :access_other, :risk_category, :owner_name
 
   def owner_name
     user.try(:displayname)

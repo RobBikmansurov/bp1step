@@ -10,7 +10,7 @@ class UserBusinessRole < ActiveRecord::Base
   belongs_to :user
   belongs_to :business_role
 
-  attr_accessible :business_role_id, :user_name, :date_from, :date_to, :note
+  # attr_accessible :business_role_id, :user_name, :date_from, :date_to, :note
 
   def user_name
     user.try(:displayname)

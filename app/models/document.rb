@@ -11,8 +11,8 @@ class Document < ActiveRecord::Base
   has_many :user, through: :user_document
   has_many :user_document, dependent: :destroy
 
-  attr_accessible :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved,
-                  :note, :place, :document_file, :file_delete, :bproce_id
+  # attr_accessible :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved,
+  #               :note, :place, :document_file, :file_delete, :bproce_id
 
   include PgSearch
   pg_search_scope :full_search,

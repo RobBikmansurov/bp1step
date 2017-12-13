@@ -33,9 +33,9 @@ class Contract < ActiveRecord::Base
   has_many :contract_scan, dependent: :destroy
   # has_many :children, :class => 'Contract', foreign_key: :parent_id
 
-  attr_accessible :owner_name, :owner_id, :payer_name, :payer_id, :agent_name, :agent_id,
-                  :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition,
-                  :check, :parent_id, :parent_name, :contract_type, :contract_place
+  # attr_accessible :owner_name, :owner_id, :payer_name, :payer_id, :agent_name, :agent_id,
+  #                :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition,
+  #                :check, :parent_id, :parent_name, :contract_type, :contract_place
 
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }

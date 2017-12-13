@@ -2,7 +2,7 @@
 
 # Agent
 class Agent < ActiveRecord::Base
-  attr_accessible :shortname, :name, :town, :address, :contacts, :agent_name, :note
+  # attr_accessible :shortname, :name, :town, :address, :contacts, :agent_name, :note
 
   has_many :contract, through: :agent_contract
   has_many :agent_contract, dependent: :destroy

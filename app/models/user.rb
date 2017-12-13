@@ -40,13 +40,13 @@ class User < ActiveRecord::Base
   after_create :create_role
   before_save :ldap_email, :ldap_firstname, :ldap_displayname, :ldap_email
 
-  attr_accessible :username, :email, :password, :password_confirmation, :remember_me,
-                  :firstname, :lastname, :displayname, :role_ids,
-                  :middlename, :office, :position, :phone, :department,
-                  :avatar,
-                  :crop_x, :crop_y, :crop_w, :crop_h,
-                  :middlename, :office, :position, :phone
-  attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
+  # attr_accessible :username, :email, :password, :password_confirmation, :remember_me,
+  #                :firstname, :lastname, :displayname, :role_ids,
+  #                :middlename, :office, :position, :phone, :department,
+  #                :avatar,
+  #                :crop_x, :crop_y, :crop_w, :crop_h,
+  #                :middlename, :office, :position, :phone
+  # attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
 
   # after_update :reprocess_pic, :if => :cropping?
 
