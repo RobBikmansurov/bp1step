@@ -49,11 +49,11 @@ namespace :bp1step do
 
     Document.where('dlevel = 4').each do |document| # все документы типа Свидетельств должны иметь процесс
       documents_count += 1
-      next unless document.bproce.any?
+      next if document.bproce.any?
       mail_to = document.owner if document.owner_id.positive?
       mail_to = default_user if DEBUG || mail_to.blank?
       processes_missing += 1
-      logger.info "process missing ##{document.id}: \t #{mail_to.email}"
+      logger.info "process missing ##{document.id}: \t#{mail_to.email}"
       DocumentMailer.process_is_missing_email(document, mail_to).deliver # рассылка о необходимости указания процесса для документа
     end
 
@@ -62,9 +62,9 @@ namespace :bp1step do
       mail_to = document.owner if document.owner_id.positive?
       mail_to = default_user if DEBUG || mail_to.blank?
 
-      if document.bproce.count.zero?
+      unless document.bproce.any?
         processes_missing += 1
-        logger.info "process missing ##{document.id}: \t #{mail_to.email}"
+        logger.info "process missing ##{document.id}: \t#{mail_to.email}"
         DocumentMailer.process_is_missing_email(document, mail_to).deliver # рассылка о необходимости указания процесса для документа
       end
 
@@ -72,7 +72,7 @@ namespace :bp1step do
         if File.exist?(document.document_file.path) # есть исходный файл документа
           if File.size(document.document_file.path) == document.document_file_file_size
             unless File.exist?(document.pdf_path) # есть PDF для просмотра
-              Paperclip.run('unoconv', "-f pdf #{document.document_file.path}")
+              Paperclip.run('unoconv', "-f pdf '#{document.document_file.path}'")
               pdfs_missing += 1
             end
           else
