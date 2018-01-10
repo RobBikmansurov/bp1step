@@ -25,18 +25,18 @@ namespace :bp1step do
       l_source = 'СВК'
 
       case name
-      when /\AOD\d{2,}\z/                                 # ODNNNN.PDF
+      when /\A(OD|ОД)-\d{1,}\z/                                 # ODNNNN.PDF
         l_number = 'ОД-' + name[2..name.size]
-        l_sender = 'ЦБ РФ'
-        l_subject = 'Об отзыве лицензии / Об уточнении'
-      when /\AОД-\d{2,}\z/                                # OD-NNNN.PDF
-        l_number = 'ОД-' + name[3..name.size]
         l_sender = 'ЦБ РФ'
         l_subject = 'Об отзыве лицензии / Об уточнении'
       when /\A\d{3,}\z/                                   # NNNN.PDF или NNNN.TIF
         l_number = name
         l_sender = 'Отделение по Пермскому краю ЦБ РФ'
         l_subject = name
+      when /\A\d{2,}\z/                                   # NNNN.PDF или NNNN.TIF
+        l_number = name
+        l_sender = 'Отделение по Пермскому краю ЦБ РФ'
+        l_subject = ' ' + name
       # when /\AVES\d{6}_\d{1,}\(\d{1,}\)/
       when /\AVES\d{6}_+/                                 # вестник банка росии
         l_number = name[/_\d+\(?f?/]
@@ -58,9 +58,9 @@ namespace :bp1step do
         l_number = "#{l_number[0..l_number.size - 1]}-У"
         l_sender = 'Банк России'
         l_subject = "Указание Банка России № #{l_number} от #{l_date}"
-      when /\A\d+_P/                                      # Положение БР
+      when /\A\d+(-|_)(П|P)/                                      # Положение БР
         l_number = name[/\A\d+_?f?/]
-        l_number = "#{l_number[0..l_number.size - 2]}-П"
+        l_number = "#{l_number[0..l_number.size - 1]}-П"
         l_sender = 'Банк России'
         l_subject = "Положение Банка России № #{l_number} от #{l_date}"
       when /\A\d+_MR/                                     # Методические рекомендации
