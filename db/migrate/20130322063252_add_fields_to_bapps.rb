@@ -1,4 +1,4 @@
-class AddFieldsToBapps < ActiveRecord::Migration
+class AddFieldsToBapps < ActiveRecord::Migration[4.2]
   def change
     add_column :bapps, :version_app, :string
     add_column :bapps, :directory_app, :string

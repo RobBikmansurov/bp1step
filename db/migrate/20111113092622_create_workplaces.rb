@@ -1,4 +1,4 @@
-class CreateWorkplaces < ActiveRecord::Migration
+class CreateWorkplaces < ActiveRecord::Migration[4.2]
   def change
     create_table :workplaces do |t|
       t.string :designation

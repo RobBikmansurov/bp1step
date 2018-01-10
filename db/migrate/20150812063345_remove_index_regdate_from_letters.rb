@@ -1,4 +1,4 @@
-class RemoveIndexRegdateFromLetters < ActiveRecord::Migration
+class RemoveIndexRegdateFromLetters < ActiveRecord::Migration[4.2]
   def self.up
     add_index :letters, :regnumber
     remove_index :letters, :regdate

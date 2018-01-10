@@ -1,4 +1,4 @@
-class CreateBusinessRoles < ActiveRecord::Migration
+class CreateBusinessRoles < ActiveRecord::Migration[4.2]
   def change
     create_table :business_roles do |t|
       t.string :name

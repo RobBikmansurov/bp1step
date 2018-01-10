@@ -1,4 +1,4 @@
-class CreateBproceIresources < ActiveRecord::Migration
+class CreateBproceIresources < ActiveRecord::Migration[4.2]
   def change
     create_table :bproce_iresources do |t|
       t.references :bproce

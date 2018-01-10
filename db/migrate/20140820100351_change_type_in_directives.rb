@@ -1,4 +1,4 @@
-class ChangeTypeInDirectives < ActiveRecord::Migration
+class ChangeTypeInDirectives < ActiveRecord::Migration[4.2]
   def self.up
     change_column :directives, :name, :text
   end

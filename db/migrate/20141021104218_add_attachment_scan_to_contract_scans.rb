@@ -1,4 +1,4 @@
-class AddAttachmentScanToContractScans < ActiveRecord::Migration
+class AddAttachmentScanToContractScans < ActiveRecord::Migration[4.2]
   def self.up
     change_table :contract_scans do |t|
       t.attachment :scan

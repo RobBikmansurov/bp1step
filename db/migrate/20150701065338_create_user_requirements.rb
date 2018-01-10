@@ -1,4 +1,4 @@
-class CreateUserRequirements < ActiveRecord::Migration
+class CreateUserRequirements < ActiveRecord::Migration[4.2]
   def change
     create_table :user_requirements do |t|
       t.references :user, index: true

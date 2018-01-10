@@ -1,4 +1,4 @@
-class CreateUserDocuments < ActiveRecord::Migration
+class CreateUserDocuments < ActiveRecord::Migration[4.2]
   def change
     create_table :user_documents do |t|
       t.references :user, index: true

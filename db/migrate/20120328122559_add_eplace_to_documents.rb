@@ -1,4 +1,4 @@
-class AddEplaceToDocuments < ActiveRecord::Migration
+class AddEplaceToDocuments < ActiveRecord::Migration[4.2]
   def change
     add_column :documents, :eplace, :string
     add_column :documents, :approveorgan, :string

@@ -1,4 +1,4 @@
-class Add3FieldsToUsers < ActiveRecord::Migration
+class Add3FieldsToUsers < ActiveRecord::Migration[4.2]
   def up
     add_column :users, :department, :string
     add_column :users, :position, :string

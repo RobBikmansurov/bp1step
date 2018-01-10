@@ -1,4 +1,4 @@
-class AddAttachmentAppendixToLetterAppendixes < ActiveRecord::Migration
+class AddAttachmentAppendixToLetterAppendixes < ActiveRecord::Migration[4.2]
   def self.up
     change_table :letter_appendixes do |t|
       t.attachment :appendix

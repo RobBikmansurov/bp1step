@@ -1,4 +1,4 @@
-class CreateUserWorkplaces < ActiveRecord::Migration
+class CreateUserWorkplaces < ActiveRecord::Migration[4.2]
   def change
     create_table :user_workplaces do |t|
       t.date :date_from

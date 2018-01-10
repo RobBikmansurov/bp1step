@@ -1,4 +1,4 @@
-class CreateLetterAppendixes < ActiveRecord::Migration
+class CreateLetterAppendixes < ActiveRecord::Migration[4.2]
   def change
     create_table :letter_appendixes do |t|
       t.references :letter, index: true

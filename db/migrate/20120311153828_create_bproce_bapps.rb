@@ -1,4 +1,4 @@
-class CreateBproceBapps < ActiveRecord::Migration
+class CreateBproceBapps < ActiveRecord::Migration[4.2]
   def change
     create_table :bproce_bapps do |t|
       t.integer :bproce_id
