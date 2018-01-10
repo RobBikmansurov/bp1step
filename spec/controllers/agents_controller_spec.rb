@@ -33,7 +33,7 @@ RSpec.describe AgentsController, type: :controller do
 
   describe 'GET show' do
     it 'assigns the requested agent as @agent' do
-      get :show, agent.id
+      get :show, params: { id: agent.id}
       expect(assigns(:agent)).to eq(agent)
     end
   end
@@ -49,18 +49,18 @@ RSpec.describe AgentsController, type: :controller do
     describe 'with valid params' do
       it 'creates a new Agent' do
         expect do
-          post :create, { agent: agent_attributes }
+          post :create, params: { agent: agent_attributes }
         end.to change(Agent, :count).by(1)
       end
 
       it 'assigns a newly created agent as @agent' do
-        post :create, { agent: agent_attributes }
+        post :create, params: { agent: agent_attributes }
         expect(assigns(:agent)).to be_a(Agent)
         expect(assigns(:agent)).to be_persisted
       end
 
       it 'redirects to the created agent' do
-        post :create, { agent: agent_attributes }
+        post :create, params: { agent: agent_attributes }
         expect(response).to redirect_to(Agent.last)
       end
     end
@@ -68,13 +68,13 @@ RSpec.describe AgentsController, type: :controller do
     describe 'with invalid params' do
       it 'assigns a newly created but unsaved agent as @agent' do
         expect_any_instance_of(Agent).to receive(:save).and_return(false)
-        post :create, { agent: { 'name' => 'invalid value' } }
+        post :create, params: { agent: { 'name' => 'invalid value' } }
         expect(assigns(:agent)).to be_a_new(Agent)
       end
 
       it "re-renders the 'new' template" do
         expect_any_instance_of(Agent).to receive(:save).and_return(false)
-        post :create, { agent: { 'name' => 'invalid value' } }
+        post :create, params: { agent: { 'name' => 'invalid value' } }
         expect(response).to render_template('new')
       end
     end
@@ -85,18 +85,18 @@ RSpec.describe AgentsController, type: :controller do
       it 'updates the requested agent' do
         agent = Agent.create! agent_attributes
         expect_any_instance_of(Agent).to receive(:save).at_least(:once)
-        put :update, { id: agent.to_param, agent: { 'name' => 'MyString' } }
+        put :update, params: { id: agent.to_param, agent: { 'name' => 'MyString' } }
       end
 
       it 'assigns the requested agent as @agent' do
         agent = Agent.create! agent_attributes
-        put :update, { id: agent.to_param, agent: agent_attributes }
+        put :update, params: { id: agent.to_param, agent: agent_attributes }
         expect(assigns(:agent)).to eq(agent)
       end
 
       it 'redirects to the agent' do
         agent = Agent.create! agent_attributes
-        put :update, { id: agent.to_param, agent: agent_attributes }
+        put :update, params: { id: agent.to_param, agent: agent_attributes }
         expect(response).to redirect_to(agent)
       end
     end
@@ -105,14 +105,14 @@ RSpec.describe AgentsController, type: :controller do
       it 'assigns the agent as @agent' do
         agent = Agent.create! agent_attributes
         expect_any_instance_of(Agent).to receive(:save).and_return(false)
-        put :update, { id: agent.to_param, agent: { 'name' => 'invalid value' } }
+        put :update, params: { id: agent.to_param, agent: { 'name' => 'invalid value' } }
         expect(assigns(:agent)).to eq(agent)
       end
 
       it "re-renders the 'edit' template" do
         agent = Agent.create! agent_attributes
         expect_any_instance_of(Agent).to receive(:save).and_return(false)
-        put :update, { id: agent.to_param, agent: { 'name' => 'invalid value' } }
+        put :update, params: { id: agent.to_param, agent: { 'name' => 'invalid value' } }
         expect(response).to render_template('edit')
       end
     end
@@ -122,13 +122,13 @@ RSpec.describe AgentsController, type: :controller do
     it 'destroys the requested agent' do
       agent = Agent.create! agent_attributes
       expect do
-        delete :destroy, { id: agent.to_param }
+        delete :destroy, params: { id: agent.to_param }
       end.to change(Agent, :count).by(-1)
     end
 
     it 'redirects to the agents list' do
       agent = Agent.create! agent_attributes
-      delete :destroy, { id: agent.to_param }
+      delete :destroy, params: { id: agent.to_param }
       expect(response).to redirect_to(agents_url)
     end
   end
