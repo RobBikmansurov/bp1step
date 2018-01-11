@@ -4,12 +4,8 @@ require 'rails_helper'
 
 RSpec.describe DirectivesController do
   # let(:valid_attributes) { FactoryBot.create :directive }
-  let(:valid_attributes) do
-    { approval: '01.01.2013',
-      number: '100',
-      name: 'directive_name',
-      body: 'test' }
-  end
+  let(:valid_attributes) { { approval: '01.01.2013', number: '100', name: 'directive_name', body: 'test' } }
+  let(:invalid_attributes) { { approval: '01.01.2013', number: '', name: 'directive_name', body: 'test' } }
   let(:valid_session) { { 'warden.user.user.key' => session['warden.user.user.key'] } }
 
   before(:each) do
@@ -18,8 +14,7 @@ RSpec.describe DirectivesController do
 
   describe 'GET index' do
     it 'assigns all directives as @directives' do
-      directive = Directive.create! valid_attributes
-      get :index, {}, valid_session
+      get :index
       expect(response).to be_success
       expect(response).to have_http_status(:success)
       expect(response).to render_template('index')
@@ -37,14 +32,14 @@ RSpec.describe DirectivesController do
     it 'assigns the requested directive as @directive' do
       @bproce = FactoryBot.create(:bproce)
       directive = Directive.create! valid_attributes
-      get :show, { id: directive.to_param }, valid_session
+      get :show, params: { id: directive.to_param }
       expect(assigns(:directive)).to eq(directive)
     end
   end
 
   describe 'GET new' do
     it 'assigns a new directive as @directive' do
-      get :new, {}, valid_session
+      get :new, params: {}
       expect(assigns(:directive)).to be_a_new(Directive)
     end
   end
@@ -52,7 +47,7 @@ RSpec.describe DirectivesController do
   describe 'GET edit' do
     it 'assigns the requested directive as @directive' do
       directive = Directive.create! valid_attributes
-      get :edit, { id: directive.to_param }, valid_session
+      get :edit, params: { id: directive.to_param }
       expect(assigns(:directive)).to eq(directive)
     end
   end
@@ -61,32 +56,26 @@ RSpec.describe DirectivesController do
     describe 'with valid params' do
       it 'creates a new Directive' do
         expect do
-          post :create, { directive: valid_attributes }, valid_session
+          post :create, params: { directive: valid_attributes }
         end.to change(Directive, :count).by(1)
       end
 
       it 'assigns a newly created directive as @directive' do
-        post :create, { directive: valid_attributes }, valid_session
+        post :create, params: { directive: valid_attributes }
         expect(assigns(:directive)).to be_a(Directive)
         expect(assigns(:directive)).to be_persisted
       end
 
       it 'redirects to the created directive' do
-        post :create, { directive: valid_attributes }, valid_session
+        post :create, params: { directive: valid_attributes }
         expect(response).to redirect_to(Directive.last)
       end
     end
 
     describe 'with invalid params' do
-      it 'assigns a newly created but unsaved directive as @directive' do
-        expect_any_instance_of(Directive).to receive(:save).and_return(false)
-        post :create, { directive: {} }, valid_session
-        expect(assigns(:directive)).to be_a_new(Directive)
-      end
-
       it "re-renders the 'new' template" do
         expect_any_instance_of(Directive).to receive(:save).and_return(false)
-        post :create, { directive: {} }, valid_session
+        post :create, params: { directive: valid_attributes }
         expect(response).to_not render_template('new')
       end
     end
@@ -97,18 +86,18 @@ RSpec.describe DirectivesController do
       it 'updates the requested directive' do
         directive = Directive.create! valid_attributes
         expect_any_instance_of(Directive).to receive(:save).and_return(false)
-        put :update, { id: directive.to_param, directive: { 'these' => 'params' } }, valid_session
+        put :update, params: { id: directive.to_param, directive: { 'these' => 'params' } }
       end
 
       it 'assigns the requested directive as @directive' do
         directive = Directive.create! valid_attributes
-        put :update, { id: directive.to_param, directive: valid_attributes }, valid_session
+        put :update, params: { id: directive.to_param, directive: valid_attributes }
         expect(assigns(:directive)).to eq(directive)
       end
 
       it 'redirects to the directive' do
         directive = Directive.create! valid_attributes
-        put :update, { id: directive.to_param, directive: valid_attributes }, valid_session
+        put :update, params: { id: directive.to_param, directive: valid_attributes }
         expect(response).to redirect_to(directive)
       end
     end
@@ -117,14 +106,14 @@ RSpec.describe DirectivesController do
       it 'assigns the directive as @directive' do
         directive = Directive.create! valid_attributes
         expect_any_instance_of(Directive).to receive(:save).and_return(false)
-        put :update, { id: directive.to_param, directive: {} }, valid_session
+        put :update, params: { id: directive.to_param, directive: invalid_attributes }
         expect(assigns(:directive)).to eq(directive)
       end
 
       it "re-renders the 'edit' template" do
         directive = Directive.create! valid_attributes
         expect_any_instance_of(Directive).to receive(:save).and_return(false)
-        put :update, { id: directive.to_param, directive: {} }, valid_session
+        put :update, params: { id: directive.to_param, directive: invalid_attributes }
         expect(response).to_not render_template('edit')
       end
     end
@@ -134,13 +123,13 @@ RSpec.describe DirectivesController do
     it 'destroys the requested directive' do
       directive = Directive.create! valid_attributes
       expect do
-        delete :destroy, { id: directive.to_param }, valid_session
+        delete :destroy, params: { id: directive.to_param }
       end.to change(Directive, :count).by(-1)
     end
 
     it 'redirects to the directives list' do
       directive = Directive.create! valid_attributes
-      delete :destroy, { id: directive.to_param }, valid_session
+      delete :destroy, params: { id: directive.to_param }
       expect(response).to redirect_to(directives_url)
     end
   end
