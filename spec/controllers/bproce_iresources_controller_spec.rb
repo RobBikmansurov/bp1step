@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe BproceIresourcesController, type: :controller do
-  let(:valid_attributes) { { bproce_id: '1', iresource_id: '1', rpurpose: 'Purpose' } }
+  let(:bproce) { FactoryBot.create :bproce }
+  let(:iresource) { FactoryBot.create :iresource }
+  let(:bproce_iresource) { FactoryBot.create :bproce_iresource }
+  let(:valid_attributes) { { bproce_id: bproce.id, iresource_id: iresource.id, rpurpose: 'Purpose' } }
+  let(:invalid_attributes) { { bproce_id: bproce.id, iresource_id: nil, rpurpose: 'Purpose' } }
   let(:valid_session) { {} }
 
   before(:each) do
@@ -21,14 +27,14 @@ RSpec.describe BproceIresourcesController, type: :controller do
   describe 'GET show' do
     it 'assigns the requested bproce_iresource as @bproce_iresource' do
       bproce_iresource = BproceIresource.create! valid_attributes
-      get :show, { id: bproce_iresource.to_param }, valid_session
+      get :show, params: { id: bproce_iresource.to_param }
       expect(assigns(:bproce_iresource)).to eq(bproce_iresource)
     end
   end
 
   describe 'GET new' do
     it 'assigns a new bproce_iresource as @bproce_iresource' do
-      get :new, {}, valid_session
+      get :new, params: {}
       expect(assigns(:bproce_iresource)).to be_a_new(BproceIresource)
     end
   end
@@ -36,7 +42,7 @@ RSpec.describe BproceIresourcesController, type: :controller do
   describe 'GET edit' do
     it 'assigns the requested bproce_iresource as @bproce_iresource' do
       bproce_iresource = BproceIresource.create! valid_attributes
-      get :edit, { id: bproce_iresource.to_param }, valid_session
+      get :edit, params: { id: bproce_iresource.to_param }
       expect(assigns(:bproce_iresource)).to eq(bproce_iresource)
     end
   end
@@ -45,18 +51,18 @@ RSpec.describe BproceIresourcesController, type: :controller do
     describe 'with valid params' do
       it 'creates a new BproceIresource' do
         expect do
-          post :create, { bproce_iresource: valid_attributes }, valid_session
+          post :create, params: { bproce_iresource: valid_attributes }
         end.to change(BproceIresource, :count).by(1)
       end
 
       it 'assigns a newly created bproce_iresource as @bproce_iresource' do
-        post :create, { bproce_iresource: valid_attributes }, valid_session
+        post :create, params: { bproce_iresource: valid_attributes }
         expect(assigns(:bproce_iresource)).to be_a(BproceIresource)
         expect(assigns(:bproce_iresource)).to be_persisted
       end
 
       it 'redirects to the created bproce_iresource' do
-        post :create, { bproce_iresource: valid_attributes }, valid_session
+        post :create, params: { bproce_iresource: valid_attributes }
         expect(response).to redirect_to(BproceIresource.last)
       end
     end
@@ -64,13 +70,13 @@ RSpec.describe BproceIresourcesController, type: :controller do
     describe 'with invalid params' do
       it 'assigns a newly created but unsaved bproce_iresource as @bproce_iresource' do
         expect_any_instance_of(BproceIresource).to receive(:save).and_return(false)
-        post :create, { bproce_iresource: {} }, valid_session
+        post :create, params: { bproce_iresource: invalid_attributes }
         expect(assigns(:bproce_iresource)).to be_a_new(BproceIresource)
       end
 
       it "re-renders the 'new' template" do
         expect_any_instance_of(BproceIresource).to receive(:save).and_return(false)
-        post :create, { bproce_iresource: {} }, valid_session
+        post :create, params: { bproce_iresource: invalid_attributes }
         expect(response).to render_template('new')
       end
     end
@@ -81,36 +87,49 @@ RSpec.describe BproceIresourcesController, type: :controller do
       it 'updates the requested bproce_iresource' do
         bproce_iresource = BproceIresource.create! valid_attributes
         expect_any_instance_of(BproceIresource).to receive(:save).and_return(false)
-        put :update, { id: bproce_iresource.to_param, bproce_iresource: { 'these' => 'params' } }, valid_session
+        put :update, params: { id: bproce_iresource.to_param, bproce_iresource: { 'these' => 'params' } }
       end
 
       it 'assigns the requested bproce_iresource as @bproce_iresource' do
         bproce_iresource = BproceIresource.create! valid_attributes
-        put :update, { id: bproce_iresource.to_param, bproce_iresource: valid_attributes }, valid_session
+        put :update, params: { id: bproce_iresource.to_param, bproce_iresource: valid_attributes }
         expect(assigns(:bproce_iresource)).to eq(bproce_iresource)
       end
 
       it 'redirects to the bproce_iresource' do
         bproce_iresource = BproceIresource.create! valid_attributes
-        put :update, { id: bproce_iresource.to_param, bproce_iresource: valid_attributes }, valid_session
+        put :update, params: { id: bproce_iresource.to_param, bproce_iresource: valid_attributes }
         expect(response).to redirect_to(bproce_iresource)
       end
     end
 
     describe 'with invalid params' do
       it 'assigns the bproce_iresource as @bproce_iresource' do
-        bproce_iresource = BproceIresource.create! valid_attributes
         expect_any_instance_of(BproceIresource).to receive(:save).and_return(false)
-        put :update, { id: bproce_iresource.to_param, bproce_iresource: {} }, valid_session
+        put :update, params: { id: bproce_iresource.to_param, bproce_iresource: invalid_attributes }
         expect(assigns(:bproce_iresource)).to eq(bproce_iresource)
       end
 
       it "re-renders the 'edit' template" do
-        bproce_iresource = BproceIresource.create! valid_attributes
         expect_any_instance_of(BproceIresource).to receive(:save).and_return(false)
-        put :update, { id: bproce_iresource.to_param, bproce_iresource: {} }, valid_session
+        put :update, params: { id: bproce_iresource.to_param, bproce_iresource: invalid_attributes }
         expect(response).to_not render_template('edit')
       end
+    end
+  end
+
+  describe 'DELETE destroy' do
+    it 'destroys the requested bproce_iresource' do
+      bproce_iresource = FactoryBot.create :bproce_iresource
+      expect do
+        delete :destroy, params: { id: bproce_iresource.to_param }
+      end.to change(BproceIresource, :count).by(-1)
+    end
+
+    it 'redirects to the bproce_iresources list' do
+      bproce_iresource = FactoryBot.create :bproce_iresource
+      delete :destroy, params: { id: bproce_iresource.to_param }
+      expect(response).to redirect_to(iresource_url)
     end
   end
 end

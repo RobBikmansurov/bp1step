@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 class BproceIresourcesController < ApplicationController
   respond_to :html, :xml, :json
   before_action :authenticate_user!, only: %i[edit create]
-  before_action :get_bproce_iresource, except: :index
+  before_action :bproce_iresource, except: :index
 
   def create
-    @bproce = Bproce.find_by_name(params[:bproce_iresource_bproce])
-    @bproce_iresource = BproceIresource.new(params[:bproce_iresource])
+    @bproce = Bproce.find_by(name: params[:bproce_iresource_bproce])
+    @bproce_iresource = BproceIresource.new(bproce_iresource_params)
     respond_to do |format|
       if @bproce_iresource.save
         format.html { redirect_to @bproce_iresource, notice: 'BproceIresources was successfully created.' }
@@ -34,13 +36,17 @@ class BproceIresourcesController < ApplicationController
   end
 
   def update
-    flash[:notice] = 'Successfully updated bproce_iresource.' if @bproce_iresource.update_attributes(params[:bproce_iresource])
+    flash[:notice] = 'Successfully updated bproce_iresource.' if @bproce_iresource.update_attributes(bproce_iresource_params)
     respond_with(@bproce_iresource)
   end
 
   private
 
-  def get_bproce_iresource
+  def bproce_iresource_params
+    params.require(:bproce_iresource).permit(:bproce_id, :iresource_id, :rpurpose)
+  end
+
+  def bproce_iresource
     @bproce = Bproce.find(params[:bproce_id]) if params[:bproce_id].present?
     @bproce_iresource = params[:id].present? ? BproceIresource.find(params[:id]) : BproceIresource.new(params[:bproce_bapp])
   end
