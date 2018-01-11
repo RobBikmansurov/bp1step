@@ -26,7 +26,7 @@ RSpec.describe DocumentsController, type: :controller do
   describe 'GET show' do
     it 'assigns the requested document as @document' do
       document = valid_documents.first
-      get :show, id: document.to_param
+      get :show, params: { id: document.to_param }
       expect(assigns(:document)).to eq(document)
     end
   end
@@ -46,7 +46,7 @@ RSpec.describe DocumentsController, type: :controller do
     describe 'GET edit' do
       it 'assigns the requested document as @document' do
         document = valid_documents.first
-        get :edit, id: document.to_param
+        get :edit, params: { id: document.to_param }
         expect(assigns(:document)).to eq(document)
       end
     end
@@ -58,18 +58,18 @@ RSpec.describe DocumentsController, type: :controller do
       describe 'with valid params' do
         it 'creates a new Document' do
           expect do
-            post :create, document: document.as_json
+            post :create, params: { document: document.as_json }
           end.to change(Document, :count).by(1)
         end
 
         it 'assigns a newly created document as @document' do
-          post :create, document: document.as_json
+          post :create, params: { document: document.as_json }
           expect(assigns(:document)).to be_a(Document)
           expect(assigns(:document)).to be_persisted
         end
 
         it 'redirects to the created document' do
-          post :create, document: document.as_json
+          post :create, params: { document: document.as_json }
           expect(response).to redirect_to(Document.last)
         end
       end
@@ -77,12 +77,12 @@ RSpec.describe DocumentsController, type: :controller do
       describe 'with invalid params' do
         let(:invalid_document) { build(:document, :invalid) }
         it 'assigns a newly created but unsaved document as @document' do
-          post :create, document: invalid_document.as_json
+          post :create, params: { document: invalid_document.as_json }
           expect(assigns(:document)).to be_a_new(Document)
         end
 
         it "re-renders the 'new' template" do
-          post :create, document: invalid_document.as_json
+          post :create, params: { document: invalid_document.as_json }
           expect(response).to render_template('new')
         end
       end
@@ -93,19 +93,19 @@ RSpec.describe DocumentsController, type: :controller do
         it 'updates the requested document' do
           document = valid_documents.first
           document.name = 'New valid name'
-          put :update, id: document.id, document: document.as_json
+          put :update, params: { id: document.id, document: document.as_json }
           expect(document.reload.name).to eq 'New valid name'
         end
 
         it 'assigns the requested document as @document' do
           document = valid_documents.first
-          put :update, id: document.to_param, document: document.as_json
+          put :update, params: { id: document.to_param, document: document.as_json }
           expect(assigns(:document)).to eq(document)
         end
 
         it 'redirects to the document' do
           document = valid_documents.first
-          put :update, id: document.to_param, document: document.as_json
+          put :update, params: { id: document.to_param, document: document.as_json }
           expect(response).to redirect_to(document)
         end
       end
@@ -114,14 +114,14 @@ RSpec.describe DocumentsController, type: :controller do
         it 'assigns the document as @document' do
           document = valid_documents.first
           document.name = '' #  not valid
-          put :update, id: document.id, document: document.as_json
+          put :update, params: { id: document.id, document: document.as_json }
           expect(assigns(:document)).to eq(document)
         end
 
         it "re-renders the 'edit' template" do
           document = valid_documents.first
           document.name = '' #  not valid
-          put :update, id: document.id, document: document.as_json
+          put :update, params: { id: document.id, document: document.as_json }
           expect(response).to render_template('edit')
         end
       end
@@ -132,13 +132,13 @@ RSpec.describe DocumentsController, type: :controller do
     it 'destroys the requested document' do
       document = valid_documents.first
       expect do
-        delete :destroy, id: document.id
+        delete :destroy, params: { id: document.id }
       end.to change(Document, :count).by(-1)
     end
 
     it 'redirects to the documents list' do
       document = valid_documents.first
-      delete :destroy, id: document.id
+      delete :destroy, params: { id: document.id }
       expect(response).to redirect_to(documents_url)
     end
   end
