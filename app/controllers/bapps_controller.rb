@@ -33,7 +33,7 @@ class BappsController < ApplicationController
   end
 
   def create
-    @bapp = Bapp.create(params[:bapp])
+    @bapp = Bapp.create(bapp_params)
     flash[:notice] = 'Successfully created bapp.' if @bapp.save
     respond_with(@bapp)
   end
@@ -48,8 +48,8 @@ class BappsController < ApplicationController
 
   def update
     @bproce_bapp = BproceBapp.new(bapp_id: @bapp.id)
-    if @bapp.update_attributes(params[:bapp])
-      flash[:notice] = 'Successfully updated bapp.' if @bapp.update_attributes(params[:bapp])
+    if @bapp.update_attributes(bapp_params)
+      flash[:notice] = 'Successfully updated bapp.'
       respond_with(@bapp)
     else
       render action: 'edit'
@@ -75,6 +75,12 @@ class BappsController < ApplicationController
   end
 
   private
+
+  def bapp_params
+    params.require(:bapp).permit(:name, :description, :apptype, :purpose, :version_app,
+                                 :directory_app, :distribution_app, :executable_file,
+                                 :licence, :source_app, :note, :tag_list)
+  end
 
   def set_app
     if params[:search].present? # это поиск

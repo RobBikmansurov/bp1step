@@ -33,14 +33,14 @@ RSpec.describe ContractsController do
   describe 'GET show' do
     it 'assigns the requested contract as @contract' do
       contract = Contract.create! valid_attributes
-      get :show, { id: contract.to_param }, valid_session
+      get :show, params: { id: contract.to_param }
       expect(assigns(:contract)).to eq(contract)
     end
   end
 
   describe 'GET new' do
     it 'assigns a new contract as @contract' do
-      get :new, {}, valid_session
+      get :new, params: {}
       expect(assigns(:contract)).to be_a_new(Contract)
     end
   end
@@ -48,7 +48,7 @@ RSpec.describe ContractsController do
   describe 'GET edit' do
     it 'assigns the requested contract as @contract' do
       contract = Contract.create! valid_attributes
-      get :edit, { id: contract.to_param }, valid_session
+      get :edit, params: { id: contract.to_param }
       expect(assigns(:contract)).to eq(contract)
     end
   end
@@ -57,18 +57,18 @@ RSpec.describe ContractsController do
     describe 'with valid params' do
       it 'creates a new Contract' do
         expect do
-          post :create, { contract: valid_attributes }, valid_session
+          post :create, params: { contract: valid_attributes }
         end.to change(Contract, :count).by(1)
       end
 
       it 'assigns a newly created contract as @contract' do
-        post :create, { contract: valid_attributes }, valid_session
+        post :create, params: { contract: valid_attributes }
         expect(assigns(:contract)).to be_a(Contract)
         expect(assigns(:contract)).to be_persisted
       end
 
       it 'redirects to the created contract' do
-        post :create, { contract: valid_attributes }, valid_session
+        post :create, params: { contract: valid_attributes }
         expect(response).to redirect_to(Contract.last)
       end
     end
@@ -76,13 +76,13 @@ RSpec.describe ContractsController do
     describe 'with invalid params' do
       it 'assigns a newly created but unsaved contract as @contract' do
         expect_any_instance_of(Contract).to receive(:save).and_return(false)
-        post :create, { contract: { 'owner_id' => 'invalid value' } }, valid_session
+        post :create, params: { contract: { 'owner_id' => 'invalid value' } }
         expect(assigns(:contract)).to be_a_new(Contract)
       end
 
       it "re-renders the 'new' template" do
         expect_any_instance_of(Contract).to receive(:save).and_return(false)
-        post :create, { contract: { 'owner_id' => 'invalid value' } }, valid_session
+        post :create, params: { contract: { 'owner_id' => 'invalid value' } }
         expect(response).to render_template('new')
       end
     end
@@ -93,7 +93,7 @@ RSpec.describe ContractsController do
       it 'updates the requested contract' do
         contract = Contract.create! valid_attributes
         expect_any_instance_of(Contract).to receive(:save).at_least(:once)
-        put :update, { id: contract.to_param, contract: { 'owner_id' => '' } }, valid_session
+        put :update, params: { id: contract.to_param, contract: { 'owner_id' => '' } }
       end
 
       it 'assigns the requested contract as @contract' do
@@ -102,14 +102,14 @@ RSpec.describe ContractsController do
         # contract.owner_id = user.id
         # contract.payer_id = user.id
         # current_user = FactoryBot.create(:user)
-        put :update, { id: contract.to_param, contract: { umber: '1', name: 'name', status: 'status', description: 'description', 'owner_id' => user.id, contract_type: 'Договор' } }, valid_session
+        put :update, params: { id: contract.to_param, contract: { umber: '1', name: 'name', status: 'status', description: 'description', 'owner_id' => user.id, contract_type: 'Договор' } }
         expect(assigns(:contract)).to eq(contract)
       end
 
       it 'redirects to the contract' do
         contract = Contract.create! valid_attributes
         user = FactoryBot.create(:user)
-        put :update, { id: contract.to_param, contract: { umber: '1', name: 'name', status: 'status', description: 'description', 'owner_id' => user.id, contract_type: 'Договор' } }, valid_session
+        put :update, params: { id: contract.to_param, contract: { umber: '1', name: 'name', status: 'status', description: 'description', 'owner_id' => user.id, contract_type: 'Договор' } }
         expect(response).to redirect_to(contract)
       end
     end
@@ -118,14 +118,14 @@ RSpec.describe ContractsController do
       it 'assigns the contract as @contract' do
         contract = Contract.create! valid_attributes
         expect_any_instance_of(Contract).to receive(:save).and_return(false)
-        put :update, { id: contract.to_param, contract: { 'owner_id' => 'invalid value' } }, valid_session
+        put :update, params: { id: contract.to_param, contract: { 'owner_id' => 'invalid value' } }
         expect(assigns(:contract)).to eq(contract)
       end
 
       it "re-renders the 'edit' template" do
         contract = Contract.create! valid_attributes
         expect_any_instance_of(Contract).to receive(:save).and_return(false)
-        put :update, { id: contract.to_param, contract: { 'owner_id' => 'invalid value' } }, valid_session
+        put :update, params: { id: contract.to_param, contract: { 'owner_id' => 'invalid value' } }
         expect(response).to render_template('edit')
       end
     end
@@ -135,13 +135,13 @@ RSpec.describe ContractsController do
     it 'destroys the requested contract' do
       contract = Contract.create! valid_attributes
       expect do
-        delete :destroy, { id: contract.to_param }, valid_session
+        delete :destroy, params: { id: contract.to_param }
       end.to change(Contract, :count).by(-1)
     end
 
     it 'redirects to the contracts list' do
       contract = Contract.create! valid_attributes
-      delete :destroy, { id: contract.to_param }, valid_session
+      delete :destroy, params: { id: contract.to_param }
       expect(response).to redirect_to(contracts_url)
     end
   end
