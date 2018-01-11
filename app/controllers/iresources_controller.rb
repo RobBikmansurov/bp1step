@@ -1,28 +1,24 @@
+# frozen_string_literal: true
+
 class IresourcesController < ApplicationController
   respond_to :html
   respond_to :pdf, :odf, :xml, :json, only: :index
   helper_method :sort_column, :sort_direction
   before_action :authenticate_user!, only: %i[edit update new create]
-  before_action :get_iresource, except: [:index]
+  before_action :iresource, except: [:index]
 
   def index
     if params[:all].present?
       @iresources = Iresource.all
+    elsif params[:level].present?
+      @iresources = Iresource.where(level: params[:level]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+    elsif params[:risk].present?
+      @iresources = Iresource.where(risk_category: params[:risk]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+    elsif params[:user].present? #  список ресурсов пользователя
+      @user = User.find(params[:user])
+      @iresources = Iresource.where(user_id: params[:user]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
     else
-      if params[:level].present?
-        @iresources = Iresource.where(level: params[:level]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-      else
-        if params[:risk].present?
-          @iresources = Iresource.where(risk_category: params[:risk]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-        else
-          if params[:user].present? #  список ресурсов пользователя
-            @user = User.find(params[:user])
-            @iresources = Iresource.where(user_id: params[:user]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-          else
-            @iresources = Iresource.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-          end
-        end
-      end
+      @iresources = Iresource.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
     end
     respond_to do |format|
       format.html
@@ -46,7 +42,7 @@ class IresourcesController < ApplicationController
   end
 
   def create
-    @iresource = Iresource.new(params[:iresource])
+    @iresource = Iresource.new(iresource_params)
     respond_to do |format|
       if @iresource.save
         format.html { redirect_to @iresource, notice: 'Iresource was successfully created.' }
@@ -61,7 +57,7 @@ class IresourcesController < ApplicationController
   def update
     @bproce_iresource = BproceIresource.new(iresource_id: @iresource.id) # заготовка для новой связи с процессом
     respond_to do |format|
-      if @iresource.update_attributes(params[:iresource])
+      if @iresource.update_attributes(iresource_params)
         format.html { redirect_to @iresource, notice: 'Iresource was successfully updated.' }
         format.json { head :no_content }
       else
@@ -87,30 +83,35 @@ class IresourcesController < ApplicationController
   def print
     report = ODFReport::Report.new('reports/iresources.odt') do |r|
       nn = 0
-      r.add_field 'REPORT_DATE', Date.today.strftime('%d.%m.%Y')
+      r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       r.add_table('TABLE_01', @iresources, header: true) do |t|
-      t.add_column(:nn) do |ca|
+        t.add_column(:nn) do |_ca|
           nn += 1
           "#{nn}."
         end
-      t.add_column(:label)
-      t.add_column(:location)
-      t.add_column(:alocation)
-      t.add_column(:access_read)
-      t.add_column(:access_write)
-      t.add_column(:access_other)
-      t.add_column(:risk_category)
-      t.add_column(:note)
+        t.add_column(:label)
+        t.add_column(:location)
+        t.add_column(:alocation)
+        t.add_column(:access_read)
+        t.add_column(:access_write)
+        t.add_column(:access_other)
+        t.add_column(:risk_category)
+        t.add_column(:note)
       end
       r.add_field 'USER_POSITION', current_user.position
       r.add_field 'USER_NAME', current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-      filename: 'resources.odt',
-      disposition: 'inline'
+                               filename: 'resources.odt',
+                               disposition: 'inline'
   end
 
   private
+
+  def iresource_params
+    params.require(:iresource).permit(:level, :label, :location, :alocation, :volume, :note,
+                                      :access_read, :access_write, :access_other, :risk_category, :user_id)
+  end
 
   def sort_column
     params[:sort] || 'label'
@@ -120,7 +121,7 @@ class IresourcesController < ApplicationController
     params[:direction] || 'asc'
   end
 
-  def get_iresource
+  def iresource
     if params[:search].present? # это поиск
       @iresources = Iresource.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
