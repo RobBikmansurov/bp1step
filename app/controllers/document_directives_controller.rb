@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DocumentDirectivesController < ApplicationController
   respond_to :html, :json, :js
   before_action :authenticate_user!, only: %i[edit new create update]
@@ -25,7 +27,7 @@ class DocumentDirectivesController < ApplicationController
   end
 
   def create
-    @document_directive = DocumentDirective.new(params[:document_directive])
+    @document_directive = DocumentDirective.new(document_directive_params)
     respond_to do |format|
       if @document_directive.save
         if params[:document_directive][:to_directive].present?
@@ -47,7 +49,7 @@ class DocumentDirectivesController < ApplicationController
   def update
     @document_directive = DocumentDirective.find(params[:id])
     respond_to do |format|
-      if @document_directive.update_attributes(params[:document_directive])
+      if @document_directive.update_attributes(document_directive_params)
         format.html { redirect_to @document_directive, notice: 'Document directive was successfully updated.' }
         format.json { head :no_content }
       else
@@ -72,5 +74,11 @@ class DocumentDirectivesController < ApplicationController
 
   def get_document_directive
     @document_directive = params[:id].present? ? DocumentDirective.find(params[:id]) : DocumentDirective.new
+  end
+
+  private
+
+  def document_directive_params
+    params.require(:document_directive).permit(:document_id, :directive_id, :note)
   end
 end

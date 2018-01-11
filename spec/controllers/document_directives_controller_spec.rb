@@ -8,7 +8,7 @@ RSpec.describe DocumentDirectivesController, type: :controller do
   let!(:bproce)          { FactoryBot.create(:bproce) }
   let!(:document)        { FactoryBot.create(:document, owner: owner) }
   let!(:directive)       { FactoryBot.create(:directive) }
-  let(:document_directive) { FactoryBot.create(:document_directive, document_id: document.id) }
+  let(:document_directive) { FactoryBot.create(:document_directive, document_id: document.id, directive_id: directive.id) }
   let(:valid_attributes) { { directive_id: directive.id, document_id: document.id } }
   let(:invalid_attributes) { { directive_id: nil, document_id: document.id } }
   let(:valid_session) { {} }
@@ -34,12 +34,12 @@ RSpec.describe DocumentDirectivesController, type: :controller do
 
   describe 'GET #show' do
     it 'assigns the requested contact to @document_directive' do
-      get :show, id: document_directive
+      get :show, params: { id: document_directive }
       expect(assigns(:document_directive)).to eq(document_directive)
     end
 
     it 'renders the #show view' do
-      get :show, id: document_directive
+      get :show, params: { id: document_directive }
       # expect(response).to render_template(:show)
       expect(subject).to redirect_to(directive_url(document_directive.directive.id))
     end
@@ -54,7 +54,7 @@ RSpec.describe DocumentDirectivesController, type: :controller do
 
   describe 'GET edit' do
     it 'assigns the requested document_directive as @document_directive' do
-      get :edit, id: document_directive.to_param
+      get :edit, params: { id: document_directive.to_param }
       expect(assigns(:document_directive)).to eq(document_directive)
     end
   end
@@ -63,30 +63,30 @@ RSpec.describe DocumentDirectivesController, type: :controller do
     describe 'with valid params' do
       it 'creates a new DocumentDirective' do
         expect do
-          post :create, { document_directive: valid_attributes }, valid_session
+          post :create, params: { document_directive: valid_attributes }
         end.to change(DocumentDirective, :count).by(1)
       end
 
       it 'assigns a newly created document_directive as @document_directive' do
-        post :create, { document_directive: valid_attributes }, valid_session
+        post :create, params: { document_directive: valid_attributes }
         expect(assigns(:document_directive)).to be_a(DocumentDirective)
         expect(assigns(:document_directive)).to be_persisted
       end
 
       it 'redirects to the created document_directive' do
-        post :create, { document_directive: valid_attributes }, valid_session
+        post :create, params: { document_directive: valid_attributes }
         expect(response).to redirect_to(DocumentDirective.last)
       end
     end
 
     describe 'with invalid params' do
       it 'assigns a newly created but unsaved document_directive as @document_directive' do
-        post :create, { document_directive: invalid_attributes }, valid_session
+        post :create, params: { document_directive: invalid_attributes }
         expect(assigns(:document_directive)).to be_a_new(DocumentDirective)
       end
 
       it "re-renders the 'new' template" do
-        post :create, { document_directive: invalid_attributes }, valid_session
+        post :create, params: { document_directive: invalid_attributes }
         expect(response).to render_template('new')
       end
     end
@@ -95,29 +95,29 @@ RSpec.describe DocumentDirectivesController, type: :controller do
       describe 'with valid params' do
         it 'updates the requested document_directive' do
           expect_any_instance_of(DocumentDirective).to receive(:save).and_return(false)
-          put :update, { id: document_directive.to_param }, valid_session
+          put :update, params: { id: document_directive.to_param, document_directive: valid_attributes }
         end
 
         it 'assigns the requested document_directive as @document_directive' do
-          put :update, { id: document_directive.to_param }, valid_session
+          put :update, params: { id: document_directive.to_param, document_directive: valid_attributes }
           expect(assigns(:document_directive)).to eq(document_directive)
         end
 
         it 'redirects to the document_directive' do
-          put :update, { id: document_directive.to_param }, valid_session
+          put :update, params: { id: document_directive.to_param, document_directive: valid_attributes }
           expect(response).to redirect_to(document_directive)
         end
       end
 
       describe 'with invalid params' do
         it 'assigns the document_directive as @document_directive' do
-          put :update, id: document_directive.id, document_directive: invalid_attributes
+          put :update, params: { id: document_directive.id, document_directive: invalid_attributes }
           expect(assigns(:document_directive)).to eq(document_directive)
         end
 
         it "re-renders the 'edit' template" do
           document_directive.note = '' #  not valid
-          put :update, id: document_directive.to_param, document_directive: invalid_attributes
+          put :update, params: { id: document_directive.to_param, document_directive: invalid_attributes }
           expect(response).to render_template('show')
         end
       end
@@ -129,7 +129,7 @@ RSpec.describe DocumentDirectivesController, type: :controller do
       document1 = FactoryBot.create(:document, owner: owner)
       document_directive = FactoryBot.create(:document_directive, document_id: document1.id)
       expect do
-        delete :destroy, id: document_directive.id
+        delete :destroy, params: { id: document_directive.id }
       end.to change(DocumentDirective, :count).by(-1)
       expect(flash[:notice]).to be_present
     end
@@ -137,7 +137,7 @@ RSpec.describe DocumentDirectivesController, type: :controller do
     it 'redirects to the document_directives list' do
       document1 = FactoryBot.create(:document, owner: owner)
       document_directive = FactoryBot.create(:document_directive, document_id: document1.id)
-      delete :destroy, id: document_directive.id
+      delete :destroy, params: { id: document_directive.id }
       expect(response).to redirect_to(document_url(document1))
     end
   end
