@@ -38,7 +38,7 @@ class BusinessRolesController < ApplicationController
   end
 
   def create
-    @business_role = BusinessRole.new(params[:business_role])
+    @business_role = BusinessRole.new(business_role_params)
     if params[:business_role][:bproce_name].present?
       name = params[:business_role][:bproce_name]
       @bproce = Bproce.where(name: name).first
@@ -90,10 +90,11 @@ class BusinessRolesController < ApplicationController
 
   def update
     @user_business_role = UserBusinessRole.new(business_role_id: @business_role.id)
-    flash[:notice] = 'Successfully updated role.' if @business_role.update_attributes(params[:business_role])
-    begin # оповестим исполнителей роли об изменениях
+    flash[:notice] = 'Successfully updated role.' if @business_role.update_attributes(business_role_params)
+    # оповестим исполнителей роли об изменениях
+    begin
       BusinessRoleMailer.update_business_role(@business_role, current_user).deliver_now
-    rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+    rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
       logger.warn "Error - business_role.update: #{e}"
       flash[:alert] = 'Error sending mail to business role workers'
     end
@@ -111,6 +112,10 @@ class BusinessRolesController < ApplicationController
   end
 
   private
+
+  def business_role_params
+    params.require(:business_role).permit(:name, :description, :bproce_id, :features)
+  end
 
   def sort_column
     params[:sort] || 'name'
@@ -143,7 +148,7 @@ class BusinessRolesController < ApplicationController
         end
         t.add_column(:name)
         t.add_column(:bpname) do |br|
-          br.bproce.shortname.to_s if br.bproce
+          br.bproce&.shortname.to_s
         end
         t.add_column(:description)
       end

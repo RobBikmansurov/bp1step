@@ -19,7 +19,7 @@ RSpec.describe BusinessRolesController, type: :controller do
 
   describe 'GET index' do
     it 'assigns all business_roles as @business_roles' do
-      get :index, {}, valid_session
+      get :index, params: {}
       expect(response).to be_success
       expect(response).to have_http_status(:success)
       expect(response).to render_template('business_roles/index')
@@ -36,14 +36,14 @@ RSpec.describe BusinessRolesController, type: :controller do
   describe 'GET show' do
     it 'assigns the requested business_role as @business_role' do
       business_role = BusinessRole.create! valid_attributes
-      get :show, { id: business_role.to_param }, valid_session
+      get :show, params: { id: business_role.to_param }
       expect(assigns(:business_role)).to eq(business_role)
     end
   end
 
   describe 'GET new' do
     it 'assigns a new business_role as @business_role' do
-      get :new, valid_session
+      get :new
       expect(assigns(:business_role)).to be_a_new(BusinessRole)
     end
   end
@@ -51,7 +51,7 @@ RSpec.describe BusinessRolesController, type: :controller do
   describe 'GET edit' do
     it 'assigns the requested business_role as @business_role' do
       business_role = BusinessRole.create! valid_attributes
-      get :edit, { id: business_role.to_param }, valid_session
+      get :edit, params: { id: business_role.to_param }
       expect(assigns(:business_role)).to eq(business_role)
     end
   end
@@ -60,30 +60,30 @@ RSpec.describe BusinessRolesController, type: :controller do
     describe 'with valid params' do
       it 'creates a new BusinessRole' do
         expect do
-          post :create, { business_role: valid_attributes }, valid_session
+          post :create, params: { business_role: valid_attributes }
         end.to change(BusinessRole, :count).by(1)
       end
 
       it 'assigns a newly created business_role as @business_role' do
-        post :create, { business_role: valid_attributes }, valid_session
+        post :create, params: { business_role: valid_attributes }
         expect(assigns(:business_role)).to be_a(BusinessRole)
         expect(assigns(:business_role)).to be_persisted
       end
 
       it 'redirects to the created business_role' do
-        post :create, { business_role: valid_attributes }, valid_session
+        post :create, params: { business_role: valid_attributes }
         expect(response).to redirect_to(BusinessRole.last)
       end
     end
 
     describe 'with invalid params' do
       it 'assigns a newly created but unsaved business_role as @business_role' do
-        post :create, { business_role: invalid_attributes }, valid_session
+        post :create, params: { business_role: invalid_attributes }
         expect(assigns(:business_role)).to be_a_new(BusinessRole)
       end
 
       it "re-renders the 'new' template" do
-        post :create, { business_role: invalid_attributes }, valid_session
+        post :create, params: { business_role: invalid_attributes }
         expect(response).to render_template('new')
       end
     end
@@ -94,18 +94,18 @@ RSpec.describe BusinessRolesController, type: :controller do
       it 'updates the requested business_role' do
         business_role = BusinessRole.create! valid_attributes
         expect_any_instance_of(BusinessRole).to receive(:save).at_least(:once)
-        put :update, { id: business_role.to_param, business_role: valid_attributes }, valid_session
+        put :update, params: { id: business_role.to_param, business_role: valid_attributes }
       end
 
       it 'assigns the requested business_role as @business_role' do
         business_role = BusinessRole.create! valid_attributes
-        put :update, { id: business_role.to_param, business_role: valid_attributes }, valid_session
+        put :update, params: { id: business_role.to_param, business_role: valid_attributes }
         expect(assigns(:business_role)).to eq(business_role)
       end
 
       it 'redirects to the business_role' do
         business_role = BusinessRole.create! valid_attributes
-        put :update, { id: business_role.to_param, business_role: valid_attributes }, valid_session
+        put :update, params: { id: business_role.to_param, business_role: valid_attributes }
         expect(response).to redirect_to(business_role)
       end
     end
@@ -114,14 +114,14 @@ RSpec.describe BusinessRolesController, type: :controller do
       it 'assigns the business_role as @business_role' do
         business_role = BusinessRole.create! valid_attributes
         expect_any_instance_of(BusinessRole).to receive(:save).and_return(false)
-        put :update, { id: business_role.to_param, business_role: invalid_attributes }, valid_session
+        put :update, params: { id: business_role.to_param, business_role: invalid_attributes }
         expect(assigns(:business_role)).to eq(business_role)
       end
 
       it "re-renders the 'edit' template" do
         business_role = BusinessRole.create! valid_attributes
         expect_any_instance_of(BusinessRole).to receive(:save).and_return(false)
-        put :update, { id: business_role.to_param, business_role: invalid_attributes }, valid_session
+        put :update, params: { id: business_role.to_param, business_role: invalid_attributes }
         expect(response).to render_template('business_role_mailer/update_business_role')
       end
     end
@@ -131,14 +131,14 @@ RSpec.describe BusinessRolesController, type: :controller do
     it 'destroys the requested business_role' do
       business_role = BusinessRole.create! valid_attributes
       expect do
-        delete :destroy, { id: business_role.to_param }, valid_session
+        delete :destroy, params: { id: business_role.to_param }
       end.to change(BusinessRole, :count).by(-1)
     end
 
     it 'redirects to the business_roles list' do
       business_role = BusinessRole.create! valid_attributes
       business_role.bproce_id = bproce.id
-      delete :destroy, { id: business_role.to_param }, valid_session
+      delete :destroy, params: { id: business_role.to_param }
       expect(response).to redirect_to(bproce_business_role_url(bproce))
     end
   end
