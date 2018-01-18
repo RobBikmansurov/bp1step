@@ -101,6 +101,7 @@ class BappsController < ApplicationController
           "#{nn}."
         end
         t.add_column(:name, :name)
+        t.add_column(:id)
         t.add_column(:description, :description)
         t.add_column(:purpose, :purpose)
         t.add_column(:apptype, :apptype)
@@ -109,7 +110,7 @@ class BappsController < ApplicationController
       r.add_field 'USER_NAME', current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-                               filename: 'documents.odt',
+                               filename: 'bapps.odt',
                                disposition: 'inline'
   end
 end
