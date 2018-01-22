@@ -30,8 +30,7 @@
           -task.user_task.each do |user_task|
             -if user_task.user
               - s = "#{user_task.user.displayname}"
-              -if !user_task.status.blank?
-                - s = s + "\u2713".html_safe
+              - s += "\u2713".html_safe if user_task.responsible?   # пометим ответственного
               = link_to s, user_task.user
             -else
               удалить ссылку
