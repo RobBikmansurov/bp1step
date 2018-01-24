@@ -147,7 +147,7 @@ class WorkplacesController < ApplicationController
         t.add_column(:description, :description)
         t.add_column(:location, :location)
       end
-      print_user
+      print_date_and_user r
     end
     send_data report.generate, type: 'application/msword',
                                filename: 'workplaces.odt',
@@ -169,14 +169,14 @@ class WorkplacesController < ApplicationController
         t.add_column(:port)
         t.add_column(:location)
       end
-      print_user
+      print_date_and_user r
     end
     send_data report.generate, type: 'application/msword',
                                filename: 'switch.odt',
                                disposition: 'inline'
   end
 
-  def print_date_and_user
+  def print_date_and_user(r)
     r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
     r.add_field 'USER_POSITION', current_user.position
     r.add_field 'USER_NAME', current_user.displayname
