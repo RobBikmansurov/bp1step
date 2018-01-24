@@ -25,7 +25,7 @@ class Bproce < ActiveRecord::Base
   #                :parent_id, :parent_name, :tag_list, :tag_id, :context,
   #                :user_id, :taggable, :checked_at
 
-  has_many :bapps, through: :bproce_bapps, dependent: :destroy
+  has_many :bapps, through: :bproce_bapps
   has_many :bproce_bapps, dependent: :destroy
   has_many :bproce_documents, dependent: :destroy
   has_many :bproce_iresource, dependent: :destroy
