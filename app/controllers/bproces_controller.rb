@@ -86,7 +86,7 @@ class BprocesController < ApplicationController
   end
 
   def create
-    @bproce = Bproce.new(params[:bproce])
+    @bproce = Bproce.new(bproce_params)
     flash[:notice] = 'Bproce was successfully created.' if @bproce.save
     respond_with(@bproce)
   end
@@ -100,7 +100,7 @@ class BprocesController < ApplicationController
       @document = Document.new(params[:document])
       @document&.save
     end
-    if @bproce.update_attributes(params[:bproce])
+    if @bproce.update_attributes(bproce_params)
       redirect_to @bproce, notice: 'Successfully updated Bproce.'
     else
       render action: 'edit'
@@ -129,6 +129,10 @@ class BprocesController < ApplicationController
   end
 
   private
+
+  def bproce_params
+    params.require(:bproce).permit(:name, :shortname, :fullname, :parent_id, :lft, :rgt, :depth, :user_id, :description)
+  end
 
   def sort_column
     params[:sort] || 'lft'
