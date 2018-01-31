@@ -22,14 +22,14 @@ RSpec.describe BproceDocumentsController, type: :controller do
 
   describe 'GET show' do
     it 'assigns the requested bproce_document as @bproce_document' do
-      get :show, { id: bproce_document.to_param }, valid_session
+      get :show, params: { id: bproce_document.to_param }
       expect(assigns(:bproce_document)).to eq(bproce_document)
     end
   end
 
   describe 'GET edit' do
     it 'assigns the requested bproce_document as @bproce_document' do
-      get :edit, { id: bproce_document.to_param }, valid_session
+      get :edit, params: { id: bproce_document.to_param }
       expect(assigns(:bproce_document)).to eq(bproce_document)
     end
   end
@@ -38,18 +38,18 @@ RSpec.describe BproceDocumentsController, type: :controller do
     describe 'with valid params' do
       it 'creates a new BproceDocument' do
         expect do
-          post :create, { bproce_document: valid_attributes }, valid_session
+          post :create, params: { bproce_document: valid_attributes }
         end.to change(BproceDocument, :count).by(1)
       end
 
       it 'assigns a newly created bproce_document as @bproce_document' do
-        post :create, { bproce_document: valid_attributes }, valid_session
+        post :create, params: { bproce_document: valid_attributes }
         expect(assigns(:bproce_document)).to be_a(BproceDocument)
         expect(assigns(:bproce_document)).to be_persisted
       end
 
       it 'redirects to the created bproce_document' do
-        post :create, { bproce_document: valid_attributes }, valid_session
+        post :create, params: { bproce_document: valid_attributes }
         expect(response).to redirect_to(BproceDocument.last.document)
       end
     end
@@ -57,7 +57,7 @@ RSpec.describe BproceDocumentsController, type: :controller do
     describe 'with invalid params' do
       it 'assigns a newly created but unsaved bproce_document as @bproce_document' do
         expect_any_instance_of(BproceDocument).to receive(:save).and_return(false)
-        post :create, { bproce_document: invalid_attributes }, valid_session
+        post :create, params: { bproce_document: invalid_attributes }
         expect(assigns(:bproce_document)).to be_a_new(BproceDocument)
       end
     end
@@ -67,16 +67,16 @@ RSpec.describe BproceDocumentsController, type: :controller do
     describe 'with valid params' do
       it 'updates the requested bproce_document' do
         expect_any_instance_of(BproceDocument).to receive(:save).and_return(false)
-        put :update, { id: bproce_document.to_param, bproce_document: { 'these' => 'params' } }, valid_session
+        put :update, params: { id: bproce_document.to_param, bproce_document: { 'these' => 'params' } }
       end
 
       it 'assigns the requested bproce_document as @bproce_document' do
-        put :update, { id: bproce_document.to_param, bproce_document: valid_attributes }, valid_session
+        put :update, params: { id: bproce_document.to_param, bproce_document: valid_attributes }
         expect(assigns(:bproce_document)).to eq(bproce_document)
       end
 
       it 'redirects to the bproce_document' do
-        put :update, { id: bproce_document.to_param, bproce_document: valid_attributes }, valid_session
+        put :update, params: { id: bproce_document.to_param, bproce_document: valid_attributes }
         expect(response).to redirect_to(bproce_document)
       end
     end
@@ -84,13 +84,13 @@ RSpec.describe BproceDocumentsController, type: :controller do
     describe 'with invalid params' do
       it 'assigns the bproce_document as @bproce_document' do
         expect_any_instance_of(BproceDocument).to receive(:save).and_return(false)
-        put :update, { id: bproce_document.to_param, bproce_document: {} }, valid_session
+        put :update, params: { id: bproce_document.to_param, bproce_document: valid_attributes }
         expect(assigns(:bproce_document)).to eq(bproce_document)
       end
 
       it "re-renders the 'edit' template" do
         expect_any_instance_of(BproceDocument).to receive(:save).and_return(false)
-        put :update, { id: bproce_document.to_param, bproce_id: bproce.to_param, document_id: document.to_param }, valid_session
+        put :update, params: { id: bproce_document.to_param, bproce_document: valid_attributes }
         expect(response).to redirect_to bproce_document # render_template("edit")
       end
     end
@@ -98,7 +98,7 @@ RSpec.describe BproceDocumentsController, type: :controller do
     describe 'with invalid params' do
       it 'assigns the bproce_document as @bproce_document' do
         expect_any_instance_of(BproceDocument).to receive(:save).and_return(false)
-        put :update, { id: bproce_document.to_param, bproce_document: {} }, valid_session
+        put :update, params: { id: bproce_document.to_param, bproce_document: invalid_attributes }
         expect(assigns(:bproce_document)).to eq(bproce_document)
       end
     end
@@ -111,7 +111,7 @@ RSpec.describe BproceDocumentsController, type: :controller do
       bproce_document1 = FactoryBot.create(:bproce_document, bproce_id: bproce1.id, document_id: document.id)
       bproce_document2 = FactoryBot.create(:bproce_document, bproce_id: bproce2.id, document_id: document.id)
       expect do
-        delete :destroy, id: bproce_document2.id
+        delete :destroy, params: { id: bproce_document2.id }
       end.to change(BproceDocument, :count).by(-1)
       expect(flash[:notice]).to be_present
     end
@@ -120,13 +120,13 @@ RSpec.describe BproceDocumentsController, type: :controller do
       # документ должен ссылаться хотя бы на 1 процесс
       bproce_document2 = FactoryBot.create(:bproce_document, bproce_id: bproce2.id, document_id: document.id)
       expect do
-        delete :destroy, id: bproce_document2.id
+        delete :destroy, params: { id: bproce_document2.id }
       end.to change(BproceDocument, :count).by(0)
       expect(flash[:alert]).to be_present
     end
 
     it 'redirects to the bproce_documents list' do
-      delete :destroy, { id: bproce_document.to_param }, valid_session
+      delete :destroy, params: { id: bproce_document.to_param }
       expect(response).to redirect_to document_url
     end
   end
