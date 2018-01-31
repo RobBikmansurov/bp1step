@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BproceDocumentsController < ApplicationController
   respond_to :html, :xml, :json
   before_action :authenticate_user!, only: %i[edit new destroy]

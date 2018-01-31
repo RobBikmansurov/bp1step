@@ -224,7 +224,7 @@ GEM
       nokogiri (>= 1.5.0)
       rubyzip (~> 1.1.0)
     orm_adapter (0.5.0)
-    paperclip (5.1.0)
+    paperclip (5.2.1)
       activemodel (>= 4.2.0)
       activesupport (>= 4.2.0)
       cocaine (~> 0.5.5)
@@ -443,7 +443,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails (= 5.0.5)
   odf-report
-  paperclip (~> 5.1)
+  paperclip (~> 5.2.1)
   pdf-reader
   pg
   pg_search

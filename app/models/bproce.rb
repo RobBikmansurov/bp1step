@@ -21,7 +21,7 @@ class Bproce < ActiveRecord::Base
   validates :fullname, length: { minimum: 10, maximum: 250 }
 
   acts_as_nested_set
-  #attr_accessible :shortname, :name, :fullname, :goal, :description, :user_name,
+  # attr_accessible :shortname, :name, :fullname, :goal, :description, :user_name,
   #                :parent_id, :parent_name, :tag_list, :tag_id, :context,
   #                :user_id, :taggable, :checked_at
 
