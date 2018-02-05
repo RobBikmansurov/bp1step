@@ -10,7 +10,7 @@ class BproceDocument < ActiveRecord::Base
   validates :bproce_id, presence: true
   validates :document_id, presence: true
 
-  attr_accessible :bproce_id, :document_id, :purpose, :bproce_name
+  # attr_accessible :bproce_id, :document_id, :purpose, :bproce_name
 
   def bproce_name
     bproce.try(:name)

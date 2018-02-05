@@ -11,7 +11,7 @@ class Term < ActiveRecord::Base
                    length: { minimum: 3, maximum: 200 }
   validates :description, presence: true
 
-  attr_accessible :name, :shortname, :description, :note, :source
+  # attr_accessible :name, :shortname, :description, :note, :source
 
   def self.search(search)
     if search

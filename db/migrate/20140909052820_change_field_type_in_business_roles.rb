@@ -1,4 +1,4 @@
-class ChangeFieldTypeInBusinessRoles < ActiveRecord::Migration
+class ChangeFieldTypeInBusinessRoles < ActiveRecord::Migration[4.2]
   def self.up
     change_column :business_roles, :description, :text
   end

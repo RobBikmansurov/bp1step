@@ -7,7 +7,7 @@ class BproceIresource < ActiveRecord::Base
   belongs_to :bproce
   belongs_to :iresource
 
-  attr_accessible :bproce_id, :iresource_id, :rpurpose, :iresource_label, :bproce_name
+  # attr_accessible :bproce_id, :iresource_id, :rpurpose, :iresource_label, :bproce_name
 
   def bproce_name
     bproce.try(:name)

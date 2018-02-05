@@ -7,6 +7,7 @@ RSpec.describe BproceBappsController, type: :controller do
   let!(:bproce)          { FactoryBot.create(:bproce) }
   let!(:bapp)            { FactoryBot.create(:bapp) }
   let(:valid_attributes) { { bproce_id: bproce.id, bapp_id: bapp.id, apurpose: 'Purpose' } }
+  let(:invalid_attributes) { { bproce_id: bproce.id, bapp_id: nil, apurpose: 'Purpose' } }
   let(:valid_session) { {} }
 
   before(:each) do
@@ -14,15 +15,12 @@ RSpec.describe BproceBappsController, type: :controller do
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
-
-    bproce = FactoryBot.create(:bproce)
-    bapp = FactoryBot.create(:bapp)
   end
 
   describe 'GET show' do
     it 'assigns the requested bproce_bapp as @bproce_bapp' do
       bproce_bapp = BproceBapp.create! valid_attributes
-      get :show, { id: bproce_bapp.id.to_param }, valid_session
+      get :show, params: { id: bproce_bapp.id.to_param }
       expect(assigns(:bproce_bapp)).to eq(bproce_bapp)
     end
   end
@@ -30,7 +28,7 @@ RSpec.describe BproceBappsController, type: :controller do
   describe 'GET edit' do
     it 'assigns the requested bproce_bapp as @bproce_bapp' do
       bproce_bapp = BproceBapp.create! valid_attributes
-      get :edit, { id: bproce_bapp.to_param }, valid_session
+      get :edit, params: { id: bproce_bapp.to_param }
       expect(assigns(:bproce_bapp)).to eq(bproce_bapp)
     end
   end
@@ -39,18 +37,18 @@ RSpec.describe BproceBappsController, type: :controller do
     describe 'with valid params' do
       it 'creates a new BproceBapp' do
         expect do
-          post :create, { bproce_bapp: valid_attributes }, valid_session
+          post :create, params: { bproce_bapp: valid_attributes }
         end.to change(BproceBapp, :count).by(1)
       end
 
       it 'assigns a newly created bproce_bapp as @bproce_bapp' do
-        post :create, { bproce_bapp: valid_attributes }, valid_session
+        post :create, params: { bproce_bapp: valid_attributes }
         expect(assigns(:bproce_bapp)).to be_a(BproceBapp)
         expect(assigns(:bproce_bapp)).to be_persisted
       end
 
       it 'redirects to the created bproce_bapp' do
-        post :create, { bproce_bapp: valid_attributes }, valid_session
+        post :create, params: { bproce_bapp: valid_attributes }
         expect(response).to redirect_to(BproceBapp.last.bapp)
       end
     end
@@ -58,7 +56,7 @@ RSpec.describe BproceBappsController, type: :controller do
     describe 'with invalid params' do
       it 'assigns a newly created but unsaved bproce_bapp as @bproce_bapp' do
         expect_any_instance_of(BproceBapp).to receive(:save).and_return(false)
-        post :create, { bproce_bapp: {} }, valid_session
+        post :create, params: { bproce_bapp: { bproce_id: bproce.id, bapp_id: nil, apurpose: 'Purpose' } }
         expect(assigns(:bproce_bapp)).to be_a_new(BproceBapp)
       end
     end
@@ -69,30 +67,23 @@ RSpec.describe BproceBappsController, type: :controller do
       it 'updates the requested bproce_bapp' do
         bproce_bapp = BproceBapp.create! valid_attributes
         expect_any_instance_of(BproceBapp).to receive(:save).and_return(false)
-        put :update, { id: bproce_bapp.to_param, bproce_bapp: { 'these' => 'params' } }, valid_session
+        put :update, params: { id: bproce_bapp.to_param, bproce_bapp: { 'these' => 'params' } }
       end
 
       it 'assigns the requested bproce_bapp as @bproce_bapp' do
         bproce_bapp = BproceBapp.create! valid_attributes
-        put :update, { id: bproce_bapp.to_param, bproce_bapp: valid_attributes }, valid_session
+        put :update, params: { id: bproce_bapp.to_param, bproce_bapp: valid_attributes }
         expect(assigns(:bproce_bapp)).to eq(bproce_bapp)
       end
 
       it 'redirects to the bproce_bapp' do
         bproce_bapp = BproceBapp.create! valid_attributes
-        put :update, { id: bproce_bapp.to_param, bproce_bapp: valid_attributes }, valid_session
+        put :update, params: { id: bproce_bapp.to_param, bproce_bapp: valid_attributes }
         expect(response).to redirect_to(bproce_bapp)
       end
     end
 
     describe 'with invalid params' do
-      it 'assigns the bproce_bapp as @bproce_bapp' do
-        bproce_bapp = BproceBapp.create! valid_attributes
-        expect_any_instance_of(BproceBapp).to receive(:save).and_return(false)
-        put :update, { id: bproce_bapp.to_param, bproce_bapp: {} }, valid_session
-        expect(assigns(:bproce_bapp)).to eq(bproce_bapp)
-      end
-
       it "re-renders the 'edit' template" do
         bproce_bapp = BproceBapp.create! valid_attributes
         expect_any_instance_of(BproceBapp).to receive(:save).and_return(false)
@@ -100,7 +91,7 @@ RSpec.describe BproceBappsController, type: :controller do
         bapp = create(:bapp)
         bproce_bapp.bproce_id = bproce.id
         bproce_bapp.bapp_id = bapp.id
-        put :update, { id: bproce_bapp.to_param, bproce_id: bproce.to_param, bapp_id: bapp.to_param }, valid_session
+        put :update, params: { id: bproce_bapp.to_param, bproce_bapp: invalid_attributes }
         expect(response).to redirect_to bproce_bapp_url # render_template("edit")
       end
     end
@@ -114,13 +105,13 @@ RSpec.describe BproceBappsController, type: :controller do
       bproce_bapp.bproce_id = bproce.id
       bproce_bapp.bapp_id = bapp.id
       expect do
-        delete :destroy, { id: bproce_bapp.to_param, bproce_id: bproce.to_param }, valid_session
+        delete :destroy, params: { id: bproce_bapp.to_param, bproce_id: bproce.to_param }
       end.to change(BproceBapp, :count).by(-1)
     end
 
     it 'redirects to the bproce_bapps list' do
       bproce_bapp = BproceBapp.create! valid_attributes
-      delete :destroy, { id: bproce_bapp.to_param }, valid_session
+      delete :destroy, params: { id: bproce_bapp.to_param }
       expect(response).to redirect_to bapp_url
     end
   end

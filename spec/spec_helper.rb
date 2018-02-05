@@ -23,8 +23,6 @@ RSpec.configure do |config|
     FactoryBot.find_definitions
   end
 
-  config.include FactoryBot::Syntax::Methods
-
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
   config.filter_run_when_matching :focus

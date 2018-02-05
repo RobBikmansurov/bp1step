@@ -19,7 +19,7 @@ RSpec.describe BproceWorkplacesController, type: :controller do
 
   describe 'GET show' do # show показывает список рабочих мест!
     it 'assigns the requested bproce_workplace.workplace as @workplace' do
-      get :show, { id: bproce.to_param }, valid_session
+      get :show, params: { id: bproce.to_param }
       expect(assigns(:workplaces)).to eq(bproce.workplaces)
     end
   end
@@ -28,18 +28,18 @@ RSpec.describe BproceWorkplacesController, type: :controller do
     describe 'with valid params' do
       it 'creates a new BproceWorkplace' do
         expect do
-          post :create, { bproce_workplace: valid_attributes }, valid_session
+          post :create, params: { bproce_workplace: valid_attributes }
         end.to change(BproceWorkplace, :count).by(1)
       end
 
       it 'assigns a newly created bproce_workplace as @bproce_workplace' do
-        post :create, { bproce_workplace: valid_attributes }, valid_session
+        post :create, params: { bproce_workplace: valid_attributes }
         expect(assigns(:bproce_workplace)).to be_a(BproceWorkplace)
         expect(assigns(:bproce_workplace)).to be_persisted
       end
 
       it 'redirects to the created bproce_workplace' do
-        post :create, { bproce_workplace: valid_attributes }, valid_session
+        post :create, params: { bproce_workplace: valid_attributes }
         expect(response).to redirect_to(BproceWorkplace.last.workplace)
       end
     end
@@ -53,13 +53,13 @@ RSpec.describe BproceWorkplacesController, type: :controller do
       bproce_workplace.bproce_id = bproce.id
       bproce_workplace.workplace_id = workplace.id
       expect do
-        delete :destroy, { id: bproce_workplace.to_param, bproce_id: bproce.to_param }, valid_session
+        delete :destroy, params: { id: bproce_workplace.to_param, bproce_id: bproce.to_param }
       end.to change(BproceWorkplace, :count).by(-1)
     end
 
     it 'redirects to the bproce_workplaces list' do
       bproce_workplace = BproceWorkplace.create! valid_attributes
-      delete :destroy, { id: bproce_workplace.to_param }, valid_session
+      delete :destroy, params: { id: bproce_workplace.to_param }
       expect(response).to redirect_to workplace_url
     end
   end

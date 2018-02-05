@@ -1,4 +1,4 @@
-class CreateUserBusinessRoles < ActiveRecord::Migration
+class CreateUserBusinessRoles < ActiveRecord::Migration[4.2]
   def change
     create_table :user_business_roles do |t|
       t.date :date_from

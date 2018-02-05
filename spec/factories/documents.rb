@@ -4,7 +4,7 @@
 FactoryBot.define do
   factory :document do
     sequence(:name) { |n| "document_name_#{n}" }
-    dlevel '1'
+    dlevel 1
     place 'office1'
     # owner_id user
     trait :invalid do

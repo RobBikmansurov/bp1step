@@ -1,32 +1,32 @@
 # frozen_string_literal: true
 
-RSpec.describe RolesController, type: :controller do
-  def valid_attributes
-    {
-      id: 1,
-      name: 'test_role',
-      description: 'test_role_description'
-    }
-  end
+require 'rails_helper'
 
-  def valid_session
-    {}
-  end
+RSpec.describe RolesController, type: :controller do
+  let(:role) { FactoryBot.create(:role) }
+  let(:role1) { FactoryBot.create(:role) }
+  let(:role_attributes) { { name: 'test_role', description: 'test_role_description' } }
+  let(:valid_session) { {} }
 
   describe 'GET index' do
     it 'assigns all roles as @roles' do
-      Role.all.each(&:destroy)
-      role = Role.create! valid_attributes
-      get :index, {}, valid_session
-      expect(assigns(:roles)).to eq([role])
+      get :index, {}
+      expect(response).to be_success
+      expect(response).to have_http_status(:success)
+      expect(response).to render_template('roles/index')
+    end
+
+    it 'loads all of the roles into @roles' do
+      get :index
+      expect(assigns(:roles)).to match_array([role, role1])
     end
   end
 
   describe 'GET show' do
     it 'assigns the requested role as @role' do
-      role = Role.create! valid_attributes
-      get :show, { id: role.to_param }, valid_session
+      get :show, params: { id: role.id }
       expect(assigns(:role)).to eq(role)
     end
   end
+
 end

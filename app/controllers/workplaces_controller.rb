@@ -50,7 +50,7 @@ class WorkplacesController < ApplicationController
   end
 
   def create
-    @workplace = Workplace.new(params[:workplace])
+    @workplace = Workplace.new(workplace_params)
     if @workplace.save
       redirect_to @workplace, notice: 'Workplace was successfully created.'
     else
@@ -91,7 +91,7 @@ class WorkplacesController < ApplicationController
   def update
     @bproce_workplace = BproceWorkplace.new(workplace_id: @workplace.id)
     @user_workplace = UserWorkplace.new(workplace_id: @workplace.id)
-    flash[:notice] = 'Successfully updated workplace.' if @workplace.update_attributes(params[:workplace])
+    flash[:notice] = 'Successfully updated workplace.' if @workplace.update_attributes(workplace_params)
     respond_with(@workplace)
   end
 
@@ -106,6 +106,10 @@ class WorkplacesController < ApplicationController
   end
 
   private
+
+  def workplace_params
+    params.require(:workplace).permit(:name, :designation, :description, :typical, :location, :switch, :port)
+  end
 
   def sort_column
     params[:sort] || 'designation'
@@ -133,7 +137,6 @@ class WorkplacesController < ApplicationController
   def print
     report = ODFReport::Report.new('reports/workplaces.odt') do |r|
       nn = 0
-      r.add_field 'REPORT_DATE', Date.today.strftime('%d.%m.%Y')
       r.add_table('TABLE_01', @workplaces, header: true) do |t|
         t.add_column(:nn) do |_ca|
           nn += 1
@@ -144,18 +147,17 @@ class WorkplacesController < ApplicationController
         t.add_column(:description, :description)
         t.add_column(:location, :location)
       end
-      r.add_field 'USER_POSITION', current_user.position
-      r.add_field 'USER_NAME', current_user.displayname
+      print_date_and_user r
     end
     send_data report.generate, type: 'application/msword',
                                filename: 'workplaces.odt',
                                disposition: 'inline'
   end
 
-  def print_switch  # подключения рабочих мест
+  # подключения рабочих мест
+  def print_switch
     report = ODFReport::Report.new('reports/wp_switch.odt') do |r|
       nn = 0
-      r.add_field 'REPORT_DATE', Date.today.strftime('%d.%m.%Y')
       r.add_table('TABLE_01', @workplaces, header: true) do |t|
         t.add_column(:nn) do |_ca|
           nn += 1
@@ -167,11 +169,16 @@ class WorkplacesController < ApplicationController
         t.add_column(:port)
         t.add_column(:location)
       end
-      r.add_field 'USER_POSITION', current_user.position
-      r.add_field 'USER_NAME', current_user.displayname
+      print_date_and_user r
     end
     send_data report.generate, type: 'application/msword',
                                filename: 'switch.odt',
                                disposition: 'inline'
+  end
+
+  def print_date_and_user(r)
+    r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
+    r.add_field 'USER_POSITION', current_user.position
+    r.add_field 'USER_NAME', current_user.displayname
   end
 end

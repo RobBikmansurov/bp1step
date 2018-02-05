@@ -44,13 +44,13 @@ class DirectivesController < ApplicationController
   end
 
   def create
-    @directive = Directive.new(params[:directive])
+    @directive = Directive.new(directive_params)
     flash[:notice] = 'Successfully created directive.' if @directive.save
     respond_with(@directive)
   end
 
   def update
-    flash[:notice] = 'Successfully updated directive.' if @directive.update_attributes(params[:directive])
+    flash[:notice] = 'Successfully updated directive.' if @directive.update_attributes(directive_params)
     respond_with(@directive)
   end
 
@@ -66,6 +66,10 @@ class DirectivesController < ApplicationController
   end
 
   private
+
+  def directive_params
+    params.require(:directive).permit(:title, :number, :approval, :name, :note, :body, :annotation, :status, :action)
+  end
 
   def sort_column
     params[:sort] || 'number'

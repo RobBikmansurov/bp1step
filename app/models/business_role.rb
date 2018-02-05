@@ -17,7 +17,7 @@ class BusinessRole < ActiveRecord::Base
   has_many :user_business_role, dependent: :destroy # пользователь может иметь много ролей
   has_many :users, through: :user_business_role
 
-  attr_accessible :name, :description, :bproce_id, :bproce_name, :features
+  # attr_accessible :name, :description, :bproce_id, :bproce_name, :features
 
   default_scope { order(:name) }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RolesController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
@@ -13,7 +15,7 @@ class RolesController < ApplicationController
   end
 
   def create
-    @role = Role.new(params[:role])
+    @role = Role.new(role_params)
     flash[:notice] = 'Successfully created role.' if @role.save
     respond_with(@role)
   end
@@ -27,7 +29,7 @@ class RolesController < ApplicationController
   end
 
   def update
-    flash[:notice] = 'Successfully updated role.' if @role.update_attributes(params[:role])
+    flash[:notice] = 'Successfully updated role.' if @role.update_attributes(role_params)
     respond_with(@role)
   end
 
@@ -38,6 +40,10 @@ class RolesController < ApplicationController
   end
 
   private
+
+  def role_params
+    params.require(:role).permit(:name, :description)
+  end
 
   def sort_column
     params[:sort] || 'name'

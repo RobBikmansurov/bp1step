@@ -1,4 +1,4 @@
-class CreateIresources < ActiveRecord::Migration
+class CreateIresources < ActiveRecord::Migration[4.2]
   def change
     create_table :iresources do |t|
       t.string :level

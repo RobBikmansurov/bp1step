@@ -4,15 +4,11 @@ require 'rails_helper'
 # TODO: не проверяется уникальность :username и :email! (не решена техническая проблема с возникающей ошибкой)
 
 describe User do
-  context 'mass assignment' do
-    it { should allow_mass_assignment_of(:username) }
-    it { should allow_mass_assignment_of(:email) }
-  end
-
   context 'validates' do
     it { should validate_presence_of(:username) }
     # it { should validate_uniqueness_of(:username) }
     it { should validate_presence_of(:email) }
+    # it { should validate_uniqueness_of(:email).with_message("уже существует") }
     # it { should validate_uniqueness_of(:email) }
   end
 

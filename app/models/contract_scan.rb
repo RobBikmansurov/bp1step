@@ -29,5 +29,5 @@ class ContractScan < ActiveRecord::Base
                                       'application/doc', 'application/rtf',
                                       'application/octet-stream', 'application/force-download'
                                     ]
-  attr_accessible :contract_id, :name, :scan
+  # attr_accessible :contract_id, :name, :scan
 end

@@ -2,26 +2,29 @@
 
 source 'https://rubygems.org'
 
-ruby '2.3.1'
+gem 'rails', '5.1.4'
 
-gem 'coffee-rails', '~> 4.0.0'
-gem 'jquery-rails'
-gem 'jquery-ui-rails', '5.0.5'
-gem 'rails', '4.2.7.1'
-gem 'sass-rails', '~> 4.0.0'
+
+# Use SCSS for stylesheets
+gem 'sass-rails', '~> 5.0'
+# Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-gem 'will_paginate', '~> 3.0'
+# Use CoffeeScript for .coffee assets and views
+gem 'coffee-rails'
+gem 'jquery-ui-rails', '5.0.5'
+gem 'jquery-rails'
 
+gem 'will_paginate', '~> 3.0'
 gem 'alphabetical_paginate'
 gem 'cancancan', '~> 1.10'
-gem 'devise', '~> 3.5.2' # , git: "https://github.com/plataformatec/devise"
+gem 'devise', '>=3.4.1' # , git: "https://github.com/plataformatec/devise"
 gem 'devise_ldap_authenticatable'
 # gem 'execjs'
 gem 'haml-rails'
 
 gem 'awesome_nested_set' # , :git => 'git://github.com/collectiveidea/awesome_nested_set'
 gem 'odf-report'
-gem 'paperclip', '~> 5.1'
+gem 'paperclip', '~> 5.2.1'
 gem 'public_activity'
 gem 'rails3-jquery-autocomplete' # , git: 'https://github.com/francisd/rails3-jquery-autocomplete'
 gem 'simple_form'
@@ -33,7 +36,6 @@ gem 'groupdate'
 gem 'jcrop-rails-v2'
 gem 'pdf-reader'
 gem 'pg_search'
-gem 'protected_attributes'
 gem 'tiny_tds', '~> 0.7.0' # MS SQL
 
 gem 'tzinfo-data'
@@ -47,7 +49,7 @@ gem 'actionpack-page_caching' # кеширование
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'capistrano', '~>3.8.2'
+  gem 'capistrano', '~>3.10.0'
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
@@ -66,8 +68,6 @@ group :production, :staging do
   gem 'pg'
   gem 'puma'
   gem 'rails_12factor', require: false
-  # gem 'unicorn'
-  gem 'rails-dom-testing'
 end
 
 group :test do
@@ -75,15 +75,14 @@ group :test do
   gem 'codeclimate-test-reporter', '~> 1.0.0'
   gem 'codecov', require: false
   gem 'database_cleaner'
-  gem 'fuubar'
-  gem 'selenium-webdriver', '~>3.7.0'
   gem 'shoulda-matchers'
+  gem 'rails-controller-testing'
   gem 'simplecov'
   gem 'sqlite3'
   gem 'webrat'
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.7.0'
+  gem 'rspec-rails'
   gem 'factory_bot_rails'
 end

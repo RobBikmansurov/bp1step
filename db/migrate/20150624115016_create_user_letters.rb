@@ -1,4 +1,4 @@
-class CreateUserLetters < ActiveRecord::Migration
+class CreateUserLetters < ActiveRecord::Migration[4.2]
   def change
     create_table :user_letters do |t|
       t.references :user, index: true

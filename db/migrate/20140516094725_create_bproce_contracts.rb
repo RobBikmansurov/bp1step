@@ -1,4 +1,4 @@
-class CreateBproceContracts < ActiveRecord::Migration
+class CreateBproceContracts < ActiveRecord::Migration[4.2]
   def change
     create_table :bproce_contracts do |t|
       t.references :bproce, index: true

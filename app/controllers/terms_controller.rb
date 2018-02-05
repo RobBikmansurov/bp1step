@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TermsController < ApplicationController
   respond_to :html
   respond_to :xml, :json, only: %i[index show]
@@ -6,15 +8,15 @@ class TermsController < ApplicationController
   before_action :get_term, except: %i[index print]
 
   def index
-    if params[:all].present?
-      @terms = Term.all
-    else
-      if params[:apptype].present?
-        @terms = Term.searchtype(params[:apptype]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-      else
-        @terms = Term.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-      end
-    end
+    @terms = if params[:all].present?
+               Term.all
+             else
+               @terms = if params[:apptype].present?
+                          Term.searchtype(params[:apptype]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+                        else
+                          Term.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+                        end
+             end
     respond_to do |format|
       format.html
       format.json { render json: @terms }
@@ -44,7 +46,7 @@ class TermsController < ApplicationController
   end
 
   def create
-    @term = Term.new(params[:term])
+    @term = Term.new(term_params)
 
     respond_to do |format|
       if @term.save
@@ -57,13 +59,11 @@ class TermsController < ApplicationController
     end
   end
 
-  # PUT /terms/1
-  # PUT /terms/1.json
   def update
     @term = Term.find(params[:id])
 
     respond_to do |format|
-      if @term.update_attributes(params[:term])
+      if @term.update_attributes(term_params)
         format.html { redirect_to @term, notice: 'Term was successfully updated.' }
         format.json { head :no_content }
       else
@@ -73,8 +73,6 @@ class TermsController < ApplicationController
     end
   end
 
-  # DELETE /terms/1
-  # DELETE /terms/1.json
   def destroy
     @term = Term.find(params[:id])
     @term.destroy
@@ -86,6 +84,10 @@ class TermsController < ApplicationController
   end
 
   private
+
+  def term_params
+    params.require(:term).permit(:name, :shortname, :description, :note)
+  end
 
   def sort_column
     params[:sort] || 'name'

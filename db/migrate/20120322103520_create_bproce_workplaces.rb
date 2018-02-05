@@ -1,4 +1,4 @@
-class CreateBproceWorkplaces < ActiveRecord::Migration
+class CreateBproceWorkplaces < ActiveRecord::Migration[4.2]
   def change
     create_table :bproce_workplaces do |t|
       t.integer :bproce_id

@@ -1,4 +1,4 @@
-class CreateBproces < ActiveRecord::Migration
+class CreateBproces < ActiveRecord::Migration[4.2]
   def change
     create_table :bproces do |t|
       t.string :shortname

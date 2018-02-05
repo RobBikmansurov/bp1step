@@ -1,4 +1,4 @@
-class CreateBapps < ActiveRecord::Migration
+class CreateBapps < ActiveRecord::Migration[4.2]
   def change
     create_table :bapps do |t|
       t.string :name

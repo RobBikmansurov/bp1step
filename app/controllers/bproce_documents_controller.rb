@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class BproceDocumentsController < ApplicationController
   respond_to :html, :xml, :json
   before_action :authenticate_user!, only: %i[edit new destroy]
-  before_action :get_bproce_document, except: %i[index show]
+  before_action :bproce_document, except: %i[index show]
 
   def new
     @bproce_document = BproceDocument.new
@@ -25,7 +27,8 @@ class BproceDocumentsController < ApplicationController
   end
 
   def destroy
-    if @bproce_document.document.bproce.count > 1
+    processes = BproceDocument.where(document_id: @bproce_document.document_id).count
+    if processes > 1
       flash[:notice] = "Документ удален из процесса ##{@bproce_document.bproce_id}" if @bproce_document.destroy
     else
       flash[:alert] = 'Нельзя удалить единственный процесс из документа!'
@@ -38,15 +41,19 @@ class BproceDocumentsController < ApplicationController
   end
 
   def update
-    flash[:notice] = 'Successfully updated bproce_document.' if @bproce_document.update_attributes(params[:bproce_document])
+    flash[:notice] = 'Successfully updated bproce_document.' if @bproce_document.update_attributes(bproce_document_params)
     respond_with(@bproce_document)
   end
 
   private
 
-  def get_bproce_document
+  def bproce_document_params
+    params.require(:bproce_document).permit(:bproce_id, :document_id, :purpose)
+  end
+
+  def bproce_document
     @bproce = Bproce.find(params[:bproce_id]) if params[:bproce_id].present?
     @document = Document.find(params[:document_id]) if params[:document_id].present?
-    @bproce_document = params[:id].present? ? BproceDocument.find(params[:id]) : BproceDocument.new(params[:bproce_document])
+    @bproce_document = params[:id].present? ? BproceDocument.find(params[:id]) : BproceDocument.new(bproce_document_params)
   end
 end

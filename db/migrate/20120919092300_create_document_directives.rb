@@ -1,4 +1,4 @@
-class CreateDocumentDirectives < ActiveRecord::Migration
+class CreateDocumentDirectives < ActiveRecord::Migration[4.2]
   def change
     create_table :document_directives do |t|
       t.references :document

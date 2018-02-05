@@ -1,4 +1,4 @@
-class CreateAgentContracts < ActiveRecord::Migration
+class CreateAgentContracts < ActiveRecord::Migration[4.2]
   def change
     create_table :agent_contracts do |t|
       t.references :agent, index: true

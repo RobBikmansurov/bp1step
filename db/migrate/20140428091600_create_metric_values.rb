@@ -1,4 +1,4 @@
-class CreateMetricValues < ActiveRecord::Migration
+class CreateMetricValues < ActiveRecord::Migration[4.2]
   def change
     create_table :metric_values do |t|
       t.references :metric, index: true

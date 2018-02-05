@@ -192,7 +192,7 @@ class RequirementsController < ApplicationController
       r.add_field 'USER_NAME', current_user.displayname
     end
     send_data report.generate, type: 'application/msword',
-                               filename: 'requirement_tasks_list.odt',
+                               filename: "requirement#{@requirement.id}_tasks_list.odt",
                                disposition: 'inline'
   end
 

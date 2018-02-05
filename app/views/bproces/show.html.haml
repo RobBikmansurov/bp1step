@@ -68,11 +68,13 @@
     .floating-box
       = link_to business_role.name, business_role_path(business_role)
 
--if @bproce.documents.count > 0
+-if @bproce.bproce_documents.any?
   %h4
     Процесс описывают
     =link_to 'Документы:', bproce_path(@bproce) + '/documents'
-  -@bproce.documents.order(:name).each do |doc|
+  -#@bproce.documents.order(:name).for_each do |doc|
+  - ids = @bproce.bproce_documents.pluck(:document_id)
+  - Document.where(id: ids).order(:name).each do |doc|
     -if doc.status == 'Утвержден' or doc.status == 'Согласование'
       .floating-box
         -if doc.document_file_file_name  #  если есть файл документа, загруженный через paperclip
@@ -107,11 +109,13 @@
     .floating-box
       = link_to wp.designation, workplace_path(wp)
 
-- if @bproce.bapps.count > 0
+- if @bproce.bproce_bapps.any?
   %h4
     В процессе используются
     =link_to 'Приложения:', bproce_path(@bproce) + '/bapps'
-  -@bproce.bapps.order(:name).each do |ba|
+  -# @bproce.bapps.order(:name).each do |ba|
+  - ids = @bproce.bproce_bapps.pluck(:bapp_id)
+  - Bapp.where(id: ids).order(:name).find_each do |ba|
     .floating-box
       = link_to ba.name, bapp_path(ba)
   

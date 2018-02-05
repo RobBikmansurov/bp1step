@@ -10,5 +10,5 @@ class UserDocument < ActiveRecord::Base
   belongs_to :user
   belongs_to :document
 
-  attr_accessible :user_id, :document_id, :link
+  # attr_accessible :user_id, :document_id, :link
 end

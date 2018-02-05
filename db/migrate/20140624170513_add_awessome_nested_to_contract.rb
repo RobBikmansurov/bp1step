@@ -1,4 +1,4 @@
-class AddAwessomeNestedToContract < ActiveRecord::Migration
+class AddAwessomeNestedToContract < ActiveRecord::Migration[4.2]
   def change
     add_column :contracts, :parent_id, :integer
     add_index :contracts, :parent_id

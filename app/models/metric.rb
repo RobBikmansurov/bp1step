@@ -12,7 +12,7 @@ class Metric < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
-  attr_accessible :bproce_id, :name, :shortname, :description, :note, :depth, :depth_name, :bproce_name, :mtype, :msql, :mhash
+  # attr_accessible :bproce_id, :name, :shortname, :description, :note, :depth, :depth_name, :bproce_name, :mtype, :msql, :mhash
 
   belongs_to :bproce # метика относится к процессу
 

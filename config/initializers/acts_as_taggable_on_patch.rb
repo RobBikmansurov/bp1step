@@ -2,10 +2,10 @@
 # fix error "WARNING: Can't mass-assign protected attributes for ActsAsTaggableOn"
 module ActsAsTaggableOn
   class Tag
-    attr_accessible :name
+    # attr_accessible :name
   end
 
   class Tagging
-    attr_accessible :tag_id, :context, :taggable
+    # attr_accessible :tag_id, :context, :taggable
   end
 end
