@@ -17,7 +17,8 @@ class DocumentsController < ApplicationController
     elsif params[:bproce_id].present?
       @title_doc = ''
       @bproce = Bproce.find(params[:bproce_id])
-      @documents = @bproce.documents
+      ids = BproceDocument.where(bproce_id: @bproce.id).pluck(:document_id)
+      @documents = Document.where(id: ids).all
       if params[:status].present? #  список документов, имеющих конкретный статус
         @documents = @documents.where(status: params[:status])
         @title_doc = " в статусе [#{params[:status]}]"

@@ -1,5 +1,5 @@
 %p
-- if !@document.bproce.blank? # есть ссылки из документа на другие процессы?
+- if @document.bproce_document.any? # есть ссылки из документа на другие процессы?
   %h3 
     Процесс:
     - @document.bproce_document.each do |bproce_document|
@@ -14,5 +14,3 @@
 - if can? :update, @document || current_user && @document.owner_id == current_user.id # ответственный за документ тоже может добавлять процесс
   #update_bproce
     = link_to 'Добавить процесс', bproce_create_document_path(@document), remote: true
-
-

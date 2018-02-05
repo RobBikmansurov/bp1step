@@ -1,5 +1,5 @@
 %hr
--if @document.directive.count > 0
+-if @document.document_directive.any?
   %h4 Документ разработан на основе следующих руководящих документов:
   - @document.document_directive.each do |document_directive|
     -if document_directive.directive

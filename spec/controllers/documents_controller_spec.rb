@@ -5,8 +5,12 @@ require 'rails_helper'
 RSpec.describe DocumentsController, type: :controller do
   let(:owner)            { FactoryBot.create(:user) }
   let(:role)             { FactoryBot.create(:role, name: 'author', description: 'Автор') }
-  let(:valid_documents)  { FactoryBot.create_list(:document, 2, owner: owner) }
   let(:invalid_document) { FactoryBot.create(:document, :invalid) }
+  let!(:document)         { FactoryBot.create(:document, owner: owner) }
+  let!(:doc2)             { FactoryBot.create(:document, owner: owner) }
+  let!(:bproce)           { FactoryBot.create(:bproce) }
+  let!(:bproce_document)  { BproceDocument.create(bproce_id: bproce.id, document_id: doc2.id, purpose: 'two') }
+  let!(:bproce_document)  { BproceDocument.create(bproce_id: bproce.id, document_id: document.id, purpose: 'one') }
 
   describe 'GET index' do
     it 'assigns all documents as @documents' do
@@ -17,15 +21,17 @@ RSpec.describe DocumentsController, type: :controller do
     end
 
     it 'loads all of the documents into @documents' do
-      documents = valid_documents
       get :index
-      expect(assigns(:documents)).to match_array(documents)
+      expect(assigns(:documents)).to match_array([document, doc2])
+    end
+    it 'returns documents for bproce if param bproce_id present' do
+      get :index, params: { bproce_id: bproce.id }
+      expect(assigns(:documents)).to match_array([document])
     end
   end
 
   describe 'GET show' do
     it 'assigns the requested document as @document' do
-      document = valid_documents.first
       get :show, params: { id: document.to_param }
       expect(assigns(:document)).to eq(document)
     end
@@ -45,7 +51,6 @@ RSpec.describe DocumentsController, type: :controller do
 
     describe 'GET edit' do
       it 'assigns the requested document as @document' do
-        document = valid_documents.first
         get :edit, params: { id: document.to_param }
         expect(assigns(:document)).to eq(document)
       end
@@ -91,20 +96,17 @@ RSpec.describe DocumentsController, type: :controller do
     describe 'PUT update' do
       describe 'with valid params' do
         it 'updates the requested document' do
-          document = valid_documents.first
           document.name = 'New valid name'
           put :update, params: { id: document.id, document: document.as_json }
           expect(document.reload.name).to eq 'New valid name'
         end
 
         it 'assigns the requested document as @document' do
-          document = valid_documents.first
           put :update, params: { id: document.to_param, document: document.as_json }
           expect(assigns(:document)).to eq(document)
         end
 
         it 'redirects to the document' do
-          document = valid_documents.first
           put :update, params: { id: document.to_param, document: document.as_json }
           expect(response).to redirect_to(document)
         end
@@ -112,14 +114,12 @@ RSpec.describe DocumentsController, type: :controller do
 
       describe 'with invalid params' do
         it 'assigns the document as @document' do
-          document = valid_documents.first
           document.name = '' #  not valid
           put :update, params: { id: document.id, document: document.as_json }
           expect(assigns(:document)).to eq(document)
         end
 
         it "re-renders the 'edit' template" do
-          document = valid_documents.first
           document.name = '' #  not valid
           put :update, params: { id: document.id, document: document.as_json }
           expect(response).to render_template('edit')
@@ -130,14 +130,12 @@ RSpec.describe DocumentsController, type: :controller do
 
   describe 'DELETE destroy' do
     it 'destroys the requested document' do
-      document = valid_documents.first
       expect do
         delete :destroy, params: { id: document.id }
       end.to change(Document, :count).by(-1)
     end
 
     it 'redirects to the documents list' do
-      document = valid_documents.first
       delete :destroy, params: { id: document.id }
       expect(response).to redirect_to(documents_url)
     end
