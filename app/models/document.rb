@@ -102,7 +102,7 @@ class Document < ActiveRecord::Base
     return unless document_file_file_name? # задано имя файла
     if File.exist?(document_file.path)
       begin
-        Paperclip.run('unoconv', "-f pdf #{document_file.path}")
+        Paperclip.run('unoconv', "-f pdf '#{document_file.path}'")
       rescue
         logger.error "      ERR: #{document_file_file_name}"
       end

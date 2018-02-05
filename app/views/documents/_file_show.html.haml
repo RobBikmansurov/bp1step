@@ -1,0 +1,41 @@
+-if @document.document_file_file_name
+  .floating-box
+    %b
+      =@document.document_file_file_name
+    - if can? :edit_document, @document
+      %br
+      размер:
+      =@document.document_file_file_size
+      | загружен:
+      =@document.document_file_updated_at.strftime('%d.%m.%Y %H:%M:%S')
+      | MD5:
+      =@document.document_file_fingerprint
+
+    -# автору документа показать все файлы документа
+    -# автору документа разрешить взять исходник
+    -# кому можно - смотреть PDF
+
+  - if can? :edit_document, @document || current_user && current_user.id == @document.owner_id
+    = link_to '| Удалить', file_delete_document_path(@document), :remote => true, class: 'floating-text'
+    .floating-text
+      #update_file
+        = link_to '| Заменить', file_create_document_path(@document), :remote => true, class: 'floating-text'
+  - if can? :view_document, @document
+    %br
+    - if File.exist?(@document.document_file.path)  # есть исходный файл документа
+      - if File.exist?(@document.pdf_path)  # есть PDF для просмотра
+        смотреть:
+        = link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), @document.pdf_url, class: 'button-img'
+      \|
+      - if can? :edit_document, @document
+        - unless File.extname(@document.document_file.path) == '.pdf'
+          взять на редактирование:
+          = link_to image_tag('ico_text.gif', alt: 'См.', title: 'Загрузить'), @document.document_file.url, class: 'button-img'
+    - else
+      файл отсутствует -
+      %b
+        = @document.document_file_file_name
+-else
+  - if can? :edit_document, @document || current_user && current_user.id == @document.owner_id
+    #update_file
+      = link_to 'Добавить файл', file_create_document_path(@document), :remote => true, class: 'floating-box'

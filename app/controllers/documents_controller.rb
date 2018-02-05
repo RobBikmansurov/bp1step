@@ -210,12 +210,12 @@ class DocumentsController < ApplicationController
   def file_delete
     @document.document_file = nil
     flash[:notice] = 'Файл документа удален' if @document.save
-    render :show
+    # render :show
+    render :file_delete
   end
 
   def file_create
     render :file_create
-    # flash[:notice] = "Successfully updated Document's File." if @document.save
   end
 
   def directive_create

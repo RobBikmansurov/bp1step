@@ -10,7 +10,7 @@ module Paperclip
 
     def make
       dst = File.open(File.expand_path(@file.path))
-      params = "-f pdf #{File.expand_path(@file.path)}"
+      params = "-f pdf '#{File.expand_path(@file.path)}'"
       begin
         success = Paperclip.run('unoconv', params)
         dst = File.open(File.expand_path(@file.path) + '.pdf')
