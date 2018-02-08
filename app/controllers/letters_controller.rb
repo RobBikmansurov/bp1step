@@ -97,7 +97,7 @@ class LettersController < ApplicationController
       end
       if params[:letter][:action].present? || (status_was != @letter.status)
         @letter.update_column(:result, @letter.result.to_s)
-        params[:letter][:action]
+        @letter.update_column(:status, 10) if status_was < 10 # на исполнении, если Назначено или Новое
       end
       redirect_to @letter, notice: 'Письмо сохранено.'
     else
@@ -140,12 +140,12 @@ class LettersController < ApplicationController
     letter = Letter.find(params[:id]) # письмо - прототип
     @requirement = Requirement.new(letter_id: letter.id, author_id: current_user.id)
     # redirect_to requirements_new(@requirement) and return
-    redirect_to new_requirement_url(letter_id: letter.id) and return
+    redirect_to(new_requirement_url(letter_id: letter.id)) && return
   end
 
   def create_task
     parent_letter = Letter.find(params[:id])
-    redirect_to new_task_url(letter_id: parent_letter.id) and return
+    redirect_to(new_task_url(letter_id: parent_letter.id)) && return
   end
 
   def create_user
@@ -198,7 +198,8 @@ class LettersController < ApplicationController
     respond_with(@letter_appendix.letter)
   end
 
-  def log_week # реестр регистрации
+  # реестр регистрации
+  def log_week
     d = if params[:week_day].present?
           params[:week_day].to_date
         else
@@ -224,7 +225,8 @@ class LettersController < ApplicationController
     end
   end
 
-  def reestr # реестр
+  # реестр
+  def reestr
     @letters = Letter.where('sender ILIKE ? and regdate = ?', @letter.sender, @letter.regdate).order(:regnumber)
     @sender = @letter.sender
     reestr_report
@@ -241,7 +243,7 @@ class LettersController < ApplicationController
         @letter.update(number: letter.number, date: letter.date) if letter
       end
     end
-    redirect_to letter_url(letter_id: @letter.id) and return
+    redirect_to(letter_url(letter_id: @letter.id)) && return
   end
 
   def senders
@@ -301,7 +303,8 @@ class LettersController < ApplicationController
     redirect_to action: :index
   end
 
-  def check_report # Отчет "Контроль исполнения"
+  # Отчет "Контроль исполнения"
+  def check_report
     report = ODFReport::Report.new('reports/letters_check.odt') do |r|
       nn = 0
       r.add_field 'REPORT_PERIOD', Date.current.strftime('%d.%m.%Y')
@@ -344,7 +347,7 @@ class LettersController < ApplicationController
           letter.user_letter.find_each do |user_letter|
             s += ', ' if s.present?
             s += user_letter.user.displayname
-            s += '-отв.' if user_letter.status && user_letter.status.positive?
+            s += '-отв.' if user_letter.status&.positive?
           end
           s.to_s
         end
@@ -358,7 +361,8 @@ class LettersController < ApplicationController
                                disposition: 'inline'
   end
 
-  def log_week_report # реестр за неделю
+  # реестр за неделю
+  def log_week_report
     report = ODFReport::Report.new('reports/letters_reestr.odt') do |r|
       nn = 0
       # r.add_field "REPORT_DATE", Date.current.strftime('%d.%m.%Y')
@@ -402,7 +406,8 @@ class LettersController < ApplicationController
                                disposition: 'inline'
   end
 
-  def reestr_report # реестр исходящих
+  # реестр исходящих
+  def reestr_report
     report = ODFReport::Report.new('reports/reestr.odt') do |r|
       nn = 0
       r.add_field 'REPORT_DATE', "#{Date.current.strftime('%d.%m.%Y')} г."
@@ -414,7 +419,7 @@ class LettersController < ApplicationController
         end
         t.add_column(:regnumber)
         t.add_column(:regdate) do |letter|
-          letter.regdate.strftime('%d.%m.%Y').to_s if letter.regdate
+          letter.regdate&.strftime('%d.%m.%Y').to_s
         end
         t.add_column(:naim, :subject)
       end
