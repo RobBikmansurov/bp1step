@@ -156,7 +156,7 @@ class LettersController < ApplicationController
   end
 
   def update_user
-    user_letter = UserLetter.new(params[:user_letter]) if params[:user_letter].present?
+    user_letter = UserLetter.new(user_letter_params) if params[:user_letter].present?
     if user_letter
       user_letter_clone = UserLetter.where(letter_id: user_letter.letter_id, user_id: user_letter.user_id).first # проверим - нет такого исполнителя?
       if user_letter_clone
@@ -288,6 +288,12 @@ class LettersController < ApplicationController
           .permit(:regnumber, :regdate, :number, :date, :subject, :source, :sender,
                   :duedate, :body, :status, :status_name, :result, :letter_id, :author_id, :author_name,
                   :letter_appendix, :letter_id, :name, :appendix, :completion_date, :in_out)
+  end
+
+  private 
+    def user_letter_params
+    params.require(:user_letter)
+           .permit(:user_id, :letter_id, :status, :user_name)
   end
 
   def sort_column

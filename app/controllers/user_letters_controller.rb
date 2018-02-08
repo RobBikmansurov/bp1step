@@ -12,7 +12,7 @@ class UserLettersController < ApplicationController
   end
 
   def create
-    @user_letter = UserLetter.new(params[:user_letter])
+    @user_letter = UserLetter.new(user_letter_params)
     if @user_letter.save
       flash[:notice] = 'Successfully created user_letter.'
       begin
@@ -41,4 +41,11 @@ class UserLettersController < ApplicationController
     end
     respond_with(@letter) # вернулись в письмо
   end
+
+  private 
+    def user_letter_params
+    params.require(:user_letter)
+           .permit(:user_id, :letter_id, :status, :user_name)
+  end
+
 end
