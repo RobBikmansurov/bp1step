@@ -97,7 +97,7 @@ class LettersController < ApplicationController
       end
       if params[:letter][:action].present? || (status_was != @letter.status)
         @letter.update_column(:result, @letter.result.to_s)
-        @letter.update_column(:status, 10) if status_was < 10 # на исполнении, если Назначено или Новое
+        @letter.update_column(:status, 10) if @letter.status < 10 # на исполнении, если Назначено или Новое
       end
       redirect_to @letter, notice: 'Письмо сохранено.'
     else
