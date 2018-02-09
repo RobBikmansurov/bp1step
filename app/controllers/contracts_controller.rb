@@ -199,7 +199,7 @@ class ContractsController < ApplicationController
       nnp = 0
       first_part = 0 # номер раздела для сброса номера документа в разделе
       r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
-      @title_doc = '' unless @title_doc
+      @title_doc ||= ''
       @title_doc += '  стр.' + params[:page] if params[:page].present?
       r.add_field 'REPORT_TITLE', @title_doc
       r.add_table('TABLE_01', @contracts, header: true) do |t|
@@ -229,7 +229,8 @@ class ContractsController < ApplicationController
                                disposition: 'inline'
   end
 
-  def approval_sheet_odt # Лист согласования
+  # Лист согласования
+  def approval_sheet_odt
     report = ODFReport::Report.new('reports/approval-sheet-contract.odt') do |r|
       r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       r.add_field 'REPORT_DATE1', (Date.current + 10.days).strftime('%d.%m.%Y')

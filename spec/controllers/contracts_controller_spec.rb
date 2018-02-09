@@ -7,6 +7,9 @@ RSpec.describe ContractsController do
   let(:valid_session) { {} }
   let(:valid_contracts)  { FactoryBot.create_list(:contract, 2) }
   let(:invalid_contract) { FactoryBot.create(:contract, :invalid) }
+  let(:bproce) { FactoryBot.create(:broce) }
+  let(:contract) { FactoryBot.create(:contract) }
+  let(:bproce_contract) { FactoryBot.create(:bproce_contract, bproce_id: bproce.id, contract_id: contract.id) }
 
   before(:each) do
     @user = FactoryBot.create(:user)
@@ -32,7 +35,6 @@ RSpec.describe ContractsController do
 
   describe 'GET show' do
     it 'assigns the requested contract as @contract' do
-      contract = Contract.create! valid_attributes
       get :show, params: { id: contract.to_param }
       expect(assigns(:contract)).to eq(contract)
     end

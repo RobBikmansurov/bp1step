@@ -61,7 +61,7 @@
     = link_to @contract.contract_place.to_s, contracts_path + '?place=' + @contract.contract_place.to_s, class: 'groups'
 
 %p
-- if !@contract.bproce.blank? # есть ссылки из договора на процессы?
+- if BproceContract.where(contract_id: @contractid).any? # есть ссылки из договора на процессы?
   %h3 Процесс:
   - @contract.bproce_contract.each do |bproce_contract|
     = link_to bproce_contract.bproce.name, bproce_path(bproce_contract.bproce)
