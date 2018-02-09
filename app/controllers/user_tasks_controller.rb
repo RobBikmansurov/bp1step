@@ -12,7 +12,7 @@ class UserTasksController < ApplicationController
   end
 
   def create
-    @user_task = UserTask.new(params[:user_task])
+    @user_task = UserTask.new(user_task_params)
     if @user_task.save
       flash[:notice] = 'Successfully created user_task.'
       begin
@@ -45,5 +45,11 @@ class UserTasksController < ApplicationController
       format.json { head :no_content }
       format.js   { render layout: false }
     end
+  end
+
+  private 
+  def user_task_params
+    params.require(:user_task)
+           .permit(:user_id, :task_id, :status, :user_name)
   end
 end

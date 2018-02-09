@@ -186,7 +186,7 @@ class LettersController < ApplicationController
   end
 
   def appendix_update
-    @letter_appendix = LetterAppendix.new(params[:letter_appendix]) if params[:letter_appendix].present?
+    @letter_appendix = LetterAppendix.new(letter_appendix_params) if params[:letter_appendix].present?
     if @letter_appendix
       @letter = @letter_appendix.letter
       if @letter_appendix.save
@@ -290,8 +290,11 @@ class LettersController < ApplicationController
                   :letter_appendix, :letter_id, :name, :appendix, :completion_date, :in_out)
   end
 
-  private 
-    def user_letter_params
+  def letter_appendix_params
+    params.require(:letter_appendix).permit(:letter_id, :name, :appendix)
+  end
+
+  def user_letter_params
     params.require(:user_letter)
            .permit(:user_id, :letter_id, :status, :user_name)
   end

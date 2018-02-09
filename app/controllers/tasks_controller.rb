@@ -104,7 +104,7 @@ class TasksController < ApplicationController
   end
 
   def update_user
-    user_task = UserTask.new(params[:user_task]) if params[:user_task].present?
+    user_task = UserTask.new(user_task_params) if params[:user_task].present?
     if user_task
       @task = user_task.task
       if user_task.user_id
@@ -160,6 +160,11 @@ class TasksController < ApplicationController
   def task_params
     params.require(:task).permit(:name, :description, :duedate, :result, :status,
                                  :letter_id, :requirement_id, :author_id, :completion_date, :status_name)
+  end
+
+  def user_task_params
+    params.require(:user_task)
+           .permit(:user_id, :task_id, :status, :user_name)
   end
 
   def sort_column
