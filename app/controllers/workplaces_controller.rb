@@ -65,10 +65,10 @@ class WorkplacesController < ApplicationController
   end
 
   def update_user
-    user_workplace = UserWorkplace.new(params[:user_workplace]) if params[:user_workplace].present?
+    user_workplace = UserWorkplace.new(user_workplace_params) if params[:user_workplace].present?
     if user_workplace
       if user_workplace.save
-        flash[:notice] = "Сотрудник на #{user_workplace.user_name} назначен"
+        flash[:notice] = "#{user_workplace.user_name} на новом рабочем месте - [#{@workplace.name}]"
         begin
           UserWorkplaceMailer.user_workplace_create(user_workplace, current_user).deliver_now # оповестим нового сотрудника
         rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
@@ -101,14 +101,21 @@ class WorkplacesController < ApplicationController
   end
 
   def autocomplete
-    @workplaces = Workplace.order(:designation).where('designation ilike ? or name ilike ?', "%#{params[:term]}%", "%#{params[:term]}%")
+    @workplaces = Workplace.order(:designation)
+                           .where('designation ilike ? or name ilike ?', "%#{params[:term]}%", "%#{params[:term]}%")
     render json: @workplaces.map(&:designation)
   end
 
   private
 
   def workplace_params
-    params.require(:workplace).permit(:name, :designation, :description, :typical, :location, :switch, :port)
+    params.require(:workplace)
+          .permit(:name, :designation, :description, :typical, :location, :switch, :port)
+  end
+
+  def user_workplace_params
+    params.require(:user_workplace)
+          .permit(:workplace_id, :user_id, :date_from, :date_to, :note, :user_name)
   end
 
   def sort_column
@@ -121,8 +128,9 @@ class WorkplacesController < ApplicationController
 
   def get_workplace
     if params[:search].present? # это поиск
-      @workplaces = Workplace.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page]).find(:all, include: :users)
-      # @workplaces = @workplaces.find(:all, :include => :users)
+      @workplaces = Workplace.search(params[:search])
+                             .order(sort_column + ' ' + sort_direction)
+                             .paginate(per_page: 10, page: params[:page]).find(:all, include: :users)
       render :index # покажем список найденного
     else
       @workplace = params[:id].present? ? Workplace.find(params[:id]) : Workplace.new

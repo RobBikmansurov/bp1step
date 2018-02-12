@@ -1,6 +1,6 @@
 class UserBusinessRolesController < ApplicationController
   respond_to :html, :xml, :json
-  before_action :get_user_business_role, only: %i[destroy edit update show]
+  before_action :user_business_role, only: %i[destroy edit update show]
   before_action :authenticate_user!, except: %i[show create]
 
   def show
@@ -44,7 +44,7 @@ class UserBusinessRolesController < ApplicationController
 
   private
 
-  def get_user_business_role
+  def user_business_role
     @user_business_role = UserBusinessRole.find(params[:id])
     @business_role = BusinessRole.find(@user_business_role.business_role_id)
   end

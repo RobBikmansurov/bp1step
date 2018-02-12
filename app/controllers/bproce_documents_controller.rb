@@ -7,7 +7,6 @@ class BproceDocumentsController < ApplicationController
 
   def new
     @bproce_document = BproceDocument.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @bproce_document }
@@ -15,7 +14,7 @@ class BproceDocumentsController < ApplicationController
   end
 
   def create
-    # @bproce_document = BproceDocument.create(params[:bproce_document])
+    @bproce_document = BproceDocument.create(bproce_document_params)
     flash[:notice] = 'Successfully created bproce_document.' if @bproce_document.save
     respond_with(@bproce_document.document)
   end
@@ -48,7 +47,7 @@ class BproceDocumentsController < ApplicationController
   private
 
   def bproce_document_params
-    params.require(:bproce_document).permit(:bproce_id, :document_id, :purpose)
+    params.require(:bproce_document).permit(:document_id, :bproce_id, :purpose, :bproce_name)
   end
 
   def bproce_document

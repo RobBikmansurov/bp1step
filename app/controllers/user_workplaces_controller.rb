@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class UserWorkplacesController < ApplicationController
   respond_to :html, :xml, :json
   before_action :authenticate_user!, only: %i[new create destroy]
 
   def show
     @user_workplace = UserWorkplace.find(params[:id])   # нашли удаляемую связь
-    redirect_to workplace_path(@user_workplace.workplace_id) and return
+    redirect_to(workplace_path(@user_workplace.workplace_id)) && return
   end
 
   def new
@@ -12,7 +14,7 @@ class UserWorkplacesController < ApplicationController
   end
 
   def create
-    @user_workplace = UserWorkplace.create(params[:user_workplace])
+    @user_workplace = UserWorkplace.create(user_workplace_params)
     flash[:notice] = 'Successfully created user_workplace.' if @user_workplace.save
     respond_with(@user_workplace)
   end
@@ -27,5 +29,11 @@ class UserWorkplacesController < ApplicationController
     end
     @user_workplace.destroy   # удалили связь
     respond_with(@workplace)  # вернулись в рабочее место
+  end
+
+  private
+
+  def user_workplace_params
+    params.require(:user_workplace).permit(:workplace_id, :user_id, :date_from, :date_to, :note)
   end
 end

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class BproceContractsController < ApplicationController
   respond_to :html, :xml, :json, :js
   before_action :authenticate_user!, only: %i[edit new destroy]
-  before_action :get_bproce_contract, except: %i[index show]
+  before_action :bproce_contract, except: %i[index show]
 
   def new
     @contract = Contract.find(params[:contract_id])
@@ -13,14 +15,13 @@ class BproceContractsController < ApplicationController
   end
 
   def create
-    # @bproce_contract = Bprocecontract.create(params[:bproce_contract])
     flash[:notice] = 'Successfully created bproce_contract.' if @bproce_contract.save
     respond_with(@bproce_contract.contract)
   end
 
   def show
     @bproce_contract = BproceContract.find(params[:id])
-    redirect_to contract_path(@bproce_contract.contract_id) and return
+    redirect_to(contract_path(@bproce_contract.contract_id)) && return
   end
 
   def destroy
@@ -48,7 +49,7 @@ class BproceContractsController < ApplicationController
 
   private
 
-  def get_bproce_contract
+  def bproce_contract
     @bproce = Bproce.find(params[:bproce_id]) if params[:bproce_id].present?
     @contract = Contract.find(params[:contract_id]) if params[:contract_id].present?
     @bproce_contract = params[:id].present? ? BproceContract.find(params[:id]) : BproceContract.new(params[:bproce_contract])

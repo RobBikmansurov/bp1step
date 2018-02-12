@@ -55,7 +55,7 @@ class BusinessRolesController < ApplicationController
   end
 
   def update_user
-    user_business_role = UserBusinessRole.new(params[:user_business_role]) if params[:user_business_role].present?
+    user_business_role = UserBusinessRole.new(user_business_role_params) if params[:user_business_role].present?
     if user_business_role
       if user_business_role.save
         flash[:notice] = "Новый исполнитель #{user_business_role.user_name} назначен"
@@ -115,6 +115,10 @@ class BusinessRolesController < ApplicationController
 
   def business_role_params
     params.require(:business_role).permit(:name, :description, :bproce_id, :features)
+  end
+
+  def user_business_role_params
+    params.require(:user_business_role).permit(:user_id, :user_name, :business_role_id, :note, :date_from, :date_to)
   end
 
   def sort_column
