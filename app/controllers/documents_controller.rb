@@ -308,7 +308,8 @@ class DocumentsController < ApplicationController
       r.add_field :approve_organ, @document.approveorgan
       r.add_field :document_owner, @document.owner_name
       rr = 0
-      if @document.bproce.present? # есть ссылки из документа на другие процессы?
+      # if @document.bproce.present? # есть ссылки из документа на другие процессы?
+      if BproceDocument.where(document_id: @document.id).any? # есть ссылки из документа на другие процессы?
         r.add_field :bp, 'Относится к процессам:'
         r.add_table('BPROCS', @document.bproce_document.all, header: false, skip_if_empty: true) do |t|
           t.add_column(:rr) do |n1| # порядковый номер строки таблицы
