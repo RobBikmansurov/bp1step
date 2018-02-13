@@ -1,4 +1,4 @@
-- if @bproce.bapps.empty?
+- if BproceBapp.where(bproce_id: @bproce.id).any? # есть ссылки на приложения процесса?
   %h3
     В процессе пока не используются
     =link_to "Приложения", bapps_path
