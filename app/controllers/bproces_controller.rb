@@ -226,7 +226,8 @@ class BprocesController < ApplicationController
       end
       @metrics = Metric.where(bproce_id: @bproce.id).order(:name) # метрики процесса
       report_metrics(@metrics, r, false) # сформировать список метрик процесса
-      report_docs(@bproce.documents.active, r, false) # сформировать таблицу действующих документов процесса
+      ids = BproceDocument.where(bproce_id: @bproce.id).pluck :document_id
+      report_docs(Document.where(id: ids).active, r, false) # сформировать таблицу действующих документов процесса
       report_contracts(@bproce.contracts.active, r, false) # сформировать список договоров
       report_roles(@bproce.business_roles, r, true) # сформировать таблицу ролей
       report_workplaces(@bproce, r, true) # сформировать таблицу рабочих мест
@@ -339,7 +340,8 @@ class BprocesController < ApplicationController
 
       @metrics = Metric.where(bproce_id: @bproce.id).order(:name) # метрики процесса
       report_metrics(@metrics, r, false) # сформировать список метрик процесса
-      report_docs(@bproce.documents.active, r, false) # действующие документы процесса
+      ids = BproceDocument.where(bproce_id: @bproce.id).pluck :document_id
+      report_docs(Document.where(id: ids).active, r, false) # сформировать таблицу действующих документов процесса
       report_contracts(@bproce.contracts.active, r, false) # сформировать список договоров
       report_roles(@bproce.business_roles, r, false) # сформировать таблицу ролей
       report_workplaces(@bproce, r, false) # сформировать таблицу рабочих мест
