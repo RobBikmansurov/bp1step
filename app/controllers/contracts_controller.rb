@@ -66,7 +66,8 @@ class ContractsController < ApplicationController
     end
     respond_to do |format|
       format.html do
-        @contracts = @contracts.includes(:agent).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+        @contracts = @contracts.includes(:agent).order(sort_column + ' ' + sort_direction)
+                                                .paginate(per_page: 10, page: params[:page])
       end
       format.odt  { print }
       format.json { render json: @contracts }
@@ -136,7 +137,7 @@ class ContractsController < ApplicationController
   end
 
   def update_scan
-    contract_scan = ContractScan.new(params[:contract_scan]) if params[:contract_scan].present?
+    contract_scan = ContractScan.new(contract_scan_params) if params[:contract_scan].present?
     if contract_scan
       @contract = contract_scan.contract
       if contract_scan.name.blank?
@@ -144,7 +145,8 @@ class ContractsController < ApplicationController
       else
         flash[:notice] = 'Файл "' + contract_scan.name + '" загружен.' if contract_scan.save
         begin
-          ContractMailer.update_contract(@contract, current_user, contract_scan, 'добавлен').deliver # оповестим ответственных об изменениях скана
+          # оповестим ответственных об изменениях скана
+          ContractMailer.update_contract(@contract, current_user, contract_scan, 'добавлен').deliver_now
         rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
           flash[:alert] = 'Error sending mail to contract owner'
         end
@@ -296,11 +298,13 @@ class ContractsController < ApplicationController
   end
 
   def contract_params
-    params.require(:contract).permit(:owner_id, :owner_name, :payer_id, :payer_name, :number, :name, :status, :date_begin, :date_end, :description, :text, :note, :condition, :check, :agent_id, :agent_name, :parent_id, :parent_name, :contract_type, :contract_place)
+    params.require(:contract).permit(:owner_id, :owner_name, :payer_id, :payer_name, :number, :name, :status,
+                                     :date_begin, :date_end, :description, :text, :note, :condition, :check,
+                                     :agent_id, :agent_name, :parent_id, :parent_name, :contract_type, :contract_place)
   end
 
-  def contract__scan_params
-    params.require(:contract_scan).permit(:conntract_id, :name)
+  def contract_scan_params
+    params.require(:contract_scan).permit(:contract_id, :name, :scan)
   end
 
   def sort_column
