@@ -28,5 +28,4 @@ RSpec.describe RolesController, type: :controller do
       expect(assigns(:role)).to eq(role)
     end
   end
-
 end

@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe AgentsController, type: :controller do
-
   let(:agent_attributes) { { name: 'Agent name' } }
   let(:valid_session) { {} }
   let(:agent) { FactoryBot.create(:agent) }
@@ -33,7 +32,7 @@ RSpec.describe AgentsController, type: :controller do
 
   describe 'GET show' do
     it 'assigns the requested agent as @agent' do
-      get :show, params: { id: agent.id}
+      get :show, params: { id: agent.id }
       expect(assigns(:agent)).to eq(agent)
     end
   end

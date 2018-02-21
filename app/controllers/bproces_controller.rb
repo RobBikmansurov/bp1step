@@ -100,7 +100,8 @@ class BprocesController < ApplicationController
       @document = Document.new(params[:document])
       @document&.save
     end
-    if @bproce.update_attributes(bproce_params)
+    @bproce = Bproce.find(params[:id])
+    if @bproce.update(bproce_params)
       redirect_to @bproce, notice: 'Successfully updated Bproce.'
     else
       render action: 'edit'
@@ -109,7 +110,7 @@ class BprocesController < ApplicationController
 
   def destroy
     flash[:notice] = 'Successfully destroyed Bproce.' if @bproce.destroy
-    redirect_to action: :index
+    redirect_to bproces_path
   end
 
   def manage
