@@ -259,7 +259,9 @@ class ContractsController < ApplicationController
         r.add_field :agent, 'Контрагент не выбран!'
       end
       rr = 0
-      if @contract.bproce.present? # есть ссылки из документа на другие процессы?
+      #if @contract.bproce.present? 
+      # есть ссылки из документа на другие процессы?
+      if BproceContract.where(contract_id: @contract.id).any?
         r.add_field :bp, 'Относится к процессам:'
         r.add_table('BPROCS', @contract.bproce_contract.all, header: false, skip_if_empty: true) do |t|
           t.add_column(:rr) do |_r1| # порядковый номер строки таблицы
@@ -278,7 +280,7 @@ class ContractsController < ApplicationController
       else
         r.add_field :bp, 'Процесс не назначен!'
       end
-      r.add_field :user_position, current_user.position.mb_chars.capitalize.to_s
+      r.add_field :user_position, current_user.position&.mb_chars&.capitalize&.to_s
       r.add_field :user_name, current_user.displayname
     end
     send_data report.generate, type: 'application/msword',

@@ -3,13 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe ContractsController do
-  let(:valid_attributes) { { number: '1', name: 'name', status: 'status', description: 'description', 'owner_id' => 1, contract_type: 'Договор' } }
+  let(:valid_attributes) do
+    { number: '1', name: 'name', status: 'status', description: 'description', owner_id: 1, contract_type: 'Договор' }
+  end
   let(:valid_session) { {} }
   let(:valid_contracts)  { FactoryBot.create_list(:contract, 2) }
   let(:invalid_contract) { FactoryBot.create(:contract, :invalid) }
   let(:bproce) { FactoryBot.create(:broce) }
   let(:contract) { FactoryBot.create(:contract) }
   let(:bproce_contract) { FactoryBot.create(:bproce_contract, bproce_id: bproce.id, contract_id: contract.id) }
+  let(:current_user) { FactoryBot.create(:user, position: 'big_boss') }
 
   before(:each) do
     @user = FactoryBot.create(:user)
@@ -104,14 +107,18 @@ RSpec.describe ContractsController do
         # contract.owner_id = user.id
         # contract.payer_id = user.id
         # current_user = FactoryBot.create(:user)
-        put :update, params: { id: contract.to_param, contract: { umber: '1', name: 'name', status: 'status', description: 'description', 'owner_id' => user.id, contract_type: 'Договор' } }
+        put :update, params: { id: contract.to_param,
+                               contract: { number: '1', name: 'name', status: 'status', description: 'description',
+                                           owner_id: user.id, contract_type: 'Договор' } }
         expect(assigns(:contract)).to eq(contract)
       end
 
       it 'redirects to the contract' do
         contract = Contract.create! valid_attributes
         user = FactoryBot.create(:user)
-        put :update, params: { id: contract.to_param, contract: { umber: '1', name: 'name', status: 'status', description: 'description', 'owner_id' => user.id, contract_type: 'Договор' } }
+        put :update, params: { id: contract.to_param,
+                               contract: { number: '1', name: 'name', status: 'status', description: 'description',
+                                           owner_id: user.id, contract_type: 'Договор' } }
         expect(response).to redirect_to(contract)
       end
     end
@@ -146,5 +153,15 @@ RSpec.describe ContractsController do
       delete :destroy, params: { id: contract.to_param }
       expect(response).to redirect_to(contracts_url)
     end
+  end
+
+  it 'form approval sheet' do
+    # allow(contract).to receive(:id).with(1).and_return('approval_sheet')
+    # @controller.should_receive(:send_data).with(csv_string, csv_options).and_return { @controller.render nothing: true }
+    # expect(controller).to receive(:send_data).with(
+    #   type: 'application/msword',
+    #   filename: "c#{contract.id}-approval-sheet.odt",
+    #   disposition: 'inline').and_return { controller.render nothing: true }
+    get :approval_sheet, params: { id: contract.to_param, format: :odt }
   end
 end

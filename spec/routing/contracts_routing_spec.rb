@@ -29,5 +29,8 @@ RSpec.describe ContractsController, type: :routing do
     it 'routes to #destroy' do
       expect(delete: '/contracts/1').to route_to('contracts#destroy', id: '1')
     end
+    it 'routes to #approval_sheet' do
+      expect(get: '/contracts/1/approval_sheet').to route_to('contracts#approval_sheet', id: '1')
+    end
   end
 end
