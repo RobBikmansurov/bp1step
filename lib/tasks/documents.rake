@@ -49,7 +49,8 @@ namespace :bp1step do
 
     Document.where('dlevel = 4').each do |document| # все документы типа Свидетельств должны иметь процесс
       documents_count += 1
-      next if document.bproce.any?
+      # next if document.bproce.any?
+      next if BproceDocument.where(document_id: document.id).any?
       mail_to = document.owner if document.owner_id.positive?
       mail_to = default_user if DEBUG || mail_to.blank?
       processes_missing += 1
