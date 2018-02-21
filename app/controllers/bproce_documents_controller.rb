@@ -14,7 +14,7 @@ class BproceDocumentsController < ApplicationController
   end
 
   def create
-    @bproce_document = BproceDocument.create(bproce_document_params)
+    @bproce_document = BproceDocument.new(bproce_document_params)
     flash[:notice] = 'Successfully created bproce_document.' if @bproce_document.save
     respond_with(@bproce_document.document)
   end
