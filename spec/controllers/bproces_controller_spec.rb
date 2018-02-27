@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe BprocesController, type: :controller do
   let(:bproce) { FactoryBot.create :bproce }
   let(:bproce1) { FactoryBot.create :bproce }
-  let(:bproce_as_hash) { { id: bproce.id, shortname: bproce.shortname, name: 'bproce.name', fullname: bproce.fullname } }
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
   before(:each) do
@@ -57,13 +56,26 @@ RSpec.describe BprocesController, type: :controller do
     describe 'with valid params' do
       it 'creates a new Bproce' do
         expect do
-          post :create, params: { bproce: bproce_as_hash }
+          post :create, params: { bproce: bproce.attributes }
         end.to change(Bproce, :count).by(1)
       end
 
       it 'assigns a newly created bproce as @bproce' do
-        post :create, params: { bproce: bproce_as_hash }
+        post :create, params: { bproce: bproce.attributes }
         expect(assigns(:bproce)).to be_a(Bproce)
+      end
+
+      it 'saves goal in created bproce' do
+        bproce.goal = 'Goal of bproce'
+        post :create, params: { bproce: bproce.attributes }
+        expect(bproce.goal).to eq('Goal of bproce')
+      end
+
+      it 'saves owner in created bproce' do
+        user = FactoryBot.create(:user)
+        bproce.user_id = user.id
+        post :create, params: { bproce: bproce.attributes }
+        expect(bproce.user.displayname).to eq(user.displayname)
       end
     end
 
@@ -83,17 +95,17 @@ RSpec.describe BprocesController, type: :controller do
   describe 'PUT update' do
     describe 'with valid params' do
       it 'updates the requested bproce' do
-        put :update, params: { id: bproce.to_param, bproce: bproce_as_hash }
+        put :update, params: { id: bproce.to_param, bproce: bproce.attributes }
         expect(response).to redirect_to(bproce)
       end
 
       it 'assigns the requested bproce as @bproce' do
-        put :update, params: { id: bproce.id.to_param, bproce: bproce_as_hash }
+        put :update, params: { id: bproce.id.to_param, bproce: bproce.attributes }
         expect(assigns(:bproce)).to eq(bproce)
       end
 
       it 'redirects to the bproce' do
-        put :update, params: { id: bproce.to_param, bproce: bproce_as_hash }
+        put :update, params: { id: bproce.to_param, bproce: bproce.attributes }
         expect(response).to redirect_to(bproce)
       end
     end
