@@ -63,7 +63,8 @@ namespace :bp1step do
       mail_to = document.owner if document.owner_id.positive?
       mail_to = default_user if DEBUG || mail_to.blank?
 
-      unless document.bproce.any?
+      # unless document.bproce.any?
+      unless  BproceDocument.where(document_id: document.id).any?
         processes_missing += 1
         logger.info "process missing ##{document.id}: \t#{mail_to.email}"
         DocumentMailer.process_is_missing_email(document, mail_to).deliver # рассылка о необходимости указания процесса для документа

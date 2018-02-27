@@ -62,6 +62,7 @@ group :development do
   gem 'rubocop', require: false
   gem 'rubocop-rspec', require: false
   gem 'sshkit-sudo'
+  # gem 'log-analyzer', require: false
 end
 
 group :production, :staging do
