@@ -79,6 +79,6 @@ class DocumentDirectivesController < ApplicationController
   private
 
   def document_directive_params
-    params.require(:document_directive).permit(:document_id, :directive_id, :note)
+    params.require(:document_directive).permit(:document_id, :directive_id, :directive_number, :note)
   end
 end
