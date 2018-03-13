@@ -78,7 +78,9 @@ class UsersController < ApplicationController
 
   def documents
     @documents = Document.order(:name).where(owner_id: @usr.id)
-    @user_documents = @usr.document.order('link, updated_at DESC').load # избранные документы пользователя
+    # @user_documents = @usr.document.order('link, updated_at DESC').load # избранные документы пользователя
+    ids = UserDocument.where(user_id: @usr.id).pluck :document_id # избранные документы пользователя
+    @user_documents = Document.where(id: ids).all
     respond_to do |format|
       format.html { render layout: false }
     end
