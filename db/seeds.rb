@@ -188,7 +188,7 @@ dd = di.document_directive.create(document_id: d.id)
 di = Directive.create(title: 'Основной закон', number: '00', approval: '2011-09-11', name: 'Конституция',
   status: 'Действует', body: 'РФ', note: 'Основной и самый главный')
 dd = di.document_directive.create(document_id: Document.last.id)
-p 'directives created'
+puts 'directives created'
 
 
 l1 = Letter.create(number: "12-34/123", date: Date.current - 10, subject: "о предоставлении информации", source: "фельдпочта",
@@ -205,7 +205,7 @@ puts 'Letters created'
 
 r = Requirement.create(label: "Напрячься и предоставить информацию!", date: Date.current - 5, duedate: Date.current,
                         body: "товарищи, надо собраться и сделать", status: 0, letter_id: l1.id, author: user5)
-r.user_requirement(user_id: user5.id, requirement_id: r.id, status: 1)
+r.user_requirement.create(user_id: user5.id, requirement_id: r.id, status: 1)
 
 puts 'Requirements created'
 
@@ -216,8 +216,6 @@ t2 = Task.create(name: "предоставить", description: "Всем вме
                  duedate: Date.current, requirement_id: r.id, author: user2, status: 50)
 t2.user_task.create(user_id: user2.id)
 puts 'Tasks created'
-
-PublicActivity.enabled = true
 
 
 #<Directive id: 173, title: "Указ", number: "1009", approval: "2004-08-04", name: " Об утверждении перечня стратегических предприятий и стратегических акционерных обществ", note: "", body: "Президент РФ", created_at: "2015-03-26 07:51:41", updated_at: "2015-03-26 09:04:56", annotation: "", status: "Действует", action: nil>
