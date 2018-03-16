@@ -9,6 +9,7 @@ class TasksController < ApplicationController
 
   def index
     @title_tasks = 'Задачи '
+    
     if params[:user].present?
       user = User.find(params[:user])
       @tasks = Task.joins(:user_task).where('user_tasks.user_id = ?', params[:user].to_s)
@@ -22,7 +23,7 @@ class TasksController < ApplicationController
       end
     else
       if params[:status].present?
-        @tasks = Task.status(params[:status])
+        @tasks = Task.search(params[:search]).status(params[:status]).includes(:user_task)
         @title_tasks += "в статусе [ #{TASK_STATUS.key(params[:status].to_i)} ]"
       else
         @tasks = Task.search(params[:search]).unfinished.includes(:user_task)

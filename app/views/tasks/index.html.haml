@@ -1,10 +1,15 @@
 - search "Задачи"
 - title @title_tasks
+- command_params = Hash.new
+- command_search = Hash.new
 
 %h2
   = @title_tasks if @title_tasks
   - if params[:search].present?
     [ #{params[:search]} ]
+    - command_search = command_search.merge('search' => params[:search])
+    - command_params = command_params.merge(command_search) # сохранить параметр для вызова Списка
+  - command_params = command_params.merge('user' => params[:user]) if params[:user].present?
 
 %table
   %tr
@@ -66,6 +71,7 @@
 
 %p
 - Task.select("status, count(id) as count").group(:status).order(:status).each do |task|
-  - if !task.status.to_s.empty?
-    = link_to " #{TASK_STATUS.key(task.status)} (#{task.count}) ", tasks_path(status: task.status), class: 'groups'
+  - if task&.status
+    - tasks_class = (params[:status].present? && task.status == params[:status].to_i) ? 'groups-s' : 'groups'
+    = link_to " #{TASK_STATUS.key(task.status)} (#{task.count}) ", tasks_path(command_search.merge(status: task.status)), class: tasks_class
     &nbsp;
