@@ -19,6 +19,8 @@ gem 'alphabetical_paginate'
 gem 'cancancan', '~> 1.10'
 gem 'devise', '>=3.4.1' # , git: "https://github.com/plataformatec/devise"
 gem 'devise_ldap_authenticatable'
+gem 'net-ldap', '>=0.16.1'
+
 # gem 'execjs'
 gem 'haml-rails'
 
