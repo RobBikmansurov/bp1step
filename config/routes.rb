@@ -178,6 +178,7 @@ BPDoc::Application.routes.draw do
       get :avatar_delete
       patch :update_avatar
     end
+    resources :roles, only: [:create, :destroy]
   end
   resources :user_business_roles, only: [:new, :create, :destroy, :edit, :update, :show]
   resources :user_documents, only: [:destroy]

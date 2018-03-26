@@ -38,7 +38,7 @@ class UsersController < ApplicationController
 
   def show
     # @uroles = @usr.user_business_role.includes(:business_role).order('business_roles.name')   # исполняет роли
-    # @uworkplaces = @usr.user_workplace 	# рабочие места пользователя
+    # @uworkplaces = @usr.user_workplace  # рабочие места пользователя
     # @documents = Document.order(:name).where(owner_id: @usr.id)
     # @contracts = Contract.order('date_begin DESC').where(owner_id: @usr.id)     # договоры, за которые отвечает пользователь
     # @contracts_pay = Contract.order('date_begin DESC').where(payer_id: @usr.id) # договоры, за оплату которых отвечает пользователь
@@ -110,7 +110,7 @@ class UsersController < ApplicationController
   def edit; end
 
   def update
-    if @usr.update_attributes(params[:user])
+    if @usr.update_attributes(user_params)
       redirect_to @usr, notice: 'Successfully created user access roles.'
     else
       render :edit
@@ -168,6 +168,10 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def user_params
+    params.require(:user).permit(:role_ids)
+  end
 
   def avatar_params
     params.require(:user).permit(:avatar)

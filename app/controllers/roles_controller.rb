@@ -15,9 +15,16 @@ class RolesController < ApplicationController
   end
 
   def create
-    @role = Role.new(role_params)
-    flash[:notice] = 'Successfully created role.' if @role.save
-    respond_with(@role)
+    if params[:user_id].present? # добавить роль пользователю
+      @usr = User.find(params[:user_id])
+      role = Role.find(params[:role])
+      UserRole.create(user_id: @usr.id, role_id: role.id) if role
+      redirect_to edit_user_path(@usr), notice: 'Successfully created role for user.'
+    else
+      @role = Role.new(role_params)
+      flash[:notice] = 'Successfully created role.' if @role.save
+      respond_with(@role)
+    end
   end
 
   def show
@@ -34,15 +41,22 @@ class RolesController < ApplicationController
   end
 
   def destroy
-    @role.destroy
-    flash[:notice] = 'Successfully destroyed role.' if @role.save
-    respond_with(@role)
+    if params[:user_id].present? # удалить роль пользователю
+      @usr = User.find(params[:user_id])
+      role = Role.find(params[:id])
+      UserRole.where(user_id: @usr.id, role_id: role.id).first.destroy if role
+      redirect_to edit_user_path(@usr), notice: 'Successfully deleted role for user.'
+    else
+      @role.destroy
+      flash[:notice] = 'Successfully destroyed role.' if @role.save
+      respond_with(@role)
+    end
   end
 
   private
 
   def role_params
-    params.require(:role).permit(:name, :description)
+    params.require(:role).permit(:name, :description, :user_id)
   end
 
   def sort_column

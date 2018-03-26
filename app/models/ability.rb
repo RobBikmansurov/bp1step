@@ -12,7 +12,7 @@ class Ability
 
     alias_action :create, :read, :update, :destroy, to: :crud
 
-    if user.roles.count.zero?
+    unless user.roles.any?
       can :read, :all # for guest without roles
       cannot :show, User
     else # зарегистрированные пользователи хотя бы с одной ролью могут:

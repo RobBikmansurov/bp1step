@@ -28,13 +28,24 @@
   = @usr.phone
   |
 
-= simple_form_for(@usr) do |u|
-  = u.error_notification
-  = u.collection_check_boxes :role_ids, Role.all, :id, :description
-  = u.error :base
-  %p
-  -if can? :assign_roles, @usr
-    = u.button :submit, 'Сохранить роли доступа'
+%h4Назначены роли доступа:
+%table
+  - @usr.roles.each do |role|
+    %tr
+      -# %td= ":#{role.name.to_sym}"
+      %td= role.description
+      %td= role.note
+      %td= link_to image_tag('action_stop.gif', alt: 'Удалить'),
+                    user_role_path(role, user_id: @usr.id),
+                    data: { confirm: "Удалить роль доступа #{role.description} у #{@usr.displayname} ?" },
+                    method: 'delete',
+                    class: 'button-img'
+
+%h4
+  Добавить роли доступа:
+  - Role.all.each do |role| 
+    - unless @usr.role? role.name.to_sym
+      = link_to role.description, user_roles_path(@usr) + "?role=#{role.id}", method: :post if can? :manage, @usr
 
 %p
 = link_to 'Show', @usr, :class => 'button'
