@@ -38,11 +38,15 @@ class UserBusinessRolesController < ApplicationController
   end
 
   def update
-    flash[:notice] = 'Successfully updated user_business_role.' if @user_business_role.update_attributes(params[:user_business_role])
+    flash[:notice] = 'Successfully updated user_business_role.' if @user_business_role.update_attributes(user_business_role_params)
     respond_with(@business_role)
   end
 
   private
+
+  def user_business_role_params
+    params.require(:user_business_role).permit(:date_from, :date_to, :note, :user_id, :business_role_id)
+  end
 
   def user_business_role
     @user_business_role = UserBusinessRole.find(params[:id])
