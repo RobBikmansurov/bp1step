@@ -3,8 +3,8 @@
 class UsersController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
-  before_action :authenticate_user!, only: %i[edit update order]
-  before_action :find_user, except: %i[index autocomplete]
+  before_action :authenticate_user!, only: %i[edit update order move_to]
+  before_action :find_user, except: %i[index autocomplete move_to]
 
   def index
     if params[:role].present?
@@ -71,8 +71,13 @@ class UsersController < ApplicationController
   def uroles
     @uroles = @usr.user_business_role.includes(:business_role).order('business_roles.name') # исполняет роли
     #- @uworkplaces = @usr.user_workplace # рабочие места пользователя
+    p params[:layout]
     respond_to do |format|
-      format.html { render layout: false }
+      if params[:layout].present?
+        format.html { render layout: true }
+      else
+        format.html { render layout: false }
+      end
     end
   end
 
@@ -108,6 +113,24 @@ class UsersController < ApplicationController
   end
 
   def edit; end
+
+  def move_to
+    @old_user = User.find(params[:id])
+    @new_user = User.new()
+    render :move_to
+  end
+
+  def business_roles_move_to
+    user_name = params[:user][:user_name]
+    new_user = User.find_by(displayname: user_name)
+    @usr = User.find(params[:id])
+    UserBusinessRole.where(user_id: @usr.id).each do |user_role|
+      user_role.user_id = new_user.id
+      user_role.note += " (#{@usr.displayname})"
+      user_role.save
+    end
+    render :edit
+  end
 
   def update
     if @usr.update_attributes(user_params)
@@ -170,7 +193,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:role_ids)
+    params.require(:user).permit(:user_name)
   end
 
   def avatar_params

@@ -47,6 +47,17 @@
     - unless @usr.role? role.name.to_sym
       = link_to role.description, user_roles_path(@usr) + "?role=#{role.id}", method: :post if can? :manage, @usr
 
+%h2Перенос Бизнес ролей другому пользователю
+%h4
+  Является исполнителем 
+  = link_to "#{@usr.business_roles.count} бизнес-ролей", uroles_user_path(@usr) + '?layout=yes'
+
+- if @usr.business_roles.any?
+  - if current_user.role? :admin
+    #move_to
+      = link_to 'Указать нового Исполнителя ролей', move_to_user_path(@usr), remote: true
+
+
 %p
 = link_to 'Show', @usr, :class => 'button'
 = link_to 'Back', users_path, :class => 'button'

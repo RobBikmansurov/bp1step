@@ -1,4 +1,3 @@
-# coding: utf-8
 # frozen_string_literal: true
 
 class User < ActiveRecord::Base
@@ -93,6 +92,14 @@ class User < ActiveRecord::Base
     else
       where(nil)
     end
+  end
+
+  def user_name
+    self.try(:displayname)
+  end
+
+  def user_name=(name)
+    self.id = User.find_by(displayname: name).id if name.present?
   end
 
   private
