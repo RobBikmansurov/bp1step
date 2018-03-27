@@ -70,8 +70,16 @@
 = link_to 'Контроль', check_tasks_path, class: 'button'
 
 %p
+- params.delete :status if params[:reset].present?
 - Task.select("status, count(id) as count").group(:status).order(:status).each do |task|
   - if task&.status
-    - tasks_class = (params[:status].present? && task.status == params[:status].to_i) ? 'groups-s' : 'groups'
-    = link_to " #{TASK_STATUS.key(task.status)} (#{task.count}) ", tasks_path(command_search.merge(status: task.status)), class: tasks_class
+    - if (params[:status].present? && task.status == params[:status].to_i)
+      - tasks_class = 'groups-s'
+      - filter_status = " Сбросить #{TASK_STATUS.key(task.status)} "
+      = link_to filter_status, tasks_path(command_search.merge(status: task.status, reset: task.status)), class: tasks_class
+    - else
+      - filter_status = " #{TASK_STATUS.key(task.status)} (#{task.count}) "
+      - tasks_class = 'groups'
+      = link_to filter_status, tasks_path(command_search.merge(status: task.status)), class: tasks_class
+
     &nbsp;

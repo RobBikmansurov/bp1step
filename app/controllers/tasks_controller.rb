@@ -9,7 +9,7 @@ class TasksController < ApplicationController
 
   def index
     @title_tasks = 'Задачи '
-    
+    params.delete :status if params[:reset].present? && params[:reset] == params[:status]
     if params[:user].present?
       user = User.find(params[:user])
       @tasks = Task.joins(:user_task).where('user_tasks.user_id = ?', params[:user].to_s)
@@ -165,7 +165,7 @@ class TasksController < ApplicationController
 
   def user_task_params
     params.require(:user_task)
-           .permit(:user_id, :task_id, :status, :user_name)
+          .permit(:user_id, :task_id, :status, :user_name)
   end
 
   def sort_column
@@ -196,7 +196,7 @@ class TasksController < ApplicationController
         s += '-отв.' if user_task.status&.positive?
       end
       r.add_field 'TASK_USERS', s.to_s
-      r.add_field 'RESULT', @task.result.blank? ? 'Не исполнено!' : @task.result
+      r.add_field 'RESULT', @task.result.presence || 'Не исполнено!'
       s = ' '
       a = ' '
       days = 0
@@ -268,7 +268,7 @@ class TasksController < ApplicationController
           s
         end
         t.add_column(:result) do |task|
-          task.result.blank? ? 'Не исполнено!' : task.result
+          task.result.presence || 'Не исполнено!'
         end
       end
       r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
