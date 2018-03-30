@@ -24,7 +24,7 @@ namespace :bp1step do
       l_date = Date.current.strftime('%d.%m.%Y')
       l_source = 'СВК'
 
-      case name
+      case name.upcase
       when /\A(OD|ОД)-\d{1,}\z/                                 # ODNNNN.PDF
         l_number = 'ОД-' + name[2..name.size]
         l_sender = 'ЦБ РФ'
@@ -73,6 +73,9 @@ namespace :bp1step do
         l_number = "ИН/#{l_number[0..l_number.size - 2]}"
         l_sender = 'Банк России'
         l_subject = "Информационное письмо № #{l_number} от #{l_date}"
+      else
+        #FileUtils.cp(file_path, destination_folder)
+        #File.rename(file, File.join(File.dirname(file), 'ARC', File.basename(file))) if File.exist?(file) # перенесем в архив
       end
 
       next if l_number.blank? # удалось идентифицировать файл

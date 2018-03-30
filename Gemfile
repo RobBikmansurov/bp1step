@@ -34,7 +34,7 @@ gem 'acts-as-taggable-on'
 gem 'chartkick'
 gem 'groupdate'
 gem 'jcrop-rails-v2'
-gem 'pdf-reader'
+# gem 'pdf-reader'
 gem 'pg_search'
 gem 'tiny_tds', '~> 0.7.0' # MS SQL
 
