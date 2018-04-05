@@ -29,7 +29,7 @@ namespace :bp1step do
         l_number = 'ОД-' + name[2..name.size]
         l_sender = 'ЦБ РФ'
         l_subject = 'Об отзыве лицензии / Об уточнении'
-      when /\A(OD|ОД)-\d{1,}\z/                                 # OD-NNNN.PDF
+      when /\A(OD|ОД|ЭД)(-|_)\d{1,}\z/                                 # OD-NNNN.* ЭД_NNNN.*
         l_number = 'ОД-' + name[2..name.size]
         l_sender = 'ЦБ РФ'
         l_subject = 'Об отзыве лицензии / Об уточнении'
