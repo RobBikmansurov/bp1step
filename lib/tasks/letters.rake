@@ -25,14 +25,14 @@ namespace :bp1step do
       l_source = 'СВК'
 
       case name.upcase
-      when /\A(OD|ОД)-\d{1,}\z/                                 # ODNNNN.PDF
+      when /\A(OD|ОД)\d{1,}\z/                                 # ODNNNN.PDF
         l_number = 'ОД-' + name[2..name.size]
         l_sender = 'ЦБ РФ'
         l_subject = 'Об отзыве лицензии / Об уточнении'
-      when /\A\d{3,}\z/                                   # NNNN.PDF или NNNN.TIF
-        l_number = name
-        l_sender = 'Отделение по Пермскому краю ЦБ РФ'
-        l_subject = name
+      when /\A(OD|ОД)-\d{1,}\z/                                 # OD-NNNN.PDF
+        l_number = 'ОД-' + name[2..name.size]
+        l_sender = 'ЦБ РФ'
+        l_subject = 'Об отзыве лицензии / Об уточнении'
       when /\A\d{2,}\z/                                   # NNNN.PDF или NNNN.TIF
         l_number = name
         l_sender = 'Отделение по Пермскому краю ЦБ РФ'
