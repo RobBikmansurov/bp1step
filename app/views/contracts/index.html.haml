@@ -6,6 +6,7 @@
   - if @bproce
     Договоры процесса
     = link_to @bproce.name, bproce_path(@bproce)
+    = @title_doc_add if @title_doc_add
     - command_params = command_params.merge(bproce_id: @bproce.id.to_s)
   - else
     = @title_doc if @title_doc

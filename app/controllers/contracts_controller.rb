@@ -23,10 +23,15 @@ class ContractsController < ApplicationController
     else
       if params[:bproce_id].present?
         @bproce = Bproce.find(params[:bproce_id])
-        @contracts = @bproce.contracts.order(:status, :date_begin) # договоры процесса
-        @title_doc = "Договоры процесса [ #{@bproce.shortname} ]"
-      end
-      if params[:status].present? # список договоров, имеющих конкретный статус
+        if params[:status].present?
+          @contracts = @bproce.contracts.where('status = ?', params[:status]).order('date_begin DESC') # действующие договоры процесса
+          @title_doc_add = " статус [#{params[:status]}]"
+        else
+          @contracts = @bproce.contracts.where('status != ?', 'НеДействует').order('date_begin DESC') # действующие договоры процесса
+          @title_doc_add = ' действующие'
+        end
+        @title_doc = "Договоры процесса [ #{@bproce.shortname} ] #{@title_doc_add}"
+      elsif params[:status].present? # список договоров, имеющих конкретный статус
         @contracts = if @contracts.nil?
                        Contract.where(status: params[:status])
                      else
@@ -67,7 +72,7 @@ class ContractsController < ApplicationController
     respond_to do |format|
       format.html do
         @contracts = @contracts.includes(:agent).order(sort_column + ' ' + sort_direction)
-                                                .paginate(per_page: 10, page: params[:page])
+                               .paginate(per_page: 10, page: params[:page])
       end
       format.odt  { print }
       format.json { render json: @contracts }
@@ -259,7 +264,7 @@ class ContractsController < ApplicationController
         r.add_field :agent, 'Контрагент не выбран!'
       end
       rr = 0
-      #if @contract.bproce.present? 
+      # if @contract.bproce.present?
       # есть ссылки из документа на другие процессы?
       if BproceContract.where(contract_id: @contract.id).any?
         r.add_field :bp, 'Относится к процессам:'
