@@ -40,12 +40,12 @@
     %th Основание
     %th Процесс
   - @business_role.user_business_role.order(:date_from).each do |business_role|
+    - next unless business_role.user.active
     %tr
       - if business_role.user
         %td{ style: ('text-decoration: line-through;' unless business_role.user.active) }
           = link_to business_role.user.displayname, business_role.user
           = link_to business_role.user.office, users_path + '?office=' + business_role.user.office, class: 'groups' if business_role.user.office
-
       - else
         %td
           удалить ссылку
@@ -62,6 +62,10 @@
         - if business_role.business_role.bproce
           = link_to business_role.business_role.bproce.shortname, bproce_business_role_path(business_role.business_role.bproce)
         - else business_role.business_role.inspect
+- if can? :update, @business_role
+  #mail
+    = link_to 'Отправить всем исполнителям сообщение', mail_business_role_path(@business_role), remote: true
+
 .info_
   - activity1 = PublicActivity::Activity.where(trackable_type: 'BusinessRole', trackable_id: @business_role.id).order('created_at asc').first
   - if activity1

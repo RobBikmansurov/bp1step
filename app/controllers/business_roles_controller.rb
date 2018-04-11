@@ -10,8 +10,6 @@ class BusinessRolesController < ApplicationController
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
   def index
     @business_roles = BusinessRole.order(sort_column + ' ' + sort_direction)
     if params[:all].blank?
@@ -90,10 +88,10 @@ class BusinessRolesController < ApplicationController
 
   def update
     @user_business_role = UserBusinessRole.new(business_role_id: @business_role.id)
-    flash[:notice] = 'Successfully updated role.' if @business_role.update_attributes(business_role_params)
     # оповестим исполнителей роли об изменениях
     begin
       BusinessRoleMailer.update_business_role(@business_role, current_user).deliver_now
+      flash[:notice] = 'Successfully updated role.' if @business_role.update(business_role_params)
     rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
       logger.warn "Error - business_role.update: #{e}"
       flash[:alert] = 'Error sending mail to business role workers'
@@ -109,6 +107,19 @@ class BusinessRolesController < ApplicationController
     else
       respond_with(@business_role)
     end
+  end
+
+  def mail; end
+
+  def mail_all
+    begin
+      BusinessRoleMailer.mail_all(@business_role, current_user, params[:mail_text]).deliver_now
+      flash[:notice] = 'Mails have been sent successfully'
+    rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+      logger.warn "Error - business_role.mail_all: #{e}"
+      flash[:alert] = 'Errors when sending mail'
+    end
+    respond_with(@business_role)
   end
 
   private

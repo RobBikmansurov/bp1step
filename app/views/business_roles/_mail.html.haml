@@ -1,0 +1,5 @@
+= form_tag mail_all_business_role_path, method: :post, :html => { :multipart => true }
+%br= label_tag :mail_text, 'Введите текст письма:'
+= text_area_tag :mail_text, nil, rows: 10, cols: 50, placeholder: 'введите, пожалуйста, текст для рассылки всем исполнителям'
+%br= submit_tag 'Разослать'
+

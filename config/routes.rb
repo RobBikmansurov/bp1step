@@ -48,6 +48,8 @@ BPDoc::Application.routes.draw do
     member do
       get :create_user # назначить исполнителя
       post :update_user
+      get :mail # отправить всем исполнителям письмо
+      post :mail_all
     end
   end
   resources :contracts do
