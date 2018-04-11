@@ -179,8 +179,9 @@ BPDoc::Application.routes.draw do
       get :avatar_create
       get :avatar_delete
       patch :update_avatar
-      get :move_to    # назначить другого пользователя
+      get :move_to    # назначить другого пользователя всех бизнес-ролей сотрудника
       post :business_roles_move_to  # перенести бизнес-роли новому пользователю
+      get :stop_all # прератить исполнение всех ролей сотрудником
     end
     resources :roles, only: [:create, :destroy]
   end

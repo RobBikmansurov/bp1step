@@ -3,8 +3,8 @@
 class UsersController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
-  before_action :authenticate_user!, only: %i[edit update order move_to]
-  before_action :find_user, except: %i[index autocomplete move_to]
+  before_action :authenticate_user!, only: %i[edit update order move_to stop_all]
+  before_action :find_user, except: %i[index autocomplete]
 
   def index
     if params[:role].present?
@@ -123,11 +123,17 @@ class UsersController < ApplicationController
   def business_roles_move_to
     user_name = params[:user][:user_name]
     new_user = User.find_by(displayname: user_name)
-    @usr = User.find(params[:id])
     UserBusinessRole.where(user_id: @usr.id).each do |user_role|
       user_role.user_id = new_user.id
       user_role.note += " (#{@usr.displayname})"
       user_role.save
+    end
+    render :edit
+  end
+
+  def stop_all
+    UserBusinessRole.where(user_id: @usr.id).each do |user_role|
+      user_role.destroy
     end
     render :edit
   end
