@@ -73,15 +73,19 @@ namespace :bp1step do
         l_number = "ИН/#{l_number[0..l_number.size - 2]}"
         l_sender = 'Банк России'
         l_subject = "Информационное письмо № #{l_number} от #{l_date}"
+      when /\AИН-\d+/                                  # Информационное письмо
+        l_number = name[/\AИН-(\d+-\d+-\d+)/][1]
+        l_sender = 'Банк России'
+        l_subject = "Информационное письмо № #{l_number} от #{l_date}"
       # исключим справочник банков
       when /B\d\d\d\d_\d\d/
       # исключим файлы протоколов
-      when /\A(DEPOSIT_LETTERS|GUCB_LETTERS|UBIZI_LETTERS|RECEIPT_LETTERS|GUOST_LETTERS|GUOFORM_LETTERS|ANY_LETTERS)\z/
+      when /\A(DEPOSIT_LETTERS|GUCB_LETTERS|UBIZI_LETTERS|RECEIPT_LETTERS|GUOST_LETTERS|GUOFORM_LETTERS|ANY_LETTERS|MONIT.CHK)\z/
       else
         logger.info file
         if File.exist?(file) # скопируем в РЕМАРТ перенесем в архив
           # копируем в папку REMART для ручного разбора
-          FileUtils.cp file, Rails.root.join('..', '..', 'remart').to_s
+          FileUtils.cp file, Rails.root.join('..', '..', 'remart', fname).to_s
           # переносим в архив
           File.rename(file, File.join(File.dirname(file), 'ARC', File.basename(file)))
           next
@@ -234,7 +238,7 @@ namespace :bp1step do
       end
 
       puts "move #{fname} -> #{File.join('ARC', File.basename(file))}" if File.exist?(file) # перенесем в архив
-      File.rename(file, File.join(File.dirname(file), 'ARC', File.basename(file))) if File.exist?(file) # перенесем в архив
+      # File.rename(file, File.join(File.dirname(file), 'ARC', File.basename(file))) if File.exist?(file) # перенесем в архив
 
     end
     puts "All: #{nf} files, created #{nn} letters"
