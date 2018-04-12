@@ -11,6 +11,7 @@ namespace :bp1step do
 
     nn = 0
     nf = 0
+    files_copied = 0
     pathfrom =  Rails.root.join('..', '..', 'svk_in') # current/ = releases/YYYYMMDDHHMMSS/
     logger.info pathfrom.to_s
 
@@ -80,14 +81,15 @@ namespace :bp1step do
       # исключим справочник банков
       when /B\d\d\d\d_\d\d/
       # исключим файлы протоколов
-      when /\A(DEPOSIT_LETTERS|GUCB_LETTERS|UBIZI_LETTERS|RECEIPT_LETTERS|GUOST_LETTERS|GUOFORM_LETTERS|ANY_LETTERS|MONIT.CHK)\z/
+      when /\A(DEPOSIT_LETTERS|GUCB_LETTERS|UBIZI_LETTERS|RECEIPT_LETTERS|GUOST_LETTERS|GUOFORM_LETTERS|ANY_LETTERS)\z/
+      when /\AMONIT*/
       else
-        logger.info file
         if File.exist?(file) # скопируем в РЕМАРТ перенесем в архив
           # копируем в папку REMART для ручного разбора
           FileUtils.cp file, Rails.root.join('..', '..', 'remart', fname).to_s
           # переносим в архив
           File.rename(file, File.join(File.dirname(file), 'ARC', File.basename(file)))
+          files_copied += 1
           next
         end
       end
@@ -108,7 +110,7 @@ namespace :bp1step do
 
       File.rename(file, File.join(File.dirname(file), 'ARC', File.basename(file))) if File.exist?(file) # перенесем в архив
     end
-    logger.info "All: #{nf} files, created #{nn} letters"
+    logger.info "All: #{nf} files, created #{nn} letters, copied #{files_copied} files"
   end
 
   desc 'Сontrol of expiring duedate or soon deadline letters'
@@ -149,8 +151,8 @@ namespace :bp1step do
   task check_files: :environment do
     nn = 0
     nf = 0
-    #pathfrom =  Rails.root.join('..', '..', 'svk_in') # current/ = releases/YYYYMMDDHHMMSS/
-    pathfrom =  Rails.root.join('svk_in') # current/ = releases/YYYYMMDDHHMMSS/
+    pathfrom =  Rails.root.join('..', '..', 'svk_in') # current/ = releases/YYYYMMDDHHMMSS/
+    # pathfrom =  Rails.root.join('svk_in') # current/ = releases/YYYYMMDDHHMMSS/
     puts pathfrom.to_s
 
     # обход всех файлов в каталоге с файлами для писем
@@ -216,6 +218,7 @@ namespace :bp1step do
       when /B\d\d\d\d_\d\d/
       # исключим файлы протоколов
       when /\A(DEPOSIT_LETTERS|GUCB_LETTERS|UBIZI_LETTERS|RECEIPT_LETTERS|GUOST_LETTERS|GUOFORM_LETTERS|ANY_LETTERS)\z/
+      when /\AMONIT*/
       else
         if File.exist?(file) # скопируем в РЕМАРТ перенесем в архив
           puts "copy #{fname} -> #{File.join('remart', fname)}"
