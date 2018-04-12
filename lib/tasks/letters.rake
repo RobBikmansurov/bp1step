@@ -78,9 +78,10 @@ namespace :bp1step do
       # исключим файлы протоколов
       when /\A(DEPOSIT_LETTERS|GUCB_LETTERS|UBIZI_LETTERS|RECEIPT_LETTERS|GUOST_LETTERS|GUOFORM_LETTERS|ANY_LETTERS)\z/
       else
+        logger.info file
         if File.exist?(file) # скопируем в РЕМАРТ перенесем в архив
           # копируем в папку REMART для ручного разбора
-          FileUtils.cp file, Rails.root.join('remart').to_s
+          FileUtils.cp file, Rails.root.join('..', '..', 'remart').to_s
           # переносим в архив
           File.rename(file, File.join(File.dirname(file), 'ARC', File.basename(file)))
           next
