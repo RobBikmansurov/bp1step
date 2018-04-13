@@ -129,16 +129,20 @@ namespace :bp1step do
         if groups&.grep(/rl_bp1step_users/).blank? # если не член группы rl_bp1step
           user.update_column(:active, false) # делаем неактивным
           disabled_users += 1
-          # если нет связи с ролями, рабочими местами, процессами
-          if user.workplaces.count.zero? && user.business_roles.count.zero? && user.bproce_ids.count.zero?
-            user.destroy # удалим
-            logger.info "#{i}!#{disabled_users}. ##{user.id} #{user.username}\t #{user.displayname} \t- DESTROYED!"
-          else
+          # если нет связи с ролями, рабочими местами, процессами, задачами
+          if user.workplaces.any? || user.business_roles.any? || user.bproce.any? || UserTask.where(user_id: user.id).any?
             logger.info "#{i}!#{disabled_users}. ##{user.id} #{user.username}\t #{user.displayname}\t - need DELETE:"
+            s = user.bproce.pluck(:name).join(',')
+            logger.info "\t bprocesses: #{s}" if s.present?
             s = user.workplaces.pluck(:name).join(',')
             logger.info "\t workplaces: #{s}" if s.present?
             s = user.business_roles.pluck(:name).join(', ')
             logger.info "\t business roles: #{s}" if s.present?
+            s = UserTask.where(user_id: user.id).pluck(:id).join(', ')
+            logger.info "\t tasks: #{s}" if s.present?
+          else
+            user.destroy # удалим
+            logger.info "#{i}!#{disabled_users}. ##{user.id} #{user.username}\t #{user.displayname} \t- DESTROYED!"
           end
         else
           user.update_column(:active, true) # делаем активным - член группы rl_bp1step_users
