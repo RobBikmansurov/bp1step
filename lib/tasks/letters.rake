@@ -1,4 +1,3 @@
-# encoding: utf-8
 # frozen_string_literal: true
 
 namespace :bp1step do
@@ -26,15 +25,15 @@ namespace :bp1step do
       l_source = 'СВК'
 
       case name.upcase
-      when /\A(OD|ОД)\d{1,}\z/                                 # ODNNNN.PDF
+      when /\A(OD|ОД)\d{1,}\z/ # ODNNNN.PDF
         l_number = 'ОД-' + name[2..name.size]
         l_sender = 'ЦБ РФ'
         l_subject = 'Об отзыве лицензии / Об уточнении'
-      when /\A(OD|ОД)(-)\d{1,}\z/                                 # OD-NNNN.*
+      when /\A(OD|ОД)(-)\d{1,}\z/ # OD-NNNN.*
         l_number = 'ОД-' + name[2..name.size]
         l_sender = 'ЦБ РФ'
         l_subject = 'Об отзыве лицензии / Об уточнении'
-      when /\A\d{2,}\z/                                   # NNNN.PDF или NNNN.TIF
+      when /\A\d{2,}\z/ # NNNN.PDF или NNNN.TIF
         l_number = name
         l_sender = 'Отделение по Пермскому краю ЦБ РФ'
         l_subject = ' ' + name
@@ -59,7 +58,7 @@ namespace :bp1step do
         l_number = "#{l_number[0..l_number.size - 1]}-У"
         l_sender = 'Банк России'
         l_subject = "Указание Банка России № #{l_number} от #{l_date}"
-      when /\A\d+(-|_)(П|P)/                                      # Положение БР
+      when /\A\d+(-|_)(П|P)/ # Положение БР
         l_number = name[/\A\d+_?f?/]
         l_number = "#{l_number[0..l_number.size - 1]}-П"
         l_sender = 'Банк России'
@@ -74,7 +73,7 @@ namespace :bp1step do
         l_number = "ИН/#{l_number[0..l_number.size - 2]}"
         l_sender = 'Банк России'
         l_subject = "Информационное письмо № #{l_number} от #{l_date}"
-      when /\AИН-\d+/                                  # Информационное письмо
+      when /\AИН-\d+/ # Информационное письмо
         l_number = name[/\AИН-(\d+-\d+-\d+)/][1]
         l_sender = 'Банк России'
         l_subject = "Информационное письмо № #{l_number} от #{l_date}"
@@ -151,7 +150,7 @@ namespace :bp1step do
   task check_files: :environment do
     nn = 0
     nf = 0
-    pathfrom =  Rails.root.join('..', '..', 'svk_in') # current/ = releases/YYYYMMDDHHMMSS/
+    pathfrom = Rails.root.join('..', '..', 'svk_in') # current/ = releases/YYYYMMDDHHMMSS/
     # pathfrom =  Rails.root.join('svk_in') # current/ = releases/YYYYMMDDHHMMSS/
     puts pathfrom.to_s
 
@@ -166,15 +165,15 @@ namespace :bp1step do
       l_source = 'СВК'
 
       case name.upcase
-      when /\A(OD|ОД)\d{1,}\z/                                 # ODNNNN.PDF
+      when /\A(OD|ОД)\d{1,}\z/ # ODNNNN.PDF
         l_number = 'ОД-' + name[2..name.size]
         l_sender = 'ЦБ РФ'
         l_subject = 'Об отзыве лицензии / Об уточнении'
-      when /\A(OD|ОД)(-)\d{1,}\z/                                 # OD-NNNN.*
+      when /\A(OD|ОД)(-)\d{1,}\z/ # OD-NNNN.*
         l_number = 'ОД-' + name[2..name.size]
         l_sender = 'ЦБ РФ'
         l_subject = 'Об отзыве лицензии / Об уточнении'
-      when /\A\d{2,}\z/                                   # NNNN.PDF или NNNN.TIF
+      when /\A\d{2,}\z/ # NNNN.PDF или NNNN.TIF
         l_number = name
         l_sender = 'Отделение по Пермскому краю ЦБ РФ'
         l_subject = ' ' + name
@@ -199,7 +198,7 @@ namespace :bp1step do
         l_number = "#{l_number[0..l_number.size - 1]}-У"
         l_sender = 'Банк России'
         l_subject = "Указание Банка России № #{l_number} от #{l_date}"
-      when /\A\d+(-|_)(П|P)/                                      # Положение БР
+      when /\A\d+(-|_)(П|P)/ # Положение БР
         l_number = name[/\A\d+_?f?/]
         l_number = "#{l_number[0..l_number.size - 1]}-П"
         l_sender = 'Банк России'
@@ -242,10 +241,7 @@ namespace :bp1step do
 
       puts "move #{fname} -> #{File.join('ARC', File.basename(file))}" if File.exist?(file) # перенесем в архив
       # File.rename(file, File.join(File.dirname(file), 'ARC', File.basename(file))) if File.exist?(file) # перенесем в архив
-
     end
     puts "All: #{nf} files, created #{nn} letters"
   end
-
-
 end
