@@ -66,7 +66,7 @@ group :development do
 end
 
 group :production, :staging do
-  gem 'pg', '~> 0.21'
+  gem 'pg'
   gem 'puma'
   gem 'rails_12factor', require: false
 end
