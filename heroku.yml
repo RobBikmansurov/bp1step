@@ -4,7 +4,7 @@ build:
   packages:
     - unoconv
   config:
-    RAILS_ENV: staging
+    RAILS_ENV: production
 release:
   command:
     - cp config/database.yml.example config/database.yml
