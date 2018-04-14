@@ -432,7 +432,7 @@ DEPENDENCIES
   jquery-ui-rails (= 5.0.5)
   odf-report
   paperclip (~> 5.2.1)
-  pg (~> 0.21)
+  pg
   pg_search
   public_activity
   puma
@@ -456,6 +456,9 @@ DEPENDENCIES
   webrat
   whenever
   will_paginate (~> 3.0)
+
+RUBY VERSION
+   ruby 2.4.3p205
 
 BUNDLED WITH
    1.16.1
