@@ -7,8 +7,8 @@ build:
     RAILS_ENV: staging
 release:
   command:
-    - cp config/database.yml{.example,}
-    - cp config/ldap.yml{.example,}
+    - cp config/database.yml.example config/database.yml
+    - cp config/ldap.yml.example config/ldap.yml
     - gem install bundler --no-ri --no-rdoc    # Bundler is not installed with the image
     - bundle install --jobs=3 --without test development --path vendor  # Install dependencies into ./vendor/ruby
     # change ldap-auth to database-auth 
