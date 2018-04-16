@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 source 'https://rubygems.org'
-ruby '2.4.3' # for heroku
 
 gem 'rails', '5.1.4'
-
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
@@ -35,6 +33,7 @@ gem 'chartkick'
 gem 'groupdate'
 gem 'jcrop-rails-v2'
 # gem 'pdf-reader'
+gem 'pg', '~> 0.21'
 gem 'pg_search'
 gem 'tiny_tds', '~> 0.7.0' # MS SQL
 
@@ -66,7 +65,6 @@ group :development do
 end
 
 group :production, :staging do
-  gem 'pg'
   gem 'puma'
   gem 'rails_12factor', require: false
 end
