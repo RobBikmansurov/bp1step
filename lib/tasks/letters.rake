@@ -87,7 +87,7 @@ namespace :bp1step do
       else
         if File.exist?(file) # скопируем в РЕМАРТ перенесем в архив
           # копируем в папку REMART для ручного разбора
-          FileUtils.cp file, Rails.root.join('..', '..', 'remart', fname).to_s
+          FileUtils.cp file, Rails.root.join('..', '..', 'remart', File.basename(file)).to_s
           # переносим в архив
           File.rename(file, File.join(File.dirname(file), 'ARC', File.basename(file)))
           files_copied += 1
