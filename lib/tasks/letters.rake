@@ -24,7 +24,7 @@ namespace :bp1step do
       l_date = Date.current.strftime('%d.%m.%Y')
       l_source = 'СВК'
 
-      next if ext == 'ARJ' # пока не умеем обрабатывать архивы
+      next if ext == '.ARJ' # пока не умеем обрабатывать архивы
 
       case name.upcase
       when /\A(OD|ОД)\d{1,}\z/ # ODNNNN.PDF
@@ -165,6 +165,8 @@ namespace :bp1step do
       l_number, l_subject, l_sender = ''
       l_date = Date.current.strftime('%d.%m.%Y')
       l_source = 'СВК'
+
+      next if ext == '.ARJ'
 
       case name.upcase
       when /\A(OD|ОД)\d{1,}\z/ # ODNNNN.PDF
