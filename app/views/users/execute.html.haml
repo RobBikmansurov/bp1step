@@ -1,5 +1,5 @@
 #Executes
--if @letters.count > 0
+-if @letters.any?
   %h2
     Незавершенные
     = link_to "Письма (#{@letters.count})", letters_path(user: @usr)
@@ -40,9 +40,15 @@
                 %br
                   %span{:style => "color: red;"}
                     = letter.completion_date.strftime("%d.%m.%y")
-        %td= LETTER_STATUS.key(letter.status)
+        %td
+          -# если текущий пользователь еще не отметился в result
+          -if /(\d\d\:){3} #{current_user.displayname}/.match(letter.result).blank?
+            = link_to LETTER_STATUS.key(letter.status), edit_letter_path(letter), style: 'color: red;'
+          -else
+            = LETTER_STATUS.key(letter.status)
 
--if @tasks.count > 0
+
+-if @tasks.any?
   %h2
     Незавершенные
     = link_to "Задачи (#{@tasks.count})", tasks_path(user: @usr)
