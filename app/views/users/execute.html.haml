@@ -78,7 +78,11 @@
                     = task.completion_date.strftime("%d.%m.%y")
         %td
           = '!' if current_user && task.author_id == current_user.id
-          = TASK_STATUS.key(task.status)
+          -# если текущий пользователь еще не отметился в result
+          -if /(\d\d\:){3} #{current_user.displayname}/.match(task.result).blank?
+            = link_to TASK_STATUS.key(task.status), edit_task_path(task), style: 'color: red;'
+          -else
+            = TASK_STATUS.key(task.status)
 
 -if @requirements_ids.size > 0
   %h2
