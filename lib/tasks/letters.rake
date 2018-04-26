@@ -81,9 +81,12 @@ namespace :bp1step do
         l_subject = "Информационное письмо № #{l_number} от #{l_date}"
       # исключим справочник банков
       when /B\d\d\d\d_\d\d/
+        next
       # исключим файлы протоколов
       when /\A(DEPOSIT_LETTERS|GUCB_LETTERS|UBIZI_LETTERS|RECEIPT_LETTERS|GUOST_LETTERS|GUOFORM_LETTERS|ANY_LETTERS)\z/
+        next
       when /\AMONIT*/
+        next
       else
         if File.exist?(file) # скопируем в РЕМАРТ перенесем в архив
           # копируем в папку REMART для ручного разбора
@@ -91,6 +94,7 @@ namespace :bp1step do
           # переносим в архив
           File.rename(file, File.join(File.dirname(file), 'ARC', File.basename(file)))
           files_copied += 1
+          logger.info "copy #{fname} -> remart"
           next
         end
       end
@@ -219,9 +223,12 @@ namespace :bp1step do
         l_subject = "Информационное письмо № #{l_number} от #{l_date}"
       # исключим справочник банков
       when /B\d\d\d\d_\d\d/
+        next
       # исключим файлы протоколов
       when /\A(DEPOSIT_LETTERS|GUCB_LETTERS|UBIZI_LETTERS|RECEIPT_LETTERS|GUOST_LETTERS|GUOFORM_LETTERS|ANY_LETTERS)\z/
+        next
       when /\AMONIT*/
+        next
       else
         if File.exist?(file) # скопируем в РЕМАРТ перенесем в архив
           puts "copy #{fname} -> #{File.join('remart', fname)}"
