@@ -134,6 +134,8 @@ GEM
     factory_bot_rails (4.8.2)
       factory_bot (~> 4.8.2)
       railties (>= 3.0.0)
+    faker (1.8.7)
+      i18n (>= 0.7)
     ffi (1.9.23)
     formatador (0.2.5)
     globalid (0.4.1)
@@ -422,6 +424,7 @@ DEPENDENCIES
   devise_ldap_authenticatable
   exception_notification
   factory_bot_rails
+  faker
   groupdate
   guard-rspec
   guard-rubocop

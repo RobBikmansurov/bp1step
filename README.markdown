@@ -97,7 +97,16 @@ autocomlete. Для решения этой проблемы можно испр
 
       where('username LIKE ? or displayname LIKE ?', "%#{search}%", "%#{search}%")
 
+##PostgreSQL install##
+sudo su postgres
+psql
+postgres=# create role bp1step with createdb login password 'pgbp1step';
+postgres=# create extension citext;
+postgres=# create database bp1step owner bp1step;
+postgres=# \l
 
+
+>gem install bundler
 >bundle install
 
 Для работы с пользователями, хранящими пароли в БД необходимо выполнить скрипт
