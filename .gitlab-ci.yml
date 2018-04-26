@@ -1,4 +1,8 @@
-image: "ruby:2.3.1"
+image: "ruby:2.4"
+
+cache:
+  paths:
+    - vendor/ruby
 
 services:
   - postgres # :latest
@@ -52,11 +56,11 @@ rubocop:
 rails:
   stage: test
   script:
-  - apt-get update -q && apt-get install nodejs -yqq
+  - apt-get update -qq && apt-get install -yqq nodejs libpq-dev
   - cp config/database.yml{.example,}
   - cp config/ldap.yml{.example,}
   - gem install bundler --no-ri --no-rdoc    # Bundler is not installed with the image
-  - bundle install --jobs=3 --without test development -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
+  - bundle install -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
 
   # change ldap-auth to database-auth 
   - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
