@@ -2,10 +2,11 @@ language: ruby
 rvm:
   - 2.4.2
 cache: bundler
+bundler_args: --without production
 before_script:
   - cp config/database.yml{.example,}
   - cp config/ldap.yml{.example,}
-  - bundle exec rake db:create db:migrate
+  - bundle exec rake db:create db:migrate db:seed --trace
 script:
   # change ldap-auth to database-auth 
   - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
@@ -16,3 +17,8 @@ script:
 
   # - bundle exec rake db:seed
   - gem install rubocop
+
+branches:
+ only:
+  - master
+
