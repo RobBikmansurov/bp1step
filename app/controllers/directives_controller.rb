@@ -23,7 +23,7 @@ class DirectivesController < ApplicationController
   end
 
   def show
-    @bproces_of_directive = Bproce.last.bproces_of_directive(@directive.id) # процессы, документы которых ссылаются на директиву
+    @bproces_of_directive = Bproce.last&.bproces_of_directive(@directive.id) # процессы, документы которых ссылаются на директиву
     respond_with(@directive)
   end
 

@@ -26,7 +26,7 @@
   = markdown(@directive.action)
 
 %p
-- if @directive.document_directive.count > 0
+- if @directive.document_directive.any?
   %h4
     На основании этой директивы разработаны следующие
     = link_to "внутренние документы банка:", directive_documents_path(@directive)
@@ -45,7 +45,7 @@
   #document
     = link_to 'Добавить документ', document_create_directive_path(@directive), remote: true #, class: 'button'
 
--if @bproces_of_directive.count > 0
+-if @bproces_of_directive&.any?
   %h4
     Документы этой директивы связаны со следующими процессами:
   - @bproces_of_directive.each do |bp|
