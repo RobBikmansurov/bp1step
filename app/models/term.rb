@@ -6,9 +6,9 @@ class Term < ActiveRecord::Base
   # tracked owner: Proc.new { |controller, model| controller.current_user }
 
   validates :shortname, uniqueness: true,
-                        length: { maximum: 20 }
+                        length: { maximum: 50 }
   validates :name, presence: true,
-                   length: { minimum: 3, maximum: 200 }
+                   length: { minimum: 2, maximum: 200 }
   validates :description, presence: true
 
   # attr_accessible :name, :shortname, :description, :note, :source
