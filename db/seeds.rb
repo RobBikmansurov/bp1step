@@ -80,10 +80,23 @@ puts 'users created'
 %w[Office Notepad Excel Word Powerpoint].each do |name|
   Bapp.create(name: name,
               description: 'Microsoft ' + name + ' 2003',
-              apptype: 'офис',
+              apptype: 'MS',
               purpose: 'редактирование ' + name)
 end
-ap1 = Bapp.create(name: '1С:Бухгалтерия', description: '1С:Бухгалтерия. Учет основных средств', apptype: 'бух')
+%w[Calc Writer Impress Base].each do |name|
+  Bapp.create(name: name,
+              description: 'LibreOffice ' + name + ' 6.0',
+              apptype: 'LO',
+              purpose: 'работа в ' + name)
+end
+%w[Gimp Notepad SublimeText].each do |name|
+  Bapp.create(name: name,
+              apptype: 'офис',
+              purpose: name)
+end
+Bapp.create(name: '1С:Бухгалтерия', description: '1С:Бухгалтерия. Учет основных средств', apptype: 'бух')
+Bapp.create(name: '1С:Бухгалтерия.Склад', description: '1С:Бухгалтерия. Учет склада', apptype: 'бух')
+Bapp.create(name: '1С:Бухгалтерия.Кадры', description: '1С:Бухгалтерия. Учет кадров', apptype: 'бух')
 puts 'applications created'
 
 # workplaces
@@ -212,7 +225,7 @@ d.save
 puts 'documents created'
 
 # agents
-50.times.map do |_i|
+75.times.map do |_i|
   company_name = Faker::Company.name
   Agent.create!(name: "#{Faker::Company.suffix} #{company_name}",
                 shortname: company_name[0, 30],
@@ -223,23 +236,40 @@ puts 'documents created'
 end
 puts 'agents created'
 
-co = Contract.new(number: '2-2014', name: 'предоставления услуг', status: 'Действует',
-                  date_begin: Date.current - 6.months, text: 'text', contract_type: 'Договор', description: 'о предоставлении услуг связи')
-co.agent_id = Agent.limit(1).order('RANDOM()').first.id
-co.owner_id = User.limit(1).order('RANDOM()').first.id
-co.payer_id = User.limit(1).order('RANDOM()').first.id
-co.save
-co = Contract.new(number: '1', name: 'оказания услуг', status: 'Действует',
-                  date_begin: Date.current - 1.year, text: 'text', contract_type: 'Договор', description: 'о технической поддержке')
-co.agent_id = Agent.limit(1).order('RANDOM()').first.id
-co.owner_id = User.limit(1).order('RANDOM()').first.id
-co.payer_id = User.limit(1).order('RANDOM()').first.id
-co.save
-co = Contract.new(number: '3', name: 'оказания услуг', status: 'Согласование',
-                  date_begin: Date.current, text: 'text', contract_type: 'Договор', description: 'поставки')
-co.agent_id = Agent.limit(1).order('RANDOM()').first.id
-co.owner_id = User.limit(1).order('RANDOM()').first.id
-co.save
+# contracts
+150.times.map do |_i|
+  status = 'Действует'
+  status = 'НеДействует' if rand(20) == 1
+  status = 'Согласование' if rand(20) == 1
+  date = Faker::Date.backward(rand(400)) # date_begin
+  date_end = Faker::Date.forward(rand(400)) if status == 'НеДействует'
+  date_end = Faker::Date.forward(rand(400)) if status == 'Действует' && rand(2) == 1
+  payer_id = nil
+  payer_id = User.limit(1).order('RANDOM()').first.id unless rand(5) == 1
+  place = "ST#{rand(10)}"
+  note = Faker::Lorem.sentence if rand(5) == 1
+  condition = Faker::Lorem.sentence if rand(10) == 1
+  check = Faker::Lorem.sentence if rand(10) == 1
+  Contract.create(
+    contract_type: %w[Договор Соглашение Контракт][rand(3)],
+    number: rand(99..9999),
+    name: Faker::Lorem.sentence,
+    status: status,
+    date_begin: date,
+    date_end: date_end,
+    text: Faker::Lorem.sentence,
+    description: Faker::Lorem.paragraph,
+    note: note,
+    condition: condition,
+    check: check,
+    owner_id: User.limit(1).order('RANDOM()').first.id,
+    agent_id: Agent.limit(1).order('RANDOM()').first.id,
+    contract_place: place,
+    payer_id: payer_id
+  )
+  BproceContract.create(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, contract_id: Contract.last.id)
+  BproceContract.create(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, contract_id: Contract.last.id, purpose: Faker::Lorem.sentence(1)) if rand(20) == 1
+end
 puts 'contracts created'
 
 m = Metric.create(name: 'ИнцидентовВсего', description: 'количество инцидентов, зарегистрированных в системе', depth: '3', bproce_id: bp211.id)

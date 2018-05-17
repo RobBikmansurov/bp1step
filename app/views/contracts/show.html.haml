@@ -86,8 +86,8 @@
     %br
     (#{contract_scan.scan_updated_at.strftime('%d.%m.%Y %H:%M:%S')}
     #{contract_scan.scan_file_size})
-.floating-box
-  - if can? :update, @contract
+- if can? :update, @contract
+  .floating-box
     #update_scan
       = link_to 'Добавить файл (скан)', scan_create_contract_path(@contract), remote: true
 %hr
