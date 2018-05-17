@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 PublicActivity.enabled = false
+
+# ru bocop:disable Metrics/LineLength
+
 # access roles
 # Role.destroy_all
 [
@@ -76,44 +79,23 @@ user7.roles << Role.find_by(name: :author)
 end
 puts 'users created'
 
-# applications
-%w[Office Notepad Excel Word Powerpoint].each do |name|
-  Bapp.create(name: name,
-              description: 'Microsoft ' + name + ' 2003',
-              apptype: 'MS',
-              purpose: 'редактирование ' + name)
-end
-%w[Calc Writer Impress Base].each do |name|
-  Bapp.create(name: name,
-              description: 'LibreOffice ' + name + ' 6.0',
-              apptype: 'LO',
-              purpose: 'работа в ' + name)
-end
-%w[Gimp Notepad SublimeText].each do |name|
-  Bapp.create(name: name,
-              apptype: 'офис',
-              purpose: name)
-end
-Bapp.create(name: '1С:Бухгалтерия', description: '1С:Бухгалтерия. Учет основных средств', apptype: 'бух')
-Bapp.create(name: '1С:Бухгалтерия.Склад', description: '1С:Бухгалтерия. Учет склада', apptype: 'бух')
-Bapp.create(name: '1С:Бухгалтерия.Кадры', description: '1С:Бухгалтерия. Учет кадров', apptype: 'бух')
-puts 'applications created'
-
 # workplaces
-wp1 = Workplace.create(name: 'РМ УИТ Начальник', description: 'начальник УИТ', designation: 'РМУИТНачальник', location: '100')
-wp2 = Workplace.create(name: 'Главный бухгалтер', description: 'Главный бухгалтер', designation: 'РМГлБухгалтер', location: '200')
+Workplace.create(name: 'РМ УИТ Начальник', description: 'начальник УИТ', designation: 'РМУИТНачальник', location: '100')
+Workplace.create(name: 'Главный бухгалтер', description: 'Главный бухгалтер', designation: 'РМГлБухгалтер', location: '200')
 %w[Кассир Бухгалтер Контролер Юрист Экономист].each do |name|
   3.times do |n|
     n += 1
-    wp = Workplace.create(name: 'РМ ' + name + n.to_s,
-                          description: 'рабочее место' + name + n.to_s,
-                          designation: name + n.to_s,
-                          location: n.to_s + '01')
+    Workplace.create(
+      name: 'РМ ' + name + n.to_s,
+      description: 'рабочее место' + name + n.to_s,
+      designation: name + n.to_s,
+      location: n.to_s + '01'
+    )
   end
 end
 60.times do |_n|
   wp = Workplace.limit(1).order('RANDOM()').first
-  uwp = wp.user_workplace.create(
+  wp.user_workplace.create(
     user_id: User.limit(1).order('RANDOM()').first.id,
     date_from: Faker::Date.backward(120),
     date_to:   Faker::Date.forward(120),
@@ -186,9 +168,9 @@ bp1 = Bproce.create(name: 'Предоставление сервисов', short
                     fullname: 'Предоставление сервисов', user_id: 1)
 bp1.user_id = user1.id
 bp1.save
-bp11 = Bproce.create(name: 'Управление уровнем сервисов', shortname: 'SLM', fullname: 'Управление уровнем сервисов', parent_id: bp1.id)
-bp12 = Bproce.create(name: 'Управление мощностями', shortname: 'CAP', fullname: 'Управление мощностями', parent_id: bp1.id)
-bp13 = Bproce.create(name: 'Управление непрерывностью', shortname: 'SCM', fullname: 'Управление непрерывностью', parent_id: bp1.id)
+Bproce.create(name: 'Управление уровнем сервисов', shortname: 'SLM', fullname: 'Управление уровнем сервисов', parent_id: bp1.id)
+Bproce.create(name: 'Управление мощностями', shortname: 'CAP', fullname: 'Управление мощностями', parent_id: bp1.id)
+Bproce.create(name: 'Управление непрерывностью', shortname: 'SCM', fullname: 'Управление непрерывностью', parent_id: bp1.id)
 bp14 = Bproce.create(name: 'Управление финансами', shortname: 'FIN', fullname: 'Управление финансами', parent_id: bp1.id)
 bp14.user_id = user1.id
 bp14.save
@@ -197,35 +179,42 @@ br1 = bp14.business_roles.create(name: 'Бухгалтер', description: 'Оп�
 ubr1 = br1.user_business_role.create(date_from: '2015-01-11', date_to: '2015-12-31', note: 'исп.обязанности')
 ubr1.user_id = user1.id
 ubr1.save
-bp15 = Bproce.create(name: 'Управление доступностью', shortname: 'AVA', fullname: 'Управление доступностью', parent_id: bp1.id)
+Bproce.create(name: 'Управление доступностью', shortname: 'AVA', fullname: 'Управление доступностью', parent_id: bp1.id)
 
 bp2 = Bproce.create(name: 'Поддержка сервисов', shortname: 'B.4.2', fullname: 'Поддержка сервисов')
 bp21 = Bproce.create(name: 'Управление инцидентами', shortname: 'INC', fullname: 'Управление инцидентами', parent_id: bp2.id)
 bp211 = Bproce.create(name: 'Служба поддержки пользователей Service Desk', shortname: 'SD', fullname: 'Служба поддержки пользователей Service Desk', parent_id: bp21.id)
-bp22 = Bproce.create(name: 'Управление проблемами', shortname: 'PRB', fullname: 'Управление проблемами', parent_id: bp2.id)
-bp23 = Bproce.create(name: 'Управление конфигурациями', shortname: 'CFG', fullname: 'Управление конфигурациями', parent_id: bp2.id)
-bp23 = Bproce.create(name: 'Управление релизами', shortname: 'REL', fullname: 'Управление релизами', parent_id: bp2.id)
-bp23 = Bproce.create(name: 'Управление изменениями', shortname: 'CNG', fullname: 'Управление изменениями', parent_id: bp2.id, user_id: user6)
+Bproce.create(name: 'Управление проблемами', shortname: 'PRB', fullname: 'Управление проблемами', parent_id: bp2.id)
+Bproce.create(name: 'Управление конфигурациями', shortname: 'CFG', fullname: 'Управление конфигурациями', parent_id: bp2.id)
+Bproce.create(name: 'Управление релизами', shortname: 'REL', fullname: 'Управление релизами', parent_id: bp2.id)
+Bproce.create(name: 'Управление изменениями', shortname: 'CNG', fullname: 'Управление изменениями', parent_id: bp2.id, user_id: user6)
 
 puts 'processes created'
 
-ir1 = Iresource.create(level: 'DB', label: '1С.УчетОС', note: '1С.Учет основных средств', location: '//srv/data/1C/OC', volume: 1)
-ir1.user_id = user1.id
-ir1.save
+# iresource
+Array.new(50) do |_i|
+  url = Faker::Internet.url.sub 'http:', ['//srv', '//s', 'aws:', 'https:', 'ftp:'][rand(5)]
+  label = Faker::Lorem.sentence(1)[0, 19] + rand(9).to_s
+  Iresource.create!(
+    level: %w[FS DB SPR API local][rand(5)],
+    label: label,
+    location: url,
+    alocation: Faker::Internet.url,
+    volume: rand(0..3),
+    note: Faker::Lorem.sentence,
+    access_read: %w[group1 gr_auto gr_devel gr_test gr_prod][rand(5)],
+    access_write: ['group1', 'gr_auto', 'gr_devel', 'gr_test', ''][rand(5)],
+    access_other: ['group1', 'gr_auto', 'gr_devel', 'gr_test', ''][rand(5)],
+    risk_category: %w[В КВ Н НВ ОВ][rand(5)],
+    user_id: User.limit(1).order('RANDOM()').first.id
+  )
+  BproceIresource.create(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, iresource_id: Iresource.last.id)
+  BproceIresource.create(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, iresource_id: Iresource.last.id, rpurpose: Faker::Lorem.sentence(1)) if rand(20) == 1
+end
 puts 'iresources created'
 
-d = Document.create(name: 'Положение об оплате счетов', status: 'Утвержден', dlevel: 2, place: 'Бух.Папка1', approved: '2015-01-01', approveorgan: 'Правление')
-d.owner_id = user2.id
-d.save
-d.bproce_document.create(bproce_id: bp14.id, purpose: '???')
-d = Document.create(name: 'Устав', status: 'Утвержден', dlevel: 2, place: 'Сейф1', approved: '2015-01-01', approveorgan: 'Собрание акционеров')
-d.owner_id = user4.id
-d.save
-
-puts 'documents created'
-
 # agents
-75.times.map do |_i|
+Array.new(75) do |_i|
   company_name = Faker::Company.name
   Agent.create!(name: "#{Faker::Company.suffix} #{company_name}",
                 shortname: company_name[0, 30],
@@ -237,7 +226,7 @@ end
 puts 'agents created'
 
 # contracts
-150.times.map do |_i|
+Array.new(150) do |_i|
   status = 'Действует'
   status = 'НеДействует' if rand(20) == 1
   status = 'Согласование' if rand(20) == 1
@@ -272,11 +261,10 @@ puts 'agents created'
 end
 puts 'contracts created'
 
-m = Metric.create(name: 'ИнцидентовВсего', description: 'количество инцидентов, зарегистрированных в системе', depth: '3', bproce_id: bp211.id)
+Metric.create(name: 'ИнцидентовВсего', description: 'количество инцидентов, зарегистрированных в системе', depth: '3', bproce_id: bp211.id)
 puts 'metrics created'
 
 # directives
-Directive.destroy_all
 [
   ['Указание', '3659-У', '04 Jun 2015', "Указание Банка России от 04.06.2015 N 3659-У\r\n\"О внесении изменений в Положение Банка России от 16 июля 2012 года N 385-П \"О правилах ведения бухгалтерского учета в кредитных организациях, расположенных на территории Российской Федерации\"\r\n\r\n", '', 'Банк России', '', 'Действует', ''],
   ['Положение', '408-П', '25 Oct 2013', "Положение о порядке оценки соответствия квалификационным требованиям и требованиям к деловой репутации лиц, указанных в статье 11.1 Федерального закона \"О банках и банковской деятельности\" и статье 60 Федерального закона \"О Центральном банке Российской Федерации (Банке России)\", и порядке ведения базы данных, предусмотренной статьей 75 Федерального закона \"О Центральном банке Российской Федерации (Банке России)\r\n", '', 'ЦБ РФ', '', 'Действует', ''],
@@ -331,6 +319,47 @@ Directive.destroy_all
 end
 puts 'Directives created'
 
+# documents
+Array.new(100) do |_i|
+  status = 'Утвержден'
+  status = 'НеДействует' if rand(20) == 1
+  status = 'Проект' if rand(30) == 1
+  status = 'Согласование' if rand(30) == 1
+  approved = nil
+  approveorgan = ''
+  if ['НеДействует', 'Утвержден'].include?(status)
+    approved = Faker::Date.backward(rand(400))
+    approveorgan = ['Председатель Правления', 'Генеральный директор', 'Правление', 'Совет Директоров', 'Общее собрание'][rand(5)]
+  end
+  note = Faker::Lorem.sentence if rand(5) == 1
+  check = Faker::Lorem.sentence if rand(10) == 1
+  Document.create!(
+    name: Faker::Lorem.sentence,
+    description: Faker::Lorem.sentence,
+    status: status,
+    owner_id: User.limit(1).order('RANDOM()').first.id,
+    responsible: User.limit(1).order('RANDOM()').first.id,
+    check: check,
+    dlevel: rand(1..4),
+    note: note,
+    bproce_id: Bproce.limit(1).order('RANDOM()').first.id,
+    approved: approved,
+    approveorgan: approveorgan,
+    place: "Папка#{rand(10)}"
+  )
+  next unless Document.last
+  document_id = Document.last&.id
+  directive_id = Directive.limit(1).order('RANDOM()').first.id
+  DocumentDirective.create!(directive_id: directive_id, document_id: document_id) unless DocumentDirective.where(document_id: document_id).where(directive_id: directive_id).any?
+  directive_id = Directive.limit(1).order('RANDOM()').first.id
+  unless DocumentDirective.where(document_id: document_id).where(directive_id: directive_id).any?
+    DocumentDirective.create!(directive_id: directive_id, document_id: document_id, note: Faker::Lorem.sentence(1)) if rand(20) == 1
+  end
+  BproceDocument.create!(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, document_id: document_id)
+  BproceDocument.create!(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, document_id: document_id, purpose: Faker::Lorem.sentence(1)) if rand(20) == 1
+end
+puts 'documents created'
+
 l1 = Letter.create(number: '12-34/123', date: Date.current - 10, subject: 'о предоставлении информации', source: 'фельдпочта',
                    sender: 'Администрация президента', body: 'срочно предоставить', duedate: Date.current - 1, author: user7,
                    status: 5)
@@ -356,3 +385,33 @@ t2 = Task.create(name: 'предоставить', description: "Всем вме
                  duedate: Date.current, requirement_id: r.id, author: user2, status: 50)
 t2.user_task.create(user_id: user2.id)
 puts 'Tasks created'
+
+# applications
+%w[Office Notepad Excel Word Powerpoint].each do |name|
+  Bapp.create(name: name,
+              description: 'Microsoft ' + name + ' 2003',
+              apptype: 'MS',
+              purpose: 'редактирование ' + name)
+end
+%w[Calc Writer Impress Base].each do |name|
+  Bapp.create(name: name,
+              description: 'LibreOffice ' + name + ' 6.0',
+              apptype: 'LO',
+              purpose: 'работа в ' + name)
+end
+%w[Gimp Notepad SublimeText].each do |name|
+  Bapp.create(name: name,
+              apptype: 'офис',
+              purpose: name)
+end
+Bapp.create(name: '1С:Бухгалтерия', description: '1С:Бухгалтерия. Учет основных средств', apptype: 'бух')
+Bapp.create(name: '1С:Бухгалтерия.Склад', description: '1С:Бухгалтерия. Учет склада', apptype: 'бух')
+Bapp.create(name: '1С:Бухгалтерия.Кадры', description: '1С:Бухгалтерия. Учет кадров', apptype: 'бух')
+15.times do |_bapp|
+  BproceBapp.create!(
+    bproce_id: Bproce.limit(1).order('RANDOM()').first.id,
+    bapp_id: Bapp.limit(1).order('RANDOM()').first.id,
+    apurpose: Faker::Lorem.sentence(1)
+  )
+end
+puts 'applications created'
