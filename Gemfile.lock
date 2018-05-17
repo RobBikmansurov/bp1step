@@ -435,7 +435,7 @@ DEPENDENCIES
   jquery-ui-rails (= 5.0.5)
   odf-report
   paperclip (~> 5.2.1)
-  pg (~> 0.21)
+  pg
   pg_search
   public_activity
   puma
