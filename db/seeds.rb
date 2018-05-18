@@ -54,6 +54,27 @@ user7 = User.create(displayname: 'Яровая И.Й.', username: 'shapoklyak', 
                     password: 'shapoklyak', phone: '8-800-0001234', position: 'старший менеджер')
 user7.roles << Role.find_by(name: :secretar)
 user7.roles << Role.find_by(name: :author)
+
+u = User.create(email: 'robb@bankperm.ru',
+                firstname: 'Роберт',
+                lastname: 'Бикмансуров',
+                middlename: 'Мулланурович',
+                username: 'mr_rob',
+                displayname: 'Бикмансуров Р.М.',
+                password: 'password',
+                department: 'управление информационных технологий',
+                position: 'начальник управления',
+                office: '401',
+                phone: Faker::PhoneNumber.cell_phone,
+                active: true)
+u.roles << Role.find_by(name: :user)
+u.roles << Role.find_by(name: :secretar) if rand(10) == 5
+u.roles << Role.find_by(name: :author) if rand(8) == 3
+u.roles << Role.find_by(name: :owner) if rand(10) == 5
+u.roles << Role.find_by(name: :analitic) if rand(10) == 5
+u.roles << Role.find_by(name: :security) if rand(10) == 5
+u.roles << Role.find_by(name: :admin) if rand(20) == 5
+
 60.times do |_n|
   begin name = Faker::Name.name end while name.split.size < 3
   names = name.split
@@ -327,7 +348,7 @@ Array.new(100) do |_i|
   status = 'Согласование' if rand(30) == 1
   approved = nil
   approveorgan = ''
-  if ['НеДействует', 'Утвержден'].include?(status)
+  if %w[НеДействует Утвержден].include?(status)
     approved = Faker::Date.backward(rand(400))
     approveorgan = ['Председатель Правления', 'Генеральный директор', 'Правление', 'Совет Директоров', 'Общее собрание'][rand(5)]
   end
@@ -339,7 +360,6 @@ Array.new(100) do |_i|
     status: status,
     owner_id: User.limit(1).order('RANDOM()').first.id,
     responsible: User.limit(1).order('RANDOM()').first.id,
-    check: check,
     dlevel: rand(1..4),
     note: note,
     bproce_id: Bproce.limit(1).order('RANDOM()').first.id,
@@ -360,20 +380,76 @@ Array.new(100) do |_i|
 end
 puts 'documents created'
 
-l1 = Letter.create(number: '12-34/123', date: Date.current - 10, subject: 'о предоставлении информации', source: 'фельдпочта',
-                   sender: 'Администрация президента', body: 'срочно предоставить', duedate: Date.current - 1, author: user7,
-                   status: 5)
-l1.user_letter.create(user_id: user5.id, status: 1)
-l1.user_letter.create(user_id: user6.id)
-l1 = Letter.create(number: '99/2', date: Date.current - 1.month, subject: 'о согласовании митинга', source: 'курьер',
-                   sender: 'ФБК', body: 'хотят согласовать', duedate: Date.current - 20, author: user7,
-                   status: 5)
-l1.user_letter.create(user_id: user2.id, status: 1)
-l1.user_letter.create(user_id: user3.id)
+def create_user_letter(letter_id, user_id = nil)
+  user_id ||= User.limit(1).order('RANDOM()').first.id
+  UserLetter.create(
+    user_id: user_id,
+    letter_id: letter_id,
+    status: rand(2)
+  )
+end
+
+Letter.destroy_all
+sender = "#{Faker::Company.suffix} #{Faker::Company.name}" # first sender
+Array.new(200) do |_l|
+  number = rand(9..9909).to_s
+  number += "-#{rand(33)}" if rand(5) == 1
+  number += "-#{rand(33)}" if rand(5) == 1
+  number += "/#{rand(20)}" if rand(6) == 1
+  date = Faker::Date.backward(rand(200))
+  duedate = date + 7 + rand(9)
+  in_out = 1 # входящее
+  in_out = 2 if rand(5) == 1
+  status = [0, 5, 10, 10, 10, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90][rand(15)]
+  regnumber = nil
+  regdate = nil
+  if in_out == 2
+    letter_id = Letter.limit(1).order('RANDOM()').first.id if status == 90 && rand(5).zero?
+    max_reg_number = Letter.where('in_out = 2').maximum(:regnumber).to_i
+    regnumber = max_reg_number + 1 # next registration number for current year and directiom
+    regdate = Faker::Date.backward(rand(200))
+  end
+  sender = "#{Faker::Company.suffix} #{Faker::Company.name}" unless rand(5) == 0 # new sender
+  Letter.create!(
+    number: number,
+    date: date,
+    subject: Faker::Lorem.sentence(4),
+    status: status,
+    source: %w[курьер почта email портал][rand(4)],
+    sender: sender,
+    duedate: duedate,
+    author_id: User.limit(1).order('RANDOM()').first.id,
+    in_out: in_out,
+    regnumber: regnumber,
+    regdate: regdate,
+    letter_id: letter_id,
+    body: Faker::Lorem.sentence
+  )
+  letter = Letter.last
+  if status.positive?
+    create_user_letter(letter.id)
+    create_user_letter(letter.id) if rand(3) == 1
+    letter.status = status
+  end
+  case status
+  when 10 # на исполнении
+    user = User.limit(1).order('RANDOM()').first
+    create_user_letter(letter.id, user.id)
+    letter.result = "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{user.displayname} - " + Faker::Lorem.sentence
+  when 90 # завершено
+    letter.completion_date = letter.duedate - rand(10) if rand(5) == 1
+    letter.completion_date = letter.duedate + rand(10) if rand(3) == 1
+    user = User.limit(1).order('RANDOM()').first
+    create_user_letter(letter.id, user.id)
+    letter.result = "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{user.displayname} - " + Faker::Lorem.sentence
+    letter.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{user.displayname} считает, что все работы по письму исполнены"
+  end
+  letter.save
+end
 puts 'Letters created'
 
 r = Requirement.create(label: 'Напрячься и предоставить информацию!', date: Date.current - 5, duedate: Date.current,
-                       body: 'товарищи, надо собраться и сделать', status: 0, letter_id: l1.id, author: user5)
+                       body: 'товарищи, надо собраться и сделать', status: 0, letter_id: Letter.limit(1).order('RANDOM()').first.id, author: User.limit(1).order('RANDOM()').first)
 r.user_requirement.create(user_id: user5.id, requirement_id: r.id, status: 1)
 
 puts 'Requirements created'
