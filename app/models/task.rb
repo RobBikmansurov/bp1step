@@ -61,6 +61,7 @@ class Task < ActiveRecord::Base
       self.status = 0 # Новое, т.к. нет исполнителей и не завершено
     end
     return unless status >= 90 # завершено
+    return unless status_was
     self.completion_date = Time.current if status_was < 90 # запомним дату и время завершения, если новый статус - "Завершено"
   end
 end

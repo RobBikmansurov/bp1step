@@ -70,12 +70,12 @@ u = User.create(email: 'robb@bankperm.ru',
                 phone: Faker::PhoneNumber.cell_phone,
                 active: true)
 u.roles << Role.find_by(name: :user)
-u.roles << Role.find_by(name: :secretar) if rand(10) == 5
-u.roles << Role.find_by(name: :author) if rand(8) == 3
-u.roles << Role.find_by(name: :owner) if rand(10) == 5
-u.roles << Role.find_by(name: :analitic) if rand(10) == 5
-u.roles << Role.find_by(name: :security) if rand(10) == 5
-u.roles << Role.find_by(name: :admin) if rand(20) == 5
+u.roles << Role.find_by(name: :secretar)
+u.roles << Role.find_by(name: :author)
+u.roles << Role.find_by(name: :owner)
+u.roles << Role.find_by(name: :analitic)
+u.roles << Role.find_by(name: :security)
+u.roles << Role.find_by(name: :admin)
 
 60.times do |_n|
   begin name = Faker::Name.name end while name.split.size < 3
@@ -503,14 +503,47 @@ Array.new(20) do |_l|
   requirement.save
 end
 puts 'Requirements created'
+# tasks
+def create_user_task(task_id, user_id = nil)
+  user_id ||= User.limit(1).order('RANDOM()').first.id
+  UserTask.create(
+    user_id: user_id,
+    task_id: task_id,
+    status: rand(2)
+  )
+end
 
-# rubocop:disable Metrics/LineLength
-t1 = Task.create(name: 'Напрячься срочно и сильно', description: "Очень важно сделать это усилие.\r\nСрочно и быстро и резко.\r\nВ едином порыве",
-                 duedate: Date.current - 3, requirement_id: r.id, author: user6, status: 5)
-t1.user_task.create(user_id: user4.id)
-t2 = Task.create(name: 'предоставить', description: "Всем вместе взять и предоставить.\r\nДо единого гвоздя, нежно и в тему",
-                 duedate: Date.current, requirement_id: r.id, author: user2, status: 50)
-t2.user_task.create(user_id: user2.id)
+Array.new(100) do |_l|
+  date = Faker::Date.backward(rand(200))
+  duedate = date + 7 + rand(9)
+  completion_date = date + rand(30)
+  status = [0, 5, 20, 50, 50, 50, 50, 50, 90, 90, 90, 90, 90, 90, 90][rand(15)]
+  if rand(5) == 1
+    letter_id = Letter.limit(1).order('RANDOM()').first.id
+    requirement_id = nil
+  else
+    letter_id = nil
+    requirement_id = (Requirement.limit(1).order('RANDOM()').first.id if rand(5) == 1)
+  end
+  task = Task.new(
+    name: Faker::Lorem.words(rand(2..7)).join(' '),
+    created_at: date,
+    duedate: duedate,
+    completion_date: completion_date,
+    status: status,
+    description: Faker::Lorem.sentences.join(''),
+    author_id: User.limit(1).order('RANDOM()').first.id,
+    letter_id: letter_id,
+    requirement_id: requirement_id
+  )
+  if status.positive?
+    create_user_task(task.id)
+    create_user_task(task.id) if rand(3) == 1
+    task.status = status
+    task.result = Faker::Lorem.paragraph(rand(3))
+  end
+  task.save
+end
 puts 'Tasks created'
 # rubocop:enable Metrics/LineLength
 
