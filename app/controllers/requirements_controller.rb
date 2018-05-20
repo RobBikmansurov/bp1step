@@ -182,7 +182,7 @@ class RequirementsController < ApplicationController
           task.user_task.find_each do |user_task|
             s += ', ' if s.present?
             s += user_task.user.displayname
-            s += '-отв.' if user_task.status.positive?
+            s += '-отв.' if user_task.status&.positive?
           end
           s.to_s
         end
@@ -259,7 +259,7 @@ class RequirementsController < ApplicationController
           task.user_task.find_each do |user_task|
             s += ', ' if s.present?
             s += user_task.user.displayname
-            s += '-отв.' if user_task.status.positive?
+            s += '-отв.' if user_task.status&.positive?
           end
           s.to_s
         end
