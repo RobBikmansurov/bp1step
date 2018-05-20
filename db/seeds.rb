@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 PublicActivity.enabled = false
-
-# ru bocop:disable Metrics/LineLength
+# rubocop:disable Rails/Output
+# rubocop:disable Metrics/BlockLength
 
 # access roles
 # Role.destroy_all
+# rubocop:disable Metrics/LineLength
 [
   ['user', 'Исполнитель', 'Просмотр информации по исполняемым ролям, участию в процессах, комментирование документов процесса'],
   ['owner', 'Владелец процесса', 'Ведение документов, ролей, приложений, рабочих мест процесса, назначение исполнителей на роли'],
@@ -19,6 +20,7 @@ PublicActivity.enabled = false
   Role.create!(name: name, description: description, note: note)
 end
 puts 'access roles created'
+# rubocop:enable Metrics/LineLength
 
 # users
 # User.destroy_all
@@ -126,6 +128,7 @@ end
 puts 'workplaces created'
 
 # terms
+# rubocop:disable Metrics/LineLength
 Term.destroy_all
 [
   ['АРМ', 'Автоматизированное рабочее место', 'Программный или программно-технический комплекс, предназначенный для автоматизации деятельности определенного вида', ''],
@@ -183,6 +186,7 @@ Term.destroy_all
   Term.create(name: name, shortname: shortname, description: description, source: source)
 end
 puts 'terms created'
+# rubocop:enable Metrics/LineLength
 
 # processes
 bp1 = Bproce.create(name: 'Предоставление сервисов', shortname: 'B.4.1',
@@ -286,6 +290,7 @@ Metric.create(name: 'ИнцидентовВсего', description: 'количе
 puts 'metrics created'
 
 # directives
+# rubocop:disable Metrics/LineLength
 [
   ['Указание', '3659-У', '04 Jun 2015', "Указание Банка России от 04.06.2015 N 3659-У\r\n\"О внесении изменений в Положение Банка России от 16 июля 2012 года N 385-П \"О правилах ведения бухгалтерского учета в кредитных организациях, расположенных на территории Российской Федерации\"\r\n\r\n", '', 'Банк России', '', 'Действует', ''],
   ['Положение', '408-П', '25 Oct 2013', "Положение о порядке оценки соответствия квалификационным требованиям и требованиям к деловой репутации лиц, указанных в статье 11.1 Федерального закона \"О банках и банковской деятельности\" и статье 60 Федерального закона \"О Центральном банке Российской Федерации (Банке России)\", и порядке ведения базы данных, предусмотренной статьей 75 Федерального закона \"О Центральном банке Российской Федерации (Банке России)\r\n", '', 'ЦБ РФ', '', 'Действует', ''],
@@ -339,6 +344,7 @@ puts 'metrics created'
   Directive.create(title: title, number: number, approval: approval, name: name, note: note, body: body, annotation: annotation, status: status, action: action)
 end
 puts 'Directives created'
+# rubocop:enable Metrics/LineLength
 
 # documents
 Array.new(100) do |_i|
@@ -353,7 +359,6 @@ Array.new(100) do |_i|
     approveorgan = ['Председатель Правления', 'Генеральный директор', 'Правление', 'Совет Директоров', 'Общее собрание'][rand(5)]
   end
   note = Faker::Lorem.sentence if rand(5) == 1
-  check = Faker::Lorem.sentence if rand(10) == 1
   Document.create!(
     name: Faker::Lorem.sentence,
     description: Faker::Lorem.sentence,
@@ -370,13 +375,20 @@ Array.new(100) do |_i|
   next unless Document.last
   document_id = Document.last&.id
   directive_id = Directive.limit(1).order('RANDOM()').first.id
-  DocumentDirective.create!(directive_id: directive_id, document_id: document_id) unless DocumentDirective.where(document_id: document_id).where(directive_id: directive_id).any?
+  unless DocumentDirective.where(document_id: document_id).where(directive_id: directive_id).any?
+    DocumentDirective.create!(
+      directive_id: directive_id,
+      document_id: document_id
+    )
+  end
   directive_id = Directive.limit(1).order('RANDOM()').first.id
   unless DocumentDirective.where(document_id: document_id).where(directive_id: directive_id).any?
     DocumentDirective.create!(directive_id: directive_id, document_id: document_id, note: Faker::Lorem.sentence(1)) if rand(20) == 1
   end
   BproceDocument.create!(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, document_id: document_id)
+  # rubocop:disable Metrics/LineLength
   BproceDocument.create!(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, document_id: document_id, purpose: Faker::Lorem.sentence(1)) if rand(20) == 1
+  # rubocop:enable Metrics/LineLength
 end
 puts 'documents created'
 
@@ -409,7 +421,7 @@ Array.new(200) do |_l|
     regnumber = max_reg_number + 1 # next registration number for current year and directiom
     regdate = Faker::Date.backward(rand(200))
   end
-  sender = "#{Faker::Company.suffix} #{Faker::Company.name}" unless rand(5) == 0 # new sender
+  sender = "#{Faker::Company.suffix} #{Faker::Company.name}" unless rand(5).zero? # new sender
   Letter.create!(
     number: number,
     date: date,
@@ -441,19 +453,58 @@ Array.new(200) do |_l|
     letter.completion_date = letter.duedate + rand(10) if rand(3) == 1
     user = User.limit(1).order('RANDOM()').first
     create_user_letter(letter.id, user.id)
+    # rubocop:disable Metrics/LineLength
     letter.result = "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{user.displayname} - " + Faker::Lorem.sentence
     letter.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{user.displayname} считает, что все работы по письму исполнены"
+    # rubocop:enable Metrics/LineLength
   end
   letter.save
 end
 puts 'Letters created'
 
-r = Requirement.create(label: 'Напрячься и предоставить информацию!', date: Date.current - 5, duedate: Date.current,
-                       body: 'товарищи, надо собраться и сделать', status: 0, letter_id: Letter.limit(1).order('RANDOM()').first.id, author: User.limit(1).order('RANDOM()').first)
-r.user_requirement.create(user_id: user5.id, requirement_id: r.id, status: 1)
+# requirements
+def create_user_requirement(requirement_id, user_id = nil)
+  user_id ||= User.limit(1).order('RANDOM()').first.id
+  UserRequirement.create(
+    user_id: user_id,
+    requirement_id: requirement_id,
+    status: rand(2)
+  )
+end
 
+Array.new(20) do |_l|
+  date = Faker::Date.backward(rand(200))
+  duedate = date + 7 + rand(9)
+  status = [0, 5, 9, 15, 15, 15, 15, 15, 15, 90, 90, 90, 90, 90, 90][rand(15)]
+  if rand(7) == 1
+    letter_id = Letter.limit(1).order('RANDOM()').first.id
+    source = nil
+  else
+    letter_id = nil
+    source = Faker::Lorem.words(rand(1..6)).join(' ')
+  end
+  Requirement.create!(
+    label: Faker::Lorem.words(rand(2..7)).join(' '),
+    date: date,
+    duedate: duedate,
+    status: status,
+    source: source,
+    body: Faker::Lorem.sentences.join(''),
+    author_id: User.limit(1).order('RANDOM()').first.id,
+    letter_id: letter_id
+  )
+  requirement = Requirement.last
+  if status.positive?
+    create_user_requirement(requirement.id)
+    create_user_requirement(requirement.id) if rand(3) == 1
+    requirement.status = status
+    requirement.result = Faker::Lorem.paragraph(rand(3))
+  end
+  requirement.save
+end
 puts 'Requirements created'
 
+# rubocop:disable Metrics/LineLength
 t1 = Task.create(name: 'Напрячься срочно и сильно', description: "Очень важно сделать это усилие.\r\nСрочно и быстро и резко.\r\nВ едином порыве",
                  duedate: Date.current - 3, requirement_id: r.id, author: user6, status: 5)
 t1.user_task.create(user_id: user4.id)
@@ -461,6 +512,7 @@ t2 = Task.create(name: 'предоставить', description: "Всем вме
                  duedate: Date.current, requirement_id: r.id, author: user2, status: 50)
 t2.user_task.create(user_id: user2.id)
 puts 'Tasks created'
+# rubocop:enable Metrics/LineLength
 
 # applications
 %w[Office Notepad Excel Word Powerpoint].each do |name|
