@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 source 'https://rubygems.org'
 
-gem 'rails', '5.1.4'
+gem 'rails', '5.2.0'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
