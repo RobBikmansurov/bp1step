@@ -1,4 +1,4 @@
-BPDoc::Application.routes.draw do
+Rails.application.routes.draw do
   resources :bproces, only: :autocomlete do
     get :autocomplete, on: :collection
   end
