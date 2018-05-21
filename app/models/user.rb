@@ -45,7 +45,7 @@ class User < ActiveRecord::Base
   #                :avatar,
   #                :crop_x, :crop_y, :crop_w, :crop_h,
   #                :middlename, :office, :position, :phone
-  # attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
+  attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
 
   # after_update :reprocess_pic, :if => :cropping?
 
