@@ -23,7 +23,7 @@ class Letter < ActiveRecord::Base
   scope :not_assigned, -> { where('status < 5 and author_id IS NOT NULL') } # не назначенные, нет исполнителя
 
   belongs_to :letter, optional: true
-  belongs_to :author, class_name: 'User'
+  belongs_to :author, class_name: 'User', optional: true
   has_many :user_letter, dependent: :destroy # ответственные за письмо
   has_many :users, through: :user_letter
   has_many :letter_appendix, dependent: :destroy
