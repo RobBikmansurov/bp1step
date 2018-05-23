@@ -17,7 +17,8 @@
 
   - @requirements.each do |requirement|
     %tr
-      %td= requirement.id
+      %td
+        .id_show_ ##{requirement.id}
       %td
         = link_to requirement.label, requirement
         %br

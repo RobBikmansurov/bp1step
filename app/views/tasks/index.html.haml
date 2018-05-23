@@ -25,7 +25,8 @@
   - if @tasks
     - @tasks.each do |task|
       %tr
-        %td= task.id
+        %td
+          .id_show_ ##{task.id}
         %td= link_to task.name, task
         %td= truncate(task.description, length: 50, omission: ' ...')
         %td

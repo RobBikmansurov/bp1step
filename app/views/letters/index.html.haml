@@ -11,7 +11,6 @@
     %th= sortable "id", "#"
     %th= sortable 'date', "#{params[:out].present? ? 'Вх.' : 'Исх.'} № от"
     %th= sortable 'regnumber', "Рег.#{params[:out].present? ? 'Исх.' : 'Вх.'}№ от"
-    -# %th
     %th [ Тема ]
     %th= link_to 'Корреспондент', senders_letters_path
     %th= sortable 'duedate', 'Срок'
@@ -23,7 +22,8 @@
 
   - @letters.each do |letter|
     %tr
-      %td= letter.id
+      %td
+        .id_show_ ##{letter.id}
       %td
         = link_to letter.number, letter
         %br

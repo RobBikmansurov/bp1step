@@ -16,7 +16,8 @@
     -# letters.select('letters.status, count(letters.id) as count').group(:status).each do | letter |
     - @letters.each do |letter|
       %tr
-        %td= letter.id
+        %td
+          .id_show_ ##{letter.id}
         %td
           - if letter.in_out > 1
             %div.h2{style: 'display: inline; color: #eee; background-color: #000;'}
@@ -62,7 +63,8 @@
 
     - @tasks.each do |task|
       %tr
-        %td= task.id
+        %td
+          .id_show_ ##{task.id}
         %td= link_to task.name, task
         %td
           -if task.duedate
@@ -98,7 +100,8 @@
 
     - @requirements.each do |requirement|
       %tr
-        %td= requirement.id
+        %td
+          .id_show_ ##{requirement.id}
         %td
           = link_to requirement.label, requirement
           = requirement.date.strftime("%d.%m.%Y")
