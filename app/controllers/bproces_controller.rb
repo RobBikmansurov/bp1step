@@ -52,7 +52,7 @@ class BprocesController < ApplicationController
 
   def show
     @metrics = Metric.where(bproce_id: @bproce.id).order(:name) if @bproce # метрики процесса
-    @directive_of_bproce = Directive.last.directives_of_bproce(@bproce.id) if @bproce
+    @directive_of_bproce = Directive.last&.directives_of_bproce(@bproce.id) if @bproce
     respond_with(@bproce)
   end
 

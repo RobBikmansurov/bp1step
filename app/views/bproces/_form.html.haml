@@ -1,6 +1,7 @@
 -# основные реквизиты Процесса
 = simple_form_for(@bproce) do |f|
-  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+  = @bproce.errors.messages
   = f.hidden_field :parent_id
   = f.input :shortname
   = f.input :name

@@ -88,7 +88,7 @@
         = doc.status
         = ' ' + doc.approved.strftime('%d.%m.%Y') if doc.approved
 
--if @directive_of_bproce.count > 0
+-if @directive_of_bproce&.any?
   %h4 Директивы, на основании которых разработаны документы процесса:
   -@directive_of_bproce.each do |directive|
     .floating-box
@@ -96,12 +96,12 @@
       = "(#{directive.note}) " unless directive.note.blank?
 
 
--if @bproce.contracts.count > 0
+-if @bproce.contracts&.any?
   %h4
     Организационно-юридическое обеспечение Процесса соcтавляют:
     = link_to "Договоры (Действует #{@bproce.contracts.where(status: 'Действует').count} из #{@bproce.contracts.count})", bproce_path(@bproce) + '/contracts'
 
--if @bproce.workplaces.count > 0
+-if @bproce.workplaces&.any?
   %h4
     В процессе участвуют
     =link_to 'Рабочие Места:', bproce_workplace_path(@bproce)
@@ -109,7 +109,7 @@
     .floating-box
       = link_to wp.designation, workplace_path(wp)
 
-- if @bproce.bproce_bapps.any?
+- if @bproce.bproce_bapps&.any?
   %h4
     В процессе используются
     =link_to 'Приложения:', bproce_path(@bproce) + '/bapps'
@@ -119,7 +119,7 @@
     .floating-box
       = link_to ba.name, bapp_path(ba)
   
--if @bproce.iresource.count > 0
+-if @bproce.iresource&.any?
   %h4
     В процессе используются Ресурсы:
   -@bproce.iresource.order(:label).each do |iresource|

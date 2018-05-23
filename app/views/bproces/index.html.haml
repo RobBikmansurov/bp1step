@@ -26,7 +26,7 @@
   = render partial: 'bproces/bproce', collection: @bproces, cached: true
 
 %p
-- if can? :create, @bproces.first
+- if can? :create, Bproce
   = link_to 'Каталог', bproces_path+'.pdf?all=1', :class => 'button'
   - format = '.pdf'
   - format << '?' + request.query_string if request.query_string

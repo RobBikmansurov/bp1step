@@ -10,7 +10,7 @@ class Iresource < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
-  belongs_to :user
+  belongs_to :user, optional: true
   has_many :bproce_iresources
   has_many :bproces, through: :bproce_iresources
 

@@ -129,7 +129,7 @@ puts 'workplaces created'
 
 # terms
 # rubocop:disable Metrics/LineLength
-Term.destroy_all
+# Term.destroy_all
 [
   ['АРМ', 'Автоматизированное рабочее место', 'Программный или программно-технический комплекс, предназначенный для автоматизации деятельности определенного вида', ''],
   ['ГВ', 'Гипервизор', 'ПО, обеспечивающее возможность запуска нескольких ОС на одной ЭВМ.', ''],
@@ -189,37 +189,43 @@ puts 'terms created'
 # rubocop:enable Metrics/LineLength
 
 # processes
-bp1 = Bproce.create(name: 'Предоставление сервисов', shortname: 'B.4.1',
-                    fullname: 'Предоставление сервисов', user_id: 1)
+#connection = ActiveRecord::Base.connection()
+#  roor process
+#connection.execute("insert INTO bproces (shortname, name, fullname, created_at, updated_at, user_id, lft, rgt, parent_id) VALUES ('root', 'Процессы', 'Бизнес-процессы', '2018-05-21', '2018-05-21', 1, 0, 1, 1);")
+#bp = Bproce.last
+#bp.parent_id = bp.id
+#bp.save
+bp1 = Bproce.create!(name: 'Предоставление сервисов', shortname: 'B.4.1', fullname: 'Предоставление сервисов', user_id: 1, parent_id: nil)
 bp1.user_id = user1.id
 bp1.save
-Bproce.create(name: 'Управление уровнем сервисов', shortname: 'SLM', fullname: 'Управление уровнем сервисов', parent_id: bp1.id)
-Bproce.create(name: 'Управление мощностями', shortname: 'CAP', fullname: 'Управление мощностями', parent_id: bp1.id)
-Bproce.create(name: 'Управление непрерывностью', shortname: 'SCM', fullname: 'Управление непрерывностью', parent_id: bp1.id)
-bp14 = Bproce.create(name: 'Управление финансами', shortname: 'FIN', fullname: 'Управление финансами', parent_id: bp1.id)
+
+Bproce.create!(name: 'Управление уровнем сервисов', shortname: 'SLM', fullname: 'Управление уровнем сервисов', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp1.id)
+Bproce.create!(name: 'Управление мощностями', shortname: 'CAP', fullname: 'Управление мощностями', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp1.id)
+Bproce.create!(name: 'Управление непрерывностью', shortname: 'SCM', fullname: 'Управление непрерывностью', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp1.id)
+bp14 = Bproce.create(name: 'Управление финансами', shortname: 'FIN', fullname: 'Управление финансами', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp1.id)
 bp14.user_id = user1.id
 bp14.save
 bp14.business_roles.create(name: 'НачальникИТ', description: 'Контролирует счета, готовит План закупок')
-br1 = bp14.business_roles.create(name: 'Бухгалтер', description: 'Оплачивает счет, учитывает бухгалтерские документы', features: 'Нужен калькулятор')
-ubr1 = br1.user_business_role.create(date_from: '2015-01-11', date_to: '2015-12-31', note: 'исп.обязанности')
-ubr1.user_id = user1.id
+br1 = bp14.business_roles.create!(name: 'Бухгалтер', description: 'Оплачивает счет, учитывает бухгалтерские документы', features: 'Нужен калькулятор')
+ubr1 = br1.user_business_role.create!(date_from: '2015-01-11', date_to: '2015-12-31', note: 'исп.обязанности', user_id: user1.id)
 ubr1.save
-Bproce.create(name: 'Управление доступностью', shortname: 'AVA', fullname: 'Управление доступностью', parent_id: bp1.id)
+Bproce.create!(name: 'Управление доступностью', shortname: 'AVA', fullname: 'Управление доступностью', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp1.id)
 
-bp2 = Bproce.create(name: 'Поддержка сервисов', shortname: 'B.4.2', fullname: 'Поддержка сервисов')
-bp21 = Bproce.create(name: 'Управление инцидентами', shortname: 'INC', fullname: 'Управление инцидентами', parent_id: bp2.id)
-bp211 = Bproce.create(name: 'Служба поддержки пользователей Service Desk', shortname: 'SD', fullname: 'Служба поддержки пользователей Service Desk', parent_id: bp21.id)
-Bproce.create(name: 'Управление проблемами', shortname: 'PRB', fullname: 'Управление проблемами', parent_id: bp2.id)
-Bproce.create(name: 'Управление конфигурациями', shortname: 'CFG', fullname: 'Управление конфигурациями', parent_id: bp2.id)
-Bproce.create(name: 'Управление релизами', shortname: 'REL', fullname: 'Управление релизами', parent_id: bp2.id)
-Bproce.create(name: 'Управление изменениями', shortname: 'CNG', fullname: 'Управление изменениями', parent_id: bp2.id, user_id: user6)
+bp2 = Bproce.create!(name: 'Поддержка сервисов', shortname: 'B.4.2', fullname: 'Поддержка сервисов', parent_id: nil, user_id: user1.id)
+bp21 = Bproce.create!(name: 'Управление инцидентами', shortname: 'INC', fullname: 'Управление инцидентами', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp2.id)
+bp211 = Bproce.create!(name: 'Служба поддержки пользователей Service Desk', shortname: 'SD', fullname: 'Служба поддержки пользователей Service Desk', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp21.id)
+Bproce.create!(name: 'Управление проблемами', shortname: 'PRB', fullname: 'Управление проблемами', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp2.id)
+Bproce.create!(name: 'Управление конфигурациями', shortname: 'CFG', fullname: 'Управление конфигурациями', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp2.id)
+Bproce.create!(name: 'Управление релизами', shortname: 'REL', fullname: 'Управление релизами', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp2.id)
+Bproce.create!(name: 'Управление изменениями', shortname: 'CNG', fullname: 'Управление изменениями', parent_id: bp2.id, user_id: user6.id)
 
 puts 'processes created'
 
 # iresource
 Array.new(50) do |_i|
   url = Faker::Internet.url.sub 'http:', ['//srv', '//s', 'aws:', 'https:', 'ftp:'][rand(5)]
-  label = Faker::Lorem.sentence(1)[0, 19] + rand(9).to_s
+  label = Faker::Lorem.sentence(1)[0, 20]
+  label = Faker::Lorem.sentence(1)[0, 20] if Iresource.where(label: label).any?
   Iresource.create!(
     level: %w[FS DB SPR API local][rand(5)],
     label: label,
@@ -264,7 +270,7 @@ Array.new(150) do |_i|
   note = Faker::Lorem.sentence if rand(5) == 1
   condition = Faker::Lorem.sentence if rand(10) == 1
   check = Faker::Lorem.sentence if rand(10) == 1
-  Contract.create(
+  Contract.create!(
     contract_type: %w[Договор Соглашение Контракт][rand(3)],
     number: rand(99..9999),
     name: Faker::Lorem.sentence,
@@ -272,7 +278,7 @@ Array.new(150) do |_i|
     date_begin: date,
     date_end: date_end,
     text: Faker::Lorem.sentence,
-    description: Faker::Lorem.paragraph,
+    description: Faker::Lorem.paragraph[0, 255],
     note: note,
     condition: condition,
     check: check,
@@ -281,8 +287,10 @@ Array.new(150) do |_i|
     contract_place: place,
     payer_id: payer_id
   )
-  BproceContract.create(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, contract_id: Contract.last.id)
-  BproceContract.create(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, contract_id: Contract.last.id, purpose: Faker::Lorem.sentence(1)) if rand(20) == 1
+  contract = Contract.last
+  contract_id = contract&.id || 1
+  BproceContract.create(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, contract_id: contract_id)
+  BproceContract.create(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, contract_id: contract_id, purpose: Faker::Lorem.sentence(1)) if rand(20) == 1
 end
 puts 'contracts created'
 
@@ -401,9 +409,9 @@ def create_user_letter(letter_id, user_id = nil)
   )
 end
 
-Letter.destroy_all
+# Letter.destroy_all
 sender = "#{Faker::Company.suffix} #{Faker::Company.name}" # first sender
-Array.new(200) do |_l|
+Array.new(300) do |_l|
   number = rand(9..9909).to_s
   number += "-#{rand(33)}" if rand(5) == 1
   number += "-#{rand(33)}" if rand(5) == 1
@@ -506,11 +514,7 @@ puts 'Requirements created'
 # tasks
 def create_user_task(task_id, user_id = nil)
   user_id ||= User.limit(1).order('RANDOM()').first.id
-  UserTask.create(
-    user_id: user_id,
-    task_id: task_id,
-    status: rand(2)
-  )
+  UserTask.create(user_id: user_id, task_id: task_id, status: rand(2))
 end
 
 Array.new(100) do |_l|
@@ -525,7 +529,7 @@ Array.new(100) do |_l|
     letter_id = nil
     requirement_id = (Requirement.limit(1).order('RANDOM()').first.id if rand(5) == 1)
   end
-  task = Task.new(
+  task = Task.create(
     name: Faker::Lorem.words(rand(2..7)).join(' '),
     created_at: date,
     duedate: duedate,
@@ -545,7 +549,6 @@ Array.new(100) do |_l|
   task.save
 end
 puts 'Tasks created'
-# rubocop:enable Metrics/LineLength
 
 # applications
 %w[Office Notepad Excel Word Powerpoint].each do |name|

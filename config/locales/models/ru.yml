@@ -55,6 +55,7 @@ ru:
         goal: Цель процесса
         description: Краткое описание
         parent_id: Родительский процесс
+        parent: Родительский процесс
         user_id: Владелец процесса
         checked_at: Принят в управление
       bproce_bapp:
@@ -197,3 +198,8 @@ ru:
         location: Местоположение
         description: Описание
         typical: Типовое рабочее место
+    errors:
+      models: mmmmm
+        bproce: bbbb
+          attributes: qqq
+            parent: ppppp
