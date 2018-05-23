@@ -20,13 +20,11 @@ class Contract < ActiveRecord::Base
   validates :contract_place, length: { maximum: 30 }
   # validates :owner_id, presence: :true
 
-  # belongs_to :contract, foreign_key: "parent_id"  # родительский договор
-  # belongs_to :user
   belongs_to :agent
   belongs_to :owner, class_name: 'User'
-  belongs_to :payer, class_name: 'User'
-  belongs_to :parent, class_name: 'Contract'
-  belongs_to :contract
+  belongs_to :payer, class_name: 'User', optional: true
+  # belongs_to :parent, class_name: 'Contract'
+  # belongs_to :contract
 
   has_many :bproce, through: :bproce_contract
   has_many :bproce_contract, dependent: :destroy

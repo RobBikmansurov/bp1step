@@ -37,7 +37,9 @@ class Bproce < ActiveRecord::Base
   has_many :iresource, through: :bproce_iresource
   has_many :workplaces, through: :bproce_workplaces
   has_many :metrics
-  belongs_to :bproce, foreign_key: 'parent_id' # родительский процесс
+  belongs_to :bproce, foreign_key: 'parent_id', optional: true # родительский процесс
+  # has_many :parent_bp, class_name: 'Bproce', foreign_key: 'parent_id' # родительский процесс
+  # belongs_to :parent, class_name: 'Bproce'
   belongs_to :user # владелец процессв
 
   def user_name
@@ -49,11 +51,11 @@ class Bproce < ActiveRecord::Base
   end
 
   def parent_name
-    bproce.try(:name)
+    Bproce.try(:name) if name.present?
   end
 
   def parent_name=(name)
-    self.parent_id = Bproce.find_by(name: name).id if name.present?
+    self.parent_id = Bproce.find_by(name: name)&.id if name.present?
   end
 
   def bproces_of_directive(directive_id) # процессы директивы (все процессы, связанные с директивой через документы)

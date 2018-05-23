@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 class Document < ActiveRecord::Base
-  belongs_to :user
+  # belongs_to :user
   belongs_to :owner, class_name: 'User'
   has_many :directive, through: :document_directive
   has_many :document_directive, dependent: :destroy

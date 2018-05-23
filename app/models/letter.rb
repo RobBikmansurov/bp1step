@@ -22,7 +22,7 @@ class Letter < ActiveRecord::Base
   scope :soon_deadline, -> { where('duedate > ? and status < 90', Date.current - 5.days) } # с наступающим сроком исполнения
   scope :not_assigned, -> { where('status < 5 and author_id IS NOT NULL') } # не назначенные, нет исполнителя
 
-  belongs_to :letter
+  belongs_to :letter, optional: true
   belongs_to :author, class_name: 'User'
   has_many :user_letter, dependent: :destroy # ответственные за письмо
   has_many :users, through: :user_letter

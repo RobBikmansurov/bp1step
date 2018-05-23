@@ -10,7 +10,7 @@ class Requirement < ActiveRecord::Base
   validates :label, presence: true,
                     length: { minimum: 3, maximum: 255 }
 
-  belongs_to :letter
+  belongs_to :letter, optional: true
   # belongs_to :user
   belongs_to :author, class_name: 'User'
   has_many :user, through: :user_requirement

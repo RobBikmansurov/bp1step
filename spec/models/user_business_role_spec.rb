@@ -2,22 +2,14 @@
 
 require 'rails_helper'
 
-describe UserBusinessRole do
-  before(:each) do
-    @ur = UserBusinessRole.new
-    @ur.user_id = 1
-    @ur.business_role_id = 1
+RSpec.describe UserBusinessRole, type: :model do
+  context 'validates' do
+    it { should validate_presence_of(:user_id) }
+    it { should validate_presence_of(:business_role_id) }
   end
 
-  it 'should be valid' do
-    expect(@ur).to be_valid
-  end
-  it 'should require user_id' do
-    @ur.user_id = nil
-    expect(@ur).not_to be_valid
-  end
-  it 'should require business_role_id' do
-    @ur.business_role_id = nil
-    expect(@ur).not_to be_valid
+  context 'associations' do
+    it { should belong_to(:user) }
+    it { should belong_to(:business_role) }
   end
 end

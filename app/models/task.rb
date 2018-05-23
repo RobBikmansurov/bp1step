@@ -6,8 +6,8 @@ class Task < ActiveRecord::Base
   validates :description, presence: true
   validates :duedate, presence: true
 
-  belongs_to :letter
-  belongs_to :requirement
+  belongs_to :letter, optional: true
+  belongs_to :requirement, optional: true
   belongs_to :author, class_name: 'User'
   has_many :user, through: :user_task
   has_many :user_task, dependent: :destroy # ответственные
