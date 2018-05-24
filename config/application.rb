@@ -29,6 +29,7 @@ module BPDoc
     config.time_zone = 'Ekaterinburg'   # 'UTC +06:00'
     #config.active_record.default_timezone = :local # так не работают графики - ActiveRecord::Base.default_timezone must be :utc to use Groupdate 
     config.active_record.default_timezone = :utc
+    config.active_record.sqlite3.represent_boolean_as_integer = true
 
     config.i18n.default_locale = :ru
     config.i18n.available_locales = [:ru, :en]

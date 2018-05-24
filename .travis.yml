@@ -1,12 +1,14 @@
 language: ruby
 rvm:
-  - 2.4.2
+  - 2.5.1
 cache: bundler
 bundler_args: --without production
 before_script:
   - cp config/database.yml{.example,}
   - cp config/ldap.yml{.example,}
-  - bundle exec rake db:create db:migrate db:seed --trace
+  - bundle exec rake db:create
+  - bundle exec rake db:migrate
+  - bundle exec rake db:seed
 script:
   # change ldap-auth to database-auth 
   - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
