@@ -195,9 +195,9 @@ puts 'terms created'
 #bp = Bproce.last
 #bp.parent_id = bp.id
 #bp.save
-bp1 = Bproce.create!(name: 'Предоставление сервисов', shortname: 'B.4.1', fullname: 'Предоставление сервисов', user_id: 1, parent_id: nil)
-bp1.user_id = user1.id
-bp1.save
+bp1 = Bproce.create!(name: 'Предоставление сервисов', shortname: 'B.4.1', fullname: 'Предоставление сервисов', user_id: user1.id, parent_id: nil)
+#bp1.user_id = user1.id
+#bp1.save
 
 Bproce.create!(name: 'Управление уровнем сервисов', shortname: 'SLM', fullname: 'Управление уровнем сервисов', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp1.id)
 Bproce.create!(name: 'Управление мощностями', shortname: 'CAP', fullname: 'Управление мощностями', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp1.id)
