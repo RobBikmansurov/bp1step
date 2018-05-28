@@ -47,6 +47,8 @@ gem 'whenever', require: false # cron jobs (crontab -l, crontab -e)
 gem 'actionpack-action_caching'
 gem 'actionpack-page_caching' # кеширование
 
+gem 'faker'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
@@ -86,5 +88,4 @@ end
 group :development, :test do
   gem 'rspec-rails'
   gem 'factory_bot_rails'
-  gem 'faker'
 end
