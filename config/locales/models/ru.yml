@@ -198,8 +198,3 @@ ru:
         location: Местоположение
         description: Описание
         typical: Типовое рабочее место
-    errors:
-      models: mmmmm
-        bproce: bbbb
-          attributes: qqq
-            parent: ppppp

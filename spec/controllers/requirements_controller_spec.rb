@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe RequirementsController, type: :controller do
-  let(:valid_attributes) { { label: 'requirement' } }
+  let(:author)           { FactoryBot.create(:user) }
+  let(:valid_attributes) { { label: 'requirement', author_id: author.id } }
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
   before(:each) do
@@ -16,14 +17,14 @@ RSpec.describe RequirementsController, type: :controller do
   describe 'GET index' do
     it 'assigns all requirements as @requirements' do
       get :index, {}
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to have_http_status(:success)
       expect(response).to render_template('requirements/index')
     end
 
     it 'loads all of the requirements into @requirements' do
-      requirement1 = FactoryBot.create(:requirement)
-      requirement2 = FactoryBot.create(:requirement)
+      requirement1 = FactoryBot.create(:requirement, label: 'requirement1', author_id: author.id)
+      requirement2 = FactoryBot.create(:requirement, label: 'requirement2', author_id: author.id)
       get :index
       expect(assigns(:requirements)).to match_array([requirement1, requirement2])
     end
