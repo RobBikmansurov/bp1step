@@ -313,3 +313,7 @@ ru:
           attributes:
             user:
               required: 'не указан владелец'
+        requirement:
+          attributes:
+            author:
+              required: 'не указан автор'

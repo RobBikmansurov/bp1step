@@ -18,13 +18,14 @@ namespace :bp1step do
     Dir.glob(pathfrom.join('*.*')).each do |file|
       nf += 1
       ext = File.extname(file).upcase
-      fname = File.basename(file).upcase            # расширение файла
+      fname = File.basename(file)                   # расширение файла
       name = fname[0..(fname.size - ext.size - 1)]  # только имя файла
       l_number, l_subject, l_sender = ''
       l_date = Date.current.strftime('%d.%m.%Y')
       l_source = 'СВК'
 
       next if ext == '.ARJ' # пока не умеем обрабатывать архивы
+      next if ext.start_with?('.A0') # и их части
 
       case name.upcase
       when /\A(OD|ОД)\d{1,}\z/ # ODNNNN.PDF
@@ -85,7 +86,9 @@ namespace :bp1step do
       # исключим файлы протоколов
       when /\A(DEPOSIT_LETTERS|GUCB_LETTERS|UBIZI_LETTERS|RECEIPT_LETTERS|GUOST_LETTERS|GUOFORM_LETTERS|ANY_LETTERS)\z/
         next
-      when /\AMONIT*/
+      when /\AMONIT*/ # исключим файл мониторинга
+        next
+      when /\AINFSWIFT|INF-KGR\z/ # исключим известные файлы, котрые надо оставить в СВК
         next
       else
         if File.exist?(file) # скопируем в РЕМАРТ перенесем в архив

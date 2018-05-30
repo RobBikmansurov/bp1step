@@ -49,7 +49,7 @@ class RequirementsController < ApplicationController
 
   def create_task
     parent_requirement = Requirement.find(params[:id])
-    redirect_to new_task_url(requirement_id: parent_requirement.id) and return
+    redirect_to(new_task_url(requirement_id: parent_requirement.id)) && return
   end
 
   def create_user
@@ -67,7 +67,7 @@ class RequirementsController < ApplicationController
   end
 
   def update_user
-    user_requirement = UserRequirement.new(params[:user_requirement]) if params[:user_requirement].present?
+    user_requirement = UserRequirement.new(user_requirement_params) if params[:user_requirement].present?
     if user_requirement
       user_requirement_clone = UserRequirement.where(requirement_id: user_requirement.requirement_id, user_id: user_requirement.user_id).first # проверим - нет такого исполнителя?
       if user_requirement_clone
@@ -112,7 +112,13 @@ class RequirementsController < ApplicationController
   end
 
   def requirement_params
-    params.require(:requirement).permit(:label, :date, :duedate, :source, :body, :status, :status_name, :result, :letter_id, :author_id, :author_name)
+    params.require(:requirement)
+          .permit(:label, :date, :duedate, :source, :body, :status, :status_name, :result, :letter_id, :author_id, :author_name)
+  end
+
+  def user_requirement_params
+    params.require(:user_requirement)
+          .permit(:user_id, :requirement_id, :status, :user_name)
   end
 
   def sort_column
