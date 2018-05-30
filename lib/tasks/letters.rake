@@ -25,7 +25,7 @@ namespace :bp1step do
       l_source = 'СВК'
 
       next if ext == '.ARJ' # пока не умеем обрабатывать архивы
-      next if ext.start_with?('A0') # и их части
+      next if ext.start_with?('.A0') # и их части
 
       case name.upcase
       when /\A(OD|ОД)\d{1,}\z/ # ODNNNN.PDF
