@@ -33,11 +33,11 @@ class User < ActiveRecord::Base
   # аутентификация - через БД
   # devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
   # аутентификация - через LDAP
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
 
   # before_create :create_role
   after_create :create_role
-  # before_save :ldap_email, :ldap_firstname, :ldap_displayname, :ldap_email
+  before_save :ldap_email, :ldap_firstname, :ldap_displayname, :ldap_email
 
   # attr_accessible :username, :email, :password, :password_confirmation, :remember_me,
   #                :firstname, :lastname, :displayname, :role_ids,
@@ -62,7 +62,7 @@ class User < ActiveRecord::Base
     avatar.reprocess!
   end
 
-  # # before_save :ldap_email, :ldap_firstname, :ldap_displayname, :ldap_email
+  # before_save :ldap_email, :ldap_firstname, :ldap_displayname, :ldap_email
 
   def role?(role_sym)
     roles.any? { |r| r.name.underscore.to_sym == role_sym }
