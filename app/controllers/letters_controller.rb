@@ -189,9 +189,7 @@ class LettersController < ApplicationController
     @letter_appendix = LetterAppendix.new(letter_appendix_params) if params[:letter_appendix].present?
     if @letter_appendix
       @letter = @letter_appendix.letter
-      if @letter_appendix.save
-        flash[:notice] = 'Файл приложения "' + @letter_appendix.appendix_file_name + '" загружен.'
-      end
+      flash[:notice] = 'Файл приложения "' + @letter_appendix.appendix_file_name + '" загружен.' if @letter_appendix.save
     else
       flash[:alert] = 'Ошибка - имя файла не указано.'
     end
@@ -217,11 +215,10 @@ class LettersController < ApplicationController
       @letters = @letters.where('in_out = 1')
       @in_out = 1
     end
-
     if @letters.any?
       log_week_report
     else
-      redirect_to letters_path, notice: "Нет зарегистрированных писем за период: #{week_start.strftime('%d.%m.%Y')} - #{week_end.strftime('%d.%m.%Y')}."
+      redirect_to letters_path, alert: "Нет зарегистрированных писем за период: #{week_start.strftime('%d.%m.%Y')} - #{week_end.strftime('%d.%m.%Y')}."
     end
   end
 
@@ -296,7 +293,7 @@ class LettersController < ApplicationController
 
   def user_letter_params
     params.require(:user_letter)
-           .permit(:user_id, :letter_id, :status, :user_name)
+          .permit(:user_id, :letter_id, :status, :user_name)
   end
 
   def sort_column

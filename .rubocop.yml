@@ -3,6 +3,7 @@ AllCops:
   TargetRailsVersion: 5.1
   Exclude:
     - 'bin/*'
+    - 'tmp/*'
     - 'db/schema.rb'
     - 'db/seeds.rb'
     - 'config/**/*'
