@@ -8,7 +8,7 @@ gem 'bootsnap'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+gem 'uglifier', '>= 4.1.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails'
 gem 'jquery-ui-rails', '5.0.5'
@@ -16,7 +16,7 @@ gem 'jquery-rails'
 
 gem 'will_paginate', '~> 3.0'
 gem 'alphabetical_paginate'
-gem 'cancancan', '~> 1.10'
+gem 'cancancan', '~> 2.2'
 gem 'devise', '>=3.4.1' # , git: "https://github.com/plataformatec/devise"
 gem 'devise_ldap_authenticatable'
 # gem 'execjs'
