@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-  let!(:user) { FactoryBot.create(:user, office: 1) }
-  let!(:user1) { FactoryBot.create(:user, office: 2) }
+  let(:user) { FactoryBot.create(:user, office: 1) }
+  let(:user1) { FactoryBot.create(:user, office: 2) }
 
   before(:each) do
     user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
@@ -25,6 +25,9 @@ RSpec.describe UsersController, type: :controller do
       expect(assigns(:users)).to match_array([user, user1])
     end
     it 'lists users from office' do
+      get :index
+      expect(assigns(:users)).to match_array([user, user1])
+
       get :index, params: { office: 1 }
       expect(assigns(:users)).to match_array([user])
       get :index, params: { office: 2 }

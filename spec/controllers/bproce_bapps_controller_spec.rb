@@ -4,7 +4,7 @@ require 'rails_helper'
 RSpec.describe BproceBappsController, type: :controller do
   let(:owner)            { FactoryBot.create(:user) }
   let(:role)             { FactoryBot.create(:role, name: 'author', description: 'Автор') }
-  let!(:bproce)          { FactoryBot.create(:bproce) }
+  let!(:bproce)          { FactoryBot.create(:bproce, user_id: owner.id) }
   let!(:bapp)            { FactoryBot.create(:bapp) }
   let(:valid_attributes) { { bproce_id: bproce.id, bapp_id: bapp.id, apurpose: 'Purpose' } }
   let(:invalid_attributes) { { bproce_id: bproce.id, bapp_id: nil, apurpose: 'Purpose' } }
@@ -87,7 +87,7 @@ RSpec.describe BproceBappsController, type: :controller do
       it "re-renders the 'edit' template" do
         bproce_bapp = BproceBapp.create! valid_attributes
         expect_any_instance_of(BproceBapp).to receive(:save).and_return(false)
-        bproce = create(:bproce)
+        bproce = create(:bproce, user_id: owner.id)
         bapp = create(:bapp)
         bproce_bapp.bproce_id = bproce.id
         bproce_bapp.bapp_id = bapp.id
@@ -100,7 +100,7 @@ RSpec.describe BproceBappsController, type: :controller do
   describe 'DELETE destroy' do
     it 'destroys the requested bproce_bapp' do
       bproce_bapp = BproceBapp.create! valid_attributes
-      bproce = create(:bproce)
+      bproce = create(:bproce, user_id: owner.id)
       bapp = create(:bapp)
       bproce_bapp.bproce_id = bproce.id
       bproce_bapp.bapp_id = bapp.id

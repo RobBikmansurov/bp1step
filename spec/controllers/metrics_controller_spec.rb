@@ -3,11 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe MetricsController, type: :controller do
-  let(:valid_attributes)   { { name: 'Metric name', description: 'description1', bproce_id: 1, depth: 1 } }
-  let(:invalid_attributes) { { name: 'Metric name', description: 'description1', bproce_id: 1, depth: 1 } }
+  let(:user) { FactoryBot.create(:user) }
+  let(:bproce) { FactoryBot.create(:bproce, user_id: user.id) }
+  let(:valid_attributes)   { { name: 'Metric name', description: 'description1', bproce_id: bproce.id, depth: 1 } }
+  let(:invalid_attributes) { { name: 'Metric name', description: 'description1', bproce_id: bproce.id, depth: 1 } }
   let(:valid_session)      { {} }
-  let!(:metric) { FactoryBot.create :metric }
-  let!(:metric1) { FactoryBot.create :metric }
+  let!(:metric) { FactoryBot.create :metric, bproce_id: bproce.id }
+  let!(:metric1) { FactoryBot.create :metric, bproce_id: bproce.id }
 
   describe 'GET index' do
     it 'assigns all metrics as @metrics' do

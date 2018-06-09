@@ -9,7 +9,7 @@ describe ContractMailer do
 
   describe 'update_contract - file scan changed' do
     # def update_contract(contract, current_user, scan, action) рассылка ответственным об изменении договора или скана
-    let!(:scan) { FactoryBot.create :contract_scan }
+    let!(:scan) { FactoryBot.create :contract_scan, contract_id: contract.id }
     let!(:action) { 'изменен' }
     let(:mail) { ContractMailer.update_contract(contract, owner, scan, action) }
 

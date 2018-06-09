@@ -3,9 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do
-  let(:task_attributes) { { name: 'Task00', description: 'description', status: 0, duedate: Date.current + 1 } }
-  let(:task) { FactoryBot.create(:task) }
-  let(:task1) { FactoryBot.create(:task) }
+  let(:author) { FactoryBot.create :user }
+  let(:task_attributes) { { name: 'Task00', description: 'description', status: 0, duedate: Date.current + 1, author_id: author.id } }
+  let(:task) { FactoryBot.create(:task, author_id: author.id) }
+  let(:task1) { FactoryBot.create(:task, author_id: author.id) }
   before(:each) do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')

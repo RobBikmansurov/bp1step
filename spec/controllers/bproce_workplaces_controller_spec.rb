@@ -4,7 +4,7 @@ require 'rails_helper'
 RSpec.describe BproceWorkplacesController, type: :controller do
   let(:owner)            { FactoryBot.create(:user) }
   let(:role)             { FactoryBot.create(:role, name: 'author', description: 'Автор') }
-  let!(:bproce)          { FactoryBot.create(:bproce) }
+  let!(:bproce)          { FactoryBot.create(:bproce, user_id: owner.id) }
   let!(:workplace)       { FactoryBot.create(:workplace) }
   let(:bproce_workplace) { FactoryBot.create(:bproce_workplace, bproce_id: bproce.id, workplace_id: workplace.id) }
   let(:valid_attributes) { { bproce_id: bproce.id, workplace_id: workplace.id } }
@@ -48,7 +48,7 @@ RSpec.describe BproceWorkplacesController, type: :controller do
   describe 'DELETE destroy' do
     it 'destroys the requested bproce_workplace' do
       bproce_workplace = BproceWorkplace.create! valid_attributes
-      bproce = create(:bproce)
+      bproce = create(:bproce, user_id: owner.id)
       workplace = create(:workplace)
       bproce_workplace.bproce_id = bproce.id
       bproce_workplace.workplace_id = workplace.id

@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe BusinessRolesController, type: :controller do
-  let!(:user) { FactoryBot.create(:user) }
-  let!(:bproce) { FactoryBot.create(:bproce, user_id: user.id) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:bproce) { FactoryBot.create(:bproce, user_id: user.id) }
   let(:valid_attributes) do
     { name: 'business_role name', description: 'description', bproce_id: bproce.id }
   end
-  let(:invalid_attributes) { { name: 'invalid value' } }
+  let(:invalid_attributes) { { name: 'invalid value', bproce_id: bproce.id } }
   let(:valid_session) { {} }
   before(:each) do
     @user = FactoryBot.create(:user)

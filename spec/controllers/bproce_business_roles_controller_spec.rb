@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe BproceBusinessRolesController, type: :controller do
-  let!(:bproce)       { FactoryBot.create(:bproce) }
+  let(:user) { FactoryBot.create :user }
+  let(:bproce) { FactoryBot.create(:bproce, user_id: user.id) }
   let(:business_role) { FactoryBot.create(:business_role, bproce_id: bproce.id) }
   let(:valid_session) { {} }
 

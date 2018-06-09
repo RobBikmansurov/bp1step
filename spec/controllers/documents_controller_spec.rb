@@ -8,7 +8,7 @@ RSpec.describe DocumentsController, type: :controller do
   let(:invalid_document) { FactoryBot.create(:document, :invalid) }
   let!(:document)         { FactoryBot.create(:document, owner: owner) }
   let!(:doc2)             { FactoryBot.create(:document, owner: owner) }
-  let!(:bproce)           { FactoryBot.create(:bproce) }
+  let!(:bproce)           { FactoryBot.create(:bproce, user_id: owner.id) }
   let!(:bproce_document)  { BproceDocument.create(bproce_id: bproce.id, document_id: doc2.id, purpose: 'two') }
   let!(:bproce_document)  { BproceDocument.create(bproce_id: bproce.id, document_id: document.id, purpose: 'one') }
 

@@ -3,14 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe ContractsController do
+  let(:user) { FactoryBot.create :user }
+  let(:bproce) { FactoryBot.create(:broce, user_id: user.id) }
+  let(:agent) { FactoryBot.create(:agent) }
   let(:valid_attributes) do
-    { number: '1', name: 'name', status: 'status', description: 'description', owner_id: 1, contract_type: 'Договор' }
+    { number: '1', name: 'name', status: 'status', description: 'description', owner_id: user.id, agent_id: agent.id, contract_type: 'Договор' }
   end
   let(:valid_session) { {} }
   let(:valid_contracts)  { FactoryBot.create_list(:contract, 2) }
   let(:invalid_contract) { FactoryBot.create(:contract, :invalid) }
-  let(:bproce) { FactoryBot.create(:broce) }
-  let(:contract) { FactoryBot.create(:contract) }
+  let(:contract) { FactoryBot.create(:contract, owner_id: user.id, agent_id: agent.id) }
   let(:bproce_contract) { FactoryBot.create(:bproce_contract, bproce_id: bproce.id, contract_id: contract.id) }
   let(:current_user) { FactoryBot.create(:user, position: 'big_boss') }
 
@@ -30,7 +32,10 @@ RSpec.describe ContractsController do
     end
 
     it 'loads all of the contracts into @contracts' do
-      contracts = valid_contracts
+      contracts = [
+        FactoryBot.create(:contract, owner_id: user.id, agent_id: agent.id),
+        FactoryBot.create(:contract, owner_id: user.id, agent_id: agent.id)
+      ]
       get :index
       expect(assigns(:contracts)).to match_array(contracts)
     end

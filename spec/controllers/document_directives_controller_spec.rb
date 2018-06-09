@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe DocumentDirectivesController, type: :controller do
   let(:owner)            { FactoryBot.create(:user) }
   let(:role)             { FactoryBot.create(:role, name: 'author', description: 'Автор') }
-  let!(:bproce)          { FactoryBot.create(:bproce) }
+  let!(:bproce)          { FactoryBot.create(:bproce, user_id: owner.id) }
   let!(:document)        { FactoryBot.create(:document, owner: owner) }
   let!(:directive)       { FactoryBot.create(:directive) }
   let(:document_directive) { FactoryBot.create(:document_directive, document_id: document.id, directive_id: directive.id) }

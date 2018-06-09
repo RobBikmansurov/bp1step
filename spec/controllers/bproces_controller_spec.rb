@@ -3,8 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe BprocesController, type: :controller do
-  let(:bproce) { FactoryBot.create :bproce }
-  let(:bproce1) { FactoryBot.create :bproce }
+  let(:user) { FactoryBot.create :user }
+  let(:bproce) { FactoryBot.create :bproce, user_id: user.id }
+  let(:bproce1) { FactoryBot.create :bproce, user_id: user.id }
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
   before(:each) do
@@ -31,7 +32,7 @@ RSpec.describe BprocesController, type: :controller do
 
   describe 'GET show' do
     it 'assigns the requested bproce as @bproce' do
-      metric = create(:metric)
+      metric = create(:metric, bproce_id: bproce.id)
       directive = create(:directive)
       get :show, params: { id: bproce.to_param }
       expect(assigns(:bproce)).to eq(bproce)

@@ -4,8 +4,8 @@ require 'rails_helper'
 RSpec.describe BproceDocumentsController, type: :controller do
   let(:owner)            { FactoryBot.create(:user) }
   let(:role)             { FactoryBot.create(:role, name: 'author', description: 'Автор') }
-  let!(:bproce)          { FactoryBot.create(:bproce) }
-  let!(:bproce2)         { FactoryBot.create(:bproce) }
+  let!(:bproce)          { FactoryBot.create(:bproce, user_id: owner.id) }
+  let!(:bproce2)         { FactoryBot.create(:bproce, user_id: owner.id) }
   let!(:document)        { FactoryBot.create(:document, owner: owner) }
   let(:bproce_document)  { FactoryBot.create(:bproce_document, bproce_id: bproce.id, document_id: document.id) }
   let(:valid_attributes) { { bproce_id: bproce.id, document_id: document.id } }
@@ -107,7 +107,7 @@ RSpec.describe BproceDocumentsController, type: :controller do
   describe 'DELETE destroy' do
     it 'destroys bproce_document if it has > 1 bproce' do
       # документ должен ссылаться хотя бы на 1 процесс
-      bproce1 = FactoryBot.create(:bproce)
+      bproce1 = FactoryBot.create(:bproce, user_id: owner.id)
       bproce_document1 = FactoryBot.create(:bproce_document, bproce_id: bproce1.id, document_id: document.id)
       bproce_document2 = FactoryBot.create(:bproce_document, bproce_id: bproce2.id, document_id: document.id)
       expect do

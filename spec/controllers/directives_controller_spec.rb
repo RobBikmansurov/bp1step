@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe DirectivesController do
-  # let(:valid_attributes) { FactoryBot.create :directive }
+  let(:user) { FactoryBot.create :user }
   let(:valid_attributes) { { approval: '01.01.2013', number: '100', name: 'directive_name', body: 'test' } }
   let(:invalid_attributes) { { approval: '01.01.2013', number: '', name: 'directive_name', body: 'test' } }
   let(:valid_session) { { 'warden.user.user.key' => session['warden.user.user.key'] } }
@@ -30,7 +30,7 @@ RSpec.describe DirectivesController do
 
   describe 'GET show' do
     it 'assigns the requested directive as @directive' do
-      @bproce = FactoryBot.create(:bproce)
+      @bproce = FactoryBot.create(:bproce, user_id: user.id)
       directive = Directive.create! valid_attributes
       get :show, params: { id: directive.to_param }
       expect(assigns(:directive)).to eq(directive)
