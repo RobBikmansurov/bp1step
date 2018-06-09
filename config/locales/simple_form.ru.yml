@@ -186,3 +186,8 @@ ru:
         typical: Типовое рабочее место
     error_notification:
       default_message: 'Упс, ошибки! Исправьте, пожалуйста:'
+
+  helpers:
+    submit:
+      create: "Add %{model}"
+      update: "Save Changes"

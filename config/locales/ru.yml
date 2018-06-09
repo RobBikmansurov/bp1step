@@ -317,3 +317,7 @@ ru:
           attributes:
             author:
               required: 'не указан автор'
+        task:
+          attributes:
+            author:
+              required: 'автор не указан'
