@@ -8,5 +8,3 @@
 //= require jquery_ujs
 //= require_tree .
 //= require autocomplete-rails
-//= datepicker.translate.js
-//= require jquery-ui/datepicker
