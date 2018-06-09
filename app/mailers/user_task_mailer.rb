@@ -3,7 +3,8 @@
 class UserTaskMailer < ActionMailer::Base
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
-  def user_task_create(user_task, current_user)	# рассылка о назначении исполнителя
+  # рассылка о назначении исполнителя
+  def user_task_create(user_task, current_user)
     @user_task = user_task
     @task = user_task.task
     @user = user_task.user
@@ -12,7 +13,8 @@ class UserTaskMailer < ActionMailer::Base
          subject: "BP1Step: Вы - #{user_task.status.positive? ? 'отв.' : ''}исполнитель Задачи ##{@task.id}")
   end
 
-  def user_task_destroy(user_task, current_user)	# рассылка об удалении исполнителя
+  # рассылка об удалении исполнителя
+  def user_task_destroy(user_task, current_user)
     @user_task = user_task
     @task = user_task.task
     @user = user_task.user

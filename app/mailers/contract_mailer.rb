@@ -10,12 +10,13 @@ class ContractMailer < ActionMailer::Base
     @contract = contract
     @scan = scan
     @action = action
-    owner_email = @contract.owner&.email # ответственный за договор
-    payer_email = @contract.payer&.email # ответственный за оплату договора
+    owner_email = @contract.owner&.email
+    payer_email = @contract.payer&.email
     address = []
     address << owner_email if owner_email.present?
     address << payer_email if payer_email.present?
-    address << 'bard@bankperm.ru' if @contract.payer # добавим в получатели Бардина для контроля
+    # добавим в получатели Бардина для контроля
+    address << 'bard@bankperm.ru' if @contract.payer
     @current_user = current_user
     if @scan
       mail(to: address.join(', '),
@@ -36,7 +37,7 @@ class ContractMailer < ActionMailer::Base
   end
 
   # рассылка о просроченных договорах
-  def check_outdated_contracts(contract, emails, text) 
+  def check_outdated_contracts(contract, emails, text)
     @contract = contract
     @text = text
     mail(to: emails, subject: "BP1Step: #{@text} договор ##{@contract.id}")

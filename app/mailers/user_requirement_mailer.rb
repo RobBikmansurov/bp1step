@@ -3,7 +3,8 @@
 class UserRequirementMailer < ActionMailer::Base
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
-  def user_requirement_create(user_requirement, current_user)	# рассылка о назначении исполнителя
+  # рассылка о назначении исполнителя
+  def user_requirement_create(user_requirement, current_user)
     @user_requirement = user_requirement
     @requirement = user_requirement.requirement
     @user = user_requirement.user
@@ -12,7 +13,8 @@ class UserRequirementMailer < ActionMailer::Base
          subject: "BP1Step: Вы - #{user_requirement.status.positive? ? 'отв.' : ''}исполнитель Требования ##{@requirement.id}")
   end
 
-  def user_requirement_destroy(user_requirement, current_user)	# рассылка об удалении исполнителя
+  # рассылка об удалении исполнителя
+  def user_requirement_destroy(user_requirement, current_user)
     @user_requirement = user_requirement
     @requirement = user_requirement.requirement
     @user = user_requirement.user
