@@ -51,9 +51,9 @@ namespace :bp1step do
       next if File.stat(f).directory?
       nf += 1
       fname = f[pathfrom.size..-1]
-      logger.info '#{nf} #{fname}'
+      logger.info "#{nf} #{fname}"
     end
-    logger.info 'All: #{nn} docs, but #{nf} files not found'
+    logger.info "All: #{nn} docs, but #{nf} files not found"
   end
 
   desc 'Check_bproces_roles'

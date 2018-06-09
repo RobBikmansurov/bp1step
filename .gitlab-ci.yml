@@ -1,4 +1,4 @@
-image: "ruby:2.4"
+image: "ruby:2.5.1"
 
 cache:
   paths:
@@ -25,7 +25,7 @@ install:
     - cp config/database.yml{.example,}
     - cp config/ldap.yml{.example,}
     - bundle install --jobs=3 --without development production -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
-    - bundle exec rake db:create RAILS_ENV=test
+    - bundle exec rake db:create db:migrate RAILS_ENV=test
     - uname -a
     # check postgres
     - export PGPASSWORD=$POSTGRES_PASSWORD
@@ -47,8 +47,7 @@ rubocop:
   script:
     - gem install rubocop
     - rubocop -V
-    - rubocop app/models/
-    - rubocop lib/tasks/
+    # - rubocop app/models/
     - rubocop app/mailers
     # - rubocop -fo
   allow_failure: true
