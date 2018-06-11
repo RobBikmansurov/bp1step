@@ -7,7 +7,8 @@ RSpec.describe ContractsController do
   let(:bproce) { FactoryBot.create(:broce, user_id: user.id) }
   let(:agent) { FactoryBot.create(:agent) }
   let(:valid_attributes) do
-    { number: '1', name: 'name', status: 'status', description: 'description', owner_id: user.id, agent_id: agent.id, contract_type: 'Договор' }
+    { number: '1', name: 'name', status: 'status', description: 'description',
+      owner_id: user.id, agent_id: agent.id, contract_type: 'Договор' }
   end
   let(:valid_session) { {} }
   let(:valid_contracts)  { FactoryBot.create_list(:contract, 2) }
@@ -109,9 +110,9 @@ RSpec.describe ContractsController do
       it 'assigns the requested contract as @contract' do
         contract = Contract.create! valid_attributes
         user = FactoryBot.create(:user)
-        # contract.owner_id = user.id
-        # contract.payer_id = user.id
-        # current_user = FactoryBot.create(:user)
+        contract.owner_id = user.id
+        contract.payer_id = user.id
+        contract.save
         put :update, params: { id: contract.to_param,
                                contract: { number: '1', name: 'name', status: 'status', description: 'description',
                                            owner_id: user.id, contract_type: 'Договор' } }
@@ -121,6 +122,9 @@ RSpec.describe ContractsController do
       it 'redirects to the contract' do
         contract = Contract.create! valid_attributes
         user = FactoryBot.create(:user)
+        contract.owner_id = user.id
+        contract.payer_id = user.id
+        contract.save
         put :update, params: { id: contract.to_param,
                                contract: { number: '1', name: 'name', status: 'status', description: 'description',
                                            owner_id: user.id, contract_type: 'Договор' } }
