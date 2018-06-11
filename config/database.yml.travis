@@ -2,4 +2,4 @@ test:
   adapter: postgresql
   encoding: unicode
   database: travis_ci_test
-  username: bp1step
+  username: postgres
