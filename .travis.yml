@@ -1,25 +1,24 @@
 language: ruby
 rvm:
   - 2.5.1
-cache: bundler
-bundler_args: --without production
-script:
-  - cp config/database.yml{.example,}
+addons:
+  postgresql: 10.0
+  code_climate:
+      repo_token: 335a735b208d1bed019b39913103142a74f992b394cd798b7d974d7d798c5769
+after_success:
+  - bundle exec codeclimate-test-reporter
+before_script:
+  - cp config/database.yml.travis config/database.yml
   - cp config/ldap.yml{.example,}
-  - bundle exec rake db:create
-  - bundle exec rake db:migrate
-  - bundle exec rake db:seed
   # change ldap-auth to database-auth 
   - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
   - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
   - sed -i 's/before_save :ldap_email/# before_save :ldap_email/g' app/models/user.rb
-
+  - psql -c 'create database travis_ci_test;' -U postgres
+script:
+  - bundle exec rails db:migrate db:seed RAILS_ENV=test
   - bundle exec rspec --exclude-pattern "spec/features/*_spec.rb"
-
-  # - bundle exec rake db:seed
-  - gem install rubocop
-
 branches:
  only:
   - master
-
+  
