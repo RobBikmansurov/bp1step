@@ -100,7 +100,7 @@ RSpec.describe BproceBappsController, type: :controller do
   describe 'DELETE destroy' do
     it 'destroys the requested bproce_bapp' do
       bproce_bapp = BproceBapp.create! valid_attributes
-      bproce = create(:bproce, user_id: owner.id)
+      #bproce = create(:bproce, user_id: owner.id)
       bapp = create(:bapp)
       bproce_bapp.bproce_id = bproce.id
       bproce_bapp.bapp_id = bapp.id
@@ -111,8 +111,11 @@ RSpec.describe BproceBappsController, type: :controller do
 
     it 'redirects to the bproce_bapps list' do
       bproce_bapp = BproceBapp.create! valid_attributes
-      delete :destroy, params: { id: bproce_bapp.to_param }
-      expect(response).to redirect_to bapp_url
+      bapp = create(:bapp)
+      bproce_bapp.bproce_id = bproce.id
+      bproce_bapp.bapp_id = bapp.id
+      delete :destroy, params: { id: bproce_bapp.to_param, bproce_id: bproce.to_param }
+      expect(response).to redirect_to bproce_url(id: bproce.to_param)
     end
   end
 end
