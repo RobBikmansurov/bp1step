@@ -198,10 +198,10 @@ class UsersController < ApplicationController
 
   private
 
-  def user_params
-    params.require(:user).permit(:user_name, :office, :email,
-      :encrypted_password, :last_sign_in_at, :created_at, :updated_at, :firstname, :lastname, :username, :displayname)
-  end
+  # def user_params
+  #   params.require(:user).permit(:user_name, :office, :email,
+  #     :encrypted_password, :last_sign_in_at, :created_at, :updated_at, :firstname, :lastname, :username, :displayname)
+  # end
 
   def avatar_params
     params.require(:user).permit(:avatar)

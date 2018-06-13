@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MetricsController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
@@ -9,16 +11,13 @@ class MetricsController < ApplicationController
     if params[:depth].present?
       @metrics = Metric.where(depth: params[:depth])
       @title_metrics += " [глубина данных: #{params[:depth]}]"
+    elsif params[:mtype].present?
+      @metrics = Metric.where(mtype: params[:mtype])
+      @title_metrics += " [тип: #{params[:mtype]}]"
     else
-      if params[:mtype].present?
-        @metrics = Metric.where(mtype: params[:mtype])
-        @title_metrics += " [тип: #{params[:mtype]}]"
-      else
-        @metrics = Metric.search(params[:search])
-      end
+      @metrics = Metric.search(params[:search])
     end
     @metrics = @metrics.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-    render :index
   end
 
   def show
@@ -70,7 +69,7 @@ class MetricsController < ApplicationController
 
   def create
     @metric = Metric.new(metric_params)
-    @metric.mhash = Digest::MD5.hexdigest(rand().to_s) # для новой метрики создадим HASH по умолчанию
+    @metric.mhash = Digest::MD5.hexdigest(rand.to_s) # для новой метрики создадим HASH по умолчанию
     if @metric.save
       redirect_to @metric, notice: 'Metric was successfully created.'
     else
@@ -93,14 +92,10 @@ class MetricsController < ApplicationController
 
   def values
     @current_period_date = Time.current
-    if params[:date].presence
-      @current_period_date = params[:date].to_time
-    end
+    @current_period_date = params[:date].to_time if params[:date].presence
     @prev_period_date = @current_period_date - @current_period_date.day.days
     @next_period_date = @current_period_date.end_of_month + 1
-    if @next_period_date == (Time.current.end_of_month + 1)
-      @next_period_date = nil
-    end
+    @next_period_date = nil if @next_period_date == (Time.current.end_of_month + 1)
     values = MetricValue.where(metric_id: @metric.id)
     @values = case @metric.depth # список значений за выбранный период
               when 1..2 then values.where(dtime: (@current_period_date.beginning_of_year..@current_period_date.end_of_year)).order(:dtime)
@@ -120,24 +115,25 @@ class MetricsController < ApplicationController
     render 'metric_values/new'
   end
 
-  def set # http: GET /metrics/ID/set?v=VALUE&h=HASH
+  # http: GET /metrics/ID/set?v=VALUE&h=HASH
+  def set
     @metric = Metric.find(params[:id])
     if @metric && params[:v].presence && params[:h].presence
       where_datetime = @metric.sql_period Time.current.utc
       value = MetricValue.where('metric_id = ?', @metric.id).where("dtime BETWEEN #{where_datetime}").first
-      value = MetricValue.new(metric_id: @metric.id) unless value # не нашли - добавим новое значение
+      value ||= MetricValue.new(metric_id: @metric.id) # не нашли - добавим новое значение
       value.dtime = Time.current # обновим время записи значения
       if Digest::MD5.hexdigest(@metric.mhash) == params[:h]
         value.value = params[:v]
         value.save
-        render nothing: true, status: 200, content_type: 'text/html'
+        render nothing: true, status: :ok, content_type: 'text/html'
       else
-        render nothing: true, status: 400, content_type: 'text/html'
+        render nothing: true, status: :bad_request, content_type: 'text/html'
       end
     else
-      render nothing: true, status: 404, content_type: 'text/html'
+      render nothing: true, status: :not_found, content_type: 'text/html'
     end
-  end
+ end
 
   def test
     test_date = @metric.sql_period_beginning_of
@@ -168,7 +164,7 @@ class MetricsController < ApplicationController
           @test << row.inspect
           @test_value = row['count']
         end
-      rescue => error
+      rescue StandardError => error
         logger.info "      ERR: #{@sql}"
         @test << "ERR: #{@sql}\n"
         @test << error.inspect
@@ -208,9 +204,9 @@ class MetricsController < ApplicationController
       (d1.to_i..d2.to_i).step(1.day) do |d|
         sql = @metric.msql.gsub(/\r\n?/, ' ') # заменим \n \r на пробелы
 
-        sql_period = @metric.sql_period Time.at(d), depth + 1
+        sql_period = @metric.sql_period Time.at.utc(d), depth + 1
         sql.gsub!(/##PERIOD##/, sql_period) # заменим период
-        sql_date = @metric.sql_period_beginning_of Time.at(d), depth + 1
+        sql_date = @metric.sql_period_beginning_of Time.at.utc(d), depth + 1
         sql.gsub!(/##DATE##/, sql_date) # заменим дату
         new_value = nil
         begin
@@ -222,9 +218,8 @@ class MetricsController < ApplicationController
           results.each do |row|
             new_value = row['count']
           end
-        rescue => error
+        rescue StandardError => error
           logger.error "      ERR: #{sql}\n#{error}"
-        ensure
         end
         if new_value
           if new_value.positive?
@@ -233,17 +228,17 @@ class MetricsController < ApplicationController
             p ids
             value = MetricValue.where(metric_id: @metric.id).where("dtime BETWEEN #{sql_period}").first
             p value
-            value = MetricValue.new(metric_id: @metric.id) unless value # не нашли? - новое значение
+            value ||= MetricValue.new(metric_id: @metric.id) # не нашли? - новое значение
             p value
             value.value = new_value
-            value.dtime = Time.at(d) # обновим время записи значения
+            value.dtime = Time.at.utc(d) # обновим время записи значения
             logger.error "#{@metric.id} #{value.errors}" unless value.save
           end
         end
       end
       mssql&.close
     end
-    redirect_to action: :show and return
+    redirect_to(action: :show) && return
   end
 
   private

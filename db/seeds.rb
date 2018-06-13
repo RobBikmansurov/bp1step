@@ -224,8 +224,8 @@ puts 'processes created'
 # iresource
 Array.new(50) do |_i|
   url = Faker::Internet.url.sub 'http:', ['//srv', '//s', 'aws:', 'https:', 'ftp:'][rand(5)]
-  label = Faker::Lorem.sentence(1)[0, 20]
-  label = Faker::Lorem.sentence(1)[0, 20] if Iresource.where(label: label).any?
+  label = Faker::Lorem.words(5)[0, 17] + Faker::String.random(3)
+  label = (Faker::Lorem.words(5)[0, 17] + Faker::String.random(3)) if Iresource.where(label: label).any?
   Iresource.create!(
     level: %w[FS DB SPR API local][rand(5)],
     label: label,
