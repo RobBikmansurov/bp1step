@@ -37,6 +37,10 @@ rspec:
     - apt-get update -q && apt-get install nodejs -yqq
     - cp config/database.yml{.example,}
     - cp config/ldap.yml{.example,}
+    # change ldap-auth to database-auth 
+    - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
+    - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
+    - sed -i 's/before_save :ldap_email/# before_save :ldap_email/g' app/models/user.rb
     - bundle install --jobs=3 --without development staging production -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
     - bundle exec rake RAILS_ENV=test db:create
     - bundle exec rake RAILS_ENV=test db:migrate
@@ -58,9 +62,8 @@ rails:
   - apt-get update -qq && apt-get install -yqq nodejs libpq-dev
   - cp config/database.yml{.example,}
   - cp config/ldap.yml{.example,}
-  - gem install bundler --no-ri --no-rdoc    # Bundler is not installed with the image
-  - bundle install -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
-
+  - gem install bundler --no-ri --no-rdoc
+  - bundle install -j $(nproc) --path vendor
   # change ldap-auth to database-auth 
   - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
   - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
