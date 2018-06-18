@@ -31,7 +31,6 @@
   - format = '.pdf'
   - format << '?' + request.query_string if request.query_string
   = link_to 'Список', bproces_path + format, :class => 'button'
-  = link_to "Добавить новый процесс" , new_bproce_path, :class => 'button'
 %p
 Теги:
 = raw Bproce.all_tags.map { |t| link_to t.name, tag_bproces_path(t.name), class: 'tags' }.join('&nbsp; ')

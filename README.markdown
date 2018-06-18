@@ -85,6 +85,8 @@ Demo: [bp1step.herokuapp.com](https://bp1step.herokuapp.com/about) - без вх
 
 >cd BPDoc
 
+>rake app:update:bin
+
 Настройте доступ к БД, в тестовом примере используется SQLite3.
 Достаточно просто скопировать config/database.yml.example в config/database.yml
 

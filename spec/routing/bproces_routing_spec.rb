@@ -8,8 +8,8 @@ RSpec.describe BprocesController, type: :routing do
       expect(get: '/bproces').to route_to('bproces#index')
     end
 
-    it 'routes to #new' do
-      expect(get: '/bproces/new').to route_to('bproces#new')
+    it 'routes to #new_sub_process' do
+      expect(get: '/bproces/1/new_sub_process').to route_to('bproces#new_sub_process', id: '1')
     end
 
     it 'routes to #show' do

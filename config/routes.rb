@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   resources :bproce_workplaces, only: [:create, :destroy, :show]
   resources :bproce_contracts, except: :index
   resources :bproce_documents, except: :index
-  resources :bproces do
+  resources :bproces, except: :new do
     resources :bapps
     resources :business_roles, only: [:new]
     resources :documents, only: [:new, :index]
@@ -42,6 +42,7 @@ Rails.application.routes.draw do
       get :metrics # метрики процесса
       get :new_metric # добавить новую метрику в процесс
       get :new_document, to: 'documents#new'
+      get :new_sub_process # добавить подпроцесс
     end
   end
   resources :business_roles do

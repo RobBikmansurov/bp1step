@@ -1,7 +1,8 @@
 -# основные реквизиты Процесса
 = simple_form_for(@bproce) do |f|
-  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
-  = @bproce.errors.messages
+  = f.error_notification
+  -# = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+  -# = @bproce.errors.messages
   = f.hidden_field :parent_id
   = f.input :shortname
   = f.input :name
@@ -10,13 +11,19 @@
   = f.input :description
   
   -#= f.input :user_name, data: {autocomplete_source: autocomplete_users_path}, :as => :autocomplete, :label => 'Владелец процесса', :prompt => 'Владелец процесса'
-  = f.label 'Владелец процесса'
-  = f.autocomplete_field :user_name, autocomplete_users_path  
+  -if @parent
+    = f.hidden_field :user_name, value: @parent.user&.displayname
+  -else
+    = f.label 'Владелец процесса'
+    = f.autocomplete_field :user_name, autocomplete_users_path
   
   -#= f.association :parent, :collection => Bproce.all(:order => 'name'), :label => 'Родительский процесс', :include_blank => false, :prompt => 'Выберите родительский процесс из списка'
   %p
-  = f.label 'Родительский процесс'
-  = f.autocomplete_field :parent_name, autocomplete_bproces_path
+  -if @parent
+    = f.hidden_field :parent_name, value: @parent.name
+  -else
+    = f.label 'Родительский процесс'
+    = f.autocomplete_field :parent_name, autocomplete_bproces_path
   = f.input :checked_at, as: :string, :input_html => {:class=>'datepicker'}  if can? :create, @bproce
   = f.input :tag_list, :label => 'Теги (через запятую)' if can? :manage_tag, @bproce
 

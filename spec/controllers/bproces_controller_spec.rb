@@ -32,16 +32,16 @@ RSpec.describe BprocesController, type: :controller do
 
   describe 'GET show' do
     it 'assigns the requested bproce as @bproce' do
-      metric = create(:metric, bproce_id: bproce.id)
-      directive = create(:directive)
+      # metric = create(:metric, bproce_id: bproce.id)
+      # directive = create(:directive)
       get :show, params: { id: bproce.to_param }
       expect(assigns(:bproce)).to eq(bproce)
     end
   end
 
-  describe 'GET new' do
-    it 'assigns a new bproce as @bproce' do
-      get :new
+  describe 'GET new_sub_process' do
+    it 'assigns a new sub_bproce as @bproce' do
+      get :new_sub_process, params: { id: bproce.to_param }
       expect(assigns(:bproce)).to be_a_new(Bproce)
     end
   end
@@ -86,9 +86,9 @@ RSpec.describe BprocesController, type: :controller do
         expect(assigns(:bproce)).to be_a_new(Bproce)
       end
 
-      it "re-renders the 'new' template" do
+      it "re-renders the 'new_sub_process' template" do
         post :create, params: { bproce: invalid_attributes }
-        expect(response).to render_template('new')
+        expect(response).to render_template('new_sub_process')
       end
     end
   end

@@ -1,0 +1,13 @@
+-title 'Процесс'
+-search "Процесс"
+%h2 Новый подпроцесс процесса
+-if @parent
+  %h3
+    %b
+      [#{@parent.shortname}]
+    = link_to @parent.name, bproce_path(@parent)
+
+= render 'form'
+
+%p
+= link_to 'Back', bproces_path, :class => 'button'

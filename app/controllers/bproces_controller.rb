@@ -72,8 +72,10 @@ class BprocesController < ApplicationController
     print_order
   end
 
-  def new
-    # respond_with(@bproce)
+  def new_sub_process
+    @parent = @bproce
+    @bproce = Bproce.new(parent_id: @parent.id)
+    respond_with(@bproce)
   end
 
   def edit
@@ -83,12 +85,16 @@ class BprocesController < ApplicationController
     @bproce_bapp = BproceBapp.new(bproce_id: @bproce.id) # заготовка для нового приложения
     @bproce_workplace = BproceWorkplace.new(bproce_id: @bproce.id)  # заготовка для нового рабочего места
     @bproce_iresource = BproceIresource.new(bproce_id: @bproce.id)  # заготовка для нового ресурса
+    @parent = @bproce.parent if @bproce.parent_id # родительский процесс
   end
 
   def create
     @bproce = Bproce.new(bproce_params)
-    flash[:notice] = 'Bproce was successfully created.' if @bproce.save
-    respond_with(@bproce)
+    if @bproce.save
+      redirect_to @bproce, notice: 'SubProcess was successfully created.'
+    else
+      render action: 'new_sub_process'
+    end
   end
 
   def update
