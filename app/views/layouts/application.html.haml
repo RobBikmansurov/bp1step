@@ -3,14 +3,11 @@
   %head
     %title
       BP1Step: #{yield (:title) || "Business Process 1st Step"}
-    %meta{ charset: 'utf-8' }
+    %meta{:charset => "utf-8"}/
+    %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}/
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
     = favicon_link_tag 'favicon.ico'
-    -#= stylesheet_link_tag 'blueprint/print', :media => "print"
-    -#= stylesheet_link_tag 'blueprint/screen'
-    -#= stylesheet_link_tag 'pagination'
-    -#= stylesheet_link_tag 'simple_form'
-    -#= stylesheet_link_tag 'style'
-    -#= stylesheet_link_tag 'autocomplete'
+    -#= favicon_link_tag 'favicon.png', rel: 'icon', type: 'image/png'
     = stylesheet_link_tag    "application"
     = yield :css
     = javascript_include_tag "application"
@@ -88,16 +85,19 @@
         - flash.each do |name, msg|
           = content_tag :div, msg, :id => "flash_#{name}"
         = yield
-      %hr
-      #footer.span-18
-        &copy;
-        %a{:href => "/"} BP1Step
-        2012-2018
-      #footer.span-4
-        rev.
-        = "#{Git::REVISION}"[0..6]
-      #footer.span-2.last
-        - if user_signed_in?
-          - if can? :assign_roles, User
-            .right
-              = link_to 'Monit', root_url(port: 2812, only_path: false)
+
+  %footer.footer
+    .container
+      .columns
+        .column
+          &copy; 
+          = link_to 'BP1Step', '/'
+          2012-2018
+        .column.is-one-fifth
+          rev.
+          = "#{Git::REVISION}"[0..6]
+          - if user_signed_in?
+            - if can? :assign_roles, User
+              .right
+                = link_to 'Monit', root_url(port: 2812, only_path: false)
+  %script{:defer => "defer", :src => "https://use.fontawesome.com/releases/v5.0.7/js/all.js"}
