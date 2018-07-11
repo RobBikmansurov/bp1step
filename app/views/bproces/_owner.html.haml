@@ -1,0 +1,8 @@
+-# = render partial: 'owner', locals: { owner_id: @bproce.user_id, owner_name: @bproce.user.displaname }
+%h3
+  Владелец процесса:
+  -if owner_id
+    = link_to owner_name, user_path(owner_id)
+  -else
+    %b
+      не задан

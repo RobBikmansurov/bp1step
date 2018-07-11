@@ -1,12 +1,8 @@
 -title 'Процесс'
 -search "Процесс"
-%h2 Новый подпроцесс процесса
--if @parent
-  %h3
-    %b
-      [#{@parent.shortname}]
-    = link_to @parent.name, bproce_path(@parent)
-
+%h2 Новый подпроцесс
+= render partial: 'parent', locals: { parent_id: @parent.id, parent_name: @parent.name }
+= render partial: 'owner', locals: { owner_id: @bproce.user_id, owner_name: @bproce.user&.displayname }
 = render 'form'
 
 %p

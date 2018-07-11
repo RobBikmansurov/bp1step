@@ -138,7 +138,9 @@ class BprocesController < ApplicationController
   private
 
   def bproce_params
-    params.require(:bproce).permit(:name, :shortname, :fullname, :goal, :parent_id, :parent_name, :user_id, :user_name, :description)
+    params.require(:bproce).permit(:name, :shortname, :fullname, :goal,
+                   :parent_id, :parent_name_form,
+                   :user_id, :user_name_form, :description)
   end
 
   def sort_column
