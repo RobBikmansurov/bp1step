@@ -3,7 +3,8 @@
 .id_
   \#
   = @bproce.id
-%h1 Процесс 
+%h2 Изменить процесс 
+= render partial: 'parent', locals: { parent_id: @bproce.parent.id, parent_name: @bproce.parent.name }
 = render 'form'
 %p
 = render 'business_roles'
@@ -12,5 +13,5 @@
 = render 'workplaces'
 = render 'iresources'
 
-= link_to 'Show', @bproce, :class => 'button'
-= link_to 'Back', bproces_path, :class => 'button'
+= link_to 'Show', @bproce, class: 'button'
+= link_to 'Back', bproces_path, class: 'button'

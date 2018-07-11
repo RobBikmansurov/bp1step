@@ -10,10 +10,8 @@
   %b
     [#{@bproce.shortname}]
   = @bproce.name
--if @bproce.parent_id
-  %h3
-    Родительский процесс:
-    = link_to @bproce.parent.name, bproce_path(@bproce.parent_id)
+= render partial: 'parent', locals: { parent_id: @bproce.parent.id, parent_name: @bproce.parent.name }
+
 %h3 Подпроцессы:
 - Bproce.where("lft>? and rgt<?", @bproce.lft, @bproce.rgt).order("lft").each do |bp|
   = "——" * (bp.depth - @bproce.depth)
@@ -39,13 +37,9 @@
 -if !@bproce.description.blank?
   %h4 Краткое описание:
   = raw markdown_and_link(@bproce.description, @bproce.business_roles)
-%h3
-  Владелец процесса:
-  -if @bproce.user_id?
-    = link_to User.find(@bproce.user_id).displayname, user_path(@bproce.user_id)
-  -else
-    %b
-      не задан
+
+= render partial: 'owner', locals: { owner_id: @bproce.user_id, owner_name: @bproce.user.displayname }
+
 Теги процесса:
 = raw @bproce.tag_list.map { |t| link_to t, bproces_path + '/tags/' + t, class: 'tags' }.join('&nbsp; ')
 
