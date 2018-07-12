@@ -19,72 +19,89 @@
     = csrf_meta_tag
     = yield(:head)
   %body
-    .container
-      #header.span-24.last
-        %logo.span-7
-          =link_to image_tag("logo.png", alt: 'Home', height: 50), '/', class: 'button-img'
-        #search.span-9
-          -if params[:controller] == 'pages' or params[:controller] == 'activities' or params[:controller] == 'bproce_business_roles'
-            &nbsp;
-          -else
-            %form.inline{:method => "get"}
-              %input{:name => "search", :type => "search", :value => params[:search], :placeholder => "искать #{yield (:search)}", required: :true}
-              -#%button{type: 'submit'} Искать
-            %sup введите подстроку поиска
-            
-        #users.span-8.last
-          .right
-            - if user_signed_in?
-              = link_to current_user.displayname, user_path(current_user)
-              %small
-                = current_user.last_sign_in_at&.strftime('%d.%m.%y %H:%M:%S')
-              -#.round-image-50
-                = link_to image_tag(current_user.avatar.url(:thumb)), user_path(current_user, anchor: "Places")
-              %br= link_to "Выйти", destroy_user_session_path, method: :delete
-
-            - else
-              = link_to "Войти", new_user_session_path
-        #menu.span-24.last
-          %ul.nav
-            =content_tag(:li, :class => nav_current(bproces_path)) do
-              =link_to "Процессы", bproces_path
-              %ul.nav
-                =nav_link "Процессы", bproces_path
+    / START NAV
+    %nav.navbar
+      .container
+        .navbar-brand
+          %a.navbar-item{href: '/'}
+            = image_tag("logo.png", alt: 'Home', heigh: 50)
+          %span.navbar-burger.burger{"data-target" => "navbarMenu"}
+            %span
+            %span
+            %span
+        #navbarMenu.navbar-menu
+          .navbar-start
+            .navbar-item.has-dropdown.is-hoverable
+              %a.navbar-link
+                Процессы
+              .navbar-dropdown
+                %a.navbar-item{href: bproces_path}Прооцессы
                 - if user_signed_in?
                   -if can? :crud, Metric
-                    =nav_link "Метрики", metrics_path + '?sort=name'
-            =content_tag(:li, :class => nav_current(business_roles_path)) do
-              =link_to "Ресурсы", business_roles_path
-              %ul.nav
-                =nav_link "Роли", business_roles_path
-                =nav_link "Места", workplaces_path
-                =nav_link "Приложения", bapps_path
-                =nav_link "Инф.ресурсы", iresources_path
-            =content_tag(:li, :class => nav_current(bproces_path)) do
-              =link_to "Документы", documents_path
-              %ul.nav
-                =nav_link "Документы", documents_path
-                =nav_link "Директивы", directives_path
-                =nav_link 'Термины', terms_path
+                    %a.navbar-item{href: metrics_path + '?sort=name'}Метрики
+            .navbar-item.has-dropdown.is-hoverable
+              %a.navbar-link
+                Ресурсы
+              .navbar-dropdown
+                %a.navbar-item{ href: business_roles_path } Роли
+                %a.navbar-item{ href: workplaces_path } Места
+                %a.navbar-item{ href: bapps_path } Приложения
+                %a.navbar-item{ href: iresources_path } Инф.ресурсы
+            .navbar-item.has-dropdown.is-hoverable
+              %a.navbar-link
+                Документы
+              .navbar-dropdown
+                %a.navbar-item{ href: documents_path } Документы
+                %a.navbar-item{ href: directives_path } Директивы
+                %a.navbar-item{ href: terms_path } Термины
                 - if user_signed_in?
                   -if can? :show, Contract
-                    =nav_link "Договоры", contracts_path
-                    =nav_link "Контрагенты", agents_path
+                    %a.navbar-item{ href: contracts_path } Договоры
+                    %a.navbar-item{ href: agents_path } Контрагенты
             -if user_signed_in?
-              =content_tag(:li, :class => nav_current(tasks_path)) do
-                =link_to 'Задачи', letters_path
-                %ul.nav
-                  = nav_link 'Письма', letters_path
-                  = nav_link 'Задачи', tasks_path 
-                  = nav_link 'Требования', requirements_path
-            =nav_link "Сотрудники", users_path
-          %ul.nav{:style => "float:right"}
-            -#%li Настройки
-            =nav_link "?", '/about'
-      #main.span-24.last
-        - flash.each do |name, msg|
-          = content_tag :div, msg, :id => "flash_#{name}"
-        = yield
+              .navbar-item.has-dropdown.is-hoverable
+                %a.navbar-link
+                  Задачи
+                .navbar-dropdown
+                  %a.navbar-item{ href: letters_path } Письма
+                  %a.navbar-item{ href: tasks_path } Задачи
+                  %a.navbar-item{ href: requirements_path } Требования
+            %a.navbar-item
+              %a.navbar-item{ href: '/users' } Сотрудники
+            %a.navbar-item
+              %a.navbar-item{ href: '/about' } ?
+
+          .navbar-end
+            .navbar-item
+              %form.inline{:method => "get"}
+                .field.has-addons.is-expanded
+                  %p.control.is-expanded
+                    %input.input{:name => "search", :type => "search", :value => params[:search], :placeholder => "искать #{yield (:search)}", required: :true}
+                  -# %p.control
+                    %a.button.is-static
+                      @gmail.com
+
+          .navbar-end
+            - if user_signed_in?
+              .navbar-item.has-dropdown.is-hoverable
+                %a.navbar-link
+                  = current_user.user_name
+                .navbar-dropdown
+                  %a.navbar-item{href: "/users/#{current_user.id}"}Профиль
+                  %hr.navbar-divider/
+                  %a.navbar-item
+                    = current_user.last_sign_in_at&.strftime('%d.%m.%y %H:%M:%S')
+                  %hr.navbar-divider/
+                  .navbar-item
+                    = link_to "Выйти", destroy_user_session_path, method: :delete
+            - else
+              %a.navbar-item{href: '/users/sign_in'} Войти
+      / END NAV
+
+
+  - flash.each do |name, msg|
+    = content_tag :div, msg, :id => "flash_#{name}"
+  = yield
 
   %footer.footer
     .container
