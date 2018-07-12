@@ -1,9 +1,24 @@
-%h2 Представьтесь, пожалуйста:
-= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
-  -if devise_mapping.ldap_authenticatable?
-    = f.input :username, :label => 'аккаунт', :required => true, :autofocus => true, hint: 'Ваше доменное имя для входа в сеть'
-  -else
-    = f.input :email, :required => true, :autofocus => true
-  = f.input :password, :label => 'пароль', hint: 'Ваш пароль для входа в сеть'
-  = f.input :remember_me, :label => 'запомнить меня на этом компьютере', as: :boolean, :boolean_style => :inline if devise_mapping.rememberable?
-  = f.button :submit, "Войти"
+%section.hero.is-success
+  .container.has-text-centered
+    .column.is-4.is-offset-4
+      %p.subtitle.has-text-grey Представьтесь, пожалуйста:
+      .box
+        = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+          -if resource.errors.any?
+            - resource.errors.full_messages.each do |msg|
+              %p.notice.color--pin= msg
+          .field
+            .control
+              - if devise_mapping.ldap_authenticatable?
+                = f.text_field :username, autofocus: true, autocomplete: "off", placeholder: "Your Account",class: 'input'
+              - else
+                = f.email_field :email, autofocus: true, autocomplete: "off", placeholder: "Your Email",class: 'input'
+          .field
+            .control
+              = f.password_field :password, autocomplete: "off", placeholder: "Your Password", class: :input
+          - if devise_mapping.rememberable?
+            .field
+              %label.checkbox
+                = f.check_box :remember_me
+                Remember me
+          %button.button.is-block.is-info.is-fullwidth Войти

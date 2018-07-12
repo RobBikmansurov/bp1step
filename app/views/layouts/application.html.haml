@@ -71,15 +71,16 @@
             %a.navbar-item
               %a.navbar-item{ href: '/about' } ?
 
-          .navbar-end
-            .navbar-item
-              %form.inline{:method => "get"}
-                .field.has-addons.is-expanded
-                  %p.control.is-expanded
-                    %input.input{:name => "search", :type => "search", :value => params[:search], :placeholder => "искать #{yield (:search)}", required: :true}
-                  -# %p.control
-                    %a.button.is-static
-                      @gmail.com
+            - unless ['page', 'activities', 'bproce_business_roles'].include? params[:controller]
+              .navbar-end
+                .navbar-item
+                  %form.inline{:method => "get"}
+                    .field.has-addons.is-expanded
+                      .control
+                        %input.input.is-expanded.is-rounded{:name => "search", :type => "search", :value => params[:search], :placeholder => "искать #{yield (:search)}", required: :true}
+                      -# %p.control
+                        %a.button.is-static
+                          @gmail.com
 
           .navbar-end
             - if user_signed_in?
@@ -87,7 +88,8 @@
                 %a.navbar-link
                   = current_user.user_name
                 .navbar-dropdown
-                  %a.navbar-item{href: "/users/#{current_user.id}"}Профиль
+                  %a.navbar-item{href: "/users/#{current_user.id}"}К исполнению
+                  %a.navbar-item Профиль
                   %hr.navbar-divider/
                   %a.navbar-item
                     = current_user.last_sign_in_at&.strftime('%d.%m.%y %H:%M:%S')
@@ -98,10 +100,11 @@
               %a.navbar-item{href: '/users/sign_in'} Войти
       / END NAV
 
-
-  - flash.each do |name, msg|
-    = content_tag :div, msg, :id => "flash_#{name}"
-  = yield
+  %section
+    .container
+      - flash.each do |name, msg|
+        = content_tag :div, msg, :id => "flash_#{name}"
+      = yield
 
   %footer.footer
     .container
