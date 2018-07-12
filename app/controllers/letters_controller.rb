@@ -13,9 +13,9 @@ class LettersController < ApplicationController
   def index
     @title_letter = 'Письма '
     if params[:user].present?
-      user = User.find(params[:user])
+      @user = User.find(params[:user])
       @letters = Letter.joins(:user_letter).where('user_letters.user_id = ?', params[:user])
-      @title_letter += "исполнителя [ #{user.displayname} ]"
+      @title_letter += "исполнителя [ #{@user.displayname} ]"
       if params[:status].present?
         @letters = @letters.status(params[:status])
         @title_letter += "в статусе [ #{LETTER_STATUS.key(params[:status].to_i)} ]"
