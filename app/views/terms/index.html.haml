@@ -7,6 +7,10 @@
         Термины, определения
         -if params[:search].present?
           [ #{params[:search]} ]
+      %h2.subtitle
+        Глоссарий терминов, используемых во
+        = link_to 'внутренних документах', documents_path
+        %p.notice= notice
 
 .container
   %table.table.is-striped.is-bordered.is-hoverable.is-fullwidth
