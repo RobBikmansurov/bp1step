@@ -1,113 +1,119 @@
 - search 'Документ'
 - command_params = Hash.new
 - command_search = Hash.new
-- if @bproce
-  - title "Документы процесса ##{@bproce.id}  #{@title_doc}"
-  %h3
-    Документы процесса
-    = link_to @bproce.name, bproce_path(@bproce)
-    = @title_doc
-- elsif @directive
-  - title "Документы директивы ##{@directive.id}"
-  %h3
-    Документы, разработанные на основании 
-    = link_to @directive.shortname, directive_path(@directive)
-- else
-  - title 'Каталог Документов'
-  %h2= @title_doc
-  - if params[:search].present?
-    - command_search = command_search.merge('search' => params[:search])
-    - command_params = command_params.merge(command_search) # сохранить параметр для вызова Списка
-  - command_params = command_params.merge('status' => params[:status]) if params[:status].present?
-  - command_params = command_params.merge('place' => params[:place]) if params[:place].present?
-  - command_params = command_params.merge('dlevel' => params[:dlevel]) if params[:dlevel].present?
 
-%table
-  %tr
-    %th= sortable 'id', '#'
-    %th= sortable 'name', 'Наименование'
-    %th= sortable 'status', 'Статус'
-    %th= sortable 'approved', 'От'
-    %th Оригинал
-    - if can? :update, Document
-      %th
-    - if can? :destroy, Document
-      %th
-    
-  - @documents.each do |document|
-    %tr
-      %td
-        .id_show_ ##{document.id}
-      %td
-        - if document.document_file_file_name # если есть файл документа, загруженный через paperclip
-          -if can? :view_document, document
-            - if File.exist?(document.pdf_path)
-              = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), document.pdf_url, class: 'button-img'
-        = link_to format_content(document.name), document_path(document)
-        - if can? :manage_tag, document
-          %sup= document.tag_list
-      %td= document.status
-      %td= document.approved.strftime('%d.%m.%Y') if document.approved
-      %td= document.place 
-      - if can? :update, document
+%section.hero.is-primary
+  .hero-body
+    .container
+      %h1.title
+        - if @bproce
+          - title "Документы процесса ##{@bproce.id}  #{@title_doc}"
+          %h2
+            Документы процесса
+            = link_to @bproce.name, bproce_path(@bproce)
+            = @title_doc
+        - elsif @directive
+          - title "Документы директивы ##{@directive.id}"
+          %h2
+            Документы, разработанные на основании 
+            = link_to @directive.shortname, directive_path(@directive)
+        - else
+          - title 'Каталог Документов'
+          %h1= @title_doc
+          - if params[:search].present?
+            - command_search = command_search.merge('search' => params[:search])
+            - command_params = command_params.merge(command_search) # сохранить параметр для вызова Списка
+          - command_params = command_params.merge('status' => params[:status]) if params[:status].present?
+          - command_params = command_params.merge('place' => params[:place]) if params[:place].present?
+          - command_params = command_params.merge('dlevel' => params[:dlevel]) if params[:dlevel].present?
+      %h2.subtitle
+        %p.notice= notice
+.container
+  %table.table.is-striped.is-bordered.is-hoverable.is-fullwidth
+    %thead
+      %tr
+        %th= sortable 'id', '#'
+        %th= sortable 'name', 'Наименование'
+        %th= sortable 'status', 'Статус'
+        %th= sortable 'approved', 'От'
+        %th Оригинал
+        - if can? :update, Document 
+          %th
+        - if can? :destroy, Document
+          %th   
+    - @documents.each do |document|
+      %tr
         %td
-          = link_to image_tag('page_edit.gif', alt: 'Изменить'), edit_document_path(document), class: 'button-img'
-      - if can? :destroy, document
+          .id_show_ ##{document.id}
         %td
-          - if !@directive
-            - if !@bproce
-              = link_to image_tag('action_stop.gif', alt: 'Удалить', title: 'Удалить' ), document, data: { confirm: document.name + "\nДействительно хотите удалить документ #" + document.id.to_s + " ?" }, method: 'delete', class: 'button-img'
-            - else
-              - bproce_document = document.bproce_document.where('bproce_id = ?', @bproce.id).first # ссылка на данный процесс из документа
-              = link_to image_tag('action_stop.gif', alt: 'Удалить'),
-                        bproce_document_path(bproce_document, bproce_id: @bproce.id),
-                        data: { confirm: document.name + "\nДействительно хотите удалить ссылку из процесса ##{bproce_document.bproce_id} на этот документ?" },
-                        method: 'delete',
-                        class: 'button-img' if bproce_document
-          - else # это документы Директивы, нельзя удалять сам документ - только ссылку из директивы
-            - di = @directive.document_directive.where("directive_id = '?' and document_id = '?'", @directive.id, document.id).first
-            = link_to image_tag('action_stop.gif', alt: 'Удалить'), di, data: { confirm: document.name + "\nДействительно хотите удалить ссылку из директивы на этот документ?" }, method: 'delete', class: 'button-img' if di
-
-- unless params[:all].present?
-  .apple_pagination
-    = will_paginate @documents
-%p
-- if can? :create, Document
-  = link_to 'Каталог', documents_path(command_params.merge(format: 'odt', all: '1')), class: 'button'
-  - if @bproce
-    = link_to 'Список', documents_path(format: 'odt', bproce_id: @bproce.id), class: 'button'
-    = link_to 'Новый документ процесса', new_document_bproce_path(@bproce), class: 'button'
-  - elsif @directive
-    = link_to 'Список', documents_path(format: 'odt', directive_id: @directive.id), class: 'button'
-    -# = link_to 'Новый документ директивы', new_document_directive_path(@directive), class: 'button'
-  - else
-    = link_to 'Список', documents_path(command_params.merge(format: 'odt')), class: 'button'
-    = link_to 'Добавить новый документ', new_document_path, class: 'button'
-
-%p
-Статус:
-- Document.select('status, count(id) as count').group(:status).order(:status).each do |d|
-  - unless d.status.to_s.empty?
-    - cl = (params[:status].present? && d.status == params[:status]) ? 'groups-s' : 'groups'
-    - if @bproce
-      = link_to d.status, bproce_path(@bproce) + "/documents?status=#{d.status}", class: cl
-    - else
-      = link_to d.status, documents_path(command_search.merge(status: d.status)), class: cl
-    &nbsp;
-%br
-Уровень:
-- Document.select('dlevel, count(id) as count').group(:dlevel).order(:dlevel).each do |d|
-  - unless d.dlevel.to_s.empty?
-    - cl = (params[:dlevel].present? && d.dlevel.to_s == params[:dlevel]) ? 'groups-s' : 'groups'
-    = link_to DOCUMENT_LEVEL.key(d.dlevel), documents_path(dlevel: d.dlevel.to_s), class: cl, title: DOCUMENT_LEVEL.key(d.dlevel)
-    &nbsp;
-%br
-Оригинал:
-- Document.select('place, count(id) as count').group(:place).order(:place).each do |d|
-  - unless d.place.to_s.empty?
-    - cl = (params[:place].present? && d.place == params[:place]) ? 'groups-s' : 'groups'
-    = link_to d.place, documents_path(command_search.merge(place: d.place.to_s)), class: cl, title: DOCUMENT_PLACE.key(d.place)
-    &nbsp;
-%p
-Теги:
-= raw Document.all_tags.map { |t| link_to t.name, tag_documents_path(t.name), class: 'tags' }.join('&nbsp; ')
+          - if document.document_file_file_name # если есть файл документа, загруженный через paperclip
+            -if can? :view_document, document
+              - if File.exist?(document.pdf_path)
+                = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), document.pdf_url, class: 'button-img'
+          = link_to format_content(document.name), document_path(document)
+          - if can? :manage_tag, document
+            %sup= document.tag_list
+        %td= document.status
+        %td= document.approved.strftime('%d.%m.%Y') if document.approved
+        %td= document.place 
+        - if can? :update, document
+          %td
+            = link_to image_tag('page_edit.gif', alt: 'Изменить'), edit_document_path(document), class: 'button-img'
+        - if can? :destroy, document
+          %td
+            - if !@directive
+              - if !@bproce
+                = link_to image_tag('action_stop.gif', alt: 'Удалить', title: 'Удалить' ), document, data: { confirm: document.name + "\nДействительно хотите удалить документ #" + document.id.to_s + " ?" }, method: 'delete', class: 'button-img'
+              - else
+                - bproce_document = document.bproce_document.where('bproce_id = ?', @bproce.id).first # ссылка на данный процесс из документа
+                = link_to image_tag('action_stop.gif', alt: 'Удалить'),
+                          bproce_document_path(bproce_document, bproce_id: @bproce.id),
+                          data: { confirm: document.name + "\nДействительно хотите удалить ссылку из процесса ##{bproce_document.bproce_id} на этот документ?" },
+                          method: 'delete',
+                          class: 'button-img' if bproce_document
+            - else # это документы Директивы, нельзя удалять сам документ - только ссылку из директивы
+              - di = @directive.document_directive.where("directive_id = '?' and document_id = '?'", @directive.id, document.id).first
+              = link_to image_tag('action_stop.gif', alt: 'Удалить'), di, data: { confirm: document.name + "\nДействительно хотите удалить ссылку из директивы на этот документ?" }, method: 'delete', class: 'button-img' if di
+.container
+  - unless params[:all].present?
+    .apple_pagination
+      = will_paginate @documents
+.container
+  .buttons
+    - if can? :create, Task
+      %a.button.is-primary{href: new_task_path} Новая задача
+    - if can? :create, Document
+      %a.button.is-primary{ href: documents_path(command_params.merge(format: 'odt', all: '1')) } Каталог
+      - if @bproce
+        %a.button.is-primary{ href: documents_path(format: 'odt', bproce_id: @bproce.id) } Список
+        %a.button.is-primary{ href: new_document_bproce_path(@bproce) } Новый документ процесса
+      - elsif @directive
+        %a.button.is-primary{ href: documents_path(format: 'odt', directive_id: @directive.id) } Список
+        -# = link_to 'Новый документ директивы', new_document_directive_path(@directive), class: 'button'
+      - else
+        %a.button.is-primary{ href: documents_path(command_params.merge(format: 'odt')) } Список
+        %a.button.is-primary{ href: new_document_path } Добавить новый документ
+  .buttons
+    Статус:
+    - Document.select('status, count(id) as count').group(:status).order(:status).each do |d|
+      - unless d.status.to_s.empty?
+        - cl = (params[:status].present? && d.status == params[:status]) ? 'groups-s' : 'groups'
+        - if @bproce
+          %a.button.is-info.is-outlined{ href: bproce_path(@bproce) + "/documents?status=#{d.status}" } #{d.status}
+        - else
+          %a.button.is-info.is-outlined{ href: documents_path(command_search.merge(status: d.status)) } #{d.status}
+  .buttons
+    Уровень:
+    - Document.select('dlevel, count(id) as count').group(:dlevel).order(:dlevel).each do |d|
+      - unless d.dlevel.to_s.empty?
+        - cl = (params[:dlevel].present? && d.dlevel.to_s == params[:dlevel]) ? 'groups-s' : 'groups'
+        %a.button.is-info.is-outlined{ href: documents_path(dlevel: "#{d.dlevel}") } #{DOCUMENT_LEVEL.key(d.dlevel)}
+  .buttons
+    Оригинал:
+    - Document.select('place, count(id) as count').group(:place).order(:place).each do |d|
+      - unless d.place.to_s.empty?
+        - cl = (params[:place].present? && d.place == params[:place]) ? 'groups-s' : 'groups'
+        %a.button.is-info.is-outlined{ href: documents_path(command_search.merge(place: d.place.to_s)) } #{d.place}
+  .buttons
+    Теги:
+    = raw Document.all_tags.map { |t| link_to t.name, tag_documents_path(t.name), class: 'tags' }.join('&nbsp; ')
