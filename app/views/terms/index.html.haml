@@ -1,39 +1,42 @@
 -title "Термины, определения" 
 -search 'Термин'
-%h1
-  Термины, определения
-  -if params[:search].present?
-    [ 
-    = params[:search]
-    ]
+%section.hero.is-primary
+  .hero-body
+    .container
+      %h1.title
+        Термины, определения
+        -if params[:search].present?
+          [ #{params[:search]} ]
 
-%table
-  %tr
-    %th= sortable "name", "Наименование"
-    %th= sortable "description", "Описание"
-    %th= sortable "note", "Примечание"
-    %th
-    - if can? :destroy, Term
-      %th
+.container
+  %table.table.is-striped.is-bordered.is-hoverable.is-fullwidth
+    %thead
+      %tr
+        %th= sortable "name", "Наименование"
+        %th= sortable "description", "Описание"
+        %th= sortable "note", "Примечание"
+        %th
+        - if can? :destroy, Term
+          %th
 
-  - @terms.each do |term|
-    %tr
-      %td
-        [
-        = term.shortname
-        ]
-        = link_to term.name, term
-      %td= term.description
-      %td= term.note
-      - if can? :manage, term
-        %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_term_path(term), class: 'button-img'
-      - if can? :destroy, term
-        %td= link_to image_tag('action_stop.gif', :alt => 'Удалить'), term, data: { confirm: 'Термин "' + term.name + "\"\nДействительно хотите удалить?"}, :method => 'delete', class: 'button-img'
-
--if ! params[:all].present? # если список всех терминов - отключить постраничый вывод
-  .apple_pagination
-    = will_paginate @terms 
-
-- if can? :destroy, Term
-  -#= link_to 'Каталог', terms_path + '.pdf?all=1', :class => 'button'
-  = link_to 'Добавить Термин', new_term_path, :class => 'button'
+      - @terms.each do |term|
+        %tr
+          %td
+            [
+            = term.shortname
+            ]
+            = link_to term.name, term
+          %td= term.description
+          %td= term.note
+          - if can? :manage, term
+            %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_term_path(term), class: 'button-img'
+          - if can? :destroy, term
+            %td= link_to image_tag('action_stop.gif', :alt => 'Удалить'), term, data: { confirm: 'Термин "' + term.name + "\"\nДействительно хотите удалить?"}, :method => 'delete', class: 'button-img'
+.container
+  -if ! params[:all].present? # если список всех терминов - отключить постраничый вывод
+    .apple_pagination
+      = will_paginate @terms 
+.container
+  - if can? :destroy, Term
+    -#= link_to 'Каталог', terms_path + '.pdf?all=1', :class => 'button'
+    %a.button.is-primary{href: new_term_path } Добавить Термин

@@ -8,18 +8,16 @@
       %h1.title
         - if @bproce
           - title "Документы процесса ##{@bproce.id}  #{@title_doc}"
-          %h2
-            Документы процесса
-            = link_to @bproce.name, bproce_path(@bproce)
-            = @title_doc
+          Документы процесса
+          = link_to @bproce.name, bproce_path(@bproce)
+          = @title_doc
         - elsif @directive
           - title "Документы директивы ##{@directive.id}"
-          %h2
-            Документы, разработанные на основании 
-            = link_to @directive.shortname, directive_path(@directive)
+          Документы, разработанные на основании 
+          = link_to @directive.shortname, directive_path(@directive)
         - else
           - title 'Каталог Документов'
-          %h1= @title_doc
+          = @title_doc
           - if params[:search].present?
             - command_search = command_search.merge('search' => params[:search])
             - command_params = command_params.merge(command_search) # сохранить параметр для вызова Списка
@@ -27,6 +25,8 @@
           - command_params = command_params.merge('place' => params[:place]) if params[:place].present?
           - command_params = command_params.merge('dlevel' => params[:dlevel]) if params[:dlevel].present?
       %h2.subtitle
+        Внутренние документы, описания, положения, регламенты, относящиеся к
+        = link_to 'процессам', bproces_path
         %p.notice= notice
 .container
   %table.table.is-striped.is-bordered.is-hoverable.is-fullwidth

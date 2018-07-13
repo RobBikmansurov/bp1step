@@ -1,82 +1,76 @@
 -title "Руководящие документы, Директивы, Указания"
 -search 'Директиву'
--if params[:title].present?
-  %h2
-    Директивы
-    [
-    = params[:title]
-    ]  
--else
-  -if params[:body].present?
-    %h2
-      Директивы
-      [
-      = params[:body]
-      ]  
-  -else
-    -if params[:status].present?
-      %h2
-        Директивы - статус
-        [
-        = params[:status]
-        ]  
-    -else
-      %h1
+%section.hero.is-primary
+  .hero-body
+    .container
+      %h1.title
         Директивы
-        -if params[:search].present?
-          [ 
-          = params[:search]
-          ]
-%table
-  %tr
-    %th= sortable "number", "Номер"
-    %th= sortable "approval", "От"
-    %th Орган
-    %th Наименование
-    - if can? :manage, Directive
-      %th
-    - if can? :destroy, Directive
-      %th
+        -if params[:title].present?
+          [ #{params[:title]} ]  
+        -elsif params[:body].present?
+          [ #{params[:body]} ]
+        -elsif params[:status].present?
+          \- статус [ #{params[:status]} ]
+        -elsif params[:search].present?
+          [ #{params[:search]} ]
+      %h2.subtitle
+        Руководящие и нормативные документы, законы, указания, основания для
+        = link_to 'внутренних документов', documents_path
+        %p.notice= notice
+.container
+  %table.table.is-striped.is-bordered.is-hoverable.is-fullwidth
+    %thead
+      %tr
+        %th= sortable "number", "Номер"
+        %th= sortable "approval", "От"
+        %th Орган
+        %th Наименование
+        - if can? :manage, Directive
+          %th
+        - if can? :destroy, Directive
+          %th
 
-  - @directives.each do |directive|
-    %tr
-      %td= link_to directive.number, directive
-      %td
-        -if directive.approval
-          = directive.approval.strftime('%d.%m.%Y')
-      %td
-        = directive.title
-        = directive.body
-      %td= format_content(directive.name)
-      - if can? :manage, Directive
-        %td
-          = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_directive_path(directive), class: 'button-img'
-      - if can? :destroy, Directive
-        %td
-          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), directive, data: { confirm: 'Директива "' + directive.shortname + "\"\nДействительно хотите удалить?"}, :method => 'delete', class: 'button-img'
-
-.apple_pagination
-  = will_paginate @directives
-
-- if can? :create, Directive
-  = link_to "Добавить новую директиву", new_directive_path, :class => 'button'
-%p
-%br
-Тип директивы:
-- Directive.select("title, count(id) as count").group(:title).order(:title).each do |directive|
-  -if directive.title.to_s.empty?
-    = link_to 'пусто', directives_path + '?title='
-  -else
-    = link_to directive.title, directives_path + '?title=' + directive.title.to_s, class: 'groups'
-%br
-Принявший орган:
-- Directive.select("body, count(id) as count").group(:body).order(:body).each do |directive|
-  -if directive.body.to_s.empty?
-    = link_to 'пусто', directives_path + '?body='
-  -else
-    = link_to directive.body, directives_path + '?body=' + directive.body.to_s, class: 'groups'
-%br
-Статус:
-- Directive.select("status, count(id) as count").group(:status).order(:status).each do |d|
-  -if !d.status.to_s.empty?
-    = link_to d.status, directives_path + '?status=' + d.status.to_s, class: 'groups'
+      - @directives.each do |directive|
+        %tr
+          %td= link_to directive.number, directive
+          %td
+            -if directive.approval
+              = directive.approval.strftime('%d.%m.%Y')
+          %td
+            = directive.title
+            = directive.body
+          %td= format_content(directive.name)
+          - if can? :manage, Directive
+            %td
+              = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_directive_path(directive), class: 'button-img'
+          - if can? :destroy, Directive
+            %td
+              = link_to image_tag('action_stop.gif', :alt => 'Удалить'), directive, data: { confirm: 'Директива "' + directive.shortname + "\"\nДействительно хотите удалить?"}, :method => 'delete', class: 'button-img'
+.container
+  .apple_pagination
+    = will_paginate @directives
+.container
+  .columns
+    .column
+      - if can? :create, Directive
+        %a.button.is-primary{href: new_directive_path} Добавить новую директиву
+    .column
+      Статус:
+      - Directive.select("status, count(id) as count").group(:status).order(:status).each do |d|
+        -unless d.status.to_s.empty?
+          %a.button.is-primary.is-outlined{href: directives_path + '?status=' + d.status.to_s } #{d.status} - #{d.count}
+.container
+  .buttons
+    Тип директивы:
+    - Directive.select("title, count(id) as count").group(:title).order(:title).each do |directive|
+      -if directive.title.to_s.empty?
+        %a.button.is-info.is-outlined{href: directives_path(title: '') } пусто
+      -else
+        %a.button.is-info.is-outlined{href: directives_path(title: "#{directive.title}") } #{directive.title}
+  .buttons
+    Принявший орган:
+    - Directive.select("body, count(id) as count").group(:body).order(:body).each do |directive|
+      -if directive.body.to_s.empty?
+        %a.button.is-outlined{href: directives_path(body: '') } пусто
+      -else
+        %a.button.is-outlined{href: directives_path(body: "#{directive.body}") }  #{directive.body}
