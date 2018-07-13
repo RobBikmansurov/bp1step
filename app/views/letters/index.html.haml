@@ -96,8 +96,8 @@
       -# = render 'pagy/nav', locals: {pagy: @pagy}
 
 .container
-  .columns.is-centered
-    .column.is-one-third.is-narrow
+  .columns
+    .column
       - if params[:out].present?
         %a.button.is-primary{href: letters_path} Входящие
       - else
@@ -115,7 +115,7 @@
         - else
           %a.button.is-primary{ href: log_week_letters_path(week_day: "#{Date.current - 7}") } Реестр
       %a.button.is-primary{ href: check_letters_path } Контроль
-    .column.is-centered
+    .column
       - if params[:user].present?
         -# @letters.select("letters.status, count(id) as count").group('letters.status').order('letters.status').each do |d|
         - letters = Letter.joins(:user_letter).where("user_letters.user_id = ?", params[:user])

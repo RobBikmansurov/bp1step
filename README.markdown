@@ -107,10 +107,11 @@ autocomlete. Для решения этой проблемы можно испр
 sudo su postgres
 psql
 postgres=# create role bp1step with createdb login password 'pgbp1step';
-postgres=# create extension citext;
 postgres=# create database bp1step owner bp1step;
 postgres=# \l
-
+postgres=# \c bp1step
+postgres=# create extension citext;
+postgres=# \dx
 
 >gem install bundler
 >bundle install
