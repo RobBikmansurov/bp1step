@@ -27,7 +27,7 @@
           - if true or can? :manage, Letter or can? :destroy, Letter
             %th
               &nbsp;
-
+      %tbody
         - @letters.each do |letter|
           %tr
             %td
@@ -88,7 +88,6 @@
                 = link_to image_tag('action_stop.gif', :alt => 'Удалить'), letter,
                 data: { confirm: "Письмо № #{letter.number} от #{letter.date.strftime("%d.%m.%Y")}\n #{letter.sender}" + "\nДействительно хотите удалить?" },
                 :method => 'delete', class: 'button-img'
-
 
   .container
     .apple_pagination

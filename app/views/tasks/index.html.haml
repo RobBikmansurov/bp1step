@@ -3,84 +3,83 @@
 - command_params = Hash.new
 - command_search = Hash.new
 
-%h2
-  = @title_tasks if @title_tasks
-  - if params[:search].present?
-    [ #{params[:search]} ]
-    - command_search = command_search.merge('search' => params[:search])
-    - command_params = command_params.merge(command_search) # сохранить параметр для вызова Списка
-  - command_params = command_params.merge('user' => params[:user]) if params[:user].present?
-
-%table
-  %tr
-    %th= sortable "id", "#"
-    %thНаименование
-    %thОписание
-    %thИсточник
-    %th= sortable 'duedate', 'Срок'
-    %th= sortable "status", "Статус"
-    %thОтветственные
-    %th
-
-  - if @tasks
-    - @tasks.each do |task|
+%section.hero.is-primary
+  .hero-body
+    .container
+      %h1.title
+        = @title_tasks if @title_tasks
+        - if params[:search].present?
+          [ #{params[:search]} ]
+          - command_search = command_search.merge('search' => params[:search])
+          - command_params = command_params.merge(command_search) # сохранить параметр для вызова Списка
+        - command_params = command_params.merge('user' => params[:user]) if params[:user].present?
+      %h2.subtitle
+        %p.notice= notice
+.container
+  %table.table.is-striped.is-bordered.is-hoverable.is-fullwidth
+    %thead
       %tr
-        %td
-          .id_show_ ##{task.id}
-        %td= link_to task.name, task
-        %td= truncate(task.description, length: 50, omission: ' ...')
-        %td
-          = link_to "Письмо #{task.letter_id}", letter_path(task.letter_id) if task.letter_id
-          = link_to "Требование ##{task.requirement_id}", requirement_path(task.requirement_id) if task.requirement_id
-        %td
-          - if task.duedate
-            - if task.status < 90 and task.duedate <= Date.current
-              %span{ style: "color: red;" }
-                = task.duedate.strftime("%d.%m.%y")
-            - else
-              = task.duedate.strftime("%d.%m.%y")
-            - if task.completion_date
-              - if task.completion_date > task.duedate
-                %br
+        %th= sortable "id", "#"
+        %thНаименование
+        %thОписание
+        %thИсточник
+        %th= sortable 'duedate', 'Срок'
+        %th= sortable "status", "Статус"
+        %thОтветственные
+        %th
+    - if @tasks.any?
+      %tbody
+        - @tasks.each do |task|
+          %tr
+            %td
+              .id_show_ ##{task.id}
+            %td= link_to task.name, task
+            %td= task.description
+            %td
+              = link_to "Письмо #{task.letter_id}", letter_path(task.letter_id) if task.letter_id
+              = link_to "Требование ##{task.requirement_id}", requirement_path(task.requirement_id) if task.requirement_id
+            %td
+              - if task.duedate
+                - if task.status < 90 and task.duedate <= Date.current
                   %span{ style: "color: red;" }
-                    = task.completion_date.strftime("%d.%m.%y")
-        %td= TASK_STATUS.key(task.status)
-        %td
-          - task.user_task.each do |user_task|
-            - if user_task.user
-              - s = "#{user_task.user.displayname}"
-              - s += "\u2713".html_safe if user_task.responsible?   # пометим ответственного
-              = link_to s, user_task.user
-            - else
-              удалить ссылку
-              = user_task.inspect
-        - if current_user.id == task.author.id or can? :manage, task or can? :destroy, task
-          %td
-            = link_to image_tag('page_edit.gif', alt: 'Изменить'), edit_task_path(task), class: 'button-img'
-            = link_to image_tag('action_stop.gif', alt: 'Удалить'), task,
-            data: { confirm: "Задача #{task.name}" + "\nДействительно хотите удалить?" },
-            method: 'delete', class: 'button-img'
-
-%br
-.apple_pagination
-  = will_paginate @tasks if @tasks
-
-%p
-- if can? :create, Task
-  = link_to 'Новая задача', new_task_path, class: 'button'
-= link_to 'Контроль', check_tasks_path, class: 'button'
-
-%p
-- params.delete :status if params[:reset].present?
-- Task.select("status, count(id) as count").group(:status).order(:status).each do |task|
-  - if task&.status
-    - if (params[:status].present? && task.status == params[:status].to_i)
-      - tasks_class = 'groups-s'
-      - filter_status = " Сбросить #{TASK_STATUS.key(task.status)} "
-      = link_to filter_status, tasks_path(command_search.merge(status: task.status, reset: task.status)), class: tasks_class
-    - else
-      - filter_status = " #{TASK_STATUS.key(task.status)} (#{task.count}) "
-      - tasks_class = 'groups'
-      = link_to filter_status, tasks_path(command_search.merge(status: task.status)), class: tasks_class
-
-    &nbsp;
+                    = task.duedate.strftime("%d.%m.%y")
+                - else
+                  = task.duedate.strftime("%d.%m.%y")
+                - if task.completion_date
+                  - if task.completion_date > task.duedate
+                    %br
+                      %span{ style: "color: red;" }
+                        = task.completion_date.strftime("%d.%m.%y")
+            %td= TASK_STATUS.key(task.status)
+            %td
+              - task.user_task.each do |user_task|
+                - if user_task.user
+                  - s = "#{user_task.user.displayname}"
+                  - s += "\u2713".html_safe if user_task.responsible?   # пометим ответственного
+                  = link_to s, user_task.user
+                - else
+                  удалить ссылку
+                  = user_task.inspect
+            - if current_user.id == task.author.id or can? :manage, task or can? :destroy, task
+              %td
+                = link_to image_tag('page_edit.gif', alt: 'Изменить'), edit_task_path(task), class: 'button-img'
+                = link_to image_tag('action_stop.gif', alt: 'Удалить'), task,
+                data: { confirm: "Задача #{task.name}" + "\nДействительно хотите удалить?" },
+                method: 'delete', class: 'button-img'
+.container
+  .apple_pagination
+    = will_paginate @tasks
+.container
+  .columns
+    .column
+      - if can? :create, Task
+        %a.button.is-primary{href: new_task_path} Новая задача
+      %a.button.is-primary{href: check_tasks_path} Контроль
+    .column
+      - params.delete :status if params[:reset].present?
+      - Task.select("status, count(id) as count").group(:status).order(:status).each do |task|
+        - if task&.status
+          - if (params[:status].present? && task.status == params[:status].to_i)
+            %a.button.is-info.is-outlined{ href: tasks_path(command_search.merge(status: task.status, reset: task.status)) } Сбросить #{TASK_STATUS.key(task.status)}
+          - else
+            %a.button.is-info.is-outlined{ href: tasks_path(command_search.merge(status: task.status)) } #{TASK_STATUS.key(task.status)} - #{task.count}
