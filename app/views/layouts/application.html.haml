@@ -20,12 +20,12 @@
     = yield(:head)
   %body
     / START NAV
-    %nav.navbar
+    %nav.navbar.is-fixed-top.is-light
       .container
         .navbar-brand
           %a.navbar-item{href: '/'}
             = image_tag("logo.png", alt: 'Home', heigh: 50)
-          %span.navbar-burger.burger{"data-target" => "navbarMenu"}
+          %span.navbar-burger.burger{:onclick => "document.querySelector('.navbar-menu').classList.toggle('is-active');"}
             %span
             %span
             %span
@@ -39,14 +39,11 @@
                 - if user_signed_in?
                   -if can? :crud, Metric
                     %a.navbar-item{href: metrics_path + '?sort=name'}Метрики
-            .navbar-item.has-dropdown.is-hoverable
-              %a.navbar-link
-                Ресурсы
-              .navbar-dropdown
+                %hr.navbar-divider/
                 %a.navbar-item{ href: business_roles_path } Роли
-                %a.navbar-item{ href: workplaces_path } Места
+                %a.navbar-item{ href: workplaces_path } Рабочие места
                 %a.navbar-item{ href: bapps_path } Приложения
-                %a.navbar-item{ href: iresources_path } Инф.ресурсы
+                %a.navbar-item{ href: iresources_path } Информационные ресурсы
             .navbar-item.has-dropdown.is-hoverable
               %a.navbar-link
                 Документы
@@ -56,14 +53,17 @@
                 %a.navbar-item{ href: terms_path } Термины
                 - if user_signed_in?
                   -if can? :show, Contract
+                    %hr.navbar-divider/
                     %a.navbar-item{ href: contracts_path } Договоры
                     %a.navbar-item{ href: agents_path } Контрагенты
             -if user_signed_in?
               .navbar-item.has-dropdown.is-hoverable
                 %a.navbar-link
-                  Задачи
+                  Действия
                 .navbar-dropdown
-                  %a.navbar-item{ href: letters_path } Письма
+                  %a.navbar-item{ href: letters_path } Письма Входящие
+                  %a.navbar-item{ href: letters_path(out: 2) } Письма Исходящие
+                  %hr.navbar-divider/
                   %a.navbar-item{ href: tasks_path } Задачи
                   %a.navbar-item{ href: requirements_path } Требования
             %a.navbar-item
