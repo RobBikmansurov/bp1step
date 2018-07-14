@@ -1,94 +1,97 @@
 -title "Каталог Рабочих мест" 
 -search "РабочееМесто" 
-%h1
-  Каталог Рабочих мест
-  -if params[:location].present?
-    [ 
-    = params[:location]
-    ]
-  -else
-    -if params[:switch].present?
-      [ 
-      = params[:switch]
-      ]
-    -else
-      -if params[:search].present?
-        [ 
-        = params[:search]
-        ]
-
-%table
-  %tr
-    %th= sortable "designation", "Обозначение"
-    - if can? :manage, Workplace
-      %th= sortable "name", "Имя ПК"
-      %th= sortable "switch,port", 'switch:port'
-    %th= sortable "description", "Описание"
-    %th Исполнитель
-    %th= sortable "location", "Каб."
-    -if can? :modify, Workplace
-      %th
-    -if can? :destroy, Workplace
-      %th
-    
-  - @workplaces.each do |workplace|
-    %tr
-      %td= link_to workplace.designation, workplace_path(workplace)
-      - if can? :manage, Workplace
-        %td= workplace.name
-        -if workplace.port
-          %td= workplace.switch + ':' + workplace.port.to_s
+%section.hero.is-primary
+  .hero-body
+    .container
+      %h1.title
+        Каталог Рабочих мест
+        -if params[:location].present?
+          [ #{params[:location]} ]
         -else
-          %td= workplace.switch
-      %td
-        = truncate(workplace.description, :length => 100, :omission => ' ...')
-      -if workplace.users.first
-        %td
-          = link_to workplace.users.first.displayname, workplace.users.first
-          -if workplace.users.count > 1
-            \+
-            = workplace.users.count - 1
-      -else
-        %td
-      %td= link_to workplace.location, workplaces_path + '?location=' + workplace.location, class: 'groups'
-      - if can? :modify, workplace
-        %td
-          = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_workplace_path(workplace), class: 'button-img'
-      - if can? :destroy, workplace
-        %td
-          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), workplace, data: { confirm: 'Рабочее место "' + workplace.designation + "\"\nДействительно хотите удалить?"}, :method => 'delete', class: 'button-img'
+          -if params[:switch].present?
+            [ #{params[:switch]} ]
+          -else
+            -if params[:search].present?
+              [ #{params[:search]} ]
+      %h2.subtitle
+        Рабочие места исполнителей ролей в 
+        = link_to 'процессах', bproces_path
+        %p.notice= notice
+.container
+  %table.table.is-striped.is-bordered.is-hoverable.is-fullwidth
+    %thead
+      %tr
+        %th= sortable "designation", "Обозначение"
+        - if can? :manage, Workplace
+          %th= sortable "name", "Имя ПК"
+          %th= sortable "switch,port", 'switch:port'
+        %th= sortable "description", "Описание"
+        %th Исполнитель
+        %th= sortable "location", "Каб."
+        -if can? :modify, Workplace
+          %th
+        -if can? :destroy, Workplace
+          %th
+        
+      - @workplaces.each do |workplace|
+        %tr
+          %td= link_to workplace.designation, workplace_path(workplace)
+          - if can? :manage, Workplace
+            %td= workplace.name
+            -if workplace.port
+              %td= workplace.switch + ':' + workplace.port.to_s
+            -else
+              %td= workplace.switch
+          %td
+            = truncate(workplace.description, :length => 100, :omission => ' ...')
+          -if workplace.users.first
+            %td
+              = link_to workplace.users.first.displayname, workplace.users.first
+              -if workplace.users.count > 1
+                \+
+                = workplace.users.count - 1
+          -else
+            %td
+          %td= link_to workplace.location, workplaces_path + '?location=' + workplace.location, class: 'groups'
+          - if can? :modify, workplace
+            %td
+              = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_workplace_path(workplace), class: 'button-img'
+          - if can? :destroy, workplace
+            %td
+              = link_to image_tag('action_stop.gif', :alt => 'Удалить'), workplace, data: { confirm: 'Рабочее место "' + workplace.designation + "\"\nДействительно хотите удалить?"}, :method => 'delete', class: 'button-img'
 
+.container
+  - unless params[:all].present? # если список всех мест - отключить постраничый вывод
+    .apple_pagination
+      = will_paginate @workplaces 
+.container
+  - if can? :destroy, Workplace
+    %a.button.is-primary{ href: workplaces_path + '.odt?all=1' } Каталог
 
--if ! params[:all].present? # если список всех мест - отключить постраничый вывод
-  .apple_pagination
-    = will_paginate @workplaces 
-
-- if can? :destroy, Workplace
-  = link_to 'Каталог', workplaces_path + '.odt?all=1', :class => 'button'
-
-  -if request.query_string
-    = link_to 'Список', workplaces_path + '.odt?' + request.query_string, :class => 'button'
-  -else
-    = link_to 'Список', workplaces_path + '.odt', :class => 'button'
-
-  = link_to 'Подключения', workplaces_path + '/switch', :class => 'button'
-  -if params[:location].present?
-    = link_to 'Добавить Рабочее место', new_workplace_path + '?location=' + params[:location], :class => 'button'
-  -else
-    = link_to 'Добавить Рабочее место', new_workplace_path, :class => 'button'
-%p
-%br
-Местоположение:
-- Workplace.select("location, count(id) as count").group(:location).order(:location).each do |wp|
-  -if wp.location.to_s.empty?
-    = link_to 'пусто', workplaces_path + '?location='
-  -else
-    = link_to wp.location, workplaces_path + '?location=' + wp.location.to_s, class: 'groups'
-- if can? :manage, Workplace
-  %br
-  Сетевое подключение:
-  - Workplace.select("switch, count(id) as count").group(:switch).order(:switch).each do |wp|
-    -if wp.switch.to_s.empty?
-      = link_to 'пусто', workplaces_path + '?switch='
+    -if request.query_string
+      %a.button.is-primary{ href: workplaces_path + '.odt?' + request.query_string } Список
     -else
-      = link_to wp.switch, workplaces_path + '?switch=' + wp.switch.to_s, class: 'groups'
+      %a.button.is-primary{ href: workplaces_path + '.odt' } Список
+
+    %a.button.is-primary{ href: workplaces_path + '/switch' } Подключения
+    -if params[:location].present?
+      %a.button.is-primary{ href: new_workplace_path(location: "#{params[:location]}") } Добавить Рабочее место
+    -else
+      %a.button.is-primary{ href: new_workplace_path } Добавить Рабочее место
+.container
+  .columns
+    .column
+      Местоположение:
+      - Workplace.select("location, count(id) as count").group(:location).order(:location).each do |wp|
+        -if wp.location.to_s.empty?
+          %a.button.is-info.is-outlined{ href: workplaces_path + '?location=' } пусто
+        -else
+          %a.button.is-info.is-outlined{ href: workplaces_path + '?location=' + wp.location.to_s } #{wp.location}
+    - if can? :manage, Workplace
+      .column
+        Сетевое подключение:
+        - Workplace.select("switch, count(id) as count").group(:switch).order(:switch).each do |wp|
+          -if wp.switch.to_s.empty?
+            %a.button.is-info.is-outlined{ href: workplaces_path + '?switch=' } пусто
+          -else
+            %a.button.is-info.is-outlined{ href: workplaces_path + '?switch=' + wp.switch.to_s } #{wp.switch}

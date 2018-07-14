@@ -97,7 +97,12 @@
                   .navbar-item
                     = link_to "Выйти", destroy_user_session_path, method: :delete
             - else
-              %a.navbar-item{href: '/users/sign_in'} Войти
+              %a.navbar-item
+                %p.control
+                  %a.button.is-primary{ href: '/users/sign_in' }
+                    %span.icon
+                      %i.fas.fa-sign-in
+                    %span Войти
       / END NAV
 
   %section
