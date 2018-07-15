@@ -1,79 +1,81 @@
 -title "Каталог Ресурсов"
 -search "Ресурс" 
-%h2
-  Каталог Ресурсов
-  -if params[:level].present?
-    [ 
-    = params[:level]
-    ]
-  -else
-    -if params[:search].present?
-      [ 
-      = params[:search]
-      ]
-    -else
-      -if params[:risk].present?
-        %sup
-          = params[:risk]
-      -else
-        -if params[:user]
-          %h2
-            владельца
-            = link_to @user.displayname, user_path(@user)
+%section.hero.is-primary
+  .hero-body
+    .container
+      %h1.title
+        Информационные ресурсы
+        -if params[:level].present?
+          [ #{params[:level]} ]
+        -elsif params[:search].present?
+          [ #{params[:search]} ]
         -else
+          -if params[:risk].present?
+            %sup
+              = params[:risk]
+          -else
+            -if params[:user]
+              владельца
+              = link_to @user.displayname, user_path(@user)
+      %h2.subtitle
+        Базы данных, каталоги, информационные ресурсы 
+        = link_to 'процессов', bproces_path
+        %p.notice= notice
+.container
+  %table.table.is-striped.is-bordered.is-hoverable.is-fullwidth
+    %thead
+      %tr
+        %th Тип
+        %th= sortable "label", "Метка"
+        %th= sortable "location", "URI"
+        %th= sortable "volume", "Объем, GB"
+        %th Права доступа
+        %th Категория
+        - if can? :manage, Iresource
+          %th
+        - if can? :destroy, Iresource
+          %th
 
-%table
-  %tr
-    %th Тип
-    %th= sortable "label", "Метка"
-    %th= sortable "location", "URI"
-    %th= sortable "volume", "Объем, GB"
-    %th Права доступа
-    %th Категория
-    - if can? :manage, Iresource
-      %th
-    - if can? :destroy, Iresource
-      %th
-
-  - @iresources.each do |iresource|
-    %tr
-      %td
-        -if iresource.level?
-          = link_to iresource.level, iresources_path + '?level=' + iresource.level.to_s, class: 'groups'
-      %td= link_to iresource.label, iresource
-      %td= iresource.location
-      %td= iresource.volume
-      %td
-        = iresource.access_read
-        = iresource.access_write
-        = iresource.access_other
-      %td
-        -if iresource.risk_category?
-          = link_to iresource.risk_category, iresources_path + '?risk=' + iresource.risk_category.to_s, class: 'groups'
-      - if can? :manage, Iresource
-        %td
-          = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_iresource_path(iresource), class: 'button-img'
-      - if can? :destroy, Iresource
-        %td
-          = link_to image_tag('action_stop.gif', :alt => 'Удалить'), iresource,  data: { confirm: "Ресурс \"" + iresource.label + "\"\nДействительно хотите удалить?"}, :method => 'delete', class: 'button-img'
-
--if !params[:all].present?
-  .apple_pagination
-    = will_paginate @iresources
-%p
+      - @iresources.each do |iresource|
+        %tr
+          %td
+            -if iresource.level?
+              = link_to iresource.level, iresources_path + '?level=' + iresource.level.to_s, class: 'groups'
+          %td= link_to iresource.label, iresource
+          %td= iresource.location
+          %td= iresource.volume
+          %td
+            = iresource.access_read
+            = iresource.access_write
+            = iresource.access_other
+          %td
+            -if iresource.risk_category?
+              = link_to iresource.risk_category, iresources_path + '?risk=' + iresource.risk_category.to_s, class: 'groups'
+          - if can? :manage, Iresource
+            %td
+              = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_iresource_path(iresource), class: 'button-img'
+          - if can? :destroy, Iresource
+            %td
+              = link_to image_tag('action_stop.gif', :alt => 'Удалить'), iresource,  data: { confirm: "Ресурс \"" + iresource.label + "\"\nДействительно хотите удалить?"}, :method => 'delete', class: 'button-img'
+.container
+  -if !params[:all].present?
+    .apple_pagination
+      = will_paginate @iresources
+.container
 - if can? :destroy, Iresource
-  = link_to 'Каталог', iresources_path + '.pdf?all=1', :class => 'button'
+  %a.button.is-primary{ href: iresources_path + '.pdf?all=1' } Каталог
 
 - if can? :create, Iresource
-  = link_to "Добавить новый ресурс", new_iresource_path, :class => 'button'
-%p
-%br
-Тип:
-- Iresource.select("level, count(id) as count").group(:level).order(:level).each do |iresource|
-  -if !iresource.level.to_s.empty?
-    = link_to iresource.level, iresources_path + '?level=' + iresource.level.to_s, class: 'groups'
-%br
-Категория ресурса:
-- Iresource.select("risk_category, count(id) as count").group(:risk_category).order(:risk_category).each do |iresource|
-  -if !iresource.risk_category.to_s.empty?
-    = link_to iresource.risk_category, iresources_path + '?risk=' + iresource.risk_category.to_s, class: 'groups'
+  %a.button.is-primary{ href: new_iresource_path } Добавить новый ресурс
+.contaner
+  .columns
+    .column
+      Тип:
+      - Iresource.select("level, count(id) as count").group(:level).order(:level).each do |iresource|
+        -if !iresource.level.to_s.empty?
+          %a.button.is-outlined{ href: iresources_path(level: "#{iresource.level}") } #{iresource.level}
+    .column
+      Категория ресурса:
+      - Iresource.select("risk_category, count(id) as count").group(:risk_category).order(:risk_category).each do |iresource|
+        -if !iresource.risk_category.to_s.empty?
+          %a.button.is-outlined{ href: iresources_path(risk: "#{iresource.risk_category}") } #{iresource.risk_category}
