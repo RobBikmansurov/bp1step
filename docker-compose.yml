@@ -1,10 +1,18 @@
 # docker-compose.yml
+# docker-compose build
 version: '3.2'
 
 services:
   db:
-    image: postgres
-  web:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_USER: bp1step
+      POSTGRES_PASSWORD: pgbp1step
+      POSTGRES_DB:  bp1step
+    ports:
+      - '5432:5432'
+  app:
     build: .
     ports: 
       - '3000:3000'
@@ -12,4 +20,5 @@ services:
       - .:/app
     environment:
       - RAILS_ENV=development
-    # ...
+    depends_on:
+      - db

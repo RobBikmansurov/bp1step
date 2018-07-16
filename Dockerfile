@@ -3,7 +3,7 @@
 # docker build -t bp1step:latest .
 # docker run --rm -it -v ${PWD}:/app bp1step:latest bundle exec rspec
 
-FROM ruby:2.4.1
+FROM ruby:2.5
 
 RUN apt-get update -qq && apt-get install -y nodejs
 
@@ -28,4 +28,5 @@ ENV PORT 3000
 EXPOSE $PORT
 
 # Run the rails server
-CMD rails s -b 0.0.0.0 -p $PORT
+# CMD rails s -b 0.0.0.0 -p $PORT
+CMD bundle exec rails s -p $PORT

@@ -16,6 +16,7 @@ set :bundle_env_variables, { http_proxy: 'http://proxy.ad.bankperm.ru:3129', htt
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+set :branch, ENV['BRANCH'] if ENV['BRANCH']
 
 set :deploy_to, "/home/#{fetch(:user)}/#{fetch(:application)}"
 
