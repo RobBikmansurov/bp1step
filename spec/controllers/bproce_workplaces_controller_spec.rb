@@ -59,8 +59,9 @@ RSpec.describe BproceWorkplacesController, type: :controller do
 
     it 'redirects to the bproce_workplaces list' do
       bproce_workplace = BproceWorkplace.create! valid_attributes
+      workplace = bproce_workplace.workplace
       delete :destroy, params: { id: bproce_workplace.to_param }
-      expect(response).to redirect_to workplace_url
+      expect(response).to redirect_to workplace
     end
   end
 end
