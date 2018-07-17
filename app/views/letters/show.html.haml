@@ -1,20 +1,19 @@
 - title "Письмо № #{@letter.number} от #{@letter.date.strftime('%d.%m.%Y')}"
 - search 'Письмо'
-%table
-  %tr
-    %td
+.container
+  .columns
+    .column
       - if @letter.in_out != 1 # Исходящее
-        .image_inline_right
+        .is_right
           =image_tag 'out_mail.png', size: "64x64", alt: "#{LETTER_DIRECTION.key(@letter.in_out)}"
       - else
-        .image_inline_left
+        .is_left
           =image_tag 'in_mail.png', size: "64x64", alt: "#{LETTER_DIRECTION.key(@letter.in_out)}"
       .large
         - if @letter.in_out != 1 # Исходящее
           - if @letter.regnumber.blank?
             - if can? :registr, @letter
-              %h2
-                = link_to 'Зарегистрировать', register_letter_path(@letter), class: 'button'
+              %a.button.is-info.is-outlined.is-small{ href: register_letter_path(@letter) } Зарегистрировать
           - else
             Исх.№
             %b #{@letter.regnumber}
@@ -34,8 +33,7 @@
         - if @letter.in_out == 1 # Входящее
           - if @letter.regnumber.blank?
             - if can? :registr, @letter
-              %h2
-                = link_to 'Зарегистрировать', register_letter_path(@letter), class: 'button'
+              %a.button.is-info.is-outlined.is-small{ href: register_letter_path(@letter) } Зарегистрировать
           - else
             %br
               Зарегистрирован:
@@ -45,27 +43,24 @@
                 от
                 %b
                   = link_to @letter.regdate.strftime('%d.%m.%Y'), letters_path(regdate: @letter.regdate.strftime('%d.%m.%Y'))
-    %td
+    .column
       .id_ ##{@letter.id}
-      .large
+      .title
         - if @letter.in_out == 1
           Отправитель:
         - else
           Получатель:
       %h2= link_to @letter.sender, letters_path(addresse: @letter.sender)
-
-  %tr
-    %td
-      %h3
-        %b [ #{@letter.subject} ]
-    %td
-      \&nbsp;
-  %tr
-    %td
-      %h3 Краткое содержание (о чем):
-      = simple_format(@letter.body, {}, {})
-    %td
-      %h3 Источник: #{@letter.source}
+.columns
+  .column
+    %h3
+      %b [ #{@letter.subject} ]
+.columns
+  .column
+    %h3 Краткое содержание (о чем):
+    = simple_format(@letter.body, {}, {})
+  .column
+    %h3 Источник: #{@letter.source}
 %h3
   Срок исполнения:
   - if @letter.duedate
@@ -99,7 +94,7 @@
     %br (#{letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S')}  #{letter_appendix.appendix_file_size})
 - if can? :update, @letter
   #appendix_update.floating-box
-    = link_to 'Добавить файл приложения', appendix_create_letter_path(@letter), remote: true
+    %a.button.is-info.is-outlined.is-small{ href: appendix_create_letter_path(@letter), "data-remote" => "true" } Добавить файл приложения
 
 %hr
 %h3
@@ -120,7 +115,7 @@
 
 - if is_can_update # автор и исполнители могут добавлять других исполнителей
   #create_user
-    = link_to 'Добавить Исполнителя', create_user_letter_path(@letter), remote: true
+    %a.button.is-info.is-outlined.is-small{ href: create_user_letter_path(@letter), "data-remote" => "true" } Добавить Исполнителя
 
 %h3
   Статус:
@@ -156,18 +151,19 @@
   - else
     изменен
     = @letter.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-%p
-- if @letter.in_out == 1
-  = link_to 'Back', letters_path, class: 'button'
-- else
-  = link_to 'Back', letters_path(out: 1), class: 'button'
+.container
+  - if @letter.in_out == 1
+    %a.button.is-primary{ href: letters_path } Back
+  - else
+    %a.button.is-primary{ href: letters_path(out: 1) } Back
 
-- if is_can_update # автор и исполнители могут изменять письмо
-  = link_to 'Edit', edit_letter_path(@letter), class: 'button'
-  - if can? :create_outgoing, @letter
-    = link_to 'Новое похожее', clone_letter_path(@letter), class: 'button'
-    = link_to 'Создать Исходящее', create_outgoing_letter_path(@letter), class: 'button' if @letter.in_out == 1
-  = link_to '+Задачу', create_task_letter_path(@letter), class: 'button'
-  = link_to '+Требование', create_requirement_letter_path(@letter), class: 'button'
-  - if can? :create_outgoing, @letter
-    = link_to 'Реестр выписок', reestr_letter_path(@letter), class: 'button'
+  - if is_can_update # автор и исполнители могут изменять письмо
+    %a.button.is-primary{ href: edit_letter_path(@letter) } Edit
+    - if can? :create_outgoing, @letter
+      %a.button.is-primary{ href: clone_letter_path(@letter) } Новое похожее
+      -  if @letter.in_out == 1
+        %a.button.is-warning{ href: create_outgoing_letter_path(@letter) } Создать Исходящее
+    %a.button.is-link{ href: create_task_letter_path(@letter) } +Задачу
+    %a.button.is-link{ href: create_requirement_letter_path(@letter) } +Требование
+    - if can? :create_outgoing, @letter
+      %a.button.is-info{ href: reestr_letter_path(@letter) } Реестр выписок
