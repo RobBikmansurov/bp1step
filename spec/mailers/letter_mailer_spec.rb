@@ -67,7 +67,7 @@ describe LetterMailer do
     end
 
     it 'renders the receiver email' do
-      expect(mail.to).to eql([user.email, user1.email])
+      expect(mail.to).to eql([user.email, user1.email].sort)
     end
 
     it 'renders the sender email' do
