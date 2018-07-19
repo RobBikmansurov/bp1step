@@ -1,4 +1,4 @@
-.column.is-offset-1
+.column
   = simple_form_for @user_letter, :url => update_user_letter_path, :html => { :multipart => true } do |f|
     = f.error_notification
     = f.hidden_field :letter_id
@@ -11,12 +11,11 @@
           %p.control.has-icons-left
             -# %input.input{:placeholder => "ФИО нового исполнителя", name: :user_name, :type => "text"}/
             %input.input{"data-autocomplete" => "/users/autocomplete", :name => "user_letter[user_name]", :type => "text", :placeholder => "ФИО нового исполнителя"}/
-            %span.icon.is-small.is-left
+            %span.icon
               %i.fas.fa-user
         .field
-          %p.control.has-icons-left
-            %input{:type => "checkbox", :name => "user_letter[status]", :value => "1" }/ 
-            ответственный
+          %label
+            %input{:type => "checkbox", :name => "user_letter[status]", :value => "1" }
+            отв.
         .control
-          %button.button.is-link.is-small Добавить исполнителя
-
+          %button.button.is-link Добавить исполнителя

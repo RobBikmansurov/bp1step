@@ -1,11 +1,27 @@
-.container
+.column.is-text-center
   = simple_form_for @letter_appendix, url: appendix_update_letter_path, html: { multipart: true } do |f|
     = f.error_notification
     = f.hidden_field :letter_id
-    = f.input :name
-    = f.input :appendix, hint: 'Выберите файл для загрузки'
-
     = f.error :base
-    - if true or can? :update, @letter
-      %p
-      = f.button :submit, 'Сохранить файл'
+    .field.is-horizontal
+      .field-label
+        %label.label Приложение:
+      .field-body
+        .field
+          .control.has-icons-left
+            %input.input{:name => "letter_appendix[name]", :type => "text", :placeholder => "комментарий к файлу"}/
+            %span.icon
+              %i.fas.fa-folder
+        .field
+          .file.has-name.is-fullwidth
+            %input.file-input{:name => "appendix", :type => "file"}/
+            %span.file-cta
+              %span.file-icon
+                %i.fas.fa-upload
+              %span.file-label
+                Выбрать
+              %span.file-name.is-fullwidth
+                не выбран
+        .control.is-fullwidth
+          - if true or can? :update, @letter
+            %button.button.is-link Сохранить файл
