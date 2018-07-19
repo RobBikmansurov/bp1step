@@ -1,8 +1,22 @@
-= simple_form_for @user_letter, :url => update_user_letter_path, :html => { :multipart => true } do |f|
-  = f.error_notification
-  = f.hidden_field :letter_id
-  = f.label 'Исполнитель'
-  = f.autocomplete_field :user_name, autocomplete_users_path
-  = f.input :status, as: :boolean
-  = f.error :base
-  = f.button :submit, 'Добавить Исполнителя'
+.column.is-offset-1
+  = simple_form_for @user_letter, :url => update_user_letter_path, :html => { :multipart => true } do |f|
+    = f.error_notification
+    = f.hidden_field :letter_id
+    = f.error :base
+    .field.is-horizontal
+      .field-label
+        %label.label Исполнитель: 
+      .field-body
+        .field
+          %p.control.has-icons-left
+            -# %input.input{:placeholder => "ФИО нового исполнителя", name: :user_name, :type => "text"}/
+            %input.input{"data-autocomplete" => "/users/autocomplete", :name => "user_letter[user_name]", :type => "text", :placeholder => "ФИО нового исполнителя"}/
+            %span.icon.is-small.is-left
+              %i.fas.fa-user
+        .field
+          %p.control.has-icons-left
+            %input{:type => "checkbox", :name => "user_letter[status]", :value => "1" }/ 
+            ответственный
+        .control
+          %button.button.is-link.is-small Добавить исполнителя
+
