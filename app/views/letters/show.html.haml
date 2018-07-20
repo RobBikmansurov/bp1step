@@ -1,138 +1,140 @@
 - title "Письмо № #{@letter.number} от #{@letter.date.strftime('%d.%m.%Y')}"
 - search 'Письмо'
-.container
-  .columns
-    .column
-      - if @letter.in_out != 1 # Исходящее
-        .is_right
-          =image_tag 'out_mail.png', size: "64x64", alt: "#{LETTER_DIRECTION.key(@letter.in_out)}"
-      - else
-        .is_left
-          =image_tag 'in_mail.png', size: "64x64", alt: "#{LETTER_DIRECTION.key(@letter.in_out)}"
-      .large
-        - if @letter.in_out != 1 # Исходящее
-          - if @letter.regnumber.blank?
-            - if can? :registr, @letter
-              %a.button.is-info.is-outlined.is-small{ href: register_letter_path(@letter) } Зарегистрировать
+%section.hero
+  .hero-body
+    .container
+      .columns
+        .column.is-5
+          - if @letter.in_out != 1 # Исходящее
+            =image_tag 'out_mail.png', size: "64x64", alt: "#{LETTER_DIRECTION.key(@letter.in_out)}"
           - else
-            Исх.№
-            %b #{@letter.regnumber}
-            - if @letter.regdate
-              от
-              %b
-                = link_to @letter.regdate.strftime('%d.%m.%Y'), letters_path(regdate: @letter.regdate.strftime('%d.%m.%Y'))
-        %br
-        - if @letter_link
-          ответ на
-          = link_to "Вх.№ #{@letter_link.number}", letter_path(@letter_link)
-          от #{@letter_link.date.strftime('%d.%m.%Y')}
-        - elsif !@letter.number.blank? && @letter.number != 'б/н' && @letter.number != '-'
-          Исх.№ #{@letter.number} от
-          = link_to @letter.date.strftime('%d.%m.%Y'), letters_path(date: @letter.date.strftime('%d.%m.%Y')) if @letter.date
-
-        - if @letter.in_out == 1 # Входящее
-          - if @letter.regnumber.blank?
-            - if can? :registr, @letter
-              %a.button.is-info.is-outlined.is-small{ href: register_letter_path(@letter) } Зарегистрировать
-          - else
+            =image_tag 'in_mail.png', size: "64x64", alt: "#{LETTER_DIRECTION.key(@letter.in_out)}"
+          .large
+            - if @letter.in_out != 1 # Исходящее
+              - if @letter.regnumber.blank?
+                - if can? :registr, @letter
+                  %a.button.is-info.is-outlined.is-small{ href: register_letter_path(@letter) } Зарегистрировать
+              - else
+                Исх.№
+                %b #{@letter.regnumber}
+                - if @letter.regdate
+                  от
+                  %b
+                    = link_to @letter.regdate.strftime('%d.%m.%Y'), letters_path(regdate: @letter.regdate.strftime('%d.%m.%Y'))
             %br
-              Зарегистрирован:
-              = @letter.in_out == 1 ? 'Вх.№' : 'Исх.№'
-              %b #{@letter.regnumber}
-              - if @letter.regdate
-                от
-                %b
-                  = link_to @letter.regdate.strftime('%d.%m.%Y'), letters_path(regdate: @letter.regdate.strftime('%d.%m.%Y'))
-    .column
-      .id_ ##{@letter.id}
-      .title
-        - if @letter.in_out == 1
-          Отправитель:
-        - else
-          Получатель:
-      %h2= link_to @letter.sender, letters_path(addresse: @letter.sender)
-.columns
-  .column
-    %h3
-      %b [ #{@letter.subject} ]
-.columns
-  .column
-    %h3 Краткое содержание (о чем):
-    = simple_format(@letter.body, {}, {})
-  .column
-    %h3 Источник: #{@letter.source}
-%h3
-  Срок исполнения:
-  - if @letter.duedate
-    %b= @letter.duedate.strftime('%d.%m.%Y')
-    - if @letter.status < 90
-      - days = @letter.duedate - Date.current
-      = " (осталось #{days.to_i} дн.)" if days > 0
-      - if days <= 0
-        %span{ style: 'color: red;' }
-          = " (опоздание #{(-days).to_i} дн.)" if days < 0
-          = " сегодня!" if days == 0
-  - if @letter.completion_date
-    [ фактически:
-    %b= @letter.completion_date.strftime('%d.%m.%Y')
+            - if @letter_link
+              ответ на
+              = link_to "Вх.№ #{@letter_link.number}", letter_path(@letter_link)
+              от #{@letter_link.date.strftime('%d.%m.%Y')}
+            - elsif !@letter.number.blank? && @letter.number != 'б/н' && @letter.number != '-'
+              Исх.№ #{@letter.number} от
+              = link_to @letter.date.strftime('%d.%m.%Y'), letters_path(date: @letter.date.strftime('%d.%m.%Y')) if @letter.date
 
-    - if @letter.status >= 90
-      - days = 0
-      - days = @letter.completion_date - @letter.duedate if @letter.duedate
-      - if days > 0
-        %span{ style: 'color: red;' }
-          (опоздание #{days.to_i} дн.)
-    ]
+            - if @letter.in_out == 1 # Входящее
+              - if @letter.regnumber.blank?
+                - if can? :registr, @letter
+                  %a.button.is-info.is-outlined.is-small{ href: register_letter_path(@letter) } Зарегистрировать
+              - else
+                %br
+                  Зарегистрирован:
+                  = @letter.in_out == 1 ? 'Вх.№' : 'Исх.№'
+                  %b #{@letter.regnumber}
+                  - if @letter.regdate
+                    от
+                    %b
+                      = link_to @letter.regdate.strftime('%d.%m.%Y'), letters_path(regdate: @letter.regdate.strftime('%d.%m.%Y'))
+        .column.is-half
+          .subtitle
+            - if @letter.in_out == 1
+              Отправитель:
+            - else
+              Получатель:
+            %h2= link_to @letter.sender, letters_path(addresse: @letter.sender)
+        .column.is-1
+          .subtitle ##{@letter.id}
+      .columns
+        .column.is-5
+          .subtitle [ #{@letter.subject} ]
+        .column
+          Источник:
+          .tag.is-medium #{@letter.source}
+          .container
+            Срок исполнения:
+            - if @letter.duedate
+              %b= @letter.duedate.strftime('%d.%m.%Y')
+              - if @letter.status < 90
+                - days = @letter.duedate - Date.current
+                = " (осталось #{days.to_i} дн.)" if days > 0
+                - if days <= 0
+                  %span{ style: 'color: red;' }
+                    = " (опоздание #{(-days).to_i} дн.)" if days < 0
+                    = " сегодня!" if days == 0
+            - if @letter.completion_date
+              [ фактически:
+              %b= @letter.completion_date.strftime('%d.%m.%Y')
 
-- @letter.letter_appendix.each do |letter_appendix|
-  .floating-box
-    - if File.exist?(letter_appendix.appendix.path) # есть исходный файл документа
-      - appendix_name = "#{letter_appendix.name}:" unless letter_appendix.name
-      = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть') + "#{appendix_name} #{letter_appendix.appendix_file_name}", letter_appendix.appendix.url
-    - else
-      #{letter_appendix.appendix_file_name}
-    %br (#{letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S')}  #{letter_appendix.appendix_file_size})
-- if can? :update, @letter
-  #appendix_update.floating-box
-    %a.button.is-info.is-outlined.is-small{ href: appendix_create_letter_path(@letter), "data-remote" => "true" } Добавить файл приложения
+              - if @letter.status >= 90
+                - days = 0
+                - days = @letter.completion_date - @letter.duedate if @letter.duedate
+                - if days > 0
+                  %span{ style: 'color: red;' }
+                    (опоздание #{days.to_i} дн.)
+              ]
+      .container
+        %h3 Краткое содержание (о чем):
+        = simple_format(@letter.body, {}, {})
+%section
+.container
+  - @letter.letter_appendix.each do |letter_appendix|
+    .floating-box
+      - if File.exist?(letter_appendix.appendix.path) # есть исходный файл документа
+        - appendix_name = "#{letter_appendix.name}:" unless letter_appendix.name
+        = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть') + "#{appendix_name} #{letter_appendix.appendix_file_name}", letter_appendix.appendix.url
+      - else
+        #{letter_appendix.appendix_file_name}
+      %br (#{letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S')}  #{letter_appendix.appendix_file_size})
+  - if can? :update, @letter
+    #appendix_update.floating-box
+      %a.button.is-info.is-outlined.is-small{ href: appendix_create_letter_path(@letter), "data-remote" => "true" } Добавить файл приложения
 
-%hr
-%h3
-  - if @letter.author_id?
-    Автор:
-    = link_to @letter.author.displayname, user_path(@letter.author.id)
-    &nbsp; &nbsp;
-  Исполнители:
-  - is_can_update = can? :update, @letter
-  - is_can_update = true if @letter.author && @letter.author.id == current_user.id # автор может добавлять других исполнителей
-  - @letter.user_letter.each do |user_letter|
-    = link_to user_letter.user.displayname, letters_path(user: user_letter.user)
-    &nbsp;
-    - if user_letter.status && user_letter.status > 0
-      \- отв.
-    &nbsp;
-    - is_can_update = true if user_letter.user.id == current_user.id # исполнители могут добавлять других исполнителей
+.container
+  %hr
+  %h3
+    - if @letter.author_id?
+      Автор:
+      = link_to @letter.author.displayname, user_path(@letter.author.id)
+      &nbsp; &nbsp;
+    Исполнители:
+    - is_can_update = can? :update, @letter
+    - is_can_update = true if @letter.author && @letter.author.id == current_user.id # автор может добавлять других исполнителей
+    - @letter.user_letter.each do |user_letter|
+      = link_to user_letter.user.displayname, letters_path(user: user_letter.user)
+      &nbsp;
+      - if user_letter.status && user_letter.status > 0
+        \- отв.
+      &nbsp;
+      - is_can_update = true if user_letter.user.id == current_user.id # исполнители могут добавлять других исполнителей
 
-  - if is_can_update # автор и исполнители могут добавлять других исполнителей
-    #create_user
-      %a.button.is-info.is-outlined.is-small{ href: create_user_letter_path(@letter), "data-remote" => "true" } Добавить Исполнителя
+    - if is_can_update # автор и исполнители могут добавлять других исполнителей
+      #create_user
+        %a.button.is-info.is-outlined.is-small{ href: create_user_letter_path(@letter), "data-remote" => "true" } Добавить Исполнителя
 
-%h3
-  Статус:
-  .tag.is-light.is-medium
-    = LETTER_STATUS.key(@letter.status)
-%h3 Результат исполнения:
-= simple_format(@letter.result, {}, {})
+  %h3
+    Статус:
+    .tag.is-light.is-medium
+      = LETTER_STATUS.key(@letter.status)
+  %h3 Результат исполнения:
+  = simple_format(@letter.result, {}, {})
 
-%hr
-= render 'letters_outgoing' if @letters_outgoing.any?
-- if @requirements.any?
-  %h4 Созданы Требования:
-  - @requirements.each do |requirement|
-    = link_to "Требование [#{requirement.label}]", requirement
-    от #{requirement.date.strftime('%d.%m.%Y')}
-    %br
-= render 'tasks' if @tasks.any?
+  %hr
+  = render 'letters_outgoing' if @letters_outgoing.any?
+  - if @requirements.any?
+    %h4 Созданы Требования:
+    - @requirements.each do |requirement|
+      = link_to "Требование [#{requirement.label}]", requirement
+      от #{requirement.date.strftime('%d.%m.%Y')}
+      %br
+  = render 'tasks' if @tasks.any?
 
 .info_
   - activity1 = PublicActivity::Activity.where(trackable_type: 'Letter', trackable_id: @letter.id).order('created_at asc').first
