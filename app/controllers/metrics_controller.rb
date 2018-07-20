@@ -120,7 +120,7 @@ class MetricsController < ApplicationController
     @metric = Metric.find(params[:id])
     if @metric && params[:v].presence && params[:h].presence
       where_datetime = @metric.sql_period Time.current.utc
-      value = MetricValue.where('metric_id = ?', @metric.id).where("dtime BETWEEN #{where_datetime}").first
+      value = MetricValue.where(metric_id: @metric.id).where("dtime BETWEEN #{where_datetime}").first
       value ||= MetricValue.new(metric_id: @metric.id) # не нашли - добавим новое значение
       value.dtime = Time.current # обновим время записи значения
       if Digest::MD5.hexdigest(@metric.mhash) == params[:h]
@@ -221,19 +221,13 @@ class MetricsController < ApplicationController
         rescue StandardError => error
           logger.error "      ERR: #{sql}\n#{error}"
         end
-        if new_value
-          if new_value.positive?
-            p Time.at(d)
-            ids = MetricValue.where(metric_id: @metric.id).where("dtime BETWEEN #{sql_period}").all.ids
-            p ids
-            value = MetricValue.where(metric_id: @metric.id).where("dtime BETWEEN #{sql_period}").first
-            p value
-            value ||= MetricValue.new(metric_id: @metric.id) # не нашли? - новое значение
-            p value
-            value.value = new_value
-            value.dtime = Time.at.utc(d) # обновим время записи значения
-            logger.error "#{@metric.id} #{value.errors}" unless value.save
-          end
+        if new_value&.positive?
+          # ids = MetricValue.where(metric_id: @metric.id).where("dtime BETWEEN #{sql_period}").all.ids
+          value = MetricValue.where(metric_id: @metric.id).where("dtime BETWEEN #{sql_period}").first
+          value ||= MetricValue.new(metric_id: @metric.id) # не нашли? - новое значение
+          value.value = new_value
+          value.dtime = Time.at.utc(d) # обновим время записи значения
+          logger.error "#{@metric.id} #{value.errors}" unless value.save
         end
       end
       mssql&.close
@@ -248,9 +242,9 @@ class MetricsController < ApplicationController
     @bproce = Bproce.find(params[:bproce_id]) if params[:bproce_id].present?
   end
 
-  # Only allow a trusted parameter "white list" through.
   def metric_params
-    params.require(:metric).permit(:bproce_id, :name, :shortname, :description, :note, :depth, :depth_name, :bproce_name, :mtype, :msql)
+    params.require(:metric).permit(:bproce_id, :name, :shortname, :description, :note,
+                                   :depth, :depth_name, :bproce_name, :mtype, :msql)
   end
 
   def sort_column
