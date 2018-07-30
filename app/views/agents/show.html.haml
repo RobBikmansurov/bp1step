@@ -6,6 +6,10 @@
 %h2
   Контрагент 
   = '[' + @agent.shortname + ']' if @agent.shortname
+  &nbsp;
+  %b
+    = ' ИНН: ' + @agent.inn if @agent.inn
+
 %h2
   %b= @agent.name
   -if !@agent.town.blank?
@@ -14,13 +18,14 @@
 = markdown(@agent.address)
 %h3Контакты:
 = markdown(@agent.contacts)
--if !@agent.note.blank?
+- unless @agent.note.blank?
   %h3Примечания:
   = markdown(@agent.note)
-
+- unless @agent.dms_name.blank?
+  %h3
+    есть в СЭД #{@agent.dms_name}
 %hr
-
--if @contracts.count > 0
+-if @contracts.any?
   %h3
     Договоры с
     %b= @agent.name

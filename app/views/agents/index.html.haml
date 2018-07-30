@@ -3,10 +3,10 @@
 
 %h2
   Список контрагентов
-  -if params[:search].present?
-    [ 
-    = params[:search]
-    ]
+  - if params[:search].present?
+    [ #{params[:search]} ]
+  - elsif params[:dms_name].present?
+    участников СЭД [ #{params[:dms_name]} ]
 
 %table
   %tr
@@ -38,3 +38,9 @@
 %p
 - if can? :destroy, Agent
   = link_to "Добавить Контрагента" , new_agent_path, :class => 'button'
+%p
+СЭД:
+- Agent.select('dms_name, count(id) as count').group(:dms_name).order(:dms_name).each do |d|
+  - unless d.dms_name.to_s.empty?
+    = link_to d.dms_name, agents_path(dms_name: d.dms_name.to_s), class: 'groups'
+    &nbsp;
