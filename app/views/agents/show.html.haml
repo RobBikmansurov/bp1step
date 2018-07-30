@@ -23,7 +23,8 @@
   = markdown(@agent.note)
 - unless @agent.dms_name.blank?
   %h3
-    есть в СЭД #{@agent.dms_name}
+    есть в СЭД #{}
+    = link_to @agent.dms_name, agents_path(dms_name: @agent.dms_name), class: 'groups'
 %hr
 -if @contracts.any?
   %h3
