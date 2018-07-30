@@ -10,11 +10,15 @@
   = f.input :goal
   = f.input :description
   = f.label 'Новый владелец процесса'
-  = f.autocomplete_field :user_name_form, autocomplete_users_path
+  -# WIP: user autocomplete
+  -# = f.autocomplete_field :user_name_form, autocomplete_users_path
+  = f.autocomplete_field :user_name, autocomplete_users_path
   %br
   %p
     = f.label 'Новый родительский процесс'
-    = f.autocomplete_field :parent_name_form, autocomplete_bproces_path
+    -# WIP: parent autocomplete
+    -# = f.autocomplete_field :parent_name_form, autocomplete_bproces_path
+    = f.autocomplete_field :parent_name, autocomplete_bproces_path
   %p
     = f.input :checked_at, as: :string, :input_html => {:class=>'datepicker'}  if can? :create, @bproce
     = f.input :tag_list, :label => 'Теги (через запятую)' if can? :manage_tag, @bproce

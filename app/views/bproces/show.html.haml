@@ -1,4 +1,4 @@
--title 'Процесс ' + @bproce.shortname
+-title "Процесс #{@bproce.shortname}"
 -search "Процесс"
 .id_
   \#
@@ -10,7 +10,7 @@
   %b
     [#{@bproce.shortname}]
   = @bproce.name
-= render partial: 'parent', locals: { parent_id: @bproce.parent.id, parent_name: @bproce.parent.name }
+= render partial: 'parent', locals: { parent_id: @bproce.parent&.id, parent_name: @bproce.parent&.name }
 
 %h3 Подпроцессы:
 - Bproce.where("lft>? and rgt<?", @bproce.lft, @bproce.rgt).order("lft").each do |bp|
@@ -38,7 +38,7 @@
   %h4 Краткое описание:
   = raw markdown_and_link(@bproce.description, @bproce.business_roles)
 
-= render partial: 'owner', locals: { owner_id: @bproce.user_id, owner_name: @bproce.user.displayname }
+= render partial: 'owner', locals: { owner_id: @bproce.user_id, owner_name: @bproce.user&.displayname }
 
 Теги процесса:
 = raw @bproce.tag_list.map { |t| link_to t, bproces_path + '/tags/' + t, class: 'tags' }.join('&nbsp; ')
@@ -140,12 +140,13 @@
     изменен
     = @bproce.updated_at.strftime('%d.%m.%Y %H:%M:%S')
 %p
-= link_to 'Edit', edit_bproce_path(@bproce), :class => 'button' if can? :update, @bproce
 = link_to 'Back', bproces_path, :class => 'button'
+= link_to 'Edit', edit_bproce_path(@bproce), :class => 'button' if can? :update, @bproce
 -if can? :update, @bproce
   = link_to 'Карточка', bproce_path(@bproce) + '/card', :class => 'button'
-  = link_to 'Чек-лист', bproce_path(@bproce) + '/check_list', :class => 'button'
-  = link_to 'Описание', bproce_path(@bproce) + '/doc', :class => 'button'
+  = link_to 'Чек-лист карточки', bproce_path(@bproce) + '/check_list', :class => 'button'
+  = link_to 'Чек-лист улучшения', bproce_path(@bproce) + '/check_list_improve', :target => :_blank, :class => 'button'
+  = link_to 'Описание процесса', bproce_path(@bproce) + '/doc', :class => 'button'
   -#= link_to 'Распоряжение', order_bproces(@bproce), :class => 'button'
   = link_to 'Распоряжение', bproce_path(@bproce) + '/order', class: :button
 -if can? :create, Bproce

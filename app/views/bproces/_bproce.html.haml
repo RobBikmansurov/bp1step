@@ -1,6 +1,6 @@
 %tr
   %td
-    = '—' * bproce.depth + '[' + bproce.shortname + ']' if bproce.depth
+    = '—' * bproce.depth + "[ #{bproce.shortname} ]" if bproce.depth
     - if bproce.checked_at
       = "\u2713".html_safe
     = link_to bproce.name, bproce_path(bproce)
@@ -21,6 +21,6 @@
       - unless Bproce.where(parent_id: bproce.id).first
         = link_to image_tag('action_stop.gif', alt: 'Удалить'),
                   bproce,
-                  data: { confirm: 'Процесс "' + bproce.name + "\"\nДействительно хотите удалить?" },
+                  data: { confirm: "Процесс \" #{bproce.name} \"\nДействительно хотите удалить?" },
                   method: 'delete',
                   class: 'button-img'

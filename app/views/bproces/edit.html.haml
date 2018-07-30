@@ -1,10 +1,10 @@
--title 'Процесс ' + @bproce.shortname
+-title "Процесс #{@bproce.shortname}"
 -search "Процесс"
 .id_
   \#
   = @bproce.id
 %h2 Изменить процесс 
-= render partial: 'parent', locals: { parent_id: @bproce.parent.id, parent_name: @bproce.parent.name }
+= render partial: 'parent', locals: { parent_id: @bproce.parent&.id, parent_name: @bproce.parent&.name }
 = render 'form'
 %p
 = render 'business_roles'
