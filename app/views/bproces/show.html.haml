@@ -14,7 +14,7 @@
 
 %h3 Подпроцессы:
 - Bproce.where("lft>? and rgt<?", @bproce.lft, @bproce.rgt).order("lft").each do |bp|
-  = "——" * (bp.depth - @bproce.depth)
+  = "——" * (bp.depth - @bproce.depth) if bp.depth > @bproce.depth
   -#= bp.depth
   = "[ #{bp.shortname} ]" if bp.shortname
   = "\u2713".html_safe if bp.checked_at
