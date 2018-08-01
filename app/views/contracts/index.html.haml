@@ -1,96 +1,105 @@
 - search 'Договор'
 - title @title_doc
 - command_params = {}
-
-%h3
-  - if @bproce
-    Договоры процесса
-    = link_to @bproce.name, bproce_path(@bproce)
-    = @title_doc_add if @title_doc_add
-    - command_params = command_params.merge(bproce_id: @bproce.id.to_s)
-  - else
-    = @title_doc if @title_doc
-    - if params[:status].present?
-      - command_params = command_params.merge(status: params[:status])
-    - elsif params[:type].present?
-      - command_params = command_params.merge(type: params[:type])
-    - elsif params[:place].present?
-      - command_params = command_params.merge(place: params[:place])
-    - elsif params[:user].present?
-      - command_params = command_params.merge(user: params[:user])
-    - elsif params[:payer].present?
-      - command_params = command_params.merge(payer: params[:payer])
-    - else
-      - command_params = command_params.merge(page: params[:page]) if params[:page].present?
-
-  - if params[:search].present?
-    [ #{params[:search]} ]
-
-%table
-  %tr
-    %th= sortable 'id', '#'
-    %th= sortable 'number', 'Номер'
-    %th= sortable 'date_begin', 'От'
-    %th= sortable 'status', 'Статус'
-    %th= sortable 'agent_id', 'Контрагент'
-    - if can? :update, Contract
-      %th
-    - if can? :destroy, Contract
-      %th
-  - @contracts.each do |contract|
-    %tr
-      %td
-        .id_show_ ##{contract.id}
-      %td
-        = '—' * contract.depth
-        - if contract.contract_scan.first # если есть скан
-          - if can? :view_contract, contract
-            - if File.exist?(contract.contract_scan.first.scan.path)
-              = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), contract.contract_scan.first.scan.url, class: 'button-img'
-        = link_to contract.shortname, contract_path(contract)
-      %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
-      %td= contract.status
-      %td= link_to contract.agent.name, agent_path(contract.agent.id) if contract.agent
-
-      - if can? :update, contract
-        %td
-          = link_to image_tag('page_edit.gif', alt: 'Изменить'), edit_contract_path(contract), class: 'button-img'
-      - if can? :destroy, contract
-        %td
-          - if !@bproce
-            = link_to image_tag('action_stop.gif', alt: 'Удалить', title: 'Удалить'), contract, data: { confirm: contract.shortname + "\nДействительно хотите удалить договор?" }, method: 'delete', class: 'button-img'
+%section.hero.is-primary
+  .hero-body
+    .container
+      %h1.title
+        - if @bproce
+          Договоры процесса
+          = link_to @bproce.name, bproce_path(@bproce)
+          = @title_doc_add if @title_doc_add
+          - command_params = command_params.merge(bproce_id: @bproce.id.to_s)
+        - else
+          = @title_doc if @title_doc
+          - if params[:status].present?
+            - command_params = command_params.merge(status: params[:status])
+          - elsif params[:type].present?
+            - command_params = command_params.merge(type: params[:type])
+          - elsif params[:place].present?
+            - command_params = command_params.merge(place: params[:place])
+          - elsif params[:user].present?
+            - command_params = command_params.merge(user: params[:user])
+          - elsif params[:payer].present?
+            - command_params = command_params.merge(payer: params[:payer])
           - else
-            - bproce_contract = contract.bproce_contract.where('bproce_id = ?', @bproce.id).first # ссылка на данный процесс из Договора
-            = link_to image_tag('action_stop.gif', alt: 'Удалить'),
-                      bproce_contract_path(bproce_contract, bproce_id: @bproce.id),
-                      data: { confirm: contract.shortname + "\nДействительно хотите удалить ссылку из процесса ##{bproce_contract.bproce_id} на этот договор?" },
-                      method: 'delete',
-                      class: 'button-img' if bproce_contract
-- unless params[:all].present?
-  .apple_pagination
-    = will_paginate @contract
-%p
-- if can? :create, Contract
-  = link_to 'Добавить новый договор', new_contract_path, class: 'button'
-  = link_to 'Список', contracts_path(command_params.merge(format: 'odt')), class: 'button'
-  = link_to 'XML', contracts_path(format: 'xml'), class: 'button'
-  = link_to 'JSON', contracts_path(format: 'json'), class: 'button'
+            - command_params = command_params.merge(page: params[:page]) if params[:page].present?
 
-%p
-Тип:
-- Contract.select('contract_type, count(id) as count').group(:contract_type).order(:contract_type).each do |d|
-  - unless d.contract_type.to_s.empty?
-    = link_to d.contract_type, contracts_path(type: d.contract_type.to_s), class: 'groups'
-    &nbsp;
-%br
-Статус:
-- Contract.select('status, count(id) as count').group(:status).order(:status).each do |d|
-  - unless d.status.to_s.empty?
-    = link_to " #{d.status} (#{d.count}) ", contracts_path(status: d.status.to_s), class: 'groups'
-    &nbsp;
-%br
-Место хранения:
-- Contract.select('contract_place, count(id) as count').group(:contract_place).order(:contract_place).each do |d|
-  - unless d.contract_place.to_s.empty?
-    = link_to d.contract_place, contracts_path(place: d.contract_place.to_s), class: 'groups'
-    &nbsp;
+        - if params[:search].present?
+          [ #{params[:search]} ]
+      %h2.subtitle
+        Договоры, юридическое обеспечение
+        = link_to 'процессов', bproces_path
+        %p.notice= notice
+.container
+  %table.table.is-striped.is-bordered.is-hoverable.is-fullwidth
+    %thead
+      %tr
+        %th= sortable 'id', '#'
+        %th= sortable 'number', 'Номер'
+        %th= sortable 'date_begin', 'От'
+        %th= sortable 'status', 'Статус'
+        %th= sortable 'agent_id', 'Контрагент'
+        - if can? :update, Contract
+          %th
+        - if can? :destroy, Contract
+          %th
+      - @contracts.each do |contract|
+        %tr
+          %td
+            .id_show_ ##{contract.id}
+          %td
+            = '—' * contract.depth
+            - if contract.contract_scan.first # если есть скан
+              - if can? :view_contract, contract
+                - if File.exist?(contract.contract_scan.first.scan.path)
+                  = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), contract.contract_scan.first.scan.url, class: 'button-img'
+            = link_to contract.shortname, contract_path(contract)
+          %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
+          %td= contract.status
+          %td= link_to contract.agent.name, agent_path(contract.agent.id) if contract.agent
+
+          - if can? :update, contract
+            %td
+              = link_to image_tag('page_edit.gif', alt: 'Изменить'), edit_contract_path(contract), class: 'button-img'
+          - if can? :destroy, contract
+            %td
+              - if !@bproce
+                = link_to image_tag('action_stop.gif', alt: 'Удалить', title: 'Удалить'), contract, data: { confirm: contract.shortname + "\nДействительно хотите удалить договор?" }, method: 'delete', class: 'button-img'
+              - else
+                - bproce_contract = contract.bproce_contract.where('bproce_id = ?', @bproce.id).first # ссылка на данный процесс из Договора
+                = link_to image_tag('action_stop.gif', alt: 'Удалить'),
+                          bproce_contract_path(bproce_contract, bproce_id: @bproce.id),
+                          data: { confirm: contract.shortname + "\nДействительно хотите удалить ссылку из процесса ##{bproce_contract.bproce_id} на этот договор?" },
+                          method: 'delete',
+                          class: 'button-img' if bproce_contract
+- unless params[:all].present?
+  .container
+    .apple_pagination
+      = will_paginate @contract
+.container
+  - if can? :create, Contract
+    %a.button.is-primary{ href: new_contract_path } Добавить новый договор
+    %a.button.is-primary{ href: contracts_path(command_params.merge(format: 'odt')) } Список
+    %a.button.is-primary{ href: contracts_path(format: 'xml') } XML
+    %a.button.is-primary{ href: contracts_path(format: 'json') } JSON
+.container
+  .columns
+    .column
+      .buttons
+        Тип:
+        - Contract.select('contract_type, count(id) as count').group(:contract_type).order(:contract_type).each do |d|
+          - unless d.contract_type.to_s.empty?
+            %a.button.is-outlined{ href: contracts_path(type: d.contract_type.to_s) } #{d.contract_type}
+    .column
+      .buttons
+        Статус:
+        - Contract.select('status, count(id) as count').group(:status).order(:status).each do |d|
+          - unless d.status.to_s.empty?
+            %a.button.is-outlined{ href: contracts_path(status: d.status) } #{d.status} - #{d.count}
+.container
+  .buttons
+    Место хранения:
+    - Contract.select('contract_place, count(id) as count').group(:contract_place).order(:contract_place).each do |d|
+      - unless d.contract_place.to_s.empty?
+        %a.button.is-outlined{ href: contracts_path(place: d.contract_place) } #{d.contract_place}
