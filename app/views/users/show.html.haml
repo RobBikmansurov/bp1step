@@ -18,35 +18,29 @@
     -else
       #update_file
         = link_to 'Заменить фото', avatar_create_user_path(@usr), :remote => true
-#tabs
-  %ul
-    %li
-      = link_to(execute_user_path(@usr)) do
-        %span К исполнению
-    %li
-      = link_to(uroles_user_path(@usr)) do
-        %span Роли
-    %li
-      = link_to(processes_user_path(@usr)) do
-        %span Процессы
-    %li
-      = link_to(documents_user_path(@usr)) do
-        %span Документы
-    %li
-      = link_to(contracts_user_path(@usr)) do
-        %span Договоры
-    %li
-      = link_to(resources_user_path(@usr)) do
-        %span Ресурсы
-    %li
-      = link_to(uworkplaces_user_path(@usr)) do
-        %span Общее
-  
-%p
--if can? :assign_roles, User
-  = link_to 'Edit', edit_user_path(@usr), :class => 'button'
-= link_to 'Back', users_path, :class => 'button'
--if can? :update, Bproce
-  = link_to 'Распоряжение', order_user_path(@usr), class: :button
-  = link_to 'Пропуск', pass_user_path(@usr), class: :button
-= link_to 'Официальное письмо', create_letter_home_path(@usr), class: :button
+
+.container
+  .tabs.is-boxed
+    %ul
+      %Li.is-active{"data-tab" => "action"}
+        %a{href: execute_user_path(@usr)} К исполнению
+      %li{"data-tab" => "roles"}
+        %a{href: uroles_user_path(@usr)} Роли
+      %Li{"data-tab" => "processes"}
+        %a{href: processes_user_path(@usr)} Процессы
+      %li{"data-tab" => "documents"}
+        %a{href: documents_user_path(@usr)} Документы
+      %li{"data-tab" => "contracts"}
+        %a{href: contracts_user_path(@usr)} Договоры
+      %li{"data-tab" => "resources"}
+        %a{href: resources_user_path(@usr)} Ресурсы
+      %li{"data-tab" => "profile"}
+        %a{href: uworkplaces_user_path(@usr)} Общее
+
+.container  
+  -if can? :assign_roles, User
+    %a.button.is-primary{ href: edit_user_path(@usr) } Edit
+  %a.button.is-primary{ href: users_path } Back
+  -if can? :update, Bproce
+    %a.button.is-link{ href: order_user_path(@usr) } Распоряжение
+    %a.button.is-link{ href: pass_user_path(@usr) } Пропуск

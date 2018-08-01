@@ -88,9 +88,10 @@
                 %a.navbar-link
                   = current_user.user_name
                 .navbar-dropdown
-                  %a.navbar-item{href: "/users/#{current_user.id}"}К исполнению
+                  %a.navbar-item{href: "/users/#{current_user.id}"} К исполнению
                   %a.navbar-item Профиль
                   %hr.navbar-divider/
+                  %a.navbar-item{href: "#{create_letter_home_path(current_user)}" } Официальное письмо
                   %a.navbar-item
                     = current_user.last_sign_in_at&.strftime('%d.%m.%y %H:%M:%S')
                   %hr.navbar-divider/
