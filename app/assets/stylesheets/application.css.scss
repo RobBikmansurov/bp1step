@@ -8,3 +8,11 @@
 {
   justify-content: left;
 }
+
+.tab-content {
+  display: none;
+}
+ 
+.tab-content.current-tab {
+  display: inherit;
+}
