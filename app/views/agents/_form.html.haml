@@ -2,10 +2,12 @@
   = f.error_notification
   = f.input :shortname
   = f.input :name, :as => :text
+  = f.input :inn
   = f.input :town
   = f.input :address, :as => :text
   = f.input :contacts
   = f.input :note
+  = f.input :dms_name
 
   %p
   -if can? :update, @agent

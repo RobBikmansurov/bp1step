@@ -24,6 +24,6 @@ class BproceWorkplacesController < ApplicationController
   private
 
   def bproce_workplace_params
-    params.require(:bproce_workplace).permit(:bproce_id, :workplace_id)
+    params.require(:bproce_workplace).permit(:bproce_id, :workplace_id, :bproce_name)
   end
 end

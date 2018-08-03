@@ -69,11 +69,9 @@
       -if can? :update, Agent
         %a.button.is-primary{ href:  edit_agent_path(@agent) } Edit
       %a.button.is-primary{ href: agents_path } Back
-
       -if can? :update, Agent or can? :create, Contract
         %a.button.is-warning{ href: new_contract_agent_path(@agent) } Новый договор
     .column.is-3
-
       -activity1 = PublicActivity::Activity.where(trackable_type: "Agent", trackable_id: @agent.id).order("created_at asc").first
       -if activity1
         = link_to 'создал', activities_path(type: "Agent", id: @agent.id)

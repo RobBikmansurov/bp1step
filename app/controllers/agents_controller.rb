@@ -4,7 +4,11 @@ class AgentsController < ApplicationController
   autocomplete :bproce, :name, extra_data: [:id]
 
   def index
-    @agents = Agent.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+    if params[:dms_name].present?
+      @agents = Agent.where("dms_name ilike ?", "#{params[:dms_name]}").order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+    else
+      @agents = Agent.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+    end
   end
 
   def show
@@ -63,7 +67,8 @@ class AgentsController < ApplicationController
   end
 
   def agent_params
-    params.require(:agent).permit(:shortname, :name, :town, :address, :contacts, :note)
+    params.require(:agent).permit(:shortname, :name, :town, :address, :contacts,
+                                  :note, :inn, :dms_name)
   end
 
   def sort_column

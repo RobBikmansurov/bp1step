@@ -8,6 +8,7 @@ RSpec.describe BproceWorkplacesController, type: :controller do
   let!(:workplace)       { FactoryBot.create(:workplace) }
   let(:bproce_workplace) { FactoryBot.create(:bproce_workplace, bproce_id: bproce.id, workplace_id: workplace.id) }
   let(:valid_attributes) { { bproce_id: bproce.id, workplace_id: workplace.id } }
+  let(:valid_attributes_w_name) { { bproce_name: bproce.name, workplace_id: workplace.id } }
   let(:valid_session) { {} }
 
   before(:each) do
@@ -38,8 +39,12 @@ RSpec.describe BproceWorkplacesController, type: :controller do
         expect(assigns(:bproce_workplace)).to be_persisted
       end
 
-      it 'redirects to the created bproce_workplace' do
+      it 'redirects to the created bproce_workplace with bproce_id and workplace_id' do
         post :create, params: { bproce_workplace: valid_attributes }
+        expect(response).to redirect_to(BproceWorkplace.last.workplace)
+      end
+      it 'redirects to the created bproce_workplace with bproce_name and workplace_id' do
+        post :create, params: { bproce_workplace: valid_attributes_w_name }
         expect(response).to redirect_to(BproceWorkplace.last.workplace)
       end
     end
@@ -59,8 +64,9 @@ RSpec.describe BproceWorkplacesController, type: :controller do
 
     it 'redirects to the bproce_workplaces list' do
       bproce_workplace = BproceWorkplace.create! valid_attributes
+      workplace = bproce_workplace.workplace
       delete :destroy, params: { id: bproce_workplace.to_param }
-      expect(response).to redirect_to workplace_url
+      expect(response).to redirect_to workplace
     end
   end
 end

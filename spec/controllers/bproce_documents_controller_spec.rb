@@ -128,6 +128,7 @@ RSpec.describe BproceDocumentsController, type: :controller do
     it 'redirects to the bproce_documents list' do
       document = bproce_document.document
       delete :destroy, params: { id: bproce_document.to_param }
-      expect(response).to redirect_to document_url(id: document.to_param)    end
+      expect(response).to redirect_to document_url(id: document.to_param)
+    end
   end
 end

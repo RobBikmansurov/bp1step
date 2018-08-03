@@ -124,8 +124,9 @@ RSpec.describe BproceIresourcesController, type: :controller do
 
     it 'redirects to the bproce_iresources list' do
       bproce_iresource = FactoryBot.create :bproce_iresource, bproce_id: bproce.id
+      iresource = bproce_iresource.iresource
       delete :destroy, params: { id: bproce_iresource.to_param }
-      expect(response).to redirect_to(iresource_url)
+      expect(response).to redirect_to(iresource)
     end
   end
 end

@@ -6,7 +6,7 @@ class LetterMailer < ActionMailer::Base
   # рассылка исполнителям о просроченных письмах
   def check_overdue_letters(letter, emails)
     @letter = letter
-    mail(to: emails, subject: "BP1Step: не исполнено Письмо #{@letter.name}")
+    mail(to: emails.sort, subject: "BP1Step: не исполнено Письмо #{@letter.name}")
   end
 
   # рассылка исполнителям о наступлении срока исполнения письма

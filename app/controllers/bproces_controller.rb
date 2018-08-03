@@ -13,7 +13,8 @@ class BprocesController < ApplicationController
   before_action :get_bproce, except: %i[index list manage autocomplete]
   before_action :authenticate_user!, only: %i[edit new create update]
 
-  def list # плоский список процессов без дерева
+  # плоский список процессов без дерева
+  def list
     @bproces = Bproce.search('?', params[:search]).order(sort_column + ' ' + sort_direction).find(:all, include: :user)
     respond_to do |format|
       format.html
@@ -64,12 +65,16 @@ class BprocesController < ApplicationController
     print_check_list # чек-лист карточки процесса
   end
 
+  def check_list_improve
+    print_check_list_improve # чек-лист карточки улучшения процесса
+  end
+
   def doc
     print_doc # заготовка описания процесса
   end
 
-  def order # распоряжение о назначении исполнителей на роли в процессе
-    print_order
+  def order
+    print_order # распоряжение о назначении исполнителей на роли в процессе
   end
 
   def new_sub_process
@@ -138,7 +143,10 @@ class BprocesController < ApplicationController
   private
 
   def bproce_params
-    params.require(:bproce).permit(:name, :shortname, :fullname, :goal, :parent_id, :parent_name, :user_id, :user_name, :description)
+    params.require(:bproce).permit(:name, :shortname, :fullname, :goal,
+                                   :parent_id, :parent_name_form,
+                                   :user_id, :user_name_form, :user_name,
+                                   :checked_at, :description)
   end
 
   def sort_column
@@ -168,16 +176,9 @@ class BprocesController < ApplicationController
       r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       nn = 0 # порядковый номер строки
       r.add_table('TABLE_01', @bproces, header: true) do |t|
-        t.add_column(:nn) do |_ca| # порядковый номер строки таблицы
-          nn += 1
-          "#{nn}."
-        end
-        t.add_column(:owner) do |bproce| # владелец процесса, если задан
-          bproce.user.displayname if bproce.user_id
-        end
-        t.add_column(:name) do |bp| # уровень вложенности процессов вместо наименования
-          name = '..' * bp.depth
-        end
+        t.add_column(:nn) { |_ca| nn += 1 } # порядковый номер строки таблицы
+        t.add_column(:owner) { |bproce| bproce.user&.displayname } # владелец процесса, если задан
+        t.add_column(:name) { |bp| '__' * bp.depth } # уровень вложенности процессов вместо наименования
         t.add_column(:fullname)
         t.add_column(:id)
         t.add_column(:goal)
@@ -193,42 +194,15 @@ class BprocesController < ApplicationController
   # печать Карточки процесса
   def print_card
     report = ODFReport::Report.new('reports/bp-card.odt') do |r|
-      r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
-      r.add_field :id, @bproce.id
-      r.add_field :shortname, @bproce.shortname
-      r.add_field :name, @bproce.name
-      r.add_field :fullname, @bproce.fullname
-      r.add_field :goal, @bproce.goal
-      r.add_field :description, @bproce.description
-      if @bproce.parent_id
-        r.add_field :parent, @bproce.parent.name
-        r.add_field :parent_id, ' #' + @bproce.parent_id.to_s
-      else
-        r.add_field :parent, '-'
-        r.add_field :parent_id, ' '
-      end
-      if @bproce.user_id # владелец процесса
-        r.add_field :owner, @bproce.user.displayname
-      else
-        r.add_field :owner, '-'
-      end
-
+      form_report_header(r)
       sp = 0 # порядковый номер строки для подпроцессов
       subs = Bproce.where('lft>? and rgt<?', @bproce.lft, @bproce.rgt).order('lft') # все подпроцессы процесса
-      r.add_table('SUBPROC', subs, header: false, skip_if_empty: true) do |t|
-        if subs.count.positive? # если подпроцессов нет - пустая таблица не будет выведена
-          t.add_column(:sp) do |_ca| # порядковый номер строки таблицы
-            sp += 1
-          end
-          t.add_column(:spname) do |sub|
-            spname = '__' * (sub.depth - @bproce.depth) + sub.name
-          end
-          t.add_column(:sp_id) do |sub|
-            sp_id = sub.id.to_s
-          end
-          t.add_column(:spowner) do |sp|
-            spowner = sp.user.displayname if sp.user_id
-          end
+      if subs.any? # если подпроцессов нет - пустая таблица не будет выведена
+        r.add_table('SUBPROC', subs, header: false, skip_if_empty: true) do |t|
+          t.add_column(:sp) { |_ca| sp += 1 } # порядковый номер строки таблицы
+          t.add_column(:spname) { |sub| '__' * (sub.depth - @bproce.depth) + " [#{sub.shortname}] #{sub.name}" }
+          t.add_column(:sp_id, &:id)
+          t.add_column(:spowner) { |sp| sp.user&.displayname }
         end
       end
       @metrics = Metric.where(bproce_id: @bproce.id).order(:name) # метрики процесса
@@ -252,45 +226,18 @@ class BprocesController < ApplicationController
   # печатать чек-лист Карточки процесса
   def print_check_list
     report = ODFReport::Report.new('reports/bp-check.odt') do |r|
-      r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
-      r.add_field :id, @bproce.id
-      r.add_field :shortname, @bproce.shortname
-      r.add_field :name, @bproce.name
-      r.add_field :fullname, @bproce.fullname
-      r.add_field :goal, @bproce.goal
-      r.add_field :description, @bproce.description
-      if @bproce.parent_id
-        r.add_field :parent, @bproce.parent.name
-        r.add_field :parent_id, ' #' + @bproce.parent_id.to_s
-      else
-        r.add_field :parent, '-'
-        r.add_field :parent_id, ' '
-      end
-      if @bproce.user_id # владелец процесса
-        r.add_field :owner, @bproce.user.displayname
-      else
-        r.add_field :owner, '-'
-      end
-
+      form_report_header(r)
       sp = 0 # порядковый номер строки для подпроцессов
       subs = Bproce.where('lft>? and rgt<?', @bproce.lft, @bproce.rgt).order('lft') # все подпроцессы процесса
-      r.add_table('SUBPROC', subs, header: false, skip_if_empty: true) do |t|
-        if subs.count.positive? # если подпроцессов нет - пустая таблица не будет выведена
-          t.add_column(:sp) do |_ca| # порядковый номер строки таблицы
-            sp += 1
-          end
-          t.add_column(:spname) do |sub|
-            spname = '__' * (sub.depth - @bproce.depth) + sub.name
-          end
-          t.add_column(:sp_id) do |sub|
-            sp_id = sub.id.to_s
-          end
-          t.add_column(:spowner) do |sp|
-            spowner = sp.user.displayname if sp.user_id
-          end
+      if subs.any? # если подпроцессов нет - пустая таблица не будет выведена
+        r.add_table('SUBPROC', subs, header: false, skip_if_empty: true) do |t|
+          t.add_column(:sp) { |_ca| sp += 1 } # порядковый номер строки таблицы
+          t.add_column(:spname) { |sub| '__' * (sub.depth - @bproce.depth) + " [#{sub.shortname}] #{sub.name}" }
+          t.add_column(:sp_id, &:id)
+          t.add_column(:spowner) { |sp| sp.user&.displayname }
         end
       end
-      roles = if @bproce.business_roles.count.positive?
+      roles = if @bproce.business_roles.any?
                 @bproce.business_roles.collect(&:name).join(', ')
               else
                 'Роли не выделены!' # сформировать список ролей
@@ -304,42 +251,46 @@ class BprocesController < ApplicationController
                                disposition: 'inline'
   end
 
+  # печатать чек-лист Улучшения процесса
+  def print_check_list_improve
+    report = ODFReport::Report.new('reports/bp-check-improve.odt') do |r|
+      form_report_header(r)
+      sp = 0 # порядковый номер строки для подпроцессов
+      subs = Bproce.where('lft>? and rgt<?', @bproce.lft, @bproce.rgt).order('lft') # все подпроцессы процесса
+      if subs.any? # если подпроцессов нет - пустая таблица не будет выведена
+        r.add_table('SUBPROC', subs, header: false, skip_if_empty: true) do |t|
+          t.add_column(:sp) { |_ca| sp += 1 } # порядковый номер строки таблицы
+          t.add_column(:spname) { |sub| '__' * (sub.depth - @bproce.depth) + " [#{sub.shortname}] #{sub.name}" }
+          t.add_column(:sp_id, &:id)
+          t.add_column(:spowner) { |sp| sp.user&.displayname }
+        end
+      end
+      roles = if @bproce.business_roles.any?
+                @bproce.business_roles.collect(&:name).join(', ') # сформировать список ролей
+              else
+                'Роли не выделены!'
+              end
+      r.add_field 'ROLES', roles
+      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
+      r.add_field 'USER_NAME', current_user.displayname
+    end
+    send_data report.generate, type: 'application/msword',
+                               filename: "#{@bproce.id}-check_list-improve-#{Date.current.strftime('%Y%m%d')}.odt",
+                               disposition: 'inline'
+  end
+
   # заготовка описания процесса
   def print_doc
     report = ODFReport::Report.new('reports/bp-doc.odt') do |r|
-      r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
-      r.add_field :id, @bproce.id
-      r.add_field :shortname, @bproce.shortname
-      r.add_field :name, @bproce.name
-      r.add_field :fullname, @bproce.fullname
-      r.add_field :goal, @bproce.goal
-      r.add_field :description, @bproce.description
-      if @bproce.parent_id
-        r.add_field :parent, @bproce.parent.name
-        r.add_field :parent_id, ' #' + @bproce.parent_id.to_s
-      else
-        r.add_field :parent, '-'
-        r.add_field :parent_id, ' '
-      end
-      if @bproce.user_id # владелец процесса
-        r.add_field :owner, @bproce.user.displayname
-      else
-        r.add_field :owner, '-'
-      end
+      form_report_header(r)
       sp = 0 # порядковый номер строки для подпроцессов
       subs = Bproce.where('lft>? and rgt<?', @bproce.lft, @bproce.rgt).order('lft') # все подпроцессы процесса
       r.add_table('SUBPROC', subs, header: false, skip_if_empty: true) do |t|
-        if subs.count.positive? # если документов нет - пустая таблица не будет выведена
+        if subs.any? # если документов нет - пустая таблица не будет выведена
           r.add_field :sub_process, 'В процесс входят следующие подпроцессы:'
-          t.add_column(:sp) do |_ca| # порядковый номер строки таблицы
-            sp += 1
-          end
-          t.add_column(:spname) do |sub|
-            spname = '__' * (sub.depth - @bproce.depth) + sub.name
-          end
-          t.add_column(:sp_id) do |sub|
-            sp_id = sub.id.to_s
-          end
+          t.add_column(:sp) { |_ca| sp += 1 } # порядковый номер строки таблицы
+          t.add_column(:spname) { |sub| '__' * (sub.depth - @bproce.depth) + sub.name }
+          t.add_column(:sp_id, &:id)
         else
           r.add_field :sub_process, 'Подпроцессов нет.'
         end
@@ -363,18 +314,14 @@ class BprocesController < ApplicationController
                                disposition: 'inline'
   end
 
+  # список процессов
   def print_list
     report = ODFReport::Report.new('reports/bp-list.odt') do |r|
       r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       nn = 0 # порядковый номер строки
       r.add_table('TABLE_01', @bproces, header: true) do |t|
-        t.add_column(:nn) do |_ca| # порядковый номер строки таблицы
-          nn += 1
-          "#{nn}."
-        end
-        t.add_column(:owner) do |bproce| # владелец процесса, если задан
-          bproce.user.displayname if bproce.user_id
-        end
+        t.add_column(:nn) { |_ca| nn += 1 } # порядковый номер строки таблицы
+        t.add_column(:owner) { |bproce| bproce.user&.displayname } # владелец процесса, если задан
         t.add_column(:name)
         t.add_column(:fullname)
       end
@@ -390,30 +337,11 @@ class BprocesController < ApplicationController
   def print_order
     @business_roles = @bproce.business_roles.order(:name)
     report = ODFReport::Report.new('reports/bp-order.odt') do |r|
-      r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
+      form_report_header(r)
       r.add_field 'ORDERNUM', Date.current.strftime('%Y%m%d-п') + @bproce.id.to_s
-      r.add_field :id, @bproce.id.to_s
-      # r.add_field :shortname, @bproce.shortname
-      # r.add_field :name, @bproce.name
-      r.add_field :fullname, @bproce.fullname
-      if @bproce.parent_id
-        r.add_field :parent, @bproce.parent.name
-        r.add_field :parent_id, @bproce.parent_id.to_s
-      else
-        r.add_field :parent, '-'
-        r.add_field :parent_id, '-'
-      end
-      if @bproce.user_id # владелец процесса
-        r.add_field :owner, @bproce.user.displayname
-      else
-        r.add_field :owner, '-'
-      end
       rr = 0 # порядковый номер строки для ролей
-      nn = 0
       r.add_section('ROLES', @business_roles) do |s|
-        s.add_field(:rr) do |_nn| # порядковый номер строки таблицы
-          rr += 1
-        end
+        s.add_field(:rr) { |_nn| rr += 1 } # порядковый номер строки таблицы
         s.add_field(:nr, :name)
         s.add_field(:rdescription, :description)
         s.add_table('TABLE_USERS', :users, header: false, skip_if_empty: true) do |u|
@@ -421,7 +349,6 @@ class BprocesController < ApplicationController
           u.add_column(:position)
         end
       end
-
       r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
       r.add_field 'USER_NAME', current_user.displayname
     end
@@ -430,27 +357,23 @@ class BprocesController < ApplicationController
                                disposition: 'inline'
   end
 
-  def report_roles(roles, r, header)
+  def report_roles(roles, report, header)
     rr = 0 # порядковый номер строки для ролей
-    r.add_table('TABLE_ROLES', roles, header: header, skip_if_empty: true) do |t|
-      if roles.count.positive? # если ролей нет - пустая таблица не будет выведена
-        t.add_column(:rr) do |_nn| # порядковый номер строки таблицы
-          rr += 1
-        end
+    report.add_table('TABLE_ROLES', roles, header: header, skip_if_empty: true) do |t|
+      if roles.any? # если ролей нет - пустая таблица не будет выведена
+        t.add_column(:rr) { |_nn| rr += 1 } # порядковый номер строки таблицы
         t.add_column(:nr, :name)
         t.add_column(:rdescription, :description)
       end
     end
   end
 
-  def report_workplaces(bproce, r, header, _users = false)
+  def report_workplaces(bproce, report, header, _users = false)
     ww = 0 # порядковый номер строки для рабочих мест
     @workplaces = bproce.workplaces
-    r.add_table('TABLE_PLACES', @workplaces, header: header, skip_if_empty: true) do |t|
-      if @workplaces.count.positive? # если рабочих мест нет - пустая таблица не будет выведена
-        t.add_column(:ww) do |_nn| # порядковый номер строки таблицы
-          ww += 1
-        end
+    report.add_table('TABLE_PLACES', @workplaces, header: header, skip_if_empty: true) do |t|
+      if @workplaces.any? # если рабочих мест нет - пустая таблица не будет выведена
+        t.add_column(:ww) { |_nn| ww += 1 } # порядковый номер строки таблицы
         t.add_column(:nw, :name)
         t.add_column(:designation)
         t.add_column(:loca, :location)
@@ -459,121 +382,101 @@ class BprocesController < ApplicationController
     end
   end
 
-  def report_docs(documents, r, header)
+  def report_docs(documents, report, header)
     nn = 0 # порядковый номер строки для документов
-    r.add_table('TABLE_DOCS', documents, header: header, skip_if_empty: true) do |t|
-      if documents.count.positive? # если документов нет - пустая таблица не будет выведена
-        t.add_column(:nn) do |_ca| # порядковый номер строки таблицы
-          nn += 1
-        end
-        t.add_column(:nd) do |document|
-          ndoc = document.name
-        end
-        t.add_column(:idd) do |document|
-          di = document.id.to_s
-        end
-        t.add_column(:status_doc) do |document|
-          ds = document.status.to_s
-        end
-        t.add_column(:approved) do |document|
-          da = document.approved.strftime('%d.%m.%Y') if document.approved
-        end
-        t.add_column(:owner_doc) do |document|
-          owner_doc = document.owner.displayname if document.owner
-        end
+    report.add_table('TABLE_DOCS', documents, header: header, skip_if_empty: true) do |t|
+      if documents.any? # если документов нет - пустая таблица не будет выведена
+        t.add_column(:nn) { |_ca| nn += 1 } # порядковый номер строки таблицы
+        t.add_column(:nd) { |document| ndoc = document.name }
+        t.add_column(:idd, &:id)
+        t.add_column(:status_doc, &:status)
+        t.add_column(:approved) { |document| document.approved&.strftime('%d.%m.%Y') }
+        t.add_column(:owner_doc) { |document| document.owner&.displayname }
       end
     end
   end
 
-  def report_bapps(bproce, r, header) # сформировать таблицу приложений процесса
+  # сформировать таблицу приложений процесса
+  def report_bapps(bproce, report, header)
     pp = 0 # порядковый номер строки для приложений
     @bapps = bproce.bproce_bapps
-    r.add_table('TABLE_BAPPS', @bapps, header: header, skip_if_empty: true) do |t|
-      if @bapps.count.positive? # если приложений нет - пустая таблица не будет выведена
-        t.add_column(:pp) do |_nn| # порядковый номер строки таблицы
-          pp += 1
-        end
-        t.add_column(:na) do |ba| # наименование прилоджения
-          na = ba.bapp.name if ba.bapp
-        end
-        t.add_column(:adescription) do |ba|
-          ades = ba.bapp.description if ba.bapp
-        end
+    report.add_table('TABLE_BAPPS', @bapps, header: header, skip_if_empty: true) do |t|
+      if @bapps.any? # если приложений нет - пустая таблица не будет выведена
+        t.add_column(:pp) { |_nn| pp += 1 } # порядковый номер строки таблицы
+        t.add_column(:na) { |ba| ba.bapp&.name } # наименование прилоджения
+        t.add_column(:adescription) { |ba| ba.bapp&.description }
         t.add_column(:apurpose)
       end
     end
   end
 
-  def report_contracts(contracts, r, header)
+  def report_contracts(contracts, report, header)
     cc = 0 # порядковый номер строки для документов
     contracts_label = ''
-    r.add_table('TABLE_CONTRACTS', contracts, header: header, skip_if_empty: true) do |t|
+    report.add_table('TABLE_CONTRACTS', contracts, header: header, skip_if_empty: true) do |t|
       # [CONTRACT_NAME] [CONTRACT_DATE] [AGENT_NAME]
-      if contracts.count.positive? # если договоров нет - пустая таблица не будет выведена
+      if contracts.any? # если договоров нет - пустая таблица не будет выведена
         contracts_label = 'Юридическое обеспечение:'
-        t.add_column(:cc) do |_ca| # порядковый номер строки таблицы
-          cc += 1
-        end
-        t.add_column(:contract_name) do |contract|
-          c_name = contract.contract_type.to_s + ' ' + contract.name
-        end
+        t.add_column(:cc) { |_ca| cc += 1 } # порядковый номер строки таблицы
+        t.add_column(:contract_name) { |contract| "#{contract.contract_type} #{contract.name}" }
         t.add_column(:contract_date) do |contract|
           c_date = " #{contract.status}" if contract.status
           c_date = c_date + ' от ' + contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
         end
-        t.add_column(:agent_name) do |contract|
-          a_name = "с #{contract.agent.name}" if contract.agent
-        end
+        t.add_column(:agent_name) { |contract| "с #{contract.agent&.name}" }
       end
     end
-    r.add_field :contracts, contracts_label
+    report.add_field :contracts, contracts_label
   end
 
-  def report_iresources(bproce, r, header) # сформировать таблицу ресурсов процесса
+  # сформировать таблицу ресурсов процесса
+  def report_iresources(bproce, report, header)
     ir = 0 # порядковый номер строки для информационных ресурсов
     @iresources = bproce.bproce_iresource
-    r.add_table('IRESOURCES', @iresources, header: header, skip_if_empty: true) do |t|
-      if @iresources.count.positive? # если инф.ресурсов нет - пустая таблица не будет выведена
-        t.add_column(:ir) do |_nn| # порядковый номер строки таблицы
-          ir += 1
-        end
-        t.add_column(:label) do |ir|
-          lab = ir.iresource.label
-        end
-        t.add_column(:location) do |ir|
-          loc =  ir.iresource.location
-        end
-        t.add_column(:alocation) do |ir|
-          loc =  ir.iresource.alocation
-        end
-        t.add_column(:note) do |ir|
-          note = ir.iresource.note
-        end
+    report.add_table('IRESOURCES', @iresources, header: header, skip_if_empty: true) do |t|
+      if @iresources.any? # если инф.ресурсов нет - пустая таблица не будет выведена
+        t.add_column(:ir) { |_nn| ir += 1 } # порядковый номер строки таблицы
+        t.add_column(:label) { |ir| ir.iresource.label }
+        t.add_column(:location) { |ir| ir.iresource.location }
+        t.add_column(:alocation) { |ir| ir.iresource.alocation }
+        t.add_column(:note) { |ir| ir.iresource.note }
         t.add_column(:rpurpose)
       end
     end
   end
 
-  def report_metrics(metrics, r, header)
-    me = 0 # порядковый номер строки для метрики
-    r.add_table('TABLE_METRICS', metrics, header: header, skip_if_empty: true) do |t|
-      if metrics.count.positive? # если метрик нет - пустая таблица не будет выведена
-        r.add_field :metrics, 'Метрики процесса:'
-        t.add_column(:me) do |_nme| # порядковый номер строки таблицы
-          me += 1
-        end
-        t.add_column(:men) do |metric|
-          n1 = metric.name
-        end
-        t.add_column(:med) do |metric|
-          n2 = metric.description.to_s
-        end
-        t.add_column(:idm) do |metric|
-          n3 = metric.id.to_s
-        end
+  def report_metrics(metrics, report, header)
+    report.add_table('TABLE_METRICS', metrics, header: header, skip_if_empty: true) do |t|
+      if metrics.any? # если метрик нет - пустая таблица не будет выведена
+        report.add_field :metrics, 'Метрики процесса:'
+        t.add_column(:men, &:name)
+        t.add_column(:med) { |metric| metric.description.to_s }
+        t.add_column(:idm) { |metric| metric.id.to_s }
       else
-        r.add_field :metrics, ''
+        report.add_field :metrics, ''
       end
+    end
+  end
+
+  def form_report_header(report)
+    report.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
+    report.add_field :id, @bproce.id
+    report.add_field :shortname, @bproce.shortname
+    report.add_field :name, @bproce.name
+    report.add_field :fullname, @bproce.fullname
+    report.add_field :goal, @bproce.goal
+    report.add_field :description, @bproce.description
+    if @bproce.parent_id
+      report.add_field :parent, @bproce.parent.name
+      report.add_field :parent_id, ' #' + @bproce.parent_id.to_s
+    else
+      report.add_field :parent, '-'
+      report.add_field :parent_id, ' '
+    end
+    if @bproce.user_id # владелец процесса
+      report.add_field :owner, @bproce.user.displayname
+    else
+      report.add_field :owner, '-'
     end
   end
 end
