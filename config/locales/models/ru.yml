@@ -35,6 +35,8 @@ ru:
         address: Адрес
         contacts: Контакты
         note: Примечание
+        inn: ИНН
+        dms_name: СЭД
       bapp:
         name: Название
         apptype: Тип приложения
