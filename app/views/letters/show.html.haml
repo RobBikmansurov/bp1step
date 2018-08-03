@@ -1,6 +1,6 @@
 - title "Письмо № #{@letter.number} от #{@letter.date.strftime('%d.%m.%Y')}"
 - search 'Письмо'
-%section.hero
+%section
   .hero-body
     .container
       .columns
@@ -80,24 +80,24 @@
                   %span{ style: 'color: red;' }
                     (опоздание #{days.to_i} дн.)
               ]
-      .container
+      .container.content
         %h3 Краткое содержание (о чем):
         = simple_format(@letter.body, {}, {})
 %section
-.container
-  - @letter.letter_appendix.each do |letter_appendix|
-    .floating-box
-      - if File.exist?(letter_appendix.appendix.path) # есть исходный файл документа
-        - appendix_name = "#{letter_appendix.name}:" unless letter_appendix.name
-        = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть') + "#{appendix_name} #{letter_appendix.appendix_file_name}", letter_appendix.appendix.url
-      - else
-        #{letter_appendix.appendix_file_name}
-      %br (#{letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S')}  #{letter_appendix.appendix_file_size})
-  - if can? :update, @letter
-    #appendix_update.floating-box
-      %a.button.is-info.is-outlined.is-small{ href: appendix_create_letter_path(@letter), "data-remote" => "true" } Добавить файл приложения
+  .container
+    - @letter.letter_appendix.each do |letter_appendix|
+      .floating-box
+        - if File.exist?(letter_appendix.appendix.path) # есть исходный файл документа
+          - appendix_name = "#{letter_appendix.name}:" unless letter_appendix.name
+          = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть') + "#{appendix_name} #{letter_appendix.appendix_file_name}", letter_appendix.appendix.url
+        - else
+          #{letter_appendix.appendix_file_name}
+        %br (#{letter_appendix.appendix_updated_at.strftime('%d.%m.%Y %H:%M:%S')}  #{letter_appendix.appendix_file_size})
+    - if can? :update, @letter
+      #appendix_update.floating-box
+        %a.button.is-info.is-outlined.is-small{ href: appendix_create_letter_path(@letter), "data-remote" => "true" } Добавить файл приложения
 
-.container
+.container.content
   %hr
   %h3
     - if @letter.author_id?
@@ -115,9 +115,9 @@
       &nbsp;
       - is_can_update = true if user_letter.user.id == current_user.id # исполнители могут добавлять других исполнителей
 
-    - if is_can_update # автор и исполнители могут добавлять других исполнителей
-      #create_user
-        %a.button.is-info.is-outlined.is-small{ href: create_user_letter_path(@letter), "data-remote" => "true" } Добавить Исполнителя
+  - if is_can_update # автор и исполнители могут добавлять других исполнителей
+    #create_user
+      %a.button.is-info.is-outlined.is-small{ href: create_user_letter_path(@letter), "data-remote" => "true" } Добавить Исполнителя
 
   %h3
     Статус:
