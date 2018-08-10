@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.5
   TargetRailsVersion: 5.1
   Exclude:
     - 'bin/*'
@@ -26,13 +26,19 @@ Lint/AmbiguousBlockAssociation:
   Exclude:
     - 'app/models/*'
 
-Rails/HttpPositionalArguments: # удалить этот запрет для Rails 5
-  Exclude:
-    - 'spec/controllers/*'
-
 Metrics/BlockLength:
   Exclude:
     - spec/**/*_spec.rb
 Metrics/ModuleLength:
   Exclude:
     - spec/**/*_spec.rb
+
+# TODO:
+Metrics/AbcSize:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false

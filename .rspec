@@ -1,1 +1,4 @@
 --color
+--require spec_helper
+
+--exclude spec/features/*_spec.rb

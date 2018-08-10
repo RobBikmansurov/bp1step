@@ -13,8 +13,9 @@ GitHub CI: [![Build Status](https://travis-ci.org/RobBikmansurov/bp1step.svg?bra
 [![Maintainability](https://api.codeclimate.com/v1/badges/243fc04d775701086f9f/maintainability)](https://codeclimate.com/github/RobBikmansurov/bp1step/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/243fc04d775701086f9f/test_coverage)](https://codeclimate.com/github/RobBikmansurov/bp1step/test_coverage)
 
-GitLab CI: [![build status](https://gitlab.com/RobBikmansurov/bp1step/badges/master/build.svg)](https://gitlab.com/RobBikmansurov/bp1step/commits/master)
-[![coverage report](https://gitlab.com/RobBikmansurov/bp1step/badges/master/coverage.svg)](https://gitlab.com/RobBikmansurov/bp1step/commits/master)
+GitLab CI: [![pipeline status](http://gitlab.ad.bankperm.ru/mr_rob/bp1step/badges/master/pipeline.svg)](http://gitlab.ad.bankperm.ru/mr_rob/bp1step/commits/master)
+
+[![coverage report](https://gitlab.ad.bankperm.ru/mr_rob/bp1step/badges/master/coverage.svg)](https://gitlab.com/RobBikmansurov/bp1step/commits/master)
 
 Язык: русский
 
