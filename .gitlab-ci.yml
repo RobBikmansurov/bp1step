@@ -55,9 +55,8 @@ rspec:
     - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
     - sed -i 's/before_save :ldap_email/# before_save :ldap_email/g' app/models/user.rb
     - bundle install -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
-    - bundle exec rake RAILS_ENV=test db:create
-    - bundle exec rake RAILS_ENV=test db:migrate
-    - bundle exec rspec --exclude-pattern "spec/features/*_spec.rb"
+    - bundle exec rake db:create db:migrate RAILS_ENV=test
+    - bundle exec rspec
   allow_failure: true
   
 rubocop:
@@ -67,31 +66,10 @@ rubocop:
   script:
     - gem install rubocop
     - rubocop -V
-    - rubocop -fo
+    - du -h -d1 ./
+    - RAILS_ENV=development rubocop -fo
   allow_failure: true
   
-rails:
-  stage: test
-  dependencies:
-    - install
-  script:
-  - apt update -qq && apt install -yqq nodejs libpq-dev
-  - cp config/database.yml{.example,}
-  - cp config/ldap.yml{.example,}
-  - gem install bundler --no-ri --no-rdoc
-  - bundle install -j $(nproc) --path vendor
-  # change ldap-auth to database-auth 
-  - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
-  - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
-  - sed -i 's/before_save :ldap_email/# before_save :ldap_email/g' app/models/user.rb
-
-  - bundle exec rake RAILS_ENV=production db:create
-  - bundle exec rake RAILS_ENV=production db:migrate
-  - bundle exec rake RAILS_ENV=production db:seed
-  only:
-    - master
-  allow_failure: true
-
 
 deploy_staging:
   stage: deploy
@@ -100,7 +78,7 @@ deploy_staging:
   environment:
     name: staging
   script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -yqq )'   # install ssh-agent
+    - 'which ssh-agent || ( apt update -y && apt install openssh-client -yqq )'   # install ssh-agent
     - eval $(ssh-agent -s)                                                              # run ssh-agent
     - ssh-add <(echo "$SSH_PRIVATE_KEY_VRDEV1")
     - ssh-add -l
@@ -113,7 +91,7 @@ deploy_staging:
     - bundle install -j $(nproc) --without test production --path vendor  # Install dependencies into ./vendor/ruby
     - bundle exec cap staging deploy
   only:
-    - master  
+    - master
 
 deploy_production:
   stage: deploy
@@ -136,4 +114,4 @@ deploy_production:
     - bundle install -j $(nproc) --without test staging --path vendor  # Install dependencies into ./vendor/ruby
     - bundle exec cap production deploy
   only:
-    - master  
+    - master
