@@ -66,8 +66,8 @@ rubocop:
   script:
     - gem install rubocop
     - rubocop -V
-    - du -h -d1 ./
-    - RAILS_ENV=development rubocop -fo
+    - ls -al .rubocop.yml
+    - rubocop --config .rubocop.yml  --format offenses
   allow_failure: true
   
 
