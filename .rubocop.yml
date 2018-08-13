@@ -1,17 +1,17 @@
 AllCops:
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.5.1
   TargetRailsVersion: 5.1
   Exclude:
     - 'bin/*'
     - 'tmp/*'
-    - 'db/schema.rb'
-    - 'db/seeds.rb'
+    - 'db/*'
     - 'config/**/*'
     - 'db/migrate/*'
     - 'features/**/*'
     - 'coverage/*'
     - 'Guardfile'
-    - 'vendor/*'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
 Rails:
   Enabled: true
 
