@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
+  rescue_from DeviseLdapAuthenticatable::LdapException do |exception|
+    render text: exception, status: :internal_server_error
+  end
   include PublicActivity::StoreController
   # hide_action :current_user
 
-  rescue_from DeviseLdapAuthenticatable::LdapException do |exception|
-    render text: exception, status: 500
-  end
-
-  rescue_from CanCan::AccessDenied do |exception|
+  rescue_from CanCan::AccessDenied do |_exception|
     flash[:error] = 'Access' # exception.message
     redirect_to root_url
   end
@@ -23,7 +24,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :email, :password])
+    devise_parameter_sanitizer.permit(:sign_up, keys: %i[name email password])
     devise_parameter_sanitizer.permit(:update_avatar, keys: [:avatar])
   end
 end

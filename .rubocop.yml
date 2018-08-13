@@ -11,6 +11,7 @@ AllCops:
     - 'features/**/*'
     - 'coverage/*'
     - 'Guardfile'
+    - 'vendor/*'
 Rails:
   Enabled: true
 
