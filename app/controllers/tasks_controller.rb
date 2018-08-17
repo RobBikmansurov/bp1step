@@ -21,14 +21,12 @@ class TasksController < ApplicationController
         @tasks = @tasks.unfinished
         @title_tasks += ' не завершенные'
       end
+    elsif params[:status].present?
+      @tasks = Task.search(params[:search]).status(params[:status]).includes(:user_task)
+      @title_tasks += "в статусе [ #{TASK_STATUS.key(params[:status].to_i)} ]"
     else
-      if params[:status].present?
-        @tasks = Task.search(params[:search]).status(params[:status]).includes(:user_task)
-        @title_tasks += "в статусе [ #{TASK_STATUS.key(params[:status].to_i)} ]"
-      else
-        @tasks = Task.search(params[:search]).unfinished.includes(:user_task)
-        @title_tasks += 'не завершенные'
-      end
+      @tasks = Task.search(params[:search]).unfinished.includes(:user_task)
+      @title_tasks += 'не завершенные'
     end
     @tasks = @tasks.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
   end
@@ -59,13 +57,7 @@ class TasksController < ApplicationController
   end
 
   def edit
-    @task_status_enabled = TASK_STATUS.select { |_key, value| value >= 0 } # автору и ответственному можно переводить в любое
-    if (current_user.id == @task.author.id) || @task.user_task.where(status: 1).pluck(:user_id).include?(current_user.id)
-      # @task_status_enabled = TASK_STATUS.select { |key, value| value > 5 }  # автору и ответственному можно переводить в любое состояние
-    else
-      @task_status_enabled = TASK_STATUS.select { |_key, value| value.positive? }
-      @task_status_enabled = @task_status_enabled.select { |_key, value| value < 90 } if @task.status < 90
-    end
+    @task_status_enabled = enabled_statuses(@task, current_user.id) # автор и отв. могут переводить в любое состояние
   end
 
   def check
@@ -98,8 +90,9 @@ class TasksController < ApplicationController
       @task.result += "\r\n#{Time.current.strftime('%d.%m.%Y %H:%M:%S')}: #{current_user.displayname} - #{params[:task][:action]}" if params[:task][:action].present?
       @task.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{current_user.displayname} считает задачу полностью исполненной" if (@task.status >= 90) && status_was < 90 # стало завершено
       @task.update_column(:result, @task.result.to_s)
-      redirect_to @task, notice: 'Инофрмация по Задаче сохранена'
+      redirect_to @task, notice: 'Информация по Задаче сохранена'
     else
+      @task_status_enabled = enabled_statuses(@task, current_user.id) # автор и отв. могут переводить в любое состояние
       render :edit
     end
   end
@@ -174,6 +167,15 @@ class TasksController < ApplicationController
 
   def sort_direction
     params[:direction] || 'desc'
+  end
+
+  def enabled_statuses(task, current_user_id)
+    if (current_user_id == task.author.id) || task.user_task.where(status: 1).pluck(:user_id).include?(current_user_id)
+      TASK_STATUS.select { |_key, value| value > 5 } # автору и отв. могут переводить в любое состояние
+    else
+      task_status_enabled = TASK_STATUS.select { |_key, value| value.positive? }
+      task_status_enabled.select { |_key, value| value < 90 } if task.status < 90
+    end
   end
 
   def task_report

@@ -5,7 +5,8 @@ set :application, 'bp1step'
 set :user, 'rubydev'
 set :local_user , 'rubydev'
 
-set :repo_url, 'git@github.com:RobBikmansurov/bp1step.git'
+# set :repo_url, 'git@github.com:RobBikmansurov/bp1step.git'
+set :repo_url, 'git@gitlab.ad.bankperm.ru:mr_rob/bp1step.git'
 
 set :rvm_type, :user                     # Defaults to: :auto
 set :rvm_ruby_version, "2.5.1@#{fetch(:application)}"

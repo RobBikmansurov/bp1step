@@ -4,73 +4,114 @@ cache:
   paths:
     - vendor/ruby
 
-services:
-  - postgres # :latest
-
-variables:
-  POSTGRES_DB: bp1step
-  POSTGRES_USER: bp1step-user
-  POSTGRES_PASSWORD: 'bp1step-password'
-
 stages:
   - install
-  - rubocop
   - test
+  - deploy
 
 install:
   stage: install
+  artifacts:
+    paths:
+    - app/
+    - bin/
+    - config/
+    - db/
+    - lib/
+    - spec/
+    - config.ru
+    - Gemfile
+    - Gemfile.lock
+    - Rakefile
+    - .rubocop.yml
+    - .rspec
+    - .ruby-version
+    name: '$CI_COMMIT_SHA'
+    expire_in: 1d
+    when: on_success
   script:
-    - ruby -v                                   # Print out ruby version for debugging
-    - apt-get update -q && apt-get install libpq-dev postgresql-client nodejs -yqq
+    - apt update -q && apt install libpq-dev postgresql-client nodejs -yqq
     - cp config/database.yml{.example,}
     - cp config/ldap.yml{.example,}
-    - bundle install --jobs=3 --without development production -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
+    - gem install bundler --no-ri --no-rdoc
+    - bundle install -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
     - bundle exec rake db:create db:migrate RAILS_ENV=test
     - uname -a
+    - du -h -d1 ./
     # check postgres
-    - export PGPASSWORD=$POSTGRES_PASSWORD
-    - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
+    #- export PGPASSWORD=$POSTGRES_PASSWORD
+    #- psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
 
 rspec:
   stage: test
+  dependencies:
+    - install
   script:
-    - apt-get update -q && apt-get install nodejs -yqq
+    - apt update -q && apt install nodejs -yqq
     - cp config/database.yml{.example,}
     - cp config/ldap.yml{.example,}
     # change ldap-auth to database-auth 
     - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
     - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
     - sed -i 's/before_save :ldap_email/# before_save :ldap_email/g' app/models/user.rb
-    - bundle install --jobs=3 --without development staging production -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
-    - bundle exec rake RAILS_ENV=test db:create
-    - bundle exec rake RAILS_ENV=test db:migrate
-    - bundle exec rspec --exclude-pattern "spec/features/*_spec.rb"
+    - bundle install -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
+    - bundle exec rake db:create db:migrate RAILS_ENV=test
+    - bundle exec rspec
+  allow_failure: true
   
 rubocop:
-  stage: rubocop
+  dependencies:
+    - install
+  stage: test
   script:
     - gem install rubocop
     - rubocop -V
-    # - rubocop app/models/
-    - rubocop app/mailers
-    # - rubocop -fo
+    - ls -al .rubocop.yml
+    - rubocop --config .rubocop.yml  --format offenses
   allow_failure: true
   
-rails:
-  stage: test
-  script:
-  - apt-get update -qq && apt-get install -yqq nodejs libpq-dev
-  - cp config/database.yml{.example,}
-  - cp config/ldap.yml{.example,}
-  - gem install bundler --no-ri --no-rdoc
-  - bundle install -j $(nproc) --path vendor
-  # change ldap-auth to database-auth 
-  - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
-  - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
-  - sed -i 's/before_save :ldap_email/# before_save :ldap_email/g' app/models/user.rb
 
-  - bundle exec rake RAILS_ENV=production db:create
-  - bundle exec rake RAILS_ENV=production db:migrate
-  - bundle exec rake RAILS_ENV=production db:seed
+deploy_staging:
+  stage: deploy
+  dependencies:
+    - install
+  environment:
+    name: staging
+  script:
+    - 'which ssh-agent || ( apt update -y && apt install openssh-client -yqq )'   # install ssh-agent
+    - eval $(ssh-agent -s)                                                              # run ssh-agent
+    - ssh-add <(echo "$SSH_PRIVATE_KEY_VRDEV1")
+    - ssh-add -l
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - ssh-keyscan bp1step-dev.ad.bankperm.ru >> ~/.ssh/known_hosts
+    - echo -e "$SSH_PUBLIC_KEY_VRDEV1" > ~/.ssh/id_rsa.pub
+    - echo -e "$SSH_PRIVATE_KEY_VRDEV1" > ~/.ssh/id_rsa
+    - ssh $DEPLOY_USER@bp1step-dev.ad.bankperm.ru 'ls -al /home/rubydev/bp1step/'
+    - bundle install -j $(nproc) --without test production --path vendor  # Install dependencies into ./vendor/ruby
+    - bundle exec cap staging deploy
+  only:
+    - master
+
+deploy_production:
+  stage: deploy
+  dependencies:
+    - install
+  environment:
+    name: production
+  when: manual
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -yqq )'   # install ssh-agent
+    - eval $(ssh-agent -s)                                                              # run ssh-agent
+    - ssh-add <(echo "$SSH_PRIVATE_KEY_VRDEV")
+    - ssh-add -l
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - ssh-keyscan bp1step.ad.bankperm.ru >> ~/.ssh/known_hosts
+    #- echo -e "$SSH_PUBLIC_KEY_VRDEV" > ~/.ssh/id_rsa.pub
+    #- echo -e "$SSH_PRIVATE_KEY_VRDEV" > ~/.ssh/id_rsa
+    - ssh $DEPLOY_USER@bp1step.ad.bankperm.ru 'ls -al /home/rubydev/bp1step/'
+    - bundle install -j $(nproc) --without test staging --path vendor  # Install dependencies into ./vendor/ruby
+    - bundle exec cap production deploy
   only:
     - master

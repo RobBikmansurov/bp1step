@@ -81,7 +81,7 @@ namespace :bp1step do
         l_sender = 'Банк России'
         l_subject = "Информационное письмо № #{l_number} от #{l_date}"
       # исключим справочник банков
-      when /B\d\d\d\d_\d\d/
+      when /BIK_DB\d\d/
         next
       # исключим файлы протоколов
       when /\A(DEPOSIT_LETTERS|GUCB_LETTERS|UBIZI_LETTERS|RECEIPT_LETTERS|GUOST_LETTERS|GUOFORM_LETTERS|ANY_LETTERS)\z/

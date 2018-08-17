@@ -1,24 +1,27 @@
 # docker-compose.yml
-# docker-compose build
-version: '3.2'
+version: '3'
 
 services:
-  db:
+  pg:
     image: postgres:alpine
-    restart: always
+    container_name: ${POSTGRES_DB}
     environment:
-      POSTGRES_USER: bp1step
-      POSTGRES_PASSWORD: pgbp1step
-      POSTGRES_DB:  bp1step
-    ports:
-      - '5432:5432'
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/1-init.sql
   app:
     build: .
-    ports: 
-      - '3000:3000'
-    volumes:
-      - .:/app
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     environment:
       - RAILS_ENV=development
+    links:
+      - pg:postgres
     depends_on:
-      - db
+      - pg
+    volumes:
+      - .:/app

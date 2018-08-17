@@ -1,16 +1,17 @@
 AllCops:
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.5.1
   TargetRailsVersion: 5.1
   Exclude:
     - 'bin/*'
     - 'tmp/*'
-    - 'db/schema.rb'
-    - 'db/seeds.rb'
+    - 'db/*'
     - 'config/**/*'
     - 'db/migrate/*'
     - 'features/**/*'
     - 'coverage/*'
     - 'Guardfile'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
 Rails:
   Enabled: true
 
@@ -24,11 +25,10 @@ Style/ClassAndModuleChildren:
   Enabled: false
 Lint/AmbiguousBlockAssociation:
   Exclude:
-    - 'app/models/*'
-
-Rails/HttpPositionalArguments: # удалить этот запрет для Rails 5
+    - app/models/*
+Metrics/ClassLength:
   Exclude:
-    - 'spec/controllers/*'
+    - app/controllers/*
 
 Metrics/BlockLength:
   Exclude:
@@ -36,3 +36,13 @@ Metrics/BlockLength:
 Metrics/ModuleLength:
   Exclude:
     - spec/**/*_spec.rb
+
+# TODO:
+Metrics/AbcSize:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false

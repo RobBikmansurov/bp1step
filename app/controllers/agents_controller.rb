@@ -59,7 +59,7 @@ class AgentsController < ApplicationController
       render :index # покажем список найденного
     else
       if params[:id].present?
-        @agent = Agent.find(params[:id])
+        @agent = Agent.find(params[:id]) or not_found
       else
         @agent = Agent.new
       end

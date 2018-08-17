@@ -8,7 +8,7 @@ RSpec.describe BproceIresourcesController, type: :controller do
   let(:iresource) { FactoryBot.create :iresource }
   let(:bproce_iresource) { FactoryBot.create :bproce_iresource, bproce_id: bproce.id }
   let(:valid_attributes) { { bproce_id: bproce.id, iresource_id: iresource.id, rpurpose: 'Purpose' } }
-  let(:invalid_attributes) { { bproce_id: bproce.id, iresource_id: nil, rpurpose: 'Purpose' } }
+  let(:invalid_attributes) { { bproce_id: nil, iresource_id: iresource.id, rpurpose: 'Purpose' } }
   let(:valid_session) { {} }
 
   before(:each) do
@@ -62,7 +62,7 @@ RSpec.describe BproceIresourcesController, type: :controller do
 
       it 'redirects to the created bproce_iresource' do
         post :create, params: { bproce_iresource: valid_attributes }
-        expect(response).to redirect_to(BproceIresource.last)
+        expect(response).to redirect_to(Iresource.last)
       end
     end
 
