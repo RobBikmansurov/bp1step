@@ -2,31 +2,36 @@
 -search "Контрагент"
 %section.hero.is-primary
   .hero-body
-    .container
-      .columns
-        .column
-          %h2.title
-            Контрагент 
-            = '[' + @agent.shortname + ']' if @agent.shortname
-        .column
-          %h2.title
-            = @agent.name
-            = ", г. #{@agent.town}" unless !@agent.town.blank?
-        .column.is-1
-          %h2.title
-            \##{@agent.id}
-      %h2.subtitle
-        %p.notice= notice
+    .columns
+      .column
+        %h2.title
+          Контрагент 
+          = '[' + @agent.shortname + ']'
+          -if @agent.inn
+            ИНН:
+            = @agent.inn 
+        %h2.subtitle
+          = @agent.name
+          = ", г. #{@agent.town}" unless @agent.town.blank?
+          = ", #{@agent.address}" unless @agent.address.blank?
+      .column.is-1
+        %h2.title
+          \##{@agent.id}
+    %h2.subtitle
+      %p.notice= notice
 %section
   .container
     .content
-      %h3Адрес:
-      = markdown(@agent.address)
       %h3Контакты:
       = markdown(@agent.contacts)
       - unless @agent.note.blank?
         %h3Примечания:
         = markdown(@agent.note)
+      - unless @agent.dms_name.blank?
+        %h3
+          есть в СЭД #{}
+          = link_to @agent.dms_name, agents_path(dms_name: @agent.dms_name), class: 'groups'
+
 %hr
 -if @contracts.any?
   .container
@@ -37,6 +42,7 @@
         %tr
           %th #
           %th Номер
+          %th Отв.
           %th Статус
           %th От
           -if can? :manage, Contract
@@ -55,6 +61,9 @@
                     = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), contract.contract_scan.first.scan.url, class: 'button-img'
               =contract.contract_type
               = link_to contract.shortname, contract_path(contract)
+            %td
+              = contract.owner&.displayname
+              = contract.payer&.displayname
             %td= contract.status
             %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
             - if can? :manage, contract

@@ -44,3 +44,10 @@
 .container
   - if can? :destroy, Agent
     %a.button.is-primary{ href: new_agent_path } Добавить Контрагента
+.container
+  .buttons
+    СЭД:
+    &nbsp;
+    - Agent.select('dms_name, count(id) as count').group(:dms_name).order(:dms_name).each do |d|
+      - if d.dms_name
+        %a.button.is-outlined.is-info{ href: agents_path(dms_name: d.dms_name) } #{d.dms_name}
