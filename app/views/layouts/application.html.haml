@@ -77,7 +77,8 @@
                   %form.inline{:method => "get"}
                     .field.has-addons.is-expanded
                       .control
-                        %input.input.is-expanded.is-rounded{:name => "search", :type => "search", :value => params[:search], :placeholder => "искать #{yield (:search)}", required: :true}
+                        %input.input.is-expanded{:name => "search", :type => "search", id: "search", :value => params[:search], :placeholder => "искать #{yield (:search)}", "data-autocomplete" => "/#{params[:controller]}/autocomplete"}
+                        -# %input#business_role_bproce_name{"data-autocomplete" => "/bproces/autocomplete", "data-no-matches-label" => "333", :id_elements => "#bproce_workplace_bproce_id", :name => "business_role[bproce_name]", :placeholder => "подстрока в наименовании", :type => "text", :value => "Управление финансами"}/
                       -# %p.control
                         %a.button.is-static
                           @gmail.com
