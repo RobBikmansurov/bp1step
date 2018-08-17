@@ -6,16 +6,13 @@ class BproceIresourcesController < ApplicationController
   before_action :bproce_iresource, except: :index
 
   def create
-    @bproce = Bproce.find_by(name: params[:bproce_iresource_bproce])
+    @bproce = Bproce.find_by(name: bproce_iresource_params[:bproce_name])
+    @iresource = Iresource.find(bproce_iresource_params[:iresource_id])
     @bproce_iresource = BproceIresource.new(bproce_iresource_params)
-    respond_to do |format|
-      if @bproce_iresource.save
-        format.html { redirect_to @bproce_iresource, notice: 'BproceIresources was successfully created.' }
-        format.json { render json: @bproce_iresource, status: :created, location: @bproce_iresource }
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @bproce_iresource.errors, status: :unprocessable_entity }
-      end
+    if @bproce_iresource.save
+      respond_with(@iresource)
+    else
+      format.html { render action: 'new' }
     end
   end
 
@@ -36,14 +33,14 @@ class BproceIresourcesController < ApplicationController
   end
 
   def update
-    flash[:notice] = 'Successfully updated bproce_iresource.' if @bproce_iresource.update_attributes(bproce_iresource_params)
+    flash[:notice] = 'Successfully updated bproce_iresource.' if @bproce_iresource.update(bproce_iresource_params)
     respond_with(@bproce_iresource)
   end
 
   private
 
   def bproce_iresource_params
-    params.require(:bproce_iresource).permit(:bproce_id, :iresource_id, :rpurpose)
+    params.require(:bproce_iresource).permit(:bproce_id, :iresource_id, :rpurpose, :bproce_name)
   end
 
   def bproce_iresource

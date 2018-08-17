@@ -10,15 +10,18 @@ class IresourcesController < ApplicationController
   def index
     if params[:all].present?
       @iresources = Iresource.all
-    elsif params[:level].present?
-      @iresources = Iresource.where(level: params[:level]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-    elsif params[:risk].present?
-      @iresources = Iresource.where(risk_category: params[:risk]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-    elsif params[:user].present? #  список ресурсов пользователя
-      @user = User.find(params[:user])
-      @iresources = Iresource.where(user_id: params[:user]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
     else
-      @iresources = Iresource.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      if params[:level].present?
+        @iresources = Iresource.where(level: params[:level])
+      elsif params[:risk].present?
+        @iresources = Iresource.where(risk_category: params[:risk])
+      elsif params[:user].present? #  список ресурсов пользователя
+        @user = User.find(params[:user])
+        @iresources = Iresource.where(user_id: params[:user])
+      else
+        @iresources = Iresource.search(params[:search])
+      end
+      @iresource = @iresource.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page]) if @iresource
     end
     respond_to do |format|
       format.html
@@ -37,7 +40,7 @@ class IresourcesController < ApplicationController
   end
 
   def edit
-    @bproce_iresource = BproceIresource.new(iresource_id: @iresource.id) # заготовка для новой связи с процессом
+    @bproce_iresource = BproceIresource.new(iresource_id: @iresource.id)
     @iresource = Iresource.find(params[:id])
   end
 
@@ -55,9 +58,9 @@ class IresourcesController < ApplicationController
   end
 
   def update
-    @bproce_iresource = BproceIresource.new(iresource_id: @iresource.id) # заготовка для новой связи с процессом
+    @bproce_iresource = BproceIresource.new(iresource_id: @iresource.id)
     respond_to do |format|
-      if @iresource.update_attributes(iresource_params)
+      if @iresource.update(iresource_params)
         format.html { redirect_to @iresource, notice: 'Iresource was successfully updated.' }
         format.json { head :no_content }
       else
@@ -123,7 +126,9 @@ class IresourcesController < ApplicationController
 
   def iresource
     if params[:search].present? # это поиск
-      @iresources = Iresource.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      @iresources = Iresource.search(params[:search])
+                             .order(sort_column + ' ' + sort_direction)
+                             .paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
       @iresource = params[:id].present? ? Iresource.find(params[:id]) : Iresource.new
