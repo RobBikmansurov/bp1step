@@ -25,7 +25,10 @@ Style/ClassAndModuleChildren:
   Enabled: false
 Lint/AmbiguousBlockAssociation:
   Exclude:
-    - 'app/models/*'
+    - app/models/*
+Metrics/ClassLength:
+  Exclude:
+    - app/controllers/*
 
 Metrics/BlockLength:
   Exclude:

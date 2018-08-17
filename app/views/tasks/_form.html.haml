@@ -10,7 +10,7 @@
     = f.input :duedate, as: :string, input_html: {class: 'datepicker'}
     %br
     = f.label :Статус
-    = f.select :status_name, @task_status_enabled.keys
+    = f.select :status_name, @task_status_enabled.keys if @task_status_enabled
   - else
     %h2 Задача от #{@task.created_at.strftime('%d.%m.%Y %H:%M:%S')}
     %h3

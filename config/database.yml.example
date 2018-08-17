@@ -2,12 +2,12 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: 5
-  username: bp1step-user
+  username: bp1step
   password: bp1step-password
 
 development:
   <<: *default
-  host: postgres
+  host: bp1step
   database: bp1step
 
 production:
