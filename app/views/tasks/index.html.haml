@@ -73,8 +73,8 @@
   .columns
     .column
       - if can? :create, Task
-        %a.button.is-primary{href: new_task_path} Новая задача
-      %a.button.is-primary{href: check_tasks_path} Контроль
+        %a.button.is-warning{href: new_task_path} Новая задача
+      %a.button.is-info{href: check_tasks_path} Контроль
     .column
       - params.delete :status if params[:reset].present?
       - Task.select("status, count(id) as count").group(:status).order(:status).each do |task|

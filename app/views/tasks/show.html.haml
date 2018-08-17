@@ -1,102 +1,109 @@
 - title "Задача [#{@task.name}]"
 - search 'Задача'
-.id_ ##{@task.id}
+%section.hero.is-primary
+  .hero-body
+    .columns
+      .column
+        %h2.title
+          Задача ##{@task.id} от #{@task.created_at.strftime('%d.%m.%Y')}
+          статус: #{TASK_STATUS.key(@task.status)}
+        %h2.subtitle
+          [#{@task.name}]
+      .column.is-1
+        %h2.title
+          \##{@task.id}
+    %h2.subtitle
+      %p.notice= notice
+%section
+  .container
+    .content
+      - if @requirement
+        %h3
+          Требование
+          = link_to @requirement.name, @requirement
 
-%h2
-  Задача ##{@task.id} от #{@task.created_at.strftime('%d.%m.%Y')}
+      %h3 Краткое описание:
+      = simple_format(@task.description, {}, {})
+      - if @task.letter
+        %h3
+          Основание:
+          = link_to image_tag('in_mail.png', size: "32x32") + " Исх.№ #{@task.letter.number}", letter_path(@task.letter)
+          от #{@task.letter.date.strftime('%d.%m.%Y')}
+      %h3
+        Срок исполнения:
+        - if @task.duedate
+          %b= @task.duedate.strftime('%d.%m.%Y')
+          - if @task.status < 90
+            - days = @task.duedate - Date.current
+            = " (осталось #{days.to_i} дн.)" if days > 0
+            - if days <= 0
+              %span{ style: "color: red;" }
+                = " (опоздание #{(-days).to_i} дн.)" if days < 0
+                = ' сегодня!' if days == 0
+        - if @task.completion_date
+          [ фактически:
+          %b= @task.completion_date.strftime('%d.%m.%Y')
 
-- if @requirement
-  %h3
-    Требование
-    = link_to @requirement.name, @requirement
+          - if @task.status >= 90
+            - days = 0
+            - days = @task.completion_date - @task.duedate if @task.duedate
+            - if days > 0
+              %span{ style: 'color: red;' }
+                (опоздание #{days.to_i} дн.)
+          ]
+      %h3
+        - is_can_update = can? :update, @task # разрешения будем формировать когда пробежим по исполнителям
+        - is_can_add_user = false
+        - if @task.author_id?
+          Автор:
+          = link_to @task.author.displayname, user_path(@task.author.id)
+          &nbsp; &nbsp;
+          - if @task.author_id == current_user.id # автор может добавлять других исполнителей и изменять задачу
+            - is_can_add_user = true
+            - is_can_update = true
 
-%h3
-  %b [ #{@task.name} ]
-%h3 Краткое описание:
-= simple_format(@task.description, {}, {})
-- if @task.letter
-  %h3
-    Основание:
-    = link_to image_tag('in_mail.png', size: "32x32") + " Исх.№ #{@task.letter.number}", letter_path(@task.letter)
-    от #{@task.letter.date.strftime('%d.%m.%Y')}
-%h3
-  Срок исполнения:
-  - if @task.duedate
-    %b= @task.duedate.strftime('%d.%m.%Y')
-    - if @task.status < 90
-      - days = @task.duedate - Date.current
-      = " (осталось #{days.to_i} дн.)" if days > 0
-      - if days <= 0
-        %span{ style: "color: red;" }
-          = " (опоздание #{(-days).to_i} дн.)" if days < 0
-          = ' сегодня!' if days == 0
-  - if @task.completion_date
-    [ фактически:
-    %b= @task.completion_date.strftime('%d.%m.%Y')
+        Исполнители:
+        - @task.user_task.each do |user_task|
+          %fio
+            = link_to user_task.user.displayname, user_task.user
+            - if user_task.responsible?
+              \- отв.
+              - is_can_add_user = true if user_task.user.id == current_user.id # отв.исполнители могут добавлять других исполнителей
+            - if is_can_add_user || is_can_update # автор или отв.исполнитель
+              = link_to image_tag('action_stop.gif', alt: 'Удалить'), user_task, method: :delete, data: { confirm: "Удалить исполнителя #{user_task.user.displayname}\nиз Задачи [#{user_task.task.name}] ?" }, remote: true, class: 'delete_user' if @task.status < 90
+            - is_can_update = true if user_task.user.id == current_user.id # исполнители могут изменять задачу
+          &nbsp;&nbsp;
 
-    - if @task.status >= 90
-      - days = 0
-      - days = @task.completion_date - @task.duedate if @task.duedate
-      - if days > 0
-        %span{ style: 'color: red;' }
-          (опоздание #{days.to_i} дн.)
-    ]
-%h3
-  - is_can_update = can? :update, @task # разрешения будем формировать когда пробежим по исполнителям
-  - is_can_add_user = false
-  - if @task.author_id?
-    Автор:
-    = link_to @task.author.displayname, user_path(@task.author.id)
-    &nbsp; &nbsp;
-    - if @task.author_id == current_user.id # автор может добавлять других исполнителей и изменять задачу
-      - is_can_add_user = true
-      - is_can_update = true
+      - if @task.status < 90 && is_can_add_user # автор и исполнители могут добавлять других исполнителей для незавершенных задач
+        #create_user
+          %a.button.is-info.is-outlined.is-small{ href: create_user_task_path(@task), "data-remote" => "true" } Добавить Исполнителя
 
-  Исполнители:
-  - @task.user_task.each do |user_task|
-    %fio
-      = link_to user_task.user.displayname, user_task.user
-      - if user_task.responsible?
-        \- отв.
-        - is_can_add_user = true if user_task.user.id == current_user.id # отв.исполнители могут добавлять других исполнителей
-      - if is_can_add_user || is_can_update # автор или отв.исполнитель
-        = link_to image_tag('action_stop.gif', alt: 'Удалить'), user_task, method: :delete, data: { confirm: "Удалить исполнителя #{user_task.user.displayname}\nиз Задачи [#{user_task.task.name}] ?" }, remote: true, class: 'delete_user' if @task.status < 90
-      - is_can_update = true if user_task.user.id == current_user.id # исполнители могут изменять задачу
-    &nbsp;&nbsp;
+      %h3 Результат исполнения:
+      = simple_format(@task.result, {}, {})
+      %hr
 
-- if @task.status < 90 && is_can_add_user # автор и исполнители могут добавлять других исполнителей для незавершенных задач
-  #create_user
-    = link_to 'Добавить Исполнителя', create_user_task_path(@task), remote: true
-
-%h3
-  Статус:
-  %b= TASK_STATUS.key(@task.status)
-%h3 Результат исполнения:
-= simple_format(@task.result, {}, {})
-%hr
-
-.info_
-  - activity1 = PublicActivity::Activity.where(trackable_type: 'task', trackable_id: @task.id).order('created_at asc').first
-  - if activity1
-    = link_to 'создал', activities_path(type: 'task', id: @task.id)
-    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity1.owner.displayname.to_s
-  - else
-    создан
-    = @task.created_at.strftime('%d.%m.%Y %H:%M:%S')
-  %br
-  - activity2 = PublicActivity::Activity.where(trackable_type: 'task', trackable_id: @task.id).order('created_at asc').last
-  - if activity2
-    = link_to 'изменил', activities_path(type: 'task', id: @task.id)
-    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity2.owner.displayname.to_s
-  - else
-    изменен
-    = @task.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-
-%p
-= link_to 'Back', tasks_path, class: 'button'
-
-- if is_can_update
-  = link_to 'Edit', edit_task_path(@task), class: 'button'
-  = link_to 'Отчет', report_task_path(@task), class: 'button'
+.container
+  .columns
+    .column
+      %a.button.is-primary{ href: tasks_path } Back
+      - if is_can_update
+        %a.button.is-primary{ href: edit_task_path(@task) } Edit
+        %a.button.is-info{ href: report_task_path(@task) } Отчет
+    .column
+      - activity1 = PublicActivity::Activity.where(trackable_type: 'task', trackable_id: @task.id).order('created_at asc').first
+      - if activity1
+        = link_to 'создал', activities_path(type: 'task', id: @task.id)
+        = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+        = activity1.owner.displayname.to_s
+      - else
+        создана
+        = @task.created_at.strftime('%d.%m.%Y %H:%M:%S')
+      %br
+      - activity2 = PublicActivity::Activity.where(trackable_type: 'task', trackable_id: @task.id).order('created_at asc').last
+      - if activity2
+        = link_to 'изменил', activities_path(type: 'task', id: @task.id)
+        = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+        = activity2.owner.displayname.to_s
+      - else
+        изменена
+        = @task.updated_at.strftime('%d.%m.%Y %H:%M:%S')

@@ -61,7 +61,7 @@
   .columns
     .column
       - if can? :create, Requirement
-        %a.button.is-primary{href: new_requirement_path} Новое требовани
+        %a.button.is-warning{href: new_requirement_path} Новое требовани
     .column
       - Requirement.select('status, count(id) as count').group(:status).order(:status).each do |requirement|
         - unless requirement.status.to_s.empty?
