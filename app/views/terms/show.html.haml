@@ -1,26 +1,35 @@
 -title 'Термин ' + @term.name
 -search 'Термин'
-%h2
-  = @term.name
-  (
-  %b
-    = @term.shortname
-  )
-%h3 Определение:
-= @term.description
-%h4 Примечание:
-= @term.note
-%h4 Источник:
-= @term.source
-
-.info_
-  создан
-  = @term.created_at.strftime('%d.%m.%Y %H:%M:%S')
-  %br
-  изменен
-  = @term.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-
-%p
-- if can? :update, Term
-  = link_to 'Edit', edit_term_path(@term), :class => 'button'
-= link_to 'Back', terms_path, :class => 'button'
+%section.hero.is-primary
+  .hero-body
+    .columns
+      .column
+        %h2.title
+          #{@term.name} - #{@term.shortname}
+      .column.is-1
+        %h2.title
+          \##{@term.id}
+    %h2.subtitle
+      %p.notice= notice
+%section
+  .container
+    .content
+      %h3 Определение:
+      = @term.description
+      %h4 Примечание:
+      = @term.note
+      %h4 Источник:
+      = @term.source
+.container
+  .columns
+    .column
+      %a.button.is-primary{ href: terms_path } Back
+      - if can? :update, Term
+        %a.button.is-primary{ href: edit_term_path(@term) } Edit
+    .column
+      .info_
+        создан
+        = @term.created_at.strftime('%d.%m.%Y %H:%M:%S')
+        %br
+        изменен
+        = @term.updated_at.strftime('%d.%m.%Y %H:%M:%S')
