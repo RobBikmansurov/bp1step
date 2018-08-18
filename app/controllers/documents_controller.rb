@@ -13,7 +13,8 @@ class DocumentsController < ApplicationController
     @title_doc = 'Список документов'
     if params[:directive_id].present? # документы относящиеся к директиве
       @directive = Directive.find(params[:directive_id])
-      @documents = @directive.document.paginate(per_page: 100, page: params[:page])
+      ids = DocumentDirective.where(directive_id: @directive.id).pluck :document_id
+      @documents = Document.where(id: ids).paginate(per_page: 100, page: params[:page])
     elsif params[:bproce_id].present?
       @title_doc = ''
       @bproce = Bproce.find(params[:bproce_id])
