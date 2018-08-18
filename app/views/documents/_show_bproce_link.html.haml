@@ -5,12 +5,12 @@
     - @document.bproce_document.each do |bproce_document|
       = link_to bproce_document.bproce.name, bproce_path(bproce_document.bproce) + '/documents' # в документы процесса
       -if can? :update, Document
-        = link_to '( ' + bproce_document.purpose.to_s + ' )', edit_bproce_document_path(bproce_document)
+        = link_to "( #{bproce_document.purpose} )", edit_bproce_document_path(bproce_document)
       -else
-        = '( ' + bproce_document.purpose.to_s + ' )'
+        ( #{bproce_document.purpose} )
 
 -else
   %h3 Процесс не назначен!
 - if can? :update, @document || current_user && @document.owner_id == current_user.id # ответственный за документ тоже может добавлять процесс
   #update_bproce
-    = link_to 'Добавить процесс', bproce_create_document_path(@document), remote: true
+    %a.button.is-info.is-outlined.is-small{ href: bproce_create_document_path(@document), "data-remote" => "true" } Добавить процесс

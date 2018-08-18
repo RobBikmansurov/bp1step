@@ -1,98 +1,101 @@
 -title "Документ " + truncate(@document.name, length: 30)
 -search 'Документ'
-.id_
-  \#
-  = @document.id
-%h2= @document.name
-%h3 Описание:
-= markdown(@document.description)
-%h3
-  -if @document.status
-    ='"' + @document.status + '"'
-  -if @document.approveorgan
-    %b= @document.approveorgan
-  -if @document.approved
-    от
-    %b= @document.approved.strftime('%d.%m.%Y')
-%h3
-  уровень документа:
-  %b= link_to "#{@document.dlevel}: #{DOCUMENT_LEVEL.key(@document.dlevel)}", documents_path(dlevel: @document.dlevel.to_s), class: 'groups'
+%section.hero.is-primary
+  .hero-body
+    .columns
+      .column
+        %h2.title
+          #{@document.name}
+        %h2.title  
+          -if @document.status
+            "#{@document.status}" 
+          #{@document.approveorgan}
+          -if @document.approved
+            от
+            %b= @document.approved.strftime('%d.%m.%Y')
+      .column.is-1
+        %h2.title
+          \##{@document.id}
+    %h2.subtitle
+      Описание:
+      %b #{markdown(@document.description)}
+      уровень документа:
+      %b= link_to "#{@document.dlevel}: #{DOCUMENT_LEVEL.key(@document.dlevel)}", documents_path(dlevel: @document.dlevel.to_s), class: 'groups'
+      %p.notice= notice
+%section
+  .container
+    .content
+      = render 'show_bproce_link'
 
-= render 'show_bproce_link'
+      %h3
+        Ответственный за документ:
+        -if @document.owner_id?
+          = link_to @document.owner_name, user_path(@document.owner_id)
+        -else
+          %b
+          не задан
 
-%p
-%h3
-  Ответственный за документ:
-  -if @document.owner_id?
-    = link_to @document.owner_name, user_path(@document.owner_id)
-  -else
-    %b
-    не задан
+      %h3 Примечание:
+      = raw add_link_from_id(@document.note, 'documents')
 
-%h3 Примечание:
-= raw add_link_from_id(@document.note, 'documents')
+      = render 'show_directive'
 
-= render 'show_directive'
+      %p
+      %h3
+        Место хранения оригинала:
+        %b= link_to @document.place, documents_path(place: @document.place), class: 'groups', title: DOCUMENT_PLACE.key(@document.place) if !@document.place.blank?
+      #delete_file
+        = render 'file_show'
+      - if can? :edit_document, @document
+        #show_files
+          = link_to 'Сохраненные файлы', show_files_document_path(@document), :remote => true   #, class: 'button'
+      %p
+      -if can? :view_document, @document
+        #add_favorite
+          -if @user_documents
+            -if @user_documents.count > 0
+              В Избранном:
+              - @user_documents.each do |user_document|
+                = link_to user_document.user.displayname, user_path(user_document.user_id, :anchor => 'Documents') if user_document.user
+              %br
+          -if @user_document && @user_document.document_id == @document.id
+            = link_to 'Удалить из Избранного', user_document_path, :method => :delete if @user_document.link >= 10 # если документ не добавил менеджер по персоналу
+          -else
+            = link_to 'Добавить в Избранное', add_favorite_document_path(@document)
+            = link_to 'Добавить в Обязательное', add_to_favorite_document_path(@document), :remote => true if current_user.role? :manager
+      %p
+      Теги документа:
+      = raw @document.tags.map { |t| link_to t, tag_documents_path(t.name), class: 'tags' }.join('&nbsp; ')
 
-%p
-%h3
-  Место хранения оригинала:
-  %b= link_to @document.place, documents_path(place: @document.place), class: 'groups', title: DOCUMENT_PLACE.key(@document.place) if !@document.place.blank?
-
-#delete_file
-  = render 'file_show'
-
-
-- if can? :edit_document, @document
-  #show_files
-    = link_to 'Сохраненные файлы', show_files_document_path(@document), :remote => true   #, class: 'button'
-
-%p
--if can? :view_document, @document
-  #add_favorite
-    -if @user_documents
-      -if @user_documents.count > 0
-        В Избранном:
-        - @user_documents.each do |user_document|
-          = link_to user_document.user.displayname, user_path(user_document.user_id, :anchor => 'Documents') if user_document.user
+.container
+  .columns
+    .column
+      %a.button.is-primary{ href: :back } Back
+      -if can? :update, @document
+        %a.button.is-primary{ href: edit_document_path(@document) } Edit
+      -if @document&.status == 'Проект' or @document&.status == 'Согласование'
+        -if can? :update, Document
+          %a.button.is-info{ href: approval_sheet_document_path(@document) } Лист согласования 
+      -if can? :clone, @document
+        %a.button.is-warning{ href: clone_document_path(@document) } Clone
+      -if can? :destroy, @document
+        %a.button.is-danger{ href: @document, data: { confirm: @document.name + "\nДействительно хотите удалить документ #" + @document.id.to_s + " ?" }, :method => 'delete' } Удалить
+    .column
+      .info_
+        -activity1 = PublicActivity::Activity.where(trackable_type: "Document", trackable_id: @document.id).order("created_at asc").first
+        -if activity1
+          = link_to 'создал', activities_path(type: "Document", id: @document.id)
+          = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+          = activity1.owner.displayname.to_s
+        -else
+          создан
+          = @document.created_at.strftime('%d.%m.%Y %H:%M:%S')
         %br
-    -if @user_document && @user_document.document_id == @document.id
-      = link_to 'Удалить из Избранного', user_document_path, :method => :delete if @user_document.link >= 10 # если документ не добавил менеджер по персоналу
-    -else
-      = link_to 'Добавить в Избранное', add_favorite_document_path(@document)
-      = link_to 'Добавить в Обязательное', add_to_favorite_document_path(@document), :remote => true if current_user.role? :manager
-
-%p
-Теги документа:
-= raw @document.tags.map { |t| link_to t, tag_documents_path(t.name), class: 'tags' }.join('&nbsp; ')
-
-.info_
-  -activity1 = PublicActivity::Activity.where(trackable_type: "Document", trackable_id: @document.id).order("created_at asc").first
-  -if activity1
-    = link_to 'создал', activities_path(type: "Document", id: @document.id)
-    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity1.owner.displayname.to_s
-  -else
-    создан
-    = @document.created_at.strftime('%d.%m.%Y %H:%M:%S')
-  %br
-  -activity2 = PublicActivity::Activity.where(trackable_type: "Document", trackable_id: @document.id).order("created_at asc").last
-  -if activity2
-    = link_to 'изменил', activities_path(type: "Document", id: @document.id)
-    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity2.owner.displayname.to_s
-  -else
-    изменен
-    = @document.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-
-%p
--if can? :update, @document
-  = link_to 'Edit', edit_document_path(@document), :class => 'button'
-= link_to 'Back', :back, :class => 'button'
--if @document.status
-  -if @document.status == 'Проект' or @document.status == 'Согласование'
-    = link_to 'Лист согласования', approval_sheet_document_path(@document), :class => 'button' if can? :update, Document
--if can? :clone, @document
-  = link_to 'Clone', clone_document_path(@document), :class => 'button'
--if can? :destroy, @document
-  = link_to 'Удалить', @document, data: { confirm: @document.name + "\nДействительно хотите удалить документ #" + @document.id.to_s + " ?" }, :method => 'delete', class: 'button'
+        -activity2 = PublicActivity::Activity.where(trackable_type: "Document", trackable_id: @document.id).order("created_at asc").last
+        -if activity2
+          = link_to 'изменил', activities_path(type: "Document", id: @document.id)
+          = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+          = activity2.owner.displayname.to_s
+        -else
+          изменен
+          = @document.updated_at.strftime('%d.%m.%Y %H:%M:%S')

@@ -1,84 +1,89 @@
 -title 'Директива ' + @directive.shortname
 -search 'Директиву'
-%h2
-  = link_to @directive.title, directives_path + '?title=' + @directive.title, class: 'groups'
-  = link_to @directive.body, directives_path + '?body=' + @directive.body, class: 'groups'
-  %b
-    №
-    = @directive.number
-    от 
-    = @directive.approval.strftime('%d.%m.%Y') if @directive.approval
+%section.hero.is-primary
+  .hero-body
+    .columns
+      .column
+        %h2.title
+          = link_to @directive.title, directives_path + '?title=' + @directive.title
+          = link_to @directive.body, directives_path + '?body=' + @directive.body
+          = @directive.name
+      .column.is-1
+        %h2.title
+          \##{@directive.id}
+    %h2.subtitle
+      %b 
+        № #{@directive.number} от #{@directive.approval&.strftime('%d.%m.%Y')}
+        "#{@directive.status}"
+      %p.notice= notice
+%section
+  .container
+    .content
+      -if !@directive.note.empty?
+        %h4
+          примечание:
+          = raw add_link_from_id(@directive.note, 'directives')
+      %h4 Краткое содержание:
+      = markdown(@directive.annotation)
 
-  -if @directive.status
-    ='"' + @directive.status + '"'
+      -if !@directive.action.blank?
+        %h4 Необходимо исполнить следующие требования:
+        = markdown(@directive.action)
 
-%h3
-  = @directive.name
--if !@directive.note.empty?
-  %h4
-    примечание:
-    = raw add_link_from_id(@directive.note, 'directives')
-%h4 Краткое содержание:
-= markdown(@directive.annotation)
+      %p
+      - if @directive.document_directive.any?
+        %h4
+          На основании этой директивы разработаны следующие
+          = link_to "внутренние документы банка:", directive_documents_path(@directive)
+        - @directive.document_directive.each do |document_directive|
+          %li
+            = link_to document_directive.document.name, document_path(document_directive.document)
+            = document_directive.document.status
+            = document_directive.document.approved.strftime('%d.%m.%Y') if document_directive.document.approved
+            (
+            -if can? :update, @directive
+              %td= link_to document_directive.note.to_s, edit_document_directive_path(document_directive)
+            -else
+              %td= document_directive.note
+            )
+      - if can? :update, @directive
+        #document
+          %a.button.is-info.is-outlined.is-small{ href: document_create_directive_path(@directive), "data-remote" => "true" } Добавить документ
 
--if !@directive.action.blank?
-  %h4 Необходимо исполнить следующие требования:
-  = markdown(@directive.action)
-
-%p
-- if @directive.document_directive.any?
-  %h4
-    На основании этой директивы разработаны следующие
-    = link_to "внутренние документы банка:", directive_documents_path(@directive)
-  - @directive.document_directive.each do |document_directive|
-    %li
-      = link_to document_directive.document.name, document_path(document_directive.document)
-      = document_directive.document.status
-      = document_directive.document.approved.strftime('%d.%m.%Y') if document_directive.document.approved
-      (
+      -if @bproces_of_directive&.any?
+        %h4
+          Документы этой директивы связаны со следующими процессами:
+        - @bproces_of_directive.each do |bp|
+          = "——" * (bp.depth)
+          [#{bp.shortname}]
+          = link_to bp.name, bproce_path(bp)
+          -if bp.user
+            = link_to bp.user.displayname, user_path(bp.user)
+          \##{bp.id}
+          %br
+%hr
+.container
+  .columns
+    .column
+      %a.button.is-primary{ href: :back } Back
       -if can? :update, @directive
-        %td= link_to document_directive.note.to_s, edit_document_directive_path(document_directive)
-      -else
-        %td= document_directive.note
-      )
-- if can? :update, @directive
-  #document
-    = link_to 'Добавить документ', document_create_directive_path(@directive), remote: true #, class: 'button'
-
--if @bproces_of_directive&.any?
-  %h4
-    Документы этой директивы связаны со следующими процессами:
-  - @bproces_of_directive.each do |bp|
-    = "——" * (bp.depth)
-    - if bp.shortname
-      [
-      =bp.shortname
-      ]
-    = link_to bp.name, bproce_path(bp)
-    -if bp.user
-      = link_to bp.user.displayname, user_path(bp.user)
-    %br
-
-.info_
-  -activity1 = PublicActivity::Activity.where(trackable_type: "Directive", trackable_id: @directive.id).order("created_at asc").first
-  -if activity1
-    = link_to 'создал', activities_path(type: "Directive", id: @directive.id)
-    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity1.owner.displayname.to_s
-  -else
-    создан
-    = @directive.created_at.strftime('%d.%m.%Y %H:%M:%S')
-  %br
-  -activity2 = PublicActivity::Activity.where(trackable_type: "Directive", trackable_id: @directive.id).order("created_at asc").last
-  -if activity2
-    = link_to 'изменил', activities_path(type: "Directive", id: @directive.id)
-    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity2.owner.displayname.to_s
-  -else
-    изменен
-    = @directive.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-
-%p
--if can? :update, @directive
-  = link_to 'Edit', edit_directive_path(@directive), :class => 'button'
-= link_to 'Back', directives_path, :class => 'button'
+        %a.button.is-primary{ href: edit_directive_path(@directive) } Edit
+    .column
+      .info_
+        -activity1 = PublicActivity::Activity.where(trackable_type: "Directive", trackable_id: @directive.id).order("created_at asc").first
+        -if activity1
+          = link_to 'создал', activities_path(type: "Directive", id: @directive.id)
+          = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+          = activity1.owner.displayname.to_s
+        -else
+          создана
+          = @directive.created_at.strftime('%d.%m.%Y %H:%M:%S')
+        %br
+        -activity2 = PublicActivity::Activity.where(trackable_type: "Directive", trackable_id: @directive.id).order("created_at asc").last
+        -if activity2
+          = link_to 'изменил', activities_path(type: "Directive", id: @directive.id)
+          = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+          = activity2.owner.displayname.to_s
+        -else
+          изменена
+          = @directive.updated_at.strftime('%d.%m.%Y %H:%M:%S')
