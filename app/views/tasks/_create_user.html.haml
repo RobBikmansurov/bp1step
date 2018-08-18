@@ -1,8 +1,23 @@
-= simple_form_for @user_task, url: update_user_task_path, html: { validate: true } do |f|
-  = f.error_notification
-  = f.hidden_field :task_id
-  = f.label 'Исполнитель'
-  = f.autocomplete_field :user_name, autocomplete_users_path, placeholder: 'выберите ФИО исполнителя', validate: { presence: true }
-  = f.input :status_boolean, as: :boolean, label: 'Отв.'
-  = f.error :base
-  = f.button :submit, 'Добавить Исполнителя'
+.columns
+  .column.is-8
+    = simple_form_for @user_task, url: update_user_task_path, html: { validate: true } do |f|
+      = f.error_notification
+      = f.hidden_field :task_id
+      = f.error :base
+      .field.is-horizontal
+        .field-label
+          %label.label Исполнитель: 
+        .field-body
+          .field
+            %p.control.has-icons-left
+              %input.input{"data-autocomplete" => "/users/autocomplete", :name => "user_task[user_name]", :type => "text", :placeholder => "ФИО нового исполнителя"}/
+              %span.icon
+                %i.fas.fa-user
+        .field-body
+          .field
+            %label
+              %input{:type => "checkbox", :name => "user_status[status]", :value => "1" }
+              отв.
+        .control
+          %button.button.is-link Добавить
+  .column
