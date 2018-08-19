@@ -1,87 +1,93 @@
 -title 'Приложение ' + @bapp.name
 -search "Приложение"
-.id_
-  \#
-  = @bapp.id
-%h2
-  = @bapp.name
--if not @bapp.apptype.blank?
-  %h4
-    Тип приложения:
-    = link_to @bapp.apptype, bapps_path + '?apptype=' + @bapp.apptype.to_s, class: 'groups'
-%h4
-  Описание:
-  = @bapp.description
-%h4
-  Назначение:
-  -if @bapp.purpose.blank?
-    не определено
-  -else
-    = @bapp.purpose
-%p
--if @bapp.version_app
-  %p
-    %bВерсия
-    = @bapp.version_app
-%p
-  %bКаталог:
-  = @bapp.directory_app
-%p
-  %bДистрибутив:
-  = @bapp.distribution_app
-%p
-  %bИсполняемый файл:
-  = @bapp.executable_file
-%p
-  %bЛицензия:
-  = @bapp.licence
-%p
-  %bИсточник (исходники):
-  = @bapp.source_app
-%h4
-  Примечание:
-= @bapp.note
-%p
-%hr
-%h3 Используется в процессах:
+%section.hero.is-primary
+  .hero-body
+    .columns
+      .column
+        %h2.title
+          Приложение [#{@bapp.name}]
+          -unless @bapp.apptype.blank?
+            тип:
+            = link_to @bapp.apptype, bapps_path(apptype: "#{@bapp.apptype}")
+      .column.is-1
+        %h2.title
+          \##{@bapp.id}
+    %h2.subtitle
+      Описание:
+      = @bapp.description
+      %p.notice= notice
+%section
+  .container
+    .content
+      %h4
+        Назначение:
+        -if @bapp.purpose.blank?
+          не определено
+        -else
+          = @bapp.purpose
+      %p
+      -if @bapp.version_app
+        %p
+          %bВерсия
+          = @bapp.version_app
+      %p
+        %bКаталог:
+        = @bapp.directory_app
+      %p
+        %bДистрибутив:
+        = @bapp.distribution_app
+      %p
+        %bИсполняемый файл:
+        = @bapp.executable_file
+      %p
+        %bЛицензия:
+        = @bapp.licence
+      %p
+        %bИсточник (исходники):
+        = @bapp.source_app
+      %h4
+        Примечание:
+      = @bapp.note
+      %p
+      %hr
+      %h3 Используется в процессах:
 
--if @bapp.id? # новая запись еще нигде не используется
-  %table
-    %tr
-      %th Процесс:
-      %th Назначение приложения в процессе
-      %th
-    -@bapp.bproce_bapps.each do |bp|
-      %tr
-        %td
-          -if bp.bproce_id
-            -if bp.bproce
-              = link_to bp.bproce.name, bproce_path(bp.bproce_id)
-            -else
-              = bp.inspect  # ссылка на несуществующий процесс
-          -else
-            = bp.inspect
-        %td
-          -if bp.apurpose.blank?
-            = link_to 'не определено', edit_bproce_bapp_path(bp)
-          -else
-            = link_to bp.apurpose, bproce_bapp_path(bp)
-        %td
+      -if @bapp.id? # новая запись еще нигде не используется
+        %table
+          %tr
+            %th Процесс:
+            %th Назначение приложения в процессе
+            %th
+          -@bapp.bproce_bapps.each do |bp|
+            %tr
+              %td
+                -if bp.bproce_id
+                  -if bp.bproce
+                    = link_to bp.bproce.name, bproce_path(bp.bproce_id)
+                  -else
+                    = bp.inspect  # ссылка на несуществующий процесс
+                -else
+                  = bp.inspect
+              %td
+                -if bp.apurpose.blank?
+                  = link_to 'не определено', edit_bproce_bapp_path(bp)
+                -else
+                  = link_to bp.apurpose, bproce_bapp_path(bp)
+              %td
 
 Теги приложения:
 = raw @bapp.tag_list.map { |t| link_to t, bapps_path + '/tags/' + t, class: 'tags' }.join('&nbsp; ')
--#if @bapp.tags.any?
-  - @bapp.tags.each do |tag|
-    = link_to tag.name, tag_path(:tag => tag.name)
 
-.info_
-  создан
-  = @bapp.created_at.strftime('%d.%m.%Y %H:%M:%S')
-  %br
-  изменен
-  = @bapp.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-
-%p
-- if can? :update, @bapp
-  = link_to 'Edit', edit_bapp_path(@bapp), :class => 'button'
-= link_to 'Back', bapps_path, :class => 'button'
+.container
+  .columns
+    .column
+      %a.button.is-primary{ href: bapps_path } Back
+      - if can? :update, @bapp
+        %a.button.is-primary{ href: edit_bapp_path(@bapp) } Edit
+    .column
+      .info_
+        создано
+        = @bapp.created_at&.strftime('%d.%m.%Y %H:%M:%S')
+        %br
+        изменено
+        = @bapp.updated_at&.strftime('%d.%m.%Y %H:%M:%S')
