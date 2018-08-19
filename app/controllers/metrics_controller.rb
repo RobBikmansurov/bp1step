@@ -160,7 +160,7 @@ class MetricsController < ApplicationController
         elsif @metric.mtype == 'localPG'
           results = ActiveRecord::Base.connection.execute(@sql)
         end
-        results.each do |row|
+        results&.each do |row|
           @test << row.inspect
           @test_value = row['count']
         end
