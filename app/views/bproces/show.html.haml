@@ -31,6 +31,7 @@
         = link_to bp.name, bproce_path(bp)
         = "##{bp.id}"
         = link_to bp.user.displayname, user_path(bp.user) if bp.user
+        %br
 
       -unless @bproce.description.blank?
         %h4 Краткое описание:
@@ -74,11 +75,35 @@
                   - if File.exist?(doc.pdf_path)
                     = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), doc.pdf_url, class: 'button-img'
               = link_to doc.name, document_path(doc)
-              %br
-              .id_show_
-                = "##{doc.id}"
+              = "##{doc.id}"
               = doc.status
               = ' ' + doc.approved.strftime('%d.%m.%Y') if doc.approved
+
+        .box
+          %article.media
+            .media-left
+              %figure.image.is-64x64
+                %img{:alt => "Image", :src => "https://bulma.io/images/placeholders/128x128.png"}/
+            .media-content
+              .content
+                %p
+                  %strong John Smith
+                  %small @johnsmith
+                  %small 31m
+                  %br/
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur sit amet massa fringilla egestas. Nullam condimentum luctus turpis.
+              %nav.level.is-mobile
+                .level-left
+                  %a.level-item{"aria-label" => "reply"}
+                    %span.icon.is-small
+                      %i.fas.fa-reply{"aria-hidden" => "true"}
+                  %a.level-item{"aria-label" => "retweet"}
+                    %span.icon.is-small
+                      %i.fas.fa-retweet{"aria-hidden" => "true"}
+                  %a.level-item{"aria-label" => "like"}
+                    %span.icon.is-small
+                      %i.fas.fa-heart{"aria-hidden" => "true"}
+
 
       -if @directive_of_bproce&.any?
         %h4 Директивы, на основании которых разработаны документы процесса:

@@ -4,8 +4,7 @@
     - if bproce.checked_at
       = "\u2713".html_safe
     = link_to bproce.name, bproce_path(bproce)
-    .id_show_
-      = "##{bproce.id}"
+    = "##{bproce.id}"
     -# if can? :manage_tag, bproce
       %sup= bproce.tag_list
     - if !params[:user].present? && bproce.user
