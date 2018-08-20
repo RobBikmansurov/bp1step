@@ -1,22 +1,24 @@
 -if @bproce_document
-.columns
-  .column.is-8
-    = simple_form_for(@bproce_document) do |bp|
-      = bp.error_notification
-      = bp.hidden_field :document_id
-      = bp.hidden_field :bproce_id
-      = bp.error :base
-      .field.is-horizontal
-        .field-label
-          %label.label Процесс: 
-        .field-body
-          .field
-            %p.control
-              %input.input{"data-autocomplete" => autocomplete_bproces_path, :name => "bproce_document[:bproce_name]", :type => "text", :placeholder => "процесс"}/
-
-              -# = bp.autocomplete_field :bproce_name, autocomplete_bproces_path, id_elements: '#bproce_id', placeholder: 'подстрока в наименовании', data: { no_matches_label: '333' }
-            -# = bp.input :purpose
-
-        -if can? :update, @document
+  = simple_form_for(@bproce_document) do |bp|
+    = bp.error_notification
+    = bp.hidden_field :document_id
+    = bp.hidden_field :bproce_id
+    = bp.error :base
+    .field.is-horizontal
+      .field-label
+        %label.label Процесс: 
+      .field-body
+        .field
+          %p.control
+            %input.input{"data-autocomplete" => autocomplete_bproces_path, :name => "bproce_document[bproce_name]", :type => "text", :placeholder => "процесс"}/
+      .field-label
+        %label.label назначение: 
+      .field-body
+        .field
           .control
-            %button.button.is-link Добавить Процесс
+            %input.input{name: "bproce_document[purpose]", type: "text", placeholder: 'назначение документа в процессе' }
+          -# = bp.input :purpose
+
+      -if can? :update, @document
+        .control
+          %button.button.is-link Добавить
