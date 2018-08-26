@@ -7,6 +7,7 @@ tmp/*
 config/database.yml*
 config/ldap.yml
 config/secret/*
+config/initializers/secret_token.rb
 secret/*
 spec/example_status.txt
 *.0

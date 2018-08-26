@@ -1,25 +1,19 @@
+# frozen_string_literal: true
+
 class DirectivesController < ApplicationController
   respond_to :html
   respond_to :xml
   respond_to :json, only: :index
   helper_method :sort_column, :sort_direction
   before_action :authenticate_user!, only: %i[edit new create update]
-  before_action :get_directive, except: %i[index autocomplete]
+  before_action :set_directive, except: %i[index autocomplete]
 
   def index
-    if params[:title].present?
-      @directives = Directive.where(title: params[:title]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-    else
-      if params[:body].present?
-        @directives = Directive.where(body: params[:body]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-      else
-        if params[:status].present?
-          @directives = Directive.where(status: params[:status]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-        else
-          @directives = Directive.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-        end
-      end
-    end
+    directives = Directive.search(params[:search])
+    directives = directives.where(title: params[:title]) if params[:title].present?
+    directives = directives.where(body: params[:body]) if params[:body].present?
+    directives = directives.where(status: params[:status]) if params[:status].present?
+    @directives = directives.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
   end
 
   def show
@@ -50,7 +44,7 @@ class DirectivesController < ApplicationController
   end
 
   def update
-    flash[:notice] = 'Successfully updated directive.' if @directive.update_attributes(directive_params)
+    flash[:notice] = 'Successfully updated directive.' if @directive.update(directive_params)
     respond_with(@directive)
   end
 
@@ -79,9 +73,10 @@ class DirectivesController < ApplicationController
     params[:direction] || 'asc'
   end
 
-  def get_directive
+  def set_directive
     if params[:search].present? # это поиск
-      @directives = Directive.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      directives = Directive.search(params[:search])
+      @directives = directives.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
       @directive = params[:id].present? ? Directive.find(params[:id]) : Directive.new
