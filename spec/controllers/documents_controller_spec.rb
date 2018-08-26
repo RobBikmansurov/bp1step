@@ -15,8 +15,7 @@ RSpec.describe DocumentsController, type: :controller do
   describe 'GET index' do
     it 'assigns all documents as @documents' do
       get :index
-      expect(response).to be_success
-      expect(response).to have_http_status(:success)
+      expect(response).to be_successful
       expect(response).to render_template('documents/index')
     end
 
