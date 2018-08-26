@@ -16,8 +16,7 @@ RSpec.describe WorkplacesController, type: :controller do
   describe 'GET index' do
     it 'assigns all workplaces as @workplaces' do
       get :index, {}
-      expect(response).to be_success
-      expect(response).to have_http_status(:success)
+      expect(response).to be_successful
       expect(response).to render_template('workplaces/index')
     end
 

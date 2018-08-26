@@ -19,8 +19,7 @@ RSpec.describe BprocesController, type: :controller do
   describe 'GET index' do
     it 'assigns all bproces as @bproces' do
       get :index, params: {}
-      expect(response).to be_success
-      expect(response).to have_http_status(:success)
+      expect(response).to be_successful
       expect(response).to render_template('bproces/index')
     end
 

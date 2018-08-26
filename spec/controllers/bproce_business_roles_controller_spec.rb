@@ -12,8 +12,7 @@ RSpec.describe BproceBusinessRolesController, type: :controller do
     it 'assigns the requested busines_role as @busines_role' do
       # business_role1 = FactoryBot.create(:business_role, bproce_id: bproce.id)
       get :show, params: { id: bproce.to_param }
-      expect(response).to be_success
-      expect(response).to have_http_status(:success)
+      expect(response).to be_successful
       expect(response).to render_template('bproce_business_roles/show')
     end
   end
