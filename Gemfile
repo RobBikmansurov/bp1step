@@ -60,11 +60,11 @@ group :development do
   # gem "rails-erd"
   gem 'capistrano-rails-db'
   gem 'capistrano3-puma'
-  gem 'guard-rspec'
-  gem 'guard-rubocop'
   gem 'rubocop', require: false
   gem 'rubocop-rspec', require: false
   gem 'sshkit-sudo'
+  gem "brakeman", :require => false
+  gem "bundler-audit", :require => false
   # gem 'log-analyzer', require: false
 end
 

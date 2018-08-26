@@ -120,7 +120,7 @@ class MetricsController < ApplicationController
     @metric = Metric.find(params[:id])
     if @metric && params[:v].presence && params[:h].presence
       where_datetime = @metric.sql_period Time.current.utc
-      value = MetricValue.where(metric_id: @metric.id).where("dtime BETWEEN #{where_datetime}").first
+      value = MetricValue.where(metric_id: @metric.id).where('dtime BETWEEN ?', where_datetime.to_s).first
       value ||= MetricValue.new(metric_id: @metric.id) # не нашли - добавим новое значение
       value.dtime = Time.current # обновим время записи значения
       if Digest::MD5.hexdigest(@metric.mhash) == params[:h]
@@ -133,11 +133,9 @@ class MetricsController < ApplicationController
     else
       render nothing: true, status: :not_found, content_type: 'text/html'
     end
- end
+  end
 
   def test
-    test_date = @metric.sql_period_beginning_of
-
     if @metric.mtype == 'MSSQL'
       require 'tiny_tds'
       c = ActiveRecord::Base.configurations['production_MSSQL']
@@ -145,32 +143,31 @@ class MetricsController < ApplicationController
     end
     @sql = @metric.msql
     @test = 'запрос не указан!'
-    if @sql
-      @sql.gsub!(/\r\n?/, ' ') # заменим \n \r на пробелы
+    return unless @sql
+    @sql.gsub!(/\r\n?/, ' ') # заменим \n \r на пробелы
 
-      sql_period = @metric.sql_period
-      @sql.gsub!(/##PERIOD##/, sql_period) # заменим период
-      sql_date = @metric.sql_period_beginning_of
-      @sql.gsub!(/##DATE##/, sql_date) # заменим дату
+    sql_period = @metric.sql_period
+    @sql.gsub!(/##PERIOD##/, sql_period) # заменим период
+    sql_date = @metric.sql_period_beginning_of
+    @sql.gsub!(/##DATE##/, sql_date) # заменим дату
 
-      begin
-        @test = ''
-        if @metric.mtype == 'MSSQL'
-          results = mssql.execute(@sql)
-        elsif @metric.mtype == 'localPG'
-          results = ActiveRecord::Base.connection.execute(@sql)
-        end
-        results&.each do |row|
-          @test << row.inspect
-          @test_value = row['count']
-        end
-      rescue StandardError => error
-        logger.info "      ERR: #{@sql}"
-        @test << "ERR: #{@sql}\n"
-        @test << error.inspect
-      ensure
-        mssql&.close
+    begin
+      @test = ''
+      if @metric.mtype == 'MSSQL'
+        results = mssql.execute(@sql)
+      elsif @metric.mtype == 'localPG'
+        results = ActiveRecord::Base.connection.execute(@sql)
       end
+      results.each do |row|
+        @test << row.inspect
+        @test_value = row['count']
+      end
+    rescue StandardError => error
+      logger.info "      ERR: #{@sql}"
+      @test << "ERR: #{@sql}\n"
+      @test << error.inspect
+    ensure
+      mssql&.close
     end
   end
 
@@ -223,7 +220,7 @@ class MetricsController < ApplicationController
         end
         if new_value&.positive?
           # ids = MetricValue.where(metric_id: @metric.id).where("dtime BETWEEN #{sql_period}").all.ids
-          value = MetricValue.where(metric_id: @metric.id).where("dtime BETWEEN #{sql_period}").first
+          value = MetricValue.where(metric_id: @metric.id).where(dtime(BETWEEN("'", sql_period.to_s))).first
           value ||= MetricValue.new(metric_id: @metric.id) # не нашли? - новое значение
           value.value = new_value
           value.dtime = Time.at.utc(d) # обновим время записи значения
