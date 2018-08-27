@@ -17,13 +17,11 @@ RSpec.describe HomeController, type: :controller do
     it 'returns http success' do
       allow(controller).to receive(:signed_in?).and_return(false) # unsigned user
       get :index
-      expect(response).to be_success
-      expect(response).to have_http_status(:success)
+      expect(response).to be_successful
 
       allow(controller).to receive(:signed_in?).and_return(true) # signed user
       get :index
-      expect(response).to be_success
-      expect(response).to have_http_status(:success)
+      expect(response).to be_successful
     end
   end
 end

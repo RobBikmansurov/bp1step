@@ -18,7 +18,6 @@ RSpec.describe RequirementsController, type: :controller do
     it 'assigns all requirements as @requirements' do
       get :index, {}
       expect(response).to be_successful
-      expect(response).to have_http_status(:success)
       expect(response).to render_template('requirements/index')
     end
 

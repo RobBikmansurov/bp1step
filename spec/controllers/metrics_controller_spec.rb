@@ -14,8 +14,7 @@ RSpec.describe MetricsController, type: :controller do
   describe 'GET index' do
     it 'assigns all metrics as @metrics' do
       get :index, params: {}
-      expect(response).to be_success
-      expect(response).to have_http_status(:success)
+      expect(response).to be_successful
       expect(response).to render_template('metrics/index')
     end
     it 'loads all of the metrics into @metricss' do
@@ -27,8 +26,7 @@ RSpec.describe MetricsController, type: :controller do
   describe 'GET show' do
     it 'assigns the requested metric as @metric' do
       @metric = Metric.create! valid_attributes
-      expect(response).to be_success
-      expect(response).to have_http_status(:success)
+      expect(response).to be_successful
       # expect(assigns(:metric)).to eq(@metric) # error - Time zones not supported for SQLite
     end
   end
