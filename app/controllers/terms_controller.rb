@@ -5,18 +5,15 @@ class TermsController < ApplicationController
   respond_to :xml, :json, only: %i[index show]
   helper_method :sort_column, :sort_direction
   before_action :authenticate_user!, only: %i[edit update new create]
-  before_action :get_term, except: %i[index print]
+  before_action :set_term, only: %i[show update destroy]
 
   def index
-    @terms = if params[:all].present?
-               Term.all
-             else
-               @terms = if params[:apptype].present?
-                          Term.searchtype(params[:apptype]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-                        else
-                          Term.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
-                        end
-             end
+    @terms = Term.order(:shortname)
+    if params[:all].blank?
+      @terms = @terms.searchtype(params[:apptype]) if params[:apptype].present?
+      @terms = @terms.search(params[:search]) if params[:search].present?
+      @terms = @terms.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+    end
     respond_to do |format|
       format.html
       format.json { render json: @terms }
@@ -63,7 +60,7 @@ class TermsController < ApplicationController
     @term = Term.find(params[:id])
 
     respond_to do |format|
-      if @term.update_attributes(term_params)
+      if @term.update(term_params)
         format.html { redirect_to @term, notice: 'Term was successfully updated.' }
         format.json { head :no_content }
       else
@@ -97,7 +94,7 @@ class TermsController < ApplicationController
     params[:direction] || 'asc'
   end
 
-  def get_term
+  def set_term
     if params[:search].present? # это поиск
       @terms = Term.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
