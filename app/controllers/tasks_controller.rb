@@ -12,23 +12,24 @@ class TasksController < ApplicationController
     params.delete :status if params[:reset].present? && params[:reset] == params[:status]
     if params[:user].present?
       user = User.find(params[:user])
-      @tasks = Task.joins(:user_task).where('user_tasks.user_id = ?', params[:user].to_s)
+      tasks = Task.joins(:user_task).where('user_tasks.user_id = ?', params[:user].to_s)
       @title_tasks += "исполнителя [ #{user.displayname} ]"
       if params[:status].present?
-        @tasks = @tasks.status(params[:status])
+        tasks = @tasks.status(params[:status])
         @title_tasks += "в статусе [ #{TASK_STATUS.key(params[:status].to_i)} ]"
       else
-        @tasks = @tasks.unfinished
+        tasks = @tasks.unfinished
         @title_tasks += ' не завершенные'
       end
     elsif params[:status].present?
-      @tasks = Task.search(params[:search]).status(params[:status]).includes(:user_task)
+      tasks = Task.search(params[:search]).status(params[:status]).includes(:user_task)
       @title_tasks += "в статусе [ #{TASK_STATUS.key(params[:status].to_i)} ]"
     else
-      @tasks = Task.search(params[:search]).unfinished.includes(:user_task)
+      tasks = Task.search(params[:search]).unfinished.includes(:user_task)
       @title_tasks += 'не завершенные'
     end
-    @tasks = @tasks.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+    tasks = tasks.order("#{sort_column} #{sort_direction}")
+    @task = tasks.paginate(per_page: 10, page: params[:page])
   end
 
   def show
