@@ -4,10 +4,11 @@ class RolesController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
   before_action :authenticate_user!, only: %i[edit update new create]
-  before_action :get_role, except: :index
+  before_action :set_role, except: :index
 
   def index
-    @roles = Role.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+    roles = Role.search(params[:search])
+    @roles = roles.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
   end
 
   def new
@@ -36,7 +37,7 @@ class RolesController < ApplicationController
   end
 
   def update
-    flash[:notice] = 'Successfully updated role.' if @role.update_attributes(role_params)
+    flash[:notice] = 'Successfully updated role.' if @role.update(role_params)
     respond_with(@role)
   end
 
@@ -67,7 +68,7 @@ class RolesController < ApplicationController
     params[:direction] || 'asc'
   end
 
-  def get_role
+  def set_role
     @role = params[:id].present? ? Role.find(params[:id]) : Role.new
   end
 end

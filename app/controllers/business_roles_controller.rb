@@ -11,15 +11,15 @@ class BusinessRolesController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
-    @business_roles = BusinessRole.order(sort_column + ' ' + sort_direction)
+    @business_roles = BusinessRole.all
     if params[:all].blank?
       @business_roles = @business_roles.search(params[:search]) if params[:search].present?
-      @business_roles = @business_roles.order(sort_column + ' ' + sort_direction).page(params[:page])
+      @business_roles = @business_roles.page(params[:page])
       # @business_roles = BusinessRole.page(params[:page]).search(params[:search])
       # @business_roles = BusinessRole.paginate(:per_page => 10, :page => params[:page])
     end
     # @business_roles = @business_roles.find(:all, :include => :users)
-    @business_roles = @business_roles.includes(:users)
+    @business_roles = @business_roles.order(sort_column + ' ' + sort_direction).includes(:users)
     respond_to do |format|
       format.html
       format.odt { print }
