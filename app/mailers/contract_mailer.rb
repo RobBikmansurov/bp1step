@@ -10,12 +10,14 @@ class ContractMailer < ActionMailer::Base
     @scan = scan
     @action = action
     @current_user = current_user
+    addresses = contract.owner.email
+    addresses += ', ' + contract.payer&.email if contract.payer
     if @scan
-      mail(to: addresses.join(', '),
+      mail(to: addresses,
            subject: "BP1Step: #{@action} файл договора ##{@contract.id}",
            template_name: 'update_contract_scan')
     else
-      mail(to: addresses.join(', '),
+      mail(to: addresses&.join(', '),
            subject: "BP1Step: изменен договор ##{@contract.id}",
            template_name: 'update_contract')
     end
