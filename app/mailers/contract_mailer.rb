@@ -17,7 +17,7 @@ class ContractMailer < ActionMailer::Base
            subject: "BP1Step: #{@action} файл договора ##{@contract.id}",
            template_name: 'update_contract_scan')
     else
-      mail(to: addresses&.join(', '),
+      mail(to: addresses,
            subject: "BP1Step: изменен договор ##{@contract.id}",
            template_name: 'update_contract')
     end
