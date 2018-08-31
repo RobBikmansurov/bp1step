@@ -40,7 +40,7 @@ class BproceDocumentsController < ApplicationController
   end
 
   def update
-    flash[:notice] = 'Successfully updated bproce_document.' if @bproce_document.update_attributes(bproce_document_params)
+    flash[:notice] = 'Successfully updated bproce_document.' if @bproce_document.update(bproce_document_params)
     respond_with(@bproce_document)
   end
 

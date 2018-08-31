@@ -17,7 +17,7 @@ class MetricsController < ApplicationController
     else
       @metrics = Metric.search(params[:search])
     end
-    @metrics = @metrics.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+    @metrics = @metrics.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
   end
 
   def show

@@ -4,14 +4,13 @@ class ContractMailer < ActionMailer::Base
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   # рассылка ответственным об изменении договора или скана
-  # rubocop: disable Metrics/MethodLength
   def update_contract(contract, current_user, scan, action)
     @contract = contract
     @scan = scan
     @action = action
     @current_user = current_user
     addresses = contract.owner.email
-    addresses += ', ' + contract.payer&.email if contract.payer
+    addresses += ', ' + contract.payer&.email + ', bard@bankperm.ru' if contract.payer
     if @scan
       mail(to: addresses,
            subject: "BP1Step: #{@action} файл договора ##{@contract.id}",
@@ -22,7 +21,6 @@ class ContractMailer < ActionMailer::Base
            template_name: 'update_contract')
     end
   end
-  # rubocop: enable Metrics/MethodLength
 
   # рассылка о необходимости указания процесса для договора
   def process_is_missing_email(contract, user)

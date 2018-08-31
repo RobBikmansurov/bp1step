@@ -15,7 +15,7 @@ class BprocesController < ApplicationController
 
   # плоский список процессов без дерева
   def list
-    @bproces = Bproce.search('?', params[:search]).order(sort_column + ' ' + sort_direction).find(:all, include: :user)
+    @bproces = Bproce.search('?', params[:search]).order(sort_order(sort_column, sort_direction)).find(:all, include: :user)
     respond_to do |format|
       format.html
       format.pdf { print_list }

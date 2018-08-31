@@ -9,18 +9,18 @@ class UsersController < ApplicationController
   def index
     if params[:role].present?
       @role = Role.find_by(name: params[:role])
-      @users = @role.users.page(params[:page]).active.search(params[:search]).order(sort_column + ' ' + sort_direction)
+      @users = @role.users.page(params[:page]).active.search(params[:search]).order(sort_order(sort_column, sort_direction))
     else
       if params[:office].present?
-        @users = User.active.where(office: params[:office]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+        @users = User.active.where(office: params[:office]).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
       else
         @users = if params[:all].present?
-                   User.active.order(sort_column + ' ' + sort_direction)
+                   User.active.order(sort_order(sort_column, sort_direction))
                  else
                    @users = if params[:search].present?
-                              User.page(params[:page]).search(params[:search]).order(sort_column + ' ' + sort_direction)
+                              User.page(params[:page]).search(params[:search]).order(sort_order(sort_column, sort_direction))
                             else
-                              User.page(params[:page]).order(sort_column + ' ' + sort_direction)
+                              User.page(params[:page]).order(sort_order(sort_column, sort_direction))
                             end
                    # @users, @alphaParams = User.all.alpha_paginate(params[:letter]){|user| user.lastname}
                  end
@@ -116,7 +116,7 @@ class UsersController < ApplicationController
 
   def move_to
     @old_user = User.find(params[:id])
-    @new_user = User.new()
+    @new_user = User.new
     render :move_to
   end
 
@@ -132,14 +132,12 @@ class UsersController < ApplicationController
   end
 
   def stop_all
-    UserBusinessRole.where(user_id: @usr.id).each do |user_role|
-      user_role.destroy
-    end
+    UserBusinessRole.where(user_id: @usr.id).each(&:destroy)
     render :edit
   end
 
   def update
-    if @usr.update_attributes(user_params)
+    if @usr.update(user_params)
       redirect_to @usr, notice: 'Successfully created user access roles.'
     else
       render :edit
@@ -168,7 +166,7 @@ class UsersController < ApplicationController
   def update_avatar
     ava_file = params[:user][:avatar] if params[:user].present?
     if ava_file.present?
-      flash[:notice] = 'Изображение "' + ava_file.original_filename + '" загружено.' if @usr.update_attributes(avatar_params)
+      flash[:notice] = 'Изображение "' + ava_file.original_filename + '" загружено.' if @usr.update(avatar_params)
     else
       flash[:alert] = 'Ошибка - имя файла не указано.'
     end
@@ -180,13 +178,13 @@ class UsersController < ApplicationController
       if u[:id] && u[:crop_x] && u[:crop_y] && u[:crop_w] && u[:crop_h]
         old_upload = Upload.find(u[:id].delete('D').to_i)
         if old_upload
-          old_upload.reprocess_avatar if old_upload.update_attributes(u)
+          old_upload.reprocess_avatar if old_upload.update(u)
         end
       end
     end
 
     respond_to do |format|
-      if @usr.update_attributes(params[:user])
+      if @usr.update(params[:user])
         format.html { redirect_to @usr, notice: 'Card was successfully updated.' }
         format.json { head :no_content }
       else
@@ -264,7 +262,7 @@ class UsersController < ApplicationController
 
   def find_user
     if params[:search].present? # это поиск
-      @users = User.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      @users = User.search(params[:search]).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
       @usr = params[:id].present? ? User.find(params[:id]) : User.new

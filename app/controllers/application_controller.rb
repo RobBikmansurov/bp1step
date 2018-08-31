@@ -27,4 +27,9 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_up, keys: %i[name email password])
     devise_parameter_sanitizer.permit(:update_avatar, keys: [:avatar])
   end
+
+  def sort_order(column, direction)
+    direction = direction.casecmp('asc').zero? ? 'asc' : 'desc'
+    "#{column} #{direction}"
+  end
 end

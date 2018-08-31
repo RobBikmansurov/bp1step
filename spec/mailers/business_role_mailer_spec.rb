@@ -9,8 +9,8 @@ RSpec.describe BusinessRoleMailer, type: :mailer do
   let(:current_user) { FactoryBot.create :user }
   let!(:user1) { FactoryBot.create :user, active: true }
   let!(:user2) { FactoryBot.create :user, active: true }
-  let!(:user_business_role1) { FactoryBot.create( :user_business_role, business_role_id: business_role.id, user_id: user1.id) }
-  let!(:user_business_role2) { FactoryBot.create( :user_business_role, business_role_id: business_role.id, user_id: user2.id) }
+  let!(:user_business_role1) { FactoryBot.create(:user_business_role, business_role_id: business_role.id, user_id: user1.id) }
+  let!(:user_business_role2) { FactoryBot.create(:user_business_role, business_role_id: business_role.id, user_id: user2.id) }
 
   # mail_all(business_role, current_user, text)
   let(:mail_all) { BusinessRoleMailer.mail_all(business_role, current_user, 'Рассылка') }

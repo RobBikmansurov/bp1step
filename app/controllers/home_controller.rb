@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HomeController < ApplicationController
   def index
     redirect_to current_user if user_signed_in?
@@ -23,7 +25,7 @@ class HomeController < ApplicationController
       r.add_field 'USER_NAME', username
     end
     send_data report.generate, type: 'application/msword',
-                              disposition: 'inline',
-                              filename: 'letter.odt'
+                               disposition: 'inline',
+                               filename: 'letter.odt'
   end
 end

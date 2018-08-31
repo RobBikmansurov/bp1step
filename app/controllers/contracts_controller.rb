@@ -71,7 +71,7 @@ class ContractsController < ApplicationController
     end
     respond_to do |format|
       format.html do
-        @contracts = @contracts.includes(:agent).order(sort_column + ' ' + sort_direction)
+        @contracts = @contracts.includes(:agent).order(sort_order(sort_column, sort_direction))
                                .paginate(per_page: 10, page: params[:page])
       end
       format.odt  { print }
@@ -296,7 +296,7 @@ class ContractsController < ApplicationController
   def set_contract
     if params[:search].present? # это поиск
       contracts = Contract.search(params[:search])
-      @contracts = contract.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      @contracts = contract.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     elsif params[:id].present?
       @contract = Contract.find(params[:id])

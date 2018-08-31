@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DocumentsController < ApplicationController
   respond_to :odt, only: :index
   respond_to :pdf, only: :show
@@ -71,9 +73,9 @@ class DocumentsController < ApplicationController
       end
     end
     respond_to do |format|
-      format.html {
-        @documents = @documents.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page]) if params[:all].blank?
-      }
+      format.html do
+        @documents = @documents.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page]) if params[:all].blank?
+      end
       format.odt { print }
     end
   end
@@ -91,14 +93,14 @@ class DocumentsController < ApplicationController
   end
 
   def update
-    flash[:notice] = 'Документ успешно обновлен.' if @document.update_attributes(document_params)
+    flash[:notice] = 'Документ успешно обновлен.' if @document.update(document_params)
     respond_with(@document)
   end
 
   def update_file
     d_file = params[:document][:document_file] if params[:document].present?
     if d_file.present?
-      flash[:notice] = 'Файл "' + d_file.original_filename + '" загружен.' if @document.update_attributes(document_file_params)
+      flash[:notice] = 'Файл "' + d_file.original_filename + '" загружен.' if @document.update(document_file_params)
     else
       flash[:alert] = 'Ошибка - имя файла не указано.'
     end
@@ -223,7 +225,7 @@ class DocumentsController < ApplicationController
   end
 
   def approval_sheet
-      approval_sheet_odt
+    approval_sheet_odt
   end
 
   private
@@ -250,7 +252,7 @@ class DocumentsController < ApplicationController
       @title_doc += '  стр.' + params[:page] if params[:page].present?
       r.add_field 'REPORT_TITLE', @title_doc
       r.add_table('TABLE_01', @documents, header: true) do |t|
-        t.add_column(:nn) do |ca|
+        t.add_column(:nn) do |_ca|
           nn += 1
           "#{nn}."
         end
@@ -271,9 +273,7 @@ class DocumentsController < ApplicationController
           document.approved.strftime('%d.%m.%Y').to_s if document.approved
         end
         t.add_column(:responsible) do |document| # владелец документа, если задан
-          if document.owner_id
-            document.owner.displayname.to_s
-          end
+          document.owner.displayname.to_s if document.owner_id
         end
         t.add_column(:place)
       end
@@ -312,7 +312,7 @@ class DocumentsController < ApplicationController
       if BproceDocument.where(document_id: @document.id).any? # есть ссылки из документа на другие процессы?
         r.add_field :bp, 'Относится к процессам:'
         r.add_table('BPROCS', @document.bproce_document.all, header: false, skip_if_empty: true) do |t|
-          t.add_column(:rr) do |n1| # порядковый номер строки таблицы
+          t.add_column(:rr) do |_n1| # порядковый номер строки таблицы
             rr += 1
           end
           t.add_column(:process_name) do |bp|
@@ -339,7 +339,7 @@ class DocumentsController < ApplicationController
 
   def get_document
     if params[:search].present? # это поиск
-      @documents = Document.full_search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      @documents = Document.full_search(params[:search]).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     elsif params[:id].present?
       @document = Document.find(params[:id])

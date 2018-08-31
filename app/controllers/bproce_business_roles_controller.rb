@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BproceBusinessRolesController < ApplicationController
   respond_to :html, :xml, :json
 

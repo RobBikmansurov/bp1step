@@ -25,7 +25,7 @@ class WorkplacesController < ApplicationController
                                       Workplace.search(params[:search])
                                     end
                     end
-      @workplaces = @workplaces.includes(:users).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      @workplaces = @workplaces.includes(:users).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
     end
     respond_to do |format|
       format.html
@@ -91,7 +91,7 @@ class WorkplacesController < ApplicationController
   def update
     @bproce_workplace = BproceWorkplace.new(workplace_id: @workplace.id)
     @user_workplace = UserWorkplace.new(workplace_id: @workplace.id)
-    flash[:notice] = 'Successfully updated workplace.' if @workplace.update_attributes(workplace_params)
+    flash[:notice] = 'Successfully updated workplace.' if @workplace.update(workplace_params)
     respond_with(@workplace)
   end
 
@@ -129,7 +129,7 @@ class WorkplacesController < ApplicationController
   def get_workplace
     if params[:search].present? # это поиск
       @workplaces = Workplace.search(params[:search])
-                             .order(sort_column + ' ' + sort_direction)
+                             .order(sort_order(sort_column, sort_direction))
                              .paginate(per_page: 10, page: params[:page]).find(:all, include: :users)
       render :index # покажем список найденного
     else

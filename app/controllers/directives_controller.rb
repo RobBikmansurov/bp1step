@@ -13,7 +13,7 @@ class DirectivesController < ApplicationController
     directives = directives.where(title: params[:title]) if params[:title].present?
     directives = directives.where(body: params[:body]) if params[:body].present?
     directives = directives.where(status: params[:status]) if params[:status].present?
-    @directives = directives.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+    @directives = directives.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
   end
 
   def show
@@ -76,7 +76,7 @@ class DirectivesController < ApplicationController
   def set_directive
     if params[:search].present? # это поиск
       directives = Directive.search(params[:search])
-      @directives = directives.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      @directives = directives.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
       @directive = params[:id].present? ? Directive.find(params[:id]) : Directive.new

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class UserRequirementsController < ApplicationController
   respond_to :html, :xml, :json
   before_action :authenticate_user!, only: %i[new create destroy]
 
   def show
     @user_requirement = UserRequirement.find(params[:id])
-    redirect_to requirement_path(@user_requirement.requirement_id) and return
+    redirect_to(requirement_path(@user_requirement.requirement_id)) && return
   end
 
   def new
@@ -37,7 +39,7 @@ class UserRequirementsController < ApplicationController
       flash[:alert] = "Error sending mail to #{@user_requirement.user.email}"
     end
     if @user_requirement.destroy # удалили связь
-      @requirement.update_column(:status, 0) if !@requirement.user_requirement.first # если нет ответственных - статус = Новое
+      @requirement.update_column(:status, 0) unless @requirement.user_requirement.first # если нет ответственных - статус = Новое
     end
     respond_with(@requirement) # вернулись в требование
   end
