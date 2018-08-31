@@ -12,7 +12,7 @@ class BproceIresourcesController < ApplicationController
     if @bproce_iresource.save
       respond_with(@iresource)
     else
-      format.html { render action: 'new' }
+      render action: 'new'
     end
   end
 

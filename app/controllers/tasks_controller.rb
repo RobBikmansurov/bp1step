@@ -15,10 +15,10 @@ class TasksController < ApplicationController
       tasks = Task.joins(:user_task).where('user_tasks.user_id = ?', params[:user].to_s)
       @title_tasks += "исполнителя [ #{user.displayname} ]"
       if params[:status].present?
-        tasks = @tasks.status(params[:status])
+        tasks = tasks.status(params[:status])
         @title_tasks += "в статусе [ #{TASK_STATUS.key(params[:status].to_i)} ]"
       else
-        tasks = @tasks.unfinished
+        tasks = tasks.unfinished
         @title_tasks += ' не завершенные'
       end
     elsif params[:status].present?
@@ -28,8 +28,7 @@ class TasksController < ApplicationController
       tasks = Task.search(params[:search]).unfinished.includes(:user_task)
       @title_tasks += 'не завершенные'
     end
-    tasks = tasks.order(sort_order(sort_column, sort_direction))
-    @task = tasks.paginate(per_page: 10, page: params[:page])
+    @tasks = tasks.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
   end
 
   def show
