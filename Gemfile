@@ -49,6 +49,9 @@ gem 'actionpack-page_caching' # кеширование
 
 gem 'faker'
 
+gem "loofah", ">= 2.2.3"
+gem "rack", ">= 2.0.6"
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
