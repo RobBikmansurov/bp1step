@@ -5,14 +5,11 @@
 - else
   %h3
     В процессе используются
-    -#=link_to 'Ресурсы:', iresource_path(@bproce)
     =link_to 'Ресурсы:', iresources_path
   -@bproce.bproce_iresource.each do | bpres |  #  список ресурсов процесса
     = link_to bpres.iresource.label, iresource_path(bpres.iresource)
-    (
-    = bpres.rpurpose 
-    )
-    = link_to image_tag('action_stop.gif', :alt => 'Удалить'), bpres, data: { confirm: "Действительно хотите исключить [" + bpres.iresource.label + "] из процесса:\n" + @bproce.name + "?" }, :method => 'delete', class: 'button-img'
+    (#{bpres.rpurpose})
+    = link_to image_tag('action_stop.gif', alt: 'Удалить'), bproce_iresource_path(id: bpres.id, bproce: @bproce.id), data: { confirm: "Действительно хотите исключить ресурс [#{bpres.iresource.label}]\nиз процесса [#{@bproce.name}] ?" }, method: :delete, class: 'button-img'
 
 -if @bproce_iresource
   = simple_form_for(@bproce_iresource) do | bproce_res |
