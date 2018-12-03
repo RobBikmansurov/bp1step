@@ -8,6 +8,8 @@ RSpec.describe BproceWorkplacesController, type: :controller do
   let!(:workplace)       { FactoryBot.create(:workplace) }
   let(:bproce_workplace) { FactoryBot.create(:bproce_workplace, bproce_id: bproce.id, workplace_id: workplace.id) }
   let(:valid_attributes) { { bproce_id: bproce.id, workplace_id: workplace.id } }
+  let(:add_proce_to_workplace) { { workplace_id: workplace.id, bproce_name: bproce.name } }
+  let(:add_workplace_to_proce) { { bproce_id: bproce.id, workplace_designation: workplace.designation } }
   let(:valid_attributes_w_name) { { bproce_name: bproce.name, workplace_id: workplace.id } }
   let(:valid_session) { {} }
 
@@ -27,20 +29,26 @@ RSpec.describe BproceWorkplacesController, type: :controller do
 
   describe 'POST create' do
     describe 'with valid params' do
-      it 'creates a new BproceWorkplace' do
+      it 'creates a new BproceWorkplace by add bproce_name' do
         expect do
-          post :create, params: { bproce_workplace: valid_attributes }
+          post :create, params: { bproce_workplace: add_proce_to_workplace }
+        end.to change(BproceWorkplace, :count).by(1)
+      end
+
+      it 'creates a new BproceWorkplace by add workplace_designation' do
+        expect do
+          post :create, params: { bproce_workplace: add_workplace_to_proce }
         end.to change(BproceWorkplace, :count).by(1)
       end
 
       it 'assigns a newly created bproce_workplace as @bproce_workplace' do
-        post :create, params: { bproce_workplace: valid_attributes }
+        post :create, params: { bproce_workplace: add_proce_to_workplace }
         expect(assigns(:bproce_workplace)).to be_a(BproceWorkplace)
         expect(assigns(:bproce_workplace)).to be_persisted
       end
 
       it 'redirects to the created bproce_workplace with bproce_id and workplace_id' do
-        post :create, params: { bproce_workplace: valid_attributes }
+        post :create, params: { bproce_workplace: add_proce_to_workplace }
         expect(response).to redirect_to(BproceWorkplace.last.workplace)
       end
       it 'redirects to the created bproce_workplace with bproce_name and workplace_id' do
