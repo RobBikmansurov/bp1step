@@ -94,7 +94,7 @@ RSpec.describe BproceBappsController, type: :controller do
   describe 'DELETE destroy' do
     it 'destroys the requested bproce_bapp' do
       bproce_bapp = BproceBapp.create! valid_attributes
-      #bproce = create(:bproce, user_id: owner.id)
+      # bproce = create(:bproce, user_id: owner.id)
       bapp = create(:bapp)
       bproce_bapp.bproce_id = bproce.id
       bproce_bapp.bapp_id = bapp.id

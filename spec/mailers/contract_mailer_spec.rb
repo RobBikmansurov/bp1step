@@ -6,11 +6,10 @@ describe ContractMailer do
   let!(:owner) { FactoryBot.create :user }
   let!(:payer) { FactoryBot.create :user }
   let(:contract) { FactoryBot.create(:contract, owner_id: owner.id, payer_id: payer.id) }
+  let!(:action) { 'изменен' }
 
   describe 'update_contract - file scan changed' do
-    # def update_contract(contract, current_user, scan, action) рассылка ответственным об изменении договора или скана
     let!(:scan) { FactoryBot.create :contract_scan, contract_id: contract.id }
-    let!(:action) { 'изменен' }
     let(:mail) { ContractMailer.update_contract(contract, owner, scan, action) }
 
     it 'should send an email' do
@@ -31,8 +30,6 @@ describe ContractMailer do
   end
 
   describe 'update_contract - contract changed' do
-    # def update_contract(contract, current_user, scan, action) рассылка ответственным об изменении договора или скана
-    let!(:action) { 'изменен' }
     let(:mail) { ContractMailer.update_contract(contract, owner, nil, action) }
 
     it 'should send an email' do

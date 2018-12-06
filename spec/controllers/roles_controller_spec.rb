@@ -10,7 +10,7 @@ RSpec.describe RolesController, type: :controller do
 
   describe 'GET index' do
     it 'assigns all roles as @roles' do
-      get :index, {}
+      get :index
       expect(response).to be_successful
       expect(response).to render_template('roles/index')
     end

@@ -15,7 +15,7 @@ RSpec.describe WorkplacesController, type: :controller do
 
   describe 'GET index' do
     it 'assigns all workplaces as @workplaces' do
-      get :index, {}
+      get :index
       expect(response).to be_successful
       expect(response).to render_template('workplaces/index')
     end

@@ -42,6 +42,8 @@ class ContractMailer < ActionMailer::Base
     mail(to: emails, subject: "BP1Step: согласование договора ##{@contract.id}")
   end
 
+  private
+
   def addresses
     owner_email = @contract.owner&.email
     payer_email = @contract.payer&.email

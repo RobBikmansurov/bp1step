@@ -15,7 +15,7 @@ RSpec.describe AgentsController, type: :controller do
 
   describe 'GET index' do
     it 'assigns all agents as @agents' do
-      get :index, {}
+      get :index
       expect(response).to be_successful
       expect(response).to render_template('agents/index')
     end
@@ -38,7 +38,7 @@ RSpec.describe AgentsController, type: :controller do
 
   describe 'GET new' do
     it 'assigns a new agent as @agent' do
-      get :new, {}
+      get :new
       expect(assigns(:agent)).to be_a_new(Agent)
     end
   end

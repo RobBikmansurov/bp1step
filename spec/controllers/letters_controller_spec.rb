@@ -18,7 +18,7 @@ RSpec.describe LettersController, type: :controller do
 
   describe 'GET index' do
     it 'assigns all letters as @letters' do
-      get :index, {}
+      get :index
       expect(response).to be_successful
       expect(response).to render_template('letters/index')
     end
