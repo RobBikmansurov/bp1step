@@ -105,11 +105,12 @@ RSpec.describe BproceBappsController, type: :controller do
 
     it 'redirects to the bproce_bapps list' do
       bproce_bapp = BproceBapp.create! valid_attributes
+      bapp_last = Bapp.last
       bapp = create(:bapp)
       bproce_bapp.bproce_id = bproce.id
       bproce_bapp.bapp_id = bapp.id
       delete :destroy, params: { id: bproce_bapp.to_param, bproce_id: bproce.to_param }
-      expect(response).to redirect_to bproce_url(id: bproce.to_param)
+      expect(response).to redirect_to bapp_url(id: bapp_last.to_param)
     end
   end
 end
