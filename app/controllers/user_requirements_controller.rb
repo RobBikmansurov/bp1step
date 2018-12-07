@@ -14,7 +14,7 @@ class UserRequirementsController < ApplicationController
   end
 
   def create
-    @user_requirement = UserRequirement.new(params[:user_requirement])
+    @user_requirement = UserRequirement.new(user_rrquirement_params)
     if @user_requirement.save
       flash[:notice] = 'Successfully created user_requirement.'
       begin
@@ -42,5 +42,11 @@ class UserRequirementsController < ApplicationController
       @requirement.update_column(:status, 0) unless @requirement.user_requirement.first # если нет ответственных - статус = Новое
     end
     respond_with(@requirement) # вернулись в требование
+  end
+
+  private
+
+  def user_rrquirement_params
+    params.require(:user_requirement).permit(:user_id, :requirement_id, :status, :user_name)
   end
 end

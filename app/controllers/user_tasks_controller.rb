@@ -6,11 +6,7 @@ class UserTasksController < ApplicationController
 
   def show
     @user_task = UserTask.find(params[:id])
-    redirect_to(Task_path(@user_task.Task_id)) && return
-  end
-
-  def new
-    @user_task = UserTask.new(status: 0)
+    redirect_to(task_path(@user_task.task_id)) && return
   end
 
   def create

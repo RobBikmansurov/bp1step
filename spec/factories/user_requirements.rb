@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :user_requirement do
-    user nil
-    requirement nil
+    user
+    requirement
     status 1
   end
 end

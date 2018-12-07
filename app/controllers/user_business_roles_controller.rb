@@ -10,11 +10,14 @@ class UserBusinessRolesController < ApplicationController
   end
 
   def new
-    @user_business_role = UserBusinessRole.new(date_from: Date.today.strftime('%d.%m.%Y'), date_to: Date.today.change(month: 12, day: 31).strftime('%d.%m.%Y'))
+    @user_business_role = UserBusinessRole.new(
+      date_from: Date.today.strftime('%d.%m.%Y'),
+      date_to: Date.today.change(month: 12, day: 31).strftime('%d.%m.%Y')
+    )
   end
 
   def create
-    @user_business_role = UserBusinessRole.create(params[:user_business_role])
+    @user_business_role = UserBusinessRole.create(user_business_role_params)
     @business_role = BusinessRole.find(@user_business_role.business_role_id)
     flash[:notice] = 'Successfully created user_business_role.' if @user_business_role.save
     begin
