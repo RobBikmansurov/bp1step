@@ -23,13 +23,6 @@ RSpec.describe UserBusinessRolesController, type: :controller do
     end
   end
 
-  describe 'GET new' do
-    it 'assigns a new user_business_role as @user_business_role' do
-      get :new, params: {}
-      expect(assigns(:user_business_role)).to be_a_new(UserBusinessRole)
-    end
-  end
-
   describe 'POST create' do
     describe 'with valid params' do
       it 'creates a new UserBusinessRole' do

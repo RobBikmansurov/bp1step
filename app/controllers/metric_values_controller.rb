@@ -11,7 +11,7 @@ class MetricValuesController < ApplicationController
 
   def update
     if @metric_value.update(metric_value_params)
-      redirect_to metric_url(@metric_value.metric_id) + '/values', notice: 'Metric value was successfully updated.'
+      redirect_to metric_url(@metric) + '/values', notice: 'Metric value was successfully updated.'
     else
       render action: 'edit'
     end
@@ -36,7 +36,7 @@ class MetricValuesController < ApplicationController
 
   def set_metric_value
     @metric_value = MetricValue.find(params[:id])
-    @metric = Metric.find(@metric_value.metric_id)
+    @metric = Metric.find(@metric_value&.metric_id)
   end
 
   def metric_value_params
