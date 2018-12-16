@@ -76,6 +76,14 @@ RSpec.describe TasksController, type: :controller do
     end
   end
 
+  describe 'GET edit' do
+    it 'assigns the requested task as @task' do
+      task = Task.create! task_attributes
+      get :edit, params: { id: task.to_param }
+      expect(assigns(:task)).to eq(task)
+    end
+  end
+
   describe 'PUT update' do
     describe 'with valid params' do
       it 'updates the requested task' do

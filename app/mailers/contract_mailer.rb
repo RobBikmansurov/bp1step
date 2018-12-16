@@ -9,14 +9,12 @@ class ContractMailer < ActionMailer::Base
     @scan = scan
     @action = action
     @current_user = current_user
-    addresses = contract.owner.email
-    addresses += ', ' + contract.payer&.email + ', bard@bankperm.ru' if contract.payer
     if @scan
-      mail(to: addresses,
+      mail(to: addresses(contract),
            subject: "BP1Step: #{@action} файл договора ##{@contract.id}",
            template_name: 'update_contract_scan')
     else
-      mail(to: addresses,
+      mail(to: addresses(contract),
            subject: "BP1Step: изменен договор ##{@contract.id}",
            template_name: 'update_contract')
     end
@@ -44,13 +42,14 @@ class ContractMailer < ActionMailer::Base
 
   private
 
-  def addresses
-    owner_email = @contract.owner&.email
-    payer_email = @contract.payer&.email
+  def addresses(contract)
+    owner_email = contract.owner&.email
+    payer_email = contract.payer&.email
     address = []
     address << owner_email if owner_email.present?
     address << payer_email if payer_email.present?
     # добавим в получатели Бардина для контроля
-    address << 'bard@bankperm.ru' if @contract.payer
+    address << 'bard@bankperm.ru' if contract.payer
+    address
   end
 end
