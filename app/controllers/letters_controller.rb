@@ -257,9 +257,9 @@ class LettersController < ApplicationController
     end
     direction = params[:direction] || 'asc'
     @senders = if direction == 'asc'
-                 @senders.group(:sender, :status).order('sender DESC, status ASC').count
+                 @senders.group(:sender, :status).order('sender DESC, status ASC').size
                else
-                 @senders.group(:sender, :status).order('sender ASC, status ASC').count
+                 @senders.group(:sender, :status).order('sender ASC, status ASC').size
                end
     # @senders = @senders.paginate(:per_page => 10, :page => params[:page])
   end
