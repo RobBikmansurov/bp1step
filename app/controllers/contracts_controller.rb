@@ -71,7 +71,7 @@ class ContractsController < ApplicationController
     end
     respond_to do |format|
       format.html do
-        @contracts = @contracts.includes(:agent).order(sort_column + ' ' + sort_direction)
+        @contracts = @contracts.includes(:agent).order(sort_order)
                                .paginate(per_page: 10, page: params[:page])
       end
       format.odt  { print }
@@ -317,10 +317,6 @@ class ContractsController < ApplicationController
 
   def sort_column
     params[:sort] || 'lft'
-  end
-
-  def sort_direction
-    params[:direction] || 'asc'
   end
 
   def record_not_found

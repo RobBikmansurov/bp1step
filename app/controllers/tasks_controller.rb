@@ -28,7 +28,7 @@ class TasksController < ApplicationController
       tasks = Task.search(params[:search]).unfinished.includes(:user_task)
       @title_tasks += 'не завершенные'
     end
-    tasks = tasks.order("#{sort_column} #{sort_direction}")
+    tasks = tasks.order(sort_order)
     @task = tasks.paginate(per_page: 10, page: params[:page])
   end
 
@@ -164,10 +164,6 @@ class TasksController < ApplicationController
 
   def sort_column
     params[:sort] || 'id' # вверху - самые новые задачи
-  end
-
-  def sort_direction
-    params[:direction] || 'desc'
   end
 
   def enabled_statuses(task, current_user_id)

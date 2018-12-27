@@ -18,7 +18,7 @@ class IresourcesController < ApplicationController
         iresources = iresources.where(user_id: params[:user])
       end
       iresources = iresources.search(params[:search]) if params[:search].present?
-      @iresources = iresources.order("#{sort_column} #{sort_direction}").paginate(per_page: 10, page: params[:page])
+      @iresources = iresources.order(sort_order).paginate(per_page: 10, page: params[:page])
     end
     respond_to do |format|
       format.html
@@ -117,14 +117,10 @@ class IresourcesController < ApplicationController
     params[:sort] || 'label'
   end
 
-  def sort_direction
-    params[:direction] || 'asc'
-  end
-
   def iresource
     if params[:search].present? # это поиск
       @iresources = Iresource.search(params[:search])
-      @iresources = @iresources.order("#{sort_column} #{sort_direction}").paginate(per_page: 10, page: params[:page])
+      @iresources = @iresources.order(sort_order).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
       @iresource = params[:id].present? ? Iresource.find(params[:id]) : Iresource.new

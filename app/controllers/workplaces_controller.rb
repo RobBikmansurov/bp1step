@@ -25,7 +25,7 @@ class WorkplacesController < ApplicationController
                                       Workplace.search(params[:search])
                                     end
                     end
-      @workplaces = @workplaces.includes(:users).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      @workplaces = @workplaces.includes(:users).order(sort_order).paginate(per_page: 10, page: params[:page])
     end
     respond_to do |format|
       format.html
@@ -122,14 +122,10 @@ class WorkplacesController < ApplicationController
     params[:sort] || 'designation'
   end
 
-  def sort_direction
-    params[:direction] || 'asc'
-  end
-
   def get_workplace
     if params[:search].present? # это поиск
       @workplaces = Workplace.search(params[:search])
-                             .order(sort_column + ' ' + sort_direction)
+                             .order(sort_order)
                              .paginate(per_page: 10, page: params[:page]).find(:all, include: :users)
       render :index # покажем список найденного
     else

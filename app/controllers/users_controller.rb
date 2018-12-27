@@ -9,18 +9,18 @@ class UsersController < ApplicationController
   def index
     if params[:role].present?
       @role = Role.find_by(name: params[:role])
-      @users = @role.users.page(params[:page]).active.search(params[:search]).order(sort_column + ' ' + sort_direction)
+      @users = @role.users.page(params[:page]).active.search(params[:search]).order(sort_order)
     else
       if params[:office].present?
-        @users = User.active.where(office: params[:office]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+        @users = User.active.where(office: params[:office]).order(sort_order).paginate(per_page: 10, page: params[:page])
       else
         @users = if params[:all].present?
-                   User.active.order(sort_column + ' ' + sort_direction)
+                   User.active.order(sort_order)
                  else
                    @users = if params[:search].present?
-                              User.page(params[:page]).search(params[:search]).order(sort_column + ' ' + sort_direction)
+                              User.page(params[:page]).search(params[:search]).order(sort_order)
                             else
-                              User.page(params[:page]).order(sort_column + ' ' + sort_direction)
+                              User.page(params[:page]).order(sort_order)
                             end
                    # @users, @alphaParams = User.all.alpha_paginate(params[:letter]){|user| user.lastname}
                  end
@@ -258,13 +258,9 @@ class UsersController < ApplicationController
     params[:sort] || 'displayname'
   end
 
-  def sort_direction
-    params[:direction] || 'asc'
-  end
-
   def find_user
     if params[:search].present? # это поиск
-      @users = User.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      @users = User.search(params[:search]).order(sort_order).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
       @usr = params[:id].present? ? User.find(params[:id]) : User.new

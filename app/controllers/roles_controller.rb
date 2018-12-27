@@ -8,7 +8,7 @@ class RolesController < ApplicationController
 
   def index
     roles = Role.search(params[:search])
-    @roles = roles.order("#{sort_column} #{sort_direction}").paginate(per_page: 10, page: params[:page])
+    @roles = roles.order(sort_order).paginate(per_page: 10, page: params[:page])
   end
 
   def new
@@ -62,10 +62,6 @@ class RolesController < ApplicationController
 
   def sort_column
     params[:sort] || 'name'
-  end
-
-  def sort_direction
-    params[:direction] || 'asc'
   end
 
   def set_role

@@ -5,9 +5,9 @@ class AgentsController < ApplicationController
 
   def index
     if params[:dms_name].present?
-      @agents = Agent.where("dms_name ilike ?", "#{params[:dms_name]}").order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      @agents = Agent.where("dms_name ilike ?", "#{params[:dms_name]}").order(sort_order).paginate(per_page: 10, page: params[:page])
     else
-      @agents = Agent.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      @agents = Agent.search(params[:search]).order(sort_order).paginate(per_page: 10, page: params[:page])
     end
   end
 
@@ -55,7 +55,7 @@ class AgentsController < ApplicationController
 
   def set_agent
     if params[:search].present? # это поиск
-      @agents = Agent.search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      @agents = Agent.search(params[:search]).order(sort_order).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
       if params[:id].present?
@@ -73,9 +73,5 @@ class AgentsController < ApplicationController
 
   def sort_column
     params[:sort] || 'name'
-  end
-
-  def sort_direction
-    params[:direction] || 'asc'
   end
 end

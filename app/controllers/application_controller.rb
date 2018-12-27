@@ -21,6 +21,15 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  def sort_direction
+    params[:direction] || 'asc'
+  end
+
+  def sort_order
+    sort_column + " " + sort_direction
+  end
+
+
   protected
 
   def configure_permitted_parameters

@@ -50,7 +50,7 @@ class LettersController < ApplicationController
         @title_letter += ' Входящие'
       end
     end
-    @letters = @letters.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+    @letters = @letters.order(sort_order).paginate(per_page: 10, page: params[:page])
   end
 
   def show
@@ -272,7 +272,7 @@ class LettersController < ApplicationController
   def set_letter
     if params[:search].present? # это поиск
       @letters = Letter.search('?', params[:search])
-                       .order(sort_column + ' ' + sort_direction)
+                       .order(sort_order)
                        .paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
@@ -298,10 +298,6 @@ class LettersController < ApplicationController
 
   def sort_column
     params[:sort] || 'id' # вверху - самые новые письма
-  end
-
-  def sort_direction
-    params[:direction] || 'desc'
   end
 
   def record_not_found

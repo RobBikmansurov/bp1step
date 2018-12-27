@@ -19,7 +19,7 @@ class BusinessRolesController < ApplicationController
       # @business_roles = BusinessRole.paginate(:per_page => 10, :page => params[:page])
     end
     # @business_roles = @business_roles.find(:all, :include => :users)
-    @business_roles = @business_roles.order(sort_column + ' ' + sort_direction).includes(:users)
+    @business_roles = @business_roles.order(sort_order).includes(:users)
     respond_to do |format|
       format.html
       format.odt { print }
@@ -136,14 +136,10 @@ class BusinessRolesController < ApplicationController
     params[:sort] || 'name'
   end
 
-  def sort_direction
-    params[:direction] || 'asc'
-  end
-
   def business_role
     if params[:search].present? # это поиск
       @business_roles = BusinessRole.search(params[:search])
-                                    .order(sort_column + ' ' + sort_direction)
+                                    .order(sort_order)
                                     .paginate(per_page: 10, page: params[:page])
                                     .find(:all, include: :users)
       render :index # покажем список найденных бизнес-ролей

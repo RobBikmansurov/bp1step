@@ -340,7 +340,7 @@ class DocumentsController < ApplicationController
 
   def get_document
     if params[:search].present? # это поиск
-      @documents = Document.full_search(params[:search]).order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+      @documents = Document.full_search(params[:search]).order(sort_order).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     elsif params[:id].present?
       @document = Document.find(params[:id])
@@ -356,9 +356,5 @@ class DocumentsController < ApplicationController
 
   def sort_column
     params[:sort] || 'name'
-  end
-
-  def sort_direction
-    params[:direction] || 'asc'
   end
 end
