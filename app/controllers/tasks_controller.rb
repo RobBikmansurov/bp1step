@@ -29,7 +29,7 @@ class TasksController < ApplicationController
       @title_tasks += 'не завершенные'
     end
     tasks = tasks.order(sort_order)
-    @task = tasks.paginate(per_page: 10, page: params[:page])
+    @tasks = tasks.paginate(per_page: 10, page: params[:page])
   end
 
   def show

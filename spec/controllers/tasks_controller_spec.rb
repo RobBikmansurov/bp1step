@@ -22,7 +22,7 @@ RSpec.describe TasksController, type: :controller do
     end
 
     it 'loads all of the tasks into @tasks' do
-      get :index
+      get :index, {}
       expect(assigns(:tasks)).to match_array([task, task1])
     end
   end
