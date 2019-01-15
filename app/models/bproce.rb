@@ -51,7 +51,7 @@ class Bproce < ActiveRecord::Base
   end
 
   def parent_name
-    Bproce.try(:name) if name.present?
+    self.parent&.try(:name)
   end
 
   def parent_name=(name)

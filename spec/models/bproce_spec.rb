@@ -3,6 +3,11 @@
 require 'rails_helper'
 
 describe Bproce do
+  let(:owner)  { FactoryBot.create(:user) }
+  let!(:user)  { FactoryBot.create(:user, displayname: 'DisplayName') }
+  let(:parent) { FactoryBot.create(:bproce, user_id: owner.id) }
+  let!(:parent1) { FactoryBot.create(:bproce, user_id: user.id, name: 'Parent Name') }
+  let(:bproce) { FactoryBot.create(:bproce, user_id: owner.id, parent_id: parent.id) }
   context 'validates' do
     it { should validate_presence_of(:name) }
     it { should validate_uniqueness_of(:name) }
@@ -25,5 +30,23 @@ describe Bproce do
     it { should have_many(:bproce_documents).dependent(:destroy) }
     # it { should belong_to(:bproce) } # процесс может имет родительский процесс
     it { should belong_to(:user) } # владелец процессв
+  end
+
+  context 'methods' do
+    it 'return user_name' do
+      expect(bproce.user_name).to eq(owner.displayname)
+    end
+    it 'set owner by owner`s name ' do
+      bproce.user_name = 'DisplayName'
+      expect(bproce.user_name).to eq('DisplayName')
+    end
+
+    it 'return parent process name' do
+      expect(bproce.parent_name).to eq(parent.name)
+    end
+    it 'set parent process by name ' do
+      bproce.parent_name = 'Parent Name'
+      expect(bproce.parent_name).to eq('Parent Name')
+    end
   end
 end
