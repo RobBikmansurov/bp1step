@@ -47,11 +47,9 @@ class Directive < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search
-      where('number ILIKE ? or name ILIKE ? or title ILIKE ? or body ILIKE ?',
+    return where(nil) unless search
+
+    where('number ILIKE ? or name ILIKE ? or title ILIKE ? or body ILIKE ?',
             "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%")
-    else
-      where(nil)
-    end
   end
 end

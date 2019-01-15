@@ -14,12 +14,10 @@ class Agent < ActiveRecord::Base
   validates :address, length: { maximum: 255 }
 
   def self.search(search)
-    if search
-      where('name ILIKE ? or shortname ILIKE ? or contacts ILIKE ? or id = ? or inn ILIKE ?',
-            "%#{search}%", "%#{search}%", "%#{search}%", search.to_i.to_s, "%#{search}%")
-    else
-      where(nil)
-    end
+    return where(nil) until search
+    
+    where('name ILIKE ? or shortname ILIKE ? or contacts ILIKE ? or id = ? or inn ILIKE ?',
+          "%#{search}%", "%#{search}%", "%#{search}%", search.to_i.to_s, "%#{search}%")
   end
 
   include PublicActivity::Model

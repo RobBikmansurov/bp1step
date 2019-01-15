@@ -87,11 +87,9 @@ class User < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search
-      where('username ILIKE ? or displayname ILIKE ?', "%#{search}%", "%#{search}%")
-    else
-      where(nil)
-    end
+    return where(nil) until search
+    
+    where('username ILIKE ? or displayname ILIKE ?', "%#{search}%", "%#{search}%")
   end
 
   def user_name

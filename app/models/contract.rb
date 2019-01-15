@@ -83,10 +83,8 @@ class Contract < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search
-      where('name ILIKE ? or number ILIKE ? or id = ?', "%#{search}%", "%#{search}%", search.to_i.to_s)
-    else
-      where(nil)
-    end
+    return where(nil) unless search
+
+    where('name ILIKE ? or number ILIKE ? or id = ?', "%#{search}%", "%#{search}%", search.to_i.to_s)
   end
 end

@@ -30,10 +30,8 @@ class BproceBapp < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search
-      where('name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%")
-    else
-      where(nil)
-    end
+    return where(nil) until search
+    
+    where('name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%")
   end
 end

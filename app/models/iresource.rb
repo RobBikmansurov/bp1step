@@ -26,10 +26,8 @@ class Iresource < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search
-      where('label ILIKE ? or location ILIKE ? or id = ?', "%#{search}%", "%#{search}%", search.to_i.to_s)
-    else
-      where(nil)
-    end
+    return where(nil) unless search
+
+    where('label ILIKE ? or location ILIKE ? or id = ?', "%#{search}%", "%#{search}%", search.to_i.to_s)
   end
 end

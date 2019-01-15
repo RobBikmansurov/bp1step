@@ -20,11 +20,9 @@ class Workplace < ActiveRecord::Base
   # has_many :bapps
 
   def self.search(search)
-    if search
-      where('designation ILIKE ? or name ILIKE ? or description ILIKE ? or id = ?',
-            "%#{search}%", "%#{search}%", "%#{search}%", search.to_i.to_s)
-    else
-      where(nil)
-    end
+    return where(nil) until search
+    
+    where('designation ILIKE ? or name ILIKE ? or description ILIKE ? or id = ?',
+          "%#{search}%", "%#{search}%", "%#{search}%", search.to_i.to_s)
   end
 end
