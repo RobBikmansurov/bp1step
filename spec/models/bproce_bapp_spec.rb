@@ -3,14 +3,14 @@
 require 'rails_helper'
 
 describe BproceBapp do
-  context 'validations' do
-    it { should validate_presence_of(:bproce_id) }
-    it { should validate_presence_of(:bapp_id) }
-    it { should validate_presence_of(:apurpose) }
+  context 'with validations' do
+    it { is_expected.to validate_presence_of(:bproce_id) }
+    it { is_expected.to validate_presence_of(:bapp_id) }
+    it { is_expected.to validate_presence_of(:apurpose) }
   end
 
-  context 'associations' do
-    it { should belong_to(:bproce) }
-    it { should belong_to(:bapp) }
+  context 'with associations' do
+    it { is_expected.to belong_to(:bproce) }
+    it { is_expected.to belong_to(:bapp) }
   end
 end

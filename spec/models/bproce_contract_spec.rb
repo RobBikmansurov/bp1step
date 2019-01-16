@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 describe BproceContract do
-  context 'associations' do
-    it { should belong_to(:bproce) }
-    it { should belong_to(:contract) }
+  context 'with associations' do
+    it { is_expected.to belong_to(:bproce) }
+    it { is_expected.to belong_to(:contract) }
   end
 end

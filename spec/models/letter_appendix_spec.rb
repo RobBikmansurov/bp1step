@@ -3,16 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe LetterAppendix, type: :model do
-  context 'validates' do
-    it { should validate_presence_of(:letter_id) }
+  context 'with validates' do
+    it { is_expected.to validate_presence_of(:letter_id) }
   end
 
-  context 'associations' do
-    it { should belong_to(:letter).class_name('Letter') }
+  context 'with associations' do
+    it { is_expected.to belong_to(:letter).class_name('Letter') }
   end
 
-  context 'have_attached_file' do
-    it { should have_attached_file(:appendix) }
-    it { should validate_attachment_presence(:appendix) }
+  context 'with attached file' do
+    it { is_expected.to have_attached_file(:appendix) }
+    it { is_expected.to validate_attachment_presence(:appendix) }
   end
 end

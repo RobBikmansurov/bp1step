@@ -88,7 +88,7 @@ class Document < ActiveRecord::Base
   end
 
   def shortname
-    name.split(//u)[0..50].join
+    name[0..49]
   end
 
   private

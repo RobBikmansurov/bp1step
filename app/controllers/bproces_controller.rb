@@ -59,11 +59,13 @@ class BprocesController < ApplicationController
   end
 
   def check_list
-    print_check_list # чек-лист карточки процесса
+    # чек-лист карточки процесса
+    generate_report('reports/bp-check.odt', "#{@bproce.id}-check_list-#{Date.current.strftime('%Y%m%d')}.odt")
   end
 
   def check_list_improve
-    print_check_list_improve # чек-лист карточки улучшения процесса
+    # чек-лист карточки улучшения процесса
+    generate_report('reports/bp-check-improve.odt', "#{@bproce.id}-check_list-improve-#{Date.current.strftime('%Y%m%d')}.odt")
   end
 
   def doc
@@ -198,7 +200,7 @@ class BprocesController < ApplicationController
           t.add_column(:sp) { |_ca| sp += 1 } # порядковый номер строки таблицы
           t.add_column(:spname) { |sub| '__' * (sub.depth - @bproce.depth) + " [#{sub.shortname}] #{sub.name}" }
           t.add_column(:sp_id, &:id)
-          t.add_column(:spowner) { |sp| sp.user&.displayname }
+          t.add_column(:spowner) { |spowner| spowner.user&.displayname }
         end
       end
       @metrics = Metric.where(bproce_id: @bproce.id).order(:name) # метрики процесса
@@ -215,16 +217,6 @@ class BprocesController < ApplicationController
     send_data report.generate, type: 'application/msword',
                                filename: "#{@bproce.id}-card-#{Date.current.strftime('%Y%m%d')}.odt",
                                disposition: 'inline'
-  end
-
-  # печатать чек-лист Карточки процесса
-  def print_check_list
-    generate_report('reports/bp-check.odt', "#{@bproce.id}-check_list-#{Date.current.strftime('%Y%m%d')}.odt")
-  end
-
-  # печатать чек-лист Улучшения процесса
-  def print_check_list_improve
-    generate_report('reports/bp-check-improve.odt', "#{@bproce.id}-check_list-improve-#{Date.current.strftime('%Y%m%d')}.odt")
   end
 
   # заготовка описания процесса

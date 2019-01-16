@@ -75,11 +75,11 @@ class Contract < ActiveRecord::Base
   end
 
   def shortname
-    '№ ' + number.to_s + ' ' + name.split(//u)[0..50].join
+    "№ #{number} #{name[0..49]}"
   end
 
   def autoname
-    '#' + id.to_s + ' №' + number.to_s + ' | ' + name.split(//u)[0..50].join
+    "##{id} №#{number} | #{name[0..49]}"
   end
 
   def self.search(search)

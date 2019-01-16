@@ -3,13 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe UserBusinessRole, type: :model do
-  context 'validates' do
-    it { should validate_presence_of(:user_id) }
-    it { should validate_presence_of(:business_role_id) }
+  context 'with validates' do
+    it { is_expected.to validate_presence_of(:user_id) }
+    it { is_expected.to validate_presence_of(:business_role_id) }
   end
 
-  context 'associations' do
-    it { should belong_to(:user) }
-    it { should belong_to(:business_role) }
+  context 'with associations' do
+    it { is_expected.to belong_to(:user) }
+    it { is_expected.to belong_to(:business_role) }
   end
 end

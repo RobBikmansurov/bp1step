@@ -208,6 +208,7 @@ class UsersController < ApplicationController
   # распоряжение о назачении на роли в процессе
   def print_order
     @business_roles = @usr.business_roles.includes(:bproce).order(:name)
+    p @business_roles.first.note
     report = ODFReport::Report.new('reports/user-order.odt') do |r|
       r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       r.add_field :id, @usr.id
@@ -221,6 +222,9 @@ class UsersController < ApplicationController
         end
         t.add_column(:nr, :name)
         t.add_column(:rdescription, :description)
+        t.add_column(:br_note) do |br|
+          note || ''
+        end
         t.add_column(:process_name) do |bp|
           bp.bproce.name
         end
