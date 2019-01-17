@@ -3,14 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe DocumentsController, type: :controller do
-  let(:owner)            { FactoryBot.create(:user) }
-  let(:role)             { FactoryBot.create(:role, name: 'author', description: 'Автор') }
-  let(:invalid_document) { FactoryBot.create(:document, :invalid) }
-  let!(:document)         { FactoryBot.create(:document, owner: owner) }
-  let!(:doc2)             { FactoryBot.create(:document, owner: owner) }
-  let!(:bproce)           { FactoryBot.create(:bproce, user_id: owner.id) }
-  let!(:bproce_document)  { BproceDocument.create(bproce_id: bproce.id, document_id: doc2.id, purpose: 'two') }
-  let!(:bproce_document)  { BproceDocument.create(bproce_id: bproce.id, document_id: document.id, purpose: 'one') }
+  let(:owner)              { FactoryBot.create(:user) }
+  let(:role)               { FactoryBot.create(:role, name: 'author', description: 'Автор') }
+  let(:invalid_document)   { FactoryBot.create(:document, :invalid) }
+  let(:document)           { FactoryBot.create(:document, owner: owner) }
+  let!(:doc2)              { FactoryBot.create(:document, owner: owner) }
+  let!(:bproce)            { FactoryBot.create(:bproce, user_id: owner.id) }
+  let!(:bproce_document)   { BproceDocument.create(bproce_id: bproce.id, document_id: doc2.id, purpose: 'two') }
+  let!(:bproce_document)   { BproceDocument.create(bproce_id: bproce.id, document_id: document.id, purpose: 'one') }
 
   describe 'GET index' do
     it 'assigns all documents as @documents' do
@@ -57,6 +57,7 @@ RSpec.describe DocumentsController, type: :controller do
 
     describe 'POST create' do
       let(:document) { build(:document) }
+
       before { sign_in(owner) } # для создания документа юзер должен быть авторизован
 
       describe 'with valid params' do
@@ -80,6 +81,7 @@ RSpec.describe DocumentsController, type: :controller do
 
       describe 'with invalid params' do
         let(:invalid_document) { build(:document, :invalid) }
+
         it 'assigns a newly created but unsaved document as @document' do
           post :create, params: { document: invalid_document.as_json }
           expect(assigns(:document)).to be_a_new(Document)
@@ -139,4 +141,10 @@ RSpec.describe DocumentsController, type: :controller do
       expect(response).to redirect_to(documents_url)
     end
   end
+
+  it 'save attached file' do
+    patch :update_file, params: { id: document.to_param }
+    expect(assigns(:document)).to eq(document)
+  end
+
 end

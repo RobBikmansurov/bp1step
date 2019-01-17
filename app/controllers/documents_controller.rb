@@ -7,7 +7,7 @@ class DocumentsController < ApplicationController
   respond_to :xml, :json, only: %i[index show]
   helper_method :sort_column, :sort_direction
   before_action :authenticate_user!, only: %i[edit new]
-  before_action :get_document, except: %i[index print view create new]
+  before_action :set_document, except: %i[index print view create new]
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
@@ -110,7 +110,8 @@ class DocumentsController < ApplicationController
   def add_favorite
     @user_document = UserDocument.new(user_id: current_user.id, document_id: @document.id, link: 10)
     flash[:notice] = "##{@document.id} добавлен в Избранное." if @user_document.save
-    @user_documents = UserDocument.where(document_id: @document.id).order('link, updated_at DESC').includes(:user).load # избранные документы пользователя
+    # избранные документы пользователя
+    @user_documents = UserDocument.where(document_id: @document.id).order('link, updated_at DESC').includes(:user).load
     # respond_with @document, notice: "##{@document.id} добавлен в Избранное."
     redirect_to @document
   end
@@ -125,7 +126,8 @@ class DocumentsController < ApplicationController
       user_id = User.where(displayname: params[:user_document][:user]).first.id
       @user_document = UserDocument.new(user_id: user_id, document_id: @document.id, link: params[:user_document][:link])
       flash[:notice] = "##{@document.id} добавлен в Избранное для #{params[:user_document][:user]}." if @user_document.save
-      @user_documents = UserDocument.where(document_id: @document.id).order('link, updated_at DESC').includes(:user).load # избранные документы пользователя
+      # избранные документы пользователя
+      @user_documents = UserDocument.where(document_id: @document.id).order('link, updated_at DESC').includes(:user).load
     end
     redirect_to @document
   end
@@ -168,19 +170,20 @@ class DocumentsController < ApplicationController
     @document.note = 'создан из #' + document.id.to_s
     @document.owner_id = current_user.id if current_user # владелец документа - пользователь
     @document.place = '?!' # место хранения не определено
-    if @document.save
-      flash[:notice] = 'Successfully cloned Document.' if @document.save
-      document.bproce_document.find_each do |bp| # клонируем ссылки на процессы
-        bproce_document = BproceDocument.new(document_id: @document, bproce_id: bp)
-        bproce_document.document = @document
-        bproce_document.bproce = bp.bproce
-        bproce_document.purpose = bp.purpose
-        bproce_document.save
-      end
-      document.document_directive.find_each do |document_directive| # клонируем ссылки на директивы
-        new_document_directive = DocumentDirective.new(document_id: @document.id, directive_id: document_directive.directive_id, note: document_directive.note)
-        new_document_directive.save
-      end
+    return unless @document.save
+
+    flash[:notice] = 'Successfully cloned Document.' if @document.save
+    document.bproce_document.find_each do |bp| # клонируем ссылки на процессы
+      bproce_document = BproceDocument.new(document_id: @document, bproce_id: bp)
+      bproce_document.document = @document
+      bproce_document.bproce = bp.bproce
+      bproce_document.purpose = bp.purpose
+      bproce_document.save
+    end
+    document.document_directive.find_each do |document_directive| # клонируем ссылки на директивы
+      new_document_directive = DocumentDirective.new(document_id: @document.id, directive_id: document_directive.directive_id,
+                                                     note: document_directive.note)
+      new_document_directive.save
     end
   end
 
@@ -191,7 +194,8 @@ class DocumentsController < ApplicationController
       flash[:notice] = 'Документ создан'
       bproce = Bproce.find(@document.bproce_id) if @document.bproce_id # добавляем документ из процесса?
       if bproce
-        bproce_document = BproceDocument.new(document_id: @document, bproce_id: bproce) # привязали документ к процессу
+        # привязали документ к процессу
+        bproce_document = BproceDocument.new(document_id: @document, bproce_id: bproce)
         bproce_document.document = @document
         bproce_document.bproce = bproce
         flash[:notice] = "Создан документ процесса ##{bproce.id}" if bproce_document.save
@@ -231,7 +235,9 @@ class DocumentsController < ApplicationController
   private
 
   def document_params
-    params.require(:document).permit(:name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved, :note, :place, :file_delete, :bproce_id)
+    params.require(:document)
+          .permit(:name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved,
+                  :note, :place, :file_delete, :bproce_id, :document_file)
   end
 
   def document_file_params
@@ -247,7 +253,7 @@ class DocumentsController < ApplicationController
       nn = 0 # порядковый номер документа
       nnp = 0
       first_part = 0 # номер раздела для сброса номера документа в разделе
-      r.add_field 'REPORT_DATE', Date.today.strftime('%d.%m.%Y')
+      r.add_field 'REPORT_DATE', Time.zone.today.strftime('%d.%m.%Y')
       # @title_doc = '' if !@title_doc
       @title_doc += '  стр.' + params[:page] if params[:page].present?
       r.add_field 'REPORT_TITLE', @title_doc
@@ -300,8 +306,8 @@ class DocumentsController < ApplicationController
 
   def approval_sheet_odt
     report = ODFReport::Report.new('reports/approval-sheet.odt') do |r|
-      r.add_field 'REPORT_DATE', Date.today.strftime('%d.%m.%Y')
-      r.add_field 'REPORT_DATE1', (Date.today + 10.days).strftime('%d.%m.%Y')
+      r.add_field 'REPORT_DATE', Time.zone.today.strftime('%d.%m.%Y')
+      r.add_field 'REPORT_DATE1', (Time.zone.today + 10.days).strftime('%d.%m.%Y')
       r.add_field :id, @document.id
       r.add_field :name, @document.name
       r.add_field :description, @document.description
@@ -331,15 +337,16 @@ class DocumentsController < ApplicationController
       r.add_field :user_position, current_user.position.mb_chars.capitalize.to_s
       r.add_field :user_name, current_user.displayname
     end
-    report_file_name = report.generate
+    # report_file_name = report.generate
     send_data report.generate, type: 'application/msword',
                                filename: "d#{@document.id}-approval-sheet.odt",
                                disposition: 'inline'
   end
 
-  def get_document
+  def set_document
     if params[:search].present? # это поиск
-      @documents = Document.full_search(params[:search]).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
+      @documents = Document.full_search(params[:search]).order(sort_order(sort_column, sort_direction))
+                           .paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     elsif params[:id].present?
       @document = Document.find(params[:id])
