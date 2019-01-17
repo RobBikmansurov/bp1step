@@ -17,7 +17,7 @@ RSpec.describe UsersController, type: :routing do
       expect(put: '/users/1').to route_to('users#update', id: '1')
     end
     it 'not routes to #create' do
-      expect(patch: '/users/1').to_not route_to('users#create', id: '1')
+      expect(patch: '/users/1').not_to route_to('users#create', id: '1')
     end
 
     it 'routes to #order' do

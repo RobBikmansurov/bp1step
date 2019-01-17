@@ -14,6 +14,8 @@ RSpec.describe BusinessRoleMailer, type: :mailer do
 
   # mail_all(business_role, current_user, text)
   let(:mail_all) { BusinessRoleMailer.mail_all(business_role, current_user, 'Рассылка') }
+  let(:mail) { BusinessRoleMailer.update_business_role(business_role, current_user) }
+
   context 'Mail all users of business_role and bproce`s owner' do
     it 'is sent email to bproce`s owner' do
       expect(mail_all.to[2]).to eq owner.email
@@ -34,7 +36,7 @@ RSpec.describe BusinessRoleMailer, type: :mailer do
   end
 
   # mail_all(business_role, current_user, text)
-  let(:mail) { BusinessRoleMailer.update_business_role(business_role, current_user) }
+
   context 'Mail all users of business_role and bproce`s owner' do
     it 'is sent email to bproce`s owner' do
       expect(mail.to[2]).to eq owner.email

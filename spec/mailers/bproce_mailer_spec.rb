@@ -8,7 +8,8 @@ describe BproceMailer do
 
   describe 'process_without_roles' do
     # # рассылка об отстутствии ролей в процессе
-    let(:mail) { BproceMailer.process_without_roles(bproce, user) }
+    let(:mail) { described_class.process_without_roles(bproce, user) }
+
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: не выделены роли в процессе ##{bproce.id}")
     end

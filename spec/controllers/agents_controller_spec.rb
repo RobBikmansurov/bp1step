@@ -6,7 +6,8 @@ RSpec.describe AgentsController, type: :controller do
   let(:agent_attributes) { { name: 'Agent name' } }
   let(:valid_session) { {} }
   let(:agent) { FactoryBot.create(:agent) }
-  before(:each) do
+
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user

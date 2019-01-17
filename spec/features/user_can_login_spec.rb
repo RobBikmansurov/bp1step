@@ -2,14 +2,14 @@
 
 require 'rails_helper'
 
-feature 'User login' do
-  given!(:user) { FactoryBot.create(:user) }
+describe 'User login' do
+  let!(:user) { FactoryBot.create(:user) }
 
-  before(:each) do
+  before do
     Capybara.reset_sessions!
   end
 
-  scenario 'with valid credentions' do
+  it 'with valid credentions' do
     visit '/users/sign_in'
     fill_in 'user_email', with: user.email
     fill_in 'user_password', with: user.password
@@ -18,7 +18,7 @@ feature 'User login' do
     expect(page).to have_content('Выйти')
   end
 
-  scenario 'with invalid credentions' do
+  it 'with invalid credentions' do
     visit '/users/sign_in'
     fill_in 'user_email', with: user.email
     fill_in 'user_password', with: 'wrong_password'

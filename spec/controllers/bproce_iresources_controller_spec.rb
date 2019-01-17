@@ -11,14 +11,14 @@ RSpec.describe BproceIresourcesController, type: :controller do
   let(:invalid_attributes) { { bproce_id: nil, iresource_id: iresource.id, rpurpose: 'Purpose' } }
   let(:valid_session) { {} }
 
-  before(:each) do
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
   end
 
-  before(:each) do
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
@@ -95,7 +95,7 @@ RSpec.describe BproceIresourcesController, type: :controller do
       it "re-renders the 'edit' template" do
         expect_any_instance_of(BproceIresource).to receive(:save).and_return(false)
         put :update, params: { id: bproce_iresource.to_param, bproce_iresource: invalid_attributes }
-        expect(response).to_not render_template('edit')
+        expect(response).not_to render_template('edit')
       end
     end
   end

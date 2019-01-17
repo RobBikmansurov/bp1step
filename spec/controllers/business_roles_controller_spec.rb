@@ -10,7 +10,8 @@ RSpec.describe BusinessRolesController, type: :controller do
   end
   let(:invalid_attributes) { { name: 'invalid value', bproce_id: bproce.id } }
   let(:valid_session) { {} }
-  before(:each) do
+
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'author', description: 'Автор')
     sign_in @user

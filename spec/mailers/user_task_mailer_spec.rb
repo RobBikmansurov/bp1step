@@ -9,7 +9,7 @@ describe UserTaskMailer do
 
   describe 'user_task_create' do
     # рассылка о назначении исполнителя
-    let(:mail) { UserTaskMailer.user_task_create(user_task, user) }
+    let(:mail) { described_class.user_task_create(user_task, user) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: Вы - отв.исполнитель Задачи ##{task.id}")
@@ -30,7 +30,7 @@ describe UserTaskMailer do
 
   describe 'user_task_destroy' do
     # рассылка об удалении исполнителя
-    let(:mail) { UserTaskMailer.user_task_destroy(user_task, user) }
+    let(:mail) { described_class.user_task_destroy(user_task, user) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: удален исполнитель Задачи ##{task.id}")

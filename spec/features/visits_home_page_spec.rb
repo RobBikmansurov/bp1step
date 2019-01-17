@@ -2,8 +2,8 @@
 
 require 'spec_helper'
 
-RSpec.feature 'user visits home page', type: :feature do
-  scenario 'not logged in' do
+RSpec.describe 'user visits home page', type: :feature do
+  it 'not logged in' do
     visit '/'
     expect(page).to have_content('Войти')
 

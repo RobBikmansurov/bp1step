@@ -10,7 +10,7 @@ describe UserBusinessRoleMailer do
 
   describe 'user_create_role' do
     # рассылка о назначении исполнителя на роль в процессе
-    let(:mail) { UserBusinessRoleMailer.user_create_role(user_business_role, user) }
+    let(:mail) { described_class.user_create_role(user_business_role, user) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: Вы - исполнитель в процессе ##{bproce.id}")
@@ -31,7 +31,7 @@ describe UserBusinessRoleMailer do
 
   describe 'user_delete_role' do
     # рассылка об удалении исполнителя из роли в процессе
-    let(:mail) { UserBusinessRoleMailer.user_delete_role(user_business_role, user) }
+    let(:mail) { described_class.user_delete_role(user_business_role, user) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: удален исполнитель из процесса ##{bproce.id}")

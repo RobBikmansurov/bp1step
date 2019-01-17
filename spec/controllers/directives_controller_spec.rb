@@ -8,7 +8,7 @@ RSpec.describe DirectivesController do
   let(:invalid_attributes) { { approval: '01.01.2013', number: '', name: 'directive_name', body: 'test' } }
   let(:valid_session) { { 'warden.user.user.key' => session['warden.user.user.key'] } }
 
-  before(:each) do
+  before do
     allow(controller).to receive(:authenticate_user!).and_return(true)
   end
 
@@ -75,7 +75,7 @@ RSpec.describe DirectivesController do
       it "re-renders the 'new' template" do
         expect_any_instance_of(Directive).to receive(:save).and_return(false)
         post :create, params: { directive: valid_attributes }
-        expect(response).to_not render_template('new')
+        expect(response).not_to render_template('new')
       end
     end
   end
@@ -113,7 +113,7 @@ RSpec.describe DirectivesController do
         directive = Directive.create! valid_attributes
         expect_any_instance_of(Directive).to receive(:save).and_return(false)
         put :update, params: { id: directive.to_param, directive: invalid_attributes }
-        expect(response).to_not render_template('edit')
+        expect(response).not_to render_template('edit')
       end
     end
   end

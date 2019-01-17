@@ -8,7 +8,8 @@ RSpec.describe BprocesController, type: :controller do
   let(:bproce1) { FactoryBot.create :bproce, user_id: user.id }
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
-  before(:each) do
+
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'author', description: 'Автор')
     sign_in @user

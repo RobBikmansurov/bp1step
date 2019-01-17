@@ -6,7 +6,7 @@ RSpec.describe WorkplacesController, type: :controller do
   let(:valid_attributes) { { name: 'workplace', description: 'workplace description', designation: 'workplace designation' } }
   let(:valid_session) { {} }
 
-  before(:each) do
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
@@ -119,7 +119,7 @@ RSpec.describe WorkplacesController, type: :controller do
         workplace = FactoryBot.create(:workplace)
         expect_any_instance_of(Workplace).to receive(:save).and_return(false)
         put :update, params: { id: workplace.to_param, workplace: { 'name' => 'invalid value' } }
-        expect(response).to_not render_template('edit')
+        expect(response).not_to render_template('edit')
       end
     end
   end

@@ -14,7 +14,7 @@ RSpec.describe BproceContractsController, type: :controller do
   let(:valid_attributes_w_name) { { bproce_name: bproce.name, contract_id: contract.id } }
   let(:valid_session) { {} }
 
-  before(:each) do
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user

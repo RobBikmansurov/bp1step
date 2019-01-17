@@ -10,9 +10,9 @@ describe ContractMailer do
 
   describe 'update_contract - file scan changed' do
     let!(:scan) { FactoryBot.create :contract_scan, contract_id: contract.id }
-    let(:mail) { ContractMailer.update_contract(contract, owner, scan, action) }
+    let(:mail) { described_class.update_contract(contract, owner, scan, action) }
 
-    it 'should send an email' do
+    it 'sends an email' do
       # expect(ActionMailer::Base.deliveries.count).to eq 1
     end
     it 'renders correct subject' do
@@ -30,9 +30,9 @@ describe ContractMailer do
   end
 
   describe 'update_contract - contract changed' do
-    let(:mail) { ContractMailer.update_contract(contract, owner, nil, action) }
+    let(:mail) { described_class.update_contract(contract, owner, nil, action) }
 
-    it 'should send an email' do
+    it 'sends an email' do
       # expect(ActionMailer::Base.deliveries.count).to eq 1
     end
     it 'renders correct subject' do
@@ -51,7 +51,8 @@ describe ContractMailer do
 
   describe 'process_is_missing_email' do
     # process_is_missing_email(contract, user) рассылка о необходимости указания процесса для договора
-    let(:mail) { ContractMailer.process_is_missing_email(contract, owner) }
+    let(:mail) { described_class.process_is_missing_email(contract, owner) }
+
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: укажите процессы договора ##{contract.id}")
     end
@@ -63,7 +64,8 @@ describe ContractMailer do
   describe 'check_outdated_contracts' do
     # check_outdated_contracts(contract, emails, text) рассылка о просроченных договорах
     let(:text) { 'text' }
-    let(:mail) { ContractMailer.check_outdated_contracts(contract, [owner.email, payer.email], text) }
+    let(:mail) { described_class.check_outdated_contracts(contract, [owner.email, payer.email], text) }
+
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: #{text} договор ##{contract.id}")
     end
@@ -80,7 +82,8 @@ describe ContractMailer do
 
   describe 'check_contracts_status' do
     # check_contracts_status(contract, emails) # оповещение о договорах в статусе "Согласование"
-    let(:mail) { ContractMailer.check_contracts_status(contract, [owner.email]) }
+    let(:mail) { described_class.check_contracts_status(contract, [owner.email]) }
+
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: согласование договора ##{contract.id}")
     end
@@ -97,10 +100,11 @@ describe ContractMailer do
 
   describe 'addresses' do
     let!(:contract) { FactoryBot.create :contract, owner_id: owner.id, payer_id: payer.id }
+
     it 'return array with owner`s and payer`s emails' do
       @contract = contract
       @contract.owner = owner
-      obj = ContractMailer.new
+      obj = described_class.new
       addresses = obj.send(:addresses, contract)
       expect(addresses).to eql([owner.email, payer.email, 'bard@bankperm.ru'])
     end

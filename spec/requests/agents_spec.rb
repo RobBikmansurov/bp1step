@@ -23,7 +23,7 @@ PublicActivity.without_tracking do
       agent_attributes = FactoryBot.attributes_for(:agent)
       expect do
         post '/agents', params: { agent: agent_attributes }
-      end.to_not change(Agent, :count)
+      end.not_to change(Agent, :count)
 
       expect(response).to redirect_to new_user_session_path
     end

@@ -9,7 +9,7 @@ RSpec.describe UserBusinessRolesController, type: :controller do
   let(:user_business_role)        { FactoryBot.create(:user_business_role, user_id: user.id, business_role_id: business_role.id) }
   let(:valid_attributes) { { user_id: user.id, business_role_id: business_role.id } }
 
-  before(:each) do
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user

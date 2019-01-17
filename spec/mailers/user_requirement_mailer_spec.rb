@@ -9,7 +9,7 @@ describe UserRequirementMailer do
 
   describe 'user_requirement_create' do
     # рассылка о назначении исполнителя
-    let(:mail) { UserRequirementMailer.user_requirement_create(user_requirement, user) }
+    let(:mail) { described_class.user_requirement_create(user_requirement, user) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: Вы - отв.исполнитель Требования ##{requirement.id}")
@@ -30,7 +30,7 @@ describe UserRequirementMailer do
 
   describe 'user_requirement_destroy' do
     # рассылка об удалении исполнителя
-    let(:mail) { UserRequirementMailer.user_requirement_destroy(user_requirement, user) }
+    let(:mail) { described_class.user_requirement_destroy(user_requirement, user) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: удален исполнитель Требования ##{requirement.id}")

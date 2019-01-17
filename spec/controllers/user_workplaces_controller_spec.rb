@@ -8,7 +8,7 @@ RSpec.describe UserWorkplacesController, type: :controller do
   let(:user_workplace) { FactoryBot.create(:user_workplace, user_id: user.id, workplace_id: workplace.id) }
   let(:valid_attributes) { { user_id: user.id, workplace_id: workplace.id, note: 'note' } }
 
-  before(:each) do
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user

@@ -4,12 +4,12 @@ require 'rails_helper'
 RSpec.describe UserRequirementsController, type: :controller do
   let(:user)             { FactoryBot.create(:user) }
   let(:author)           { FactoryBot.create(:user) }
-  let(:requirement)     { FactoryBot.create(:requirement, author_id: author.id) }
+  let(:requirement) { FactoryBot.create(:requirement, author_id: author.id) }
   let(:user_requirement) { FactoryBot.create(:user_requirement, user_id: user.id, requirement_id: requirement.id) }
   let(:valid_attributes) { { user_id: user.id, requirement_id: requirement.id, status: 0 } }
   let(:invalid_attributes) { { bproce_id: bproce.id, bapp_id: nil, apurpose: 'Purpose' } }
 
-  before(:each) do
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user

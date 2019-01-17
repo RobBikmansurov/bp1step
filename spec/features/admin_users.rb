@@ -4,9 +4,9 @@ require 'spec_helper'
 include Warden::Test::Helpers
 Warden.test_mode!
 
-feature 'admin searching for a specific user' do
+describe 'admin searching for a specific user' do
   context 'when logged in as admin' do
-    before(:each) do
+    before do
       admin = FactoryBot.create(:user)
       login_as(admin, scope: :user)
 
@@ -14,7 +14,7 @@ feature 'admin searching for a specific user' do
       user2 = FactoryBot.create(:user, email: 'bar@bar.com')
     end
 
-    scenario 'admin searches for a specific user', js: true do
+    it 'admin searches for a specific user', js: true do
       visit '/'
       page.body.should     have_content 'foo@foo.com'
       page.body.should     have_content 'bar@bar.com'

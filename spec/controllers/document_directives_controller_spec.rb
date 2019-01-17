@@ -13,7 +13,7 @@ RSpec.describe DocumentDirectivesController, type: :controller do
   let(:invalid_attributes) { { directive_id: nil, document_id: document.id } }
   let(:valid_session) { {} }
 
-  before(:each) do
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user

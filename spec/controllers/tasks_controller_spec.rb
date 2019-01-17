@@ -7,7 +7,8 @@ RSpec.describe TasksController, type: :controller do
   let(:task_attributes) { { name: 'Task0', description: 'descript', status: 0, duedate: Date.current + 1, author_id: author.id } }
   let(:task) { FactoryBot.create(:task, author_id: author.id) }
   let(:task1) { FactoryBot.create(:task, author_id: author.id) }
-  before(:each) do
+
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user

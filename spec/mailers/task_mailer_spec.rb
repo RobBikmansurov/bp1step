@@ -30,6 +30,7 @@ describe LetterMailer do
   describe 'soon_deadline_tasks' do
     # рассылка исполнителям о наступлении срока исполнения письма
     let(:mail) { TaskMailer.soon_deadline_tasks(task, task.author.email, 5, user) }
+
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: 5 дн. на Задачу #{task.id}")
     end

@@ -4,7 +4,7 @@
 FactoryBot.define do
   factory :metric_value do
     sequence(:value, &:to_s)
-    dtime Time.current
+    dtime { Time.current }
     metric
   end
 end

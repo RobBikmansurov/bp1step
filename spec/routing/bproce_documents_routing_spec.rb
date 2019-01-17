@@ -17,7 +17,7 @@ RSpec.describe BproceDocumentsController, type: :routing do
     end
 
     it 'does not expose a list of bproce_documents' do
-      expect(get: '/bproce_documents').to_not be_routable
+      expect(get: '/bproce_documents').not_to be_routable
     end
 
     it 'routes to #edit' do

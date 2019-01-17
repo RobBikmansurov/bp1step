@@ -10,7 +10,7 @@ describe UserLetterMailer do
 
   describe 'user_letter_create' do
     # рассылка о назначении исполнителя ответственным за письмо
-    let(:mail) { UserLetterMailer.user_letter_create(user_letter, user) }
+    let(:mail) { described_class.user_letter_create(user_letter, user) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: Вы - исполнитель Письма ##{letter.name}")
@@ -31,7 +31,7 @@ describe UserLetterMailer do
 
   describe 'user_letter_destroy' do
     # рассылка об удалении исполнителя из ответственных
-    let(:mail) { UserLetterMailer.user_letter_destroy(user_letter, user) }
+    let(:mail) { described_class.user_letter_destroy(user_letter, user) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: удален исполнитель Письма ##{letter.name}")

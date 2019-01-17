@@ -2,8 +2,8 @@
 
 require 'spec_helper'
 
-RSpec.feature 'User logs in and logs out', type: :feature do
-  scenario 'with correct details', js: true do
+RSpec.describe 'User logs in and logs out', type: :feature do
+  it 'with correct details', js: true do
     user = create(:user, email: 'someone@example.tld', password: 'somepassword', password_confirmation: 'somepassword')
     p user.inspect
 
@@ -27,7 +27,7 @@ RSpec.feature 'User logs in and logs out', type: :feature do
     expect(page).not_to have_content 'someone@example.tld'
   end
 
-  scenario 'locks account after 3 failed attempts' do
+  it 'locks account after 3 failed attempts' do
     email = 'someone@example.tld'
     # user = create(:user, email: email, password: "somepassword", password_confirmation: "somepassword")
 

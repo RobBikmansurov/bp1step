@@ -8,7 +8,7 @@ RSpec.describe UserTasksController, type: :controller do
   let(:user_task)        { FactoryBot.create(:user_task, user_id: user.id, task_id: task.id) }
   let(:valid_attributes) { { user_id: user.id, task_id: task.id, status: 0 } }
 
-  before(:each) do
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user

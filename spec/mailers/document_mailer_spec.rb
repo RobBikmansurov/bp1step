@@ -8,7 +8,7 @@ describe DocumentMailer do
 
   describe 'file_not_found_email' do
     # рассылка об отсутствии файла документа
-    let(:mail) { DocumentMailer.file_not_found_email(document, user) }
+    let(:mail) { described_class.file_not_found_email(document, user) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: загрузить файл документа ##{document.id}")
@@ -29,7 +29,7 @@ describe DocumentMailer do
 
   describe 'file_is_corrupted_email' do
     # рассылка о необходимости новой загрузки файла документа
-    let(:mail) { DocumentMailer.file_is_corrupted_email(document, user) }
+    let(:mail) { described_class.file_is_corrupted_email(document, user) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: обновите файл документа ##{document.id}")
@@ -44,7 +44,7 @@ describe DocumentMailer do
 
   describe 'process_is_missing_email' do
     # рассылка о необходимости указания процесса для документа
-    let(:mail) { DocumentMailer.process_is_missing_email(document, user) }
+    let(:mail) { described_class.process_is_missing_email(document, user) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: укажите процесс документа ##{document.id}")
@@ -59,7 +59,7 @@ describe DocumentMailer do
 
   describe 'check_documents_status' do
     # контроль статуса документов
-    let(:mail) { DocumentMailer.check_documents_status(document, user.email, 'text') }
+    let(:mail) { described_class.check_documents_status(document, user.email, 'text') }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: статус документа ##{document.id}")

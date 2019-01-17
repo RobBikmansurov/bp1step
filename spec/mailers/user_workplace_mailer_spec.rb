@@ -9,7 +9,7 @@ describe UserWorkplaceMailer do
 
   describe 'user_workplace_create' do
     # рассылка о назначении исполнителя
-    let(:mail) { UserWorkplaceMailer.user_workplace_create(user_workplace, user) }
+    let(:mail) { described_class.user_workplace_create(user_workplace, user) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: Ваше Рабочее место - #{workplace.designation}")
@@ -30,7 +30,7 @@ describe UserWorkplaceMailer do
 
   describe 'user_workplace_destroy' do
     # рассылка об удалении исполнителя
-    let(:mail) { UserWorkplaceMailer.user_workplace_destroy(user_workplace, user) }
+    let(:mail) { described_class.user_workplace_destroy(user_workplace, user) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: Рабочее место #{workplace.designation}")
