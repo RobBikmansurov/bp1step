@@ -27,18 +27,28 @@ describe Task do
   it 'return author_name' do
     expect(task.author_name).to eq(author.displayname)
   end
-
   it 'set author by author`s name ' do
     _user = FactoryBot.create(:user, displayname: 'DisplayName')
     task.author_name = 'DisplayName'
     expect(task.author_name).to eq('DisplayName')
   end
-
+  it 'set status by name' do
+    task.status_name = 'На исполнении'
+    expect(task.status_name).to eq('На исполнении')
+  end
   it 'return correct status_name' do
     expect(task.status_name).to eq('Новая')
   end
   it 'return correct status_name after update' do
     task.status = 50
     expect(task.status_name).to eq('На исполнении')
+  end
+  it 'add action to result' do
+    task.result = '1'
+    task.action = '23'
+    expect(task.result).to eq('123')
+  end
+  it 'have a search method' do
+    expect(described_class.search('').first).to eq(described_class.first)
   end
 end

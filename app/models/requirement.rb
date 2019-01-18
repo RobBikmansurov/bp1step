@@ -41,7 +41,7 @@ class Requirement < ActiveRecord::Base
   end
 
   def self.search(search)
-    return where(nil) until search
+    return where(nil) if search.blank?
     
     where('label ILIKE ? or source ILIKE ?', "%#{search}%", "%#{search}%")
   end

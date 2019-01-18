@@ -14,7 +14,7 @@ class BproceBapp < ActiveRecord::Base
   # attr_accessible :id, :bproce_id, :bapp_id, :apurpose, :bproce_name, :bapp_name
 
   def bapp_name
-    bapp.try(:designation)
+    bapp.try(:description)
   end
 
   def bapp_name=(name)
@@ -30,7 +30,7 @@ class BproceBapp < ActiveRecord::Base
   end
 
   def self.search(search)
-    return where(nil) until search
+    return where(nil) if search.blank?
     
     where('name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%")
   end

@@ -40,4 +40,7 @@ describe Requirement do
     requirement.status = 15
     expect(requirement.status_name).to eq('На исполнении') # REQUIREMENT_STATUS.key(15))
   end
+  it 'have search method' do
+    expect(described_class.search('').first).to eq(described_class.first)
+  end
 end

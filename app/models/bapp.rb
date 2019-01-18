@@ -21,13 +21,13 @@ class Bapp < ActiveRecord::Base
   tracked owner: proc { |controller, _model| controller.current_user }
 
   def self.search(search)
-    return where(nil) until search
+    return where(nil) if search.blank?
 
     where('name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", search.to_i.to_s)
   end
 
   def self.searchtype(search)
-    return where(nil) until search
+    return where(nil) if search.blank?
 
     where('apptype ILIKE ? ', "%#{search}%")
   end

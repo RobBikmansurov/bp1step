@@ -70,4 +70,7 @@ describe Contract do
   it 'return auto name' do
     expect(contract.autoname).to eq("##{contract.id} №100 | Доп.соглашение")
   end
+  it 'have search method' do
+    expect(described_class.search('').first).to eq(described_class.first)
+  end
 end

@@ -24,4 +24,12 @@ describe User do
     it { is_expected.to have_many(:document).through(:user_document) }
     it { is_expected.to have_many(:user_document).dependent(:destroy) }
   end
+  it 'have search method' do
+    expect(described_class.search('').first).to eq(described_class.first)
+  end
+  it 'set user by displayname' do
+    user = FactoryBot.create :user, displayname: 'Иванов'
+    user.user_name = 'Иванов'
+    expect(user.user_name).to eq('Иванов')
+  end
 end

@@ -12,7 +12,7 @@ class Role < ActiveRecord::Base
   # attr_accessible :name, :description, :note
 
   def self.search(search)
-    return where(nil) until search
+    return where(nil) if search.blank?
     where('name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%")
   end
 end

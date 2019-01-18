@@ -13,4 +13,7 @@ describe Agent do
     it { is_expected.to have_many(:agent_contract).dependent(:destroy) }
     it { is_expected.to have_many(:contract).through(:agent_contract) }
   end
+  it 'search' do
+    expect(described_class.search('').first).to eq(described_class.first)
+  end
 end

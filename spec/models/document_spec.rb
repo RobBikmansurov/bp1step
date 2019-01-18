@@ -38,4 +38,7 @@ describe Document do
     document.owner_name = 'Bush'
     expect(document.owner_name).to eq('Bush')
   end
+  # it 'return document pdf_path' do
+  #   expect(document.pdf_path).to eq('')
+  # end
 end

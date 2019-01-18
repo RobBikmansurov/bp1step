@@ -15,4 +15,7 @@ describe Workplace do
     it { is_expected.to have_many(:user_workplace) }
     it { is_expected.to have_many(:users).through(:user_workplace) }
   end
+  it 'have search method' do
+    expect(described_class.search('').first).to eq(described_class.first)
+  end
 end

@@ -10,4 +10,7 @@ describe Term do
     it { is_expected.to validate_length_of(:name).is_at_least(2).is_at_most(200) }
     it { is_expected.to validate_presence_of(:description) }
   end
+  it 'have search method' do
+    expect(described_class.search('').first).to eq(described_class.first)
+  end
 end

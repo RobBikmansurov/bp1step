@@ -30,7 +30,7 @@ class BusinessRole < ActiveRecord::Base
   end
 
   def self.search(search)
-    return where(nil) unless search
+    return where(nil) if search.blank?
 
     where('name ILIKE ? or description ILIKE ? or id = ?',
           "%#{search}%", "%#{search}%", search.to_i.to_s)

@@ -14,7 +14,7 @@ class Term < ActiveRecord::Base
   # attr_accessible :name, :shortname, :description, :note, :source
 
   def self.search(search)
-    return where(nil) until search
+    return where(nil) if search.blank?
     where('shortname ILIKE ? or name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
   end
 end

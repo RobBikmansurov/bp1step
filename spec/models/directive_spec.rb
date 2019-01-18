@@ -46,4 +46,7 @@ describe Directive do
       expect(directive.directive_name).to eq("Закон РФ №123-ФЗ   ##{directive.id}")
     end
   end
+  it 'have search method' do
+    expect(described_class.search('').first).to eq(described_class.first)
+  end
 end
