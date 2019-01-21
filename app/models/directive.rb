@@ -28,14 +28,17 @@ class Directive < ActiveRecord::Base
     title + ' ' + body + ' №' + number + (approval ? ' ' + approval.strftime('%d.%m.%Y') : '')
   end
 
+  # добавляет #id в конце строки
   def directive_name
-    midname + '   #' + id.to_s
+    "#{midname}   ##{id}"
   end
 
+  # возвращет directive.id из конца строки наименования
   def directive_name=(name)
     return if name.blank?
     i = name.rindex('#')
-    self.directive_id = name.slice(i + 1, 5).to_i if i.positive?
+    #name.slice(i + 1, 5).to_i if i.positive?
+    self.id = name[(i + 1..-1)].to_i
   end
 
   def directives_of_bproce(bproce_id) # все директивы процесса (связаны с ним через документы процесса)

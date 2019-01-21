@@ -28,8 +28,9 @@ describe Directive do
     it 'return middle name' do
       expect(directive.midname).to eq('Закон РФ №123-ФЗ 01.01.2019')
     end
-    it 'return directive name' do
-      expect(directive.directive_name).to eq("Закон РФ №123-ФЗ 01.01.2019   ##{directive.id}")
+    it 'set directive name by #id and return directive name' do
+      directive.directive_name = "abracadabra  #100"
+      expect(directive.id).to eq(100)
     end
   end
   context 'without approval date' do
@@ -48,5 +49,19 @@ describe Directive do
   end
   it 'have search method' do
     expect(described_class.search('').first).to eq(described_class.first)
+  end
+  it 'return all directives of bproce, linked through documents' do
+    owner = FactoryBot.create :user
+    bproce1 = FactoryBot.create :bproce, user_id: owner.id
+    document1 = FactoryBot.create :document, owner_id: owner.id
+    document_directive1 = FactoryBot.create :document_directive, document_id: document1.id, directive_id: directive.id
+    bproce_document = FactoryBot.create :bproce_document, bproce_id: bproce1.id, document_id: document1.id
+    bproce2 = FactoryBot.create :bproce, user_id: owner.id
+    document2 = FactoryBot.create :document, owner_id: owner.id
+    directive2 = FactoryBot.create :directive
+    document_directive2 = FactoryBot.create :document_directive, document_id: document2.id, directive_id: directive2.id
+    bproce_document = FactoryBot.create :bproce_document, bproce_id: bproce2.id, document_id: document2.id
+
+    expect(directive.directives_of_bproce(bproce1.id)).to eq([directive])
   end
 end
