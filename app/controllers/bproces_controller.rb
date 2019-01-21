@@ -32,7 +32,7 @@ class BprocesController < ApplicationController
       @bproces = Bproce.nested_set.where(user_id: params[:user])
     else
       @bproces = Bproce.nested_set
-      @bproces = @bproce.search__by_all_column(params[:search]) if params[:search].present?
+      @bproces = @bproces.search__by_all_column(params[:search]) if params[:search].present?
     end
     @bproces = @bproces.order(:lft)
     respond_to do |format|
