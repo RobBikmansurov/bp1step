@@ -141,10 +141,4 @@ RSpec.describe DocumentsController, type: :controller do
       expect(response).to redirect_to(documents_url)
     end
   end
-
-  it 'save attached file' do
-    patch :update_file, params: { id: document.to_param }
-    expect(assigns(:document)).to eq(document)
-  end
-
 end

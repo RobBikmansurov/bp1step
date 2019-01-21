@@ -98,11 +98,10 @@ class DocumentsController < ApplicationController
   end
 
   def update_file
-    d_file = params[:document][:document_file] if params[:document].present?
-    if d_file.present?
-      flash[:notice] = 'Файл "' + d_file.original_filename + '" загружен.' if @document.update(document_file_params)
+    if @document.update(document_file_params)
+      flash[:notice] = "Загружен файл \"#{@document.document_file.original_filename}\""
     else
-      flash[:alert] = 'Ошибка - имя файла не указано.'
+      flash[:alert] = "Ошибка: #{@document.errors.messages}"
     end
     respond_with(@document)
   end
