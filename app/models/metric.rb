@@ -60,4 +60,18 @@ class Metric < ActiveRecord::Base
     else "'#{date.strftime('%Y-%m-%d %H')}'" # начало часа
     end
   end
+
+  def self.by_depth(depth, title)
+    return where(nil) if depth.blank?
+
+    title += " [глубина данных: #{depth}]"
+    where(depth: depth)
+  end
+
+  def self.by_metric_type(metric_type, title)
+    return where(nil) if metric_type.blank?
+
+    title += " [тип: #{metric_type}]"
+    where(mtype: metric_type)
+  end
 end

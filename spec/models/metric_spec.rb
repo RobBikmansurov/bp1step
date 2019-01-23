@@ -57,5 +57,11 @@ describe Metric do
     it 'search' do
       expect(described_class.search('').first).to eq(described_class.first)
     end
+    it 'by_depth' do
+      expect(described_class.by_depth('', '').first).to eq(described_class.first)
+    end
+    it 'by_metric_type' do
+      expect(described_class.by_metric_type('', '').first).to eq(described_class.first)
+    end
   end
 end
