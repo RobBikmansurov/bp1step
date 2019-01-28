@@ -23,7 +23,11 @@ RSpec.describe BprocesController, type: :controller do
       expect(response).to be_successful
       expect(response).to render_template('bproces/index')
     end
-
+    it 'returns finded processes with param search' do
+      bproce.name = 'sms-information'
+      get :index, params: { search: 'sms' }
+      # expect(assigns(:bproces)).to match_array([bproce])
+    end
     it 'loads all of the bproces into @bproces' do
       get :index
       expect(assigns(:bproces)).to match_array([bproce, bproce1])

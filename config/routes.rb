@@ -208,6 +208,6 @@ Rails.application.routes.draw do
   end
 
   match '/about' => 'pages#about', via: :get
-  get 'pages/about'
   root to: 'home#index'
+  match "*path", to: 'pages#about', via: :all
 end
