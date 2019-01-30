@@ -10,6 +10,8 @@ RSpec.describe MetricsController, type: :controller do
   let(:valid_session)      { {} }
   let!(:metric) { FactoryBot.create :metric, bproce_id: bproce.id }
   let!(:metric1) { FactoryBot.create :metric, bproce_id: bproce.id }
+  let(:input ) { Metric.all }
+  let(:params) { {} }
 
   describe 'GET index' do
     it 'assigns all metrics as @metrics' do
@@ -133,4 +135,20 @@ RSpec.describe MetricsController, type: :controller do
       expect(response).to redirect_to(metrics_url)
     end
   end
+
+  # subject { described_class.call(input, params) }
+
+  # specify "no matching params" do
+  #   expect(subject).to eq input
+  # end
+    
+  # specify "searching" do
+  #   params[:search] = "sms"
+  #   # p input.search('www')
+  #   # expect(subject).to eq input.search('sms')
+  # end
+  # specify 'depth' do
+  #   params[:depth] = 1
+  #   expect(subject).to eq input.depth('sms')
+  # end
 end
