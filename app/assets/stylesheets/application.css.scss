@@ -1,9 +1,56 @@
 /*
  * application.css.scss
  *
- *= require_tree .
  *= require_self
  */
+@charset "utf-8";
+@import 'autocomplete.css.scss';
+@import 'datepicker.css';
+/* @import 'simple_form.css.scss'; */
+/* @import 'forms.css.scss';*/
+@import 'forms.css.scss';
+@import 'pagination.sass';
+
+// Import a Google Font
+// // @import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
+
+// Set your brand colors
+$purple: #8A4D76;
+$pink: #FA7C91;
+$brown: #757763;
+$beige-light: #D0D1CD;
+$beige-lighter: #EFF0EB;
+
+// Update Bulma's global variables
+/* $family-sans-serif: "Nunito", sans-serif;
+$grey-dark: $brown;
+$grey-light: $beige-light;
+$primary: $purple;
+$link: $pink;
+$widescreen-enabled: false;
+$fullhd-enabled: false;
+*/
+
+// Update some of Bulma's component variables
+// $body-background-color: $beige-lighter;
+// $control-border-width: 2px;
+// $input-border-color: transparent;
+// $input-shadow: none;
+
+
+// @import "../bulma-0.7.2/bulma.sass";
+
+// Import only what you need from Bulma
+@import "../bulma-0.7.2/sass/utilities/_all.sass";
+@import "../bulma-0.7.2/sass/base/_all.sass";
+@import "../bulma-0.7.2/sass/elements/button.sass";
+@import "../bulma-0.7.2/sass/elements/container.sass";
+@import "../bulma-0.7.2/sass/elements/form.sass";
+@import "../bulma-0.7.2/sass/elements/title.sass";
+@import "../bulma-0.7.2/sass/components/navbar.sass";
+@import "../bulma-0.7.2/sass/layout/hero.sass";
+@import "../bulma-0.7.2/sass/layout/section.sass";
+
 .is-justified
 {
   justify-content: left;

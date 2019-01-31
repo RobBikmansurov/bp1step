@@ -20,7 +20,7 @@
         = link_to 'Заменить фото', avatar_create_user_path(@usr), :remote => true
 
 .container
-  .tabs.is-boxed
+  .tabs.is-boxed.is-right
     %ul
       %Li.is-active{"data-tab" => "action"}
         %a{href: execute_user_path(@usr)} К исполнению
