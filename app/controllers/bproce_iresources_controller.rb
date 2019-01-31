@@ -2,26 +2,45 @@
 
 class BproceIresourcesController < ApplicationController
   respond_to :html, :xml, :json
-  before_action :authenticate_user!, only: %i[edit create]
-  before_action :bproce_iresource, except: :index
+  before_action :authenticate_user!, only: %i[edit create destroy]
+  before_action :bproce_iresource, except: :create
 
   def create
-    @bproce = Bproce.find_by(name: bproce_iresource_params[:bproce_name])
-    @iresource = Iresource.find(bproce_iresource_params[:iresource_id])
-    @bproce_iresource = BproceIresource.new(bproce_iresource_params)
+    @bproce = if bproce_iresource_params[:bproce_id].present?
+                Bproce.find(bproce_iresource_params[:bproce_id])
+              else
+                Bproce.find_by(name: bproce_iresource_params[:bproce_name])
+              end
+    @iresource = if bproce_iresource_params[:iresource_id].present?
+                   Iresource.find(bproce_iresource_params[:iresource_id])
+                 else
+                   Iresource.find_by(label: bproce_iresource_params[:iresource_label])
+                 end
+    @bproce_iresource = BproceIresource.new(bproce_id: @bproce.id,
+                                            iresource_id: @iresource.id,
+                                            rpurpose: bproce_iresource_params[:rpurpose])
     if @bproce_iresource.save
-      respond_with(@iresource)
+      if bproce_iresource_params[:iresource_id].present?
+        flash[:notice] = "Ресурс добавлен в процесс [#{@bproce.name}]"
+        respond_with @iresource
+      else
+        flash[:notice] = "В процесс добавлен ресурс[#{@iresource.label}]"
+        respond_with @bproce if bproce_iresource_params[:bproce_id].present?
+      end
     else
-      format.html { render action: 'new' }
+      render action: 'new'
     end
   end
 
   def destroy
     @iresource = @bproce_iresource.iresource
-    # @iresource = @bproce_iresource.iresource
-    flash[:notice] = 'Successfully destroyed bproce_iresource.' if @bproce_iresource.destroy
-    # respond_with(@bproce_iresource.bproce)
-    respond_with(@bproce_iresource.iresource) # удаляем процесс из ресурса - поэтому возврат в ресурс
+    flash[:notice] = "Ресурс удален из процесса" if @bproce_iresource.destroy
+    if params[:bproce].present? # возврат в процесс
+      @bproce = Bproce.find(params[:bproce])
+      respond_with(@bproce)
+    else
+      respond_with(@bproce_iresource.iresource) # удаляем процесс из ресурса - поэтому возврат в ресурс
+    end
   end
 
   def show
@@ -40,7 +59,7 @@ class BproceIresourcesController < ApplicationController
   private
 
   def bproce_iresource_params
-    params.require(:bproce_iresource).permit(:bproce_id, :iresource_id, :rpurpose, :bproce_name)
+    params.require(:bproce_iresource).permit(:bproce_id, :iresource_id, :rpurpose, :bproce_name, :iresource_label)
   end
 
   def bproce_iresource

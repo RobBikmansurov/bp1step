@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Iresource < ActiveRecord::Base
+class Iresource < ApplicationRecord
   validates :label, presence: true,
                     uniqueness: true,
                     length: { minimum: 3, maximum: 20 }
@@ -26,10 +26,8 @@ class Iresource < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search
-      where('label ILIKE ? or location ILIKE ? or id = ?', "%#{search}%", "%#{search}%", search.to_i.to_s)
-    else
-      where(nil)
-    end
+    return where(nil) if search.blank?
+
+    where('label ILIKE ? or location ILIKE ? or id = ?', "%#{search}%", "%#{search}%", search.to_i.to_s)
   end
 end

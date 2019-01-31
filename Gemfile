@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 source 'https://rubygems.org'
 
-gem 'rails', '5.2.0'
+gem 'rails', '5.2.2'
 
 gem 'bootsnap'
 
@@ -48,6 +48,9 @@ gem 'actionpack-action_caching'
 gem 'actionpack-page_caching' # кеширование
 
 gem 'faker'
+
+gem "loofah", ">= 2.2.3"
+gem "rack", ">= 2.0.6"
 
 group :development do
   gem 'better_errors'

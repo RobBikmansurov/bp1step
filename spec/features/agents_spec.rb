@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.feature 'Managing agents', type: :feature do
+RSpec.describe 'Managing agents', type: :feature do
   context 'Finding the list of agents' do
     describe 'any users' do
       it "don't see Agents" do

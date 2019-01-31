@@ -16,7 +16,7 @@ RSpec.describe TermsController, type: :controller do
 
   describe 'GET index' do
     it 'assigns all terms as @terms' do
-      get :index, {}
+      get :index
       expect(response).to be_successful
       expect(response).to render_template('terms/index')
     end

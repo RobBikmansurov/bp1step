@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 describe AgentContract do
-  context 'associations' do
-    it { should belong_to(:agent) }
-    it { should belong_to(:contract) }
+  context 'with associations' do
+    it { is_expected.to belong_to(:agent) }
+    it { is_expected.to belong_to(:contract) }
   end
 end

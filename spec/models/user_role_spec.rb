@@ -3,13 +3,13 @@
 require 'rails_helper'
 
 describe UserRole do
-  context 'validates' do
-    it { should validate_presence_of(:user) }
-    it { should validate_presence_of(:role) }
+  context 'with validates' do
+    it { is_expected.to validate_presence_of(:user) }
+    it { is_expected.to validate_presence_of(:role) }
   end
 
-  context 'associations' do
-    it { should belong_to(:user) }
-    it { should belong_to(:role) }
+  context 'with associations' do
+    it { is_expected.to belong_to(:user) }
+    it { is_expected.to belong_to(:role) }
   end
 end

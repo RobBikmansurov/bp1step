@@ -8,16 +8,12 @@ class MetricsController < ApplicationController
 
   def index
     @title_metrics = 'Метрики процессов'
-    if params[:depth].present?
-      @metrics = Metric.where(depth: params[:depth])
-      @title_metrics += " [глубина данных: #{params[:depth]}]"
-    elsif params[:mtype].present?
-      @metrics = Metric.where(mtype: params[:mtype])
-      @title_metrics += " [тип: #{params[:mtype]}]"
-    else
-      @metrics = Metric.search(params[:search])
-    end
-    @metrics = @metrics.order(sort_column + ' ' + sort_direction).paginate(per_page: 10, page: params[:page])
+    @metrics = Metric.
+      by_depth(params[:depth], @title_metrics).
+      by_metric_type(params[:mtype], @title_metrics).
+      search(params[:search]).
+      paginate(per_page: 10, page: params[:page]).
+      order(sort_order(sort_column, sort_direction))
   end
 
   def show

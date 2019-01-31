@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Metric < ActiveRecord::Base
+class Metric < ApplicationRecord
   validates :name, presence: true,
                    length: { minimum: 5, maximum: 50 }
   validates :description, presence: true,
@@ -35,15 +35,12 @@ class Metric < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search
-      where('name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%")
-    else
-      where(nil)
-    end
+    return where(nil) if search.blank?
+
+    where('name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%")
   end
 
   # возвращает период от первой его секунды до последней - для замены ##PERIOD## в условии between
-  # rubocop:disable Metrics/AbcSize
   def sql_period(date = Date.current, dpth = depth)
     case dpth
     when 1 then "'#{date.beginning_of_year.to_s(:db)}' AND '#{date.end_of_year.to_s(:db)}'" # текущий год
@@ -61,5 +58,19 @@ class Metric < ActiveRecord::Base
     when 3 then "'#{date.beginning_of_day.strftime('%Y-%m-%d')}'" # начало дня
     else "'#{date.strftime('%Y-%m-%d %H')}'" # начало часа
     end
+  end
+
+  def self.by_depth(depth, title)
+    return where(nil) if depth.blank?
+
+    title += " [глубина данных: #{depth}]"
+    where(depth: depth)
+  end
+
+  def self.by_metric_type(metric_type, title)
+    return where(nil) if metric_type.blank?
+
+    title += " [тип: #{metric_type}]"
+    where(mtype: metric_type)
   end
 end

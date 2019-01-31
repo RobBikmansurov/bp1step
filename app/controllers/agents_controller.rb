@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AgentsController < ApplicationController
   before_action :authenticate_user! # , :only => [:edit, :new, :create, :show]
   before_action :set_agent, only: %i[show edit update destroy new_contract new]
@@ -5,9 +7,9 @@ class AgentsController < ApplicationController
 
   def index
     if params[:dms_name].present?
-      @agents = Agent.where("dms_name ilike ?", "#{params[:dms_name]}").order(sort_order).paginate(per_page: 10, page: params[:page])
+      @agents = Agent.where("dms_name ilike ?", "#{params[:dms_name]}").order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
     else
-      @agents = Agent.search(params[:search]).order(sort_order).paginate(per_page: 10, page: params[:page])
+      @agents = Agent.search(params[:search]).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
     end
   end
 
@@ -18,7 +20,7 @@ class AgentsController < ApplicationController
   def new; end
 
   def new_contract # новый договор контрагента
-    redirect_to new_contract_path({ agent_id: @agent.id })
+    redirect_to new_contract_path(agent_id: @agent.id)
   end
 
   def edit; end

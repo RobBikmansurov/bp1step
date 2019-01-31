@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Requirement < ActiveRecord::Base
+class Requirement < ApplicationRecord
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
@@ -41,10 +41,8 @@ class Requirement < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search
-      where('label ILIKE ? or source ILIKE ?', "%#{search}%", "%#{search}%")
-    else
-      where(nil)
-    end
+    return where(nil) if search.blank?
+
+    where('label ILIKE ? or source ILIKE ?', "%#{search}%", "%#{search}%")
   end
 end

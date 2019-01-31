@@ -13,7 +13,7 @@ RSpec.describe BproceDocumentsController, type: :controller do
 
   let(:valid_session) { {} }
 
-  before(:each) do
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
@@ -108,7 +108,7 @@ RSpec.describe BproceDocumentsController, type: :controller do
     it 'destroys bproce_document if it has > 1 bproce' do
       # документ должен ссылаться хотя бы на 1 процесс
       bproce1 = FactoryBot.create(:bproce, user_id: owner.id)
-      bproce_document1 = FactoryBot.create(:bproce_document, bproce_id: bproce1.id, document_id: document.id)
+      _bproce_document1 = FactoryBot.create(:bproce_document, bproce_id: bproce1.id, document_id: document.id)
       bproce_document2 = FactoryBot.create(:bproce_document, bproce_id: bproce2.id, document_id: document.id)
       expect do
         delete :destroy, params: { id: bproce_document2.id }

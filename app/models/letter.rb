@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Letter < ActiveRecord::Base
+class Letter < ApplicationRecord
   # acts_as_taggable
   # acts_as_nested_set
 
@@ -63,12 +63,10 @@ class Letter < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search
-      where('number ILIKE ? or regnumber ILIKE ? or subject ILIKE ? or sender ILIKE ? or id = ?',
-            "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%", search.to_i.to_s)
-    else
-      where(nil)
-    end
+    return where(nil) if search.blank?
+
+    where('number ILIKE ? or regnumber ILIKE ? or subject ILIKE ? or sender ILIKE ? or id = ?',
+          "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%", search.to_i.to_s)
   end
 
   private
@@ -80,11 +78,13 @@ class Letter < ActiveRecord::Base
       self.status = 0 # Новое, т.к. нет исполнителей и не завершено
     end
     return unless status >= 90 # завершено
+
     self.completion_date = Date.current.strftime('%d.%m.%Y') if status_was.blank? || status_was < 90 # дата исполения, если стал - "Завершено"
   end
 
   def check_regdate
     return if regnumber.blank?
+
     self.regdate = Date.current.strftime('%d.%m.%Y') if regdate.blank?
   end
 end

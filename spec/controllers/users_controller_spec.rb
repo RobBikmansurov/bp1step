@@ -6,7 +6,7 @@ RSpec.describe UsersController, type: :controller do
   let(:user) { FactoryBot.create(:user, office: 1) }
   let(:user1) { FactoryBot.create(:user, office: 2) }
 
-  before(:each) do
+  before do
     user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in user
     allow(controller).to receive(:authenticate_user!).and_return(true)
@@ -14,7 +14,7 @@ RSpec.describe UsersController, type: :controller do
 
   describe 'GET index' do
     it 'assigns all users as @users' do
-      get :index, {}
+      get :index
       expect(response).to be_successful
       expect(response).to render_template('users/index')
     end

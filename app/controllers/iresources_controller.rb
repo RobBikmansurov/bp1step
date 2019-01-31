@@ -10,7 +10,7 @@ class IresourcesController < ApplicationController
   def index
     @iresources = Iresource.order(:label)
     if params[:all].blank?
-      iresources = @iresources
+      iresources = Iresource.order(sort_order(sort_column, sort_direction))
       iresources = iresources.where(level: params[:level]) if params[:level].present?
       iresources = iresources.where(risk_category: params[:risk]) if params[:risk].present?
       if params[:user].present? #  список ресурсов пользователя
@@ -18,7 +18,7 @@ class IresourcesController < ApplicationController
         iresources = iresources.where(user_id: params[:user])
       end
       iresources = iresources.search(params[:search]) if params[:search].present?
-      @iresources = iresources.order(sort_order).paginate(per_page: 10, page: params[:page])
+      @iresources = iresources.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
     end
     respond_to do |format|
       format.html
@@ -110,7 +110,8 @@ class IresourcesController < ApplicationController
 
   def iresource_params
     params.require(:iresource).permit(:level, :label, :location, :alocation, :volume, :note,
-                                      :access_read, :access_write, :access_other, :risk_category, :user_id)
+                                      :access_read, :access_write, :access_other, :risk_category,
+                                      :user_id, :owner_name)
   end
 
   def sort_column
@@ -119,8 +120,8 @@ class IresourcesController < ApplicationController
 
   def iresource
     if params[:search].present? # это поиск
-      @iresources = Iresource.search(params[:search])
-      @iresources = @iresources.order(sort_order).paginate(per_page: 10, page: params[:page])
+      iresources = Iresource.search(params[:search])
+      @iresources = iresources.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
       @iresource = params[:id].present? ? Iresource.find(params[:id]) : Iresource.new

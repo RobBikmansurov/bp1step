@@ -17,7 +17,7 @@ RSpec.describe ContractsController do
   let(:bproce_contract) { FactoryBot.create(:bproce_contract, bproce_id: bproce.id, contract_id: contract.id) }
   let(:current_user) { FactoryBot.create(:user, position: 'big_boss') }
 
-  before(:each) do
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user

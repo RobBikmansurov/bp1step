@@ -26,7 +26,7 @@ class BproceDocumentsController < ApplicationController
   end
 
   def destroy
-    processes = BproceDocument.where(document_id: @bproce_document.document_id).count
+    processes = BproceDocument.where(document_id: @bproce_document.document_id).size
     if processes > 1
       flash[:notice] = "Документ удален из процесса ##{@bproce_document.bproce_id}" if @bproce_document.destroy
     else
@@ -40,7 +40,7 @@ class BproceDocumentsController < ApplicationController
   end
 
   def update
-    flash[:notice] = 'Successfully updated bproce_document.' if @bproce_document.update_attributes(bproce_document_params)
+    flash[:notice] = 'Successfully updated bproce_document.' if @bproce_document.update(bproce_document_params)
     respond_with(@bproce_document)
   end
 

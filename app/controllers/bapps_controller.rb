@@ -20,7 +20,7 @@ class BappsController < ApplicationController
       bapps = bapps.searchtype(params[:apptype]) if params[:apptype].present?
       bapps = bapps.tagged_with(params[:tag]) if params[:tag].present?
       bapps = bapps.search(params[:search]) if params[:search].present?
-      @bapps = bapps.order(sort_order).paginate(per_page: 10, page: params[:page])
+      @bapps = bapps.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
     end
     respond_to do |format|
       format.html
@@ -80,7 +80,7 @@ class BappsController < ApplicationController
 
   def set_app
     if params[:search].present? # это поиск
-      @bapps = Bapp.search(params[:search]).order(sort_order).paginate(per_page: 10, page: params[:page])
+      @bapps = Bapp.search(params[:search]).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
       @bapp = params[:id].present? ? Bapp.find(params[:id]) : Bapp.new

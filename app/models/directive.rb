@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-class Directive < ActiveRecord::Base
+class Directive < ApplicationRecord
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
   validates :approval, presence: true
   validates :number, presence: true
   validates :name, presence: true, length: { minimum: 10 }
-  validates :body, length: { minimum: 2, maximum: 100 }	# орган, утвердивший документ
+  validates :body, length: { minimum: 2, maximum: 100 } # орган, утвердивший документ
   validates :status, length: { maximum: 30 }
   validates :note, length: { maximum: 255 }
 
@@ -28,14 +28,18 @@ class Directive < ActiveRecord::Base
     title + ' ' + body + ' №' + number + (approval ? ' ' + approval.strftime('%d.%m.%Y') : '')
   end
 
+  # добавляет #id в конце строки
   def directive_name
-    midname + '   #' + id.to_s
+    "#{midname}   ##{id}"
   end
 
+  # возвращет directive.id из конца строки наименования
   def directive_name=(name)
     return if name.blank?
+
     i = name.rindex('#')
-    self.directive_id = name.slice(i + 1, 5).to_i if i.positive?
+    # name.slice(i + 1, 5).to_i if i.positive?
+    self.id = name[(i + 1..-1)].to_i
   end
 
   def directives_of_bproce(bproce_id) # все директивы процесса (связаны с ним через документы процесса)
@@ -47,11 +51,9 @@ class Directive < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search
-      where('number ILIKE ? or name ILIKE ? or title ILIKE ? or body ILIKE ?',
-            "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%")
-    else
-      where(nil)
-    end
+    return where(nil) if search.blank?
+
+    where('number ILIKE ? or name ILIKE ? or title ILIKE ? or body ILIKE ?',
+          "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%")
   end
 end

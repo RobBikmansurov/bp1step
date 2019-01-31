@@ -43,7 +43,7 @@ class BproceContractsController < ApplicationController
   end
 
   def update
-    flash[:notice] = 'Successfully updated bproce_contract.' if @bproce_contract.update_attributes(bproce_contract_params)
+    flash[:notice] = 'Successfully updated bproce_contract.' if @bproce_contract.update(bproce_contract_params)
     respond_with(@bproce_contract)
   end
 
@@ -58,5 +58,4 @@ class BproceContractsController < ApplicationController
   def bproce_contract_params
     params.require(:bproce_contract).permit(:contract_id, :bproce_id, :bproce_name, :purpose)
   end
-
 end

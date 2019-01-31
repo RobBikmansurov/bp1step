@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Bproce < ActiveRecord::Base
+class Bproce < ApplicationRecord
   include TheSortableTree::Scopes
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
@@ -51,7 +51,7 @@ class Bproce < ActiveRecord::Base
   end
 
   def parent_name
-    Bproce.try(:name) if name.present?
+    parent&.try(:name)
   end
 
   def parent_name=(name)

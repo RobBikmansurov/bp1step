@@ -1,7 +1,6 @@
-# encoding: utf-8
 # frozen_string_literal: true
 
-class Document < ActiveRecord::Base
+class Document < ApplicationRecord
   # belongs_to :user
   belongs_to :owner, class_name: 'User'
   has_many :directive, through: :document_directive
@@ -46,7 +45,8 @@ class Document < ActiveRecord::Base
                                       'application/vnd.ms-excel', 'application/msword',
                                       'application/doc', 'application/rtf',
                                       'application/vnd.oasis.opendocument.graphics',
-                                      'application/octet-stream', 'application/force-download'
+                                      'application/octet-stream', 'application/force-download',
+                                      'application/zip'
                                     ]
   validates :name, presence: true, length: { minimum: 10, maximum: 200 }
   # validates :bproce_id, :presence => true # документ относится к процессу
@@ -66,9 +66,9 @@ class Document < ActiveRecord::Base
     self.owner = User.find_by(displayname: name) if name.present?
   end
 
-  # rubocop:disable Metrics/AbcSize
   def pdf_path
     return unless document_file
+
     extention = File.extname(document_file.path)
     if extention != '.pdf'
       document_file.path[0, document_file.path.length - extention.length] + '.pdf' # путь к файлу PDF для просмотра
@@ -79,6 +79,7 @@ class Document < ActiveRecord::Base
 
   def pdf_url
     return unless document_file
+
     extention = File.extname(document_file.path)
     if extention != '.pdf'
       document_file.url.gsub(extention, '.pdf') # url файла PDF для просмотра
@@ -88,7 +89,7 @@ class Document < ActiveRecord::Base
   end
 
   def shortname
-    name.split(//u)[0..50].join
+    name[0..49]
   end
 
   private
@@ -100,10 +101,11 @@ class Document < ActiveRecord::Base
 
   def copy_to_pdf
     return unless document_file_file_name? # задано имя файла
+
     if File.exist?(document_file.path)
       begin
         Paperclip.run('unoconv', "-f pdf '#{document_file.path}'")
-      rescue
+      rescue StandardError
         logger.error "      ERR: #{document_file_file_name}"
       end
     else

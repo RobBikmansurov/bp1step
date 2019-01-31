@@ -58,17 +58,18 @@ namespace :bp1step do
           usr1 = User.find_by(email: email.to_s) # поищем по e-mail
           if usr1.nil?
             logger.info "+ #{entry['sn'].first} \t[#{username}] \t"
-            usr.update_column(:username, username)
-            usr.update_column(:email, email)
-            usr.update_column(:department, department)
-            usr.update_column(:position, position)
-            usr.update_column(:phone, phone)
-            usr.update_column(:office, office)
-            usr.update_column(:password, email)
-            usr.update_column(:firstname, firstname)
-            usr.update_column(:middlename, middlename)
-            usr.update_column(:lastname, lastname)
+            usr.username = username
+            usr.email = email
+            usr.department = department
+            usr.position = position
+            usr.phone = phone
+            usr.office = office
+            usr.password = email
+            usr.firstname = firstname
+            usr.middlename = middlename
+            usr.lastname = lastname
             # usr.update_column(:displayname, name)   # ФИО - модель update_from_ldap
+            usr.save
             logger.info "#{i}+#{new_users}. #{entry.sAMAccountName} #{email} #{entry.dn}"
             logger.info usr.errors if debug_flag
           else

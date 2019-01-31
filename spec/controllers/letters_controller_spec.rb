@@ -9,7 +9,7 @@ RSpec.describe LettersController, type: :controller do
   let(:letter) { FactoryBot.create :letter }
   let(:letter1) { FactoryBot.create :letter }
 
-  before(:each) do
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'author', description: 'Автор')
     sign_in @user
@@ -18,7 +18,7 @@ RSpec.describe LettersController, type: :controller do
 
   describe 'GET index' do
     it 'assigns all letters as @letters' do
-      get :index, {}
+      get :index
       expect(response).to be_successful
       expect(response).to render_template('letters/index')
     end

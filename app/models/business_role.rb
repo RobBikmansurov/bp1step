@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class BusinessRole < ActiveRecord::Base
+class BusinessRole < ApplicationRecord
   validates :name, presence: true,
                    length: { minimum: 5, maximum: 50 }
   validates :description, presence: true,
@@ -29,8 +29,10 @@ class BusinessRole < ActiveRecord::Base
     self.bproce_id = Bproce.find_by(name: name).id if name.present?
   end
 
-  def self.search(search, page)
-    paginate page: page,
-             conditions: ['name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", search.to_i.to_s]
+  def self.search(search)
+    return where(nil) if search.blank?
+
+    where('name ILIKE ? or description ILIKE ? or id = ?',
+          "%#{search}%", "%#{search}%", search.to_i.to_s)
   end
 end

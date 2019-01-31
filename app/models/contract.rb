@@ -1,7 +1,6 @@
-# encoding: utf-8
 # frozen_string_literal: true
 
-class Contract < ActiveRecord::Base
+class Contract < ApplicationRecord
   acts_as_taggable
   acts_as_nested_set
 
@@ -38,24 +37,24 @@ class Contract < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
-  def agent_name    # Контрагент
-    agent.try(:name)
+  def agent_name
+    agent.try(:name) # Контрагент
   end
 
   def agent_name=(name)
     self.agent = Agent.find_by(name: name) if name.present?
   end
 
-  def owner_name    # ответственный за договор
-    owner.try(:displayname)
+  def owner_name
+    owner.try(:displayname) # ответственный за договор
   end
 
   def owner_name=(name)
     self.owner = User.find_by(displayname: name) if name.present?
   end
 
-  def payer_name    # ответственный за оплату договора
-    payer.try(:displayname)
+  def payer_name
+    payer.try(:displayname) # ответственный за оплату договора
   end
 
   def payer_name=(name)
@@ -69,24 +68,23 @@ class Contract < ActiveRecord::Base
   def parent_name=(name)
     id_find = name[/#.*\ №/]
     return unless id_find
+
     id_find = id_find[1..-3] # выделим #id
     parent_find = Contract.where(id: id_find) if id_find
     self.parent = parent_find.first if parent_find
   end
 
   def shortname
-    '№ ' + number.to_s + ' ' + name.split(//u)[0..50].join
+    "№ #{number} #{name[0..49]}"
   end
 
   def autoname
-    '#' + id.to_s + ' №' + number.to_s + ' | ' + name.split(//u)[0..50].join
+    "##{id} №#{number} | #{name[0..49]}"
   end
 
   def self.search(search)
-    if search
-      where('name ILIKE ? or number ILIKE ? or id = ?', "%#{search}%", "%#{search}%", search.to_i.to_s)
-    else
-      where(nil)
-    end
+    return where(nil) if search.blank?
+
+    where('name ILIKE ? or number ILIKE ? or id = ?', "%#{search}%", "%#{search}%", search.to_i.to_s)
   end
 end

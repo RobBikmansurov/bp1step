@@ -6,10 +6,7 @@ class LettersController < ApplicationController
   before_action :set_letter, only: %i[show edit update destroy register reestr]
   helper_method :sort_column, :sort_direction
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
-
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/LineLength
-  # rubocop:disable Metrics/MethodLength
   def index
     @title_letter = 'Письма '
     if params[:user].present?
@@ -50,7 +47,7 @@ class LettersController < ApplicationController
         @title_letter += ' Входящие'
       end
     end
-    @letters = @letters.order(sort_order).paginate(per_page: 10, page: params[:page])
+    @letters = @letters.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
   end
 
   def show
@@ -260,9 +257,9 @@ class LettersController < ApplicationController
     end
     direction = params[:direction] || 'asc'
     @senders = if direction == 'asc'
-                 @senders.group(:sender, :status).order('sender DESC, status ASC').count
+                 @senders.group(:sender, :status).order('sender DESC, status ASC').size
                else
-                 @senders.group(:sender, :status).order('sender ASC, status ASC').count
+                 @senders.group(:sender, :status).order('sender ASC, status ASC').size
                end
     # @senders = @senders.paginate(:per_page => 10, :page => params[:page])
   end
@@ -272,7 +269,7 @@ class LettersController < ApplicationController
   def set_letter
     if params[:search].present? # это поиск
       @letters = Letter.search('?', params[:search])
-                       .order(sort_order)
+                       .order(sort_order(sort_column, sort_direction))
                        .paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else

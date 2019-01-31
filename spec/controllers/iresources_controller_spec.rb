@@ -51,6 +51,7 @@ RSpec.describe IresourcesController, type: :controller do
 
     describe 'POST create' do
       let(:iresource) { build(:iresource) }
+
       before { sign_in(user) }
 
       describe 'with valid params' do
@@ -74,6 +75,7 @@ RSpec.describe IresourcesController, type: :controller do
 
       describe 'with invalid params' do
         let(:invalid_iresource) { build(:iresource, :invalid) }
+
         it 'assigns a newly created but unsaved iresource as @iresource' do
           post :create, params: { iresource: invalid_iresource.as_json }
           expect(assigns(:iresource)).to be_a_new(Iresource)

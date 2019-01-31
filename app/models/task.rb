@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Task < ActiveRecord::Base
+class Task < ApplicationRecord
   validates :name, presence: true,
                    length: { minimum: 5, maximum: 255 }
   validates :description, presence: true
@@ -45,11 +45,9 @@ class Task < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search
-      where('name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", search.to_i.to_s)
-    else
-      where(nil)
-    end
+    return where(nil) if search.blank?
+
+    where('name ILIKE ? or description ILIKE ? or id = ?', "%#{search}%", "%#{search}%", search.to_i.to_s)
   end
 
   private
@@ -62,6 +60,7 @@ class Task < ActiveRecord::Base
     end
     return unless status >= 90 # завершено
     return unless status_was
+
     self.completion_date = Time.current if status_was < 90 # запомним дату и время завершения, если новый статус - "Завершено"
   end
 end

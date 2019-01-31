@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MetricValue < ActiveRecord::Base
+class MetricValue < ApplicationRecord
   validates :value, presence: true
   validates :dtime, presence: true
 

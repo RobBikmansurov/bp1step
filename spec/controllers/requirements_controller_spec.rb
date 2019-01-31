@@ -7,7 +7,8 @@ RSpec.describe RequirementsController, type: :controller do
   let(:valid_attributes) { { label: 'requirement', author_id: author.id } }
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
-  before(:each) do
+
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'author', description: 'Автор')
     sign_in @user
@@ -16,7 +17,7 @@ RSpec.describe RequirementsController, type: :controller do
 
   describe 'GET index' do
     it 'assigns all requirements as @requirements' do
-      get :index, {}
+      get :index
       expect(response).to be_successful
       expect(response).to render_template('requirements/index')
     end

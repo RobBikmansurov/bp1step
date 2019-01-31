@@ -1,14 +1,12 @@
+# frozen_string_literal: true
+
 class UserTasksController < ApplicationController
   respond_to :html, :xml, :json
   before_action :authenticate_user!, only: %i[new create destroy]
 
   def show
     @user_task = UserTask.find(params[:id])
-    redirect_to Task_path(@user_task.Task_id) and return
-  end
-
-  def new
-    @user_task = UserTask.new(status: 0)
+    redirect_to(task_path(@user_task.task_id)) && return
   end
 
   def create
@@ -37,7 +35,7 @@ class UserTasksController < ApplicationController
       flash[:alert] = "Error sending mail to #{@user_task.user.email}"
     end
     if @user_task.destroy # удалили связь
-      @task.update_column(:status, 0) if !@task.user_task.first # если нет ответственных - статус = Новая
+      @task.update_column(:status, 0) unless @task.user_task.first # если нет ответственных - статус = Новая
     end
     # respond_with(@task)  # вернулись в задачу
     respond_to do |format|
@@ -47,9 +45,10 @@ class UserTasksController < ApplicationController
     end
   end
 
-  private 
+  private
+
   def user_task_params
     params.require(:user_task)
-           .permit(:user_id, :task_id, :status, :user_name)
+          .permit(:user_id, :task_id, :status, :user_name)
   end
 end

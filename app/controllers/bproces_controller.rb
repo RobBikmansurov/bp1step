@@ -10,12 +10,12 @@ class BprocesController < ApplicationController
   respond_to :html
   respond_to :pdf, :xml, :json, only: %i[index list]
   helper_method :sort_column, :sort_direction
-  before_action :get_bproce, except: %i[index list manage autocomplete]
-  before_action :authenticate_user!, only: %i[edit new create update]
+  before_action :set_bproce, except: %i[index list manage autocomplete]
+  before_action :authenticate_user!, only: %i[edit create update]
 
   # плоский список процессов без дерева
   def list
-    @bproces = Bproce.search('?', params[:search]).order(sort_order).find(:all, include: :user)
+    @bproces = Bproce.search('?', params[:search]).order(sort_order(sort_column, sort_direction)).find(:all, include: :user)
     respond_to do |format|
       format.html
       format.pdf { print_list }
@@ -31,11 +31,8 @@ class BprocesController < ApplicationController
       @user = User.find(params[:user])
       @bproces = Bproce.nested_set.where(user_id: params[:user])
     else
-      @bproces = if params[:search].present?
-                   Bproce.nested_set.search__by_all_column(params[:search])
-                 else
-                   Bproce.nested_set
-                 end
+      @bproces = Bproce.nested_set
+      @bproces = @bproces.search__by_all_column(params[:search]) if params[:search].present?
     end
     @bproces = @bproces.order(:lft)
     respond_to do |format|
@@ -62,11 +59,13 @@ class BprocesController < ApplicationController
   end
 
   def check_list
-    print_check_list # чек-лист карточки процесса
+    # чек-лист карточки процесса
+    generate_report('reports/bp-check.odt', "#{@bproce.id}-check_list-#{Date.current.strftime('%Y%m%d')}.odt")
   end
 
   def check_list_improve
-    print_check_list_improve # чек-лист карточки улучшения процесса
+    # чек-лист карточки улучшения процесса
+    generate_report('reports/bp-check-improve.odt', "#{@bproce.id}-check_list-improve-#{Date.current.strftime('%Y%m%d')}.odt")
   end
 
   def doc
@@ -153,7 +152,11 @@ class BprocesController < ApplicationController
     params[:sort] || 'lft'
   end
 
-  def get_bproce
+  def sort_direction
+    params[:direction] || 'asc'
+  end
+
+  def set_bproce
     if params[:search].present? # это поиск
       @bproces = Bproce.search__by_all_column(params[:search])
       render :index # покажем список найденного
@@ -179,8 +182,7 @@ class BprocesController < ApplicationController
         t.add_column(:id)
         t.add_column(:goal)
       end
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer(r)
     end
     send_data report.generate, type: 'application/msword',
                                filename: "processes-#{Date.current.strftime('%Y%m%d')}.odt",
@@ -190,7 +192,7 @@ class BprocesController < ApplicationController
   # печать Карточки процесса
   def print_card
     report = ODFReport::Report.new('reports/bp-card.odt') do |r|
-      form_report_header(r)
+      report_header(r)
       sp = 0 # порядковый номер строки для подпроцессов
       subs = Bproce.where('lft>? and rgt<?', @bproce.lft, @bproce.rgt).order('lft') # все подпроцессы процесса
       if subs.any? # если подпроцессов нет - пустая таблица не будет выведена
@@ -198,7 +200,7 @@ class BprocesController < ApplicationController
           t.add_column(:sp) { |_ca| sp += 1 } # порядковый номер строки таблицы
           t.add_column(:spname) { |sub| '__' * (sub.depth - @bproce.depth) + " [#{sub.shortname}] #{sub.name}" }
           t.add_column(:sp_id, &:id)
-          t.add_column(:spowner) { |sp| sp.user&.displayname }
+          t.add_column(:spowner) { |spowner| spowner.user&.displayname }
         end
       end
       @metrics = Metric.where(bproce_id: @bproce.id).order(:name) # метрики процесса
@@ -210,75 +212,17 @@ class BprocesController < ApplicationController
       report_workplaces(@bproce, r, true) # сформировать таблицу рабочих мест
       report_bapps(@bproce, r, true) # сформировать таблицу приложений процесса
       report_iresources(@bproce, r, true) # сформировать таблицу ресурсов процесса
-
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer(r)
     end
     send_data report.generate, type: 'application/msword',
                                filename: "#{@bproce.id}-card-#{Date.current.strftime('%Y%m%d')}.odt",
                                disposition: 'inline'
   end
 
-  # печатать чек-лист Карточки процесса
-  def print_check_list
-    report = ODFReport::Report.new('reports/bp-check.odt') do |r|
-      form_report_header(r)
-      sp = 0 # порядковый номер строки для подпроцессов
-      subs = Bproce.where('lft>? and rgt<?', @bproce.lft, @bproce.rgt).order('lft') # все подпроцессы процесса
-      if subs.any? # если подпроцессов нет - пустая таблица не будет выведена
-        r.add_table('SUBPROC', subs, header: false, skip_if_empty: true) do |t|
-          t.add_column(:sp) { |_ca| sp += 1 } # порядковый номер строки таблицы
-          t.add_column(:spname) { |sub| '__' * (sub.depth - @bproce.depth) + " [#{sub.shortname}] #{sub.name}" }
-          t.add_column(:sp_id, &:id)
-          t.add_column(:spowner) { |sp| sp.user&.displayname }
-        end
-      end
-      roles = if @bproce.business_roles.any?
-                @bproce.business_roles.collect(&:name).join(', ')
-              else
-                'Роли не выделены!' # сформировать список ролей
-              end
-      r.add_field 'ROLES', roles
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
-    end
-    send_data report.generate, type: 'application/msword',
-                               filename: "#{@bproce.id}-check_list-#{Date.current.strftime('%Y%m%d')}.odt",
-                               disposition: 'inline'
-  end
-
-  # печатать чек-лист Улучшения процесса
-  def print_check_list_improve
-    report = ODFReport::Report.new('reports/bp-check-improve.odt') do |r|
-      form_report_header(r)
-      sp = 0 # порядковый номер строки для подпроцессов
-      subs = Bproce.where('lft>? and rgt<?', @bproce.lft, @bproce.rgt).order('lft') # все подпроцессы процесса
-      if subs.any? # если подпроцессов нет - пустая таблица не будет выведена
-        r.add_table('SUBPROC', subs, header: false, skip_if_empty: true) do |t|
-          t.add_column(:sp) { |_ca| sp += 1 } # порядковый номер строки таблицы
-          t.add_column(:spname) { |sub| '__' * (sub.depth - @bproce.depth) + " [#{sub.shortname}] #{sub.name}" }
-          t.add_column(:sp_id, &:id)
-          t.add_column(:spowner) { |sp| sp.user&.displayname }
-        end
-      end
-      roles = if @bproce.business_roles.any?
-                @bproce.business_roles.collect(&:name).join(', ') # сформировать список ролей
-              else
-                'Роли не выделены!'
-              end
-      r.add_field 'ROLES', roles
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
-    end
-    send_data report.generate, type: 'application/msword',
-                               filename: "#{@bproce.id}-check_list-improve-#{Date.current.strftime('%Y%m%d')}.odt",
-                               disposition: 'inline'
-  end
-
   # заготовка описания процесса
   def print_doc
     report = ODFReport::Report.new('reports/bp-doc.odt') do |r|
-      form_report_header(r)
+      report_header(r)
       sp = 0 # порядковый номер строки для подпроцессов
       subs = Bproce.where('lft>? and rgt<?', @bproce.lft, @bproce.rgt).order('lft') # все подпроцессы процесса
       r.add_table('SUBPROC', subs, header: false, skip_if_empty: true) do |t|
@@ -301,9 +245,7 @@ class BprocesController < ApplicationController
       report_workplaces(@bproce, r, false) # сформировать таблицу рабочих мест
       report_bapps(@bproce, r, false) # сформировать таблицу приложений процесса
       report_iresources(@bproce, r, false) # сформировать таблицу ресурсов процесса
-
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer(r)
     end
     send_data report.generate, type: 'application/msword',
                                filename: "#{@bproce.id}-process-#{Date.current.strftime('%Y%m%d')}.odt",
@@ -321,8 +263,7 @@ class BprocesController < ApplicationController
         t.add_column(:name)
         t.add_column(:fullname)
       end
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer(r)
     end
     send_data report.generate, type: 'application/msword',
                                filename: "process_list-#{Date.current.strftime('%Y%m%d')}.odt",
@@ -333,7 +274,7 @@ class BprocesController < ApplicationController
   def print_order
     @business_roles = @bproce.business_roles.order(:name)
     report = ODFReport::Report.new('reports/bp-order.odt') do |r|
-      form_report_header(r)
+      report_header(r)
       r.add_field 'ORDERNUM', Date.current.strftime('%Y%m%d-п') + @bproce.id.to_s
       rr = 0 # порядковый номер строки для ролей
       r.add_section('ROLES', @business_roles) do |s|
@@ -345,8 +286,7 @@ class BprocesController < ApplicationController
           u.add_column(:position)
         end
       end
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer(r)
     end
     send_data report.generate, type: 'application/msword',
                                filename: "#{@bproce.id}-order-#{Date.current.strftime('%Y%m%d')}.odt",
@@ -454,7 +394,7 @@ class BprocesController < ApplicationController
     end
   end
 
-  def form_report_header(report)
+  def report_header(report)
     report.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
     report.add_field :id, @bproce.id
     report.add_field :shortname, @bproce.shortname
@@ -474,5 +414,36 @@ class BprocesController < ApplicationController
     else
       report.add_field :owner, '-'
     end
+  end
+
+  def report_footer(report)
+    report.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
+    report.add_field 'USER_NAME', current_user.displayname
+  end
+
+  def generate_report(odt_template_name, report_file_name)
+    report = ODFReport::Report.new(odt_template_name) do |r|
+      report_header(r)
+      sp = 0 # порядковый номер строки для подпроцессов
+      subs = Bproce.where('lft>? and rgt<?', @bproce.lft, @bproce.rgt).order('lft') # все подпроцессы процесса
+      if subs.any? # если подпроцессов нет - пустая таблица не будет выведена
+        r.add_table('SUBPROC', subs, header: false, skip_if_empty: true) do |t|
+          t.add_column(:sp) { |_ca| sp += 1 } # порядковый номер строки таблицы
+          t.add_column(:spname) { |sub| '__' * (sub.depth - @bproce.depth) + " [#{sub.shortname}] #{sub.name}" }
+          t.add_column(:sp_id, &:id)
+          t.add_column(:spowner) { |sp| sp.user&.displayname }
+        end
+      end
+      roles = if @bproce.business_roles.any?
+                @bproce.business_roles.collect(&:name).join(', ')
+              else
+                'Роли не выделены!' # сформировать список ролей
+              end
+      r.add_field 'ROLES', roles
+      report_footer(r)
+    end
+    send_data report.generate, type: 'application/msword',
+                               filename: report_file_name,
+                               disposition: 'inline'
   end
 end

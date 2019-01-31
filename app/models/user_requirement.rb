@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UserRequirement < ActiveRecord::Base
+class UserRequirement < ApplicationRecord
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 

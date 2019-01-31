@@ -3,7 +3,7 @@
 class UserWorkplaceMailer < ActionMailer::Base
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
-  # рассылка о назначении сотрунику РМ
+  # рассылка о назначении сотруднику РМ
   def user_workplace_create(user_workplace, current_user)
     @user_workplace = user_workplace
     @workplace = user_workplace.workplace

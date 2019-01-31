@@ -4,10 +4,11 @@ require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do
   let(:author) { FactoryBot.create :user }
-  let(:task_attributes) { { name: 'Task00', description: 'description', status: 0, duedate: Date.current + 1, author_id: author.id } }
+  let(:task_attributes) { { name: 'Task0', description: 'descript', status: 0, duedate: Date.current + 1, author_id: author.id } }
   let(:task) { FactoryBot.create(:task, author_id: author.id) }
   let(:task1) { FactoryBot.create(:task, author_id: author.id) }
-  before(:each) do
+
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
@@ -16,7 +17,7 @@ RSpec.describe TasksController, type: :controller do
 
   describe 'GET index' do
     it 'assigns all task as @tasks' do
-      get :index, {}
+      get :index
       expect(response).to be_successful
       expect(response).to render_template('tasks/index')
     end
@@ -36,7 +37,7 @@ RSpec.describe TasksController, type: :controller do
 
   describe 'GET new' do
     it 'assigns a new task as @task' do
-      get :new, {}
+      get :new
       expect(assigns(:task)).to be_a_new(Task)
     end
   end
@@ -73,6 +74,14 @@ RSpec.describe TasksController, type: :controller do
         post :create, params: { task: { 'name' => 'invalid value' } }
         expect(response).to render_template('new')
       end
+    end
+  end
+
+  describe 'GET edit' do
+    it 'assigns the requested task as @task' do
+      task = Task.create! task_attributes
+      get :edit, params: { id: task.to_param }
+      expect(assigns(:task)).to eq(task)
     end
   end
 

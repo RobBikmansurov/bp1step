@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   scope :active, -> { where(active: true) }
 
   has_attached_file :avatar,
@@ -70,12 +70,12 @@ class User < ActiveRecord::Base
 
   def ldap_lastname
     lastname = Devise::LDAP::Adapter.get_ldap_param(username, 'sn')
-    lastname.first.force_encoding('UTF-8') if lastname
+    lastname&.first&.force_encoding('UTF-8')
   end
 
   def ldap_firstname
     tempname = Devise::LDAP::Adapter.get_ldap_param(username, 'givenname')
-    tempname.first.force_encoding('UTF-8') if tempname
+    tempname&.first&.force_encoding('UTF-8')
   end
 
   def ldap_displayname
@@ -87,15 +87,13 @@ class User < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search
-      where('username ILIKE ? or displayname ILIKE ?', "%#{search}%", "%#{search}%")
-    else
-      where(nil)
-    end
+    return where(nil) if search.blank?
+
+    where('username ILIKE ? or displayname ILIKE ?', "%#{search}%", "%#{search}%")
   end
 
   def user_name
-    self.try(:displayname)
+    try(:displayname)
   end
 
   def user_name=(name)

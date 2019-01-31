@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class BproceWorkplace < ActiveRecord::Base
+class BproceWorkplace < ApplicationRecord
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 

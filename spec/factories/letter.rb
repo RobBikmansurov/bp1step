@@ -5,9 +5,9 @@ FactoryBot.define do
     sequence(:id, &:to_s)
     number { "LET--#{id}" }
     regnumber 'MyString'
-    regdate Date.current
-    date Date.current
-    duedate Date.current + 1
+    regdate { Date.current }
+    date { Date.current }
+    duedate { Date.current + 1 }
     subject 'MyString'
     source 'MyString'
     sender 'MyText'

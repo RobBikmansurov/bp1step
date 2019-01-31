@@ -6,7 +6,8 @@ RSpec.describe AgentsController, type: :controller do
   let(:agent_attributes) { { name: 'Agent name' } }
   let(:valid_session) { {} }
   let(:agent) { FactoryBot.create(:agent) }
-  before(:each) do
+
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
@@ -15,7 +16,7 @@ RSpec.describe AgentsController, type: :controller do
 
   describe 'GET index' do
     it 'assigns all agents as @agents' do
-      get :index, {}
+      get :index
       expect(response).to be_successful
       expect(response).to render_template('agents/index')
     end
@@ -38,7 +39,7 @@ RSpec.describe AgentsController, type: :controller do
 
   describe 'GET new' do
     it 'assigns a new agent as @agent' do
-      get :new, {}
+      get :new
       expect(assigns(:agent)).to be_a_new(Agent)
     end
   end

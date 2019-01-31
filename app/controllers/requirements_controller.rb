@@ -16,13 +16,13 @@ class RequirementsController < ApplicationController
       @requirements = Requirement.search(params[:search]).unfinished.includes(:user_requirement)
       @title_requirements += 'не завершенные'
     end
-    @requirements = @requirements.order(sort_order).paginate(per_page: 10, page: params[:page])
+    @requirements = @requirements.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
   end
 
   def show
     @tasks = Task.where('requirement_id = ?', @requirement.id)
     @tasks = if params[:sort].present?
-               @tasks.order(sort_order)
+               @tasks.order(sort_order(sort_column, sort_direction))
              else
                @tasks.order('status, duedate, id')
              end

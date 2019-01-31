@@ -4,7 +4,7 @@ require 'spec_helper'
 include Warden::Test::Helpers
 Warden.test_mode!
 
-RSpec.feature 'Managing terms', type: :feature do
+RSpec.describe 'Managing terms', type: :feature do
   context "Any users see list of terms and can't update it" do
     it 'see Terms' do
       visit '/'

@@ -10,7 +10,7 @@ class DocumentDirectivesController < ApplicationController
   end
 
   def show
-    redirect_to directive_path(@document_directive.directive_id) and return
+    redirect_to(directive_path(@document_directive.directive_id)) && return
   end
 
   def new
@@ -49,7 +49,7 @@ class DocumentDirectivesController < ApplicationController
   def update
     @document_directive = DocumentDirective.find(params[:id])
     respond_to do |format|
-      if @document_directive.update_attributes(document_directive_params)
+      if @document_directive.update(document_directive_params)
         format.html { redirect_to @document_directive, notice: 'Document directive was successfully updated.' }
         format.json { head :no_content }
       else

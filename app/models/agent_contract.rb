@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AgentContract < ActiveRecord::Base
+class AgentContract < ApplicationRecord
   belongs_to :agent
   belongs_to :contract
 end

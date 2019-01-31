@@ -5,7 +5,7 @@ FactoryBot.define do
   factory :directive do
     sequence(:name) { |n| "directive_name#{n}" }
     number 'number'
-    approval Time.current
+    approval { Time.current }
     body 'Орган'
     status 'Проект'
   end

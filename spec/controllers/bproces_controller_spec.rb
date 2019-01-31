@@ -8,7 +8,8 @@ RSpec.describe BprocesController, type: :controller do
   let(:bproce1) { FactoryBot.create :bproce, user_id: user.id }
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
-  before(:each) do
+
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'author', description: 'Автор')
     sign_in @user
@@ -22,7 +23,11 @@ RSpec.describe BprocesController, type: :controller do
       expect(response).to be_successful
       expect(response).to render_template('bproces/index')
     end
-
+    it 'returns finded processes with param search' do
+      bproce.name = 'sms-information'
+      get :index, params: { search: 'sms' }
+      # expect(assigns(:bproces)).to match_array([bproce])
+    end
     it 'loads all of the bproces into @bproces' do
       get :index
       expect(assigns(:bproces)).to match_array([bproce, bproce1])

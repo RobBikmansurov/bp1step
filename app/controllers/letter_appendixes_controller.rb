@@ -1,12 +1,10 @@
-# coding: utf-8
+# frozen_string_literal: true
 
 class LetterAppendixesController < ApplicationController
   respond_to :html
   before_action :authenticate_user!, only: %i[edit new]
   before_action :set_letter_appendix, only: %i[show edit update destroy]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
-
-  def show; end
 
   def edit
     @letter = @letter_appendix.letter if @letter_appendix

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class UserLettersController < ApplicationController
   respond_to :html, :xml, :json
   before_action :authenticate_user!, only: %i[new create destroy]
 
   def show
     @user_letter = UserLetter.find(params[:id])
-    redirect_to letter_path(@user_letter.letter_id) and return
+    redirect_to(letter_path(@user_letter.letter_id)) && return
   end
 
   def new
@@ -37,15 +39,15 @@ class UserLettersController < ApplicationController
       flash[:alert] = "Error sending mail to #{@user_letter.user.email}"
     end
     if @user_letter.destroy # удалили связь
-      @letter.update_column(:status, 0) if !@letter.user_letter.first # если нет ответственных - статус = Новое
+      @letter.update_column(:status, 0) unless @letter.user_letter.first # если нет ответственных - статус = Новое
     end
     respond_with(@letter) # вернулись в письмо
   end
 
-  private 
-    def user_letter_params
-    params.require(:user_letter)
-           .permit(:user_id, :letter_id, :status, :user_name)
-  end
+  private
 
+  def user_letter_params
+    params.require(:user_letter)
+          .permit(:user_id, :letter_id, :status, :user_name)
+end
 end

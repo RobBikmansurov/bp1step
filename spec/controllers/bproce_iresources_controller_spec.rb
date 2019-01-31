@@ -6,19 +6,19 @@ RSpec.describe BproceIresourcesController, type: :controller do
   let(:user) { FactoryBot.create :user }
   let(:bproce) { FactoryBot.create :bproce, user_id: user.id }
   let(:iresource) { FactoryBot.create :iresource }
-  let(:bproce_iresource) { FactoryBot.create :bproce_iresource, bproce_id: bproce.id }
+  let(:bproce_iresource) { FactoryBot.create :bproce_iresource, bproce_id: bproce.id, iresource_id: iresource.id }
   let(:valid_attributes) { { bproce_id: bproce.id, iresource_id: iresource.id, rpurpose: 'Purpose' } }
   let(:invalid_attributes) { { bproce_id: nil, iresource_id: iresource.id, rpurpose: 'Purpose' } }
   let(:valid_session) { {} }
 
-  before(:each) do
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
   end
 
-  before(:each) do
+  before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
     sign_in @user
@@ -48,7 +48,7 @@ RSpec.describe BproceIresourcesController, type: :controller do
 
   describe 'POST create' do
     describe 'with valid params' do
-      it 'creates a new BproceIresource' do
+      it 'creates a new BproceIresource from IResource' do
         expect do
           post :create, params: { bproce_iresource: valid_attributes }
         end.to change(BproceIresource, :count).by(1)
@@ -63,20 +63,6 @@ RSpec.describe BproceIresourcesController, type: :controller do
       it 'redirects to the created bproce_iresource' do
         post :create, params: { bproce_iresource: valid_attributes }
         expect(response).to redirect_to(Iresource.last)
-      end
-    end
-
-    describe 'with invalid params' do
-      it 'assigns a newly created but unsaved bproce_iresource as @bproce_iresource' do
-        expect_any_instance_of(BproceIresource).to receive(:save).and_return(false)
-        post :create, params: { bproce_iresource: invalid_attributes }
-        expect(assigns(:bproce_iresource)).to be_a_new(BproceIresource)
-      end
-
-      it "re-renders the 'new' template" do
-        expect_any_instance_of(BproceIresource).to receive(:save).and_return(false)
-        post :create, params: { bproce_iresource: invalid_attributes }
-        expect(response).to render_template('new')
       end
     end
   end
@@ -109,7 +95,7 @@ RSpec.describe BproceIresourcesController, type: :controller do
       it "re-renders the 'edit' template" do
         expect_any_instance_of(BproceIresource).to receive(:save).and_return(false)
         put :update, params: { id: bproce_iresource.to_param, bproce_iresource: invalid_attributes }
-        expect(response).to_not render_template('edit')
+        expect(response).not_to render_template('edit')
       end
     end
   end
