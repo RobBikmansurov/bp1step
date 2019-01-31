@@ -43,7 +43,7 @@
                     = letter.completion_date.strftime("%d.%m.%y")
         %td
           -# если текущий пользователь еще не отметился в result
-          -if /(\d\d\:){3} #{current_user.displayname}/.match(letter.result).blank?
+          -if /(\d\d\:){3} #{current_user&.displayname}/.match(letter.result).blank?
             = link_to LETTER_STATUS.key(letter.status), edit_letter_path(letter), style: 'color: red;'
           -else
             = LETTER_STATUS.key(letter.status)
@@ -81,7 +81,7 @@
         %td
           = '!' if current_user && task.author_id == current_user.id
           -# если текущий пользователь еще не отметился в result
-          -if /(\d\d\:){3} #{current_user.displayname}/.match(task.result).blank?
+          -if /(\d\d\:){3} #{current_user&.displayname}/.match(task.result).blank?
             = link_to TASK_STATUS.key(task.status), edit_task_path(task), style: 'color: red;'
           -else
             = TASK_STATUS.key(task.status)
