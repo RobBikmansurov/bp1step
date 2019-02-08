@@ -5,7 +5,7 @@
 </head>
 <body>
   <a href=<%=h user_url(@user)%>><%= @user.displayname%></a> назначен
-  <a href=<%=h business_role_url('1084') %>> <%= @user_letter.status and @user_letter.status > 0 ? 'отв.' : ''%> исполнителем </a>
+  <a href=<%=h business_role_url('1084') %>> <%= @user_letter&.status&.positive? ? 'отв.' : ''%> исполнителем </a>
    Письма
   <a href=<%=h letter_url(@letter) %>> <%= @letter.name%> </a>
   <p>

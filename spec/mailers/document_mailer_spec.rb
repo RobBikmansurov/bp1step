@@ -23,7 +23,8 @@ describe DocumentMailer do
       expect(mail.body.encoded).to match(document.name)
     end
     it '@text contains text' do
-      expect(mail.body.encoded).to match('К сожалению, к карточке данного документа не присоединен файл документа в электронном виде.')
+      expect(mail.body.encoded)
+        .to match('К сожалению, к карточке данного документа не присоединен файл документа в электронном виде.')
     end
   end
 

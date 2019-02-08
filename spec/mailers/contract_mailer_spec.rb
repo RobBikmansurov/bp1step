@@ -99,11 +99,9 @@ describe ContractMailer do
   end
 
   describe 'addresses' do
-    let!(:contract) { FactoryBot.create :contract, owner_id: owner.id, payer_id: payer.id }
+    let!(:contract) { create :contract, owner_id: owner.id, payer_id: payer.id }
 
     it 'return array with owner`s and payer`s emails' do
-      @contract = contract
-      @contract.owner = owner
       obj = described_class.new
       addresses = obj.send(:addresses, contract)
       expect(addresses).to eql([owner.email, payer.email, 'bard@bankperm.ru'])
