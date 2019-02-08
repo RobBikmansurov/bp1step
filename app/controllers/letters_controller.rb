@@ -155,18 +155,22 @@ class LettersController < ApplicationController
   def update_user
     user_letter = UserLetter.new(user_letter_params) if params[:user_letter].present?
     if user_letter
-      user_letter_clone = UserLetter.where(letter_id: user_letter.letter_id, user_id: user_letter.user_id).first # проверим - нет такого исполнителя?
-      if user_letter_clone
-        user_letter_clone.status = user_letter.status
-        user_letter = user_letter_clone
-      end
-      if user_letter.save
-        flash[:notice] = "Исполнитель #{user_letter.user_name} назначен"
-        begin
-          UserLetterMailer.user_letter_create(user_letter, current_user).deliver_now # оповестим нового исполнителя
-        rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-          flash[:alert] = "Error sending mail to #{user_letter.user.email}"
+      @letter = user_letter.letter
+      if @letter.users.any? # уже есть исполнители письма
+        if UserLetter.where(letter_id: @letter.id, user_id: user_letter.user_id).any?
+          _status = user_letter.status
+          user_letter = UserLetter.where(letter_id: user_letter.letter_id, user_id: user_letter.user_id).first
+          user_letter.status = _status # новый статус для исполнителя, котрый уже был
         end
+        user_letter.status = check_statuses_another_users(user_letter)
+      else
+        user_letter.status = 1 # первый исполнитель - ответственный
+      end
+      p user_letter
+      p user_letter.status
+      if user_letter.save
+        flash[:notice] = "#{user_letter.user_name} назначен #{user_letter.status > 0 ? 'отв.' : ''} исполнителем"
+        UserLetterMailer.user_letter_create(user_letter, current_user).deliver_later # оповестим нового исполнителя
         @letter = user_letter.letter # Letter.find(@user_letter.letter_id)
         @letter.update_column(:status, 5) if @letter.status < 1 # если есть ответственные - статус = Назначено
       end
@@ -432,5 +436,20 @@ class LettersController < ApplicationController
     send_data report.generate, type: 'application/msword',
                                filename: 'reestr.odt',
                                disposition: 'inline'
+  end
+
+  # проверить чтобы ответственный был только один для данного письма
+  def check_statuses_another_users(user_letter)
+    other_users = UserLetter.where(letter_id: user_letter.letter_id).where.not(user_id: user_letter.user_id).where('status > 0')
+    if user_letter.status > 0
+      if other_users.any?
+        other_users.first.update_column(:status, 0)
+      end
+    else
+      unless other_users.any? # нет других отвественных
+        user_letter.status = 1
+      end
+    end
+    user_letter.status
   end
 end

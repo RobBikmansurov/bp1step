@@ -66,4 +66,9 @@ module ApplicationHelper
   def status(status)
     status && status.positive? ? 'отв.' : ''
   end
+
+  def format_content(name)
+    truncate(name, length: 150, omission: ' ...')
+  end
+
 end

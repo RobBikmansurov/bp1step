@@ -2,13 +2,13 @@
 
 require 'rails_helper'
 
-describe LetterMailer do
+describe TaskMailer do
   let!(:user) { FactoryBot.create(:user) }
   let!(:task) { FactoryBot.create(:task, author_id: user.id) }
 
   describe 'check_overdue_letters' do
     # рассылка исполнителям о просроченных письмах
-    let(:mail) { TaskMailer.check_overdue_tasks(task, task.author.email) }
+    let(:mail) { described_class.check_overdue_tasks(task, task.author.email) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: не исполнена Задача #{task.id}")
@@ -29,7 +29,7 @@ describe LetterMailer do
 
   describe 'soon_deadline_tasks' do
     # рассылка исполнителям о наступлении срока исполнения письма
-    let(:mail) { TaskMailer.soon_deadline_tasks(task, task.author.email, 5, user) }
+    let(:mail) { described_class.soon_deadline_tasks(task, task.author.email, 5, user) }
 
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: 5 дн. на Задачу #{task.id}")
