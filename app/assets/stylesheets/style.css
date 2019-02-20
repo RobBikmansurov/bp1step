@@ -300,3 +300,15 @@ a.groups:hover, a.groups-s:hover {
 .floating-text {
   display: inline-block;
 }
+user span {
+  max-width: 0;
+  -webkit-transition: max-width 1s;
+  transition: max-width 1s;
+  display: inline-block;
+  vertical-align: top;
+  white-space: nowrap;
+  overflow: hidden;
+}
+user:hover span {
+  max-width: 20rem;
+}

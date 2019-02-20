@@ -45,28 +45,21 @@
       %td= link_to truncate(letter.sender, length: 20, omission: ' ...'), letters_path(addresse: letter.sender)
       %td
         - if letter.duedate
-          - if letter.status < 90 and letter.duedate <= Date.current
-            %span{ style: "color: red;" }
-              = letter.duedate.strftime("%d.%m.%y")
-          - else
-            = letter.duedate.strftime("%d.%m.%y")
+          = days_left_as_text(letter.duedate, letter.status < 90 && letter.duedate <= Date.current)
           - if letter.completion_date
             - if letter.completion_date > letter.duedate
               %br
-                %span{ style: "color: red;" }
-                  = letter.completion_date.strftime("%d.%m.%y")
+                = date_as_text letter.completion_date, true
 
       %td= LETTER_STATUS.key(letter.status)
       %td
         - i = 0
         - letter.user_letter.includes(:user).each do |user_letter|
           - if user_letter.user
-            - if i > 0
-              %br
-            - s = "#{user_letter.user.displayname}"
-            - s += "\u2713".html_safe if user_letter.status and user_letter.status > 0   # пометим ответственного
-            -# = link_to s, letters_path(user: user_letter.user)
-            = link_to s, user_path(user_letter.user)
+            - s = "#{user_letter.user.user3}<span>#{user_letter.user.lastname[1,10]}</span>"
+            - s += "\u2713".html_safe if user_letter.status&.positive?   # пометим ответственного
+            %user
+              = link_to raw(s), user_letter.user
           - else
             удалить ссылку
             = user_letter.inspect
