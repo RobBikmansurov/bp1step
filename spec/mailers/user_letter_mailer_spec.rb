@@ -3,16 +3,20 @@
 require 'rails_helper'
 
 describe UserLetterMailer do
-  let!(:user) { FactoryBot.create(:user) }
-  let!(:bproce) { FactoryBot.create(:bproce, user_id: user.id) }
-  let!(:letter) { FactoryBot.create(:letter) }
-  let!(:user_letter) { UserLetter.create(letter_id: letter.id, user_id: user.id) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:bproce) { FactoryBot.create(:bproce, user_id: user.id) }
+  let(:letter) { FactoryBot.create(:letter) }
+  let!(:user_letter) { FactoryBot.create :user_letter, letter_id: letter.id, user_id: user.id }
 
   describe 'user_letter_create' do
     # рассылка о назначении исполнителя ответственным за письмо
     let(:mail) { described_class.user_letter_create(user_letter, user) }
 
-    it 'renders correct subject' do
+    it 'renders correct subject for status = 1' do
+      expect(mail.subject).to eql("BP1Step: Вы - отв.исполнитель Письма ##{letter.name}")
+    end
+    it 'renders correct subject for status = 0' do
+      user_letter.status = 0
       expect(mail.subject).to eql("BP1Step: Вы - исполнитель Письма ##{letter.name}")
     end
     it 'renders the sender email' do

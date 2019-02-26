@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe LetterMailer do
-  let!(:letter) { FactoryBot.create(:letter) }
-  let!(:user) { FactoryBot.create(:user) }
-  let(:user_letter) { FactoryBot.create(:user_letter, user_id: user.id, letter_id: letter.id) }
+  let(:letter) { create :letter }
+  let(:user) { create :user  }
+  let(:user_letter) { create :user_letter, user_id: user.id, letter_id: letter.id }
 
   describe 'check_overdue_letters' do
     # check_overdue_letters(letter, emails) # рассылка исполнителям о просроченных письмах
@@ -57,10 +57,10 @@ describe LetterMailer do
 
   describe 'update_letter' do
     # update_letter(letter, current_user, result) # рассылка об изменении письма
-    let!(:user_letter) { FactoryBot.create(:user_letter, user_id: user.id, letter_id: letter.id) }
+    let!(:user_letter) { create(:user_letter, user_id: user.id, letter_id: letter.id) } # rubocop: disable RSpec/LetSetup
     let(:mail) { described_class.update_letter(letter, user, 'updated') }
-    let!(:user1) { FactoryBot.create(:user) }
-    let!(:user_letter1) { FactoryBot.create(:user_letter, user_id: user1.id, letter_id: letter.id) }
+    let(:user1) { create(:user) }
+    let!(:user_letter1) { create(:user_letter, user_id: user1.id, letter_id: letter.id) } # rubocop: disable RSpec/LetSetup
 
     it 'renders the subject' do
       expect(mail.subject).to eql("BP1Step: Письмо #{letter.name} [#{LETTER_STATUS.key(letter.status)}] изменено")
@@ -74,9 +74,11 @@ describe LetterMailer do
       expect(mail.from).to eql(['bp1step@bankperm.ru'])
     end
 
-    it 'assigns @text' do
-      expect(mail.body.encoded).to match('исполнитель')
+    it 'assigns text' do
       expect(mail.body.encoded).to match('в которое внесены изменения')
+    end
+    it 'assigns right text' do
+      expect(mail.body.encoded).to match('исполнитель')
     end
   end
 end

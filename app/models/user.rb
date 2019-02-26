@@ -92,6 +92,10 @@ class User < ApplicationRecord
     where('username ILIKE ? or displayname ILIKE ?', "%#{search}%", "%#{search}%")
   end
 
+  def user3
+    "#{firstname&.chr}#{middlename&.chr}#{lastname&.chr}".upcase
+  end
+
   def user_name
     try(:displayname)
   end

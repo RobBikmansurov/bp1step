@@ -3,21 +3,15 @@
 require 'spec_helper'
 
 RSpec.describe BproceDocumentsController, type: :routing do
+
   describe 'routing -   resources :bproce_documents, :only => [:show]' do
     it 'routes to #show' do
       expect(get: '/bproce_documents/1').to route_to('bproce_documents#show', id: '1')
     end
 
-    it 'routes /bproce_documents/1 to bproce-documents#show' do
-      expect(get: '/bproce_documents/1').to route_to(
-        controller: 'bproce_documents',
-        action: 'show',
-        id: '1'
-      )
-    end
-
-    it 'does not expose a list of bproce_documents' do
-      expect(get: '/bproce_documents').not_to be_routable
+    it 'redirect to /pages/about if route is broken' do
+      #expect(get: '/bproce_documents').not_to be_routable
+      expect(get: '/bproce_documents').to route_to(controller: "pages", action: "about", path: 'bproce_documents')
     end
 
     it 'routes to #edit' do

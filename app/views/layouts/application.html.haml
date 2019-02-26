@@ -107,24 +107,24 @@
                     %span Войти
       / END NAV
 
-  %section
-    .container
-      - flash.each do |name, msg|
-        = content_tag :div, msg, :id => "flash_#{name}"
-      = yield
+    %section
+      .container
+        - flash.each do |name, msg|
+          = content_tag :div, msg, :id => "flash_#{name}"
+        = yield
 
-  %footer.footer
-    .container
-      .columns
-        .column
-          &copy; 
-          = link_to 'BP1Step', '/'
-          2012-2018
-        .column.is-one-fifth
-          rev.
-          = "#{Git::REVISION}"[0..6]
-          - if user_signed_in?
-            - if can? :assign_roles, User
-              .right
-                = link_to 'Monit', root_url(port: 2812, only_path: false)
-  %script{:defer => "defer", :src => "https://use.fontawesome.com/releases/v5.0.7/js/all.js"}
+    %footer.footer
+      .container
+        .columns
+          .column
+            &copy; 
+            = link_to 'BP1Step', '/'
+            2012-2018
+          .column.is-one-fifth
+            rev.
+            = "#{Git::REVISION}"[0..6]
+            - if user_signed_in?
+              - if can? :assign_roles, User
+                .right
+                  = link_to 'Monit', root_url(port: 2812, only_path: false)
+    %script{:defer => "defer", :src => "https://use.fontawesome.com/releases/v5.0.7/js/all.js"}

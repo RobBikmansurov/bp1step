@@ -4,11 +4,11 @@
  *= require_self
  */
 @charset "utf-8";
-@import 'autocomplete.css.scss';
+@import 'autocomplete.css';
 @import 'datepicker.css';
 /* @import 'simple_form.css.scss'; */
 /* @import 'forms.css.scss';*/
-@import 'forms.css.scss';
+@import 'forms.css';
 @import 'pagination.sass';
 
 // Import a Google Font
@@ -62,4 +62,19 @@ $fullhd-enabled: false;
  
 .tab-content.current-tab {
   display: inherit;
+}
+
+// @import 'style.css';
+
+user span {
+  max-width: 0;
+  -webkit-transition: max-width 1s;
+  transition: max-width 1s;
+  display: inline-block;
+  vertical-align: top;
+  white-space: nowrap;
+  overflow: hidden;
+}
+user:hover span {
+  max-width: 20rem;
 }

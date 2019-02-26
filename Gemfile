@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 gem 'rails', '5.2.2'
@@ -11,14 +12,14 @@ gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 4.1.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails'
-gem 'jquery-ui-rails', '5.0.5'
 gem 'jquery-rails'
+gem 'jquery-ui-rails', '5.0.5'
 
-gem 'will_paginate', '~> 3.0'
 gem 'alphabetical_paginate'
 gem 'cancancan', '~> 2.2'
 gem 'devise', '>=3.4.1' # , git: "https://github.com/plataformatec/devise"
 gem 'devise_ldap_authenticatable'
+gem 'will_paginate', '~> 3.0'
 # gem 'execjs'
 gem 'haml-rails'
 
@@ -49,8 +50,8 @@ gem 'actionpack-page_caching' # кеширование
 
 gem 'faker'
 
-gem "loofah", ">= 2.2.3"
-gem "rack", ">= 2.0.6"
+gem 'loofah', '>= 2.2.3'
+gem 'rack', '>= 2.0.6'
 
 group :development do
   gem 'better_errors'
@@ -61,13 +62,13 @@ group :development do
   gem 'capistrano-rvm'
   gem 'haml_lint', require: false
   # gem "rails-erd"
+  gem 'brakeman', require: false
+  gem 'bundler-audit', require: false
   gem 'capistrano-rails-db'
   gem 'capistrano3-puma'
   gem 'rubocop', require: false
   gem 'rubocop-rspec', require: false
   gem 'sshkit-sudo'
-  gem "brakeman", :require => false
-  gem "bundler-audit", :require => false
   # gem 'log-analyzer', require: false
 end
 
@@ -81,14 +82,14 @@ group :test do
   gem 'codeclimate-test-reporter', '~> 1.0.0'
   gem 'codecov', require: false
   gem 'database_cleaner'
-  gem 'shoulda-matchers'
   gem 'rails-controller-testing'
+  gem 'shoulda-matchers'
   gem 'simplecov'
   gem 'sqlite3'
   gem 'webrat'
 end
 
 group :development, :test do
-  gem 'rspec-rails'
   gem 'factory_bot_rails'
+  gem 'rspec-rails'
 end

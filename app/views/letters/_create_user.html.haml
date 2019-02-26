@@ -1,5 +1,5 @@
 .column
-  = simple_form_for @user_letter, :url => update_user_letter_path, :html => { :multipart => true } do |f|
+  = simple_form_for @user_letter, url: update_user_letter_path, html: { multipart: true } do |f|
     = f.error_notification
     = f.hidden_field :letter_id
     = f.error :base
