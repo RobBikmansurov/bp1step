@@ -71,4 +71,30 @@ module ApplicationHelper
     truncate(name, length: 150, omission: ' ...')
   end
 
+  def red_text(text, condition)
+    return text unless condition
+
+    raw("<span style='color: red;'>#{text}</span>")
+  end
+
+  def days_left_as_text(duedate, alarm)
+    days = (Date.current - duedate).to_i
+    return duedate.strftime("%d.%m.%y") if days < -2
+    return red_text(duedate.strftime("%d.%m.%y"), alarm) if days > 1
+    if days.zero?
+      red_text 'сегодня', true
+    elsif days == -1
+      red_text 'завтра', true
+    elsif days == 1
+      red_text 'вчера', true
+    elsif days.negative?
+      red_text 'скоро', true
+    else
+      '?? ?? ??'
+    end
+  end
+
+  def date_as_text(date, alarm)
+    red_text date.strftime("%d.%m.%y"), alarm
+  end
 end

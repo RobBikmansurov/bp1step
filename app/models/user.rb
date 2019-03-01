@@ -92,8 +92,12 @@ class User < ActiveRecord::Base
     where('username ILIKE ? or displayname ILIKE ?', "%#{search}%", "%#{search}%")
   end
 
+  def user3
+    "#{firstname&.chr}#{middlename&.chr}#{lastname&.chr}".upcase
+  end
+
   def user_name
-    self.try(:displayname)
+    try(:displayname)
   end
 
   def user_name=(name)

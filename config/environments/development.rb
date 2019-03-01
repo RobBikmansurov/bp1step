@@ -41,6 +41,6 @@ BPDoc::Application.configure do
   Paperclip.options[:command_path] = "/usr/bin/"
 
   config.eager_load = false
-  config.log_level = :info
+  config.log_level = :debug
 
 end
