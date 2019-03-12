@@ -23,8 +23,7 @@
         = link_to requirement.label, requirement
         от #{requirement.date.strftime('%d.%m.%Y')}
         %br
-        %small
-          = requirement.body
+        %small= truncate(requirement.body, length: 300, omission: ' ...')
       %td
         - if requirement.duedate
           = days_left_as_text requirement.duedate, requirement.status < 90 && requirement.duedate <= Date.current

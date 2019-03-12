@@ -166,7 +166,7 @@
   = link_to 'Edit', edit_letter_path(@letter), class: 'button'
   - if can? :create_outgoing, @letter
     = link_to 'Новое похожее', clone_letter_path(@letter), class: 'button'
-    = link_to 'Создать Исходящее', create_outgoing_letter_path(@letter), class: 'button' if @letter.in_out == 1
+  = link_to 'Создать Исходящее', create_outgoing_letter_path(@letter), class: 'button' if @letter.in_out == 1
   = link_to '+Задачу', create_task_letter_path(@letter), class: 'button'
   = link_to '+Требование', create_requirement_letter_path(@letter), class: 'button'
   - if can? :create_outgoing, @letter
