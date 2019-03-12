@@ -1,6 +1,7 @@
 - search "Требования"
 - title @title_requirements
 
+<<<<<<< HEAD
 %section.hero.is-primary
   .hero-body
     .container
@@ -61,3 +62,62 @@
       - Requirement.select('status, count(id) as count').group(:status).order(:status).each do |requirement|
         - unless requirement.status.to_s.empty?
           %a.button.is-info.is-outlined{ href: requirements_path(status: requirement.status) } #{REQUIREMENT_STATUS.key(requirement.status)} - #{requirement.count}
+=======
+%h2
+  = @title_requirements if @title_requirements
+  = "[ #{params[:search]} ]" if params[:search].present?
+
+%table
+  %tr
+    %th= sortable 'id', '#'
+    %thМетка, обозначение
+    -# %thСодержание
+    %th= sortable 'duedate', 'Срок'
+    %th= sortable 'status', 'Статус'
+    %thИсполнитель
+    %th
+
+  - @requirements.each do |requirement|
+    %tr
+      %td
+        .id_show_ ##{requirement.id}
+      %td
+        = link_to requirement.label, requirement
+        от #{requirement.date.strftime('%d.%m.%Y')}
+        %br
+        %small= truncate(requirement.body, length: 300, omission: ' ...')
+      %td
+        - if requirement.duedate
+          = days_left_as_text requirement.duedate, requirement.status < 90 && requirement.duedate <= Date.current
+      %td= REQUIREMENT_STATUS.key(requirement.status)
+      %td
+        - requirement.user_requirement.includes(:user).each do |user_requirement|
+          - if user_requirement.user
+            - s = "#{user_requirement.user.user3}<span>#{user_requirement.user.lastname[1,10]}</span>"
+            - s += "\u2713".html_safe if user_requirement.status&.positive?   # пометим ответственного
+            %user
+              = link_to raw(s), user_requirement.user
+          - else
+            удалить ссылку
+            = user_requirement.inspect
+      - if true or can? :manage, Requirement or can? :destroy, Requirement
+        %td
+          = link_to image_tag('page_edit.gif', alt: 'Изменить'), edit_requirement_path(requirement), class: 'button-img'
+          = link_to image_tag('action_stop.gif', alt: 'Удалить'), requirement,
+          data: { confirm: "Требование #{requirement.label} от #{requirement.date.strftime('%d.%m.%Y')}\n #{requirement.body}\nДействительно хотите удалить?" },
+          method: 'delete', class: 'button-img'
+
+%br
+.apple_pagination
+  = will_paginate @requirements
+
+%p
+- if can? :create, Requirement
+  = link_to 'Новое требование', new_requirement_path, class: 'button'
+
+%p
+- Requirement.select('status, count(id) as count').group(:status).order(:status).each do |requirement|
+  - unless requirement.status.to_s.empty?
+    = link_to " #{REQUIREMENT_STATUS.key(requirement.status)} (#{requirement.count}) ", requirements_path(status: requirement.status), class: 'groups'
+    &nbsp;
+>>>>>>> master

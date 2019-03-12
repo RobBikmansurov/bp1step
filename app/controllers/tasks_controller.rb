@@ -86,10 +86,11 @@ class TasksController < ApplicationController
     status_was = @task.status # старые значения записи
     duedate_was = @task.duedate
     if @task.update(task_params)
-      @task.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{current_user.displayname} изменил срок исполнения (с #{duedate_was.strftime('%d.%m.%Y')} на #{@task.duedate.strftime('%d.%m.%Y')})" unless @task.duedate == duedate_was
-      @task.result += "\r\n#{Time.current.strftime('%d.%m.%Y %H:%M:%S')}: #{current_user.displayname} - #{params[:task][:action]}" if params[:task][:action].present?
-      @task.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{current_user.displayname} считает задачу полностью исполненной" if (@task.status >= 90) && status_was < 90 # стало завершено
-      @task.update_column(:result, @task.result.to_s)
+      time = Time.current.strftime('%d.%m.%Y %H:%M:%S')
+      @task.result += "\r\n#{time}: #{current_user.displayname} изменил срок исполнения (с #{duedate_was.strftime('%d.%m.%Y')} на #{@task.duedate.strftime('%d.%m.%Y')})" unless @task.duedate == duedate_was
+      @task.result += "\r\n#{time}: #{current_user.displayname} - #{params[:task][:action]}" if params[:task][:action].present?
+      @task.result += "\r\n#{time}: #{current_user.displayname} считает задачу полностью исполненной" if (@task.status >= 90) && status_was < 90 # стало завершено
+      @task.update! result: @task.result.to_s
       redirect_to @task, notice: 'Информация по Задаче сохранена'
     else
       @task_status_enabled = enabled_statuses(@task, current_user.id) # автор и отв. могут переводить в любое состояние
@@ -102,7 +103,8 @@ class TasksController < ApplicationController
     if user_task
       @task = user_task.task
       if user_task.user_id
-        user_task_clone = UserTask.where(task_id: user_task.task_id, user_id: user_task.user_id).first # проверим - нет такого исполнителя?
+        # проверим - нет такого исполнителя?
+        user_task_clone = UserTask.where(task_id: user_task.task_id, user_id: user_task.user_id).first
         if user_task_clone
           user_task_clone.status = user_task.status
           user_task = user_task_clone
@@ -120,7 +122,7 @@ class TasksController < ApplicationController
             flash[:alert] = "Error sending mail to #{user_task.user.email}"
           end
           @task = user_task.task # task.find(@user_task.task_id)
-          @task.update_column(:status, 5) if @task.status < 1 # если есть ответственные - статус = Назначено
+          @task.update! status: 5 if @task.status < 1 # если есть ответственные - статус = Назначено
         end
       else
         flash[:alert] = "Ошибка - исполнитель [#{params[:user_task][:user_name]}] не найден"
@@ -219,7 +221,8 @@ class TasksController < ApplicationController
               disposition: 'inline'
   end
 
-  def check_report #  Отчет "Контроль исполнения"
+  #  Отчет "Контроль исполнения"
+  def check_report
     report = ODFReport::Report.new('reports/tasks_check.odt') do |r|
       nn = 0
       r.add_field 'REPORT_PERIOD', Date.current.strftime('%d.%m.%Y')

@@ -144,32 +144,12 @@
       - else
         %a.button.is-primary{ href: letters_path(out: 1) } Back
 
-      - if is_can_update # автор и исполнители могут изменять письмо
-        %a.button.is-primary{ href: edit_letter_path(@letter) } Edit
-        - if can? :create_outgoing, @letter
-          %a.button.is-primary{ href: clone_letter_path(@letter) } Новое похожее
-          -  if @letter.in_out == 1
-            %a.button.is-warning{ href: create_outgoing_letter_path(@letter) } Создать Исходящее
-        %a.button.is-link{ href: create_task_letter_path(@letter) } +Задачу
-        %a.button.is-link{ href: create_requirement_letter_path(@letter) } +Требование
-        - if can? :create_outgoing, @letter
-          %a.button.is-info{ href: reestr_letter_path(@letter) } Реестр выписок
-    .column
-      .info_
-        - activity1 = PublicActivity::Activity.where(trackable_type: 'Letter', trackable_id: @letter.id).order('created_at asc').first
-        - if activity1
-          = link_to 'создал', activities_path(type: 'Letter', id: @letter.id)
-          = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-          = activity1.owner.displayname.to_s
-        - else
-          создано
-          = @letter.created_at.strftime('%d.%m.%Y %H:%M:%S')
-        %br
-        - activity2 = PublicActivity::Activity.where(trackable_type: 'Letter', trackable_id: @letter.id).order('created_at asc').last
-        - if activity2
-          = link_to 'изменил', activities_path(type: 'Letter', id: @letter.id)
-          = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-          = activity2.owner.displayname.to_s
-        - else
-          изменено
-          = @letter.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+- if is_can_update # автор и исполнители могут изменять письмо
+  = link_to 'Edit', edit_letter_path(@letter), class: 'button'
+  - if can? :create_outgoing, @letter
+    = link_to 'Новое похожее', clone_letter_path(@letter), class: 'button'
+  = link_to 'Создать Исходящее', create_outgoing_letter_path(@letter), class: 'button' if @letter.in_out == 1
+  = link_to '+Задачу', create_task_letter_path(@letter), class: 'button'
+  = link_to '+Требование', create_requirement_letter_path(@letter), class: 'button'
+  - if can? :create_outgoing, @letter
+    = link_to 'Реестр выписок', reestr_letter_path(@letter), class: 'button'
