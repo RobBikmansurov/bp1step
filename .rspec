@@ -1,4 +1,4 @@
 --color
 --require spec_helper
 
---exclude spec/features/*_spec.rb
+--exclude spec/features/*_spec.rb spec/controllers/letter_appendixes_controller_spec.rb
