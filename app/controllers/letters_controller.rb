@@ -439,7 +439,7 @@ class LettersController < ApplicationController
   # проверить чтобы ответственный был только один для данного письма
   def check_statuses_another_users(user_letter)
     other_users = UserLetter.where(letter_id: user_letter.letter_id).where.not(user_id: user_letter.user_id).where('status > 0')
-    if user_letter.positive?
+    if user_letter.status.positive?
       if other_users.any?
         other_users.first.update! status: 0
       end
