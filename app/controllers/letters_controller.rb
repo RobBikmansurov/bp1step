@@ -170,7 +170,7 @@ class LettersController < ApplicationController
         flash[:notice] = "#{user_letter.user_name} назначен #{user_letter.status.positive? ? 'отв.' : ''} исполнителем"
         UserLetterMailer.user_letter_create(user_letter, current_user).deliver_later # оповестим нового исполнителя
         @letter = user_letter.letter # Letter.find(@user_letter.letter_id)
-        @letter.update! :status, 5 if @letter.status < 1 # если есть ответственные - статус = Назначено
+        @letter.update! status: 5 if @letter.status < 1 # если есть ответственные - статус = Назначено
       end
     else
       flash[:alert] = 'Ошибка - ФИО Исполнителя не указано.'
