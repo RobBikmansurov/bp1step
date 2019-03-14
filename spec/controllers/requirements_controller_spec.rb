@@ -7,6 +7,7 @@ RSpec.describe RequirementsController, type: :controller do
   let(:valid_attributes) { { label: 'requirement', author_id: author.id } }
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
+  let(:requirement) { FactoryBot.create :requirement, author_id: author.id }
 
   before do
     @user = FactoryBot.create(:user)
@@ -138,4 +139,15 @@ RSpec.describe RequirementsController, type: :controller do
       expect(response).to redirect_to(requirements_url)
     end
   end
+
+  describe 'update_user' do
+    it 'save user and show requirement' do
+      user = create :user
+      user_requirement = create :user_requirement, user_id: user.id, requirement_id: requirement.id
+      put :update_user, params: { id: requirement.to_param, 
+          user_requirement: { user_id: user.id, requirement_id: requirement.id, status: 0, user_name: user.displayname } }
+      expect(assigns(:requirement)).to eq(requirement)
+    end
+  end
+
 end

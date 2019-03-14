@@ -12,7 +12,7 @@ class TasksController < ApplicationController
     params.delete :status if params[:reset].present? && params[:reset] == params[:status]
     if params[:user].present?
       user = User.find(params[:user])
-      tasks = Task.joins(:user_task).where('user_tasks.user_id = ?', params[:user].to_s)
+      tasks = Task.joins(:user_task).where('user_tasks.user_id = ?', params[:user])
       @title_tasks += "исполнителя [ #{user.displayname} ]"
       if params[:status].present?
         tasks = tasks.status(params[:status])
@@ -103,11 +103,12 @@ class TasksController < ApplicationController
     if user_task
       @task = user_task.task
       if user_task.user_id
-        # проверим - нет такого исполнителя?
         user_task_clone = UserTask.where(task_id: user_task.task_id, user_id: user_task.user_id).first
-        if user_task_clone
+        if user_task_clone # проверим - нет такого исполнителя?
           user_task_clone.status = user_task.status
           user_task = user_task_clone
+        else
+          user_task.status = 1 # первый исполнитель - ответственный
         end
         user_task.status = params[:user_task][:status_boolean] if params[:user_task][:status_boolean].present?
         if user_task.save
@@ -119,7 +120,7 @@ class TasksController < ApplicationController
                  Net::SMTPSyntaxError,
                  Net::SMTPFatalError,
                  Net::SMTPUnknownError => e
-            flash[:alert] = "Error sending mail to #{user_task.user.email}"
+            flash[:alert] = "Error sending mail to #{user_task.user.email} #{e}"
           end
           @task = user_task.task # task.find(@user_task.task_id)
           @task.update! status: 5 if @task.status < 1 # если есть ответственные - статус = Назначено
