@@ -13,15 +13,6 @@ class BprocesController < ApplicationController
   before_action :set_bproce, except: %i[index list manage autocomplete]
   before_action :authenticate_user!, only: %i[edit create update]
 
-  # плоский список процессов без дерева
-  def list
-    @bproces = Bproce.search('?', params[:search]).order(sort_order(sort_column, sort_direction)).find(:all, include: :user)
-    respond_to do |format|
-      format.html
-      format.pdf { print_list }
-    end
-  end
-
   def index
     if params[:all].present?
       @bproces = Bproce.nested_set

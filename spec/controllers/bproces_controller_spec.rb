@@ -4,8 +4,9 @@ require 'rails_helper'
 
 RSpec.describe BprocesController, type: :controller do
   let(:user) { FactoryBot.create :user }
+  let(:user1) { FactoryBot.create :user }
   let(:bproce) { FactoryBot.create :bproce, user_id: user.id }
-  let(:bproce1) { FactoryBot.create :bproce, user_id: user.id }
+  let(:bproce1) { FactoryBot.create :bproce, user_id: user1.id }
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
 
@@ -28,9 +29,22 @@ RSpec.describe BprocesController, type: :controller do
       get :index, params: { search: 'sms' }
       # expect(assigns(:bproces)).to match_array([bproce])
     end
-    it 'loads all of the bproces into @bproces' do
-      get :index
+    it 'loads all bprocesses into @bproces' do
+      get :index, params: {}
       expect(assigns(:bproces)).to match_array([bproce, bproce1])
+    end
+    it 'loads all bprocesses with params all' do
+      get :index, params: { all: 1}
+      expect(assigns(:bproces)).to match_array([bproce, bproce1])
+    end
+    it 'loads all bprocesses with params all' do
+      get :index, params: { tag: 'web'}
+      # expect(assigns(:bproces)).to match_array([bproce, bproce1])
+    end
+    it 'loads bproceses for user' do
+      bproce_u = FactoryBot.create :bproce, user_id: user1.id
+      get :index, params: { user: user1.id }
+      expect(assigns(:bproces)).to match_array([bproce_u])
     end
   end
 
