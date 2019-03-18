@@ -71,7 +71,7 @@ class UsersController < ApplicationController
   def uroles
     @uroles = @usr.user_business_role.includes(:business_role).order('business_roles.name') # исполняет роли
     #- @uworkplaces = @usr.user_workplace # рабочие места пользователя
-    p params[:layout]
+    # p params[:layout]
     respond_to do |format|
       if params[:layout].present?
         format.html { render layout: true }
@@ -144,12 +144,12 @@ class UsersController < ApplicationController
     end
   end
 
-  def order # распоряжение о назначении исполнителей на роли в процессе
-    print_order
+  def order
+    print_order # распоряжение о назначении исполнителей на роли в процессе
   end
 
-  def pass # печать пропуска
-    print_pass
+  def pass
+    print_pass # печать пропуска
   end
 
   def avatar_delete
@@ -208,7 +208,6 @@ class UsersController < ApplicationController
   # распоряжение о назачении на роли в процессе
   def print_order
     @business_roles = @usr.business_roles.includes(:bproce).order(:name)
-    p @business_roles.first.note
     report = ODFReport::Report.new('reports/user-order.odt') do |r|
       r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       r.add_field :id, @usr.id
@@ -223,7 +222,7 @@ class UsersController < ApplicationController
         t.add_column(:nr, :name)
         t.add_column(:rdescription, :description)
         t.add_column(:br_note) do |br|
-          note || ''
+          br.features || ''
         end
         t.add_column(:process_name) do |bp|
           bp.bproce.name
