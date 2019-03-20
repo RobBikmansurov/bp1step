@@ -3,13 +3,16 @@
 require 'rails_helper'
 
 describe LetterMailer do
-  let(:letter) { create :letter }
+  let(:author) { create :user }
+  let(:letter) { create :letter, author_id: author.id }
   let(:user) { create :user  }
   let(:user_letter) { create :user_letter, user_id: user.id, letter_id: letter.id }
+  let(:user1) { create :user  }
+  let(:user_letter1) { create :user_letter, user_id: user1.id, letter_id: letter.id }
 
   describe 'check_overdue_letters' do
     # check_overdue_letters(letter, emails) # рассылка исполнителям о просроченных письмах
-    let(:mail) { described_class.check_overdue_letters(letter, [user.email]) }
+    let(:mail) { described_class.check_overdue_letters(letter, user.email + ', ' + user1.email) }
 
     it 'sends an email' do
       # expect(ActionMailer::Base.deliveries.count).to eq 1
@@ -21,7 +24,7 @@ describe LetterMailer do
       expect(mail.from).to eql(['bp1step@bankperm.ru'])
     end
     it 'renders the receiver email' do
-      expect(mail.to).to eql([user.email])
+      expect(mail.to).to eql([user.email, + user1.email])
     end
     it '@text contains leter\'s subject' do
       expect(mail.body.encoded).to match(letter.subject)
