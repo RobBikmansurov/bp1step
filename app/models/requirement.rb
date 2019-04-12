@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Requirement < ActiveRecord::Base
+class Requirement < ApplicationRecord
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
@@ -15,7 +15,7 @@ class Requirement < ActiveRecord::Base
   belongs_to :author, class_name: 'User'
   has_many :user, through: :user_requirement
   has_many :user_requirement, dependent: :destroy # ответственные за Требование
-  has_many :task
+  has_many :task, dependent: :destroy
 
   # attr_accessible :label, :date, :source, :duedate, :body, :status, :status_name,
   #                :result, :author_name, :author, :letter_id
@@ -42,7 +42,7 @@ class Requirement < ActiveRecord::Base
 
   def self.search(search)
     return where(nil) if search.blank?
-    
+
     where('label ILIKE ? or source ILIKE ?', "%#{search}%", "%#{search}%")
   end
 end

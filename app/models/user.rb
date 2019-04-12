@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   scope :active, -> { where(active: true) }
 
   has_attached_file :avatar,
@@ -17,14 +17,14 @@ class User < ActiveRecord::Base
   validates :username, presence: true, uniqueness: true
   validates :email, presence: true, uniqueness: true
 
-  has_many :user_business_role # бизнес-роли пользователя
+  has_many :user_business_role, dependent: :destroy # бизнес-роли пользователя
   has_many :business_roles, through: :user_business_role
-  has_many :user_workplace # рабочие места пользователя
+  has_many :user_workplace, dependent: :destroy # рабочие места пользователя
   has_many :workplaces, through: :user_workplace
   has_many :user_roles, dependent: :destroy # роли доступа пользователя
   has_many :roles, through: :user_roles
-  has_many :bproce
-  has_many :iresource
+  has_many :bproce, dependent: :destroy
+  has_many :iresource, dependent: :destroy
   has_many :document, through: :user_document
   has_many :user_document, dependent: :destroy
 
@@ -70,12 +70,12 @@ class User < ActiveRecord::Base
 
   def ldap_lastname
     lastname = Devise::LDAP::Adapter.get_ldap_param(username, 'sn')
-    lastname.first.force_encoding('UTF-8') if lastname
+    lastname&.first&.force_encoding('UTF-8')
   end
 
   def ldap_firstname
     tempname = Devise::LDAP::Adapter.get_ldap_param(username, 'givenname')
-    tempname.first.force_encoding('UTF-8') if tempname
+    tempname&.first&.force_encoding('UTF-8')
   end
 
   def ldap_displayname
@@ -88,7 +88,7 @@ class User < ActiveRecord::Base
 
   def self.search(search)
     return where(nil) if search.blank?
-    
+
     where('username ILIKE ? or displayname ILIKE ?', "%#{search}%", "%#{search}%")
   end
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Agent
-class Agent < ActiveRecord::Base
+class Agent < ApplicationRecord
   # attr_accessible :shortname, :name, :town, :address, :contacts, :agent_name, :note
 
   has_many :contract, through: :agent_contract
@@ -15,7 +15,7 @@ class Agent < ActiveRecord::Base
 
   def self.search(search)
     return where(nil) if search.blank?
-    
+
     where('name ILIKE ? or shortname ILIKE ? or contacts ILIKE ? or id = ? or inn ILIKE ?',
           "%#{search}%", "%#{search}%", "%#{search}%", search.to_i.to_s, "%#{search}%")
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DocumentDirective < ActiveRecord::Base
+class DocumentDirective < ApplicationRecord
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
@@ -20,6 +20,7 @@ class DocumentDirective < ActiveRecord::Base
 
   def directive_number=(name)
     return if name.blank?
+
     i = name.rindex('#') #  id директивы передадвали в конце наименования директивы - см. model/directive.rb: directive_name
     self.directive_id = name.slice(i + 1, 5).to_i if i.positive?
   end

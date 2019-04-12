@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Bproce < ActiveRecord::Base
+class Bproce < ApplicationRecord
   include TheSortableTree::Scopes
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
@@ -32,12 +32,13 @@ class Bproce < ActiveRecord::Base
   has_many :bproce_iresource, dependent: :destroy
   has_many :bproce_workplaces, dependent: :destroy
   has_many :business_roles, dependent: :destroy
-  has_many :bproce_contract
+  has_many :bproce_contract, dependent: :destroy
   has_many :contracts, through: :bproce_contract
   has_many :iresource, through: :bproce_iresource
   has_many :workplaces, through: :bproce_workplaces
-  has_many :metrics
-  belongs_to :bproce, foreign_key: 'parent_id', optional: true # родительский процесс
+  has_many :metrics, dependent: :destroy
+  belongs_to :bproce, foreign_key: 'parent_id', optional: true # родительский процесс # rubocop:disable Rails/InverseOf
+
   # has_many :parent_bp, class_name: 'Bproce', foreign_key: 'parent_id' # родительский процесс
   # belongs_to :parent, class_name: 'Bproce'
   belongs_to :user # владелец процессв
@@ -51,14 +52,15 @@ class Bproce < ActiveRecord::Base
   end
 
   def parent_name
-    self.parent&.try(:name)
+    parent&.try(:name)
   end
 
   def parent_name=(name)
     self.parent_id = Bproce.find_by(name: name)&.id if name.present?
   end
 
-  def bproces_of_directive(directive_id) # процессы директивы (все процессы, связанные с директивой через документы)
+  # процессы директивы (все процессы, связанные с директивой через документы)
+  def bproces_of_directive(directive_id)
     Bproce.find_by_sql ["select bproces.* from bproces, bproce_documents, document_directives
       where bproce_documents.bproce_id = bproces.id
       and document_directives.directive_id = ?

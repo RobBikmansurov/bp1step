@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Document < ActiveRecord::Base
+class Document < ApplicationRecord
   # belongs_to :user
   belongs_to :owner, class_name: 'User'
   has_many :directive, through: :document_directive

@@ -8,9 +8,11 @@ class MetricsController < ApplicationController
 
   def index
     @title_metrics = 'Метрики процессов'
+    @title_metrics += by_depth(params[:depth]) if params['depth'].present?
+    @title_metrics += by_metric_type(params[:mtype]) if params['mtype'].present?
     @metrics = Metric.
-      by_depth(params[:depth], @title_metrics).
-      by_metric_type(params[:mtype], @title_metrics).
+      by_depth(params[:depth]).
+      by_metric_type(params[:mtype]).
       search(params[:search]).
       paginate(per_page: 10, page: params[:page]).
       order(sort_order(sort_column, sort_direction))

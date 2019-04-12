@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Task < ActiveRecord::Base
+class Task < ApplicationRecord
   validates :name, presence: true,
                    length: { minimum: 5, maximum: 255 }
   validates :description, presence: true
@@ -60,6 +60,7 @@ class Task < ActiveRecord::Base
     end
     return unless status >= 90 # завершено
     return unless status_was
+
     self.completion_date = Time.current if status_was < 90 # запомним дату и время завершения, если новый статус - "Завершено"
   end
 end

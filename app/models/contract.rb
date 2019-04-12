@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Contract < ActiveRecord::Base
+class Contract < ApplicationRecord
   acts_as_taggable
   acts_as_nested_set
 
@@ -37,7 +37,7 @@ class Contract < ActiveRecord::Base
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
-  def agent_name    # Контрагент
+  def agent_name
     agent.try(:name)
   end
 
@@ -45,7 +45,7 @@ class Contract < ActiveRecord::Base
     self.agent = Agent.find_by(name: name) if name.present?
   end
 
-  def owner_name    # ответственный за договор
+  def owner_name
     owner.try(:displayname)
   end
 
@@ -53,7 +53,7 @@ class Contract < ActiveRecord::Base
     self.owner = User.find_by(displayname: name) if name.present?
   end
 
-  def payer_name    # ответственный за оплату договора
+  def payer_name
     payer.try(:displayname)
   end
 
@@ -68,6 +68,7 @@ class Contract < ActiveRecord::Base
   def parent_name=(name)
     id_find = name[/#.*\ №/]
     return unless id_find
+
     id_find = id_find[1..-3] # выделим #id
     parent_find = Contract.where(id: id_find) if id_find
     self.parent = parent_find.first if parent_find

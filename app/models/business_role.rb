@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class BusinessRole < ActiveRecord::Base
+class BusinessRole < ApplicationRecord
   validates :name, presence: true,
                    length: { minimum: 5, maximum: 50 }
   validates :description, presence: true,

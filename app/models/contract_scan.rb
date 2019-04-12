@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ContractScan < ActiveRecord::Base
+class ContractScan < ApplicationRecord
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 

@@ -57,11 +57,25 @@ describe Metric do
     it 'search' do
       expect(described_class.search('').first).to eq(described_class.first)
     end
+
     it 'by_depth' do
-      expect(described_class.by_depth('', '').first).to eq(described_class.first)
+      expect(described_class.by_depth('').first).to eq(described_class.first)
     end
+    it 'by_depth_title empty' do
+      expect(described_class.by_depth_title('')).to eq('')
+    end
+    it 'by_depth_title 2' do
+      expect(described_class.by_depth_title(2)).to eq(' [глубина данных: 2]')
+    end
+
     it 'by_metric_type' do
-      expect(described_class.by_metric_type('', '').first).to eq(described_class.first)
+      expect(described_class.by_metric_type('').first).to eq(described_class.first)
+    end
+    it 'by_metric_type empty' do
+      expect(described_class.by_metric_type_title('')).to eq('')
+    end
+    it 'by_metric_type 3' do
+      expect(described_class.by_metric_type_title(3)).to eq(' [тип: 3]')
     end
   end
 end
