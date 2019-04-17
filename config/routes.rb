@@ -184,6 +184,8 @@ Rails.application.routes.draw do
       get :move_to    # назначить другого пользователя всех бизнес-ролей сотрудника
       post :business_roles_move_to  # перенести бизнес-роли новому пользователю
       get :stop_all # прератить исполнение всех ролей сотрудником
+      post :documents_move_to # перенести документы другому пользователю
+      get :move_documents_to
     end
     resources :roles, only: [:create, :destroy]
   end

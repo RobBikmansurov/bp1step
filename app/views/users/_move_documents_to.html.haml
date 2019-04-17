@@ -1,0 +1,7 @@
+= simple_form_for @new_user, url: documents_move_to_user_path, html: { validate: true } do |f|
+  = f.error_notification
+  -# = f.hidden_field :old_user_id
+  = f.label 'Ответственный'
+  = f.autocomplete_field :user_name, autocomplete_users_path, placeholder: 'ФИО нового ответственного', validate: { presence: true }
+  = f.error :base
+  = f.button :submit, 'Новый ответственный'

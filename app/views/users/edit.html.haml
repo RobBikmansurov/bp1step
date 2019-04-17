@@ -59,6 +59,13 @@
       %p= link_to 'Прекратить исполнение всех ролей',
                 stop_all_user_path(@usr),
                 data: { confirm: "Прекратить исполнение всех ролей сотрудником #{@usr.displayname} ?" }
+- if Document.where(owner_id: @usr.id).any?
+  %h4
+    Отвечает за 
+    = link_to "#{Document.where(owner_id: @usr.id).count} документов", documents_path(user: @usr.id) + '?layout=yes'
+  - if current_user.role? :admin
+    #move_documents_to
+      = link_to 'Перенести документы другому сотруднику', move_documents_to_user_path(@usr), remote: true
 
 %p
 = link_to 'Show', @usr, :class => 'button'

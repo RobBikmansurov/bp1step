@@ -1,4 +1,4 @@
-- if @user_documents.count > 0
+- if @user_documents.any?
   %h3 Избранные документы:
   %ol
     - @user_documents.each do |document|

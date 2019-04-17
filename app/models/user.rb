@@ -25,8 +25,8 @@ class User < ApplicationRecord
   has_many :roles, through: :user_roles
   has_many :bproce, dependent: :destroy
   has_many :iresource, dependent: :destroy
-  has_many :document, through: :user_document
   has_many :user_document, dependent: :destroy
+  has_many :document, through: :user_document
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
