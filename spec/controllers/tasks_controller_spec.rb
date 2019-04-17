@@ -107,7 +107,6 @@ RSpec.describe TasksController, type: :controller do
 
   describe 'GET edit' do
     it 'assigns the requested task as @task' do
-      task = Task.create! task_attributes
       get :edit, params: { id: task.to_param }
       expect(assigns(:task)).to eq(task)
     end
@@ -116,19 +115,16 @@ RSpec.describe TasksController, type: :controller do
   describe 'PUT update' do
     describe 'with valid params' do
       it 'updates the requested task' do
-        task = Task.create! task_attributes
         expect_any_instance_of(Task).to receive(:save).at_least(:once)
         put :update, params: { id: task.to_param, task: { 'name' => 'MyString' } }
       end
 
       it 'assigns the requested task as @task' do
-        task = Task.create! task_attributes
         put :update, params: { id: task.to_param, task: task_attributes }
         expect(assigns(:task)).to eq(task)
       end
 
       it 'redirects to the task' do
-        task = Task.create! task_attributes
         put :update, params: { id: task.to_param, task: task_attributes }
         expect(response).to redirect_to(task)
       end
@@ -136,14 +132,12 @@ RSpec.describe TasksController, type: :controller do
 
     describe 'with invalid params' do
       it 'assigns the task as @task' do
-        task = Task.create! task_attributes
         expect_any_instance_of(Task).to receive(:save).and_return(false)
         put :update, params: { id: task.to_param, task: { 'name' => 'invalid value' } }
         expect(assigns(:task)).to eq(task)
       end
 
       it "re-renders the 'edit' template" do
-        task = Task.create! task_attributes
         expect_any_instance_of(Task).to receive(:save).and_return(false)
         put :update, params: { id: task.to_param, task: { 'name' => 'invalid value' } }
         expect(response).to render_template('edit')
@@ -153,14 +147,12 @@ RSpec.describe TasksController, type: :controller do
 
   describe 'DELETE destroy' do
     it 'destroys the requested task' do
-      task = Task.create! task_attributes
       expect do
         delete :destroy, params: { id: task.to_param }
       end.to change(Task, :count).by(-1)
     end
 
     it 'redirects to the tasks list' do
-      task = Task.create! task_attributes
       delete :destroy, params: { id: task.to_param }
       expect(response).to redirect_to(tasks_url)
     end

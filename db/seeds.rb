@@ -282,8 +282,8 @@ Array.new(150) do |_i|
     note: note,
     condition: condition,
     check: check,
-    owner_id: User.pluck(:id).shuffle.first
-    agent_id: Agent.pluck(:id).shuffle.first
+    owner_id: User.pluck(:id).shuffle.first,
+    agent_id: Agent.pluck(:id).shuffle.first,
     contract_place: place,
     payer_id: payer_id
   )
