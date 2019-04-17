@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do
   let(:author) { FactoryBot.create :user }
-  let(:task_attributes) { { name: 'Task0', description: 'descript', status: 0, duedate: Date.current + 1, author_id: author.id } }
+  let(:task_attributes) { { name: 'Task0', description: 'description', status: 0, duedate: Date.current + 1, author_id: author.id } }
   let!(:task) { FactoryBot.create :task, author_id: author.id }
   let!(:task1) { FactoryBot.create :task, author_id: author.id }
 
@@ -85,7 +85,8 @@ RSpec.describe TasksController, type: :controller do
 
       it 'redirects to the created task' do
         post :create, params: { task: task_attributes }
-        expect(response).to redirect_to(Task.last)
+        new_task = Task.where(name: 'Task0').first
+        expect(response).to redirect_to(new_task)
       end
     end
 
