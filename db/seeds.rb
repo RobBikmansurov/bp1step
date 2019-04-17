@@ -88,7 +88,7 @@ u.roles << Role.find_by(name: :admin)
                   displayname: "#{names[2]} #{names[0][0]}.#{names[1][0]}.",
                   password: 'password',
                   #   department: nil,
-                  position: Faker::Name.title,
+                  position: Faker::Company.profession,
                   office: rand(100..119),
                   phone: Faker::PhoneNumber.cell_phone,
                   active: true)
