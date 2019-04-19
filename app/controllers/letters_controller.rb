@@ -6,7 +6,6 @@ class LettersController < ApplicationController
   before_action :set_letter, only: %i[show edit update destroy register reestr]
   helper_method :sort_column, :sort_direction
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
-  # rubocop:disable Metrics/LineLength
   def index
     @title_letter = 'Письма '
     if params[:user].present?
@@ -83,6 +82,7 @@ class LettersController < ApplicationController
     end
   end
 
+  # rubocop:disable Metrics/LineLength
   def update
     status_was = @letter.status # старые значения
     if @letter.update(letter_params)
@@ -160,7 +160,7 @@ class LettersController < ApplicationController
         if UserLetter.where(letter_id: @letter.id, user_id: user_letter.user_id).any?
           was_status = user_letter.status
           user_letter = UserLetter.where(letter_id: user_letter.letter_id, user_id: user_letter.user_id).first
-          user_letter.status = was_status # новый статус для исполнителя, котрый уже был
+          user_letter.status = was_status # новый статус для исполнителя, который уже был
         end
         user_letter.status = check_statuses_another_users(user_letter)
       else
@@ -308,6 +308,7 @@ class LettersController < ApplicationController
     redirect_to action: :index
   end
 
+  # rubocop:disable Metrics/BlockLength
   # Отчет "Контроль исполнения"
   def check_report
     report = ODFReport::Report.new('reports/letters_check.odt') do |r|
@@ -436,7 +437,7 @@ class LettersController < ApplicationController
                                disposition: 'inline'
   end
 
-  # проверить чтобы ответственный был только один для данного письма
+  # проверить чтобы ответственный был только один для данной задачи
   def check_statuses_another_users(user_letter)
     other_users = UserLetter.where(letter_id: user_letter.letter_id).where.not(user_id: user_letter.user_id).where('status > 0')
     if user_letter.status.positive?
@@ -446,4 +447,6 @@ class LettersController < ApplicationController
     end
     user_letter.status
   end
+  # rubocop:enable Metrics/BlockLength
+  # rubocop:enable Metrics/LineLength
 end

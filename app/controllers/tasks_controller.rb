@@ -82,6 +82,7 @@ class TasksController < ApplicationController
     render :create_user
   end
 
+  # rubocop:disable Metrics/LineLength
   def update
     status_was = @task.status # старые значения записи
     duedate_was = @task.duedate
@@ -102,31 +103,20 @@ class TasksController < ApplicationController
     user_task = UserTask.new(user_task_params) if params[:user_task].present?
     if user_task
       @task = user_task.task
-      if user_task.user_id
-        user_task_clone = UserTask.where(task_id: user_task.task_id, user_id: user_task.user_id).first
-        if user_task_clone # проверим - нет такого исполнителя?
-          user_task_clone.status = user_task.status
-          user_task = user_task_clone
-        else
-          user_task.status = 1 # первый исполнитель - ответственный
+      if @task.user.any? # уже есть исполнители этой задачи?
+        if UserTask.where(task_id: @task.id, user_id: user_task.user_id).any?
+          was_status = user_task.status
+          user_task = UserTask.where(task_id: @task.id, user_id: user_task.user_id).first
+          user_task.status = was_status # новый статус для исполнителя, который уже был
         end
-        user_task.status = params[:user_task][:status_boolean] if params[:user_task][:status_boolean].present?
-        if user_task.save
-          flash[:notice] = "Исполнитель #{user_task.user_name} назначен"
-          begin
-            UserTaskMailer.user_task_create(user_task, current_user).deliver_now # оповестим нового исполнителя
-          rescue Net::SMTPAuthenticationError,
-                 Net::SMTPServerBusy,
-                 Net::SMTPSyntaxError,
-                 Net::SMTPFatalError,
-                 Net::SMTPUnknownError => e
-            flash[:alert] = "Error sending mail to #{user_task.user.email} #{e}"
-          end
-          @task = user_task.task # task.find(@user_task.task_id)
-          @task.update! status: 5 if @task.status < 1 # если есть ответственные - статус = Назначено
-        end
+        user_task.status = check_statuses_another_users(user_task)
       else
-        flash[:alert] = "Ошибка - исполнитель [#{params[:user_task][:user_name]}] не найден"
+        user_task.status = 1 # первый исполнитель - ответственный
+      end
+      if user_task.save
+        flash[:notice] = "Исполнитель #{user_task.user_name} назначен #{user_task.status&.positive? ? 'отв.' : ''} исполнителем"
+        ## UserTaskMailer.user_task_create(user_task, current_user).deliver_later # оповестим нового исполнителя
+        @task.update! status: 5 if @task.status < 1 # если есть ответственные - статус = Назначено
       end
     else
       flash[:alert] = 'Ошибка - ФИО Исполнителя не указано.'
@@ -181,9 +171,9 @@ class TasksController < ApplicationController
     end
   end
 
+  # rubocop:disable Metrics/BlockLength
   def task_report
     report = ODFReport::Report.new('reports/task_report.odt') do |r|
-      nn = 0
       r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       r.add_field 'TASK_DATE', @task.created_at.strftime('%d.%m.%Y')
       r.add_field 'TASK_ID', @task.id
@@ -284,4 +274,17 @@ class TasksController < ApplicationController
                                filename: "tasks-check-#{Date.current.strftime('%Y%m%d')}.odt",
                                disposition: 'inline'
   end
+
+  # проверить чтобы ответственный был только один для данной задачи
+  def check_statuses_another_users(user_task)
+    other_users = UserTask.where(task_id: user_task.task_id).where.not(user_id: user_task.user_id).where('status > 0')
+    if user_task.status&.positive?
+      other_users.first.update! status: 0 if other_users.any?
+    else
+      user_task.status = 1 unless other_users.any? # нет других отвественных
+    end
+    user_task.status
+  end
+  # rubocop:enable Metrics/BlockLength
+  # rubocop:enable Metrics/LineLength
 end
