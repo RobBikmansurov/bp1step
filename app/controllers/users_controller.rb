@@ -33,7 +33,7 @@ class UsersController < ApplicationController
     render json: @users.map(&:displayname)
   end
 
-  def show;  end
+  def show; end
 
   def uworkplaces
     @uworkplaces = @usr.user_workplace

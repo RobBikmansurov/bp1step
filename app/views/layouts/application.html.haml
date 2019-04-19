@@ -38,13 +38,8 @@
         #users.span-8.last
           .right
             - if user_signed_in?
-              = link_to current_user.displayname, user_path(current_user)
-              %small
-                = current_user.last_sign_in_at&.strftime('%d.%m.%y %H:%M:%S')
-              -#.round-image-50
-                = link_to image_tag(current_user.avatar.url(:thumb)), user_path(current_user, anchor: "Places")
-              %br= link_to "Выйти", destroy_user_session_path, method: :delete
-
+              =link_to current_user.displayname, user_path(current_user)
+              =link_to image_tag("logout.png", alt: 'Выйти', height: 20), destroy_user_session_path, method: :delete, class: 'button-img'
             - else
               = link_to "Войти", new_user_session_path
         #menu.span-24.last

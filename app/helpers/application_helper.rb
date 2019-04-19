@@ -1,10 +1,11 @@
-module ApplicationHelper
+# frozen_string_literal: true
 
+module ApplicationHelper
   def sortable(column, title = nil)
     title ||= column.titleize
-    css_class = (column == sort_column) ? "current #{sort_direction}" : nil
-    direction = (column == sort_column && sort_direction == 'asc') ? 'desc' : 'asc'
-    link_to title, params.permit.merge(sort: column, direction: direction, page: nil), { class: css_class }
+    css_class = column == sort_column ? "current #{sort_direction}" : nil
+    direction = column == sort_column && sort_direction == 'asc' ? 'desc' : 'asc'
+    link_to title, params.permit.merge(sort: column, direction: direction, page: nil), class: css_class
   end
 
   def title(page_title)
@@ -38,7 +39,7 @@ module ApplicationHelper
     text.gsub!(/\r\n?/, "\n")                       # \r\n and \r => \n
     text = "<p>#{text.gsub(/\n\n\s*/, '</p><p>')}"  # 2 newline   => p
     text.gsub!(/([^\n]\n)(?=[^\n])/, '\1<br />')    # 1 newline   => br
-    return text
+    text
   end
 
   def add_link_from_id(text, route)
@@ -59,12 +60,12 @@ module ApplicationHelper
 
   def nav_current(link_path)
     class_name = 'current' if params[:controller] == link_path.from(1)
-    class_name = 'current' if 'bproceses' == link_path.from(1) && params[:controller] == 'bproces'
-    return class_name
+    class_name = 'current' if link_path.from(1) == 'bproceses' && params[:controller] == 'bproces'
+    class_name
   end
 
   def status(status)
-    status && status.positive? ? 'отв.' : ''
+    status&.positive? ? 'отв.' : ''
   end
 
   def format_content(name)
@@ -79,8 +80,9 @@ module ApplicationHelper
 
   def days_left_as_text(duedate, alarm)
     days = (Date.current - duedate).to_i
-    return duedate.strftime("%d.%m.%y") if days < -2
-    return red_text(duedate.strftime("%d.%m.%y"), alarm) if days > 1
+    return duedate.strftime('%d.%m.%y') if days < -2
+    return red_text(duedate.strftime('%d.%m.%y'), alarm) if days > 1
+
     if days.zero?
       red_text 'сегодня', true
     elsif days == -1
@@ -95,6 +97,6 @@ module ApplicationHelper
   end
 
   def date_as_text(date, alarm)
-    red_text date.strftime("%d.%m.%y"), alarm
+    red_text date.strftime('%d.%m.%y'), alarm
   end
 end

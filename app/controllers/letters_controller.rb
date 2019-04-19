@@ -440,13 +440,9 @@ class LettersController < ApplicationController
   def check_statuses_another_users(user_letter)
     other_users = UserLetter.where(letter_id: user_letter.letter_id).where.not(user_id: user_letter.user_id).where('status > 0')
     if user_letter.status.positive?
-      if other_users.any?
-        other_users.first.update! status: 0
-      end
+      other_users.first.update! status: 0 if other_users.any?
     else
-      unless other_users.any? # нет других отвественных
-        user_letter.status = 1
-      end
+      user_letter.status = 1 unless other_users.any? # нет других отвественных
     end
     user_letter.status
   end
