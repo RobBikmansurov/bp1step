@@ -69,7 +69,7 @@ namespace :bp1step do
       emails = contract.owner.email.to_s if contract.owner # ответственный за договор
       emails += ', ' + contract.payer.email.to_s if contract.payer
       ContractMailer.check_contracts_status(contract, emails).deliver
-      logger.info "      ##{contract.id} \t#{emails} \t#{contract.status} \t#{contract.date_begin.strftime('%d.%m.%Y')}"
+      logger.info "      ##{contract.id} \t#{emails} \t#{contract.status} \t#{contract.date_begin&.strftime('%d.%m.%Y')}"
     end
     logger.info "      #{contracts_count} contracts are in status = Approval"
   end

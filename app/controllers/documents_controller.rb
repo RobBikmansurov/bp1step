@@ -74,7 +74,10 @@ class DocumentsController < ApplicationController
     end
     respond_to do |format|
       format.html do
-        @documents = @documents.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page]) if params[:all].blank?
+        if params[:all].blank?
+          @documents = @documents.order(sort_order(sort_column, sort_direction))
+                                 .paginate(per_page: 10, page: params[:page])
+        end
       end
       format.odt { print }
     end
@@ -248,7 +251,7 @@ class DocumentsController < ApplicationController
   end
 
   def print
-    report = ODFReport::Report.new('reports/documents.odt') do |r|
+    report = ODFReport::Report.new('reports/documents.odt') do |r| # rubocop:disable Metrics/BlockLength
       nn = 0 # порядковый номер документа
       nnp = 0
       first_part = 0 # номер раздела для сброса номера документа в разделе
@@ -304,7 +307,7 @@ class DocumentsController < ApplicationController
   end
 
   def approval_sheet_odt
-    report = ODFReport::Report.new('reports/approval-sheet.odt') do |r|
+    report = ODFReport::Report.new('reports/approval-sheet.odt') do |r| # rubocop:disable Metrics/BlockLength
       r.add_field 'REPORT_DATE', Time.zone.today.strftime('%d.%m.%Y')
       r.add_field 'REPORT_DATE1', (Time.zone.today + 10.days).strftime('%d.%m.%Y')
       r.add_field :id, @document.id

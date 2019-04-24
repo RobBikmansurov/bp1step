@@ -2,20 +2,12 @@
 
 class Ability
   include CanCan::Ability
-
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
   def initialize(user)
     user ||= User.new # guest user (not logged in)
 
     alias_action :create, :read, :update, :destroy, to: :crud
 
-    unless user.roles.any?
-      can :read, :all # for guest without roles
-      cannot :show, User
-    else # зарегистрированные пользователи хотя бы с одной ролью могут:
+    if user.roles.any? # зарегистрированные пользователи хотя бы с одной ролью могут:
       can :read, User # видеть подробности о других пользователях
       cannot :edit_document_place, Document
       cannot :edit_place, Contract
@@ -76,6 +68,9 @@ class Ability
       if user.role? :security
         can :assign_roles, User # администратор доступа может изменять роли доступа пользователям
       end
+    else
+      can :read, :all # for guest without roles
+      cannot :show, User
     end
   end
 end

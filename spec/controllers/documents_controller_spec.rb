@@ -12,6 +12,13 @@ RSpec.describe DocumentsController, type: :controller do
   let!(:bproce_document)   { BproceDocument.create(bproce_id: bproce.id, document_id: doc2.id, purpose: 'two') }
   let!(:bproce_document)   { BproceDocument.create(bproce_id: bproce.id, document_id: document.id, purpose: 'one') }
 
+  before do
+    @user = FactoryBot.create(:user)
+    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
+    sign_in @user
+    allow(controller).to receive(:authenticate_user!).and_return(true)
+  end
+
   describe 'GET index' do
     it 'assigns all documents as @documents' do
       get :index
@@ -139,6 +146,25 @@ RSpec.describe DocumentsController, type: :controller do
     it 'redirects to the documents list' do
       delete :destroy, params: { id: document.id }
       expect(response).to redirect_to(documents_url)
+    end
+  end
+
+  it 'return clone' do
+    bproce_document = FactoryBot.create :bproce_document, bproce: bproce, document: document
+    get :clone, params: { id: document.to_param }
+    expect(response).to render_template('clone')
+  end
+
+  describe 'reports' do
+    it 'print' do
+      current_user = FactoryBot.create :user
+      get :index, params: { format: 'odt' } #  id: document.to_param }
+      expect(response).to be_successful
+    end
+    it 'approval_sheet' do
+      current_user = FactoryBot.create :user
+      get :approval_sheet, params: { id: document.to_param }
+      expect(response).to be_successful
     end
   end
 end

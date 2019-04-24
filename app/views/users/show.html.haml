@@ -1,11 +1,9 @@
 -title 'Сотрудник ' + @usr.displayname
 -search 'Человека'
-%h1{style: ('text-decoration: line-through;' if !@usr.active)} 
+%h1{style: ('text-decoration: line-through;' unless @usr.active)} 
   %b
     = @usr.lastname
-  = @usr.firstname
-  = @usr.middlename.to_s + ','
-  = @usr.position
+  #{@usr.firstname} #{@usr.middlename}, #{@usr.position}
 
   .round-image-50
     = link_to image_tag(@usr.avatar.url(:mini)), avatar_create_user_path(@usr), :remote => true

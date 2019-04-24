@@ -69,7 +69,9 @@ class RequirementsController < ApplicationController
   def update_user
     user_requirement = UserRequirement.new(user_requirement_params) if params[:user_requirement].present?
     if user_requirement
-      user_requirement_clone = UserRequirement.where(requirement_id: user_requirement.requirement_id, user_id: user_requirement.user_id).first # проверим - нет такого исполнителя?
+      # проверим - нет такого исполнителя?
+      user_requirement_clone = UserRequirement.where(requirement_id: user_requirement.requirement_id,
+                                                     user_id: user_requirement.user_id).first
       if user_requirement_clone
         user_requirement_clone.status = user_requirement.status
         user_requirement = user_requirement_clone
@@ -78,11 +80,11 @@ class RequirementsController < ApplicationController
         flash[:notice] = "Исполнитель #{user_requirement.user_name} назначен"
         begin
           UserRequirementMailer.user_requirement_create(user_requirement, current_user).deliver_now # оповестим нового исполнителя
-        rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-          flash[:alert] = "Error sending mail to #{user_requirement.user.email}"
+        rescue StandardError => e
+          flash[:alert] = "Error sending mail to #{user_requirement.user.email}\n#{e}"
         end
         @requirement = user_requirement.requirement # requirement.find(@user_requirement.requirement_id)
-        @requirement.update_column(:status, 5) if @requirement.status < 1 # если есть ответственные - статус = Назначено
+        @requirement.update! status: 5 if @requirement.status < 1 # если есть ответственные - статус = Назначено
       end
     else
       flash[:alert] = 'Ошибка - ФИО Исполнителя не указано.'
@@ -135,7 +137,7 @@ class RequirementsController < ApplicationController
   end
 
   def tasks_list_report
-    report = ODFReport::Report.new('reports/requirement_tasks_list.odt') do |r|
+    report = ODFReport::Report.new('reports/requirement_tasks_list.odt') do |r| # rubocop:disable Metrics/BlockLength
       nn = 0
       r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       r.add_field 'REQUIREMENT_DATE', @requirement.date.strftime('%d.%m.%Y')
@@ -159,7 +161,7 @@ class RequirementsController < ApplicationController
       end
       r.add_field 'REQUIREMENT_USERS', s
 
-      r.add_table('TASKS', @tasks, header: true) do |t|
+      r.add_table('TASKS', @tasks, header: true) do |t| # rubocop:disable Metrics/BlockLength
         t.add_column(:nn) do |_ca|
           nn += 1
           "#{nn}."
@@ -203,7 +205,7 @@ class RequirementsController < ApplicationController
   end
 
   def tasks_report_report
-    report = ODFReport::Report.new('reports/requirement_tasks_report.odt') do |r|
+    report = ODFReport::Report.new('reports/requirement_tasks_report.odt') do |r| # rubocop:disable Metrics/BlockLength
       nn = 0
       r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       r.add_field 'REQUIREMENT_DATE', @requirement.date.strftime('%d.%m.%Y')
@@ -227,7 +229,7 @@ class RequirementsController < ApplicationController
       end
       r.add_field 'REQUIREMENT_USERS', s
 
-      r.add_table('TASKS', @tasks, header: true) do |t|
+      r.add_table('TASKS', @tasks, header: true) do |t| # rubocop:disable Metrics/BlockLength
         t.add_column(:nn) do |_ca|
           nn += 1
           "#{nn}."
@@ -245,7 +247,7 @@ class RequirementsController < ApplicationController
         t.add_column(:author, :author_name)
         # t.add_column(:source)
         t.add_column(:duedate) do |task|
-          days = task.duedate - Date.current
+          # days = task.duedate - Date.current
           task.duedate.strftime('%d.%m.%y').to_s # + (days < 0 ? " (+ #{(-days).to_i} дн.)" : "")
         end
         t.add_column(:completiondate) do |task|

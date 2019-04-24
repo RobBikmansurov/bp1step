@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class LetterAppendix < ActiveRecord::Base
+class LetterAppendix < ApplicationRecord
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 

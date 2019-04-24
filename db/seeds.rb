@@ -88,7 +88,7 @@ u.roles << Role.find_by(name: :admin)
                   displayname: "#{names[2]} #{names[0][0]}.#{names[1][0]}.",
                   password: 'password',
                   #   department: nil,
-                  position: Faker::Name.title,
+                  position: Faker::Company.profession,
                   office: rand(100..119),
                   phone: Faker::PhoneNumber.cell_phone,
                   active: true)
@@ -117,9 +117,9 @@ Workplace.create(name: 'Главный бухгалтер', description: 'Гла
   end
 end
 60.times do |_n|
-  wp = Workplace.limit(1).order('RANDOM()').first
+  wp = Workplace.find(Workplace.pluck(:id).shuffle.first)
   wp.user_workplace.create(
-    user_id: User.limit(1).order('RANDOM()').first.id,
+    user_id: User.pluck(:id).shuffle.first,
     date_from: Faker::Date.backward(120),
     date_to:   Faker::Date.forward(120),
     note: ''
@@ -199,24 +199,24 @@ bp1 = Bproce.create!(name: 'Предоставление сервисов', shor
 #bp1.user_id = user1.id
 #bp1.save
 
-Bproce.create!(name: 'Управление уровнем сервисов', shortname: 'SLM', fullname: 'Управление уровнем сервисов', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp1.id)
-Bproce.create!(name: 'Управление мощностями', shortname: 'CAP', fullname: 'Управление мощностями', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp1.id)
-Bproce.create!(name: 'Управление непрерывностью', shortname: 'SCM', fullname: 'Управление непрерывностью', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp1.id)
-bp14 = Bproce.create(name: 'Управление финансами', shortname: 'FIN', fullname: 'Управление финансами', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp1.id)
+Bproce.create!(name: 'Управление уровнем сервисов', shortname: 'SLM', fullname: 'Управление уровнем сервисов', user_id: User.pluck(:id).shuffle.first, parent_id: bp1.id)
+Bproce.create!(name: 'Управление мощностями', shortname: 'CAP', fullname: 'Управление мощностями', user_id: User.pluck(:id).shuffle.first, parent_id: bp1.id)
+Bproce.create!(name: 'Управление непрерывностью', shortname: 'SCM', fullname: 'Управление непрерывностью', user_id: User.pluck(:id).shuffle.first, parent_id: bp1.id)
+bp14 = Bproce.create(name: 'Управление финансами', shortname: 'FIN', fullname: 'Управление финансами', user_id: User.pluck(:id).shuffle.first, parent_id: bp1.id)
 bp14.user_id = user1.id
 bp14.save
 bp14.business_roles.create(name: 'НачальникИТ', description: 'Контролирует счета, готовит План закупок')
 br1 = bp14.business_roles.create!(name: 'Бухгалтер', description: 'Оплачивает счет, учитывает бухгалтерские документы', features: 'Нужен калькулятор')
 ubr1 = br1.user_business_role.create!(date_from: '2015-01-11', date_to: '2015-12-31', note: 'исп.обязанности', user_id: user1.id)
 ubr1.save
-Bproce.create!(name: 'Управление доступностью', shortname: 'AVA', fullname: 'Управление доступностью', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp1.id)
+Bproce.create!(name: 'Управление доступностью', shortname: 'AVA', fullname: 'Управление доступностью', user_id: User.pluck(:id).shuffle.first, parent_id: bp1.id)
 
 bp2 = Bproce.create!(name: 'Поддержка сервисов', shortname: 'B.4.2', fullname: 'Поддержка сервисов', parent_id: nil, user_id: user1.id)
-bp21 = Bproce.create!(name: 'Управление инцидентами', shortname: 'INC', fullname: 'Управление инцидентами', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp2.id)
+bp21 = Bproce.create!(name: 'Управление инцидентами', shortname: 'INC', fullname: 'Управление инцидентами', user_id: User.pluck(:id).shuffle.first, parent_id: bp2.id)
 bp211 = Bproce.create!(name: 'Служба поддержки пользователей Service Desk', shortname: 'SD', fullname: 'Служба поддержки пользователей Service Desk', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp21.id)
-Bproce.create!(name: 'Управление проблемами', shortname: 'PRB', fullname: 'Управление проблемами', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp2.id)
-Bproce.create!(name: 'Управление конфигурациями', shortname: 'CFG', fullname: 'Управление конфигурациями', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp2.id)
-Bproce.create!(name: 'Управление релизами', shortname: 'REL', fullname: 'Управление релизами', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp2.id)
+Bproce.create!(name: 'Управление проблемами', shortname: 'PRB', fullname: 'Управление проблемами', user_id: User.pluck(:id).shuffle.first, parent_id: bp2.id)
+Bproce.create!(name: 'Управление конфигурациями', shortname: 'CFG', fullname: 'Управление конфигурациями', user_id: User.pluck(:id).shuffle.first, parent_id: bp2.id)
+Bproce.create!(name: 'Управление релизами', shortname: 'REL', fullname: 'Управление релизами', user_id: User.pluck(:id).shuffle.first, parent_id: bp2.id)
 Bproce.create!(name: 'Управление изменениями', shortname: 'CNG', fullname: 'Управление изменениями', parent_id: bp2.id, user_id: user6.id)
 
 puts 'processes created'
@@ -237,10 +237,10 @@ Array.new(50) do |_i|
     access_write: ['group1', 'gr_auto', 'gr_devel', 'gr_test', ''][rand(5)],
     access_other: ['group1', 'gr_auto', 'gr_devel', 'gr_test', ''][rand(5)],
     risk_category: %w[В КВ Н НВ ОВ][rand(5)],
-    user_id: User.limit(1).order('RANDOM()').first.id
+    user_id: User.pluck(:id).shuffle.first
   )
-  BproceIresource.create(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, iresource_id: Iresource.last.id)
-  BproceIresource.create(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, iresource_id: Iresource.last.id, rpurpose: Faker::Lorem.sentence(1)) if rand(20) == 1
+  BproceIresource.create(bproce_id: Bproce.pluck(:id).shuffle.first, iresource_id: Iresource.last.id)
+  BproceIresource.create(bproce_id: Bproce.pluck(:id).shuffle.first, iresource_id: Iresource.last.id, rpurpose: Faker::Lorem.sentence(1)) if rand(20) == 1
 end
 puts 'iresources created'
 
@@ -265,7 +265,7 @@ Array.new(150) do |_i|
   date_end = Faker::Date.forward(rand(400)) if status == 'НеДействует'
   date_end = Faker::Date.forward(rand(400)) if status == 'Действует' && rand(2) == 1
   payer_id = nil
-  payer_id = User.limit(1).order('RANDOM()').first.id unless rand(5) == 1
+  payer_id = User.pluck(:id).shuffle.first unless rand(5) == 1
   place = "ST#{rand(10)}"
   note = Faker::Lorem.sentence if rand(5) == 1
   condition = Faker::Lorem.sentence if rand(10) == 1
@@ -282,8 +282,8 @@ Array.new(150) do |_i|
     note: note,
     condition: condition,
     check: check,
-    owner_id: User.limit(1).order('RANDOM()').first.id,
-    agent_id: Agent.limit(1).order('RANDOM()').first.id,
+    owner_id: User.pluck(:id).shuffle.first,
+    agent_id: Agent.pluck(:id).shuffle.first,
     contract_place: place,
     payer_id: payer_id
   )
@@ -498,7 +498,7 @@ Array.new(20) do |_l|
     status: status,
     source: source,
     body: Faker::Lorem.sentences.join(''),
-    author_id: User.limit(1).order('RANDOM()').first.id,
+    author_id: User.pluck(:id).shuffle.first,
     letter_id: letter_id
   )
   requirement = Requirement.last
@@ -536,7 +536,7 @@ Array.new(100) do |_l|
     completion_date: completion_date,
     status: status,
     description: Faker::Lorem.sentences.join(''),
-    author_id: User.limit(1).order('RANDOM()').first.id,
+    author_id: User.pluck(:id).shuffle.first,
     letter_id: letter_id,
     requirement_id: requirement_id
   )
@@ -573,8 +573,8 @@ Bapp.create(name: '1С:Бухгалтерия.Склад', description: '1С:Б�
 Bapp.create(name: '1С:Бухгалтерия.Кадры', description: '1С:Бухгалтерия. Учет кадров', apptype: 'бух')
 15.times do |_bapp|
   BproceBapp.create!(
-    bproce_id: Bproce.limit(1).order('RANDOM()').first.id,
-    bapp_id: Bapp.limit(1).order('RANDOM()').first.id,
+    bproce_id: Bproce.pluck(:id).shuffle.first,
+    bapp_id: Bapp.pluck(:id).shuffle.first,
     apurpose: Faker::Lorem.sentence(1)
   )
 end

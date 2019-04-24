@@ -36,5 +36,43 @@ RSpec.describe UsersController, type: :controller do
       get :index, params: { role: 'admin' }
       expect(assigns(:users)).to match_array([user])
     end
+    it 'stop all business roles' do
+      get :stop_all, params: { id: user.id }
+      expect(response).to render_template(:edit)
+    end
+    it 'documents_move_to' do
+      new_user = FactoryBot.create :user
+      post :documents_move_to, params: { id: user.id, user: {user_name: new_user.displayname } }
+      expect(response).to redirect_to(new_user)
+    end
+    it 'business_roles_move_to' do
+      new_user = FactoryBot.create :user
+      post :business_roles_move_to, params: { id: user.id, user: {user_name: new_user.displayname } }
+      expect(response).to render_template(:edit)
+    end
+    it 'render uworkplaces' do
+      get :uworkplaces, params: { id: user.id }
+      expect(response).to render_template :uworkplaces
+    end
+    it 'render uroles' do
+      get :uroles, params: { id: user.id }
+      expect(response).to render_template :uroles
+    end
+    it 'render documents' do
+      get :documents, params: { id: user.id }
+      expect(response).to render_template :documents
+    end
+    it 'render documents' do
+      get :documents, params: { id: user.id }
+      expect(response).to render_template :documents
+    end
+    it 'render documents' do
+      get :documents, params: { id: user.id }
+      expect(response).to render_template :documents
+    end
+    it 'render processes' do
+      get :processes, params: { id: user.id }
+      expect(response).to render_template :processes
+    end
   end
 end

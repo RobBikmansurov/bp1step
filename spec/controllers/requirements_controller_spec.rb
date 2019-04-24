@@ -8,6 +8,11 @@ RSpec.describe RequirementsController, type: :controller do
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
 
+  let(:requirement) { FactoryBot.create :requirement, author_id: author.id }
+  let!(:task) { FactoryBot.create :task, author_id: author.id }
+  let(:user) { create :user }
+  let!(:user_requirement) { create :user_requirement, requirement: requirement, user: user }
+
   before do
     @user = FactoryBot.create(:user)
     @user.roles << Role.find_or_create_by(name: 'author', description: 'Автор')
@@ -24,9 +29,14 @@ RSpec.describe RequirementsController, type: :controller do
 
     it 'loads all of the requirements into @requirements' do
       requirement1 = FactoryBot.create(:requirement, label: 'requirement1', author_id: author.id)
-      requirement2 = FactoryBot.create(:requirement, label: 'requirement2', author_id: author.id)
       get :index
-      expect(assigns(:requirements)).to match_array([requirement1, requirement2])
+      expect(assigns(:requirements)).to match_array([requirement, requirement1])
+    end
+
+    it 'show requirement with status' do
+      requirement_with_status = FactoryBot.create :requirement, author: author, status: 5
+      get :index, params: { status: '5' }
+      expect(assigns(:requirements)).to match_array([requirement_with_status])
     end
   end
 
@@ -136,6 +146,29 @@ RSpec.describe RequirementsController, type: :controller do
       requirement = Requirement.create! valid_attributes
       delete :destroy, params: { id: requirement.to_param }
       expect(response).to redirect_to(requirements_url)
+    end
+  end
+
+  describe 'update_user' do
+    it 'save user and show requirement' do
+      user = create :user
+      user_requirement = create :user_requirement, user_id: user.id, requirement_id: requirement.id
+      put :update_user, params: { id: requirement.to_param, 
+          user_requirement: { user_id: user.id, requirement_id: requirement.id, status: 0, user_name: user.displayname } }
+      expect(assigns(:requirement)).to eq(requirement)
+    end
+  end
+
+  describe 'reports' do
+    let(:user) { create :user }
+    let!(:user_task) { create :user_task, task: task, user: user, status: 1 }
+    it 'tasks_list' do
+      get :tasks_list, params: { id: requirement.to_param }
+      expect(response).to be_successful
+    end
+    it 'tasks_report' do
+      get :tasks_report, params: { id: requirement.to_param }
+      expect(response).to be_successful
     end
   end
 end

@@ -12,10 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2018_07_30_062426) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
-  create_table "activities", id: :serial, force: :cascade do |t|
+  create_table "activities", force: :cascade do |t|
     t.string "trackable_type"
     t.integer "trackable_id"
     t.string "owner_type"
@@ -31,7 +28,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type"
   end
 
-  create_table "agent_contracts", id: :serial, force: :cascade do |t|
+  create_table "agent_contracts", force: :cascade do |t|
     t.integer "agent_id"
     t.integer "contract_id"
     t.datetime "created_at", null: false
@@ -40,7 +37,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["contract_id"], name: "index_agent_contracts_on_contract_id"
   end
 
-  create_table "agents", id: :serial, force: :cascade do |t|
+  create_table "agents", force: :cascade do |t|
     t.string "name", limit: 255
     t.string "town", limit: 30
     t.string "address", limit: 255
@@ -53,7 +50,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.string "dms_name"
   end
 
-  create_table "bapps", id: :serial, force: :cascade do |t|
+  create_table "bapps", force: :cascade do |t|
     t.string "name"
     t.string "type"
     t.string "description"
@@ -70,7 +67,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.text "note"
   end
 
-  create_table "bproce_bapps", id: :serial, force: :cascade do |t|
+  create_table "bproce_bapps", force: :cascade do |t|
     t.integer "bproce_id"
     t.integer "bapp_id"
     t.datetime "created_at", null: false
@@ -78,7 +75,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.text "apurpose"
   end
 
-  create_table "bproce_contracts", id: :serial, force: :cascade do |t|
+  create_table "bproce_contracts", force: :cascade do |t|
     t.integer "bproce_id"
     t.integer "contract_id"
     t.string "purpose"
@@ -88,7 +85,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["contract_id"], name: "index_bproce_contracts_on_contract_id"
   end
 
-  create_table "bproce_documents", id: :serial, force: :cascade do |t|
+  create_table "bproce_documents", force: :cascade do |t|
     t.integer "bproce_id"
     t.integer "document_id"
     t.string "purpose"
@@ -98,7 +95,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["document_id"], name: "index_bproce_documents_on_document_id"
   end
 
-  create_table "bproce_iresources", id: :serial, force: :cascade do |t|
+  create_table "bproce_iresources", force: :cascade do |t|
     t.integer "bproce_id"
     t.integer "iresource_id"
     t.datetime "created_at", null: false
@@ -108,14 +105,14 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["iresource_id"], name: "index_bproce_iresources_on_iresource_id"
   end
 
-  create_table "bproce_workplaces", id: :serial, force: :cascade do |t|
+  create_table "bproce_workplaces", force: :cascade do |t|
     t.integer "bproce_id"
     t.integer "workplace_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "bproces", id: :serial, force: :cascade do |t|
+  create_table "bproces", force: :cascade do |t|
     t.string "shortname"
     t.string "name"
     t.string "fullname"
@@ -135,7 +132,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["rgt"], name: "index_bproces_on_rgt"
   end
 
-  create_table "business_roles", id: :serial, force: :cascade do |t|
+  create_table "business_roles", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.integer "bproce_id"
@@ -145,7 +142,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["bproce_id"], name: "index_business_roles_on_bproce_id"
   end
 
-  create_table "contract_scans", id: :serial, force: :cascade do |t|
+  create_table "contract_scans", force: :cascade do |t|
     t.string "name"
     t.integer "contract_id"
     t.datetime "created_at", null: false
@@ -157,7 +154,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["contract_id"], name: "index_contract_scans_on_contract_id"
   end
 
-  create_table "contracts", id: :serial, force: :cascade do |t|
+  create_table "contracts", force: :cascade do |t|
     t.integer "owner_id"
     t.string "number", limit: 20
     t.string "name", limit: 255
@@ -186,7 +183,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["rgt"], name: "index_contracts_on_rgt"
   end
 
-  create_table "directives", id: :serial, force: :cascade do |t|
+  create_table "directives", force: :cascade do |t|
     t.string "title"
     t.string "number"
     t.date "approval"
@@ -200,7 +197,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.text "action"
   end
 
-  create_table "document_directives", id: :serial, force: :cascade do |t|
+  create_table "document_directives", force: :cascade do |t|
     t.integer "document_id"
     t.integer "directive_id"
     t.string "note"
@@ -209,7 +206,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["document_id", "directive_id"], name: "index_document_directives_on_document_id_and_directive_id", unique: true
   end
 
-  create_table "documents", id: :serial, force: :cascade do |t|
+  create_table "documents", force: :cascade do |t|
     t.string "name"
     t.string "filename"
     t.text "description"
@@ -236,7 +233,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["id"], name: "index_documents_on_id", unique: true
   end
 
-  create_table "iresources", id: :serial, force: :cascade do |t|
+  create_table "iresources", force: :cascade do |t|
     t.string "level"
     t.string "label"
     t.string "location"
@@ -254,7 +251,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["user_id"], name: "index_iresources_on_user_id"
   end
 
-  create_table "letter_appendixes", id: :serial, force: :cascade do |t|
+  create_table "letter_appendixes", force: :cascade do |t|
     t.integer "letter_id"
     t.string "name"
     t.datetime "created_at", null: false
@@ -266,7 +263,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["letter_id"], name: "index_letter_appendixes_on_letter_id"
   end
 
-  create_table "letters", id: :serial, force: :cascade do |t|
+  create_table "letters", force: :cascade do |t|
     t.string "regnumber", limit: 10
     t.date "regdate"
     t.string "number", limit: 30
@@ -292,7 +289,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["status"], name: "index_letters_on_status"
   end
 
-  create_table "metric_values", id: :serial, force: :cascade do |t|
+  create_table "metric_values", force: :cascade do |t|
     t.integer "metric_id"
     t.datetime "dtime"
     t.integer "value"
@@ -301,7 +298,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["metric_id"], name: "index_metric_values_on_metric_id"
   end
 
-  create_table "metrics", id: :serial, force: :cascade do |t|
+  create_table "metrics", force: :cascade do |t|
     t.integer "bproce_id"
     t.string "name", limit: 200
     t.string "shortname", limit: 30
@@ -316,7 +313,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["bproce_id"], name: "index_metrics_on_bproce_id"
   end
 
-  create_table "pg_search_documents", id: :serial, force: :cascade do |t|
+  create_table "pg_search_documents", force: :cascade do |t|
     t.text "content"
     t.string "searchable_type"
     t.integer "searchable_id"
@@ -325,7 +322,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
   end
 
-  create_table "requirements", id: :serial, force: :cascade do |t|
+  create_table "requirements", force: :cascade do |t|
     t.string "label"
     t.date "date"
     t.date "duedate"
@@ -343,7 +340,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["letter_id"], name: "index_requirements_on_letter_id"
   end
 
-  create_table "roles", id: :serial, force: :cascade do |t|
+  create_table "roles", force: :cascade do |t|
     t.string "name"
     t.string "description"
     t.integer "bproce_id"
@@ -353,7 +350,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["name"], name: "index_roles_on_name", unique: true
   end
 
-  create_table "taggings", id: :serial, force: :cascade do |t|
+  create_table "taggings", force: :cascade do |t|
     t.integer "tag_id"
     t.string "taggable_type"
     t.integer "taggable_id"
@@ -365,11 +362,11 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
   end
 
-  create_table "tags", id: :serial, force: :cascade do |t|
+  create_table "tags", force: :cascade do |t|
     t.string "name"
   end
 
-  create_table "tasks", id: :serial, force: :cascade do |t|
+  create_table "tasks", force: :cascade do |t|
     t.string "name", limit: 255
     t.text "description"
     t.date "duedate"
@@ -388,7 +385,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["requirement_id"], name: "index_tasks_on_requirement_id"
   end
 
-  create_table "terms", id: :serial, force: :cascade do |t|
+  create_table "terms", force: :cascade do |t|
     t.string "shortname"
     t.string "name"
     t.text "description"
@@ -400,7 +397,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["shortname"], name: "index_terms_on_shortname", unique: true
   end
 
-  create_table "user_business_roles", id: :serial, force: :cascade do |t|
+  create_table "user_business_roles", force: :cascade do |t|
     t.date "date_from"
     t.date "date_to"
     t.string "note"
@@ -412,7 +409,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["user_id"], name: "index_user_business_roles_on_user_id"
   end
 
-  create_table "user_documents", id: :serial, force: :cascade do |t|
+  create_table "user_documents", force: :cascade do |t|
     t.integer "user_id"
     t.integer "document_id"
     t.integer "link"
@@ -422,7 +419,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["user_id"], name: "index_user_documents_on_user_id"
   end
 
-  create_table "user_letters", id: :serial, force: :cascade do |t|
+  create_table "user_letters", force: :cascade do |t|
     t.integer "user_id"
     t.integer "letter_id"
     t.integer "status"
@@ -432,7 +429,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["user_id"], name: "index_user_letters_on_user_id"
   end
 
-  create_table "user_requirements", id: :serial, force: :cascade do |t|
+  create_table "user_requirements", force: :cascade do |t|
     t.integer "user_id"
     t.integer "requirement_id"
     t.integer "status"
@@ -442,7 +439,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["user_id"], name: "index_user_requirements_on_user_id"
   end
 
-  create_table "user_roles", id: :serial, force: :cascade do |t|
+  create_table "user_roles", force: :cascade do |t|
     t.date "date_from"
     t.date "date_to"
     t.string "note"
@@ -454,7 +451,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["user_id"], name: "index_user_roles_on_user_id"
   end
 
-  create_table "user_tasks", id: :serial, force: :cascade do |t|
+  create_table "user_tasks", force: :cascade do |t|
     t.integer "user_id"
     t.integer "task_id"
     t.integer "status"
@@ -465,7 +462,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["user_id"], name: "index_user_tasks_on_user_id"
   end
 
-  create_table "user_workplaces", id: :serial, force: :cascade do |t|
+  create_table "user_workplaces", force: :cascade do |t|
     t.date "date_from"
     t.date "date_to"
     t.string "note"
@@ -477,7 +474,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["workplace_id"], name: "index_user_workplaces_on_workplace_id"
   end
 
-  create_table "users", id: :serial, force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -509,7 +506,7 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "workplaces", id: :serial, force: :cascade do |t|
+  create_table "workplaces", force: :cascade do |t|
     t.string "designation"
     t.string "name"
     t.string "description"
@@ -521,8 +518,4 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.integer "port"
   end
 
-  add_foreign_key "tasks", "letters"
-  add_foreign_key "tasks", "requirements"
-  add_foreign_key "user_tasks", "tasks"
-  add_foreign_key "user_tasks", "users"
 end

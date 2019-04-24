@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Metric < ActiveRecord::Base
+class Metric < ApplicationRecord
   validates :name, presence: true,
                    length: { minimum: 5, maximum: 50 }
   validates :description, presence: true,
@@ -11,8 +11,6 @@ class Metric < ActiveRecord::Base
 
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
-
-  # attr_accessible :bproce_id, :name, :shortname, :description, :note, :depth, :depth_name, :bproce_name, :mtype, :msql, :mhash
 
   belongs_to :bproce # метика относится к процессу
 
@@ -36,12 +34,11 @@ class Metric < ActiveRecord::Base
 
   def self.search(search)
     return where(nil) if search.blank?
-    
+
     where('name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%")
   end
 
   # возвращает период от первой его секунды до последней - для замены ##PERIOD## в условии between
-  # rubocop:disable Metrics/AbcSize
   def sql_period(date = Date.current, dpth = depth)
     case dpth
     when 1 then "'#{date.beginning_of_year.to_s(:db)}' AND '#{date.end_of_year.to_s(:db)}'" # текущий год
@@ -61,17 +58,27 @@ class Metric < ActiveRecord::Base
     end
   end
 
-  def self.by_depth(depth, title)
+  def self.by_depth(depth)
     return where(nil) if depth.blank?
 
-    title += " [глубина данных: #{depth}]"
     where(depth: depth)
   end
 
-  def self.by_metric_type(metric_type, title)
+  def self.by_depth_title(depth)
+    return '' if depth.blank?
+
+    " [глубина данных: #{depth}]"
+  end
+
+  def self.by_metric_type(metric_type)
     return where(nil) if metric_type.blank?
 
-    title += " [тип: #{metric_type}]"
     where(mtype: metric_type)
+  end
+
+  def self.by_metric_type_title(metric_type)
+    return '' if metric_type.blank?
+
+    " [тип: #{metric_type}]"
   end
 end

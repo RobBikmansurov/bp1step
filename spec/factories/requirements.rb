@@ -8,7 +8,7 @@ FactoryBot.define do
     duedate { Date.current }
     source 'MyString'
     body 'MyText'
-    status 'MyString'
+    status 0
     result 'MyText'
   end
 end

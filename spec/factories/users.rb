@@ -13,6 +13,7 @@ FactoryBot.define do
     encrypted_password 'secret'
     last_sign_in_at { 1.month.ago }
     active true
+    position 'position'
     # User.new :avatar => Rails.root.join("spec/factories/images/rails.png").open
     # avatar { fixture_file_upload(Rails.root.join('spec/factories/images/rails.png'), 'image/png') }
     # avatar { Rails.root.join("spec/factories/images/rails.png").open }

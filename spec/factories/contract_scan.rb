@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :contract_scan do
     sequence(:id, &:to_s)
     name { "scan#{id}" }
-    scan_file_name 'filename.ext'
+    scan { File.new("#{Rails.root}/spec/support/test.odt") }
     contract
   end
 end

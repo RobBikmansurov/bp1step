@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Iresource < ActiveRecord::Base
+class Iresource < ApplicationRecord
   validates :label, presence: true,
                     uniqueness: true,
                     length: { minimum: 3, maximum: 20 }
@@ -11,7 +11,7 @@ class Iresource < ActiveRecord::Base
   tracked owner: proc { |controller, _model| controller.current_user }
 
   belongs_to :user, optional: true
-  has_many :bproce_iresources
+  has_many :bproce_iresources, dependent: :destroy
   has_many :bproces, through: :bproce_iresources
 
   # attr_accessible :label, :location, :level, :alocation, :volume, :note,

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Task < ActiveRecord::Base
+class Task < ApplicationRecord
   validates :name, presence: true,
                    length: { minimum: 5, maximum: 255 }
   validates :description, presence: true
@@ -9,8 +9,8 @@ class Task < ActiveRecord::Base
   belongs_to :letter, optional: true
   belongs_to :requirement, optional: true
   belongs_to :author, class_name: 'User'
-  has_many :user, through: :user_task
   has_many :user_task, dependent: :destroy # ответственные
+  has_many :user, through: :user_task
 
   scope :status, ->(status) { where status: status }
   scope :unfinished, -> { where('tasks.status < 90') } # незавершенные
@@ -60,6 +60,7 @@ class Task < ActiveRecord::Base
     end
     return unless status >= 90 # завершено
     return unless status_was
+
     self.completion_date = Time.current if status_was < 90 # запомним дату и время завершения, если новый статус - "Завершено"
   end
 end

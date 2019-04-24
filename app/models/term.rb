@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Term < ActiveRecord::Base
+class Term < ApplicationRecord
   include PublicActivity::Common
   # include PublicActivity::Model
   # tracked owner: Proc.new { |controller, model| controller.current_user }
@@ -15,6 +15,7 @@ class Term < ActiveRecord::Base
 
   def self.search(search)
     return where(nil) if search.blank?
+
     where('shortname ILIKE ? or name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
   end
 end

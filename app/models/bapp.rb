@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Bapp < ActiveRecord::Base
+class Bapp < ApplicationRecord
   acts_as_taggable
 
   validates :name, presence: true,
@@ -8,7 +8,7 @@ class Bapp < ActiveRecord::Base
                    length: { minimum: 4, maximum: 50 }
   validates :description, presence: true
 
-  has_many :bproce_bapps
+  has_many :bproce_bapps, dependent: :destroy
   has_many :bproces, through: :bproce_bapps
   accepts_nested_attributes_for :bproce_bapps, allow_destroy: true
   accepts_nested_attributes_for :bproces

@@ -26,7 +26,7 @@
       #header.span-24.last
         %logo.span-7
           =link_to image_tag("logo.png", alt: 'Home', height: 50), '/', class: 'button-img'
-        #search.span-9
+        #search.span-15
           -if params[:controller] == 'pages' or params[:controller] == 'activities' or params[:controller] == 'bproce_business_roles'
             &nbsp;
           -else
@@ -35,18 +35,13 @@
               -#%button{type: 'submit'} Искать
             %sup введите подстроку поиска
             
-        #users.span-8.last
+        #users.span-2.last
           .right
             - if user_signed_in?
-              = link_to current_user.displayname, user_path(current_user)
-              %small
-                = current_user.last_sign_in_at&.strftime('%d.%m.%y %H:%M:%S')
-              -#.round-image-50
-                = link_to image_tag(current_user.avatar.url(:thumb)), user_path(current_user, anchor: "Places")
-              %br= link_to "Выйти", destroy_user_session_path, method: :delete
-
+              =link_to image_tag("logout.png", alt: 'Выйти', height: 20), destroy_user_session_path, method: :delete, class: 'button-img'
             - else
               = link_to "Войти", new_user_session_path
+
         #menu.span-24.last
           %ul.nav
             =content_tag(:li, :class => nav_current(bproces_path)) do
@@ -83,6 +78,8 @@
             =nav_link "Сотрудники", users_path
           %ul.nav{:style => "float:right"}
             -#%li Настройки
+            - if user_signed_in?
+              =nav_link current_user.displayname, user_path(current_user)
             =nav_link "?", '/about'
       #main.span-24.last
         - flash.each do |name, msg|

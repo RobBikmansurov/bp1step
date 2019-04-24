@@ -6,6 +6,7 @@ RSpec.describe LettersController, type: :controller do
   let(:valid_attributes) { { sender: 'sender', date: Date.current, subject: 'subject', number: '123', status: 0 } }
   let(:invalid_attributes) { { subject: 'invalid value' } }
   let(:valid_session) { {} }
+  let(:author) { FactoryBot.create :user }
   let(:letter) { FactoryBot.create :letter }
   let(:letter1) { FactoryBot.create :letter }
 
@@ -26,6 +27,28 @@ RSpec.describe LettersController, type: :controller do
     it 'loads all of the letters into @letters' do
       get :index
       expect(assigns(:letters)).to match_array([letter, letter1])
+    end
+    it 'loads letter for date' do
+      letter_new = FactoryBot.create :letter, author_id: author.id, date: '2011-01-01'
+      get :index, params: { date: '2011-01-01' }
+      expect(assigns(:letters)).to match_array([letter_new])
+    end
+    it 'loads letter for regdate' do
+      letter_new = FactoryBot.create :letter, author_id: author.id, regdate: '2011-01-01'
+      get :index, params: { regdate: '2011-01-01' }
+      expect(assigns(:letters)).to match_array([letter_new])
+    end
+    it 'loads letter for status' do
+      letter_new = FactoryBot.create :letter, author_id: author.id, status: 90
+      get :index, params: { status: 90 }
+      expect(assigns(:letters)).to match_array([letter_new])
+    end
+    it 'loads letter for user' do
+      user = FactoryBot.create :user
+      letter_new = FactoryBot.create :letter, author_id: author.id
+      user_letter = FactoryBot.create :user_letter, user_id: user.id, letter_id: letter_new.id
+      get :index, params: { user: user.id }
+      expect(assigns(:letters)).to match_array([letter_new])
     end
   end
 
@@ -134,6 +157,32 @@ RSpec.describe LettersController, type: :controller do
     it 'redirects to the letters list' do
       letter = Letter.create! valid_attributes
       delete :destroy, params: { id: letter.to_param }
+      expect(response).to redirect_to(letters_url)
+    end
+  end
+
+  describe 'update_user' do
+    it 'save user and show task' do
+      user = create :user
+      user_letter = create :user_letter, user_id: user.id, letter_id: letter.id
+      put :update_user, params: { id: letter.to_param,
+                                  user_letter: { user_id: user.id, letter_id: letter.id, status: 0, user_name: user.displayname } }
+      expect(assigns(:letter)).to eq(letter)
+    end
+  end
+
+  describe 'check' do
+    it 'render report check' do
+      current_user = FactoryBot.create :user
+      get :check, params: { id: letter.to_param }
+      expect(response).to be_successful
+    end
+  end
+
+  describe 'log_week' do
+    it 'render week report' do
+      current_user = FactoryBot.create :user
+      get :log_week, params: {  }
       expect(response).to redirect_to(letters_url)
     end
   end

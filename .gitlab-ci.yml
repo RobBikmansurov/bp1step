@@ -64,7 +64,7 @@ rubocop:
     - install
   stage: test
   script:
-    - gem install rubocop
+    - gem install rubocop ubocop-rspec
     - rubocop -V
     - ls -al .rubocop.yml
     - rubocop --config .rubocop.yml  --format offenses

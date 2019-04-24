@@ -9,23 +9,20 @@ class UsersController < ApplicationController
   def index
     if params[:role].present?
       @role = Role.find_by(name: params[:role])
-      @users = @role.users.page(params[:page]).active.search(params[:search]).order(sort_order(sort_column, sort_direction))
+      users = @role.users.active.search(params[:search])
+    elsif params[:office].present?
+      users = User.active.where(office: params[:office])
+    elsif params[:all].present?
+      users = User.active
     else
-      if params[:office].present?
-        @users = User.active.where(office: params[:office]).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
-      else
-        @users = if params[:all].present?
-                   User.active.order(sort_order(sort_column, sort_direction))
-                 else
-                   @users = if params[:search].present?
-                              User.page(params[:page]).search(params[:search]).order(sort_order(sort_column, sort_direction))
-                            else
-                              User.page(params[:page]).order(sort_order(sort_column, sort_direction))
-                            end
-                   # @users, @alphaParams = User.all.alpha_paginate(params[:letter]){|user| user.lastname}
-                 end
-      end
+      users = if params[:search].present?
+                User.search(params[:search])
+              else
+                User.all
+              end
+      # @users, @alphaParams = User.all.alpha_paginate(params[:letter]){|user| user.lastname}
     end
+    @users = users.page(params[:page]).order(sort_order(sort_column, sort_direction))
     respond_to do |format|
       format.html
     end
@@ -36,14 +33,7 @@ class UsersController < ApplicationController
     render json: @users.map(&:displayname)
   end
 
-  def show
-    # @uroles = @usr.user_business_role.includes(:business_role).order('business_roles.name')   # исполняет роли
-    # @uworkplaces = @usr.user_workplace  # рабочие места пользователя
-    # @documents = Document.order(:name).where(owner_id: @usr.id)
-    # @contracts = Contract.order('date_begin DESC').where(owner_id: @usr.id)     # договоры, за которые отвечает пользователь
-    # @contracts_pay = Contract.order('date_begin DESC').where(payer_id: @usr.id) # договоры, за оплату которых отвечает пользователь
-    respond_with
-  end
+  def show; end
 
   def uworkplaces
     @uworkplaces = @usr.user_workplace
@@ -59,7 +49,8 @@ class UsersController < ApplicationController
     @tasks_ids = Task.joins(:user_task).where('user_tasks.user_id = ? and tasks.status < 90', @usr.id).ids \
                | Task.where('author_id = ? and status < 90', @usr.id).ids
     @tasks = Task.where(id: @tasks_ids).order(:duedate, :status)
-    @requirements_ids = Requirement.joins(:user_requirement).where('user_requirements.user_id = ? and requirements.status < 90', @usr.id).ids \
+    @requirements_ids = Requirement.joins(:user_requirement)
+                                   .where('user_requirements.user_id = ? and requirements.status < 90', @usr.id).ids \
                       | Requirement.where('author_id = ? and status < 90', @usr.id).ids
     @requirements = Requirement.where(id: @requirements_ids).order(:duedate, :status)
 
@@ -71,7 +62,7 @@ class UsersController < ApplicationController
   def uroles
     @uroles = @usr.user_business_role.includes(:business_role).order('business_roles.name') # исполняет роли
     #- @uworkplaces = @usr.user_workplace # рабочие места пользователя
-    p params[:layout]
+    # p params[:layout]
     respond_to do |format|
       if params[:layout].present?
         format.html { render layout: true }
@@ -136,6 +127,20 @@ class UsersController < ApplicationController
     render :edit
   end
 
+  def move_documents_to
+    @old_user = User.find(params[:id])
+    @new_user = User.new
+  end
+
+  def documents_move_to
+    user_name = params[:user][:user_name]
+    new_user = User.find_by(displayname: user_name)
+    Document.where(owner_id: @usr.id).each do |document|
+      document.update! owner_id: new_user.id
+    end
+    redirect_to new_user, notice: 'Документы переданы новому ответственному'
+  end
+
   def update
     if @usr.update(user_params)
       redirect_to @usr, notice: 'Successfully created user access roles.'
@@ -144,12 +149,12 @@ class UsersController < ApplicationController
     end
   end
 
-  def order # распоряжение о назначении исполнителей на роли в процессе
-    print_order
+  def order
+    print_order # распоряжение о назначении исполнителей на роли в процессе
   end
 
-  def pass # печать пропуска
-    print_pass
+  def pass
+    print_pass # печать пропуска
   end
 
   def avatar_delete
@@ -196,10 +201,10 @@ class UsersController < ApplicationController
 
   private
 
-  # def user_params
-  #   params.require(:user).permit(:user_name, :office, :email,
-  #     :encrypted_password, :last_sign_in_at, :created_at, :updated_at, :firstname, :lastname, :username, :displayname)
-  # end
+  def user_params
+    params.require(:user).permit(:user_name) # , :office, :email,
+    # :encrypted_password, :last_sign_in_at, :created_at, :updated_at, :firstname, :lastname, :username, :displayname)
+  end
 
   def avatar_params
     params.require(:user).permit(:avatar)
@@ -208,7 +213,6 @@ class UsersController < ApplicationController
   # распоряжение о назачении на роли в процессе
   def print_order
     @business_roles = @usr.business_roles.includes(:bproce).order(:name)
-    p @business_roles.first.note
     report = ODFReport::Report.new('reports/user-order.odt') do |r|
       r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       r.add_field :id, @usr.id
@@ -223,7 +227,7 @@ class UsersController < ApplicationController
         t.add_column(:nr, :name)
         t.add_column(:rdescription, :description)
         t.add_column(:br_note) do |br|
-          note || ''
+          br.features || ''
         end
         t.add_column(:process_name) do |bp|
           bp.bproce.name
@@ -266,7 +270,9 @@ class UsersController < ApplicationController
 
   def find_user
     if params[:search].present? # это поиск
-      @users = User.search(params[:search]).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
+      @users = User.search(params[:search])
+                   .order(sort_order(sort_column, sort_direction))
+                   .paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
       @usr = params[:id].present? ? User.find(params[:id]) : User.new

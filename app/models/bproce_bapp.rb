@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class BproceBapp < ActiveRecord::Base
+class BproceBapp < ApplicationRecord
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
@@ -31,7 +31,7 @@ class BproceBapp < ActiveRecord::Base
 
   def self.search(search)
     return where(nil) if search.blank?
-    
+
     where('name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%")
   end
 end
