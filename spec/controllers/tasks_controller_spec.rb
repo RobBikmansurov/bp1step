@@ -162,16 +162,36 @@ RSpec.describe TasksController, type: :controller do
     it 'save user and show task' do
       user = create :user
       user_task = create :user_task, user_id: user.id, task_id: task.id
-      put :update_user, params: { id: task.to_param, 
-          user_task: { user_id: user.id, task_id: task.id, status: 0, user_name: user.displayname } }
+      put :update_user, params: { id: task.to_param,
+                                  user_task: { user_id: user.id, task_id: task.id, status: 0, user_name: user.displayname } }
       expect(assigns(:task)).to eq(task)
     end
   end
 
   describe 'create_user' do
     it 'render create_user' do
+      user = FactoryBot.create :user
+      user_task = UserTask.create task_id: task.id, user_id: user.id
       # get :create_user, params: { id: task.to_param }
-      # expect(response).to render_template(partial: 'show')
+      # expect(response).to be_successful
+    end
+  end
+
+  describe 'check' do
+    it 'render report check' do
+      current_user = FactoryBot.create :user
+      get :check, params: { id: task.to_param }
+      expect(response).to be_successful
+    end
+  end
+
+  describe 'report' do
+    it 'render report check' do
+      user = FactoryBot.create :user
+      user_task = UserTask.create task_id: task.id, user_id: user.id
+      current_user = FactoryBot.create :user
+      get :report, params: { id: task.to_param }
+      expect(response).to be_successful
     end
   end
 end

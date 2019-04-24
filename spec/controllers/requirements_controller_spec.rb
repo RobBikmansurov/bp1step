@@ -7,7 +7,11 @@ RSpec.describe RequirementsController, type: :controller do
   let(:valid_attributes) { { label: 'requirement', author_id: author.id } }
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
+
   let(:requirement) { FactoryBot.create :requirement, author_id: author.id }
+  let!(:task) { FactoryBot.create :task, author_id: author.id }
+  let(:user) { create :user }
+  let!(:user_requirement) { create :user_requirement, requirement: requirement, user: user }
 
   before do
     @user = FactoryBot.create(:user)
@@ -25,9 +29,14 @@ RSpec.describe RequirementsController, type: :controller do
 
     it 'loads all of the requirements into @requirements' do
       requirement1 = FactoryBot.create(:requirement, label: 'requirement1', author_id: author.id)
-      requirement2 = FactoryBot.create(:requirement, label: 'requirement2', author_id: author.id)
       get :index
-      expect(assigns(:requirements)).to match_array([requirement1, requirement2])
+      expect(assigns(:requirements)).to match_array([requirement, requirement1])
+    end
+
+    it 'show requirement with status' do
+      requirement_with_status = FactoryBot.create :requirement, author: author, status: 5
+      get :index, params: { status: '5' }
+      expect(assigns(:requirements)).to match_array([requirement_with_status])
     end
   end
 
@@ -150,4 +159,16 @@ RSpec.describe RequirementsController, type: :controller do
     end
   end
 
+  describe 'reports' do
+    let(:user) { create :user }
+    let!(:user_task) { create :user_task, task: task, user: user, status: 1 }
+    it 'tasks_list' do
+      get :tasks_list, params: { id: requirement.to_param }
+      expect(response).to be_successful
+    end
+    it 'tasks_report' do
+      get :tasks_report, params: { id: requirement.to_param }
+      expect(response).to be_successful
+    end
+  end
 end

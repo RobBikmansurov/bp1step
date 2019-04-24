@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe ContractsController do
   let(:user) { FactoryBot.create :user }
-  let(:bproce) { FactoryBot.create(:broce, user_id: user.id) }
+  let(:bproce) { FactoryBot.create(:bproce, user_id: user.id) }
   let(:agent) { FactoryBot.create(:agent) }
   let(:valid_attributes) do
     { number: '1', name: 'name', status: 'status', description: 'description',
@@ -38,6 +38,48 @@ RSpec.describe ContractsController do
       ]
       get :index
       expect(assigns(:contracts)).to match_array(contracts)
+    end
+
+    it 'returns contracts with status' do
+      contract_w_status = FactoryBot.create :contract, owner_id: user.id, agent_id: agent.id, status: 'Согласование'
+      get :index, params: { status: 'Согласование' }
+      expect(assigns(:contracts)).to match_array([contract_w_status])
+    end
+    it 'returns contracts for bproce' do
+      bproce1 = FactoryBot.create :bproce, user_id: user.id
+      contract1 = FactoryBot.create :contract, owner_id: user.id, agent_id: agent.id
+      bproce_contract1 = FactoryBot.create :bproce_contract, bproce_id: bproce1.id, contract_id: contract1.id
+      get :index, params: { bproce_id: bproce1.to_param }
+      expect(assigns(:contracts)).to match_array([contract1])
+    end
+    it 'returns contracts for bproce and status' do
+      bproce1 = FactoryBot.create :bproce, user_id: user.id
+      contract1 = FactoryBot.create :contract, owner_id: user.id, agent_id: agent.id, status: 'Привет'
+      bproce_contract1 = FactoryBot.create :bproce_contract, bproce_id: bproce1.id, contract_id: contract1.id
+      get :index, params: { bproce_id: bproce1.to_param, status: 'Привет' }
+      expect(assigns(:contracts)).to match_array([contract1])
+    end
+    it 'returns contracts with type' do
+      contract_with_type = FactoryBot.create :contract, owner_id: user.id, agent_id: agent.id, contract_type: 'AnyType'
+      get :index, params: { type: 'AnyType' }
+      expect(assigns(:contracts)).to match_array([contract_with_type])
+    end
+    it 'returns contracts with place' do
+      contract_with_place = FactoryBot.create :contract, owner_id: user.id, agent_id: agent.id, contract_place: 'Place'
+      get :index, params: { place: 'Place' }
+      expect(assigns(:contracts)).to match_array([contract_with_place])
+    end
+    it 'returns contracts for user' do
+      user1 = FactoryBot.create :user
+      contract_users = FactoryBot.create :contract, owner_id: user1.id, agent_id: agent.id
+      get :index, params: { user: user1.id }
+      expect(assigns(:contracts)).to match_array([contract_users])
+    end
+    it 'returns contracts for payer' do
+      payer = FactoryBot.create :user
+      contract_payers = FactoryBot.create :contract, owner_id: user.id, payer_id: payer.id, agent_id: agent.id
+      get :index, params: { payer: payer.id }
+      expect(assigns(:contracts)).to match_array([contract_payers])
     end
   end
 
@@ -163,13 +205,28 @@ RSpec.describe ContractsController do
     end
   end
 
-  it 'form approval sheet' do
-    # allow(contract).to receive(:id).with(1).and_return('approval_sheet')
-    # @controller.should_receive(:send_data).with(csv_string, csv_options).and_return { @controller.render nothing: true }
-    # expect(controller).to receive(:send_data).with(
-    #   type: 'application/msword',
-    #   filename: "c#{contract.id}-approval-sheet.odt",
-    #   disposition: 'inline').and_return { controller.render nothing: true }
-    get :approval_sheet, params: { id: contract.to_param, format: :odt }
+  it 'return clone' do
+    bproce_contract = FactoryBot.create :bproce_contract, bproce_id: bproce.id, contract_id: contract.id
+    get :clone, params: { id: contract.to_param }
+    expect(response).to render_template('contracts/clone')
+  end
+
+  it 'update_scan' do
+    contract_scan = FactoryBot.create :contract_scan, contract_id: contract.id
+    # post :update_scan, params: { contract_scan: contract_scan }
+    # expect(response).to render_template('show')
+  end
+
+  describe 'reports' do
+    it 'render approval_sheet' do
+      current_user = FactoryBot.create :user
+      bproce_contract = FactoryBot.create :bproce_contract, bproce_id: bproce.id, contract_id: contract.id
+      get :approval_sheet, params: { id: contract.to_param }
+      expect(response).to be_successful
+    end
+    it 'print' do
+      get :index, params: { format: 'odt' }
+      expect(response).to be_successful
+    end
   end
 end

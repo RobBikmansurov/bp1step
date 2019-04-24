@@ -160,4 +160,30 @@ RSpec.describe LettersController, type: :controller do
       expect(response).to redirect_to(letters_url)
     end
   end
+
+  describe 'update_user' do
+    it 'save user and show task' do
+      user = create :user
+      user_letter = create :user_letter, user_id: user.id, letter_id: letter.id
+      put :update_user, params: { id: letter.to_param,
+                                  user_letter: { user_id: user.id, letter_id: letter.id, status: 0, user_name: user.displayname } }
+      expect(assigns(:letter)).to eq(letter)
+    end
+  end
+
+  describe 'check' do
+    it 'render report check' do
+      current_user = FactoryBot.create :user
+      get :check, params: { id: letter.to_param }
+      expect(response).to be_successful
+    end
+  end
+
+  describe 'log_week' do
+    it 'render week report' do
+      current_user = FactoryBot.create :user
+      get :log_week, params: {  }
+      expect(response).to redirect_to(letters_url)
+    end
+  end
 end

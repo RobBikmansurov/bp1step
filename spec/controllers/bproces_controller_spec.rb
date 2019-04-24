@@ -34,11 +34,11 @@ RSpec.describe BprocesController, type: :controller do
       expect(assigns(:bproces)).to match_array([bproce, bproce1])
     end
     it 'loads all bprocesses with params all' do
-      get :index, params: { all: 1}
+      get :index, params: { all: 1 }
       expect(assigns(:bproces)).to match_array([bproce, bproce1])
     end
     it 'loads all bprocesses with params all' do
-      get :index, params: { tag: 'web'}
+      get :index, params: { tag: 'web' }
       # expect(assigns(:bproces)).to match_array([bproce, bproce1])
     end
     it 'loads bproceses for user' do
@@ -154,6 +154,45 @@ RSpec.describe BprocesController, type: :controller do
     it 'redirects to the bproces list' do
       delete :destroy, params: { id: bproce.to_param }
       expect(response).to redirect_to(bproces_url)
+    end
+  end
+
+  describe 'reports' do
+    let!(:bproce_sub) { create :bproce, user_id: user1.id, parent_id: bproce.id }
+    let(:bapp) { create :bapp }
+    let!(:bproce_bapp) { create :bproce_bapp, bproce_id: bproce.id, bapp_id: bapp.id }
+    let!(:metric) { create :metric, bproce_id: bproce.id }
+    let(:agent) { create(:agent) }
+    let(:contract) { create(:contract, owner_id: user.id, agent_id: agent.id) }
+    let!(:bproce_contract) { create :bproce_contract, bproce_id: bproce.id, contract_id: contract.id }
+    let(:workplace) { create :workplace }
+    let!(:bproce_workplace) { create :bproce_workplace, bproce_id: bproce.id, workplace_id: workplace.id }
+    let(:document) { create :document, owner_id: user.id, status: 'Действует' }
+    let!(:bproce_document)  { create :bproce_document, bproce_id: bproce.id, document_id: document.id }
+
+    it 'check_list' do
+      get :check_list, params: { id: bproce.to_param }
+      expect(response).to be_successful
+    end
+    it 'check_list_improve' do
+      get :check_list_improve, params: { id: bproce.to_param }
+      expect(response).to be_successful
+    end
+    it 'doc' do
+      get :doc, params: { id: bproce.to_param }
+      expect(response).to be_successful
+    end
+    it 'order' do
+      get :order, params: { id: bproce.to_param }
+      expect(response).to be_successful
+    end
+    it 'card' do
+      get :card, params: { id: bproce.to_param }
+      expect(response).to be_successful
+    end
+    it 'print' do
+      get :index, params: { id: bproce.to_param, format: 'pdf' }
+      expect(response).to be_successful
     end
   end
 end

@@ -12,7 +12,9 @@ class ContractsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def autocomplete
-    @contracts = Contract.order(:number).where('name ilike ? or number ilike ? or id = ?', "%#{params[:term]}%", "%#{params[:term]}%", params[:term].to_i.to_s)
+    @contracts = Contract
+                 .where('name ilike ? or number ilike ? or id = ?', "%#{params[:term]}%", "%#{params[:term]}%", params[:term].to_s)
+                 .order(:number)
     render json: @contracts.map(&:autoname)
   end
 
@@ -24,10 +26,12 @@ class ContractsController < ApplicationController
       if params[:bproce_id].present?
         @bproce = Bproce.find(params[:bproce_id])
         if params[:status].present?
-          @contracts = @bproce.contracts.where('status = ?', params[:status]).order('date_begin DESC') # действующие договоры процесса
+          # действующие договоры процесса
+          @contracts = @bproce.contracts.where('status = ?', params[:status]).order('date_begin DESC')
           @title_doc_add = " статус [#{params[:status]}]"
         else
-          @contracts = @bproce.contracts.where('status != ?', 'НеДействует').order('date_begin DESC') # действующие договоры процесса
+          # действующие договоры процесса
+          @contracts = @bproce.contracts.where('status != ?', 'НеДействует').order('date_begin DESC')
           @title_doc_add = ' действующие'
         end
         @title_doc = "Договоры процесса [ #{@bproce.shortname} ] #{@title_doc_add}"
@@ -60,7 +64,7 @@ class ContractsController < ApplicationController
           @contracts = Contract.where(payer_id: params[:payer])
           @title_doc += ' ответственный за оплату [' + @user.displayname + ']'
         else
-          @title_doc += ' поиск [' + params[:search] + ']' if params[':search'].present?
+          @title_doc += " поиск [#{params[:search]}]" if params[':search'].present?
           @contracts = if sort_column == 'lft'
                          Contract.search(params[:search]).order(:lft).paginate(per_page: 10, page: params[:page])
                        else
@@ -116,9 +120,10 @@ class ContractsController < ApplicationController
     if @contract.update(contract_params)
       redirect_to @contract, notice: 'Contract was successfully updated.'
       begin
-        ContractMailer.update_contract(@contract, current_user, nil, '').deliver_now # оповестим ответственных об изменениях договора
-      rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-        flash[:alert] = 'Error sending mail to contract owner'
+        # оповестим ответственных об изменениях договора
+        ContractMailer.update_contract(@contract, current_user, nil, '').deliver_now
+      rescue StandardError => e
+        flash[:alert] = "Error sending mail to contract owner\n#{e}"
       end
     else
       render action: 'edit'
@@ -152,8 +157,8 @@ class ContractsController < ApplicationController
         begin
           # оповестим ответственных об изменениях скана
           ContractMailer.update_contract(@contract, current_user, contract_scan, 'добавлен').deliver_now
-        rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-          flash[:alert] = 'Error sending mail to contract owner'
+        rescue StandardError => e
+          flash[:alert] = "Error sending mail to contract owner\n#{e}"
         end
       end
     else
@@ -201,7 +206,7 @@ class ContractsController < ApplicationController
   private
 
   def print
-    report = ODFReport::Report.new('reports/contracts.odt') do |r|
+    report = ODFReport::Report.new('reports/contracts.odt') do |r| # rubocop:disable Metrics/BlockLength
       nn = 0 # порядковый номер документа
       nnp = 0
       first_part = 0 # номер раздела для сброса номера документа в разделе
@@ -238,7 +243,7 @@ class ContractsController < ApplicationController
 
   # Лист согласования
   def approval_sheet_odt
-    report = ODFReport::Report.new('reports/approval-sheet-contract.odt') do |r|
+    report = ODFReport::Report.new('reports/approval-sheet-contract.odt') do |r| # rubocop:disable Metrics/BlockLength
       r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       r.add_field 'REPORT_DATE1', (Date.current + 10.days).strftime('%d.%m.%Y')
       r.add_field :id, @contract.id
