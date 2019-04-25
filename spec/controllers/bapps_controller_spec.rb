@@ -6,6 +6,8 @@ RSpec.describe BappsController, type: :controller do
   let(:bapp_attributes) { { name: 'bapp name', description: 'description' } }
   let(:inbapp_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
+  let(:user) { create :user }
+  let(:bproce) { create :bproce, user: user }
   let(:bapp) { FactoryBot.create :bapp }
 
   before do
@@ -41,13 +43,12 @@ RSpec.describe BappsController, type: :controller do
   describe 'GET new' do
     it 'assigns a new bapp as @bapp' do
       get :new
-      expect(assigns(:bapp)).to be_a_new(Bapp)
+      expect(assigns(:bapp)).to be_a_new Bapp 
     end
   end
 
   describe 'GET edit' do
     it 'assigns the requested bapp as @bapp' do
-      bapp = Bapp.create! bapp_attributes
       get :edit, params: { id: bapp.to_param }
       expect(assigns(:bapp)).to eq(bapp)
     end

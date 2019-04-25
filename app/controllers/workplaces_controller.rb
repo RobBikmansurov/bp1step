@@ -8,7 +8,7 @@ class WorkplacesController < ApplicationController
 
   helper_method :sort_column, :sort_direction
   before_action :authenticate_user!, only: %i[edit update new create]
-  before_action :get_workplace, except: %i[index switch]
+  before_action :set_workplace, except: %i[index switch]
   # load_and_authorize_resource
   autocomplete :bproce, :name, extra_data: [:id]
 
@@ -25,7 +25,9 @@ class WorkplacesController < ApplicationController
                                       Workplace.search(params[:search])
                                     end
                     end
-      @workplaces = @workplaces.includes(:users).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
+      @workplaces = @workplaces.includes(:users)
+                               .order(sort_order(sort_column, sort_direction))
+                               .paginate(per_page: 10, page: params[:page])
     end
     respond_to do |format|
       format.html
@@ -71,8 +73,8 @@ class WorkplacesController < ApplicationController
         flash[:notice] = "#{user_workplace.user_name} на новом рабочем месте - [#{@workplace.name}]"
         begin
           UserWorkplaceMailer.user_workplace_create(user_workplace, current_user).deliver_now # оповестим нового сотрудника
-        rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-          flash[:alert] = "Error sending mail to #{user_workplace.user.email}"
+        rescue StandardError => e
+          flash[:alert] = "Error sending mail to #{user_workplace.user.email}\n#{e}"
         end
         @workplace = user_workplace.workplace
       end
@@ -126,7 +128,7 @@ class WorkplacesController < ApplicationController
     params[:direction] || 'asc'
   end
 
-  def get_workplace
+  def set_workplace
     if params[:search].present? # это поиск
       @workplaces = Workplace.search(params[:search])
                              .order(sort_order(sort_column, sort_direction))
@@ -184,9 +186,9 @@ class WorkplacesController < ApplicationController
                                disposition: 'inline'
   end
 
-  def print_date_and_user(r)
-    r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
-    r.add_field 'USER_POSITION', current_user.position
-    r.add_field 'USER_NAME', current_user.displayname
+  def print_date_and_user(report)
+    report.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
+    report.add_field 'USER_POSITION', current_user.position
+    report.add_field 'USER_NAME', current_user.displayname
   end
 end

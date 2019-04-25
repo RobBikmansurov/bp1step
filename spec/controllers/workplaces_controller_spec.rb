@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe WorkplacesController, type: :controller do
   let(:valid_attributes) { { name: 'workplace', description: 'workplace description', designation: 'workplace designation' } }
   let(:valid_session) { {} }
+  let(:workplace) { create :workplace }
 
   before do
     @user = FactoryBot.create(:user)
@@ -136,6 +137,27 @@ RSpec.describe WorkplacesController, type: :controller do
       workplace = FactoryBot.create(:workplace)
       delete :destroy, params: { id: workplace.id }
       expect(response).to redirect_to(workplaces_url)
+    end
+  end
+
+  describe 'update_user' do
+    it 'save user and show workplace' do
+      user = create :user
+      user_workplace = create :user_workplace, user_id: user.id, workplace: workplace
+      put :update_user, params: { id: workplace.to_param,
+                                  user_workplace: { user_id: user.id, workplace: workplace, user_name: user.displayname } }
+      expect(assigns(:workplace)).to eq(workplace)
+    end
+  end
+
+  describe 'reports' do
+    it 'render print' do
+      get :index, params: { format: 'odt' }
+      expect(response).to be_successful
+    end
+    it 'render switch' do
+      get :switch
+      expect(response).to be_successful
     end
   end
 end

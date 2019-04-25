@@ -223,7 +223,7 @@ class LettersController < ApplicationController
 
   # реестр
   def reestr
-    @letters = Letter.where('sender ILIKE ? and regdate = ?', @letter.sender, @letter.regdate).order(:regnumber)
+    @letters = Letter.where('sender LIKE ? and regdate = ?', @letter.sender, @letter.regdate).order(:regnumber)
     @sender = @letter.sender
     reestr_report
   end

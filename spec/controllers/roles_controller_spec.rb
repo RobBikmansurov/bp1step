@@ -12,7 +12,10 @@ RSpec.describe RolesController, type: :controller do
     it 'assigns all roles as @roles' do
       get :index
       expect(response).to be_successful
-      expect(response).to render_template('roles/index')
+    end
+    it 'render template index' do
+      get :index
+      expect(response).to render_template :index
     end
 
     it 'loads all of the roles into @roles' do
