@@ -4,7 +4,7 @@ class BappsController < ApplicationController
   respond_to :html
   respond_to :pdf, :odf, :xml, :json, only: :index
   helper_method :sort_column, :sort_direction
-  before_action :set_app, onky: %i[show destroy update]
+  before_action :set_app, only: %i[show destroy update edit new]
   before_action :authenticate_user!, only: %i[edit new]
 
   autocomplete :bproce, :name, extra_data: [:id]

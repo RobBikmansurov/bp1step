@@ -5,6 +5,7 @@ class UserDocumentsController < ApplicationController
 
   def destroy
     return unless current_user
+
     @document = Document.find(params[:id]) if params[:id].present?
     @user_document = UserDocument.where(user_id: current_user.id, document_id: @document.id).first
     @user_document&.destroy

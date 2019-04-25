@@ -3,12 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe LettersController, type: :controller do
-  let(:valid_attributes) { { sender: 'sender', date: Date.current, subject: 'subject', number: '123', status: 0 } }
+  let(:valid_attributes) { { sender: 'sender', date: Date.current, subject: 'subject', number: '123', status: 90 } }
   let(:invalid_attributes) { { subject: 'invalid value' } }
   let(:valid_session) { {} }
-  let(:author) { FactoryBot.create :user }
-  let(:letter) { FactoryBot.create :letter }
-  let(:letter1) { FactoryBot.create :letter }
+  let(:author) { create :user }
+  let(:user) { create :user }
+  let(:letter) { create :letter, author: author }
+  let(:letter1) { create :letter }
 
   before do
     @user = FactoryBot.create(:user)
@@ -111,7 +112,7 @@ RSpec.describe LettersController, type: :controller do
   describe 'PUT update' do
     describe 'with valid params' do
       it 'updates the requested letter' do
-        letter = Letter.create! valid_attributes
+        letter = create :letter, author: author, status: 0
         expect_any_instance_of(Letter).to receive(:save).at_least(:once)
         put :update, params: { id: letter.to_param, letter: valid_attributes }
       end
@@ -171,19 +172,56 @@ RSpec.describe LettersController, type: :controller do
     end
   end
 
-  describe 'check' do
+  it 'clone letter' do
+    get :clone, params: { id: letter.id}
+    expect(response).to render_template('clone')
+  end
+  it 'create outgoing letter' do
+    get :create_outgoing, params: { id: letter.id}
+    expect(response).to render_template :create_outgoing
+  end
+  it 'create task' do
+    get :create_task, params: { id: letter.id }
+    expect(response).to redirect_to "/tasks/new?letter_id=#{letter.id}"
+  end
+  it 'create requirement' do
+    get :create_requirement, params: { id: letter.id }
+    expect(response).to redirect_to "/requirements/new?letter_id=#{letter.id}"
+  end
+
+  it 'register letter' do
+    get :register, params: { id: letter.id }
+    expect(response).to redirect_to "/letters/#{letter.id}?letter_id=#{letter.id}"
+  end
+
+  it 'display sender list' do
+    get :senders
+    expect(response).to render_template :senders
+  end
+  it 'display sender list with status' do
+    get :senders, params: { status: 90 }
+    expect(response).to render_template :senders
+  end
+
+  describe 'reports' do
     it 'render report check' do
       current_user = FactoryBot.create :user
+      user = create :user
+      user_letter = create :user_letter, user: user, letter: letter
       get :check, params: { id: letter.to_param }
       expect(response).to be_successful
     end
-  end
-
-  describe 'log_week' do
     it 'render week report' do
       current_user = FactoryBot.create :user
-      get :log_week, params: {  }
-      expect(response).to redirect_to(letters_url)
+      letter1 = create :letter, author: user, regdate: Date.current - 5
+      letter2 = create :letter, author: user, regdate: Date.current - 5
+      get :log_week, params: { week_day: Date.current - 5 }
+      expect(response).to be_successful
+    end
+    it 'render reestr report' do
+      current_user = FactoryBot.create :user
+      get :reestr, params: { id: letter.id }
+      expect(response).to be_successful
     end
   end
 end
