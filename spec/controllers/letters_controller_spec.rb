@@ -163,7 +163,7 @@ RSpec.describe LettersController, type: :controller do
   end
 
   describe 'update_user' do
-    it 'save user and show task' do
+    it 'save user and show letter' do
       user = create :user
       user_letter = create :user_letter, user_id: user.id, letter_id: letter.id
       put :update_user, params: { id: letter.to_param,

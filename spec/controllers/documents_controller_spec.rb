@@ -11,6 +11,7 @@ RSpec.describe DocumentsController, type: :controller do
   let!(:bproce)            { FactoryBot.create(:bproce, user_id: owner.id) }
   let!(:bproce_document)   { BproceDocument.create(bproce_id: bproce.id, document_id: doc2.id, purpose: 'two') }
   let!(:bproce_document)   { BproceDocument.create(bproce_id: bproce.id, document_id: document.id, purpose: 'one') }
+  let(:directive)          { create :directive }
 
   before do
     @user = FactoryBot.create(:user)
@@ -31,8 +32,43 @@ RSpec.describe DocumentsController, type: :controller do
       expect(assigns(:documents)).to match_array([document, doc2])
     end
     it 'returns documents for bproce if param bproce_id present' do
-      get :index, params: { bproce_id: bproce.id }
+      get :index, params: { bproce_id: bproce.id, status: document.status }
       expect(assigns(:documents)).to match_array([document])
+    end
+    it 'returns documents for directive' do
+      document1 = create :document, owner: owner
+      document_directive = create :document_directive, document: document1, directive: directive
+      get :index, params: { directive_id: directive.id }
+      expect(response).to render_template :index
+    end
+    it 'returns documents with :place' do
+      document_place = create :document, owner: owner, place: 'Place'
+      get :index, params: { place: 'Place', format: 'html' }
+      expect(response).to render_template :index
+    end
+    it 'returns documents with :dlevel' do
+      document_dlevel = create :document, owner: owner, dlevel: 3
+      get :index, params: { dlevel: 3 }
+      expect(response).to render_template :index
+    end
+    it 'returns documents with :part' do
+      document_dlevel = create :document, owner: owner, part: 1
+      get :index, params: { part: 1 }
+      expect(response).to render_template :index
+    end
+    it 'returns documents with :status' do
+      get :index, params: { status: document.status }
+      expect(response).to render_template :index
+    end
+    it 'returns documents for user' do
+      get :index, params: { user: owner.id }
+      expect(response).to render_template :index
+    end
+    it 'returns documents with :tag' do
+      # document.tags = 'tag'
+      # document.save
+      # get :index, params: { tag: document.tag }
+      # expect(response).to render_template :index
     end
   end
 
@@ -50,7 +86,7 @@ RSpec.describe DocumentsController, type: :controller do
 
     describe 'GET new' do
       it 'assigns a new document as @document' do
-        get :new
+        get :new, params: { id: bproce.id }
         expect(assigns(:document)).to be_a_new(Document)
       end
     end

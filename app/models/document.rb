@@ -3,8 +3,8 @@
 class Document < ApplicationRecord
   # belongs_to :user
   belongs_to :owner, class_name: 'User'
-  has_many :directive, through: :document_directive
   has_many :document_directive, dependent: :destroy
+  has_many :directive, through: :document_directive
   has_many :bproce, through: :bproce_document
   has_many :bproce_document, dependent: :destroy
   has_many :user, through: :user_document
