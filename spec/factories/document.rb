@@ -6,6 +6,7 @@ FactoryBot.define do
     sequence(:name) { |n| "document_name_#{n}" }
     dlevel 1
     place 'office1'
+    status 'Действует'
     trait :invalid do
       name ''
     end

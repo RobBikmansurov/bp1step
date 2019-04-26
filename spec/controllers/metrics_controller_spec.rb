@@ -136,6 +136,28 @@ RSpec.describe MetricsController, type: :controller do
     end
   end
 
+  it 'render values' do
+    get :values, params: { id: metric.to_param }
+    expect(response).to render_template :values
+  end
+
+  it 'render new' do
+    get :new_value, params: { id: metric.to_param }
+    expect(response).to render_template :new
+  end
+
+  it 'set_values redirect to show' do
+    metric = create :metric, bproce_id: bproce.id, mtype: 'PGSQL'
+    get :set_values, params: { id: metric.to_param }
+    expect(response).to redirect_to(action: :show)
+  end
+
+  it 'set render' do
+    metric = create :metric, bproce_id: bproce.id, mhash: '123'
+    # get :set, params: { id: metric.to_param, v: '1', h: '123' }
+    # expect(response.status).to eq(404)
+  end
+
   # subject { described_class.call(input, params) }
 
   # specify "no matching params" do

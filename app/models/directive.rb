@@ -11,8 +11,8 @@ class Directive < ApplicationRecord
   validates :status, length: { maximum: 30 }
   validates :note, length: { maximum: 255 }
 
-  has_many :document, through: :document_directive
   has_many :document_directive, dependent: :destroy
+  has_many :document, through: :document_directive
 
   # attr_accessible :name, :body, :number, :approval, :title, :annotation, :note, :status, :action
 

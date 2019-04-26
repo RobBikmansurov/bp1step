@@ -6,10 +6,10 @@ RSpec.describe BusinessRolesController, type: :controller do
   let(:user) { FactoryBot.create(:user) }
   let(:bproce) { FactoryBot.create(:bproce, user_id: user.id) }
   let(:valid_attributes) do
-    { name: 'business_role name', description: 'description', bproce_id: bproce.id }
+    { name: 'business_role name', description: 'description', bproce_id: bproce.id, bproce_name: bproce.name }
   end
   let(:invalid_attributes) { { name: 'invalid value', bproce_id: bproce.id } }
-  let(:valid_session) { {} }
+  let(:business_role) { create :business_role, bproce_id: bproce.id }
 
   before do
     @user = FactoryBot.create(:user)
@@ -43,7 +43,7 @@ RSpec.describe BusinessRolesController, type: :controller do
 
   describe 'GET new' do
     it 'assigns a new business_role as @business_role' do
-      get :new
+      get :new, params: { bproce_id: bproce.id }
       expect(assigns(:business_role)).to be_a_new(BusinessRole)
     end
   end
@@ -140,6 +140,28 @@ RSpec.describe BusinessRolesController, type: :controller do
       business_role.bproce_id = bproce.id
       delete :destroy, params: { id: business_role.to_param }
       expect(response).to redirect_to(bproce_business_role_url(bproce))
+    end
+  end
+
+  describe 'update_user' do
+    it 'save user and show business_role' do
+      user = create :user
+      user_business_role = create :user_business_role, user_id: user.id, business_role_id: business_role.id
+      put :update_user, params: { id: business_role.to_param,
+                                  user_business_role: { user_id: user.id, business_role_id: business_role.id, status: 0, user_name: user.displayname } }
+      expect(assigns(:business_role)).to eq(business_role)
+    end
+  end
+
+  it 'mail_all' do
+    # get :mail_all, params: { id: business_role.id }
+    # expect(assigns(response)).to render_template :show
+  end
+  describe 'reports' do
+    it 'render report print' do
+      current_user = FactoryBot.create :user
+      get :index, params: { format: 'odt' }
+      expect(response).to be_successful
     end
   end
 end
