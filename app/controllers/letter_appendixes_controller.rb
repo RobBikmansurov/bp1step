@@ -2,8 +2,8 @@
 
 class LetterAppendixesController < ApplicationController
   respond_to :html
-  before_action :authenticate_user!, only: %i[edit new]
-  before_action :set_letter_appendix, only: %i[show edit update destroy]
+  before_action :authenticate_user!, only: :edit
+  before_action :set_letter_appendix, only: %i[edit update destroy]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def edit

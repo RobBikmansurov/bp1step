@@ -6,8 +6,6 @@ class ContractScansController < ApplicationController
   before_action :set_contract_scan, only: %i[show edit update destroy]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
-  def show; end
-
   def edit
     @contract = @contract_scan.contract if @contract_scan
   end

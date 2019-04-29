@@ -2,7 +2,8 @@
 
 FactoryBot.define do
   factory :letter_appendix do
-    letter nil
+    appendix { File.new("#{Rails.root}/spec/support/test.odt") }
     name 'MyString'
+    letter
   end
 end

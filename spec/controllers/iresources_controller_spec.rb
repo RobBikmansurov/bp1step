@@ -3,9 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe IresourcesController, type: :controller do
-  let(:user)              { FactoryBot.create(:user) }
-  let(:valid_iresources)  { FactoryBot.create_list(:iresource, 2) }
-  let(:invalid_iresource) { FactoryBot.create(:iresource, :invalid) }
+  let(:user)              { create :user }
+  let(:valid_iresources)  { create_list :iresource, 2 }
+  let(:invalid_iresource) { create :iresource, :invalid }
+
+  before do
+    @user = FactoryBot.create(:user)
+    @user.roles << Role.find_or_create_by(name: 'author', description: 'Автор')
+    sign_in @user
+    allow(controller).to receive(:authenticate_user!).and_return(true)
+  end
 
   describe 'GET index' do
     it 'assigns all iresources as @iresources' do
@@ -18,6 +25,12 @@ RSpec.describe IresourcesController, type: :controller do
       iresources = valid_iresources
       get :index
       expect(assigns(:iresources)).to match_array(iresources)
+    end
+    it 'loads letter for user' do
+      user = create :user
+      iresource_user = create :iresource, user_id: user.id
+      get :index, params: { user: user.id }
+      expect(assigns(:iresources)).to match_array([iresource_user])
     end
   end
 
@@ -140,6 +153,14 @@ RSpec.describe IresourcesController, type: :controller do
       iresource = valid_iresources.first
       delete :destroy, params: { id: iresource.id }
       expect(response).to redirect_to(iresources_url)
+    end
+  end
+  describe 'reports' do
+    it 'render report print' do
+      current_user = FactoryBot.create :user, position: 'big boss'
+      iresource = create :iresource
+      get :index, params: { format: 'pdf' }
+      expect(response).to be_successful
     end
   end
 end

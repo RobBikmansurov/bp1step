@@ -8,8 +8,9 @@ RSpec.describe RequirementsController, type: :controller do
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
 
-  let(:requirement) { FactoryBot.create :requirement, author_id: author.id }
-  let!(:task) { FactoryBot.create :task, author_id: author.id }
+  let(:letter) { create :letter, author: author }
+  let(:requirement) { create :requirement, author: author }
+  let!(:task) { create :task, author: author, requirement: requirement }
   let(:user) { create :user }
   let!(:user_requirement) { create :user_requirement, requirement: requirement, user: user }
 
@@ -28,7 +29,7 @@ RSpec.describe RequirementsController, type: :controller do
     end
 
     it 'loads all of the requirements into @requirements' do
-      requirement1 = FactoryBot.create(:requirement, label: 'requirement1', author_id: author.id)
+      requirement1 = create(:requirement, label: 'RequirementNew', author_id: author.id)
       get :index
       expect(assigns(:requirements)).to match_array([requirement, requirement1])
     end
@@ -44,6 +45,10 @@ RSpec.describe RequirementsController, type: :controller do
     it 'assigns the requested requirement as @requirement' do
       requirement = Requirement.create! valid_attributes
       get :show, params: { id: requirement.to_param }
+      expect(assigns(:requirement)).to eq(requirement)
+    end
+    it 'show with :sort' do
+      get :show, params: { id: requirement.to_param, sort: 'id' }
       expect(assigns(:requirement)).to eq(requirement)
     end
   end
@@ -162,12 +167,21 @@ RSpec.describe RequirementsController, type: :controller do
   describe 'reports' do
     let(:user) { create :user }
     let!(:user_task) { create :user_task, task: task, user: user, status: 1 }
+    let(:requirement_with_letter) { create :requirement, author: author, letter: letter }
     it 'tasks_list' do
       get :tasks_list, params: { id: requirement.to_param }
       expect(response).to be_successful
     end
     it 'tasks_report' do
       get :tasks_report, params: { id: requirement.to_param }
+      expect(response).to be_successful
+    end
+    it 'tasks_list requirement_with_letter' do
+      get :tasks_list, params: { id: requirement_with_letter.to_param }
+      expect(response).to be_successful
+    end
+    it 'tasks_report requirement_with_letter' do
+      get :tasks_report, params: { id: requirement_with_letter.to_param }
       expect(response).to be_successful
     end
   end

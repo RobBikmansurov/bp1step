@@ -34,7 +34,7 @@ class BproceIresourcesController < ApplicationController
 
   def destroy
     @iresource = @bproce_iresource.iresource
-    flash[:notice] = "Ресурс удален из процесса" if @bproce_iresource.destroy
+    flash[:notice] = 'Ресурс удален из процесса' if @bproce_iresource.destroy
     if params[:bproce].present? # возврат в процесс
       @bproce = Bproce.find(params[:bproce])
       respond_with(@bproce)

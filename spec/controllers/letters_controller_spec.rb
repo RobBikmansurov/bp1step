@@ -9,7 +9,7 @@ RSpec.describe LettersController, type: :controller do
   let(:author) { create :user }
   let(:user) { create :user }
   let(:letter) { create :letter, author: author }
-  let(:letter1) { create :letter }
+  let(:letter1) { create :letter, author: author }
 
   before do
     @user = FactoryBot.create(:user)
@@ -190,6 +190,8 @@ RSpec.describe LettersController, type: :controller do
   end
 
   it 'register letter' do
+    letter.update_column :letter_id, letter1.id
+    letter.update_column :in_out, 2
     get :register, params: { id: letter.id }
     expect(response).to redirect_to "/letters/#{letter.id}?letter_id=#{letter.id}"
   end

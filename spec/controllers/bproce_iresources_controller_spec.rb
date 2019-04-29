@@ -18,13 +18,6 @@ RSpec.describe BproceIresourcesController, type: :controller do
     allow(controller).to receive(:authenticate_user!).and_return(true)
   end
 
-  before do
-    @user = FactoryBot.create(:user)
-    @user.roles << Role.find_or_create_by(name: 'admin', description: 'description')
-    sign_in @user
-    allow(controller).to receive(:authenticate_user!).and_return(true)
-  end
-
   describe 'GET show' do
     it 'assigns the requested bproce_iresource as @bproce_iresource' do
       get :show, params: { id: bproce_iresource.to_param }

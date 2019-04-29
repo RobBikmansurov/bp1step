@@ -4,7 +4,7 @@ class BproceBappsController < ApplicationController
   respond_to :html, :json
   helper_method :sort_column, :sort_direction
   before_action :authenticate_user!, only: %i[edit create]
-  before_action :bproce_bapp, except: :index
+  before_action :bproce_bapp
 
   def create
     if bproce_bapp_params[:bproce_name].present?
@@ -51,15 +51,6 @@ class BproceBappsController < ApplicationController
   def show
     @bp = Bproce.find(@bproce_bapp.bproce.id)
     respond_with(@bproce_bapp)
-  end
-
-  def index
-    if params[:bproce_id].present?
-      @bproce = Bproce.find(params[:bproce_id])
-      @bproce_bapp = @bproce.bapps
-    else
-      @bproce_bapp = BproceBapp.paginate(per_page: 10, page: params[:page])
-    end
   end
 
   def update

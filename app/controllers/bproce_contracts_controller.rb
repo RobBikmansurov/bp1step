@@ -2,17 +2,8 @@
 
 class BproceContractsController < ApplicationController
   respond_to :html, :xml, :json, :js
-  before_action :authenticate_user!, only: %i[edit new destroy]
+  before_action :authenticate_user!, only: %i[edit destroy]
   before_action :bproce_contract, except: %i[index show]
-
-  def new
-    @contract = Contract.find(params[:contract_id])
-    @contract_bproce = @contract.bproce_contract.new # заготовка для новой связи с процессом
-    respond_to do |format|
-      format.html { render 'new' } # view.html.erb
-      format.js {} # view.js.erb
-    end
-  end
 
   def create
     flash[:notice] = 'Successfully created bproce_contract.' if @bproce_contract.save

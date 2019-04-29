@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   resources :bproces, only: :autocomlete do
     get :autocomplete, on: :collection
@@ -18,16 +20,16 @@ Rails.application.routes.draw do
   resources :bapps do
     get :autocomplete, on: :collection
   end
-  resources :bproce_bapps, only: [:create, :destroy, :show, :edit, :update]
+  resources :bproce_bapps, only: %i[create destroy show edit update]
   resources :bproce_business_roles, only: [:show]
-  resources :bproce_iresources, only: [:new, :create, :destroy, :show, :edit, :update]
-  resources :bproce_workplaces, only: [:create, :destroy, :show]
-  resources :bproce_contracts, except: :index
+  resources :bproce_iresources, only: %i[new create destroy show edit update]
+  resources :bproce_workplaces, only: %i[create destroy show]
+  resources :bproce_contracts, except: %i[index new]
   resources :bproce_documents, except: :index
   resources :bproces, except: :new do
     resources :bapps
     resources :business_roles, only: [:new]
-    resources :documents, only: [:new, :index]
+    resources :documents, only: %i[new index]
     resources :contracts, only: [:index]
     collection do
       get :manage
@@ -65,7 +67,7 @@ Rails.application.routes.draw do
       get :clone # создать похожий договор
     end
   end
-  resources :contract_scans, only: [:destroy, :edit, :update]
+  resources :contract_scans, only: %i[destroy edit update]
   resources :directives do
     resources :documents  # документы на основании директивы
     get :autocomplete, on: :collection
@@ -120,7 +122,7 @@ Rails.application.routes.draw do
       get :reestr         # реестр выписок
     end
   end
-  resources :letter_appendixes, only: [:destroy, :edit, :update]
+  resources :letter_appendixes, only: %i[destroy edit update]
 
   resources :metrics do
     member do
@@ -131,7 +133,7 @@ Rails.application.routes.draw do
       get :set_values
     end
   end
-  resources :metric_values, only: [:edit, :update, :new, :create, :destroy]
+  resources :metric_values, only: %i[edit update new create destroy]
   get 'bproces/tags/:tag', to: 'bproces#index', as: :tag_bproces
   get 'bapps/tags/:tag', to: 'bapps#index', as: :tag_bapps
   get 'documents/tags/:tag', to: 'documents#index', as: :tag_documents
@@ -140,7 +142,7 @@ Rails.application.routes.draw do
 
   resources :tasks do
     collection do
-      get :check       # контроль
+      get :check # контроль
     end
     member do
       get :create_user      # назначить исполнителя
@@ -158,7 +160,7 @@ Rails.application.routes.draw do
       get :tasks_report
     end
   end
-  resources :roles, only: [:index, :show]
+  resources :roles, only: %i[index show]
 
   devise_for :users
   devise_scope :users do
@@ -166,7 +168,7 @@ Rails.application.routes.draw do
     get 'sign_out', to: 'devise/sessions#destroy'
     get 'sign_up',  to: 'devise/registrations#new'
   end
-  resources :users, only: [:index, :show, :edit, :update] do
+  resources :users, only: %i[index show edit update] do
     member do
       get :order # распоряжение о назначении исполнителя на роли в процессах
       get :pass # пропуск
@@ -181,19 +183,19 @@ Rails.application.routes.draw do
       get :avatar_create
       get :avatar_delete
       patch :update_avatar
-      get :move_to    # назначить другого пользователя всех бизнес-ролей сотрудника
-      post :business_roles_move_to  # перенести бизнес-роли новому пользователю
+      get :move_to # назначить другого пользователя всех бизнес-ролей сотрудника
+      post :business_roles_move_to # перенести бизнес-роли новому пользователю
       get :stop_all # прератить исполнение всех ролей сотрудником
       post :documents_move_to # перенести документы другому пользователю
       get :move_documents_to
     end
-    resources :roles, only: [:create, :destroy]
+    resources :roles, only: %i[create destroy]
   end
-  resources :user_business_roles, only: [:new, :create, :destroy, :edit, :update, :show]
+  resources :user_business_roles, only: %i[new create destroy edit update show]
   resources :user_documents, only: [:destroy]
-  resources :user_letters, only: [:destroy, :update, :create, :show]
-  resources :user_requirements, only: [:destroy, :update, :create, :show]
-  resources :user_tasks, only: [:destroy, :update, :create, :show]
+  resources :user_letters, only: %i[destroy update create show]
+  resources :user_requirements, only: %i[destroy update create show]
+  resources :user_tasks, only: %i[destroy update create show]
   resources :user_workplaces
 
   # match '/bproceses' => 'bproces#list', :via => :get  # получение полного списка процессов
@@ -211,5 +213,5 @@ Rails.application.routes.draw do
 
   match '/about' => 'pages#about', via: :get
   root to: 'home#index'
-  match "*path", to: 'pages#about', via: :all
+  match '*path', to: 'pages#about', via: :all
 end
