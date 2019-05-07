@@ -118,10 +118,10 @@ class ContractsController < ApplicationController
 
   def update
     if @contract.update(contract_params)
-      redirect_to @contract, notice: 'Contract was successfully updated.'
+      redirect_to @contract, notice: "Договор ##{@contract.id} изменен"
       begin
         # оповестим ответственных об изменениях договора
-        ContractMailer.update_contract(@contract, current_user, nil, '').deliver_now
+        ContractMailer.update_contract(@contract, current_user, nil, '').deliver_later
       rescue StandardError => e
         flash[:alert] = "Error sending mail to contract owner\n#{e}"
       end
@@ -132,7 +132,7 @@ class ContractsController < ApplicationController
 
   def destroy
     @contract.destroy
-    redirect_to contracts_url, notice: 'Contract was successfully destroyed.'
+    redirect_to contracts_url, notice: 'Договор удален'
   end
 
   def approval_sheet
@@ -156,7 +156,7 @@ class ContractsController < ApplicationController
         flash[:notice] = 'Файл "' + contract_scan.name + '" загружен.' if contract_scan.save
         begin
           # оповестим ответственных об изменениях скана
-          ContractMailer.update_contract(@contract, current_user, contract_scan, 'добавлен').deliver_now
+          ContractMailer.update_contract(@contract, current_user, contract_scan, 'добавлен').deliver_later
         rescue StandardError => e
           flash[:alert] = "Error sending mail to contract owner\n#{e}"
         end
@@ -188,7 +188,7 @@ class ContractsController < ApplicationController
     @contract.note = 'создан из #' + contract.id.to_s
     @contract.parent_id = contract.id
     if @contract.save
-      flash[:notice] = "Successfully cloned Contract ##{contract.id}" if @contract.save
+      flash[:notice] = "Создан новый субдоговор ##{contract.id}"
       contract.bproce_contract.find_each do |bp| # клонируем ссылки на процессы
         bproce_contract = BproceContract.new(contract_id: @contract, bproce_id: bp)
         bproce_contract.contract = @contract
