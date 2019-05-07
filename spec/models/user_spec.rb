@@ -4,6 +4,10 @@ require 'rails_helper'
 # TODO: не проверяется уникальность :username и :email! (не решена техническая проблема с возникающей ошибкой)
 
 describe User do
+  let(:user) { create :user }
+  let(:role) { create :role, name: 'admin' }
+  let!(:user_role) { create :user_role, user: user, role: role }
+
   context 'with validates' do
     it { is_expected.to validate_presence_of(:username) }
     # it { should validate_uniqueness_of(:username) }
@@ -24,6 +28,7 @@ describe User do
     it { is_expected.to have_many(:document).through(:user_document) }
     it { is_expected.to have_many(:user_document).dependent(:destroy) }
   end
+
   it 'have search method' do
     expect(described_class.search('').first).to eq(described_class.first)
   end
@@ -31,5 +36,16 @@ describe User do
     user = FactoryBot.create :user, displayname: 'Иванов'
     user.user_name = 'Иванов'
     expect(user.user_name).to eq('Иванов')
+  end
+  it 'show first symbols from full name' do
+    user = create :user, lastname: 'Фамилия', firstname: 'Имя', middlename: 'Отчество'
+    expect(user.user3).to eq('ИОФ')
+  end
+
+  it 'check exists role' do
+    expect(user.role?(:admin)).to eq true
+  end
+  it 'check non exists role' do
+    expect(user.role?(:admin1)).to eq false
   end
 end
