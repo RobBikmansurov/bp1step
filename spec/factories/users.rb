@@ -4,12 +4,12 @@ FactoryBot.define do
   factory :user do
     sequence(:id, &:to_s)
     username      { "u#{id}" }
-    email         { "person#{id}@example.com" }
-    displayname { "displayname#{id}" }
+    email         { "mail#{id}@example.com" }
+    displayname   { "displayname#{id}" }
     lastname      { "lastname#{id}" }
     firstname     { "firstname#{id}" }
-    password              'password'
-    password_confirmation 'password'
+    password        'password'
+    # password_confirmation 'password'
     encrypted_password 'secret'
     last_sign_in_at { 1.month.ago }
     active true

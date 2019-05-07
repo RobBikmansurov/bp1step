@@ -27,9 +27,10 @@ RSpec.describe MetricsController, type: :controller do
 
   describe 'GET show' do
     it 'assigns the requested metric as @metric' do
-      # get :show, params: { id: metric.to_param, depth: 2 }
+      # get :show, params: { id: metric.to_param, depth: 3 }
+      # !!! error - Time zones not supported for SQLite
       # expect(response).to be_successful
-      # expect(assigns(:metric)).to eq(@metric) # error - Time zones not supported for SQLite
+      # expect(assigns(:metric)).to eq(@metric)
     end
   end
 
