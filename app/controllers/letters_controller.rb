@@ -104,8 +104,16 @@ class LettersController < ApplicationController
   end
 
   def destroy
+    if Task.where(letter_id: @letter.id).any?
+      notice = "Письмо #{@letter.name} нельзя удалить - содежит задачи"
+      (redirect_to @letter, alert: notice) && return
+    elsif Requirement.where(letter_id: @letter.id).any?
+      notice = "Письмо #{@letter.name} нельзя удалить - содежит требования"
+      (redirect_to @letter, alert: notice) && return
+    end
+    notice = "Письмо #{@letter.name} удалено"
     @letter.destroy
-    redirect_to letters_url, notice: 'Письмо удалено.'
+    redirect_to letters_url, notice: notice
   end
 
   def check

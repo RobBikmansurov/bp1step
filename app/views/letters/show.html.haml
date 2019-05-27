@@ -171,3 +171,9 @@
   = link_to '+Требование', create_requirement_letter_path(@letter), class: 'button'
   - if can? :create_outgoing, @letter
     = link_to 'Реестр выписок', reestr_letter_path(@letter), class: 'button'
+  - if can? :registr, @letter
+    = link_to 'Удалить!', @letter,
+                          data: { confirm: "Письмо #{@letter.name}\nДействительно хотите удалить письмо ##{@letter.id} ?\n\nВосстановление не возможно!" },
+                          method: :delete,
+                          class: 'button'
+
