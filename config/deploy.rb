@@ -104,7 +104,7 @@ namespace :deploy do
       #run "rm -rf #{deploy_to}/current/public/store"
       #run "ln -s -- #{deploy_to}/public/store/ #{deploy_to}/current/public/store" #    app/models/document.rb :path => ":rails_root/public/store/:id.:ymd.:basename.:extension",
       #run "rm -rf #{deploy_to}/current/files"
-      execute "ln -s -- #{deploy_to}/files/ #{deploy_to}/current/files"
+      # execute "ln -s -- #{deploy_to}/files/ #{deploy_to}/current/files"
 
 
 
