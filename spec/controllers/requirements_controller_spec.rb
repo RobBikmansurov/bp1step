@@ -4,12 +4,12 @@ require 'rails_helper'
 
 RSpec.describe RequirementsController, type: :controller do
   let(:author)           { FactoryBot.create(:user) }
-  let(:valid_attributes) { { label: 'requirement', author_id: author.id } }
+  let(:requirement) { create :requirement, author: author }
+  let(:valid_attributes) { { label: requirement.label, author_id: author.id } }
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
 
   let(:letter) { create :letter, author: author }
-  let(:requirement) { create :requirement, author: author }
   let!(:task) { create :task, author: author, requirement: requirement }
   let(:user) { create :user }
   let!(:user_requirement) { create :user_requirement, requirement: requirement, user: user }

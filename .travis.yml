@@ -1,10 +1,10 @@
 language: ruby
 rvm:
-  - 2.5.1
+  - 2.6
 services:
   - postgresql
 addons:
-  postgresql: '9.6'
+  postgresql: '11.0'
   code_climate:
       repo_token: 335a735b208d1bed019b39913103142a74f992b394cd798b7d974d7d798c5769
 after_success:
