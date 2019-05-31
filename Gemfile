@@ -66,8 +66,6 @@ group :development do
   gem 'bundler-audit', require: false
   gem 'capistrano-rails-db'
   gem 'capistrano3-puma'
-  gem 'rubocop', require: false
-  gem 'rubocop-rspec', require: false
   gem 'sshkit-sudo'
   # gem 'log-analyzer', require: false
 end
@@ -90,6 +88,10 @@ group :test do
 end
 
 group :development, :test do
+  gem 'selenium-webdriver'
   gem 'factory_bot_rails'
   gem 'rspec-rails'
+  gem 'rubocop', require: false
+  gem 'rubocop-rspec', require: false
+  gem 'rubycritic', require: false
 end
