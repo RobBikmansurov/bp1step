@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class WorkplacesController < ApplicationController
+  include Reports
   respond_to :html
   respond_to :pdf, :odt, :xml, :json, only: %i[index switch]
 
@@ -157,7 +158,7 @@ class WorkplacesController < ApplicationController
         t.add_column(:description, :description)
         t.add_column(:location, :location)
       end
-      print_date_and_user r
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: 'workplaces.odt',
@@ -179,16 +180,10 @@ class WorkplacesController < ApplicationController
         t.add_column(:port)
         t.add_column(:location)
       end
-      print_date_and_user r
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: 'switch.odt',
                                disposition: 'inline'
-  end
-
-  def print_date_and_user(report)
-    report.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
-    report.add_field 'USER_POSITION', current_user.position
-    report.add_field 'USER_NAME', current_user.displayname
   end
 end

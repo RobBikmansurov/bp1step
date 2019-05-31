@@ -24,8 +24,8 @@ class UserWorkplacesController < ApplicationController
     @workplace = Workplace.find(@user_workplace.workplace_id) # запомнили рабочее место для этой удаляемой связи
     begin
       UserWorkplaceMailer.user_workplace_destroy(@user_workplace, current_user).deliver_now # оповестим сотрудника
-    rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-      flash[:alert] = "Error sending mail to #{@user_workplace.user.email}"
+    rescue StandardError => e
+      flash[:alert] = "Error sending mail to #{@user_workplace.user.email}\n#{e}"
     end
     @user_workplace.destroy   # удалили связь
     respond_with(@workplace)  # вернулись в рабочее место

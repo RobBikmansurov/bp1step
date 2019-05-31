@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RequirementsController < ApplicationController
+  include Reports
+
   respond_to :html, :json
   helper_method :sort_column, :sort_direction
   before_action :set_requirement, only: %i[show edit update destroy tasks_list tasks_report]
@@ -139,7 +141,6 @@ class RequirementsController < ApplicationController
   def tasks_list_report
     report = ODFReport::Report.new('reports/requirement_tasks_list.odt') do |r| # rubocop:disable Metrics/BlockLength
       nn = 0
-      r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       r.add_field 'REQUIREMENT_DATE', @requirement.date.strftime('%d.%m.%Y')
       r.add_field 'REQ_ID', @requirement.id
       r.add_field 'REQUIREMENT_LABEL', @requirement.label
@@ -196,8 +197,7 @@ class RequirementsController < ApplicationController
         end
         t.add_column(:result)
       end
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: "requirement#{@requirement.id}_tasks_list.odt",
@@ -207,7 +207,6 @@ class RequirementsController < ApplicationController
   def tasks_report_report
     report = ODFReport::Report.new('reports/requirement_tasks_report.odt') do |r| # rubocop:disable Metrics/BlockLength
       nn = 0
-      r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       r.add_field 'REQUIREMENT_DATE', @requirement.date.strftime('%d.%m.%Y')
       r.add_field 'REQ_ID', @requirement.id
       r.add_field 'REQUIREMENT_LABEL', @requirement.label
@@ -273,8 +272,7 @@ class RequirementsController < ApplicationController
         end
         t.add_column(:result)
       end
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: 'requirement_tasks_report.odt',

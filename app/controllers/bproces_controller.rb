@@ -2,6 +2,7 @@
 
 class BprocesController < ApplicationController
   include TheSortableTreeController::Rebuild
+  include Reports
 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
@@ -173,7 +174,7 @@ class BprocesController < ApplicationController
         t.add_column(:id)
         t.add_column(:goal)
       end
-      report_footer(r)
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: "processes-#{Date.current.strftime('%Y%m%d')}.odt",
@@ -203,7 +204,7 @@ class BprocesController < ApplicationController
       report_workplaces(@bproce, r, true) # сформировать таблицу рабочих мест
       report_bapps(@bproce, r, true) # сформировать таблицу приложений процесса
       report_iresources(@bproce, r, true) # сформировать таблицу ресурсов процесса
-      report_footer(r)
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: "#{@bproce.id}-card-#{Date.current.strftime('%Y%m%d')}.odt",
@@ -405,11 +406,6 @@ class BprocesController < ApplicationController
     else
       report.add_field :owner, '-'
     end
-  end
-
-  def report_footer(report)
-    report.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-    report.add_field 'USER_NAME', current_user.displayname
   end
 
   def generate_report(odt_template_name, report_file_name)

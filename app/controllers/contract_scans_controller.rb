@@ -15,9 +15,10 @@ class ContractScansController < ApplicationController
     if @contract_scan.update(contract_scan_params)
       redirect_to @contract, notice: 'Contract_scan name was successfully updated.'
       begin
-        ContractMailer.update_contract(@contract, current_user, @contract_scan, 'изменен').deliver # оповестим ответственных об изменениях договора
-      rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-        flash[:alert] = 'Error sending mail to contract owner'
+        # оповестим ответственных об изменениях договора
+        ContractMailer.update_contract(@contract, current_user, @contract_scan, 'изменен').deliver
+      rescue StandardError => e
+        flash[:alert] = "Error sending mail to contract owner\n#{e}"
       end
     else
       render action: 'edit'
@@ -28,9 +29,10 @@ class ContractScansController < ApplicationController
     @contract = @contract_scan.contract if @contract_scan
     if @contract_scan.destroy
       begin
-        ContractMailer.update_contract(@contract, current_user, @contract_scan, 'удален').deliver # оповестим ответственных об удалении файла договора
-      rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-        flash[:alert] = 'Error sending mail to contract owner'
+        # оповестим ответственных об удалении файла договора
+        ContractMailer.update_contract(@contract, current_user, @contract_scan, 'удален').deliver
+      rescue StandardError => e
+        flash[:alert] = "Error sending mail to contract owner\n#{e}"
       end
     end
     redirect_to contract_url(@contract), notice: 'Contract_scan was successfully destroyed.'

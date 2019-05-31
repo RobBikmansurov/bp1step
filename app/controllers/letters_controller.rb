@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class LettersController < ApplicationController
+  include Reports
+
   respond_to :html, :json
   before_action :authenticate_user!, only: %i[edit new create update destroy register show]
   before_action :set_letter, only: %i[show edit update destroy register reestr]
@@ -367,8 +369,7 @@ class LettersController < ApplicationController
         end
         t.add_column(:result)
       end
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: 'letters_check.odt',
@@ -412,8 +413,7 @@ class LettersController < ApplicationController
         t.add_column(:author, :author_name)
         t.add_column(:source)
       end
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: 'letters_reestr.odt',
@@ -424,7 +424,6 @@ class LettersController < ApplicationController
   def reestr_report
     report = ODFReport::Report.new('reports/reestr.odt') do |r|
       nn = 0
-      r.add_field 'REPORT_DATE', "#{Date.current.strftime('%d.%m.%Y')} г."
       r.add_field 'SENDER', @sender
       r.add_table('TABLE_01', @letters, header: true) do |t|
         t.add_column(:nn) do |_ca|
@@ -437,8 +436,7 @@ class LettersController < ApplicationController
         end
         t.add_column(:naim, :subject)
       end
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: 'reestr.odt',

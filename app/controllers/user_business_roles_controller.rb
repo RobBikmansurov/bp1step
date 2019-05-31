@@ -11,8 +11,8 @@ class UserBusinessRolesController < ApplicationController
 
   def new
     @user_business_role = UserBusinessRole.new(
-      date_from: Date.today.strftime('%d.%m.%Y'),
-      date_to: Date.today.change(month: 12, day: 31).strftime('%d.%m.%Y')
+      date_from: Tome.zone.today.strftime('%d.%m.%Y'),
+      date_to: Time.zone.today.change(month: 12, day: 31).strftime('%d.%m.%Y')
     )
   end
 
@@ -22,8 +22,8 @@ class UserBusinessRolesController < ApplicationController
     flash[:notice] = 'Successfully created user_business_role.' if @user_business_role.save
     begin
       UserBusinessRoleMailer.user_create_role(@user_business_role, current_user).deliver    # оповестим нового исполнителя
-    rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-      flash[:alert] = "Error sending mail to #{@user_business_role.user.email}"
+    rescue StandardError => e
+      flash[:alert] = "Error sending mail to #{@user_business_role.user.email}\n#{e}"
     end
     respond_with(@business_role)
   end
@@ -32,8 +32,8 @@ class UserBusinessRolesController < ApplicationController
     @user_business_role.destroy
     begin
       UserBusinessRoleMailer.user_delete_role(@user_business_role, current_user).deliver    # оповестим бывшего исполнителя
-    rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-      flash[:alert] = "Error sending mail to #{@user_business_role.user.email}"
+    rescue StandardError => e
+      flash[:alert] = "Error sending mail to #{@user_business_role.user.email}\n#{e}"
     end
     respond_with(@business_role)
   end

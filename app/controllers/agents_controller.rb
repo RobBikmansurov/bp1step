@@ -6,11 +6,13 @@ class AgentsController < ApplicationController
   autocomplete :bproce, :name, extra_data: [:id]
 
   def index
-    if params[:dms_name].present?
-      @agents = Agent.where('dms_name ilike ?', params[:dms_name].to_s).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
-    else
-      @agents = Agent.search(params[:search]).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
-    end
+    agents = if params[:dms_name].present?
+               Agent.where('dms_name ilike ?', params[:dms_name].to_s)
+             else
+               Agent.search(params[:search])
+             end
+    @agents = agents.order(sort_order(sort_column, sort_direction))
+                    .paginate(per_page: 10, page: params[:page])
   end
 
   def show
@@ -19,8 +21,8 @@ class AgentsController < ApplicationController
 
   def new; end
 
-  def new_contract # новый договор контрагента
-    redirect_to new_contract_path(agent_id: @agent.id)
+  def new_contract
+    redirect_to new_contract_path(agent_id: @agent.id) # новый договор контрагента
   end
 
   def edit; end
@@ -57,7 +59,9 @@ class AgentsController < ApplicationController
 
   def set_agent
     if params[:search].present? # это поиск
-      @agents = Agent.search(params[:search]).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
+      @agents = Agent.search(params[:search])
+                     .order(sort_order(sort_column, sort_direction))
+                     .paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
       @agent = if params[:id].present?

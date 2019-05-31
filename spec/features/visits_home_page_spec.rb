@@ -1,18 +1,28 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require 'rails_helper'
 
-RSpec.describe 'user visits home page', type: :feature do
-  it 'not logged in' do
-    visit '/'
-    expect(page).to have_content('Войти')
+RSpec.describe "a user" do
+  describe "without a role" do
+    before (:each) do
+      @person = create(:person)
+      sign_in_as(nil) # no role
+    end
 
-    click_link 'Процессы'
-    expect(current_path).to eq('/bproces')
-    expect(page).to have_content('Каталог Процессов')
+    it "cannot view people" do
+      visit people_path
+      expect(page).to have_content("Access Denied")
+      expect(page).not_to have_content('Edit') #Need to scope this, or it will fail on Edith
+      expect(page).not_to have_content('New')
+      expect(page).not_to have_content(@person.lastname)
 
-    click_link 'Термины'
-    expect(current_path).to eq('/terms')
-    expect(page).to have_content('Термины, определения')
+      visit person_path(@person)
+      expect(page).to have_content("Access Denied")
+      expect(page).not_to have_content('Edit')
+      expect(page).not_to have_content(@person.lastname)
+
+      visit edit_person_path(@person)
+      expect(page).to have_content("Access Denied")
+    end
   end
 end

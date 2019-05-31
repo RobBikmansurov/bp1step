@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
+  include Reports
+
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
   before_action :authenticate_user!, only: %i[edit update order move_to stop_all]
@@ -236,8 +238,7 @@ class UsersController < ApplicationController
           bp.bproce.id
         end
       end
-      r.add_field 'USER_POSITION', current_user.position
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: "u#{@usr.id}-order-#{Date.current.strftime('%Y%m%d')}.odt",

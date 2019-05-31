@@ -13,12 +13,6 @@ class LetterAppendixesController < ApplicationController
   def update
     @letter = @letter_appendix.letter if @letter_appendix
     if @letter_appendix.update(letter_appendix_params)
-      # redirect_to @letter, notice: 'Contract_appendix name was successfully updated.'
-      # begin
-      #   ContractMailer.update_letter(@letter, current_user, @letter_appendix, 'изменен').deliver    # оповестим ответственных об изменениях договора
-      # rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-      #   flash[:alert] = "Error sending mail to letter owner"
-      # end
     else
       render action: 'edit'
     end
@@ -27,11 +21,6 @@ class LetterAppendixesController < ApplicationController
   def destroy
     @letter = @letter_appendix.letter if @letter_appendix
     if @letter_appendix.destroy
-      # begin
-      #   ContractMailer.update_letter(@letter, current_user, @letter_appendix, 'удален').deliver    # оповестим ответственных об удалении файла договора
-      # rescue  Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-      #   flash[:alert] = "Error sending mail to letter owner"
-      # end
     end
     redirect_to letter_url(@letter), notice: 'Letter_appendix was successfully destroyed.'
   end

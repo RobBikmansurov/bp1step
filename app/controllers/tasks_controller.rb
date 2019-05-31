@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TasksController < ApplicationController
+  include Reports
+
   respond_to :html, :json
   before_action :set_task, only: %i[show edit update destroy report]
   helper_method :sort_column, :sort_direction
@@ -174,7 +176,6 @@ class TasksController < ApplicationController
   # rubocop:disable Metrics/BlockLength
   def task_report
     report = ODFReport::Report.new('reports/task_report.odt') do |r|
-      r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       r.add_field 'TASK_DATE', @task.created_at.strftime('%d.%m.%Y')
       r.add_field 'TASK_ID', @task.id
       r.add_field 'NAME', @task.name
@@ -207,8 +208,7 @@ class TasksController < ApplicationController
       r.add_field 'COMPLETIONDATE', s.to_s
       r.add_field 'STATUS', TASK_STATUS.key(@task.status)
 
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer r
     end
     send_data report.generate,
               type: 'application/msword',
@@ -267,8 +267,7 @@ class TasksController < ApplicationController
           task.result.presence || 'Не исполнено!'
         end
       end
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: "tasks-check-#{Date.current.strftime('%Y%m%d')}.odt",

@@ -3,7 +3,7 @@
 class BproceDocumentsController < ApplicationController
   respond_to :html, :xml, :json
   before_action :authenticate_user!, only: %i[edit new destroy]
-  before_action :bproce_document, except: %i[index show]
+  before_action :bproce_document, except: %i[show]
 
   def new
     @bproce_document = BproceDocument.new

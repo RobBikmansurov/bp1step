@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ContractsController < ApplicationController
+  include Reports
+
   respond_to :odt, only: :index
   respond_to :pdf, only: :show
   respond_to :html
@@ -210,7 +212,6 @@ class ContractsController < ApplicationController
       nn = 0 # порядковый номер документа
       nnp = 0
       first_part = 0 # номер раздела для сброса номера документа в разделе
-      r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       @title_doc ||= ''
       @title_doc += '  стр.' + params[:page] if params[:page].present?
       r.add_field 'REPORT_TITLE', @title_doc
@@ -233,8 +234,7 @@ class ContractsController < ApplicationController
         t.add_column(:place, :contract_place)
         t.add_column(:responsible, :owner_name)
       end
-      r.add_field 'USER_POSITION', current_user.position.mb_chars.capitalize.to_s
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: "contracts-#{Date.current.strftime('%Y%m%d')}.odt",
@@ -244,7 +244,6 @@ class ContractsController < ApplicationController
   # Лист согласования
   def approval_sheet_odt
     report = ODFReport::Report.new('reports/approval-sheet-contract.odt') do |r| # rubocop:disable Metrics/BlockLength
-      r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       r.add_field 'REPORT_DATE1', (Date.current + 10.days).strftime('%d.%m.%Y')
       r.add_field :id, @contract.id
       r.add_field :type, @contract.contract_type
@@ -290,8 +289,7 @@ class ContractsController < ApplicationController
       else
         r.add_field :bp, 'Процесс не назначен!'
       end
-      r.add_field :user_position, current_user.position&.mb_chars&.capitalize&.to_s
-      r.add_field :user_name, current_user.displayname
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: "c#{@contract.id}-approval-sheet.odt",

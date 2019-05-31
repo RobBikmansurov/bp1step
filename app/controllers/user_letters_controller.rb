@@ -19,11 +19,11 @@ class UserLettersController < ApplicationController
       flash[:notice] = 'Successfully created user_letter.'
       begin
         UserLetterMailer.user_letter_create(@user_letter, current_user).deliver_now # оповестим нового исполнителя
-      rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-        flash[:alert] = "Error sending mail to #{@user_letter.user.email}"
+      rescue StandardError => e
+        flash[:alert] = "Error sending mail to #{@user_letter.user.email}\n#{e}"
       end
       letter = Letter.find(@user_letter.letter_id)
-      letter.update_column(:status, 5) if letter.status < 1 # если есть ответственные - статус = Назначено
+      letter.update! status: 5 if letter.status < 1 # если есть ответственные - статус = Назначено
     else
       flash[:alert] = 'Error create user_letter'
     end
@@ -35,11 +35,11 @@ class UserLettersController < ApplicationController
     @letter = Letter.find(@user_letter.letter_id) # запомнили письмо для этой удаляемой связи
     begin
       UserLetterMailer.user_letter_destroy(@user_letter, current_user).deliver_now # оповестим исполнителя
-    rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-      flash[:alert] = "Error sending mail to #{@user_letter.user.email}"
+    rescue StandardError => e
+      flash[:alert] = "Error sending mail to #{@user_letter.user.email}\n#{e}"
     end
     if @user_letter.destroy # удалили связь
-      @letter.update_column(:status, 0) unless @letter.user_letter.first # если нет ответственных - статус = Новое
+      @letter.update! status: 0 unless @letter.user_letter.first # если нет ответственных - статус = Новое
     end
     respond_with(@letter) # вернулись в письмо
   end

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require 'net/smtp'
+
 class BusinessRolesController < ApplicationController
-  require 'net/smtp'
+  include Reports
   respond_to :html
   respond_to :odt, :xml, :json, only: :index
   helper_method :sort_column, :sort_direction
@@ -155,7 +157,6 @@ class BusinessRolesController < ApplicationController
   def print
     report = ODFReport::Report.new('reports/broles.odt') do |r|
       nn = 0
-      r.add_field 'REPORT_DATE', Date.current
       r.add_table('TABLE_01', @business_roles, header: true) do |t|
         t.add_column(:nn) do |_ca|
           nn += 1
@@ -167,8 +168,7 @@ class BusinessRolesController < ApplicationController
         end
         t.add_column(:description)
       end
-      r.add_field 'USER_POSITION', current_user.position
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: 'business_roles.odt',

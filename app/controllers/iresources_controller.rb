@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class IresourcesController < ApplicationController
+  include Reports
+
   respond_to :html
   respond_to :pdf, :odf, :xml, :json, only: :index
   helper_method :sort_column, :sort_direction
@@ -98,8 +100,7 @@ class IresourcesController < ApplicationController
         t.add_column(:risk_category)
         t.add_column(:note)
       end
-      r.add_field 'USER_POSITION', current_user.position
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: 'resources.odt',

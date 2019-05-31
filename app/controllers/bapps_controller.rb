@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class BappsController < ApplicationController
+  include Reports
   respond_to :html
   respond_to :pdf, :odf, :xml, :json, only: :index
   helper_method :sort_column, :sort_direction
@@ -96,7 +97,6 @@ class BappsController < ApplicationController
   def list
     report = ODFReport::Report.new('reports/bapps.odt') do |r|
       nn = 0
-      r.add_field 'REPORT_DATE', Date.current.strftime('%d.%m.%Y')
       r.add_table('TABLE_01', @bapps, header: true) do |t|
         t.add_column(:nn) do |_ca|
           nn += 1
@@ -108,8 +108,7 @@ class BappsController < ApplicationController
         t.add_column(:purpose, :purpose)
         t.add_column(:apptype, :apptype)
       end
-      r.add_field 'USER_POSITION', current_user.position
-      r.add_field 'USER_NAME', current_user.displayname
+      report_footer r
     end
     send_data report.generate, type: 'application/msword',
                                filename: 'bapps.odt',

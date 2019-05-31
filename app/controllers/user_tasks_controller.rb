@@ -2,7 +2,7 @@
 
 class UserTasksController < ApplicationController
   respond_to :html, :xml, :json
-  before_action :authenticate_user!, only: %i[new create destroy]
+  before_action :authenticate_user!, only: %i[create destroy]
 
   def show
     @user_task = UserTask.find(params[:id])
@@ -15,11 +15,11 @@ class UserTasksController < ApplicationController
       flash[:notice] = 'Successfully created user_task.'
       begin
         UserTaskMailer.user_task_create(@user_task, current_user).deliver_now # оповестим нового исполнителя
-      rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-        flash[:alert] = "Error sending mail to #{@user_task.user.email}"
+      rescue StandardError => e
+        flash[:alert] = "Error sending mail to #{@user_task.user.email}\n#{e}"
       end
       task = Task.find(@user_task.task_id)
-      task.update_column(:status, 5) if task.status < 1 # если есть ответственные - статус = Назначено
+      task.update! status: 5 if task.status < 1 # если есть ответственные - статус = Назначено
     else
       flash[:alert] = 'Error create user_task'
     end
@@ -31,11 +31,11 @@ class UserTasksController < ApplicationController
     @task = Task.find(@user_task.task_id) # запомнили письмо для этой удаляемой связи
     begin
       UserTaskMailer.user_task_destroy(@user_task, current_user).deliver_now # оповестим исполнителя
-    rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-      flash[:alert] = "Error sending mail to #{@user_task.user.email}"
+    rescue StandardError => e
+      flash[:alert] = "Error sending mail to #{@user_task.user.email}\n#{e}"
     end
     if @user_task.destroy # удалили связь
-      @task.update_column(:status, 0) unless @task.user_task.first # если нет ответственных - статус = Новая
+      @task.update! status: 0 unless @task.user_task.first # если нет ответственных - статус = Новая
     end
     # respond_with(@task)  # вернулись в задачу
     respond_to do |format|

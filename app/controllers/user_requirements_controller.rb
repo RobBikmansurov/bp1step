@@ -19,11 +19,11 @@ class UserRequirementsController < ApplicationController
       flash[:notice] = 'Successfully created user_requirement.'
       begin
         UserRequirementMailer.user_requirement_create(@user_requirement, current_user).deliver_now # оповестим нового исполнителя
-      rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-        flash[:alert] = "Error sending mail to #{@user_requirement.user.email}"
+      rescue StandardError => e
+        flash[:alert] = "Error sending mail to #{@user_requirement.user.email}\n#{e}"
       end
       requirement = Requirement.find(@user_requirement.requirement_id)
-      requirement.update_column(:status, 5) if requirement.status < 1 # если есть ответственные - статус = Назначено
+      requirement.update! status: 5 if requirement.status < 1 # если есть ответственные - статус = Назначено
     else
       flash[:alert] = 'Error create user_requirement'
     end
@@ -35,11 +35,11 @@ class UserRequirementsController < ApplicationController
     @requirement = Requirement.find(@user_requirement.requirement_id) # запомнили требование для этой удаляемой связи
     begin
       UserRequirementMailer.user_requirement_destroy(@user_requirement, current_user).deliver_now # оповестим исполнителя
-    rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-      flash[:alert] = "Error sending mail to #{@user_requirement.user.email}"
+    rescue StandardError => e
+      flash[:alert] = "Error sending mail to #{@user_requirement.user.email}\n#{e}"
     end
     if @user_requirement.destroy # удалили связь
-      @requirement.update_column(:status, 0) unless @requirement.user_requirement.first # если нет ответственных - статус = Новое
+      @requirement.update! status: 0 unless @requirement.user_requirement.first # если нет ответственных - статус = Новое
     end
     respond_with(@requirement) # вернулись в требование
   end
