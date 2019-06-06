@@ -54,31 +54,24 @@
     Незавершенные
     = link_to "Задачи (#{@tasks.count})", tasks_path(user: @usr)
     \:
-  %table
-    %tr
-      %th #
-      %th Название
-      %thСрок
-      %thСтатус
 
+  %grid
     - @tasks.each do |task|
-      %tr
-        %td
-          .id_show_ ##{task.id}
-        %td= link_to task.name, task
-        %td
-          -if task.duedate
-            -if task.status < 90 and task.duedate <= Date.current
-              %span{:style => "color: red;"}
-                = task.duedate.strftime("%d.%m.%y")
-            -else
+      .item
+        .id_show_ ##{task.id}
+        = link_to task.name, task
+        %br
+        -if task.duedate
+          -if task.status < 90 and task.duedate <= Date.current
+            %span{:style => "color: red;"}
               = task.duedate.strftime("%d.%m.%y")
-            -if task.completion_date
-              -if task.completion_date > task.duedate
-                %br
-                  %span{:style => "color: red;"}
-                    = task.completion_date.strftime("%d.%m.%y")
-        %td
+          -else
+            = task.duedate.strftime("%d.%m.%y")
+          -if task.completion_date
+            -if task.completion_date > task.duedate
+              %br
+                %span{:style => "color: red;"}
+                  = task.completion_date.strftime("%d.%m.%y")
           = '!' if current_user && task.author_id == current_user.id
           -# если текущий пользователь еще не отметился в result
           -if /(\d\d\:){3} #{current_user&.displayname}/.match(task.result).blank?
