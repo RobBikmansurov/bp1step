@@ -116,7 +116,7 @@ class UsersController < ApplicationController
   def business_roles_move_to
     user_name = params[:user][:user_name]
     new_user = User.find_by(displayname: user_name)
-    UserBusinessRole.where(user_id: @usr.id).each do |user_role|
+    UserBusinessRole.where(user_id: @usr.id).find_each do |user_role|
       user_role.user_id = new_user.id
       user_role.note += " (#{@usr.displayname})"
       user_role.save
@@ -137,7 +137,7 @@ class UsersController < ApplicationController
   def documents_move_to
     user_name = params[:user][:user_name]
     new_user = User.find_by(displayname: user_name)
-    Document.where(owner_id: @usr.id).each do |document|
+    Document.where(owner_id: @usr.id).find_each do |document|
       document.update! owner_id: new_user.id
     end
     redirect_to new_user, notice: 'Документы переданы новому ответственному'
