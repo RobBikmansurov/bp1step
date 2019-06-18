@@ -1,7 +1,7 @@
 - if @user_documents.any?
   %h3 Избранные документы:
   %ol
-    - @user_documents.each do |document|
+    - @user_documents.find_each do |document|
       %li
         -if document.document_file_file_name  #  если есть файл документа, загруженный через paperclip
           -if can? :view_document, document

@@ -30,7 +30,7 @@
 
 %h4Назначены роли доступа:
 %table
-  - @usr.roles.each do |role|
+  - @usr.roles.find_each do |role|
     %tr
       -# %td= ":#{role.name.to_sym}"
       %td= role.description
@@ -43,7 +43,7 @@
 
 %h4
   Добавить роли доступа:
-  - Role.all.each do |role| 
+  - Role.all.find_each do |role| 
     - unless @usr.role? role.name.to_sym
       = link_to role.description, user_roles_path(@usr) + "?role=#{role.id}", method: :post if can? :manage, @usr
 

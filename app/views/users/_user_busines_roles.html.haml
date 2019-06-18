@@ -7,7 +7,7 @@
       %th
         Действия в процессе,
         %i основание 
-    - @uroles.each do |business_role|
+    - @uroles.find_each do |business_role|
       %tr
         %td
           %b= link_to business_role.business_role.name, business_role_path(business_role.business_role)

@@ -25,7 +25,7 @@
     - if can? :destroy, @users.first
       %th Роли доступа
   
-  -@users.each do |user|
+  -@users.find_each do |user|
     %tr
       %td
         %p{style: ('text-decoration: line-through;' if !user.active)} 
@@ -51,7 +51,7 @@
       - if can? :assign_roles, user
         %td
           = link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_user_path(user), class: 'button-img'
-          -user.roles.each do |role|
+          -user.roles.find_each do |role|
             = role.description
 
 -if !params[:all].present?
@@ -68,7 +68,7 @@
     = link_to user.office, users_path + '?office=' + user.office.to_s, class: 'groups'
 -#%br
   Роли:
-  - UserRole.select("role, count(id) as count").group(:role).order(:role).each do |user|
+  - UserRole.select("role, count(id) as count").group(:role).order(:role).find_each do |user|
     -if user.role.to_s.empty?
       = link_to 'пусто', users_path + '?role='
     -else

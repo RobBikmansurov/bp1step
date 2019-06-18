@@ -3,7 +3,7 @@
     Владелец
     = link_to 'процессов:', bproces_path + '?user=' + @usr.id.to_s
 
-  - @usr.bproce.order(:lft).each do |bproce|
+  - @usr.bproce.order(:lft).find_each do |bproce|
     = "——" * (bproce.depth)
     = "[ #{bproce.shortname} ]" if bproce.shortname
     = "\u2713".html_safe if bproce.checked_at

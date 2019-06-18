@@ -3,7 +3,7 @@
     Отвечает за 
     = link_to 'внутренние документы:', documents_path + '?user=' + @usr.id.to_s
   %ol
-    - @documents.each do |doc|
+    - @documents.find_each do |doc|
       %li
         = link_to doc.name, document_path(doc)
         = doc.status
