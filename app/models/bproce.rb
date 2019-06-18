@@ -61,10 +61,12 @@ class Bproce < ApplicationRecord
 
   # процессы директивы (все процессы, связанные с директивой через документы)
   def bproces_of_directive(directive_id)
-    Bproce.find_by_sql ["select bproces.* from bproces, bproce_documents, document_directives
-      where bproce_documents.bproce_id = bproces.id
-      and document_directives.directive_id = ?
-      and document_directives.document_id = bproce_documents.document_id
-      group by bproces.id order by lft", directive_id]
+    Bproce.find_by_sql(<<-SQL.squish)
+      SELECT bproces.* from bproces, bproce_documents, document_directives
+      WHERE bproce_documents.bproce_id = bproces.id
+        and document_directives.directive_id = #{directive_id}
+        and document_directives.document_id = bproce_documents.document_id
+      GROUP BY bproces.id ORDER BY lft
+    SQL
   end
 end
