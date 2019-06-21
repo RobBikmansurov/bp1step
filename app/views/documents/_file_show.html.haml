@@ -16,14 +16,18 @@
     -# кому можно - смотреть PDF
 
   - if can? :edit_document, @document || current_user && current_user.id == @document.owner_id
-    = link_to '| Удалить', file_delete_document_path(@document), :remote => true, class: 'floating-text'
     .floating-text
+      = link_to '| Удалить', file_delete_document_path(@document), :remote => true, class: 'floating-text'
       #update_file
         = link_to '| Заменить', file_create_document_path(@document), :remote => true, class: 'floating-text'
+      #update_pdf
+        = link_to '| Заменить PDF', pdf_create_document_path(@document), :remote => true, class: 'floating-text'
   - if can? :view_document, @document
     %br
     - if File.exist?(@document.document_file.path)  # есть исходный файл документа
+      - pdf_exists = false
       - if File.exist?(@document.pdf_path)  # есть PDF для просмотра
+        - pdf_exists = true
         смотреть:
         = link_to image_tag('action_go.gif', :alt => 'См.', title: 'Смотреть' ), @document.pdf_url, class: 'button-img'
       \|

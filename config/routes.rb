@@ -82,6 +82,8 @@ Rails.application.routes.draw do
       get :file_create
       get :file_delete
       patch :update_file
+      get :pdf_create
+      patch :update_pdf
       get :approval_sheet # Лист согласования
       get :clone # создать карточку похожего документа
       get :add_favorite     # добровольное занесение в избранное

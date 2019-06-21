@@ -50,13 +50,12 @@
 %p
 -if can? :view_document, @document
   #add_favorite
-    -if @user_documents
-      -if @user_documents.count > 0
-        В Избранном:
-        - @user_documents.each do |user_document|
-          = link_to user_document.user.displayname, user_path(user_document.user_id, :anchor => 'Documents') if user_document.user
-        %br
-    -if @user_document && @user_document.document_id == @document.id
+    -if @user_documents.any?
+      В Избранном:
+      - @user_documents.each do |user_document|
+        = link_to user_document.user.displayname, user_path(user_document.user_id, :anchor => 'Documents') if user_document.user
+      %br
+    -if @user_document&.document_id == @document.id
       = link_to 'Удалить из Избранного', user_document_path, :method => :delete if @user_document.link >= 10 # если документ не добавил менеджер по персоналу
     -else
       = link_to 'Добавить в Избранное', add_favorite_document_path(@document)

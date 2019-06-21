@@ -1,0 +1,8 @@
+= simple_form_for @document, :url => update_pdf_document_path, :html => { :multipart => true } do |f|
+  = f.error_notification
+  = f.input :document_file, hint: 'Выберите PDF для загрузки'
+
+  = f.error :base
+  -if can? :update, @document
+    %p
+    = f.button :submit, 'Сохранить'

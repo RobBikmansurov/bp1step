@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DocumentsController < ApplicationController
+  include Reports
+
   respond_to :odt, only: :index
   respond_to :pdf, only: :show
   respond_to :html
@@ -15,59 +17,59 @@ class DocumentsController < ApplicationController
     @title_doc = 'Список документов'
     if params[:directive_id].present? # документы относящиеся к директиве
       @directive = Directive.find(params[:directive_id])
-      @documents = @directive.document.paginate(per_page: 100, page: params[:page])
+      @documents = @directive.document
     elsif params[:bproce_id].present?
       @title_doc = ''
       @bproce = Bproce.find(params[:bproce_id])
       ids = BproceDocument.where(bproce_id: @bproce.id).pluck(:document_id)
       @documents = Document.where(id: ids).all
       if params[:status].present? #  список документов, имеющих конкретный статус
-        @documents = @documents.where(status: params[:status])
+        @documents = @documents.status(params[:status])
         @title_doc = " в статусе [#{params[:status]}]"
       end
-      @documents = @documents.paginate(per_page: 100, page: params[:page])
+    elsif params[:all].present?
+      @title_doc = 'Каталог документов'
+      @documents = Document.find_by_sql(<<-SQL.squish)
+        SELECT documents.id, name, approveorgan, approved, place, status, part, owner_id, users.displayname
+        FROM documents
+        LEFT OUTER JOIN users
+          ON (users.id=owner_id)
+        WHERE NOT status = 'НеДействует'
+        ORDER BY cast (part as integer), name
+      SQL
     else
-      @documents = Document.all
-      if params[:all].present?
-        @documents = @documents.order('cast (part as integer)', :name).all
-        @title_doc = 'Каталог документов'
-      else
-        if params[:place].present? # список документов по месту хранения
-          if params[:place].empty?
-            @documents = @documents.where("place = ''")
-            @title_doc += ' - место хранения оригинала [не указано]'
-          else
-            @documents = @documents.where(place: params[:place])
-            @title_doc += ", хранящихся в [#{params[:place]}]: #{DOCUMENT_PLACE.key(params[:place])}"
-          end
+      @documents = Document.order('cast (part as integer)', :name).all
+      if params[:place].present? # список документов по месту хранения
+        if params[:place].empty?
+          @documents = @documents.where("place = ''")
+          @title_doc += ' - место хранения оригинала [не указано]'
         else
-          if params[:dlevel].present? #  список документов уровня
-            @documents = @documents.where(dlevel: params[:dlevel])
-            @title_doc += " уровень [#{params[:dlevel]}]: #{DOCUMENT_LEVEL.key(params[:dlevel].to_i)}"
-          else
-            if params[:part].present? #  список документов раздела документооборота
-              @documents = @documents.where(part: params[:part])
-              @title_doc += " раздела [#{params[:part]}]"
-            else
-              if params[:user].present? #  список документов пользователя
-                @user = User.find(params[:user])
-                @documents = Document.where(owner_id: params[:user])
-                @title_doc += ', ответственный [' + @user.displayname + ']' if @user
-              else
-                if params[:tag].present?
-                  @title_doc += ", тэг [#{params[:tag]}]"
-                  @documents = @documents.tagged_with(params[:tag]).search(params[:search])
-                end
-                if params[:search].present?
-                  @title_doc += ", содержащих [#{params[:search]}]"
-                  @documents = @documents.full_search(params[:search])
-                end
-                if params[:status].present? #  список документов, имеющих конкретный статус
-                  @documents = @documents.where(status: params[:status])
-                  @title_doc += " в статусе [#{params[:status]}]"
-                end
-              end
-            end
+          @documents = @documents.where(place: params[:place])
+          @title_doc += ", хранящихся в [#{params[:place]}]: #{DOCUMENT_PLACE.key(params[:place])}"
+        end
+      elsif params[:dlevel].present? #  список документов уровня
+        @documents = @documents.where(dlevel: params[:dlevel])
+        @title_doc += " уровень [#{params[:dlevel]}]: #{DOCUMENT_LEVEL.key(params[:dlevel].to_i)}"
+      else
+        if params[:part].present? #  список документов раздела документооборота
+          @documents = @documents.where(part: params[:part])
+          @title_doc += " раздела [#{params[:part]}]"
+        elsif params[:user].present? #  список документов пользователя
+          @user = User.find(params[:user])
+          @documents = Document.where(owner_id: params[:user])
+          @title_doc += ', ответственный [' + @user.displayname + ']' if @user
+        else
+          if params[:tag].present?
+            @title_doc += ", тэг [#{params[:tag]}]"
+            @documents = @documents.tagged_with(params[:tag]).search(params[:search])
+          end
+          if params[:search].present?
+            @title_doc += ", содержащих [#{params[:search]}]"
+            @documents = @documents.full_search(params[:search])
+          end
+          if params[:status].present? #  список документов, имеющих конкретный статус
+            @documents = @documents.status(params[:status])
+            @title_doc += " в статусе [#{params[:status]}]"
           end
         end
       end
@@ -226,6 +228,23 @@ class DocumentsController < ApplicationController
     render :file_create
   end
 
+  def pdf_create
+    render :pdf_create
+  end
+
+  def update_pdf
+    pdf_file = document_file_params[:document_file]
+    if File.extname(pdf_file.original_filename) == '.pdf'
+      File.open(@document.pdf_path, 'wb') do |file|
+        file.write(pdf_file.read)
+      end
+      flash[:notice] = "Загружен PDF \"#{@document.document_file.original_filename}\""
+    else
+      flash[:alert] = "Неверный файл '#{pdf_file.original_filename}'! Разрешен тип *.PDF"
+    end
+    respond_with(@document)
+  end
+
   def directive_create
     render :_form_directive
   end
@@ -255,7 +274,6 @@ class DocumentsController < ApplicationController
       nn = 0 # порядковый номер документа
       nnp = 0
       first_part = 0 # номер раздела для сброса номера документа в разделе
-      r.add_field 'REPORT_DATE', Time.zone.today.strftime('%d.%m.%Y')
       # @title_doc = '' if !@title_doc
       @title_doc += '  стр.' + params[:page] if params[:page].present?
       r.add_field 'REPORT_TITLE', @title_doc
@@ -265,7 +283,7 @@ class DocumentsController < ApplicationController
           "#{nn}."
         end
         t.add_column(:nnp) do |document|
-          if first_part != document.part
+          unless first_part == document.part
             nnp = 0 # порядковый номер документа в разделе
             first_part = document.part
           end
@@ -280,14 +298,18 @@ class DocumentsController < ApplicationController
         t.add_column(:approved) do |document| # дата утверждения в нормальном формате
           document.approved.strftime('%d.%m.%Y').to_s if document.approved
         end
-        t.add_column(:responsible) do |document| # владелец документа, если задан
-          document.owner.displayname.to_s if document.owner_id
+        if params[:all].present?
+          t.add_column(:responsible, :displayname) # владелец документа, если задан
+        else
+          t.add_column(:responsible) do |document| # владелец документа, если задан
+            document.owner.displayname.to_s if document.owner_id
+          end
         end
+
         t.add_column(:place)
       end
-      r.add_field :user_position, current_user.position.mb_chars.capitalize.to_s
-      r.add_field :user_name, current_user.displayname
     end
+    report_footer report
     send_data report.generate, type: 'application/msword',
                                filename: 'documents.odt',
                                disposition: 'inline'
