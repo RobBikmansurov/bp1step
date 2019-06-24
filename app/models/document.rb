@@ -23,7 +23,7 @@ class Document < ApplicationRecord
                   using: { tsearch: { prefix: true } }
 
   scope :active, -> { where.not(status: 'НеДействует') } # действующие документы
-  scope :status, -> (status) { where status: status }
+  scope :status, ->(status) { where status: status }
 
   acts_as_taggable
   # acts_as_taggable_on :category

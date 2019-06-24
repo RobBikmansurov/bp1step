@@ -63,17 +63,15 @@ namespace :bp1step do
       begin
         results = mssql.execute(sql)
         new_value = nil
-        results.each do |row|
+        results&.each do |row|
           new_value = row['count']
         end
-        if new_value
-          if new_value.positive?
-            value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{sql_period}").first
-            value ||= MetricValue.new(metric_id: metric.id) # не нашли? - новое значение
-            value.value = new_value
-            value.dtime = Time.current.utc # обновим время записи значения
-            value.save
-          end
+        if new_value&.positive?
+          value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{sql_period}").first
+          value ||= MetricValue.new(metric_id: metric.id) # не нашли? - новое значение
+          value.value = new_value
+          value.dtime = Time.current.utc # обновим время записи значения
+          value.save
         end
       rescue StandardError => e
         logger.info "      ERR: #{sql}\n#{e}"
