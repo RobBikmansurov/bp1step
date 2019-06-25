@@ -5,7 +5,8 @@
   = @document.id
 %h2= @document.name
 %h3 Описание:
-= markdown(@document.description)
+- text = add_link_from_id(@document.description, 'documents')
+= markdown(text)
 %h3
   -if @document.status
     ='"' + @document.status + '"'
