@@ -25,9 +25,6 @@ class UsersController < ApplicationController
       # @users, @alphaParams = User.all.alpha_paginate(params[:letter]){|user| user.lastname}
     end
     @users = users.page(params[:page]).order(sort_order(sort_column, sort_direction))
-    respond_to do |format|
-      format.html
-    end
   end
 
   def autocomplete
