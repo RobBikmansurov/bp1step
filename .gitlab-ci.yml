@@ -143,57 +143,6 @@ image: "ruby:2.5.1"
 cache:
   paths:
     - vendor/ruby
-
-
-install:
-  stage: install
-  artifacts:
-    paths:
-    - app/
-    - bin/
-    - config/
-    - db/
-    - lib/
-    - spec/
-    - config.ru
-    - Gemfile
-    - Gemfile.lock
-    - Rakefile
-    - .rubocop.yml
-    - .rspec
-    - .ruby-version
-    name: '$CI_COMMIT_SHA'
-    expire_in: 1d
-    when: on_success
-  script:
-    - apt update -q && apt install libpq-dev postgresql-client nodejs -yqq
-    - cp config/database.yml{.example,}
-    - cp config/ldap.yml{.example,}
-    - gem install bundler --no-ri --no-rdoc
-    - bundle install -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
-    - bundle exec rake db:create db:migrate RAILS_ENV=test
-    - uname -a
-    - du -h -d1 ./
-    # check postgres
-    #- export PGPASSWORD=$POSTGRES_PASSWORD
-    #- psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
-
-rspec:
-  stage: test
-  dependencies:
-    - install
-  script:
-    - apt update -q && apt install nodejs -yqq
-    - cp config/database.yml{.example,}
-    - cp config/ldap.yml{.example,}
-    # change ldap-auth to database-auth 
-    - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
-    - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
-    - sed -i 's/before_save :ldap_email/# before_save :ldap_email/g' app/models/user.rb
-    - bundle install -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
-    - bundle exec rake db:create db:migrate RAILS_ENV=test
-    - bundle exec rspec
-  allow_failure: true
   
 deploy:staging:
   extends: .base
@@ -219,8 +168,6 @@ deploy:staging:
 deploy:production:
   extends: .base
   stage: deploy
-  dependencies:
-    - install
   environment:
     name: production
   when: manual
