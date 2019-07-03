@@ -1,13 +1,149 @@
+stages:
+  - build
+  - test
+  - report
+  - deploy
+
+.base:
+  image: ruby:2.6.3
+  cache:
+    key: gems_and_packages
+    paths:
+      - apt-cache/
+      - vendor/ruby
+    policy: pull
+  before_script:
+    - gem install bundler --no-document
+    - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
+
+.base_db:
+  extends: .base
+  services:
+    - postgres:latest
+  variables:
+    POSTGRES_DB: my_app_gitlab
+    POSTGRES_USER: my_app
+    POSTGRES_PASSWORD: ''
+    RAILS_ENV: gitlab
+  before_script:
+    - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
+    - apt-get update -qq && apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -yqq nodejs
+    - gem install bundler --no-document
+    - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
+    - bundle exec rake db:setup
+
+.base_minimal:
+  image: alpine:latest
+  cache: {}
+
+build:assets_precompile:
+  extends: .base_db
+  stage: build
+  script:
+    - bundle exec rake assets:precompile
+
+build:rubocop:
+  extends: .base
+  stage: build
+  cache:
+    policy: pull-push
+  script:
+    - bundle exec rubocop
+
+test:brakeman:
+  extends: .base
+  stage: test
+  allow_failure: true
+  artifacts:
+    name: brakeman_report
+    when: always
+    paths:
+      - brakeman/
+  only:
+    - master
+  script:
+    - bundle exec brakeman --format html -o brakeman/index.html
+
+test:bundle_audit:
+  extends: .base
+  allow_failure: true
+  script:
+    - bundle exec bundle audit check --update
+
+test:dawnscanner:
+  extends: .base
+  stage: test
+  allow_failure: true
+  artifacts:
+    name: dawnscanner_report
+    when: always
+    paths:
+      - dawnscanner
+  only:
+    - master
+  script:
+    - mkdir dawnscanner
+    - bundle exec dawn --html -zF dawnscanner/index.html .
+
+test:erd:
+  extends: .base_db
+  stage: test
+  allow_failure: true
+  artifacts:
+    name: erd
+    paths:
+      - erd.pdf
+  only:
+    - master
+  script:
+    - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y -qq graphviz
+    - erd
+
+test:rspec:
+  extends: .base_db
+  stage: test
+  artifacts:
+    name: coverage_report
+    paths:
+      - coverage/
+  script:
+    - bundle exec rspec
+
+pages:
+  extends: .base_minimal
+  stage: report
+  allow_failure: true
+  dependencies:
+    - test:brakeman
+    - test:dawnscanner
+    - test:erd
+    - test:rspec
+  artifacts:
+    name: time_tracking_artifacts
+    paths:
+      - public/brakeman
+      - public/coverage
+      - public/dawnscanner
+      - public/erd.pdf
+  only:
+    - master
+  script:
+    - mv brakeman public/ || true
+    - mv coverage public/ || true
+    - mv dawnscanner public/ || true
+    - mv erd.pdf public/ || true
+
+
+
+
+
+
 image: "ruby:2.5.1"
 
 cache:
   paths:
     - vendor/ruby
 
-stages:
-  - install
-  - test
-  - deploy
 
 install:
   stage: install
@@ -59,22 +195,9 @@ rspec:
     - bundle exec rspec
   allow_failure: true
   
-rubocop:
-  dependencies:
-    - install
-  stage: test
-  script:
-    - gem install rubocop rubocop-rspec
-    - rubocop -V
-    - ls -al .rubocop.yml
-    - rubocop --config .rubocop.yml  --format offenses
-  allow_failure: true
-  
-
-deploy_staging:
+deploy:staging:
+  extends: .base
   stage: deploy
-  dependencies:
-    - install
   environment:
     name: staging
   script:
@@ -93,7 +216,8 @@ deploy_staging:
   only:
     - master
 
-deploy_production:
+deploy:production:
+  extends: .base
   stage: deploy
   dependencies:
     - install
