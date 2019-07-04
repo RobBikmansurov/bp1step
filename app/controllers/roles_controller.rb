@@ -3,7 +3,8 @@
 class RolesController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
-  before_action :set_role, only: :show
+  before_action :authenticate_user!, only: %i[edit update new create]
+  before_action :set_role, except: :index
 
   def index
     roles = Role.search(params[:search])
@@ -11,6 +12,34 @@ class RolesController < ApplicationController
   end
 
   def show; end
+
+  def create
+    if params[:user_id].present? # добавить роль пользователю
+      @usr = User.find(params[:user_id])
+      role = Role.find(params[:role])
+      UserRole.create(user_id: @usr.id, role_id: role.id) if role
+      redirect_to edit_user_path(@usr), notice: "Successfully created role for #{@usr.displayname}."
+    else
+      @role = Role.new(role_params)
+      flash[:notice] = 'Successfully created role.' if @role.save
+      respond_with(@role)
+    end
+  end
+
+
+  def destroy
+    if params[:user_id].present? # удалить роль пользователю
+      @usr = User.find(params[:user_id])
+      role = Role.find(params[:id])
+      UserRole.where(user_id: @usr.id, role_id: role.id).first.destroy if role
+      redirect_to edit_user_path(@usr), notice: "Successfully deleted role for #{@usr.displayname}."
+    else
+      @role.destroy
+      flash[:notice] = 'Successfully destroyed role.' if @role.save
+      respond_with(@role)
+    end
+  end
+
 
   private
 

@@ -43,7 +43,7 @@
 
 %h4
   Добавить роли доступа:
-  - Role.all.find_each do |role| 
+  - Role.all.each do |role| 
     - unless @usr.role? role.name.to_sym
       = link_to role.description, user_roles_path(@usr) + "?role=#{role.id}", method: :post if can? :manage, @usr
 
