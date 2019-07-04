@@ -26,7 +26,6 @@ class RolesController < ApplicationController
     end
   end
 
-
   def destroy
     if params[:user_id].present? # удалить роль пользователю
       @usr = User.find(params[:user_id])
@@ -39,7 +38,6 @@ class RolesController < ApplicationController
       respond_with(@role)
     end
   end
-
 
   private
 

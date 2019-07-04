@@ -38,7 +38,7 @@ class DocumentsController < ApplicationController
         ORDER BY cast (part as integer), name
       SQL
     else
-      @documents = Document.order('cast (part as integer)', :name).all
+      @documents = Document.order(:name).all
       if params[:place].present? # список документов по месту хранения
         if params[:place].empty?
           @documents = @documents.where("place = ''")

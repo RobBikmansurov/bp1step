@@ -14,7 +14,7 @@
       %thСтатус
 
     -# letters.select('letters.status, count(letters.id) as count').group(:status).find_each do | letter |
-    - @letters.find_each do |letter|
+    - @letters.each do |letter|
       %tr
         %td
           .id_show_ ##{letter.id}
@@ -56,11 +56,9 @@
     \:
 
   %grid
-    - @tasks.find_each do |task|
+    - @tasks.each do |task|
       .item
         .id_show_ ##{task.id}
-        = link_to task.name, task
-        %br
         -if task.duedate
           -if task.status < 90 and task.duedate <= Date.current
             %span{:style => "color: red;"}
@@ -78,6 +76,8 @@
             = link_to TASK_STATUS.key(task.status), edit_task_path(task), style: 'color: red;'
           -else
             = TASK_STATUS.key(task.status)
+        %br
+        = link_to task.name, task
 
 -if @requirements_ids.size > 0
   %h2
@@ -91,7 +91,7 @@
       %th Срок
       %th Статус
 
-    - @requirements.find_each do |requirement|
+    - @requirements.each do |requirement|
       %tr
         %td
           .id_show_ ##{requirement.id}
