@@ -28,6 +28,8 @@ stages:
   before_script:
     - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
     - apt-get update -qq && apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -yqq nodejs
+    - cp config/database.yml{.example,}
+    - cp config/ldap.yml{.example,}
     - gem install bundler --no-document
     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
     - bundle exec rake db:setup
@@ -45,6 +47,7 @@ build:assets_precompile:
 build:rubocop:
   extends: .base
   stage: build
+  allow_failure: true
   cache:
     policy: pull-push
   script:
@@ -133,16 +136,6 @@ pages:
     - mv dawnscanner public/ || true
     - mv erd.pdf public/ || true
 
-
-
-
-
-
-image: "ruby:2.5.1"
-
-cache:
-  paths:
-    - vendor/ruby
   
 deploy:staging:
   extends: .base

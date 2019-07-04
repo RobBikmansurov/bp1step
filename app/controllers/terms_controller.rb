@@ -96,7 +96,9 @@ class TermsController < ApplicationController
 
   def set_term
     if params[:search].present? # это поиск
-      @terms = Term.search(params[:search]).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
+      @terms = Term.search(params[:search])
+                   .order(sort_order(sort_column, sort_direction))
+                   .paginate(per_page: 10, page: params[:page])
       render :index # покажем список найденного
     else
       @term = params[:id].present? ? Term.find(params[:id]) : Term.new

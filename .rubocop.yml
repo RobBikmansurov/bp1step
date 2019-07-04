@@ -9,7 +9,7 @@ AllCops:
     - 'db/*'
     - 'config/**/*'
     - 'db/migrate/*'
-    - 'features/**/*'
+    - 'spec/features/**/*'
     - 'coverage/*'
     - 'Guardfile'
     - 'node_modules/**/*'

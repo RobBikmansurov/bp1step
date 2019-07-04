@@ -3,7 +3,7 @@
 class RolesController < ApplicationController
   respond_to :html, :xml, :json
   helper_method :sort_column, :sort_direction
-  before_action :authenticate_user!, only: %i[edit update new create]
+  before_action :authenticate_user!, only: %i[destroy create]
   before_action :set_role, except: :index
 
   def index
