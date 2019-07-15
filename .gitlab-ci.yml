@@ -1,145 +1,80 @@
+image: "ruby:2.5.1"
+
+cache:
+  paths:
+    - vendor/ruby
+
 stages:
-  - build
+  - install
   - test
-  - report
   - deploy
 
-.base:
-  image: ruby:2.6.3
-  cache:
-    key: gems_and_packages
+install:
+  stage: install
+  artifacts:
     paths:
-      - apt-cache/
-      - vendor/ruby
-    policy: pull
-  before_script:
-    - gem install bundler --no-document
-    - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
-
-.base_db:
-  extends: .base
-  services:
-    - postgres:latest
-  variables:
-    POSTGRES_DB: my_app_gitlab
-    POSTGRES_USER: my_app
-    POSTGRES_PASSWORD: ''
-    RAILS_ENV: gitlab
-  before_script:
-    - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
-    - apt-get update -qq && apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -yqq nodejs
+    - app/
+    - bin/
+    - config/
+    - db/
+    - lib/
+    - spec/
+    - config.ru
+    - Gemfile
+    - Gemfile.lock
+    - Rakefile
+    - .rubocop.yml
+    - .rspec
+    - .ruby-version
+    name: '$CI_COMMIT_SHA'
+    expire_in: 1d
+    when: on_success
+  script:
+    - apt update -q && apt install libpq-dev postgresql-client nodejs -yqq
     - cp config/database.yml{.example,}
     - cp config/ldap.yml{.example,}
-    - gem install bundler --no-document
-    - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
-    - bundle exec rake db:setup
+    - gem install bundler --no-ri --no-rdoc
+    - bundle install -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
+    - bundle exec rake db:create db:migrate RAILS_ENV=test
+    - uname -a
+    - du -h -d1 ./
+    # check postgres
+    #- export PGPASSWORD=$POSTGRES_PASSWORD
+    #- psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
 
-.base_minimal:
-  image: alpine:latest
-  cache: {}
-
-build:assets_precompile:
-  extends: .base_db
-  stage: build
-  script:
-    - bundle exec rake assets:precompile
-
-build:rubocop:
-  extends: .base
-  stage: build
-  allow_failure: true
-  cache:
-    policy: pull-push
-  script:
-    - bundle exec rubocop
-
-test:brakeman:
-  extends: .base
+rspec:
   stage: test
-  allow_failure: true
-  artifacts:
-    name: brakeman_report
-    when: always
-    paths:
-      - brakeman/
-  only:
-    - master
-  script:
-    - bundle exec brakeman --format html -o brakeman/index.html
-
-test:bundle_audit:
-  extends: .base
-  allow_failure: true
-  script:
-    - bundle exec bundle audit check --update
-
-test:dawnscanner:
-  extends: .base
-  stage: test
-  allow_failure: true
-  artifacts:
-    name: dawnscanner_report
-    when: always
-    paths:
-      - dawnscanner
-  only:
-    - master
-  script:
-    - mkdir dawnscanner
-    - bundle exec dawn --html -zF dawnscanner/index.html .
-
-test:erd:
-  extends: .base_db
-  stage: test
-  allow_failure: true
-  artifacts:
-    name: erd
-    paths:
-      - erd.pdf
-  only:
-    - master
-  script:
-    - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y -qq graphviz
-    - erd
-
-test:rspec:
-  extends: .base_db
-  stage: test
-  artifacts:
-    name: coverage_report
-    paths:
-      - coverage/
-  script:
-    - bundle exec rspec
-
-pages:
-  extends: .base_minimal
-  stage: report
-  allow_failure: true
   dependencies:
-    - test:brakeman
-    - test:dawnscanner
-    - test:erd
-    - test:rspec
-  artifacts:
-    name: time_tracking_artifacts
-    paths:
-      - public/brakeman
-      - public/coverage
-      - public/dawnscanner
-      - public/erd.pdf
-  only:
-    - master
+    - install
   script:
-    - mv brakeman public/ || true
-    - mv coverage public/ || true
-    - mv dawnscanner public/ || true
-    - mv erd.pdf public/ || true
-
+    - apt update -q && apt install nodejs -yqq
+    - cp config/database.yml{.example,}
+    - cp config/ldap.yml{.example,}
+    # change ldap-auth to database-auth 
+    - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
+    - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
+    - sed -i 's/before_save :ldap_email/# before_save :ldap_email/g' app/models/user.rb
+    - bundle install -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
+    - bundle exec rake db:create db:migrate RAILS_ENV=test
+    - bundle exec rspec
+  allow_failure: true
   
-deploy:staging:
-  extends: .base
+rubocop:
+  dependencies:
+    - install
+  stage: test
+  script:
+    - gem install rubocop rubocop-rspec
+    - rubocop -V
+    - ls -al .rubocop.yml
+    - rubocop --config .rubocop.yml  --format offenses
+  allow_failure: true
+  
+
+deploy_staging:
   stage: deploy
+  dependencies:
+    - install
   environment:
     name: staging
   script:
@@ -158,9 +93,10 @@ deploy:staging:
   only:
     - master
 
-deploy:production:
-  extends: .base
+deploy_production:
   stage: deploy
+  dependencies:
+    - install
   environment:
     name: production
   when: manual
