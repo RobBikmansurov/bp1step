@@ -19,12 +19,14 @@ namespace :bp1step do
       sql.gsub!(/##DATE##/, sql_date) # заменим дату
       begin
         results = ActiveRecord::Base.connection.execute(sql)
-      rescue StandardError
-        logger.info "      ERR: #{sql}"
+      rescue StandardError => error
+        logger.error "     ERR: #{error}\n#{sql}"
       end
       next unless results
+
       result = results.first
       next if result['count'].blank?
+
       new_value = result['count'].to_i
       value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{sql_period}").first
       value ||= MetricValue.new(metric_id: metric.id) # не нашли?
@@ -62,7 +64,7 @@ namespace :bp1step do
       sql.gsub!(/##DATE##/, sql_date) # заменим дату
       begin
         results = mssql.execute(sql)
-        new_value = nil
+        new_value = 0
         results&.each do |row|
           new_value = row['count']
         end
@@ -73,9 +75,9 @@ namespace :bp1step do
           value.dtime = Time.current.utc # обновим время записи значения
           value.save
         end
-      rescue StandardError => e
-        logger.info "      ERR: #{sql}\n#{e}"
-        # puts "ERR: #{sql}\n#{e}"
+      rescue StandardError => error
+        logger.error "     ERR: #{error}\n#{sql}"
+        # puts "ERR: #{sql}\n#{error}"
         errors += 1
       end
     end

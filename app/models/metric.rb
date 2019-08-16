@@ -40,22 +40,31 @@ class Metric < ApplicationRecord
 
   # возвращает период от первой его секунды до последней - для замены ##PERIOD## в условии between
   def sql_period(date = Date.current, dpth = depth)
+    return "'#{date.strftime('%d.%m.%Y %H:00:00.0')}' AND '#{date.strftime('%d.%m.%Y %H:59:59.999')}'" unless dpth.between?(1, 3)
     case dpth
-    when 1 then "'#{date.beginning_of_year.to_s(:db)}' AND '#{date.end_of_year.to_s(:db)}'" # текущий год
-    when 2 then "'#{date.beginning_of_month.to_s(:db)}' AND '#{date.end_of_month.to_s(:db)}'" # текущий месяц
-    when 3 then "'#{date.beginning_of_day.to_s(:db)}' AND '#{date.end_of_day.to_s(:db)}'" # текущий день
-    else "'#{date.strftime('%Y-%m-%d %H:00:00.0')}' AND '#{date.strftime('%Y-%m-%d %H:59:59.999')}'" # текущий час
+    when 1 then
+      begin_of = date.beginning_of_year
+      end_of = date.end_of_year # текущий год
+    when 2 then
+      begin_of = date.beginning_of_month
+      end_of = date.end_of_month # текущий месяц
+    when 3 then
+      begin_of = date.beginning_of_day
+      end_of = date.end_of_day # текущий день
     end
+    "'#{begin_of.strftime('%d.%m.%Y 00:00:00.0')}' AND '#{end_of.strftime('%d.%m.%Y 23:59:59.999')}'"
   end
 
   # возвращает начало периода - для замены ##DATE## в условии where
   def sql_period_beginning_of(date = Date.current, dpth = depth)
-    case dpth
-    when 1 then "'#{date.beginning_of_year.strftime('%Y-%m-%d')}'" # начало года
-    when 2 then "'#{date.beginning_of_month.strftime('%Y-%m-%d')}'" # начало месяц
-    when 3 then "'#{date.beginning_of_day.strftime('%Y-%m-%d')}'" # начало дня
-    else "'#{date.strftime('%Y-%m-%d %H')}'" # начало часа
-    end
+    return "'#{date.strftime('%d.%m.%Y %H')}'" unless dpth.between?(1, 3)
+
+    beginning = case dpth
+                when 1 then date.beginning_of_year # начало года
+                when 2 then date.beginning_of_month # начало месяц
+                when 3 then date.beginning_of_day # начало дня
+                end
+    "'#{beginning.strftime('%d.%m.%Y')}'"
   end
 
   def self.by_depth(depth)
