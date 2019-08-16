@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Requirement < ApplicationRecord
+  include Statuses
+
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
@@ -44,5 +46,13 @@ class Requirement < ApplicationRecord
     return where(nil) if search.blank?
 
     where('label ILIKE ? or source ILIKE ?', "%#{search}%", "%#{search}%")
+  end
+
+  def tasks_statuses
+    tasks_statuses = ''
+    task.order(:id).each do |task|
+      tasks_statuses += task.status_mark
+    end
+    tasks_statuses
   end
 end

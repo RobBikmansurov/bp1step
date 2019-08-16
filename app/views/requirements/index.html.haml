@@ -11,7 +11,7 @@
     %thМетка, обозначение
     -# %thСодержание
     %th= sortable 'duedate', 'Срок'
-    %th= sortable 'status', 'Статус'
+    %thЗадачи
     %thИсполнитель
     %th
 
@@ -27,7 +27,7 @@
       %td
         - if requirement.duedate
           = days_left_as_text requirement.duedate, requirement.status < 90 && requirement.duedate <= Date.current
-      %td= REQUIREMENT_STATUS.key(requirement.status)
+      %td= requirement.tasks_statuses.html_safe
       %td
         - requirement.user_requirement.includes(:user).each do |user_requirement|
           - if user_requirement.user

@@ -25,7 +25,7 @@
                 %br
                   %span{:style => "color: red;"}
                     = task.completion_date.strftime("%d.%m.%y")
-        %td= TASK_STATUS.key(task.status)
+        %td= task.status_mark.html_safe
         %td
           -task.user_task.each do |user_task|
             -if user_task.user

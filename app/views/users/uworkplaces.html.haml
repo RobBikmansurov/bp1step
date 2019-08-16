@@ -9,7 +9,7 @@
   %h4
     -if @usr.roles.count
       %b роли доступа:
-      - @usr.roles.find_each do |role|
+      - @usr.roles.each do |role|
         -if current_user
           -if current_user.role? :admin
             = link_to role.description, users_path + '?role=' + role.name
@@ -25,7 +25,7 @@
       %th
       %th
 
-    -@uworkplaces.find_each do |user_workplace|
+    -@uworkplaces.each do |user_workplace|
       %tr
         %td
           -if user_workplace.workplace
@@ -59,7 +59,7 @@
       = doc_count
       = link_to 'документов', documents_path(user: @usr)
       \: из них в статусе 
-      - Document.where(owner_id: @usr.id).group(:status).count.find_each do | key, value |
+      - Document.where(owner_id: @usr.id).group(:status).count.each do | key, value |
         = "#{key} - #{value}"
         %nbsp,
   %h4
@@ -69,7 +69,7 @@
       = contract_count
       = link_to 'договоров', contracts_path(user: @usr)
       \: из них в статусе 
-      - Contract.where(owner_id: @usr.id).group(:status).count.find_each do | key, value |
+      - Contract.where(owner_id: @usr.id).group(:status).count.each do | key, value |
         = "#{key} - #{value}"
         %nbsp,
     %br
@@ -79,7 +79,7 @@
       = contract_count
       = link_to 'договоров', contracts_path(payer: @usr)
       \: из них в статусе 
-      - Contract.where(payer_id: @usr.id).group(:status).count.find_each do | key, value |
+      - Contract.where(payer_id: @usr.id).group(:status).count.each do | key, value |
         = "#{key} - #{value}"
         %nbsp,
   %h4

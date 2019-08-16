@@ -3,6 +3,7 @@
 class Letter < ApplicationRecord
   # acts_as_taggable
   # acts_as_nested_set
+  include Statuses
 
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }

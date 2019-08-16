@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Task < ApplicationRecord
+  include Statuses
+
   validates :name, presence: true,
                    length: { minimum: 5, maximum: 255 }
   validates :description, presence: true

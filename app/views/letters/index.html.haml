@@ -51,7 +51,7 @@
               %br
                 = date_as_text letter.completion_date, true
 
-      %td= LETTER_STATUS.key(letter.status)
+      %td= letter.status_mark.html_safe
       %td
         - i = 0
         - letter.user_letter.includes(:user).each do |user_letter|

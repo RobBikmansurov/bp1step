@@ -40,7 +40,7 @@
             - if task.completion_date
               %br= date_as_text task.completion_date, true if task.completion_date > task.duedate
 
-        %td= TASK_STATUS.key(task.status)
+        %td= task.status_mark.html_safe
         %td
           - task.user_task.each do |user_task|
             - if user_task.user

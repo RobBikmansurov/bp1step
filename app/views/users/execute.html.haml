@@ -46,7 +46,7 @@
           -if /(\d\d\:){3} #{current_user&.displayname}/.match(letter.result).blank?
             = link_to LETTER_STATUS.key(letter.status), edit_letter_path(letter), style: 'color: red;'
           -else
-            = LETTER_STATUS.key(letter.status)
+            = letter.status_mark.html_safe
 
 
 -if @tasks.any?
@@ -73,9 +73,9 @@
           = '!' if current_user && task.author_id == current_user.id
           -# если текущий пользователь еще не отметился в result
           -if /(\d\d\:){3} #{current_user&.displayname}/.match(task.result).blank?
-            = link_to TASK_STATUS.key(task.status), edit_task_path(task), style: 'color: red;'
+            = link_to task.status_mark.html_safe, edit_task_path(task), style: 'color: red;'
           -else
-            = TASK_STATUS.key(task.status)
+            = task.status_mark.html_safe
         %br
         = link_to task.name, task
 
@@ -88,6 +88,7 @@
     %tr
       %th #
       %th Метка, обозначение
+      %thЗадачи
       %th Срок
       %th Статус
 
@@ -99,6 +100,9 @@
           = link_to requirement.label, requirement
           = requirement.date.strftime("%d.%m.%Y")
         %td
+          = requirement.tasks_statuses.html_safe
+
+        %td
           -if requirement.duedate
             -if requirement.status < 90 and requirement.duedate <= Date.current
               %span{:style => "color: red;"}
@@ -107,4 +111,4 @@
               = requirement.duedate.strftime("%d.%m.%y")
         %td
           = '!' if current_user && requirement.author_id == current_user.id
-          = REQUIREMENT_STATUS.key(requirement.status)
+          = requirement.status_mark.html_safe
