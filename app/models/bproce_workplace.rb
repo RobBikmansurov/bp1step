@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class BproceWorkplace < ApplicationRecord
+  include BproceNames
+
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
@@ -18,13 +20,5 @@ class BproceWorkplace < ApplicationRecord
 
   def workplace_designation=(name)
     self.workplace_id = Workplace.find_by(designation: name).id if name.present?
-  end
-
-  def bproce_name
-    bproce.try(:name)
-  end
-
-  def bproce_name=(name)
-    self.bproce_id = Bproce.find_by(name: name).id if name.present?
   end
 end

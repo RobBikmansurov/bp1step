@@ -25,7 +25,7 @@ describe Document do
     it { is_expected.to have_attached_file(:document_file) }
     it { is_expected.not_to validate_attachment_presence(:document_file) }
     it do
-      is_expected.not_to validate_attachment_size(:document_file)
+      expect(subject).not_to validate_attachment_size(:document_file)
         .less_than(2.megabytes)
     end
   end

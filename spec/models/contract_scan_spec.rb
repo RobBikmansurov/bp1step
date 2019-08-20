@@ -17,7 +17,7 @@ RSpec.describe ContractScan, type: :model do
     it { is_expected.to have_attached_file(:scan) }
     it { is_expected.to validate_attachment_presence(:scan) }
     it do
-      is_expected.not_to validate_attachment_size(:scan)
+      expect(subject).not_to validate_attachment_size(:scan)
         .less_than(1.megabytes)
     end
   end

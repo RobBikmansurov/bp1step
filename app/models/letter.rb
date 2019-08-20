@@ -4,6 +4,8 @@ class Letter < ApplicationRecord
   # acts_as_taggable
   # acts_as_nested_set
   include Statuses
+  include Actions
+  include Authors
 
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
@@ -35,28 +37,12 @@ class Letter < ApplicationRecord
 
   before_save :check_status, :check_regdate
 
-  def author_name
-    author.try(:displayname)
-  end
-
-  def author_name=(name)
-    self.author = User.find_by(displayname: name) if name.present?
-  end
-
   def status_name
     LETTER_STATUS.key(status)
   end
 
   def status_name=(key)
     self.status = LETTER_STATUS[key]
-  end
-
-  def action
-    ''
-  end
-
-  def action=(action)
-    self.result += action if action.present?
   end
 
   def name

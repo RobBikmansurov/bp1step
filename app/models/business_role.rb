@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class BusinessRole < ApplicationRecord
+  include BproceNames
+
   validates :name, presence: true,
                    length: { minimum: 5, maximum: 50 }
   validates :description, presence: true,
@@ -20,14 +22,6 @@ class BusinessRole < ApplicationRecord
   # attr_accessible :name, :description, :bproce_id, :bproce_name, :features
 
   default_scope { order(:name) }
-
-  def bproce_name
-    bproce.try(:name)
-  end
-
-  def bproce_name=(name)
-    self.bproce_id = Bproce.find_by(name: name).id if name.present?
-  end
 
   def self.search(search)
     return where(nil) if search.blank?

@@ -14,6 +14,7 @@ describe Bapp do
     it { is_expected.to have_many(:bproce_bapps) }
     it { is_expected.to have_many(:bproces).through(:bproce_bapps) }
   end
+
   it 'have search method' do
     expect(described_class.search('').first).to eq(described_class.first)
   end

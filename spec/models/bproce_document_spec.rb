@@ -12,6 +12,7 @@ describe BproceDocument do
     it { is_expected.to belong_to(:bproce) }
     it { is_expected.to belong_to(:document) }
   end
+
   it 'set bproce by name' do
     bproce_document = FactoryBot.create :bproce_document, bproce_id: bproce.id, document_id: document.id
     _bproce_new = FactoryBot.create :bproce, user_id: user.id, name: 'BPROCE_NAME'

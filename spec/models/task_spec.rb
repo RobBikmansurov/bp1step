@@ -51,4 +51,10 @@ describe Task do
   it 'have a search method' do
     expect(described_class.search('').first).to eq(described_class.first)
   end
+  it 'have right status mark' do
+    { 9 => '&#x2606;', 50 => '&#x2605;', 81 => '&#x2714;' }.each do |s, m|
+      task.status = s
+      expect(task.status_mark).to eq(m)
+    end
+  end
 end

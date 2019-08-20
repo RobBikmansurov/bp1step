@@ -2,6 +2,9 @@
 
 class Task < ApplicationRecord
   include Statuses
+  include Tasks
+  include Actions
+  include Authors
 
   validates :name, presence: true,
                    length: { minimum: 5, maximum: 255 }
@@ -21,30 +24,6 @@ class Task < ApplicationRecord
   scope :not_assigned, -> { where('status < 5 and author_id IS NOT NULL') } # не назначенные, нет исполнителя
 
   before_save :check_status
-
-  def status_name
-    TASK_STATUS.key(status)
-  end
-
-  def status_name=(key)
-    self.status = TASK_STATUS[key]
-  end
-
-  def author_name
-    author.try(:displayname)
-  end
-
-  def author_name=(name)
-    self.author = User.find_by(displayname: name) if name.present?
-  end
-
-  def action
-    ''
-  end
-
-  def action=(action)
-    self.result += action if action.present?
-  end
 
   def self.search(search)
     return where(nil) if search.blank?

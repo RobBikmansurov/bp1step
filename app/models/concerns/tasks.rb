@@ -1,10 +1,27 @@
 # frozen_string_literal: true
 
 module Tasks
-  def status_mark
-    return '&#x2606;' if status < 10
-    return '&#x2714;' if status > 80
+  def status_name
+    TASK_STATUS.key(status)
+  end
 
-    '&#x2605;'
+  def status_name=(key)
+    self.status = TASK_STATUS[key]
+  end
+
+  def author_name
+    author.try(:displayname)
+  end
+
+  def author_name=(name)
+    self.author = User.find_by(displayname: name) if name.present?
+  end
+
+  def action
+    ''
+  end
+
+  def action=(action)
+    self.result += action if action.present?
   end
 end

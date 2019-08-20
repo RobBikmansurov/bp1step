@@ -469,14 +469,14 @@ DEPENDENCIES
   jcrop-rails-v2
   jquery-rails
   jquery-ui-rails (= 5.0.5)
-  loofah (>= 2.2.3)
+  loofah
   odf-report
   paperclip (~> 5.2.1)
   pg
   pg_search
   public_activity
   puma
-  rack (>= 2.0.6)
+  rack
   rails (= 5.2.2.1)
   rails-controller-testing
   rails3-jquery-autocomplete

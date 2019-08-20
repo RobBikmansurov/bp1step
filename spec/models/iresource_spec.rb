@@ -16,6 +16,7 @@ describe Iresource do
     it { is_expected.to have_many(:bproce_iresources) }
     it { is_expected.to have_many(:bproces).through(:bproce_iresources) }
   end
+
   it 'set owner by owner`s name ' do
     iresource = FactoryBot.create :iresource
     _user = FactoryBot.create(:user, displayname: 'DisplayName')

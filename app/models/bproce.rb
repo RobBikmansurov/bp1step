@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Bproce < ApplicationRecord
+  include UserNames
+
   include TheSortableTree::Scopes
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
@@ -42,14 +44,6 @@ class Bproce < ApplicationRecord
   # has_many :parent_bp, class_name: 'Bproce', foreign_key: 'parent_id' # родительский процесс
   # belongs_to :parent, class_name: 'Bproce'
   belongs_to :user # владелец процессв
-
-  def user_name
-    user.try(:displayname)
-  end
-
-  def user_name=(name)
-    self.user_id = User.find_by(displayname: name)&.id if name.present?
-  end
 
   def parent_name
     parent&.try(:name)

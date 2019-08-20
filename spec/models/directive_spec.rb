@@ -29,10 +29,11 @@ describe Directive do
       expect(directive.midname).to eq('Закон РФ №123-ФЗ 01.01.2019')
     end
     it 'set directive name by #id and return directive name' do
-      directive.directive_name = "abracadabra  #100"
+      directive.directive_name = 'abracadabra  #100'
       expect(directive.id).to eq(100)
     end
   end
+
   context 'without approval date' do
     it 'return short name' do
       directive.approval = nil
@@ -47,6 +48,7 @@ describe Directive do
       expect(directive.directive_name).to eq("Закон РФ №123-ФЗ   ##{directive.id}")
     end
   end
+
   it 'have search method' do
     expect(described_class.search('').first).to eq(described_class.first)
   end

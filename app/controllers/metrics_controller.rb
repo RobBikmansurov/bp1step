@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
 
 class MetricsController < ApplicationController
   respond_to :html, :xml, :json
@@ -19,7 +19,8 @@ class MetricsController < ApplicationController
   end
 
   def show
-    @current_period_date = (params[:date].presence || Time.current.to_s).to_time
+    @current_period_date = Time.current
+    @current_period_date = Time.zone.parse(params[:date]) if params[:date].presence
     @current_period_date = Time.current if @current_period_date > Time.current
     @current_depth = (params[:depth].presence || @metric.depth - 1).to_i
     case @current_depth
@@ -30,21 +31,28 @@ class MetricsController < ApplicationController
       @prev_date = @date1.ago(1.year)
       @next_date = @date2.since(1.year)
       # values = MetricValue.group_by_month(:dtime, range: @date1..@date2, format: "%M").order('MAX(dtime) ASC').count
-      values = MetricValue.where(metric_id: @metric.id).order('MAX(dtime) ASC').group_by_month(:dtime, range: @date1..@date2, time_zone: 'UTC').sum(:value)
+      values = MetricValue.where(metric_id: @metric.id).order('MAX(dtime) ASC')
+                          .group_by_month(:dtime, range: @date1..@date2, time_zone: 'UTC')
+                          .sum(:value)
     when 2 # месяц
       @format_period = '%B %Y'
       @date1 = @current_period_date.beginning_of_month
       @date2 = @current_period_date.end_of_month
       @prev_date = @date1.ago(1.month)
       @next_date = @date2.since(1.month)
-      values = MetricValue.where(metric_id: @metric.id).group_by_day(:dtime, range: @date1..@date2, format: '%-d').order('MAX(dtime) ASC').sum(:value)
+      values = MetricValue.where(metric_id: @metric.id)
+                          .group_by_day(:dtime, range: @date1..@date2, format: '%-d')
+                          .order('MAX(dtime) ASC')
+                          .sum(:value)
     when 3 # день
       @format_period = '%d.%m.%Y'
       @date1 = @current_period_date.beginning_of_day
       @date2 = @current_period_date.end_of_day
       @prev_date = @date1.ago(1.day)
       @next_date = @date2.since(1.day)
-      values = MetricValue.group_by_hour(:dtime, range: @date1..@date2, format: '%H').order('MAX(dtime) ASC').sum(:value)
+      values = MetricValue.group_by_hour(:dtime, range: @date1..@date2, format: '%H')
+                          .order('MAX(dtime) ASC')
+                          .sum(:value)
     end
     @current_period_name = @current_period_date.strftime(@format_period)
     @prev_name = @prev_date.strftime(@format_period)
@@ -90,14 +98,16 @@ class MetricsController < ApplicationController
 
   def values
     @current_period_date = Time.current
-    @current_period_date = params[:date].to_time if params[:date].presence
+    @current_period_date = Time.zone.parse(params[:date]) if params[:date].presence
     @prev_period_date = @current_period_date - @current_period_date.day.days
     @next_period_date = @current_period_date.end_of_month + 1
     @next_period_date = nil if @next_period_date == (Time.current.end_of_month + 1)
     values = MetricValue.where(metric_id: @metric.id)
     @values = case @metric.depth # список значений за выбранный период
-              when 1..2 then values.where(dtime: (@current_period_date.beginning_of_year..@current_period_date.end_of_year)).order(:dtime)
-              else values.where(dtime: (@current_period_date.beginning_of_month..@current_period_date.end_of_month)).order(:dtime)
+              when 1..2 then
+                values.where(dtime: (@current_period_date.beginning_of_year..@current_period_date.end_of_year)).order(:dtime)
+              else
+                values.where(dtime: (@current_period_date.beginning_of_month..@current_period_date.end_of_month)).order(:dtime)
               end
     @datetime_format = case @metric.depth # формат отображения даты значений выбранного периода
                        when 1 then '%Y'
@@ -171,8 +181,9 @@ class MetricsController < ApplicationController
   end
 
   def set_values
-    period_date = (params[:date].presence || Time.current.to_s).to_time
-    period_date = Time.current if period_date > Time.current
+    period_date = Time.zone
+    period_date = Tome.zone.parse(params[:date]) if params[:date].presence
+    period_date = Time.zone if period_date > Time.zone
     depth = (params[:depth].presence || @metric.depth - 1).to_i
 
     if @metric.mtype == 'MSSQL'

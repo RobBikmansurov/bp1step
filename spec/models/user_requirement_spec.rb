@@ -15,6 +15,7 @@ describe UserRequirement do
     it { is_expected.to belong_to(:requirement) }
     it { is_expected.to belong_to(:user) }
   end
+
   it 'set user by username' do
     _user = FactoryBot.create :user, displayname: 'Иванов'
     user_requirement = FactoryBot.create :user_requirement, requirement_id: requirement.id

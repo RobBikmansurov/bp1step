@@ -16,6 +16,7 @@ RSpec.describe UserTask, type: :model do
     it { is_expected.to belong_to(:task) }
     it { is_expected.to belong_to(:user) }
   end
+
   it 'set user by name' do
     user_task = FactoryBot.create :user_task, task_id: task.id
     _user = FactoryBot.create :user, displayname: 'Иванов'

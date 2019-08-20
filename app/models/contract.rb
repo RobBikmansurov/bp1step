@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Contract < ApplicationRecord
+  include OwnerNames
+
   acts_as_taggable
   acts_as_nested_set
 
@@ -43,14 +45,6 @@ class Contract < ApplicationRecord
 
   def agent_name=(name)
     self.agent = Agent.find_by(name: name) if name.present?
-  end
-
-  def owner_name
-    owner.try(:displayname)
-  end
-
-  def owner_name=(name)
-    self.owner = User.find_by(displayname: name) if name.present?
   end
 
   def payer_name

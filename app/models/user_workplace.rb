@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserWorkplace < ApplicationRecord
+  include UserNames
+
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
@@ -11,14 +13,4 @@ class UserWorkplace < ApplicationRecord
 
   belongs_to :user
   belongs_to :workplace
-
-  # attr_accessible :user_name, :date_from, :date_to, :note
-
-  def user_name
-    user.try(:displayname)
-  end
-
-  def user_name=(name)
-    self.user_id = User.find_by(displayname: name).id if name.present?
-  end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Document < ApplicationRecord
+  include OwnerNames
   # belongs_to :user
   belongs_to :owner, class_name: 'User'
   has_many :document_directive, dependent: :destroy
@@ -58,14 +59,6 @@ class Document < ApplicationRecord
 
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
-
-  def owner_name
-    owner.try(:displayname)
-  end
-
-  def owner_name=(name)
-    self.owner = User.find_by(displayname: name) if name.present?
-  end
 
   def pdf_path
     return unless document_file

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class BproceBapp < ApplicationRecord
+  include BproceNames
+
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
@@ -19,14 +21,6 @@ class BproceBapp < ApplicationRecord
 
   def bapp_name=(name)
     self.bapp_id = Bapp.find_by(name: name).id if name.present?
-  end
-
-  def bproce_name
-    bproce.try(:name)
-  end
-
-  def bproce_name=(name)
-    self.bproce_id = Bproce.find_by(name: name).id if name.present?
   end
 
   def self.search(search)

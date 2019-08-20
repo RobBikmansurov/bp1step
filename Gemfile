@@ -50,8 +50,8 @@ gem 'actionpack-page_caching' # кеширование
 
 gem 'faker'
 
-gem 'loofah', '>= 2.2.3'
-gem 'rack', '>= 2.0.6'
+gem 'loofah' # , '>= 2.2.3'
+gem 'rack' #, '>= 2.0.6'
 
 group :development do
   gem 'better_errors'

@@ -2,6 +2,7 @@
 
 class Requirement < ApplicationRecord
   include Statuses
+  include Authors
 
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
@@ -21,14 +22,6 @@ class Requirement < ApplicationRecord
 
   # attr_accessible :label, :date, :source, :duedate, :body, :status, :status_name,
   #                :result, :author_name, :author, :letter_id
-
-  def author_name
-    author.try(:displayname)
-  end
-
-  def author_name=(name)
-    self.author = User.find_by(displayname: name) if name.present?
-  end
 
   def status_name
     REQUIREMENT_STATUS.key(status)

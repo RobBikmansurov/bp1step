@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Metric < ApplicationRecord
+  include BproceNames
+
   validates :name, presence: true,
                    length: { minimum: 5, maximum: 50 }
   validates :description, presence: true,
@@ -15,14 +17,6 @@ class Metric < ApplicationRecord
   belongs_to :bproce # метика относится к процессу
 
   self.per_page = 10
-
-  def bproce_name
-    bproce.try(:name)
-  end
-
-  def bproce_name=(name)
-    self.bproce_id = Bproce.find_by(name: name.to_s).id if name.present?
-  end
 
   def depth_name
     METRICS_VALUE_DEPTH.key(depth)
@@ -41,6 +35,7 @@ class Metric < ApplicationRecord
   # возвращает период от первой его секунды до последней - для замены ##PERIOD## в условии between
   def sql_period(date = Date.current, dpth = depth)
     return "'#{date.strftime('%d.%m.%Y %H:00:00.0')}' AND '#{date.strftime('%d.%m.%Y %H:59:59.999')}'" unless dpth.between?(1, 3)
+
     case dpth
     when 1 then
       begin_of = date.beginning_of_year
