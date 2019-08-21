@@ -32,7 +32,7 @@ gem 'simple_form'
 gem 'the_sortable_tree', '>= 2.4.0'
 # gem "paperclip", git: "git://github.com/thoughtbot/paperclip.git"
 gem 'acts-as-taggable-on'
-gem "chartkick", ">= 3.2.0"
+gem "chartkick"
 gem 'groupdate'
 gem 'jcrop-rails-v2'
 # gem 'pdf-reader'
@@ -52,6 +52,7 @@ gem 'faker'
 
 gem 'loofah' # , '>= 2.2.3'
 gem 'rack' #, '>= 2.0.6'
+gem 'nokogiri', '>= 1.10.4'
 
 group :development do
   gem 'better_errors'
