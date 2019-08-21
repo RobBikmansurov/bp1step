@@ -57,7 +57,7 @@ build:
 rspec:
   stage: test
   dependencies:
-    - install
+    - build
   script:
     - apt update -q && apt install nodejs -yqq
     - cp config/database.yml{.example,}
@@ -73,7 +73,7 @@ rspec:
   
 rubocop:
   dependencies:
-    - install
+    - build
   stage: test
   script:
     - gem install rubocop rubocop-rspec
@@ -91,7 +91,7 @@ test:bundle_audit:
 deploy_staging:
   stage: deploy
   dependencies:
-    - install
+    - build
   environment:
     name: staging
   script:
@@ -105,7 +105,7 @@ deploy_staging:
     - echo -e "$SSH_PUBLIC_KEY_VRDEV1" > ~/.ssh/id_rsa.pub
     - echo -e "$SSH_PRIVATE_KEY_VRDEV1" > ~/.ssh/id_rsa
     - ssh $DEPLOY_USER@bp1step-dev.ad.bankperm.ru 'ls -al /home/rubydev/bp1step/'
-    - bundle install -j $(nproc) --without test production --path vendor  # Install dependencies into ./vendor/ruby
+    - bundle install -j $(nproc) --without test production --path=vendor  # Install dependencies into ./vendor/ruby
     - bundle exec cap staging deploy
   only:
     - master
@@ -113,7 +113,7 @@ deploy_staging:
 deploy_production:
   stage: deploy
   dependencies:
-    - install
+    - build
   environment:
     name: production
   when: manual
@@ -128,7 +128,7 @@ deploy_production:
     #- echo -e "$SSH_PUBLIC_KEY_VRDEV" > ~/.ssh/id_rsa.pub
     #- echo -e "$SSH_PRIVATE_KEY_VRDEV" > ~/.ssh/id_rsa
     - ssh $DEPLOY_USER@bp1step.ad.bankperm.ru 'ls -al /home/rubydev/bp1step/'
-    - bundle install -j $(nproc) --without test staging --path vendor  # Install dependencies into ./vendor/ruby
+    - bundle install -j $(nproc) --without test staging --path=vendor  # Install dependencies into ./vendor/ruby
     - bundle exec cap production deploy
   only:
     - master
