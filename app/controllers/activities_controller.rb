@@ -18,8 +18,10 @@ class ActivitiesController < ApplicationController
           contract = Contract.find(params[:id].to_s)
           @activities_header = "Договор #{contract.shortname}"
           ids = PublicActivity::Activity.select(:id).where(trackable_type: params[:type].to_s, trackable_id: params[:id].to_s) \
-            | PublicActivity::Activity.select(:id).where(trackable_type: 'ContractScan', trackable_id: contract.contract_scan.ids) \
-            | PublicActivity::Activity.select(:id).where(trackable_type: 'BproceContract', trackable_id: contract.bproce_contract.ids)
+            | PublicActivity::Activity.select(:id)
+                                      .where(trackable_type: 'ContractScan', trackable_id: contract.contract_scan.ids) \
+            | PublicActivity::Activity.select(:id)
+                                      .where(trackable_type: 'BproceContract', trackable_id: contract.bproce_contract.ids)
           @activities = PublicActivity::Activity.where(id: ids).order('created_at desc')
         else
           @activities = PublicActivity::Activity.where(trackable_type: params[:type].to_s, trackable_id: params[:id].to_s)

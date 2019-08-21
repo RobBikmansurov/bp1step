@@ -3,7 +3,7 @@
 class BproceContractsController < ApplicationController
   respond_to :html, :xml, :json, :js
   before_action :authenticate_user!, only: %i[edit destroy]
-  before_action :bproce_contract, except: %i[index show]
+  before_action :bproce_contract, except: :show
 
   def create
     flash[:notice] = 'Successfully created bproce_contract.' if @bproce_contract.save
