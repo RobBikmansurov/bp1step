@@ -6,5 +6,7 @@
 //
 //= require jquery-1.9.1.min.js
 //= require jquery_ujs
-//= require_tree .
 //= require autocomplete-rails
+//= require chartkick
+//= require Chart.bundle
+//= require_tree .
