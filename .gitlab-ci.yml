@@ -1,16 +1,28 @@
-image: "ruby:2.5.1"
+image: ruby:2.5.1
 
 cache:
   paths:
     - vendor/ruby
 
 stages:
-  - install
+  - build
   - test
   - deploy
 
-install:
-  stage: install
+.base:
+  image: ruby:2.6.3
+  cache:
+    key: gems_and_packages
+    paths:
+      - apt-caache/
+      - vendor/ruby
+    policy: pull
+  before_script:
+    - gem install bundler --no-document
+    - bundle install --jobs $(nproc) --path=vendor
+
+build:
+  stage: build
   artifacts:
     paths:
     - app/
@@ -33,8 +45,8 @@ install:
     - apt update -q && apt install libpq-dev postgresql-client nodejs -yqq
     - cp config/database.yml{.example,}
     - cp config/ldap.yml{.example,}
-    - gem install bundler --no-ri --no-rdoc
-    - bundle install -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
+    - gem install bundler --no-document
+    - bundle install -j $(nproc) --path=vendor  # Install dependencies into ./vendor/ruby
     - bundle exec rake db:create db:migrate RAILS_ENV=test
     - uname -a
     - du -h -d1 ./
@@ -69,7 +81,12 @@ rubocop:
     - ls -al .rubocop.yml
     - rubocop --config .rubocop.yml  --format offenses
   allow_failure: true
-  
+
+test:bundle_audit:
+  extends: .base
+  allow_failure: true
+  script:
+    - bundle exec bundle audit check --update
 
 deploy_staging:
   stage: deploy
