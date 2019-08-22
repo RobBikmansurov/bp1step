@@ -32,32 +32,73 @@ class Metric < ApplicationRecord
     where('name ILIKE ? or description ILIKE ?', "%#{search}%", "%#{search}%")
   end
 
-  # возвращает период от первой его секунды до последней - для замены ##PERIOD## в условии between
-  def sql_period(date = Date.current, dpth = depth)
-    return "'#{date.strftime('%d.%m.%Y %H:00:00.0')}' AND '#{date.strftime('%d.%m.%Y %H:59:59.999')}'" unless dpth.between?(1, 3)
-
-    case dpth
-    when 1 then
-      begin_of = date.beginning_of_year
-      end_of = date.end_of_year # текущий год
-    when 2 then
-      begin_of = date.beginning_of_month
-      end_of = date.end_of_month # текущий месяц
-    when 3 then
-      begin_of = date.beginning_of_day
-      end_of = date.end_of_day # текущий день
+  def sql_text(date_time = Time.current)
+    sql = msql.gsub(/\r\n?/, ' ') # заменим \n \r на пробелы
+    if mtype == 'MSSQL'
+      sql.gsub!(/##PERIOD##/, period_format_ms(date_time)) # заменим период
+      sql.gsub!(/##DATE##/, date_format_ms(date_time)) # заменим дату
+    else
+      sql.gsub!(/##PERIOD##/, period_format_pg(date_time))
+      sql.gsub!(/##DATE##/, date_format_pg(date_time))
     end
-    "'#{begin_of.strftime('%d.%m.%Y 00:00:00.0')}' AND '#{end_of.strftime('%d.%m.%Y 23:59:59.999')}'"
+    sql
+  end
+
+  # возвращает период от первой его секунды до последней - для замены ##PERIOD## в условии between
+  def period_format_pg(date_time = Time.current)
+    start_s = date_time.strftime('%Y-%m-%d %H').to_s
+    return "'#{start_s}:00:00.0' AND '#{start_s}:59:59.999'" unless depth.between?(1, 3)
+
+    case depth
+    when 1 then
+      begin_of = date_time.beginning_of_year
+      end_of = date_time.end_of_year # текущий год
+    when 2 then
+      begin_of = date_time.beginning_of_month
+      end_of = date_time.end_of_month # текущий месяц
+    when 3 then
+      begin_of = date_time.beginning_of_day
+      end_of = date_time.end_of_day # текущий день
+    end
+    "'#{begin_of.strftime('%Y-%m-%d 00:00:00')}' AND '#{end_of.strftime('%Y-%m-%d 23:59:59')}'"
+  end
+
+  def period_format_ms(date_time = Time.current)
+    return "'#{date.strftime('%d.%m.%Y %H:00:00.0')}' AND '#{date.strftime('%d.%m.%Y %H:59:59.999')}'" unless depth.between?(1, 3)
+
+    case depth
+    when 1 then
+      begin_of = date_time.beginning_of_year
+      end_of = date_time.end_of_year # текущий год
+    when 2 then
+      begin_of = date_time.beginning_of_month
+      end_of = date_time.end_of_month # текущий месяц
+    when 3 then
+      begin_of = date_time.beginning_of_day
+      end_of = date_time.end_of_day # текущий день
+    end
+    "'#{begin_of.strftime('%d.%m.%Y 00:00:00')}' AND '#{end_of.strftime('%d.%m.%Y 23:59:59')}'"
   end
 
   # возвращает начало периода - для замены ##DATE## в условии where
-  def sql_period_beginning_of(date = Date.current, dpth = depth)
-    return "'#{date.strftime('%d.%m.%Y %H')}'" unless dpth.between?(1, 3)
+  def date_format_pg(date_time = Time.current)
+    return "'#{date_time.strftime('%Y-%m-%d %H')}'" unless depth.between?(1, 3)
 
-    beginning = case dpth
-                when 1 then date.beginning_of_year # начало года
-                when 2 then date.beginning_of_month # начало месяц
-                when 3 then date.beginning_of_day # начало дня
+    beginning = case depth
+                when 1 then date_time.beginning_of_year # начало года
+                when 2 then date_time.beginning_of_month # начало месяц
+                when 3 then date_time.beginning_of_day # начало дня
+                end
+    "'#{beginning.strftime('%Y-%m-%d')}'"
+  end
+
+  def date_format_ms(date_time = Time.current)
+    return "'#{date_time.strftime('%d.%m.%Y %H')}'" unless depth.between?(1, 3)
+
+    beginning = case depth
+                when 1 then date_time.beginning_of_year # начало года
+                when 2 then date_time.beginning_of_month # начало месяц
+                when 3 then date_time.beginning_of_day # начало дня
                 end
     "'#{beginning.strftime('%d.%m.%Y')}'"
   end

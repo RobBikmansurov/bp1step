@@ -8,33 +8,27 @@ namespace :bp1step do
     logger.info '===== ' + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ' :set_values_PG'
 
     count = 0
+    errors = 0
     Metric.where(mtype: 'localPG').each do |metric| # метрики с типом 'localPG'
       count += 1
-      # sql = Metric.find(metric.id).msql
-      sql = metric.msql
-      sql.gsub!(/\r\n?/, ' ') # заменим \n \r на пробелы
-      sql_period = metric.sql_period Time.current.utc
-      sql.gsub!(/##PERIOD##/, sql_period) # заменим период
-      sql_date = metric.sql_period_beginning_of Time.current.utc
-      sql.gsub!(/##DATE##/, sql_date) # заменим дату
+      sql = metric.sql_text
       begin
         results = ActiveRecord::Base.connection.execute(sql)
       rescue StandardError => error
         logger.error "     ERR: #{error}\n#{sql}"
+        errors += 1
       end
       next unless results
 
       result = results.first
       next if result['count'].blank?
 
-      new_value = result['count'].to_i
-      value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{sql_period}").first
-      value ||= MetricValue.new(metric_id: metric.id) # не нашли?
-      value.dtime = Time.current.utc # обновим время записи значения
-      value.value = new_value
-      value.save if new_value.positive?
+      new_value = result['count']
+      update_or_create_value metric, new_value
     end
-    logger.info "      localPG: #{count} metrics"
+    inf = "      localPG: #{count} metrics"
+    inf += ", #{errors} errors" if errors.positive?
+    logger.info inf
   end
 
   desc 'Set values metrics from MS SQL'
@@ -46,38 +40,23 @@ namespace :bp1step do
 
     c = ActiveRecord::Base.configurations['production_MSSQL']
     mssql = TinyTds::Client.new username: c['username'], password: c['password'], host: c['host'], database: c['database']
+    mssql.execute('set dateformat DMY;') # установим формат даты
 
     count = 0
     errors = 0
     # Metric.where(mtype: metrics_type).where(id: 8).each do | metric |  # метрики с типом 'MSSQL'
     Metric.where(mtype: 'MSSQL').each do |metric| # метрики с типом 'MSSQL'
       count += 1
-      # ('2016-02-01'.to_datetime.to_i .. '2016-02-09'.to_datetime.to_i).step(1.day) do |datei|
-      date = Time.current.utc
-      sql = Metric.find(metric.id).msql
-      sql.gsub!(/\r\n?/, ' ') # заменим \n \r на пробелы
-
-      sql_period = metric.sql_period date
-      sql.gsub!(/##PERIOD##/, sql_period) # заменим период
-
-      sql_date = metric.sql_period_beginning_of date
-      sql.gsub!(/##DATE##/, sql_date) # заменим дату
+      sql = metric.sql_text
       begin
         results = mssql.execute(sql)
         new_value = 0
         results&.each do |row|
           new_value = row['count']
         end
-        if new_value&.positive?
-          value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{sql_period}").first
-          value ||= MetricValue.new(metric_id: metric.id) # не нашли? - новое значение
-          value.value = new_value
-          value.dtime = Time.current.utc # обновим время записи значения
-          value.save
-        end
+        update_or_create_value metric, new_value
       rescue StandardError => error
         logger.error "     ERR: #{error}\n#{sql}"
-        # puts "ERR: #{sql}\n#{error}"
         errors += 1
       end
     end
@@ -86,4 +65,15 @@ namespace :bp1step do
     inf += ", #{errors} errors" if errors.positive?
     logger.info inf
   end
+
+  def update_or_create_value(metric, new_value)
+    return unless new_value&.positive?
+
+    value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{metric.period_format_pg}").first
+    value ||= MetricValue.new(metric_id: metric.id) # не нашли? - новое значение
+    value.value = new_value
+    value.dtime = Time.current # обновим время записи значения
+    value.save
+  end
+
 end

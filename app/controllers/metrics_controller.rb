@@ -148,17 +148,11 @@ class MetricsController < ApplicationController
       require 'tiny_tds'
       c = ActiveRecord::Base.configurations['production_MSSQL']
       mssql = TinyTds::Client.new username: c['username'], password: c['password'], host: c['host'], database: c['database']
+      mssql.execute('set dateformat DMY')
     end
-    @sql = @metric.msql
+    @sql = @metric.sql_text Time.current
     @test = 'запрос не указан!'
     return unless @sql
-
-    @sql.gsub!(/\r\n?/, ' ') # заменим \n \r на пробелы
-
-    sql_period = @metric.sql_period
-    @sql.gsub!(/##PERIOD##/, sql_period) # заменим период
-    sql_date = @metric.sql_period_beginning_of
-    @sql.gsub!(/##DATE##/, sql_date) # заменим дату
 
     begin
       @test = ''
