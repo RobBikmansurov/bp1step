@@ -35,29 +35,40 @@ describe Metric do
       expect(metric.depth_name).to eq('Год')
     end
 
-    it 'return dates period for year' do
-      expect(metric.sql_period(Date.parse('2019-01-15'), 1)).to eq("'01.01.2019 00:00:00.0' AND '31.12.2019 23:59:59.999'")
-    end
-    it 'return dates period for month' do
-      expect(metric.sql_period(Date.parse('2019-02-15'), 2)).to eq("'01.02.2019 00:00:00.0' AND '28.02.2019 23:59:59.999'")
-    end
-    it 'return dates period for day' do
-      expect(metric.sql_period(Time.parse('2019-03-15 15:15:00'), 3)).to eq("'15.03.2019 00:00:00.0' AND '15.03.2019 23:59:59.999'")
-    end
-    it 'return dates period for hour' do
-      expect(metric.sql_period(Time.parse('2019-03-15 15:15:00'), 4)).to eq("'15.03.2019 15:00:00.0' AND '15.03.2019 15:59:59.999'")
-    end
-    it 'return begining of year' do
-      expect(metric.sql_period_beginning_of(Date.parse('2019-01-15'), 1)).to eq("'01.01.2019'")
-    end
-    it 'return begining of month' do
-      expect(metric.sql_period_beginning_of(Date.parse('2019-02-15'), 2)).to eq("'01.02.2019'")
-    end
-    it 'return begining of day' do
-      expect(metric.sql_period_beginning_of(Time.parse('2019-03-15 15:15:00'), 3)).to eq("'15.03.2019'")
-    end
-    it 'return begining of hour' do
-      expect(metric.sql_period_beginning_of(Time.parse('2019-03-15 15:15:00'), 4)).to eq("'15.03.2019 15'")
+    describe 'MSSQL dates format' do
+      it 'return dates period for year' do
+        metric.depth = 1
+        expect(metric.period_format_ms(Date.parse('2019-01-15'))).to eq("'01.01.2019 00:00:00' AND '31.12.2019 23:59:59'")
+      end
+      it 'return dates period for month' do
+        metric.depth = 2
+        expect(metric.period_format_ms(Date.parse('2019-02-15'))).to eq("'01.02.2019 00:00:00' AND '28.02.2019 23:59:59'")
+      end
+      it 'return dates period for day' do
+        metric.depth = 3
+        expect(metric.period_format_ms(Date.parse('2019-03-15 15:15:00'))).to eq("'15.03.2019 00:00:00' AND '15.03.2019 23:59:59'")
+      end
+      it 'return dates period for hour' do
+        metric.depth = 4
+        expect(metric.period_format_ms(Time.zone.parse('2019-03-15 15:15:00')))
+          .to eq("'15.03.2019 15:00:00' AND '15.03.2019 15:59:59'")
+      end
+      it 'return begining of year' do
+        metric.depth = 1
+        expect(metric.date_format_ms(Date.parse('2019-01-15'))).to eq("'01.01.2019'")
+      end
+      it 'return begining of month' do
+        metric.depth = 2
+        expect(metric.date_format_ms(Date.parse('2019-02-15'))).to eq("'01.02.2019'")
+      end
+      it 'return begining of day' do
+        metric.depth = 3
+        expect(metric.date_format_ms(Date.parse('2019-03-15 15:15:00'))).to eq("'15.03.2019'")
+      end
+      it 'return begining of hour' do
+        metric.depth = 4
+        expect(metric.date_format_ms(Time.zone.parse('2019-03-15 15:15:00'))).to eq("'15.03.2019 15'")
+      end
     end
 
     it 'search' do

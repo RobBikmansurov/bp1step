@@ -20,14 +20,14 @@
 = "[#{@metric.note}]" if @metric.note
 %p
 
-%h4Запрос
+%h4Запрос [#{@metric.mtype}]
 = @sql
 %h4Результат запроса:
 = @test
 %h3
   Значение ['count']:
   = @test_value
-
+  = link_to 'сохранить его', save_value_metric_path(@metric, value: @test_value) if @test_value&.positive?
 %p
 = link_to 'Edit', edit_metric_path(@metric), :class => 'button' if can? :update, @metric
 = link_to 'Show', @metric, :class => 'button'

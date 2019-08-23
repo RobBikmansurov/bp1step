@@ -75,5 +75,4 @@ namespace :bp1step do
     value.dtime = Time.current # обновим время записи значения
     value.save
   end
-
 end

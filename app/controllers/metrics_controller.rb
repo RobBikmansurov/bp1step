@@ -8,8 +8,8 @@ class MetricsController < ApplicationController
 
   def index
     @title_metrics = 'Метрики процессов'
-    @title_metrics += by_depth(params[:depth]) if params['depth'].present?
-    @title_metrics += by_metric_type(params[:mtype]) if params['mtype'].present?
+    @title_metrics += Metric.by_depth_title(params[:depth]) if params['depth'].present?
+    @title_metrics += Metric.by_metric_type_title(params[:mtype]) if params['mtype'].present?
     @metrics = Metric
                .by_depth(params[:depth])
                .by_metric_type(params[:mtype])
@@ -124,22 +124,17 @@ class MetricsController < ApplicationController
   end
 
   # http: GET /metrics/ID/set?v=VALUE&h=HASH
+  # from vpbx-ng http://localhost:3000/metrics/24/set?h=350b87584a23f7fbee07c441b2947d84&v=18
   def set
-    @metric = Metric.find(params[:id])
     if @metric && params[:v].presence && params[:h].presence
-      where_datetime = @metric.sql_period Time.current.utc
-      value = MetricValue.where(metric_id: @metric.id).where('dtime BETWEEN ?', where_datetime.to_s).first
-      value ||= MetricValue.new(metric_id: @metric.id) # не нашли - добавим новое значение
-      value.dtime = Time.current # обновим время записи значения
-      if Digest::MD5.hexdigest(@metric.mhash) == params[:h]
-        value.value = params[:v]
-        value.save
-        render nothing: true, status: :ok, content_type: 'text/html'
+      if Digest::MD5.hexdigest(@metric.mhash) == params[:h] && params[:v].to_i.positive?
+        update_or_create_value @metric, params[:v].to_i
+        head :ok
       else
-        render nothing: true, status: :bad_request, content_type: 'text/html'
+        head :bad_request
       end
     else
-      render nothing: true, status: :not_found, content_type: 'text/html'
+      head :not_found
     end
   end
 
@@ -174,6 +169,16 @@ class MetricsController < ApplicationController
     end
   end
 
+  def save_value
+    value = params[:value] || 0
+    if new_value.positive?
+      update_or_create_value @metric, value
+      redirect_to @metric, notice: 'Value of metric was successfully updated.'
+    else
+      redirect_to @metric, notice: 'New Value must be positive.'
+    end
+  end
+
   def set_values
     period_date = Time.zone
     period_date = Tome.zone.parse(params[:date]) if params[:date].presence
@@ -203,13 +208,8 @@ class MetricsController < ApplicationController
         d2 = period_date.end_of_day
       end
       (d1.to_i..d2.to_i).step(1.day) do |d|
-        sql = @metric.msql.gsub(/\r\n?/, ' ') # заменим \n \r на пробелы
-
-        sql_period = @metric.sql_period Time.at.utc(d), depth + 1
-        sql.gsub!(/##PERIOD##/, sql_period) # заменим период
-        sql_date = @metric.sql_period_beginning_of Time.at.utc(d), depth + 1
-        sql.gsub!(/##DATE##/, sql_date) # заменим дату
-        new_value = nil
+        sql = @metric.sql_text Time.at.utc(d)
+        new_value = 0
         begin
           if @metric.mtype == 'MSSQL'
             results = mssql.execute(sql)
@@ -223,11 +223,7 @@ class MetricsController < ApplicationController
           logger.error "      ERR: #{sql}\n#{error}"
         end
         if new_value&.positive?
-          # ids = MetricValue.where(metric_id: @metric.id).where("dtime BETWEEN #{sql_period}").all.ids
-          value = MetricValue.where(metric_id: @metric.id).where(dtime(BETWEEN("'", sql_period.to_s))).first
-          value ||= MetricValue.new(metric_id: @metric.id) # не нашли? - новое значение
-          value.value = new_value
-          value.dtime = Time.at.utc(d) # обновим время записи значения
+          update_or_create_value @metric, new_value, Time.at.utc(d)
           logger.error "#{@metric.id} #{value.errors}" unless value.save
         end
       end
@@ -259,5 +255,15 @@ class MetricsController < ApplicationController
   def record_not_found
     flash[:alert] = "Метрика ##{params[:id]} не найдена."
     redirect_to action: :index
+  end
+
+  def update_or_create_value(metric, new_value, time_at = Time.current)
+    return unless new_value&.positive?
+
+    value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{metric.period_format_pg}").first
+    value ||= MetricValue.new(metric_id: metric.id) # не нашли? - новое значение
+    value.value = new_value
+    value.dtime = time_at
+    value.save
   end
 end

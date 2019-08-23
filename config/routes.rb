@@ -132,6 +132,7 @@ Rails.application.routes.draw do
       get :new_value
       get :set
       get :test
+      get :save_value
       get :set_values
     end
   end

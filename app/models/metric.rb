@@ -64,7 +64,8 @@ class Metric < ApplicationRecord
   end
 
   def period_format_ms(date_time = Time.current)
-    return "'#{date.strftime('%d.%m.%Y %H:00:00.0')}' AND '#{date.strftime('%d.%m.%Y %H:59:59.999')}'" unless depth.between?(1, 3)
+    start_s = date_time.strftime('%d.%m.%Y %H').to_s
+    return "'#{start_s}:00:00' AND '#{start_s}:59:59'" unless depth.between?(1, 3)
 
     case depth
     when 1 then
