@@ -170,8 +170,8 @@ class MetricsController < ApplicationController
   end
 
   def save_value
-    value = params[:value] || 0
-    if new_value.positive?
+    value = params[:value].to_i || 0
+    if value.positive?
       update_or_create_value @metric, value
       redirect_to @metric, notice: 'Value of metric was successfully updated.'
     else
