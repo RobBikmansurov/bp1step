@@ -4,6 +4,6 @@ FactoryBot.define do
   factory :user_requirement do
     user
     requirement
-    status 1
+    status { 1 }
   end
 end

@@ -4,6 +4,6 @@ FactoryBot.define do
   factory :bproce_document do
     bproce
     document
-    purpose 'test'
+    purpose { 'test' }
   end
 end

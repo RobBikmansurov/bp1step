@@ -5,13 +5,13 @@ FactoryBot.define do
     sequence(:id, &:to_s)
     number        { "10#{id}" }
     name          { "name#{id}" }
-    contract_type 'Contract'
-    status        'Действует'
+    contract_type { 'Contract' }
+    status        { 'Действует' }
     date_begin    { Date.current }
     date_end      { Date.current + 100 }
-    description   'contract_description'
+    description   { 'contract_description' }
     trait :invalid do
-      name ''
+      name { '' }
     end
     agent
   end

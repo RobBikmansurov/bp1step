@@ -7,6 +7,6 @@ FactoryBot.define do
     description { "description-task-#{id}" }
     duedate { Date.current + 1 }
     completion_date { Date.current + 1 }
-    status 0
+    status { 0 }
   end
 end

@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :user_business_role do
-    note 'note'
+    note { 'note' }
     business_role
     user
   end

@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :bproce_contract do
-    purpose 'contract purpose in process'
+    purpose { 'contract purpose in process' }
     bproce
     contract
   end

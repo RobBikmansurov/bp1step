@@ -4,6 +4,6 @@ FactoryBot.define do
   factory :role do
     sequence(:id, &:to_s)
     name { "role#{id}" }
-    description 'role_description'
+    description { 'role_description' }
   end
 end

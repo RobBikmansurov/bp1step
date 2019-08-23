@@ -5,6 +5,6 @@ FactoryBot.define do
     sequence(:id, &:to_s)
     name { "name#{id}" }
     shortname { "shortname#{id}" }
-    description 'test_description'
+    description { 'test_description' }
   end
 end

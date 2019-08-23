@@ -5,7 +5,7 @@ FactoryBot.define do
   factory :metric do
     sequence(:name) { |n| "metric#{n}" }
     description { "#{name}_desscription" }
-    depth 1
+    depth { 1 }
     bproce
   end
 end

@@ -4,11 +4,11 @@
 FactoryBot.define do
   factory :document do
     sequence(:name) { |n| "document_name_#{n}" }
-    dlevel 1
-    place 'office1'
-    status 'Действует'
+    dlevel { 1 }
+    place { 'office1' }
+    status { 'Действует' }
     trait :invalid do
-      name ''
+      name { '' }
     end
   end
 end

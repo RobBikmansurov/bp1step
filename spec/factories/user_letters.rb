@@ -4,6 +4,6 @@ FactoryBot.define do
   factory :user_letter do
     user
     letter
-    status 1
+    status { 1 }
   end
 end

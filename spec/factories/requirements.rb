@@ -6,9 +6,9 @@ FactoryBot.define do
     label         { "requirement#{id}" }
     date { Date.current }
     duedate { Date.current }
-    source 'MyString'
-    body 'MyText'
-    status 0
-    result 'MyText'
+    source { 'MyString' }
+    body { 'MyText' }
+    status { 0 }
+    result { 'MyText' }
   end
 end
