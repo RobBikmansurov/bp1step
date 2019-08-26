@@ -173,11 +173,11 @@ RSpec.describe LettersController, type: :controller do
   end
 
   it 'clone letter' do
-    get :clone, params: { id: letter.id}
+    get :clone, params: { id: letter.id }
     expect(response).to render_template('clone')
   end
   it 'create outgoing letter' do
-    get :create_outgoing, params: { id: letter.id}
+    get :create_outgoing, params: { id: letter.id }
     expect(response).to render_template :create_outgoing
   end
   it 'create task' do

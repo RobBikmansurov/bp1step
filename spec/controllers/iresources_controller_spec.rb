@@ -155,6 +155,7 @@ RSpec.describe IresourcesController, type: :controller do
       expect(response).to redirect_to(iresources_url)
     end
   end
+
   describe 'reports' do
     it 'render report print' do
       current_user = FactoryBot.create :user, position: 'big boss'

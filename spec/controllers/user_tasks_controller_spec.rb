@@ -42,6 +42,7 @@ RSpec.describe UserTasksController, type: :controller do
       end
     end
   end
+
   describe 'DELETE destroy' do
     it 'destroys the requested user_task' do
       user_task = UserTask.create! valid_attributes

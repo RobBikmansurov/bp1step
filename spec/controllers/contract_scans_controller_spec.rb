@@ -66,5 +66,4 @@ RSpec.describe ContractScansController do
       expect(response).to redirect_to contract
     end
   end
-
 end

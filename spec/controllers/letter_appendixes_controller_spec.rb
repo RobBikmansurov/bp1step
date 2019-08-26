@@ -31,5 +31,4 @@ RSpec.describe LetterAppendixesController do
       expect(response).to redirect_to letter
     end
   end
-
 end

@@ -42,6 +42,7 @@ RSpec.describe UserLettersController, type: :controller do
       end
     end
   end
+
   describe 'DELETE destroy' do
     it 'destroys the requested user_letter' do
       user_letter = UserLetter.create! valid_attributes

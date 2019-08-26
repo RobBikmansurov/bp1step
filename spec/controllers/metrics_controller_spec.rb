@@ -10,7 +10,7 @@ RSpec.describe MetricsController, type: :controller do
   let(:valid_session)      { {} }
   let!(:metric) { FactoryBot.create :metric, bproce_id: bproce.id }
   let!(:metric1) { FactoryBot.create :metric, bproce_id: bproce.id }
-  let(:input ) { Metric.all }
+  let(:input) { Metric.all }
   let(:params) { {} }
 
   describe 'GET index' do
@@ -164,7 +164,7 @@ RSpec.describe MetricsController, type: :controller do
   # specify "no matching params" do
   #   expect(subject).to eq input
   # end
-    
+
   # specify "searching" do
   #   params[:search] = "sms"
   #   # p input.search('www')

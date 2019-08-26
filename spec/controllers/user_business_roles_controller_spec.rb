@@ -43,6 +43,7 @@ RSpec.describe UserBusinessRolesController, type: :controller do
       end
     end
   end
+
   describe 'DELETE destroy' do
     it 'destroys the requested user_business_role' do
       user_business_role = UserBusinessRole.create! valid_attributes

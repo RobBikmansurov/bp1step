@@ -49,6 +49,7 @@ RSpec.describe UserWorkplacesController, type: :controller do
       end
     end
   end
+
   describe 'DELETE destroy' do
     it 'destroys the requested user_workplace' do
       user_workplace = UserWorkplace.create! valid_attributes

@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe RequirementsController, type: :controller do
-  let(:author)           { FactoryBot.create(:user) }
+  let(:author) { FactoryBot.create(:user) }
   let(:requirement) { create :requirement, author: author }
   let(:valid_attributes) { { label: requirement.label, author_id: author.id } }
   let(:invalid_attributes) { { name: 'invalid value' } }
@@ -158,8 +158,8 @@ RSpec.describe RequirementsController, type: :controller do
     it 'save user and show requirement' do
       user = create :user
       user_requirement = create :user_requirement, user_id: user.id, requirement_id: requirement.id
-      put :update_user, params: { id: requirement.to_param, 
-          user_requirement: { user_id: user.id, requirement_id: requirement.id, status: 0, user_name: user.displayname } }
+      put :update_user, params: { id: requirement.to_param,
+                                  user_requirement: { user_id: user.id, requirement_id: requirement.id, status: 0, user_name: user.displayname } }
       expect(assigns(:requirement)).to eq(requirement)
     end
   end
@@ -168,6 +168,7 @@ RSpec.describe RequirementsController, type: :controller do
     let(:user) { create :user }
     let!(:user_task) { create :user_task, task: task, user: user, status: 1 }
     let(:requirement_with_letter) { create :requirement, author: author, letter: letter }
+
     it 'tasks_list' do
       get :tasks_list, params: { id: requirement.to_param }
       expect(response).to be_successful

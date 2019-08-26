@@ -43,6 +43,7 @@ RSpec.describe UserRequirementsController, type: :controller do
       end
     end
   end
+
   describe 'DELETE destroy' do
     it 'destroys the requested user_requirement' do
       user_requirement = UserRequirement.create! valid_attributes

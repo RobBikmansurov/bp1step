@@ -44,7 +44,7 @@ RSpec.describe UsersController, type: :controller do
     describe 'with valid params' do
       it 'updates the requested user' do
         expect_any_instance_of(User).to receive(:save).at_least(:once)
-        put :update, params: { id: user.to_param, 
+        put :update, params: { id: user.to_param,
                                user: { position: 'Должность' } }
       end
       it 'assigns the requested user' do
@@ -54,8 +54,6 @@ RSpec.describe UsersController, type: :controller do
       end
     end
   end
-
-
 
   it 'stop all business roles' do
     get :stop_all, params: { id: user.id }
@@ -69,14 +67,14 @@ RSpec.describe UsersController, type: :controller do
   it 'documents_move_to' do
     user_document = UserDocument.create user: user, document: document
     new_user = FactoryBot.create :user
-    post :documents_move_to, params: { id: user.id, user: {user_name: new_user.displayname } }
+    post :documents_move_to, params: { id: user.id, user: { user_name: new_user.displayname } }
     expect(response).to redirect_to(new_user)
   end
   it 'business_roles_move_to' do
     business_role = create :business_role, bproce_id: bproce.id
     user_business_role = create :user_business_role, business_role_id: business_role.id, user_id: user.id
     new_user = FactoryBot.create :user
-    post :business_roles_move_to, params: { id: user.id, user: {user_name: new_user.displayname } }
+    post :business_roles_move_to, params: { id: user.id, user: { user_name: new_user.displayname } }
     expect(response).to render_template(:edit)
   end
   it 'render uworkplaces' do

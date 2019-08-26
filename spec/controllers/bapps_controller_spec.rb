@@ -52,7 +52,7 @@ RSpec.describe BappsController, type: :controller do
   describe 'GET new' do
     it 'assigns a new bapp as @bapp' do
       get :new
-      expect(assigns(:bapp)).to be_a_new Bapp 
+      expect(assigns(:bapp)).to be_a_new Bapp
     end
   end
 
@@ -148,6 +148,7 @@ RSpec.describe BappsController, type: :controller do
       expect(response).to redirect_to(bapps_url)
     end
   end
+
   describe 'reports' do
     it 'render report list' do
       current_user = FactoryBot.create :user
