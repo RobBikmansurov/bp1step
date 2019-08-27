@@ -7,7 +7,6 @@ FactoryBot.define do
     date { Date.current }
     duedate { Date.current }
     source { 'MyString' }
-    body { generate(:email) }
     sequence(:body) { |n| "body requirement #{n}" }
     status { 0 }
     result { 'MyText' }
