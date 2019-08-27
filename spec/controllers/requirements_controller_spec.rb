@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe RequirementsController, type: :controller do
   let(:author) { create(:user) }
   let(:requirement) { create :requirement, author: author }
-  let(:valid_attributes) { { label: requirement.label, author_id: author.id } }
+  let(:valid_attributes) { { label: requirement.label, author_id: author.id, status: 5 } }
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
 

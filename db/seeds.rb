@@ -85,7 +85,7 @@ u.roles << Role.find_by(name: :security)
 u.roles << Role.find_by(name: :admin)
 
 60.times do |_n|
-  name = Faker::Name.name while name&.split.size < 3
+  name = Faker::Name.name + ' ' + Faker::Name.name
   names = name.split
   u = User.create(email: Faker::Internet.email,
                   firstname: names[0],
