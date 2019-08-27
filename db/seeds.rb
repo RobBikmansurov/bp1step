@@ -476,16 +476,15 @@ Array.new(300) do |_l|
     create_user_letter(letter.id) if rand(3) == 1
     letter.status = status
   end
+  user_id = User.pluck(:id).sample
+  user = User.find(user_id) || User.first
   case status
   when 10 # на исполнении
-    user = User.pluck(:id).sample
     create_user_letter(letter.id, user.id)
     letter.result = "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{user.displayname} - " + Faker::Lorem.sentence
   when 90 # завершено
     letter.completion_date = letter.duedate - rand(10) if rand(5) == 1
     letter.completion_date = letter.duedate + rand(10) if rand(3) == 1
-    user = User.pluck(:id).sample
-    create_user_letter(letter.id, user.id)
     # rubocop:disable Metrics/LineLength
     letter.result = "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{user.displayname} - " + Faker::Lorem.sentence
     letter.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{user.displayname} считает, что все работы по письму исполнены"
