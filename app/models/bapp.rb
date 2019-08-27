@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# applications for processes
 class Bapp < ApplicationRecord
   acts_as_taggable
 

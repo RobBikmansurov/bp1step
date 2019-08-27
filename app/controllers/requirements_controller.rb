@@ -2,6 +2,7 @@
 
 class RequirementsController < ApplicationController
   include Reports
+  include Users
 
   respond_to :html, :json
   helper_method :sort_column, :sort_direction
@@ -61,7 +62,14 @@ class RequirementsController < ApplicationController
   end
 
   def update
+    status_was = @requirement.status # старые значения записи
     if @requirement.update(requirement_params)
+      @requirement.status = 90 if params[:commit].present? && params[:commit].end_with?('Завершить')
+      @requirement.update! status: @requirement.status unless @requirement.status == status_was
+      if (@requirement.status >= 90) && status_was < 90 # стало завершено
+        @requirement.result += time_and_current_user 'считает требование полностью исполненным'
+        @requirement.update! result: @requirement.result.to_s
+      end
       redirect_to @requirement, notice: 'Requirement was successfully updated.'
     else
       render action: 'edit'
@@ -141,26 +149,8 @@ class RequirementsController < ApplicationController
   def tasks_list_report
     report = ODFReport::Report.new('reports/requirement_tasks_list.odt') do |r| # rubocop:disable Metrics/BlockLength
       nn = 0
-      r.add_field 'REQUIREMENT_DATE', @requirement.date.strftime('%d.%m.%Y')
-      r.add_field 'REQ_ID', @requirement.id
-      r.add_field 'REQUIREMENT_LABEL', @requirement.label
-      r.add_field 'REQUIREMENT_BODY', @requirement.body
-      if @requirement.letter
-        s = 'Основание: Вх.№  '
-        s += "#{@requirement.letter.number} от #{@requirement.letter.date.strftime('%d.%m.%Y')}"
-      else
-        s = "Источник: #{@requirement.source}"
-      end
-      r.add_field 'REQUIREMENT_SOURCE', s
-      r.add_field 'REQUIREMENT_DUEDATE', @requirement.duedate.strftime('%d.%m.%Y') if @requirement.duedate
-      r.add_field 'REQUIREMENT_AUTHOR', @requirement.author.displayname.to_s
-      s = ''
-      @requirement.user_requirement.find_each do |user_requirement|
-        s += ', ' if s.present?
-        s += user_requirement.user.displayname
-        s += '-отв.' if user_requirement.status.positive?
-      end
-      r.add_field 'REQUIREMENT_USERS', s
+      report_header r
+      r.add_field 'REQUIREMENT_USERS', requirement_users
 
       r.add_table('TASKS', @tasks, header: true) do |t| # rubocop:disable Metrics/BlockLength
         t.add_column(:nn) do |_ca|
@@ -178,7 +168,6 @@ class RequirementsController < ApplicationController
         t.add_column(:description) do |task|
           task.description.to_s
         end
-        # t.add_column(:source)
         t.add_column(:duedate) do |task|
           days = task.duedate - Date.current
           task.duedate.strftime('%d.%m.%y').to_s + (days.negative? ? "  (+ #{(-days).to_i} дн.)" : '')
@@ -187,13 +176,7 @@ class RequirementsController < ApplicationController
           TASK_STATUS.key(task.status)
         end
         t.add_column(:users) do |task| # исполнители задачи
-          s = ''
-          task.user_task.find_each do |user_task|
-            s += ', ' if s.present?
-            s += user_task.user.displayname
-            s += '-отв.' if user_task.status&.positive?
-          end
-          s.to_s
+          task_users_list task
         end
         t.add_column(:result)
       end
@@ -207,26 +190,8 @@ class RequirementsController < ApplicationController
   def tasks_report_report
     report = ODFReport::Report.new('reports/requirement_tasks_report.odt') do |r| # rubocop:disable Metrics/BlockLength
       nn = 0
-      r.add_field 'REQUIREMENT_DATE', @requirement.date.strftime('%d.%m.%Y')
-      r.add_field 'REQ_ID', @requirement.id
-      r.add_field 'REQUIREMENT_LABEL', @requirement.label
-      r.add_field 'REQUIREMENT_BODY', @requirement.body
-      if @requirement.letter
-        s = 'Основание: Вх.№  '
-        s += "#{@requirement.letter.number} от #{@requirement.letter.date.strftime('%d.%m.%Y')}"
-      else
-        s = "Источник: #{@requirement.source}"
-      end
-      r.add_field 'REQUIREMENT_SOURCE', s
-      r.add_field 'REQUIREMENT_DUEDATE', @requirement.duedate.strftime('%d.%m.%Y')
-      r.add_field 'REQUIREMENT_AUTHOR', @requirement.author.displayname.to_s
-      s = ''
-      @requirement.user_requirement.find_each do |user_requirement|
-        s += ', ' if s.present?
-        s += user_requirement.user.displayname
-        s += '-отв.' if user_requirement.status.positive?
-      end
-      r.add_field 'REQUIREMENT_USERS', s
+      report_header r
+      r.add_field 'REQUIREMENT_USERS', requirement_users
 
       r.add_table('TASKS', @tasks, header: true) do |t| # rubocop:disable Metrics/BlockLength
         t.add_column(:nn) do |_ca|
@@ -244,13 +209,11 @@ class RequirementsController < ApplicationController
           "от #{task.created_at.strftime('%d.%m.%y')}"
         end
         t.add_column(:author, :author_name)
-        # t.add_column(:source)
         t.add_column(:duedate) do |task|
-          # days = task.duedate - Date.current
-          task.duedate.strftime('%d.%m.%y').to_s # + (days < 0 ? " (+ #{(-days).to_i} дн.)" : "")
+          task.duedate&.strftime('%d.%m.%y')
         end
         t.add_column(:completiondate) do |task|
-          task.completion_date.strftime('%d.%m.%y').to_s if task.completion_date
+          task.completion_date&.strftime('%d.%m.%y')
         end
         t.add_column(:completionalert) do |task|
           if task.completion_date
@@ -262,13 +225,7 @@ class RequirementsController < ApplicationController
           TASK_STATUS.key(task.status)
         end
         t.add_column(:users) do |task| # исполнители задачи
-          s = ''
-          task.user_task.find_each do |user_task|
-            s += ', ' if s.present?
-            s += user_task.user.displayname
-            s += '-отв.' if user_task.status&.positive?
-          end
-          s.to_s
+          task_users_list task
         end
         t.add_column(:result)
       end
@@ -277,5 +234,39 @@ class RequirementsController < ApplicationController
     send_data report.generate, type: 'application/msword',
                                filename: 'requirement_tasks_report.odt',
                                disposition: 'inline'
+  end
+
+  def report_header(report)
+    report.add_field 'REQUIREMENT_DATE', @requirement.date.strftime('%d.%m.%Y')
+    report.add_field 'REQ_ID', @requirement.id
+    report.add_field 'REQUIREMENT_LABEL', @requirement.label
+    report.add_field 'REQUIREMENT_BODY', @requirement.body
+    if @requirement.letter
+      s = 'Основание: Вх.№  '
+      s += "#{@requirement.letter.number} от #{@requirement.letter.date.strftime('%d.%m.%Y')}"
+    else
+      s = "Источник: #{@requirement.source}"
+    end
+    report.add_field 'REQUIREMENT_SOURCE', s
+    report.add_field 'REQUIREMENT_DUEDATE', @requirement.duedate.strftime('%d.%m.%Y')
+    report.add_field 'REQUIREMENT_AUTHOR', @requirement.author.displayname.to_s
+  end
+
+  def requirement_users(users = '')
+    @requirement.user_requirement.find_each do |user_requirement|
+      users += ', ' if users.present?
+      users += user_requirement.user.displayname
+      users += '-отв.' if user_requirement.status.positive?
+    end
+    users
+  end
+
+  def task_users_list(task, list = '')
+    task.user_task.find_each do |user_task|
+      list += ', ' if list.present?
+      list += user_task.user.displayname
+      list += '-отв.' if user_task.status&.positive?
+    end
+    list
   end
 end

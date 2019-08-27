@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 describe TaskMailer do
-  let!(:user) { FactoryBot.create(:user) }
-  let!(:task) { FactoryBot.create(:task, author_id: user.id) }
+  let!(:user) { create :user }
+  let!(:task) { create :task, author_id: user.id }
 
   describe 'check_overdue_letters' do
     # рассылка исполнителям о просроченных письмах

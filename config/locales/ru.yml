@@ -235,6 +235,12 @@ ru:
       create: 'Создать %{model}'
       update: 'Сохранить %{model}'
       submit: 'Сохранить %{model}'
+en:
+  helpers:
+    submit:
+      letter:
+        create: "Add %{model}"
+        update: "Save Changes"
 
   # In rails 3 errors is top-level namespace
   errors:

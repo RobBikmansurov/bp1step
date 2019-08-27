@@ -65,7 +65,7 @@ class User < ApplicationRecord
   # before_save :ldap_email, :ldap_firstname, :ldap_displayname, :ldap_email
 
   def role?(role_sym)
-    roles.any? { |r| r.name.underscore.to_sym == role_sym }
+    roles.any? { |role| role.name.underscore.to_sym == role_sym }
   end
 
   def ldap_lastname

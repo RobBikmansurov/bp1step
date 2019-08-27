@@ -2,6 +2,7 @@
 
 class LettersController < ApplicationController
   include Reports
+  include Users
 
   respond_to :html, :json
   before_action :authenticate_user!, only: %i[edit new create update destroy register show]
@@ -88,11 +89,13 @@ class LettersController < ApplicationController
   def update
     status_was = @letter.status # старые значения
     if @letter.update(letter_params)
-      @letter.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{current_user.displayname} - " + params[:letter][:action] if params[:letter][:action].present?
+      @letter.status = 90 if params[:commit].present? && params[:commit].end_with?('Завершить')
+      action = params[:letter][:action]
+      @letter.result += time_and_current_user("- #{action}") if action.present?
       if @letter.status >= 90 && status_was < 90 # стало завершено
-        @letter.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{current_user.displayname} считает, что все работы по письму исполнены"
+        @letter.result += time_and_current_user 'считает, что все работы по письму исполнены'
       elsif @letter.status < 90 && status_was >= 90 # стало не завершено, а было завершено
-        @letter.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{current_user.displayname} считает, что работы по письму надо продолжить"
+        @letter.result += time_and_current_user 'считает, что работы по письму надо продолжить'
       end
       if params[:letter][:action].present? || (status_was != @letter.status)
         @letter.update! result: @letter.result.to_s

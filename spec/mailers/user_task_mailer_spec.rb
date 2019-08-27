@@ -3,9 +3,7 @@
 require 'rails_helper'
 
 describe UserTaskMailer do
-  let!(:user) { FactoryBot.create(:user) }
-  let!(:task) { FactoryBot.create(:task, author_id: user.id) }
-  let!(:user_task) { FactoryBot.create(:user_task, task_id: task.id, user_id: user.id) }
+  include_examples 'creates a user task'
 
   describe 'user_task_create' do
     # рассылка о назначении исполнителя

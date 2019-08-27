@@ -2,6 +2,7 @@
 
 class TasksController < ApplicationController
   include Reports
+  include Users
 
   respond_to :html, :json
   before_action :set_task, only: %i[show edit update destroy report]
@@ -89,11 +90,12 @@ class TasksController < ApplicationController
     status_was = @task.status # старые значения записи
     duedate_was = @task.duedate
     if @task.update(task_params)
-      time = Time.current.strftime('%d.%m.%Y %H:%M:%S')
-      @task.result += "\r\n#{time}: #{current_user.displayname} изменил срок исполнения (с #{duedate_was.strftime('%d.%m.%Y')} на #{@task.duedate.strftime('%d.%m.%Y')})" unless @task.duedate == duedate_was
-      @task.result += "\r\n#{time}: #{current_user.displayname} - #{params[:task][:action]}" if params[:task][:action].present?
-      @task.result += "\r\n#{time}: #{current_user.displayname} считает задачу полностью исполненной" if (@task.status >= 90) && status_was < 90 # стало завершено
+      @task.status = 90 if params[:commit].present? && params[:commit].end_with?('Завершить')
+      @task.result += time_and_current_user "изменил срок исполнения (с #{duedate_was.strftime('%d.%m.%Y')} на #{@task.duedate.strftime('%d.%m.%Y')})" unless @task.duedate == duedate_was
+      @task.result += time_and_current_user params[:task][:action] if params[:task][:action].present?
+      @task.result += time_and_current_user 'считает задачу полностью исполненной' if (@task.status >= 90) && status_was < 90 # стало завершено
       @task.update! result: @task.result.to_s
+      @task.update! status: @task.status unless @task.status == status_was
       redirect_to @task, notice: 'Информация по Задаче сохранена'
     else
       @task_status_enabled = enabled_statuses(@task, current_user.id) # автор и отв. могут переводить в любое состояние

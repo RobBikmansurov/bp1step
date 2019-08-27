@@ -241,7 +241,7 @@ class MetricsController < ApplicationController
 
   def metric_params
     params.require(:metric).permit(:bproce_id, :name, :shortname, :description, :note,
-                                   :depth, :depth_name, :bproce_name, :mtype, :msql)
+                                   :depth, :depth_name, :bproce_name, :mtype, :msql, :sort, :direction)
   end
 
   def sort_column

@@ -50,10 +50,8 @@ namespace :bp1step do
       sql = metric.sql_text
       begin
         results = mssql.execute(sql)
-        new_value = 0
-        results&.each do |row|
-          new_value = row['count']
-        end
+        row = results&.first
+        new_value = row['count'] if row&.key? 'count'
         update_or_create_value metric, new_value
       rescue StandardError => error
         logger.error "     ERR: #{error}\n#{sql}"
