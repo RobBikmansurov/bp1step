@@ -25,28 +25,35 @@ puts 'access roles created'
 # users
 # User.destroy_all
 user1 = User.create!(displayname: 'Иванов И.И.', username: 'ivanov', email: 'ivanov@example.com', password: 'ivanov',
-                     firstname: 'Иван', middlename: 'Иванович', lastname: 'Иванов', office: '101', position: 'Экономист',
+                     firstname: 'Иван', middlename: 'Иванович', lastname: 'Иванов',
+                     office: '101', position: 'Экономист',
                      phone: '+7(342)212-34-56')
 user1.roles << Role.find_by(name: :author)
 user1.roles << Role.find_by(name: :analitic)
 user1.roles << Role.find_by(name: :owner)
 user1.roles << Role.find_by(name: :admin)
 
-user2 = User.create(displayname: 'Петров П.П.', username: 'petrov', email: 'petrov@example.com', password: 'petrov', firstname: 'Петр', middlename: 'Петрович', lastname: 'Петров')
+user2 = User.create(displayname: 'Петров П.П.', username: 'petrov', email: 'petrov@example.com',
+                    password: 'petrov', firstname: 'Петр', middlename: 'Петрович', lastname: 'Петров')
 user2.roles << Role.find_by(name: :author)
 
-user3 = User.create(displayname: 'Администратор', username: 'admin', email: 'admin@example.com', password: 'admin', firstname: 'Admin', middlename: 'Adminович', lastname: 'Adminов')
+user3 = User.create(displayname: 'Администратор', username: 'admin', email: 'admin@example.com',
+                    password: 'admin', firstname: 'Admin', middlename: 'Adminович', lastname: 'Adminов')
 user3.roles << Role.find_by(name: :admin)
 user3.roles << Role.find_by(name: :security)
 
-user4 = User.create(displayname: 'Сидоров С.С.', username: 'sidorov', email: 'sidorov@example.com', password: 'sidorov', firstname: 'Сидор', middlename: 'Сидорович', lastname: 'Сидоров')
+user4 = User.create(displayname: 'Сидоров С.С.', username: 'sidorov', email: 'sidorov@example.com',
+                    password: 'sidorov', firstname: 'Сидор', middlename: 'Сидорович', lastname: 'Сидоров')
 user4.roles << Role.find_by(name: :author)
 
-user5 = User.create(displayname: 'Путин В.В.', username: 'putinx', email: 'putinx@example.com', password: 'putinx', department: 'Библиотека', position: 'Юрист', office: '201', phone: '2201')
+user5 = User.create(displayname: 'Путин В.В.', username: 'putinx',
+                    email: 'putinx@example.com', password: 'putinx', department: 'Библиотека',
+                    position: 'Юрист', office: '201', phone: '2201')
 user5.roles << Role.find_by(name: :keeper)
 user5.roles << Role.find_by(name: :user)
 
-user6 = User.create(displayname: 'Кудрин А.В.', username: 'kudrin', email: 'kudrin@example.com', password: 'kudrin', position: 'Финансист')
+user6 = User.create(displayname: 'Кудрин А.В.', username: 'kudrin',
+                    email: 'kudrin@example.com', password: 'kudrin', position: 'Финансист')
 user6.roles << Role.find_by(name: :author)
 user6.roles << Role.find_by(name: :owner)
 user6.roles << Role.find_by(name: :analitic)
@@ -78,7 +85,7 @@ u.roles << Role.find_by(name: :security)
 u.roles << Role.find_by(name: :admin)
 
 60.times do |_n|
-  begin name = Faker::Name.name end while name.split.size < 3
+  name = Faker::Name.name while name.split.size < 3
   names = name.split
   u = User.create(email: Faker::Internet.email,
                   firstname: names[0],
@@ -117,11 +124,11 @@ Workplace.create(name: 'Главный бухгалтер', description: 'Гла
   end
 end
 60.times do |_n|
-  wp = Workplace.find(Workplace.pluck(:id).shuffle.first)
+  wp = Workplace.find(Workplace.pluck(:id).sample)
   wp.user_workplace.create(
-    user_id: User.pluck(:id).shuffle.first,
+    user_id: User.pluck(:id).sample,
     date_from: Faker::Date.backward(120),
-    date_to:   Faker::Date.forward(120),
+    date_to: Faker::Date.forward(120),
     note: ''
   )
 end
@@ -189,35 +196,43 @@ puts 'terms created'
 # rubocop:enable Metrics/LineLength
 
 # processes
-#connection = ActiveRecord::Base.connection()
-#  roor process
-#connection.execute("insert INTO bproces (shortname, name, fullname, created_at, updated_at, user_id, lft, rgt, parent_id) VALUES ('root', 'Процессы', 'Бизнес-процессы', '2018-05-21', '2018-05-21', 1, 0, 1, 1);")
-#bp = Bproce.last
-#bp.parent_id = bp.id
-#bp.save
-bp1 = Bproce.create!(name: 'Предоставление сервисов', shortname: 'B.4.1', fullname: 'Предоставление сервисов', user_id: user1.id, parent_id: nil)
-#bp1.user_id = user1.id
-#bp1.save
+bp1 = Bproce.create!(name: 'Предоставление сервисов', shortname: 'B.4.1', fullname: 'Предоставление сервисов',
+                     user_id: user1.id, parent_id: nil)
 
-Bproce.create!(name: 'Управление уровнем сервисов', shortname: 'SLM', fullname: 'Управление уровнем сервисов', user_id: User.pluck(:id).shuffle.first, parent_id: bp1.id)
-Bproce.create!(name: 'Управление мощностями', shortname: 'CAP', fullname: 'Управление мощностями', user_id: User.pluck(:id).shuffle.first, parent_id: bp1.id)
-Bproce.create!(name: 'Управление непрерывностью', shortname: 'SCM', fullname: 'Управление непрерывностью', user_id: User.pluck(:id).shuffle.first, parent_id: bp1.id)
-bp14 = Bproce.create(name: 'Управление финансами', shortname: 'FIN', fullname: 'Управление финансами', user_id: User.pluck(:id).shuffle.first, parent_id: bp1.id)
+Bproce.create!(name: 'Управление уровнем сервисов', shortname: 'SLM', fullname: 'Управление уровнем сервисов',
+               user_id: User.pluck(:id).sample, parent_id: bp1.id)
+Bproce.create!(name: 'Управление мощностями', shortname: 'CAP', fullname: 'Управление мощностями',
+               user_id: User.pluck(:id).sample, parent_id: bp1.id)
+Bproce.create!(name: 'Управление непрерывностью', shortname: 'SCM', fullname: 'Управление непрерывностью',
+               user_id: User.pluck(:id).sample, parent_id: bp1.id)
+bp14 = Bproce.create(name: 'Управление финансами', shortname: 'FIN', fullname: 'Управление финансами',
+                     user_id: User.pluck(:id).sample, parent_id: bp1.id)
 bp14.user_id = user1.id
 bp14.save
 bp14.business_roles.create(name: 'НачальникИТ', description: 'Контролирует счета, готовит План закупок')
-br1 = bp14.business_roles.create!(name: 'Бухгалтер', description: 'Оплачивает счет, учитывает бухгалтерские документы', features: 'Нужен калькулятор')
-ubr1 = br1.user_business_role.create!(date_from: '2015-01-11', date_to: '2015-12-31', note: 'исп.обязанности', user_id: user1.id)
+br1 = bp14.business_roles.create!(name: 'Бухгалтер', description: 'Оплачивает счет, учитывает бухгалтерские документы',
+                                  features: 'Нужен калькулятор')
+ubr1 = br1.user_business_role.create!(date_from: '2015-01-11', date_to: '2015-12-31', note: 'исп.обязанности',
+                                      user_id: user1.id)
 ubr1.save
-Bproce.create!(name: 'Управление доступностью', shortname: 'AVA', fullname: 'Управление доступностью', user_id: User.pluck(:id).shuffle.first, parent_id: bp1.id)
+Bproce.create!(name: 'Управление доступностью', shortname: 'AVA', fullname: 'Управление доступностью',
+               user_id: User.pluck(:id).sample, parent_id: bp1.id)
 
-bp2 = Bproce.create!(name: 'Поддержка сервисов', shortname: 'B.4.2', fullname: 'Поддержка сервисов', parent_id: nil, user_id: user1.id)
-bp21 = Bproce.create!(name: 'Управление инцидентами', shortname: 'INC', fullname: 'Управление инцидентами', user_id: User.pluck(:id).shuffle.first, parent_id: bp2.id)
-bp211 = Bproce.create!(name: 'Служба поддержки пользователей Service Desk', shortname: 'SD', fullname: 'Служба поддержки пользователей Service Desk', user_id: User.limit(1).order('RANDOM()').first.id, parent_id: bp21.id)
-Bproce.create!(name: 'Управление проблемами', shortname: 'PRB', fullname: 'Управление проблемами', user_id: User.pluck(:id).shuffle.first, parent_id: bp2.id)
-Bproce.create!(name: 'Управление конфигурациями', shortname: 'CFG', fullname: 'Управление конфигурациями', user_id: User.pluck(:id).shuffle.first, parent_id: bp2.id)
-Bproce.create!(name: 'Управление релизами', shortname: 'REL', fullname: 'Управление релизами', user_id: User.pluck(:id).shuffle.first, parent_id: bp2.id)
-Bproce.create!(name: 'Управление изменениями', shortname: 'CNG', fullname: 'Управление изменениями', parent_id: bp2.id, user_id: user6.id)
+bp2 = Bproce.create!(name: 'Поддержка сервисов', shortname: 'B.4.2', fullname: 'Поддержка сервисов',
+                     parent_id: nil, user_id: user1.id)
+bp21 = Bproce.create!(name: 'Управление инцидентами', shortname: 'INC', fullname: 'Управление инцидентами',
+                      user_id: User.pluck(:id).sample, parent_id: bp2.id)
+bp211 = Bproce.create!(name: 'Служба поддержки пользователей Service Desk', shortname: 'SD',
+                       fullname: 'Служба поддержки пользователей Service Desk', user_id: User.pluck(:id).sample,
+                       parent_id: bp21.id)
+Bproce.create!(name: 'Управление проблемами', shortname: 'PRB', fullname: 'Управление проблемами',
+               user_id: User.pluck(:id).sample, parent_id: bp2.id)
+Bproce.create!(name: 'Управление конфигурациями', shortname: 'CFG', fullname: 'Управление конфигурациями',
+               user_id: User.pluck(:id).sample, parent_id: bp2.id)
+Bproce.create!(name: 'Управление релизами', shortname: 'REL', fullname: 'Управление релизами',
+               user_id: User.pluck(:id).sample, parent_id: bp2.id)
+Bproce.create!(name: 'Управление изменениями', shortname: 'CNG', fullname: 'Управление изменениями',
+               parent_id: bp2.id, user_id: user6.id)
 
 puts 'processes created'
 
@@ -237,10 +252,13 @@ Array.new(50) do |_i|
     access_write: ['group1', 'gr_auto', 'gr_devel', 'gr_test', ''][rand(5)],
     access_other: ['group1', 'gr_auto', 'gr_devel', 'gr_test', ''][rand(5)],
     risk_category: %w[В КВ Н НВ ОВ][rand(5)],
-    user_id: User.pluck(:id).shuffle.first
+    user_id: User.pluck(:id).sample
   )
-  BproceIresource.create(bproce_id: Bproce.pluck(:id).shuffle.first, iresource_id: Iresource.last.id)
-  BproceIresource.create(bproce_id: Bproce.pluck(:id).shuffle.first, iresource_id: Iresource.last.id, rpurpose: Faker::Lorem.sentence(1)) if rand(20) == 1
+  BproceIresource.create(bproce_id: Bproce.pluck(:id).sample, iresource_id: Iresource.last.id)
+  if rand(20) == 1
+    BproceIresource.create(bproce_id: Bproce.pluck(:id).sample, iresource_id: Iresource.last.id,
+                           rpurpose: Faker::Lorem.sentence(1))
+  end
 end
 puts 'iresources created'
 
@@ -265,7 +283,7 @@ Array.new(150) do |_i|
   date_end = Faker::Date.forward(rand(400)) if status == 'НеДействует'
   date_end = Faker::Date.forward(rand(400)) if status == 'Действует' && rand(2) == 1
   payer_id = nil
-  payer_id = User.pluck(:id).shuffle.first unless rand(5) == 1
+  payer_id = User.pluck(:id).sample unless rand(5) == 1
   place = "ST#{rand(10)}"
   note = Faker::Lorem.sentence if rand(5) == 1
   condition = Faker::Lorem.sentence if rand(10) == 1
@@ -282,23 +300,28 @@ Array.new(150) do |_i|
     note: note,
     condition: condition,
     check: check,
-    owner_id: User.pluck(:id).shuffle.first,
-    agent_id: Agent.pluck(:id).shuffle.first,
+    owner_id: User.pluck(:id).sample,
+    agent_id: Agent.pluck(:id).sample,
     contract_place: place,
     payer_id: payer_id
   )
   contract = Contract.last
   contract_id = contract&.id || 1
-  BproceContract.create(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, contract_id: contract_id)
-  BproceContract.create(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, contract_id: contract_id, purpose: Faker::Lorem.sentence(1)) if rand(20) == 1
+  BproceContract.create(bproce_id: Bproce.pluck(:id).sample, contract_id: contract_id)
+  if rand(20) == 1
+    BproceContract.create(bproce_id: Bproce.pluck(:id).sample, contract_id: contract_id,
+                          purpose: Faker::Lorem.sentence(1))
+  end
 end
 puts 'contracts created'
 
-Metric.create(name: 'ИнцидентовВсего', description: 'количество инцидентов, зарегистрированных в системе', depth: '3', bproce_id: bp211.id)
+Metric.create(name: 'ИнцидентовВсего', description: 'количество инцидентов, зарегистрированных в системе',
+              depth: '3', bproce_id: bp211.id)
 puts 'metrics created'
 
 # directives
 # rubocop:disable Metrics/LineLength
+# rubocop:disable Metrics/ParameterLists
 [
   ['Указание', '3659-У', '04 Jun 2015', "Указание Банка России от 04.06.2015 N 3659-У\r\n\"О внесении изменений в Положение Банка России от 16 июля 2012 года N 385-П \"О правилах ведения бухгалтерского учета в кредитных организациях, расположенных на территории Российской Федерации\"\r\n\r\n", '', 'Банк России', '', 'Действует', ''],
   ['Положение', '408-П', '25 Oct 2013', "Положение о порядке оценки соответствия квалификационным требованиям и требованиям к деловой репутации лиц, указанных в статье 11.1 Федерального закона \"О банках и банковской деятельности\" и статье 60 Федерального закона \"О Центральном банке Российской Федерации (Банке России)\", и порядке ведения базы данных, предусмотренной статьей 75 Федерального закона \"О Центральном банке Российской Федерации (Банке России)\r\n", '', 'ЦБ РФ', '', 'Действует', ''],
@@ -353,6 +376,7 @@ puts 'metrics created'
 end
 puts 'Directives created'
 # rubocop:enable Metrics/LineLength
+# rubocop:enable Metrics/ParameterLists
 
 # documents
 Array.new(100) do |_i|
@@ -371,37 +395,38 @@ Array.new(100) do |_i|
     name: Faker::Lorem.sentence,
     description: Faker::Lorem.sentence,
     status: status,
-    owner_id: User.limit(1).order('RANDOM()').first.id,
-    responsible: User.limit(1).order('RANDOM()').first.id,
+    owner_id: User.pluck(:id).sample,
+    responsible: User.pluck(:id).sample,
     dlevel: rand(1..4),
     note: note,
-    bproce_id: Bproce.limit(1).order('RANDOM()').first.id,
+    bproce_id: Bproce.pluck(:id).sample,
     approved: approved,
     approveorgan: approveorgan,
     place: "Папка#{rand(10)}"
   )
   next unless Document.last
+
   document_id = Document.last&.id
-  directive_id = Directive.limit(1).order('RANDOM()').first.id
+  directive_id = Directive.pluck(:id).sample
   unless DocumentDirective.where(document_id: document_id).where(directive_id: directive_id).any?
     DocumentDirective.create!(
       directive_id: directive_id,
       document_id: document_id
     )
   end
-  directive_id = Directive.limit(1).order('RANDOM()').first.id
+  directive_id = Directive.pluck(:id).sample
   unless DocumentDirective.where(document_id: document_id).where(directive_id: directive_id).any?
     DocumentDirective.create!(directive_id: directive_id, document_id: document_id, note: Faker::Lorem.sentence(1)) if rand(20) == 1
   end
-  BproceDocument.create!(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, document_id: document_id)
+  BproceDocument.create!(bproce_id: Bproce.pluck(:id).sample, document_id: document_id)
   # rubocop:disable Metrics/LineLength
-  BproceDocument.create!(bproce_id: Bproce.limit(1).order('RANDOM()').first.id, document_id: document_id, purpose: Faker::Lorem.sentence(1)) if rand(20) == 1
+  BproceDocument.create!(bproce_id: Bproce.pluck(:id).sample, document_id: document_id, purpose: Faker::Lorem.sentence(1)) if rand(20) == 1
   # rubocop:enable Metrics/LineLength
 end
 puts 'documents created'
 
 def create_user_letter(letter_id, user_id = nil)
-  user_id ||= User.limit(1).order('RANDOM()').first.id
+  user_id ||= User.pluck(:id).sample
   UserLetter.create(
     user_id: user_id,
     letter_id: letter_id,
@@ -424,7 +449,7 @@ Array.new(300) do |_l|
   regnumber = nil
   regdate = nil
   if in_out == 2
-    letter_id = Letter.limit(1).order('RANDOM()').first.id if status == 90 && rand(5).zero?
+    letter_id = Letter.pluck(:id).sample if status == 90 && rand(5).zero?
     max_reg_number = Letter.where('in_out = 2').maximum(:regnumber).to_i
     regnumber = max_reg_number + 1 # next registration number for current year and directiom
     regdate = Faker::Date.backward(rand(200))
@@ -438,7 +463,7 @@ Array.new(300) do |_l|
     source: %w[курьер почта email портал][rand(4)],
     sender: sender,
     duedate: duedate,
-    author_id: User.limit(1).order('RANDOM()').first.id,
+    author_id: User.pluck(:id).sample,
     in_out: in_out,
     regnumber: regnumber,
     regdate: regdate,
@@ -453,13 +478,13 @@ Array.new(300) do |_l|
   end
   case status
   when 10 # на исполнении
-    user = User.limit(1).order('RANDOM()').first
+    user = User.pluck(:id).sample
     create_user_letter(letter.id, user.id)
     letter.result = "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{user.displayname} - " + Faker::Lorem.sentence
   when 90 # завершено
     letter.completion_date = letter.duedate - rand(10) if rand(5) == 1
     letter.completion_date = letter.duedate + rand(10) if rand(3) == 1
-    user = User.limit(1).order('RANDOM()').first
+    user = User.pluck(:id).sample
     create_user_letter(letter.id, user.id)
     # rubocop:disable Metrics/LineLength
     letter.result = "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{user.displayname} - " + Faker::Lorem.sentence
@@ -472,7 +497,7 @@ puts 'Letters created'
 
 # requirements
 def create_user_requirement(requirement_id, user_id = nil)
-  user_id ||= User.limit(1).order('RANDOM()').first.id
+  user_id ||= User.pluck(:id).sample
   UserRequirement.create(
     user_id: user_id,
     requirement_id: requirement_id,
@@ -485,7 +510,7 @@ Array.new(20) do |_l|
   duedate = date + 7 + rand(9)
   status = [0, 5, 9, 15, 15, 15, 15, 15, 15, 90, 90, 90, 90, 90, 90][rand(15)]
   if rand(7) == 1
-    letter_id = Letter.limit(1).order('RANDOM()').first.id
+    letter_id = Letter.pluck(:id).sample
     source = nil
   else
     letter_id = nil
@@ -498,7 +523,7 @@ Array.new(20) do |_l|
     status: status,
     source: source,
     body: Faker::Lorem.sentences.join(''),
-    author_id: User.pluck(:id).shuffle.first,
+    author_id: User.pluck(:id).sample,
     letter_id: letter_id
   )
   requirement = Requirement.last
@@ -513,7 +538,7 @@ end
 puts 'Requirements created'
 # tasks
 def create_user_task(task_id, user_id = nil)
-  user_id ||= User.limit(1).order('RANDOM()').first.id
+  user_id ||= User.pluck(:id).sample
   UserTask.create(user_id: user_id, task_id: task_id, status: rand(2))
 end
 
@@ -523,11 +548,11 @@ Array.new(100) do |_l|
   completion_date = date + rand(30)
   status = [0, 5, 20, 50, 50, 50, 50, 50, 90, 90, 90, 90, 90, 90, 90][rand(15)]
   if rand(5) == 1
-    letter_id = Letter.limit(1).order('RANDOM()').first.id
+    letter_id = Letter.pluck(:id).sample
     requirement_id = nil
   else
     letter_id = nil
-    requirement_id = (Requirement.limit(1).order('RANDOM()').first.id if rand(5) == 1)
+    requirement_id = (Requirement.pluck(:id).sample if rand(5) == 1)
   end
   task = Task.create(
     name: Faker::Lorem.words(rand(2..7)).join(' '),
@@ -536,7 +561,7 @@ Array.new(100) do |_l|
     completion_date: completion_date,
     status: status,
     description: Faker::Lorem.sentences.join(''),
-    author_id: User.pluck(:id).shuffle.first,
+    author_id: User.pluck(:id).sample,
     letter_id: letter_id,
     requirement_id: requirement_id
   )
@@ -573,9 +598,11 @@ Bapp.create(name: '1С:Бухгалтерия.Склад', description: '1С:Б�
 Bapp.create(name: '1С:Бухгалтерия.Кадры', description: '1С:Бухгалтерия. Учет кадров', apptype: 'бух')
 15.times do |_bapp|
   BproceBapp.create!(
-    bproce_id: Bproce.pluck(:id).shuffle.first,
-    bapp_id: Bapp.pluck(:id).shuffle.first,
+    bproce_id: Bproce.pluck(:id).sample,
+    bapp_id: Bapp.pluck(:id).sample,
     apurpose: Faker::Lorem.sentence(1)
   )
 end
 puts 'applications created'
+# rubocop:enable Rails/Output
+# rubocop:enable Metrics/BlockLength
