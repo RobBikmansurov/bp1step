@@ -51,23 +51,23 @@ class DocumentsController < ApplicationController
         @documents = @documents.where(dlevel: params[:dlevel])
         @title_doc += " уровень [#{params[:dlevel]}]: #{DOCUMENT_LEVEL.key(params[:dlevel].to_i)}"
       else
-        if params[:part].present? #  список документов раздела документооборота
+        if params[:part].present? #  список документов раздела документооборота # rubocop:disable Style/IfInsideElse
           @documents = @documents.where(part: params[:part])
           @title_doc += " раздела [#{params[:part]}]"
         elsif params[:user].present? #  список документов пользователя
           @user = User.find(params[:user])
           @documents = Document.where(owner_id: params[:user])
-          @title_doc += ', ответственный [' + @user.displayname + ']' if @user
+          @title_doc += ", ответственный [#{@user&.displayname}]"
         else
-          if params[:tag].present?
+          if params[:tag].present? # rubocop:disable Metrics/BlockNesting
             @title_doc += ", тэг [#{params[:tag]}]"
             @documents = @documents.tagged_with(params[:tag]).search(params[:search])
           end
-          if params[:search].present?
+          if params[:search].present? # rubocop:disable Metrics/BlockNesting
             @title_doc += ", содержащих [#{params[:search]}]"
             @documents = @documents.full_search(params[:search])
           end
-          if params[:status].present? #  список документов, имеющих конкретный статус
+          if params[:status].present? #  список документов, имеющих конкретный статус # rubocop:disable Metrics/BlockNesting
             @documents = @documents.status(params[:status])
             @title_doc += " в статусе [#{params[:status]}]"
           end
@@ -277,7 +277,7 @@ class DocumentsController < ApplicationController
       # @title_doc = '' if !@title_doc
       @title_doc += '  стр.' + params[:page] if params[:page].present?
       r.add_field 'REPORT_TITLE', @title_doc
-      r.add_table('TABLE_01', @documents, header: true) do |t|
+      r.add_table('TABLE_01', @documents, header: true) do |t| # rubocop:disable Metrics/BlockLength
         t.add_column(:nn) do |_ca|
           nn += 1
           "#{nn}."

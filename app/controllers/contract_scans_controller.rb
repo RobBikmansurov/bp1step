@@ -2,8 +2,8 @@
 
 class ContractScansController < ApplicationController
   respond_to :html
-  before_action :authenticate_user!, only: %i[edit new]
-  before_action :set_contract_scan, only: %i[show edit update destroy]
+  before_action :authenticate_user!, only: :edit
+  before_action :set_contract_scan, only: %i[edit update destroy]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def edit

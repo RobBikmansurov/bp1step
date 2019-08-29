@@ -34,7 +34,8 @@ module ApplicationHelper
 
   def markdown_and_link(text, business_roles)
     business_roles&.each do |business_role| # заменим названия роли на ссылку
-      text.gsub!(/(^|\s|^\s)#{business_role.name}($|\s|\.|,)/, ' <a href="/business_roles/' + business_role.id.to_s + '">' + business_role.name + '</a> ')
+      role_link = "<a href=\"/business_roles/#{business_role.id}\"> #{business_role.name} </a>"
+      text.gsub!(/(^|\s|^\s)#{business_role.name}($|\s|\.|,)/, role_link)
     end
     text.gsub!(/\r\n?/, "\n")                       # \r\n and \r => \n
     text = "<p>#{text.gsub(/\n\n\s*/, '</p><p>')}"  # 2 newline   => p
@@ -43,12 +44,12 @@ module ApplicationHelper
   end
 
   def add_link_from_id(text, route)
-    if text
-      aid = text.match('(^|\s|^\s)#([1-9]\d+)($|\s|\.|,)') # ищем ID в тексте
-      text.gsub!(/#{aid[0]}/, ' <a href="/' + route + '/' + aid[2] + '">' + aid[0].strip + '</a> ') if aid
-      text.gsub!(/\r\n?/, "\n")                       # \r\n and \r => \n
-      text.gsub!(/([^\n]\n)(?=[^\n])/, '\1<br />')    # 1 newline   => br
-    end
+    return '' unless text
+
+    aid = text.match('(^|\s|^\s)#([1-9]\d+)($|\s|\.|,)') # ищем ID в тексте
+    text.gsub!(/#{aid[0]}/, ' <a href="/' + route + '/' + aid[2] + '">' + aid[0].strip + '</a> ') if aid
+    text.gsub!(/\r\n?/, "\n")                       # \r\n and \r => \n
+    text.gsub!(/([^\n]\n)(?=[^\n])/, '\1<br />')    # 1 newline   => br
     text
   end
 
@@ -75,7 +76,7 @@ module ApplicationHelper
   def red_text(text, condition)
     return text unless condition
 
-    raw("<span style='color: red;'>#{text}</span>")
+    raw("<span style='color: red;'>#{text}</span>") # rubocop:disable Rails/OutputSafety
   end
 
   def days_left_as_text(duedate, alarm)

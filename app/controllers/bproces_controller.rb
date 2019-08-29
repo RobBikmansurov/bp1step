@@ -9,9 +9,9 @@ class BprocesController < ApplicationController
   # caches_page :show, :new
 
   respond_to :html
-  respond_to :pdf, :xml, :json, only: %i[index list]
+  respond_to :pdf, :xml, :json, only: :index
   helper_method :sort_column, :sort_direction
-  before_action :set_bproce, except: %i[index list manage autocomplete]
+  before_action :set_bproce, except: %i[index manage autocomplete]
   before_action :authenticate_user!, only: %i[edit create update]
 
   def index
@@ -315,7 +315,7 @@ class BprocesController < ApplicationController
     report.add_table('TABLE_DOCS', documents, header: header, skip_if_empty: true) do |t|
       if documents.any? # если документов нет - пустая таблица не будет выведена
         t.add_column(:nn) { |_ca| nn += 1 } # порядковый номер строки таблицы
-        t.add_column(:nd) { |document| ndoc = document.name }
+        t.add_column(:nd, &:name)
         t.add_column(:idd, &:id)
         t.add_column(:status_doc, &:status)
         t.add_column(:approved) { |document| document.approved&.strftime('%d.%m.%Y') }
@@ -331,7 +331,7 @@ class BprocesController < ApplicationController
     report.add_table('TABLE_BAPPS', @bapps, header: header, skip_if_empty: true) do |t|
       if @bapps.any? # если приложений нет - пустая таблица не будет выведена
         t.add_column(:pp) { |_nn| pp += 1 } # порядковый номер строки таблицы
-        t.add_column(:na) { |ba| ba.bapp&.name } # наименование прилоджения
+        t.add_column(:na) { |ba| ba.bapp&.name } # наименование приложения
         t.add_column(:adescription) { |ba| ba.bapp&.description }
         t.add_column(:apurpose)
       end
@@ -349,7 +349,8 @@ class BprocesController < ApplicationController
         t.add_column(:contract_name) { |contract| "#{contract.contract_type} #{contract.name}" }
         t.add_column(:contract_date) do |contract|
           c_date = " #{contract.status}" if contract.status
-          c_date = c_date + ' от ' + contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
+          c_date ||= ' от ' + contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
+          c_date
         end
         t.add_column(:agent_name) { |contract| "с #{contract.agent&.name}" }
       end
@@ -364,10 +365,10 @@ class BprocesController < ApplicationController
     report.add_table('IRESOURCES', @iresources, header: header, skip_if_empty: true) do |t|
       if @iresources.any? # если инф.ресурсов нет - пустая таблица не будет выведена
         t.add_column(:ir) { |_nn| ir += 1 } # порядковый номер строки таблицы
-        t.add_column(:label) { |ir| ir.iresource.label }
-        t.add_column(:location) { |ir| ir.iresource.location }
-        t.add_column(:alocation) { |ir| ir.iresource.alocation }
-        t.add_column(:note) { |ir| ir.iresource.note }
+        t.add_column(:label) { |ir| ir.iresource.label } # rubocop:disable Lint/ShadowingOuterLocalVariable
+        t.add_column(:location) { |ir| ir.iresource.location } # rubocop:disable Lint/ShadowingOuterLocalVariable
+        t.add_column(:alocation) { |ir| ir.iresource.alocation } # rubocop:disable Lint/ShadowingOuterLocalVariable
+        t.add_column(:note) { |ir| ir.iresource.note } # rubocop:disable Lint/ShadowingOuterLocalVariable
         t.add_column(:rpurpose)
       end
     end
@@ -418,7 +419,7 @@ class BprocesController < ApplicationController
           t.add_column(:sp) { |_ca| sp += 1 } # порядковый номер строки таблицы
           t.add_column(:spname) { |sub| '__' * (sub.depth - @bproce.depth) + " [#{sub.shortname}] #{sub.name}" }
           t.add_column(:sp_id, &:id)
-          t.add_column(:spowner) { |sp| sp.user&.displayname }
+          t.add_column(:spowner) { |sp| sp.user&.displayname } # rubocop:disable Lint/ShadowingOuterLocalVariable
         end
       end
       roles = if @bproce.business_roles.any?

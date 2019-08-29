@@ -48,3 +48,5 @@
   = link_to 'Распоряжение', order_user_path(@usr), class: :button
   = link_to 'Пропуск', pass_user_path(@usr), class: :button
 = link_to 'Официальное письмо', create_letter_home_path(@usr), class: :button
+.info_
+  = @usr.updated_at.strftime("%d.%m.%Y %H:%M:%S")

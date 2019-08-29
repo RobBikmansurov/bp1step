@@ -50,7 +50,7 @@ class ContractsController < ApplicationController
           @contracts = Contract.where(contract_type: params[:type])
           @title_doc += ' тип [' + params[:type] + ']'
         elsif params[:place].present? # список договоров, хранящихся в конкретном месте
-          if params[:place].empty?
+          if params[:place].empty? # rubocop:disable Metrics/BlockNesting
             @contracts = Contract.where('contract_place = ""')
             @title_doc += ' место хранения оригинала [не указано]'
           else
@@ -66,8 +66,8 @@ class ContractsController < ApplicationController
           @contracts = Contract.where(payer_id: params[:payer])
           @title_doc += ' ответственный за оплату [' + @user.displayname + ']'
         else
-          @title_doc += " поиск [#{params[:search]}]" if params[':search'].present?
-          @contracts = if sort_column == 'lft'
+          @title_doc += " поиск [#{params[:search]}]" if params[':search'].present? # rubocop:disable Metrics/BlockNesting
+          @contracts = if sort_column == 'lft' # rubocop:disable Metrics/BlockNesting
                          Contract.search(params[:search]).order(:lft).paginate(per_page: 10, page: params[:page])
                        else
                          Contract.search(params[:search])
@@ -208,10 +208,8 @@ class ContractsController < ApplicationController
   private
 
   def print
-    report = ODFReport::Report.new('reports/contracts.odt') do |r| # rubocop:disable Metrics/BlockLength
+    report = ODFReport::Report.new('reports/contracts.odt') do |r|
       nn = 0 # порядковый номер документа
-      nnp = 0
-      first_part = 0 # номер раздела для сброса номера документа в разделе
       @title_doc ||= ''
       @title_doc += '  стр.' + params[:page] if params[:page].present?
       r.add_field 'REPORT_TITLE', @title_doc

@@ -3,14 +3,14 @@
 class DocumentDirectivesController < ApplicationController
   respond_to :html, :json, :js
   before_action :authenticate_user!, only: %i[edit new create update]
-  before_action :get_document_directive, except: :index
+  before_action :set_document_directive, except: :index
 
   def index
     @document_directives = DocumentDirective.paginate(per_page: 10, page: params[:page])
   end
 
   def show
-    redirect_to(directive_path(@document_directive.directive_id)) && return
+    redirect_to directive_path(@document_directive.directive_id)
   end
 
   def new
@@ -31,7 +31,7 @@ class DocumentDirectivesController < ApplicationController
     respond_to do |format|
       if @document_directive.save
         if params[:document_directive][:to_directive].present?
-          puts "===\nto_directive"
+          # puts "===\nto_directive"
           @directive = Directive.find(@document_directive.directive_id)
           format.html { redirect_to directive_path(@directive), notice: 'Document directive was successfully created.' }
           # format.html { render @directive, action: :show}
@@ -72,7 +72,7 @@ class DocumentDirectivesController < ApplicationController
     end
   end
 
-  def get_document_directive
+  def set_document_directive
     @document_directive = params[:id].present? ? DocumentDirective.find(params[:id]) : DocumentDirective.new
   end
 

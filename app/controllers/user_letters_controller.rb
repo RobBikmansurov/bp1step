@@ -49,5 +49,5 @@ class UserLettersController < ApplicationController
   def user_letter_params
     params.require(:user_letter)
           .permit(:user_id, :letter_id, :status, :user_name)
-end
+  end
 end
