@@ -32,7 +32,7 @@ gem 'simple_form'
 gem 'the_sortable_tree', '>= 2.4.0'
 # gem "paperclip", git: "git://github.com/thoughtbot/paperclip.git"
 gem 'acts-as-taggable-on'
-gem "chartkick"
+gem 'chartkick'
 gem 'groupdate'
 gem 'jcrop-rails-v2'
 # gem 'pdf-reader'
@@ -51,8 +51,8 @@ gem 'actionpack-page_caching' # кеширование
 gem 'faker'
 
 gem 'loofah' # , '>= 2.2.3'
-gem 'rack' #, '>= 2.0.6'
 gem 'nokogiri', '>= 1.10.4'
+gem 'rack' # , '>= 2.0.6'
 
 group :development do
   gem 'better_errors'
@@ -89,10 +89,10 @@ group :test do
 end
 
 group :development, :test do
-  gem 'selenium-webdriver'
   gem 'factory_bot_rails'
   gem 'rspec-rails'
   gem 'rubocop', require: false
   gem 'rubocop-rspec', require: false
   gem 'rubycritic', require: false
+  gem 'selenium-webdriver'
 end

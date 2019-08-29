@@ -104,7 +104,7 @@ class MetricsController < ApplicationController
     @next_period_date = nil if @next_period_date == (Time.current.end_of_month + 1)
     values = MetricValue.where(metric_id: @metric.id)
     @values = case @metric.depth # список значений за выбранный период
-              when 1..2 then
+              when 1..2
                 values.where(dtime: (@current_period_date.beginning_of_year..@current_period_date.end_of_year)).order(:dtime)
               else
                 values.where(dtime: (@current_period_date.beginning_of_month..@current_period_date.end_of_month)).order(:dtime)
@@ -160,10 +160,10 @@ class MetricsController < ApplicationController
         @test << row.inspect
         @test_value = row['count']
       end
-    rescue StandardError => error
+    rescue StandardError => e
       logger.info "      ERR: #{@sql}"
       @test << "ERR: #{@sql}\n"
-      @test << error.inspect
+      @test << e.inspect
     ensure
       mssql&.close
     end
@@ -219,12 +219,12 @@ class MetricsController < ApplicationController
           results.each do |row|
             new_value = row['count']
           end
-        rescue StandardError => error
-          logger.error "      ERR: #{sql}\n#{error}"
+        rescue StandardError => e
+          logger.e "      ERR: #{sql}\n#{e}"
         end
         if new_value&.positive?
           update_or_create_value @metric, new_value, Time.at.utc(d)
-          logger.error "#{@metric.id} #{value.errors}" unless value.save
+          logger.e "#{@metric.id} #{value.es}" unless value.save
         end
       end
       mssql&.close
