@@ -260,7 +260,8 @@ class MetricsController < ApplicationController
   def update_or_create_value(metric, new_value, time_at = Time.current)
     return unless new_value&.positive?
 
-    value = MetricValue.where(metric_id: metric.id).where("dtime BETWEEN #{metric.period_format_pg}").first
+    period = "dtime BETWEEN #{metric.period_format_pg}"
+    value = MetricValue.where(metric_id: metric.id).where(period).first
     value ||= MetricValue.new(metric_id: metric.id) # не нашли? - новое значение
     value.value = new_value
     value.dtime = time_at

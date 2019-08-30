@@ -18,9 +18,9 @@ before_script:
   - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
   - sed -i 's/before_save :ldap_email/# before_save :ldap_email/g' app/models/user.rb
 script:
-  - bundle exec rails db:migrate db:seed RAILS_ENV=test
+  - bundle exec rails db:migrate RAILS_ENV=test
   - bundle exec rspec --exclude-pattern "spec/features/*_spec.rb"
-
+  - bundle exec rails db:seed RAILS_ENV=test # test seeding
 
   - bundle exec codeclimate-test-reporter
 branches:
