@@ -17,7 +17,7 @@ gem 'jquery-ui-rails', '5.0.5'
 
 gem 'alphabetical_paginate'
 gem 'cancancan', '~> 2.2'
-gem 'devise', '~> 4.6.1' # , git: "https://github.com/plataformatec/devise"
+gem "devise", ">= 4.7.1"
 gem 'devise_ldap_authenticatable'
 gem 'will_paginate', '~> 3.0'
 # gem 'execjs'

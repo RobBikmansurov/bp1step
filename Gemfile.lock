@@ -135,10 +135,10 @@ GEM
     debug_inspector (0.0.3)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
-    devise (4.6.2)
+    devise (4.7.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
-      railties (>= 4.1.0, < 6.0)
+      railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
     devise_ldap_authenticatable (0.8.6)
@@ -455,7 +455,7 @@ DEPENDENCIES
   codecov
   coffee-rails
   database_cleaner
-  devise (~> 4.6.1)
+  devise (>= 4.7.1)
   devise_ldap_authenticatable
   exception_notification
   factory_bot_rails
