@@ -8,15 +8,16 @@ namespace :bp1step do
     logger = Logger.new('log/bp1step.log') # протокол работы
     logger.info '===== ' + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ' :letters_from_portal_cb'
 
-    pathfrom =  Rails.root.join('portal5', 'in') # папка, куда выгружает информацию наш загрузчик с Портала Банка России
+    pathfrom =  Rails.root.join(Rails.configuration.x.letters.path_to_portal, 'in') # папка, куда выгружает информацию наш загрузчик с Портала Банка России
     logger.info pathfrom.to_s
 
     # .select {|entry| File.directory? File.join('/your_dir',entry) and !(entry =='.' || entry == '..') }
     dirs = 0
     Dir.entries(pathfrom).each do |entry|
       next if ['..', '.'].include? entry
+      next unless File.directory? pathfrom.join(entry) # process only directories
 
-      check_directory pathfrom.join(entry) if File.directory? pathfrom.join(entry) # process only directories
+      check_directory pathfrom.join(entry)
       dirs += 1
     end
     logger.info "      #{dirs} directories processed"
@@ -56,7 +57,7 @@ namespace :bp1step do
     file_name = file['Name']
     return if file_name.downcase.start_with? 'список рассылки'
 
-    path_from = Rails.root.join('portal5', 'in', message_id)
+    path_from = Rails.root.join(ails.configuration.x.letters.path_to_portal, 'in', message_id)
     letter_appendix = LetterAppendix.new(letter_id: letter_id)
     File.open path_from.join(file_name) do |f|
       letter_appendix.appendix = f
