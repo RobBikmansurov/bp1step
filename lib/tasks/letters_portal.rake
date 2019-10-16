@@ -37,7 +37,7 @@ namespace :bp1step do
 
     json_file = File.read(json_file_name)
     json = JSON.parse json_file
-    letter = Letter.new(status: 0, number: json['RegNumber'], sender: get_sender(name), subject: json['Text'], source: 'Портал БР')
+    letter = Letter.new(status: 0, number: json['RegNumber'], sender: get_sender(name), subject: json['Text'][0..199], source: 'Портал5 БР')
     letter.date = Date.parse json['CreationDate'] || Time.current
     letter.duedate = (Time.current + 10.days).strftime('%d.%m.%Y') # срок исполнения - даем 10 дней по умолчанию
     letter_files = json['Files']
