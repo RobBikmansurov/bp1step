@@ -57,7 +57,7 @@ namespace :bp1step do
     file_name = file['Name']
     return if file_name.downcase.start_with? 'список рассылки'
 
-    path_from = Rails.root.join(ails.configuration.x.letters.path_to_portal, 'in', message_id)
+    path_from = Rails.root.join(Rails.configuration.x.letters.path_to_portal, 'in', message_id)
     letter_appendix = LetterAppendix.new(letter_id: letter_id)
     File.open path_from.join(file_name) do |f|
       letter_appendix.appendix = f
