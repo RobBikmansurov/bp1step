@@ -43,4 +43,6 @@ BPDoc::Application.configure do
   config.eager_load = false
   config.log_level = :debug
 
+  config.x.letters.path_to_portal = 'portal'
+
 end

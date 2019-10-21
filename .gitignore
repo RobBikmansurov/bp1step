@@ -31,3 +31,4 @@ mount-bp1step
 test*
 doc/
 REVISION
+bin/*
