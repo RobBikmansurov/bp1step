@@ -43,18 +43,20 @@ namespace :bp1step do
       next unless File.file? directory_name.join(message_id + '.json') # отсутствует сообщение
       next unless File.file? directory_name.join(message_id + '.bp1step') # папка не обработана BP1Step
 
+      letter = nil
       File.open directory_name.join(message_id + '.bp1step') do |f|
         letter = Letter.where(id: f.gets).first
-        next unless letter
-
-        if letter.created_at < Date.today - 6.days
-          Dir.each_child(directory_name) { |file| File.delete directory_name.join(file) }
-          Dir.delete directory_name
-          deleted_dirs += 1
-        end
       end
 
-      dirs += 1
+      next unless letter
+
+      next unless letter.created_at < Date.today - 6.days
+
+      Dir.each_child(directory_name) { |file| File.delete directory_name.join(file) }
+      Dir.each_child(directory_name) { |file| p file }
+      Dir.entries(directory_name)
+      deleted_dirs += 1
+      Dir.delete directory_name
     end
     logger.info "      #{dirs} directories processed, #{deleted_dirs} old directories deleted"
   end
