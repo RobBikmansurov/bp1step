@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 PublicActivity.enabled = false
-# rubocop:disable Rails/Output
 # rubocop:disable Metrics/BlockLength
 
 # access roles
@@ -46,20 +45,21 @@ user4 = User.create(displayname: 'Сидоров С.С.', username: 'sidorov', e
                     password: 'sidorov', firstname: 'Сидор', middlename: 'Сидорович', lastname: 'Сидоров')
 user4.roles << Role.find_by(name: :author)
 
-user5 = User.create(displayname: 'Путин В.В.', username: 'putinx',
+user5 = User.create(displayname: 'Путин В.В.', username: 'putinx', lastname: 'Х',
                     email: 'putinx@example.com', password: 'putinx', department: 'Библиотека',
                     position: 'Юрист', office: '201', phone: '2201')
 user5.roles << Role.find_by(name: :keeper)
 user5.roles << Role.find_by(name: :user)
 
-user6 = User.create(displayname: 'Кудрин А.В.', username: 'kudrin',
+user6 = User.create(displayname: 'Кудрин А.Л.', username: 'kudrin', lastname: 'Леонидович',
                     email: 'kudrin@example.com', password: 'kudrin', position: 'Финансист')
 user6.roles << Role.find_by(name: :author)
 user6.roles << Role.find_by(name: :owner)
 user6.roles << Role.find_by(name: :analitic)
 user6.roles << Role.find_by(name: :security)
 
-user7 = User.create(displayname: 'Яровая И.Й.', username: 'shapoklyak', email: 'shapoklyak@example.com',
+user7 = User.create(displayname: 'Яровая И.А.', username: 'shapoklyak', email: 'shapoklyak@example.com',
+                    lastname: 'Анатольевна',
                     password: 'shapoklyak', phone: '8-800-0001234', position: 'старший менеджер')
 user7.roles << Role.find_by(name: :secretar)
 user7.roles << Role.find_by(name: :author)
@@ -455,7 +455,7 @@ Array.new(300) do |_l|
     regdate = Faker::Date.backward(rand(200))
   end
   sender = "#{Faker::Company.suffix} #{Faker::Company.name}" unless rand(5).zero? # new sender
-  Letter.create!(
+  letter = Letter.create!(
     number: number,
     date: date,
     subject: Faker::Lorem.sentence(4),
@@ -470,7 +470,6 @@ Array.new(300) do |_l|
     letter_id: letter_id,
     body: Faker::Lorem.sentence
   )
-  letter = Letter.last
   if status.positive?
     create_user_letter(letter.id)
     create_user_letter(letter.id) if rand(3) == 1
@@ -478,9 +477,9 @@ Array.new(300) do |_l|
   end
   user_id = User.pluck(:id).sample
   user = User.find(user_id) || User.first
+  create_user_letter(letter.id, user.id)
   case status
   when 10 # на исполнении
-    create_user_letter(letter.id, user.id)
     letter.result = "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{user.displayname} - " + Faker::Lorem.sentence
   when 90 # завершено
     letter.completion_date = letter.duedate - rand(10) if rand(5) == 1
@@ -603,5 +602,5 @@ Bapp.create(name: '1С:Бухгалтерия.Кадры', description: '1С:Б�
   )
 end
 puts 'applications created'
-# rubocop:enable Rails/Output
+
 # rubocop:enable Metrics/BlockLength

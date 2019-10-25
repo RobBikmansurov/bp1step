@@ -25,6 +25,8 @@ public/*
 coverage/*
 bp1step.store/*
 store/*
+portal/*
+svk_in/*
 .sass-cache/*
 mount-bp1step
 .rvmrc

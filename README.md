@@ -54,7 +54,7 @@ Demo: [bp1step.herokuapp.com](https://bp1step.herokuapp.com/about) - без вх
 
 Ваша **цель** - понять что делается на предприятии и начать работу по **улучшению процессов**.
 
-###Права доступа
+### Права доступа
 
 Объем доступа задается ролями, у пользователя может быть несколько ролей:
 
@@ -72,35 +72,28 @@ Demo: [bp1step.herokuapp.com](https://bp1step.herokuapp.com/about) - без вх
 
 *  Хранитель - отвечает за хранение бумажных оригиналов, изменяет место хранения документа или договора
 
-##Getting Started#
 
->sudo apt-get install unoconv
+## Getting started
 
-Загрузите проект 
+### Install
 
->git clone https://github.com/RobBikmansurov/BPDoc
+Development environment requirements :
+- [Ruby](https://www.ruby-lang.org/en/) >= 2.6.3
+- [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
 
->cd BPDoc
+```bash
+$ git clone git@github.com:RobBikmansurov/bp1step.git
+$ cd bp1step
+$ bundle
+$ docker-compose up -d
+$ rake db:setup
+$ bundle exec rails s
+```
 
->rake app:update:bin
+Now you can access the application with your browser on: http://localhost:3000
 
-Настройте доступ к БД, в тестовом примере используется SQLite3.
-Достаточно просто скопировать config/database.yml.example в config/database.yml
 
->cp config/database.yml{.example,} 
-
-Замечу, что при использовании SQLite не будет работать поиск и
-autocomlete. Для решения этой проблемы можно исправить команды SQL ILIKE на LIKE в методах autocomplete в контроллерах и search в моделях.
-
-Например в app/models/user.rb:
-
-      where('username ILIKE ? or displayname ILIKE ?', "%#{search}%", "%#{search}%")
-
-заменить на:
-
-      where('username LIKE ? or displayname LIKE ?', "%#{search}%", "%#{search}%")
-
-##PostgreSQL install##
+## PostgreSQL install
 sudo su postgres
 psql
 postgres=# create role bp1step with createdb login password 'pgbp1step';
@@ -128,23 +121,21 @@ postgres=# \l
 
 Далее в браузере http://localhost:3000
 
-##Testing#
+## Testing
 
->rspec spec/models/
->rspec spec/routing/
->rspec spec/requests/
+>rspec
 
 Автор будет безмерно благодарен за отзывы и помощь в написании тестов для Rspec.
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/storage/fork )
+1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
 
-##License#
+## License #
 MIT
  see in LICENSE file.
 
