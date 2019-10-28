@@ -69,5 +69,7 @@ BPDoc::Application.configure do
   Paperclip.options[:command_path] = "/usr/bin/"
 
   config.eager_load = true
+  config.x.letters.path_to_portal = 'portal'
+  config.x.letters.path_to_rps = 'svk_in'
 
 end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 namespace :bp1step do
   desc 'Create Letters from files in  SVK'
   # создание новых писем из файов в каталоге СВК
@@ -11,11 +12,11 @@ namespace :bp1step do
     nn = 0
     nf = 0
     files_copied = 0
-    pathfrom =  Rails.root.join('..', '..', 'svk_in') # current/ = releases/YYYYMMDDHHMMSS/
-    logger.info pathfrom.to_s
+    path_from_rps = Rails.root.join(Rails.configuration.x.letters.path_to_rps)
+    logger.info path_from_rps.to_s
 
     # обход всех файлов в каталоге с файлами для писем
-    Dir.glob(pathfrom.join('*.*')).each do |file|
+    Dir.glob(path_from_rps.join('*.*')).each do |file|
       nf += 1
       ext = File.extname(file).upcase
       fname = File.basename(file)                   # расширение файла
@@ -103,10 +104,12 @@ namespace :bp1step do
       end
 
       next if l_number.blank? # удалось идентифицировать файл
+
       letter = Letter.new(status: 0, number: l_number, sender: l_sender, subject: l_subject, source: l_source)
       letter.date = Time.current.strftime('%d.%m.%Y')
       letter.duedate = (Time.current + 10.days).strftime('%d.%m.%Y') # срок исполнения - даем 10 дней по умолчанию
       next unless letter.save! # письмо создали, теперь присоедним файл
+
       nn += 1
       logger.info "##{letter.id} #{name}: \t№#{l_number}\t[#{l_subject}]"
       letter_appendix = LetterAppendix.new(letter_id: letter.id)
@@ -136,6 +139,7 @@ namespace :bp1step do
       users = ''
       letter.user_letter.each do |user_letter| # исполнители
         next unless user_letter.user
+
         emails += ', ' if emails.present?
         emails += user_letter.user.email.to_s
         users += user_letter.user.displayname.to_s
@@ -159,12 +163,12 @@ namespace :bp1step do
   task check_files: :environment do
     nn = 0
     nf = 0
-    pathfrom = Rails.root.join('..', '..', 'svk_in') # current/ = releases/YYYYMMDDHHMMSS/
-    # pathfrom =  Rails.root.join('svk_in') # current/ = releases/YYYYMMDDHHMMSS/
-    puts pathfrom.to_s
+    path_from_rps = Rails.root.join(Rails.configuration.x.letters.path_to_rps)
+    # path_from_rps =  Rails.root.join('svk_in') # current/ = releases/YYYYMMDDHHMMSS/
+    puts path_from_rps.to_s
 
     # обход всех файлов в каталоге с файлами для писем
-    Dir.glob(pathfrom.join('*.*')).each do |file|
+    Dir.glob(path_from_rps.join('*.*')).each do |file|
       nf += 1
       ext = File.extname(file).upcase
       fname = File.basename(file).upcase            # расширение файла
@@ -242,6 +246,7 @@ namespace :bp1step do
       end
 
       next if l_number.blank? # удалось идентифицировать файл
+
       letter = Letter.new(status: 0, number: l_number, sender: l_sender, subject: l_subject, source: l_source)
       letter.date = Time.current.strftime('%d.%m.%Y')
       letter.duedate = (Time.current + 10.days).strftime('%d.%m.%Y') # срок исполнения - даем 10 дней по умолчанию
@@ -259,3 +264,4 @@ namespace :bp1step do
     puts "All: #{nf} files, created #{nn} letters"
   end
 end
+# rubocop:enable Metrics/BlockLength

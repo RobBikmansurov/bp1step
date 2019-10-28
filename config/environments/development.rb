@@ -44,5 +44,6 @@ BPDoc::Application.configure do
   config.log_level = :debug
 
   config.x.letters.path_to_portal = 'portal'
+  config.x.letters.path_to_rps = 'svk_in'
 
 end

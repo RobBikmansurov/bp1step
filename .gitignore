@@ -34,3 +34,11 @@ test*
 doc/
 REVISION
 bin/*
+.gitlab-ci.yml.template
+.haml-lint_todo.yml
+class_eval_error.rb
+erd.pdf
+favicon.ico
+ldap-auth.txt
+ldap.rb
+node_modules/*
