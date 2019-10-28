@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe RequirementsController, type: :controller do
   let(:author) { create(:user) }
   let(:requirement) { create :requirement, author: author }
+  let(:requirement_created) { { label: 'label_created', author_id: author.id, status: 5 } }
   let(:valid_attributes) { { label: requirement.label, author_id: author.id, status: 5 } }
   let(:invalid_attributes) { { name: 'invalid value' } }
   let(:valid_session) { {} }
@@ -83,8 +84,10 @@ RSpec.describe RequirementsController, type: :controller do
       end
 
       it 'redirects to the created requirement' do
-        post :create, params: { requirement: valid_attributes }
-        expect(response).to redirect_to(Requirement.last)
+        post :create, params: { requirement: requirement_created }
+        requirement = Requirement.where(label: 'label_created').first
+        expect(response).to redirect_to requirement_path(requirement.id)
+
       end
     end
 
