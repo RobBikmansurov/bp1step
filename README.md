@@ -84,9 +84,11 @@ Development environment requirements :
 ```bash
 $ git clone git@github.com:RobBikmansurov/bp1step.git
 $ cd bp1step
-$ bundle
-$ docker-compose up -d
-$ rake db:setup
+$ docker-compose build
+$ docker-compose run web bundle install
+$ docker-compose run web rake db:create
+$ docker-compose run web rake db:setup
+$ docker-compose up
 $ bundle exec rails s
 ```
 
@@ -141,7 +143,4 @@ MIT
 
  Copyright &copy; 2012-2019 Rob Bikmansurov. All rights reserved.
  
- Author: Rob Bikmansurov, contacts: robb@mail.ru
-
-
- [Rob Bikmansurov](mailto:robb@mail.ru)
+ Author: [Rob Bikmansurov](https://bikmansurov.ru), contact: [Rob Bikmansurov](mailto:robb@mail.ru)

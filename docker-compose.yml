@@ -1,15 +1,29 @@
 # docker-compose.yml
-# docker-compose up -d
+# docker-compose build
+# docker-compose run web bundle install
+# docker-compose run web rake db:create
+# docker-compose run web rake db:setup
+# docker-compose up
+# docker-compose down
 version: '3'
 
 services:
   db:
     image: postgres:11-alpine
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_PASSWORD: secret
     volumes:
       - db-data:/var/lib/postgresql/data:cached
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /bin/bash -c "rm -f /tmp/server.pid && bundle exec rails server -b 0.0.0.0 -P /tmp/server.pid"
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    volumes:
+      - .:/app
 volumes:
   db-data:

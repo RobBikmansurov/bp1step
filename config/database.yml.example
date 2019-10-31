@@ -1,25 +1,38 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  pool: 5
-  username: bp1step
-  password: bp1step-password
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: db
+  port: 5432
+  database: bp1step
+  username: postgres
+  password: secret
 
 development:
+  database: bp1step-dev
   <<: *default
-  host: bp1step
-  database: bp1step
+
+test:
+  <<: *default
+  database: bp1step-test
 
 production:
   <<: *default
-  host:     postgres
-  database: bp1step
+  #url: <%= ENV['DATABASE_URL'] %>
+  host:     db
+  username: bp1step
+  password: secret
 
-test:
-  adapter: sqlite3
-  database: db/test
-  pool: 5
-  timeout: 5000
-  database: db/development.sqlite3
-  username: bp1step-user
-  password: bp1step-password
+
+staging:
+  <<: *default
+
+production_MSSQL:
+  adapter: sqlserver
+  encoding: unicode
+  database: bp1step
+  host:     db
+  username: mssql
+  password: secret
