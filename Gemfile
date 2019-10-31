@@ -84,7 +84,6 @@ group :test do
   gem 'rails-controller-testing'
   gem 'shoulda-matchers'
   gem 'simplecov'
-  gem 'sqlite3', '~>1.3.13'
   gem 'webrat'
 end
 
