@@ -96,6 +96,7 @@ namespace :bp1step do
 
   def add_file_to_letter(letter_id, file, message_id)
     file_name = file['Name']
+    file_name = file_name[0..-5] if file_name.end_with? '.enc'
     return if file_name.downcase.start_with? 'список рассылки'
 
     path_from = Rails.root.join(Rails.configuration.x.letters.path_to_portal, 'in', message_id)
@@ -109,7 +110,7 @@ namespace :bp1step do
 
   def file_exclude?(name)
     return true if name == 'passport.xml'
-    return true if ['.sig', '.enc'].include? File.extname(name).downcase
+    return true if ['.sig'].include? File.extname(name).downcase
   end
 
   def get_sender(name)

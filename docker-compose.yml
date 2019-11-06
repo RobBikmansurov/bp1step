@@ -5,6 +5,7 @@
 # docker-compose run web rake db:setup
 # docker-compose up
 # docker-compose down
+# docker-compose run web rake -T bp1step:
 version: '3'
 
 services:
@@ -12,6 +13,8 @@ services:
     image: postgres:11-alpine
     environment:
       POSTGRES_PASSWORD: secret
+    ports:
+      - 5432:5432
     volumes:
       - db-data:/var/lib/postgresql/data:cached
   web:
