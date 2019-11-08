@@ -1,8 +1,11 @@
 image: ruby:2.5.1
 
+services:
+  - postgres:11-alpine
+
 variables:
   POSTGRES_PASSWORD: secret
-
+  DATABASE_URL: db
 
 cache:
   paths:
@@ -45,8 +48,6 @@ build:
     name: '$CI_COMMIT_SHA'
     expire_in: 1d
     when: on_success
-  services:
-    - postgres:11-alpine
   script:
     - apt update -q && apt install libpq-dev postgresql-client nodejs -yqq
     - cp config/database.yml{.example,}
