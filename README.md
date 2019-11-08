@@ -89,7 +89,6 @@ $ docker-compose run web bundle install
 $ docker-compose run web rake db:create
 $ docker-compose run web rake db:setup
 $ docker-compose up
-$ bundle exec rails s
 ```
 
 Now you can access the application with your browser on: http://localhost:3000
@@ -125,9 +124,11 @@ postgres=# \l
 
 ## Testing
 
->rspec
+```
+$ docker-compose run web rspec
+```
+The author will be grateful for any help for improving the style and writing tests.
 
-Автор будет безмерно благодарен за отзывы и помощь в написании тестов для Rspec.
 
 ## Contributing
 
@@ -143,4 +144,6 @@ MIT
 
  Copyright &copy; 2012-2019 Rob Bikmansurov. All rights reserved.
  
- Author: [Rob Bikmansurov](https://bikmansurov.ru), contact: [Rob Bikmansurov](mailto:robb@mail.ru)
+ Author: [Rob Bikmansurov](https://bikmansurov.ru), contact: ](mailto:robb@mail.ru)
+
+ [Rob Bikmansurov](mailto:robb@mail.ru)

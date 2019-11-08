@@ -34,6 +34,7 @@ Capybara.javascript_driver = :headless_chrome
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
 
+DatabaseCleaner.allow_remote_database_url = true
 RSpec.configure do |config|
   # config.include Features, type: :feature
   config.include FactoryBot::Syntax::Methods
