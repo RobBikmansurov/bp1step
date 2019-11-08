@@ -4,15 +4,15 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: db
+  host: <%= ENV['DATABASE_URL'] %>
   port: 5432
   database: bp1step
   username: postgres
   password: secret
 
 development:
-  database: bp1step-dev
   <<: *default
+  database: bp1step-dev
 
 test:
   <<: *default
@@ -20,8 +20,7 @@ test:
 
 production:
   <<: *default
-  #url: <%= ENV['DATABASE_URL'] %>
-  host:     db
+  host: <%= ENV['DATABASE_URL'] %>
   username: bp1step
   password: secret
 
