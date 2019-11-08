@@ -5,7 +5,7 @@ services:
 
 variables:
   POSTGRES_PASSWORD: secret
-  DATABASE_URL: db
+  DATABASE_URL: postgres
 
 cache:
   paths:
@@ -54,12 +54,13 @@ build:
     - cp config/ldap.yml{.example,}
     - gem install bundler --no-document
     - bundle install -j $(nproc) --path=vendor  # Install dependencies into ./vendor/ruby
-    - bundle exec rake db:create db:migrate RAILS_ENV=test
     - uname -a
     - du -h -d1 ./
+    - cat config/database.yml
     # check postgres
-    #- export PGPASSWORD=$POSTGRES_PASSWORD
-    #- psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
+    - export PGPASSWORD=$POSTGRES_PASSWORD
+    - psql -h postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
+    - bundle exec rake db:create db:migrate RAILS_ENV=test
 
 rspec:
   stage: test
