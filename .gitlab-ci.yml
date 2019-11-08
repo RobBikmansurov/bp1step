@@ -58,8 +58,8 @@ build:
     - du -h -d1 ./
     - cat config/database.yml
     # check postgres
-    - export PGPASSWORD=$POSTGRES_PASSWORD
-    - psql -h postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
+    #- export PGPASSWORD=$POSTGRES_PASSWORD
+    # - psql -h postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
     - bundle exec rake db:create db:migrate RAILS_ENV=test
 
 rspec:
