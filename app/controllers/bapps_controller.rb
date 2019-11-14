@@ -50,6 +50,8 @@ class BappsController < ApplicationController
   def update
     @bproce_bapp = BproceBapp.new(bapp_id: @bapp.id)
     if @bapp.update(bapp_params)
+      @bapp.tag_list.add 'ms' # params[:bapp][:tag_list]
+      @bapp.save
       flash[:notice] = 'Successfully updated bapp.'
       respond_with(@bapp)
     else
@@ -80,7 +82,7 @@ class BappsController < ApplicationController
   def bapp_params
     params.require(:bapp).permit(:name, :description, :apptype, :purpose, :version_app,
                                  :directory_app, :distribution_app, :executable_file,
-                                 :licence, :source_app, :note, :tag_list)
+                                 :licence, :source_app, :note)
   end
 
   def set_app

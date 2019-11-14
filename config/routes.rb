@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  resources :orders, except: %i[new create] do
+    get :create_from_file, on: :collection
+  end
   resources :bproces, only: :autocomlete do
     get :autocomplete, on: :collection
   end

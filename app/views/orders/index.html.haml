@@ -1,0 +1,42 @@
+- search "Распоряжения"
+- title @title_order
+
+%h2
+  = @title_order if @title_order
+  - if params[:search].present?
+    [ #{params[:search]} ]
+
+%table
+  %tr
+    %th #
+    %thТип распоряжения
+    %th [ Договор ]
+    %thКлиент
+    %thДата создания
+    %thСтатус
+    %thАвтор
+    %thИсполнитель
+    - if true or can? :manage, Order or can? :destroy, Order
+      %th
+        &nbsp;
+
+  - @orders.each do |order|
+    %tr
+      %td
+        .id_show_ ##{order.id}
+      %td=link_to order.order_type, order
+      %td 
+        = "#{order.contract_number} от #{order.contract_date&.strftime('%d.%m.%y')}" if order.contract_number.present?
+      %td
+        #{order.codpred} #{order.client_name}
+      %td #{order.created_at.strftime("%d.%m.%Y %H:%m")}
+      %td #{order.status}
+      %td #{order.author.displayname}
+      %td
+        - order.user_order.each do |user_order|
+          - if user_order.user
+            = link_to user_order.user&.displayname, user_order.user
+            &nbsp;
+
+      %td
+

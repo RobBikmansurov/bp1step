@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  include LDAP
   scope :active, -> { where(active: true) }
 
   has_attached_file :avatar,
@@ -68,22 +69,22 @@ class User < ApplicationRecord
     roles.any? { |role| role.name.underscore.to_sym == role_sym }
   end
 
-  def ldap_lastname
-    lastname = Devise::LDAP::Adapter.get_ldap_param(username, 'sn')
-    lastname&.first&.force_encoding('UTF-8')
+  def has_business_role?(business_role_id)
+    return false if self.id.blank?
+    UserBusinessRole.where(user_id: id, business_role_id: business_role_id).any?
   end
 
-  def ldap_firstname
-    tempname = Devise::LDAP::Adapter.get_ldap_param(username, 'givenname')
-    tempname&.first&.force_encoding('UTF-8')
+  def executor_in?(bproce_id)
+    return false if self.id.blank?
+    business_roles_ids = UserBusinessRole.where(user_id: id).pluck :id
+    BusinessRole.where(bproce_id: bproce_id, id: business_roles_ids).any?
   end
 
-  def ldap_displayname
-    Devise::LDAP::Adapter.get_ldap_param(username, 'displayname')
-  end
-
-  def ldap_email
-    Devise::LDAP::Adapter.get_ldap_param(username, 'mail')
+  def executor_of?(bproce_id, role_name)
+    return false if self.id.blank?
+    business_role_id = BusinessRole.where(bproce_id: bproce_id, name: role_name).pluck :id
+    return false if id.blank?
+    UserBusinessRole.where(user_id: id, business_role_id: business_role_id).any?
   end
 
   def self.search(search)

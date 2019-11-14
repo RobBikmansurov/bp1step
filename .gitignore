@@ -27,6 +27,7 @@ bp1step.store/*
 store/*
 portal/*
 svk_in/*
+h_tmp/*
 .sass-cache/*
 mount-bp1step
 .rvmrc

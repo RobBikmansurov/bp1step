@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_30_062426) do
+ActiveRecord::Schema.define(version: 2019_11_13_094518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -316,6 +316,23 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["bproce_id"], name: "index_metrics_on_bproce_id"
   end
 
+  create_table "orders", force: :cascade do |t|
+    t.string "order_type", null: false
+    t.integer "codpred"
+    t.text "client_name"
+    t.bigint "author_id"
+    t.string "contract_number"
+    t.date "contract_date"
+    t.date "order_date"
+    t.date "due_date"
+    t.date "completed_at"
+    t.string "status"
+    t.text "result"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_orders_on_author_id"
+  end
+
   create_table "pg_search_documents", id: :serial, force: :cascade do |t|
     t.text "content"
     t.string "searchable_type"
@@ -432,6 +449,15 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
     t.index ["user_id"], name: "index_user_letters_on_user_id"
   end
 
+  create_table "user_orders", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "order_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_user_orders_on_order_id"
+    t.index ["user_id"], name: "index_user_orders_on_user_id"
+  end
+
   create_table "user_requirements", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "requirement_id"
@@ -523,6 +549,8 @@ ActiveRecord::Schema.define(version: 2018_07_30_062426) do
 
   add_foreign_key "tasks", "letters"
   add_foreign_key "tasks", "requirements"
+  add_foreign_key "user_orders", "orders"
+  add_foreign_key "user_orders", "users"
   add_foreign_key "user_tasks", "tasks"
   add_foreign_key "user_tasks", "users"
 end

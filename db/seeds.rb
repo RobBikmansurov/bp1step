@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 PublicActivity.enabled = false
-# rubocop:disable Metrics/BlockLength
 
 # access roles
 # Role.destroy_all
-# rubocop:disable Metrics/LineLength
 [
   ['user', 'Исполнитель', 'Просмотр информации по исполняемым ролям, участию в процессах, комментирование документов процесса'],
   ['owner', 'Владелец процесса', 'Ведение документов, ролей, приложений, рабочих мест процесса, назначение исполнителей на роли'],
@@ -19,7 +17,6 @@ PublicActivity.enabled = false
   Role.create!(name: name, description: description, note: note)
 end
 puts 'access roles created'
-# rubocop:enable Metrics/LineLength
 
 # users
 # User.destroy_all
@@ -64,25 +61,25 @@ user7 = User.create(displayname: 'Яровая И.А.', username: 'shapoklyak', 
 user7.roles << Role.find_by(name: :secretar)
 user7.roles << Role.find_by(name: :author)
 
-u = User.create(email: 'robb@bankperm.ru',
-                firstname: 'Роберт',
-                lastname: 'Бикмансуров',
-                middlename: 'Мулланурович',
-                username: 'mr_rob',
-                displayname: 'Бикмансуров Р.М.',
-                password: 'password',
-                department: 'управление информационных технологий',
-                position: 'начальник управления',
-                office: '401',
-                phone: Faker::PhoneNumber.cell_phone,
-                active: true)
-u.roles << Role.find_by(name: :user)
-u.roles << Role.find_by(name: :secretar)
-u.roles << Role.find_by(name: :author)
-u.roles << Role.find_by(name: :owner)
-u.roles << Role.find_by(name: :analitic)
-u.roles << Role.find_by(name: :security)
-u.roles << Role.find_by(name: :admin)
+developer = User.create(email: 'robb@bankperm.ru',
+                        firstname: 'Роберт',
+                        lastname: 'Бикмансуров',
+                        middlename: 'Мулланурович',
+                        username: 'mr_rob',
+                        displayname: 'Бикмансуров Р.М.',
+                        password: 'password',
+                        department: 'управление информационных технологий',
+                        position: 'начальник управления',
+                        office: '401',
+                        phone: Faker::PhoneNumber.cell_phone,
+                        active: true)
+developer.roles << Role.find_by(name: :user)
+developer.roles << Role.find_by(name: :secretar)
+developer.roles << Role.find_by(name: :author)
+developer.roles << Role.find_by(name: :owner)
+developer.roles << Role.find_by(name: :analitic)
+developer.roles << Role.find_by(name: :security)
+developer.roles << Role.find_by(name: :admin)
 
 60.times do |_n|
   name = Faker::Name.name + ' ' + Faker::Name.name
@@ -135,7 +132,6 @@ end
 puts 'workplaces created'
 
 # terms
-# rubocop:disable Metrics/LineLength
 # Term.destroy_all
 [
   ['АРМ', 'Автоматизированное рабочее место', 'Программный или программно-технический комплекс, предназначенный для автоматизации деятельности определенного вида', ''],
@@ -193,7 +189,6 @@ puts 'workplaces created'
   Term.create(name: name, shortname: shortname, description: description, source: source)
 end
 puts 'terms created'
-# rubocop:enable Metrics/LineLength
 
 # processes
 bp1 = Bproce.create!(name: 'Предоставление сервисов', shortname: 'B.4.1', fullname: 'Предоставление сервисов',
@@ -320,8 +315,6 @@ Metric.create(name: 'ИнцидентовВсего', description: 'количе
 puts 'metrics created'
 
 # directives
-# rubocop:disable Metrics/LineLength
-# rubocop:disable Metrics/ParameterLists
 [
   ['Указание', '3659-У', '04 Jun 2015', "Указание Банка России от 04.06.2015 N 3659-У\r\n\"О внесении изменений в Положение Банка России от 16 июля 2012 года N 385-П \"О правилах ведения бухгалтерского учета в кредитных организациях, расположенных на территории Российской Федерации\"\r\n\r\n", '', 'Банк России', '', 'Действует', ''],
   ['Положение', '408-П', '25 Oct 2013', "Положение о порядке оценки соответствия квалификационным требованиям и требованиям к деловой репутации лиц, указанных в статье 11.1 Федерального закона \"О банках и банковской деятельности\" и статье 60 Федерального закона \"О Центральном банке Российской Федерации (Банке России)\", и порядке ведения базы данных, предусмотренной статьей 75 Федерального закона \"О Центральном банке Российской Федерации (Банке России)\r\n", '', 'ЦБ РФ', '', 'Действует', ''],
@@ -375,8 +368,6 @@ puts 'metrics created'
   Directive.create(title: title, number: number, approval: approval, name: name, note: note, body: body, annotation: annotation, status: status, action: action)
 end
 puts 'Directives created'
-# rubocop:enable Metrics/LineLength
-# rubocop:enable Metrics/ParameterLists
 
 # documents
 Array.new(100) do |_i|
@@ -419,9 +410,7 @@ Array.new(100) do |_i|
     DocumentDirective.create!(directive_id: directive_id, document_id: document_id, note: Faker::Lorem.sentence(1)) if rand(20) == 1
   end
   BproceDocument.create!(bproce_id: Bproce.pluck(:id).sample, document_id: document_id)
-  # rubocop:disable Metrics/LineLength
   BproceDocument.create!(bproce_id: Bproce.pluck(:id).sample, document_id: document_id, purpose: Faker::Lorem.sentence(1)) if rand(20) == 1
-  # rubocop:enable Metrics/LineLength
 end
 puts 'documents created'
 
@@ -484,10 +473,9 @@ Array.new(300) do |_l|
   when 90 # завершено
     letter.completion_date = letter.duedate - rand(10) if rand(5) == 1
     letter.completion_date = letter.duedate + rand(10) if rand(3) == 1
-    # rubocop:disable Metrics/LineLength
     letter.result = "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{user.displayname} - " + Faker::Lorem.sentence
     letter.result += "\r\n" + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ": #{user.displayname} считает, что все работы по письму исполнены"
-    # rubocop:enable Metrics/LineLength
+
   end
   letter.save
 end
@@ -603,4 +591,25 @@ Bapp.create(name: '1С:Бухгалтерия.Кадры', description: '1С:Б�
 end
 puts 'applications created'
 
-# rubocop:enable Metrics/BlockLength
+def create_roles_executors(bproce_id, users, developers_ids, role_name, role_description)
+  br = BusinessRole.create(name: role_name, description: role_description, bproce_id: bproce_id)
+  users.times { |_i| UserBusinessRole.create(business_role_id: br.id, user_id: User.pluck(:id).sample, note: '') }
+  developers_ids.each { |id| UserBusinessRole.create(business_role_id: br.id, user_id: id, note: 'test') }
+end
+
+b = Bproce.create(shortname: 'ЭДОРаспКО', name: 'ЭДО. Распоряжения кредитного отдела',
+                  fullname: 'ЭДО. Распоряжения кредитного отдела',
+                  goal: 'Уменьшить время работы с Распоряжениями КО за счет обработки только в электронном виде с отметками исполнителей, без передачи бумаги',
+                  user_id: User.pluck(:id).sample,
+                  description: 'Автор создает его в АРМДоговоры, при этом программ...')
+dev = User.create(displayname: 'Набоков С.Ф.', username: 'nabokov',
+                  lastname: 'Набоков', firstname: 'Сергей', middlename: 'Феликсович',
+                  email: 'nabokov@example.com', password: 'secret', position: 'Финансист')
+dev.roles << Role.find_by(name: :author)
+dev.roles << Role.find_by(name: :owner)
+
+create_roles_executors(b.id, 3, [developer.id, dev.id], 'Автор', 'сотрудник КО, создавший Распоряжение в электронном виде из АРМДоговоры, может править его до момента «согласовано»')
+create_roles_executors(b.id, 2, [developer.id], 'Руководитель', 'подтверждает правильность и запускает в работу распоряжение (статус - «согласовано»)')
+create_roles_executors(b.id, 2, [developer.id], 'Исполнитель', 'исполняет и делает отметку об исполнении (статус - «исполнено»)')
+create_roles_executors(b.id, 2, [developer.id], 'Контролер', 'видит все действия над Распоряжениями, ничего не меняет')
+puts "#{b.id}: #{b.name}"

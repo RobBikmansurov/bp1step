@@ -30,7 +30,6 @@ gem 'public_activity'
 gem 'rails3-jquery-autocomplete' # , git: 'https://github.com/francisd/rails3-jquery-autocomplete'
 gem 'simple_form'
 gem 'the_sortable_tree', '>= 2.4.0'
-# gem "paperclip", git: "git://github.com/thoughtbot/paperclip.git"
 gem 'acts-as-taggable-on'
 gem 'chartkick'
 gem 'groupdate'

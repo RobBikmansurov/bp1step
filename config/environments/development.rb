@@ -8,7 +8,7 @@ BPDoc::Application.configure do
   ## config.action_controller.page_cache_directory = "#{Rails.root}/public/cached_pages"
 
   # Show full error reports and disable caching
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true # for the better_errors
   ##  config.action_view.debug_rjs             = false
   #config.action_controller.perform_caching = true
 
@@ -45,5 +45,7 @@ BPDoc::Application.configure do
 
   config.x.letters.path_to_portal = 'portal'
   config.x.letters.path_to_rps = 'svk_in'
+  config.x.dms.path_to_h_tmp = 'h_tmp'
+  config.x.dms.process_ko = 14  # id процесса ЭДО. Распоряжения КО
 
 end
