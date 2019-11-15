@@ -76,15 +76,14 @@ class User < ApplicationRecord
 
   def executor_in?(bproce_id)
     return false if self.id.blank?
-    business_roles_ids = UserBusinessRole.where(user_id: id).pluck :id
-    BusinessRole.where(bproce_id: bproce_id, id: business_roles_ids).any?
+    business_roles_ids = BusinessRole.where(bproce_id: bproce_id).pluck :id
+    UserBusinessRole.where(user_id: id, business_role_id: business_role_ids).any?
   end
 
   def executor_of?(bproce_id, role_name)
     return false if self.id.blank?
-    business_role_id = BusinessRole.where(bproce_id: bproce_id, name: role_name).pluck :id
-    return false if id.blank?
-    UserBusinessRole.where(user_id: id, business_role_id: business_role_id).any?
+    business_role_ids = BusinessRole.where(bproce_id: bproce_id, name: role_name).pluck :id
+    UserBusinessRole.where(user_id: id, business_role_id: business_role_ids).any?
   end
 
   def self.search(search)

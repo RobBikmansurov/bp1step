@@ -32,7 +32,8 @@ set :format, :airbrussh
 
 # Default value for :linked_files is []
 # set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
-set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/ldap.yml', 'config/secrets.yml', 'config/environments/production.rb')
+set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/ldap.yml', 'config/secrets.yml', "config/environments/#{fetch(:stage)}.rb")
+
 
 # Default value for linked_dirs is []
 # set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system')
@@ -123,11 +124,9 @@ namespace :deploy do
       # шаблон официального письма
       execute "cp #{shared_path}/secret/bnk-letter.odt #{release_path}/reports/letter.odt"
       execute "rm #{release_path}/reports/bnk-letter.odt"
-      if "#{fetch(:rails_env)}" != 'staging'
-        execute "ln -s #{shared_path}/config/ldap.yml #{release_path}/config/ldap.yml"
-      end 
-      execute "rm #{release_path}/config/environments/production.rb"
-      execute "ln -s #{shared_path}/config/environments/production.rb #{release_path}/config/environments/production.rb"
+      execute "ln -s #{shared_path}/config/ldap.yml #{release_path}/config/ldap.yml"
+      execute "rm #{release_path}/config/environments/#{fetch(:stage)}.rb"
+      execute "ln -s #{shared_path}/config/environments/#{fetch(:stage)}.rb #{release_path}/config/environments/#{fetch(:stage)}.rb"
     end
   end
 
