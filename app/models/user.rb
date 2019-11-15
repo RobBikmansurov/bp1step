@@ -69,7 +69,7 @@ class User < ApplicationRecord
     roles.any? { |role| role.name.underscore.to_sym == role_sym }
   end
 
-  def has_business_role?(business_role_id)
+  def business_role?(business_role_id)
     return false if id.blank?
 
     UserBusinessRole.where(user_id: id, business_role_id: business_role_id).any?
@@ -78,7 +78,7 @@ class User < ApplicationRecord
   def executor_in?(bproce_id)
     return false if id.blank?
 
-    business_roles_ids = BusinessRole.where(bproce_id: bproce_id).pluck :id
+    business_role_ids = BusinessRole.where(bproce_id: bproce_id).pluck :id
     UserBusinessRole.where(user_id: id, business_role_id: business_role_ids).any?
   end
 

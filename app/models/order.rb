@@ -6,5 +6,4 @@ class Order < ApplicationRecord
   has_many :user, through: :user_order
 
   attr_reader :action
-  
 end

@@ -18,5 +18,4 @@ module LDAP
   def ldap_email
     Devise::LDAP::Adapter.get_ldap_param(username, 'mail')
   end
-
 end
