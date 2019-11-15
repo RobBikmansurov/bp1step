@@ -124,9 +124,9 @@ namespace :deploy do
       # шаблон официального письма
       execute "cp #{shared_path}/secret/bnk-letter.odt #{release_path}/reports/letter.odt"
       execute "rm #{release_path}/reports/bnk-letter.odt"
-      execute "ln -s #{shared_path}/config/ldap.yml #{release_path}/config/ldap.yml"
-      execute "rm #{release_path}/config/environments/#{fetch(:stage)}.rb"
-      execute "ln -s #{shared_path}/config/environments/#{fetch(:stage)}.rb #{release_path}/config/environments/#{fetch(:stage)}.rb"
+      #execute "ln -s #{shared_path}/config/ldap.yml #{release_path}/config/ldap.yml"
+      #execute "rm #{release_path}/config/environments/#{fetch(:stage)}.rb"
+      #execute "ln -s #{shared_path}/config/environments/#{fetch(:stage)}.rb #{release_path}/config/environments/#{fetch(:stage)}.rb"
     end
   end
 

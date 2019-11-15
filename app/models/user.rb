@@ -70,18 +70,21 @@ class User < ApplicationRecord
   end
 
   def has_business_role?(business_role_id)
-    return false if self.id.blank?
+    return false if id.blank?
+
     UserBusinessRole.where(user_id: id, business_role_id: business_role_id).any?
   end
 
   def executor_in?(bproce_id)
-    return false if self.id.blank?
+    return false if id.blank?
+
     business_roles_ids = BusinessRole.where(bproce_id: bproce_id).pluck :id
     UserBusinessRole.where(user_id: id, business_role_id: business_role_ids).any?
   end
 
   def executor_of?(bproce_id, role_name)
-    return false if self.id.blank?
+    return false if id.blank?
+
     business_role_ids = BusinessRole.where(bproce_id: bproce_id, name: role_name).pluck :id
     UserBusinessRole.where(user_id: id, business_role_id: business_role_ids).any?
   end
