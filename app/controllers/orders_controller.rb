@@ -21,6 +21,7 @@ class OrdersController < ApplicationController
     @order.attachment.attach(io: File.open(Rails.root.join(path_to_h_tmp, filename)),
                              filename: filename,
                              content_type: 'application/pdf')
+    File.delete Rails.root.join(path_to_h_tmp, filename)
     redirect_to @order, notice: 'Order was successfully created.'
   end
 
@@ -76,6 +77,7 @@ class OrdersController < ApplicationController
                       client_name: json['name'],
                       contract_date: json['dog_date'], status: 'Новое'
     order.author_id = order_author json['author']
+    File.delete file_path
     order
   end
 
