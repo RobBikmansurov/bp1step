@@ -43,6 +43,11 @@ BPDoc::Application.configure do
   config.eager_load = false
   config.log_level = :debug
 
+  # Store uploaded files on the local file system (see config/storage.yml for options)
+  config.active_storage.service = :local
+  config.active_storage.routes_prefix = '/files'
+
+
   config.x.letters.path_to_portal = 'portal'
   config.x.letters.path_to_rps = 'svk_in'
   config.x.dms.path_to_h_tmp = 'h_tmp'

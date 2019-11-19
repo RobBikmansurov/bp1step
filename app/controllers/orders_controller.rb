@@ -10,12 +10,17 @@ class OrdersController < ApplicationController
   def create_from_file
     filename = params[:file]
     redirect_to orders_url, notice: 'parameter is missing.' unless filename.present?
-    path_from_portal = Rails.root.join(Rails.configuration.x.dms.path_to_h_tmp, filename)
-    redirect_to orders_url, notice: "#{filename} not exists." unless File.file? path_from_portal
-    @order = create_order_from(path_from_portal)
+    path_to_h_tmp = Rails.configuration.x.dms.path_to_h_tmp
+    path_from_file_meta = Rails.root.join(path_to_h_tmp, filename)
+    redirect_to orders_url, notice: "#{filename} not exists." unless File.file? path_from_file_meta
+    @order = create_order_from(path_from_file_meta)
     return false unless @order.save
 
     add_executors @order
+    filename['json'] = 'pdf' # replace extension
+    @order.attachment.attach(io: File.open(Rails.root.join(path_to_h_tmp, filename)),
+                             filename: filename,
+                             content_type: 'application/pdf')
     redirect_to @order, notice: 'Order was successfully created.'
   end
 
@@ -23,7 +28,9 @@ class OrdersController < ApplicationController
     @orders = Order.order(sort_order(sort_column, sort_direction))
   end
 
-  def show; end
+  def show
+    ActiveStorage::Current.host = request.base_url
+  end
 
   def update
     command = params[:commit]
@@ -59,7 +66,7 @@ class OrdersController < ApplicationController
 
   def order_params
     params.require(:order).permit(:type, :codpred, :author_id, :contract_number, :contract_date,
-                                  :date, :due_date, :completed_at, :status, :result)
+                                  :date, :due_date, :completed_at, :status, :result, :attachment)
   end
 
   def create_order_from(file_path)
@@ -94,24 +101,24 @@ class OrdersController < ApplicationController
   end
 
   def approve(order, action)
-    result = order.result
+    result = order.result || ''
     result += time_and_current_user action
     result += time_and_current_user 'согласовал исполнение'
-    order.update! status: 'Согласовано'
+    params[:order][:status] = 'Согласовано'
     params[:order][:result] = result
   end
 
   def comment(order, action)
-    result = order.result
+    result = order.result || ''
     result += time_and_current_user action
     params[:order][:result] = result
   end
 
   def complete(order, action)
-    result = order.result
+    result = order.result || ''
     result += time_and_current_user action
     result += time_and_current_user 'завершил исполнение'
-    order.update! status: 'Исполнено'
+    params[:order][:status] = 'Исполнено'
     params[:order][:result] = result
   end
 end

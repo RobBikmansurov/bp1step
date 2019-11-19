@@ -1,5 +1,8 @@
 ru:
   simple_form:
+    labels:
+      order:
+        action: 'Примечание:'
     hints:
       user:
         username: 'User name to sign in.'

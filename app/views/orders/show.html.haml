@@ -4,7 +4,7 @@
 
 %h2
   #{@order.order_type} от #{@order.created_at.strftime('%d.%m.%Y %H:%m')}
-%h3
+%h2
   Договор № #{@order.contract_number} от #{@order.contract_date}
 %h3
   [#{@order.codpred}]
@@ -12,22 +12,25 @@
 %h3
   Автор:
   = link_to @order.author.displayname, user_path(@order.author.id)
+  .right
+    Статус:
+    %b= @order.status
+%h3
+  Смотреть:
+  -# = image_tag @order.order.preview(resize_to_limit: [100, 100]) if @order.order.attached?
+  = link_to @order.attachment.filename, rails_blob_path(@order.attachment, disposition: :inline) if @order.attachment.attached?
 %h3
   Исполнители:
   - @order.user_order.each do |user_order|
     %fio
       = link_to user_order.user.displayname, user_order.user
-%h3
-  Статус:
-  %b= @order.status
-
+%h3Ваши действия:
 = simple_form_for(@order) do |f|
   = f.error_notification
   = f.hidden_field :author_id
-
   - process_id = Rails.configuration.x.dms.process_ko
   - unless (current_user.executor_of? process_id, 'Контролер')
-    = f.input :action, as: :text
+    = f.input :action, as: :text, label: 'Можете добавить комментарий:'
     - if @order.status == 'Новое' && (current_user.executor_of? process_id, 'Руководитель')
       = f.button :submit, 'Согласовать'
     - if @order.status == 'Согласовано' && (current_user.executor_of? process_id, 'Исполнитель')
@@ -37,7 +40,6 @@
 %h3 Результат исполнения:
 = simple_format(@order.result, {}, {})
 %hr
-
 
 .info_
   - process = Bproce.find(Rails.configuration.x.dms.process_ko)

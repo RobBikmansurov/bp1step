@@ -217,7 +217,7 @@ Rails.application.routes.draw do
     end
   end
 
-  match '/about' => 'pages#about', via: :get
+  get '/about' => 'pages#about'
   root to: 'home#index'
-  match '*path', to: 'pages#about', via: :all
+  # get '*path', to: 'pages#about'
 end
