@@ -26,7 +26,8 @@ class OrdersController < ApplicationController
   end
 
   def index
-    @orders = Order.order(sort_order(sort_column, sort_direction))
+    @orders = Order.filter(filtering_params(params))
+                   .order(sort_order(sort_column, sort_direction))
   end
 
   def show
@@ -122,5 +123,9 @@ class OrdersController < ApplicationController
     result += time_and_current_user 'завершил исполнение'
     params[:order][:status] = 'Исполнено'
     params[:order][:result] = result
+  end
+
+  def filtering_params(params)
+    params.slice(:status, :codpred)
   end
 end
