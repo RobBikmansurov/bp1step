@@ -50,7 +50,7 @@ gem 'actionpack-page_caching' # кеширование
 gem 'faker'
 
 gem 'loofah' # , '>= 2.2.3'
-gem 'nokogiri', '>= 1.10.4'
+gem 'nokogiri', '>= 1.10.5'
 gem 'rack' # , '>= 2.0.6'
 
 group :development do

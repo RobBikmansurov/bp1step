@@ -76,7 +76,7 @@ class OrdersController < ApplicationController
   end
 
   def create_order_from(file_path)
-    json_file = File.read(file_path) #, encoding: 'windows-1251')
+    json_file = File.read(file_path, encoding: 'windows-1251')
     json = JSON.parse json_file
     order = Order.new order_type: json['type'], codpred: json['codpred'], contract_number: json['dog_number'],
                       client_name: json['name'],

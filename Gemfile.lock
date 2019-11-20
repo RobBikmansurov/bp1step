@@ -231,7 +231,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (5.2.0)
     nio4r (2.3.1)
-    nokogiri (1.10.4)
+    nokogiri (1.10.5)
       mini_portile2 (~> 2.4.0)
     odf-report (0.6.1)
       nokogiri (>= 1.5.0)
@@ -466,7 +466,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails (= 5.0.5)
   loofah
-  nokogiri (>= 1.10.4)
+  nokogiri (>= 1.10.5)
   odf-report
   paperclip (~> 5.2.1)
   pg
