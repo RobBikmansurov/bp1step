@@ -71,4 +71,3 @@ server 'bp1step.ad.bankperm.ru', user: fetch(:user), roles: %w(web app db)
 #     auth_methods: %w(publickey password)
 #     # password: 'please use keys'
 #   }
-set :linked_files, %w{config/database.yml config/secrets.yml}

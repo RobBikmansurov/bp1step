@@ -611,5 +611,10 @@ dev.roles << Role.find_by(name: :owner)
 create_roles_executors(b.id, 3, [developer.id, dev.id], 'Автор', 'сотрудник КО, создавший Распоряжение в электронном виде из АРМДоговоры, может править его до момента «согласовано»')
 create_roles_executors(b.id, 2, [developer.id], 'Руководитель', 'подтверждает правильность и запускает в работу распоряжение (статус - «согласовано»)')
 create_roles_executors(b.id, 2, [developer.id], 'Исполнитель', 'исполняет и делает отметку об исполнении (статус - «исполнено»)')
-create_roles_executors(b.id, 2, [developer.id], 'Контролер', 'видит все действия над Распоряжениями, ничего не меняет')
+create_roles_executors(b.id, 2, [dev.id], 'Контролер', 'видит все действия над Распоряжениями, ничего не меняет')
+
+Order.create(order_type: "Распоряжение о закрытии счетов", codpred: 6390, client_name: "АО \"Геликон Консалтинг\"", author_id: dev.id, 
+              contract_number: "5412ЛЗ", contract_date: "2019-08-15", status: "Новое")
+UserOrder.create(order_id: Order.last.id, user_id: developer.id)
+
 puts "#{b.id}: #{b.name}"

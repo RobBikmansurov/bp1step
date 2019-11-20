@@ -28,7 +28,9 @@
       %td 
         = "#{order.contract_number} от #{order.contract_date&.strftime('%d.%m.%y')}" if order.contract_number.present?
       %td
-        #{order.codpred} #{order.client_name}
+        - unless order.codpred == 1
+          [#{order.codpred}]
+        #{order.client_name}
       %td #{order.created_at.strftime("%d.%m.%Y %H:%m")}
       %td #{order.status}
       %td #{order.author.displayname}
@@ -39,4 +41,7 @@
             &nbsp;
 
       %td
+.info_
+  - process = Bproce.find(Rails.configuration.x.dms.process_ko)
+  = link_to process.name, process
 

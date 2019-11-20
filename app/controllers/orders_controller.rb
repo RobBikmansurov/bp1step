@@ -21,7 +21,11 @@ class OrdersController < ApplicationController
     @order.attachment.attach(io: File.open(Rails.root.join(path_to_h_tmp, filename)),
                              filename: filename,
                              content_type: 'application/pdf')
-    File.delete Rails.root.join(path_to_h_tmp, filename)
+    begin
+      File.delete Rails.root.join(path_to_h_tmp, filename)
+    rescue StandardError => e
+      logger.error "Error file delete: #{e}"
+    end
     redirect_to @order, notice: 'Order was successfully created.'
   end
 
@@ -72,13 +76,17 @@ class OrdersController < ApplicationController
   end
 
   def create_order_from(file_path)
-    json_file = File.read(file_path, encoding: 'windows-1251')
+    json_file = File.read(file_path) #, encoding: 'windows-1251')
     json = JSON.parse json_file
     order = Order.new order_type: json['type'], codpred: json['codpred'], contract_number: json['dog_number'],
                       client_name: json['name'],
                       contract_date: json['dog_date'], status: 'Новое'
     order.author_id = order_author json['author']
-    File.delete file_path
+    begin
+      File.delete file_path
+    rescue StandardError => e
+      logger.error "Error file delete: #{e}"
+    end
     order
   end
 
