@@ -14,7 +14,10 @@ class OrdersController < ApplicationController
     path_from_file_meta = Rails.root.join(path_to_h_tmp, filename)
     redirect_to orders_url, notice: "#{filename} not exists." unless File.file? path_from_file_meta
     @order = create_order_from(path_from_file_meta)
-    return false unless @order.save
+    flash[:alert] = @order.errors.messages
+    redirect_to(orders_url) && return unless @order.valid?
+    flash[:alert] = ''
+    @order.save
 
     add_executors @order
     filename['json'] = 'pdf' # replace extension
@@ -52,7 +55,10 @@ class OrdersController < ApplicationController
   end
 
   def destroy
-    @order.destroy
+    order_destroyed = "##{@order.id} #{@order.order_type}"
+    @order.attachment.purge if @order.attachment.attached?
+    flash[:notice] = "#{order_destroyed} удалено" if @order.destroy
+    redirect_to orders_url
   end
 
   def sort_column
@@ -81,7 +87,9 @@ class OrdersController < ApplicationController
     order = Order.new order_type: json['type'], codpred: json['codpred'], contract_number: json['dog_number'],
                       client_name: json['name'],
                       contract_date: json['dog_date'], status: 'Новое'
-    order.author_id = order_author json['author']
+    author_id = order_author(json['author'])
+    logger.error "Error! Wrong author name: #{json['author']}" if author_id.blank?
+    order.author_id = author_id
     begin
       File.delete file_path
     rescue StandardError => e
@@ -90,10 +98,12 @@ class OrdersController < ApplicationController
     order
   end
 
-  def order_author(author)
-    fio, im, ot = author.split
+  def order_author(author_a)
+    fio, im, ot = author_a.split
     author = User.where('firstname=? and lastname=? and middlename=?', im, fio, ot).first
-    author&.id
+    return nil if author.blank?
+
+    author.id
   end
 
   def add_executors(order)
