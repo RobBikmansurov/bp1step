@@ -35,12 +35,15 @@
       %td #{order.status}
       %td #{order.author.displayname}
       %td
-        - order.user_order.each do |user_order|
-          - if user_order.user
-            = link_to user_order.user&.displayname, user_order.user
-            &nbsp;
+        - if order.executor
+          #{order.executor.displayname}
 
       %td
+%br
+.apple_pagination
+  = will_paginate @orders
+
+
 .info_
   - process = Bproce.find(Rails.configuration.x.dms.process_ko)
   = link_to process.name, process

@@ -33,8 +33,9 @@ class OrdersController < ApplicationController
   end
 
   def index
-    @orders = Order.filter(filtering_params(params))
-                   .order(sort_order(sort_column, sort_direction))
+    # orders = Order.all # unfinished.joins(:user)
+    orders = Order.filter(filtering_params(params))
+    @orders = orders.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
   end
 
   def show
@@ -77,7 +78,7 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:type, :codpred, :author_id, :contract_number, :contract_date,
+    params.require(:order).permit(:type, :codpred, :author_id, :manager_id, :executor_id, :contract_number, :contract_date,
                                   :date, :due_date, :completed_at, :status, :result, :attachment)
   end
 
@@ -123,9 +124,10 @@ class OrdersController < ApplicationController
 
   def approve(order, action)
     result = order.result || ''
-    result += time_and_current_user action
+    result += time_and_current_user action unless action.blank?
     result += time_and_current_user 'согласовал исполнение'
     params[:order][:status] = 'Согласовано'
+    params[:order][:manager_id] = current_user.id
     params[:order][:result] = result
   end
 
@@ -137,9 +139,10 @@ class OrdersController < ApplicationController
 
   def complete(order, action)
     result = order.result || ''
-    result += time_and_current_user action
+    result += time_and_current_user action unless action.blank?
     result += time_and_current_user 'завершил исполнение'
     params[:order][:status] = 'Исполнено'
+    params[:order][:executor_id] = current_user.id
     params[:order][:result] = result
   end
 
