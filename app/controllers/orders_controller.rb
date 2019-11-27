@@ -33,8 +33,7 @@ class OrdersController < ApplicationController
   end
 
   def index
-    # orders = Order.all # unfinished.joins(:user)
-    orders = Order.filter(filtering_params(params))
+    orders = Order.unfinished #.filter(filtering_params(params))
     @orders = orders.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
   end
 
@@ -147,6 +146,6 @@ class OrdersController < ApplicationController
   end
 
   def filtering_params(params)
-    params.slice(:status, :codpred)
+    params.slice(:status, :codpred, :unfinished)
   end
 end
