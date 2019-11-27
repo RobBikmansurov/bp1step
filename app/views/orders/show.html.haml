@@ -62,7 +62,7 @@
 
 %p
 = link_to 'Back', orders_path, class: 'button'
-- if (current_user.id == @order.author_id) && (@order.status = 'Новое')
+- if (current_user.id == @order.author_id) && (@order.status == 'Новое')
   = link_to 'Удалить!', @order,
               data: { confirm: "#{@order.order_type} от #{@order.created_at.strftime('%d.%m.%Y %H:%m')}\nДействительно хотите удалить распоряжение ##{@order.id} ?\n\nВосстановление не возможно!" },
               method: :delete,

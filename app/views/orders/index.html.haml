@@ -10,12 +10,13 @@
   %tr
     %th #
     %thТип распоряжения
-    %th [ Договор ]
+    %thДоговор
     %thКлиент
     %thДата создания
     %thСтатус
     %thАвтор
-    %thИсполнитель
+    %thСогласовал
+    %thИсполнил
     - if true or can? :manage, Order or can? :destroy, Order
       %th
         &nbsp;
@@ -34,6 +35,9 @@
       %td #{order.created_at.strftime("%d.%m.%Y %H:%m")}
       %td #{order.status}
       %td #{order.author.displayname}
+      %td
+        - if order.manager
+          #{order.manager.displayname}
       %td
         - if order.executor
           #{order.executor.displayname}

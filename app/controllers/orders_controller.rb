@@ -55,6 +55,7 @@ class OrdersController < ApplicationController
   end
 
   def destroy
+    redirect_to(orders_url) && return unless @order.status == 'Новое'
     order_destroyed = "##{@order.id} #{@order.order_type}"
     @order.attachment.purge if @order.attachment.attached?
     flash[:notice] = "#{order_destroyed} удалено" if @order.destroy
