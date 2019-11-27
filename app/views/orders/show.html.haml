@@ -12,19 +12,32 @@
   %b #{@order.client_name}
 %h3
   Автор:
-  = link_to @order.author.displayname, user_path(@order.author.id)
-  .right
-    Статус:
-    %b= @order.status
+  %b=@order.author.displayname
+  -if @order.status == 'Новое'
+    .right
+      Статус:
+      %b= @order.status
+- if @order.manager
+  %h3
+    Согласовал:
+    %b=@order.manager.displayname
+    -if @order.status == 'Согласовано'
+      .right
+        Статус:
+        %b= @order.status
+- if @order.executor
+  %h3
+    Исполнил:
+    %b=@order.executor.displayname
+    -if @order.status == 'Исполнено'
+      .right
+        Статус:
+        %b= @order.status
+
 %h3
   Смотреть:
   -# = image_tag @order.order.preview(resize_to_limit: [100, 100]) if @order.order.attached?
   = link_to @order.attachment.filename, rails_blob_path(@order.attachment, disposition: :inline) if @order.attachment.attached?
-%h3
-  Исполнители:
-  - @order.user_order.each do |user_order|
-    %fio
-      = link_to user_order.user.displayname, user_order.user
 %h3Ваши действия:
 = simple_form_for(@order) do |f|
   = f.error_notification

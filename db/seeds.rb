@@ -613,8 +613,12 @@ create_roles_executors(b.id, 2, [developer.id], 'Руководитель', 'п�
 create_roles_executors(b.id, 2, [developer.id], 'Исполнитель', 'исполняет и делает отметку об исполнении (статус - «исполнено»)')
 create_roles_executors(b.id, 2, [dev.id], 'Контролер', 'видит все действия над Распоряжениями, ничего не меняет')
 
-Order.create(order_type: "Распоряжение о закрытии счетов", codpred: 6390, client_name: "АО \"Геликон Консалтинг\"", author_id: dev.id, 
-              contract_number: "5412ЛЗ", contract_date: "2019-08-15", status: "Новое")
-UserOrder.create(order_id: Order.last.id, user_id: developer.id)
-
+10.times do
+  Order.create(order_type: "Распоряжение о закрытии счетов", codpred: 6390, client_name: Faker::Company.name, author_id: dev.id, 
+              contract_number: Faker::IDNumber.valid, contract_date: Faker::Date.backward(10), status: "Новое")
+end
+5.times do
+  Order.create(order_type: "Распоряжение о открытии счетов", codpred: 6390, client_name: Faker::Company.name, author_id: dev.id, 
+              contract_number: Faker::IDNumber.valid, contract_date: Faker::Date.backward(10), status: "Новое")
+end
 puts "#{b.id}: #{b.name}"
