@@ -13,7 +13,7 @@
     %thДоговор
     %thКлиент
     %thДата создания
-    %thСтатус
+    -# %thСтатус
     %thАвтор
     %thСогласовал
     %thИсполнил
@@ -33,7 +33,7 @@
           [#{order.codpred}]
         #{order.client_name}
       %td #{order.created_at.strftime("%d.%m.%Y %H:%m")}
-      %td #{order.status}
+      -# %td #{order.status}
       %td #{order.author.displayname}
       %td
         - if order.manager
@@ -47,8 +47,31 @@
 .apple_pagination
   = will_paginate @orders
 
+%table
+  %td
+    = link_to "Не исполнено: #{Order.unfinished.count}", orders_path, class: 'groups'
+  %td
+    По дням: 
+    - if @date.to_date < Date.current
+      - date_prev = @date + 1.day
+      = link_to " за #{date_prev.strftime('%d.%m.%Y')} ", orders_path(date: date_prev.strftime('%Y-%m-%d')), class: 'groups'
+      &nbsp;
+    = link_to " за #{@date.strftime('%d.%m.%Y')} ", orders_path(date: @date.strftime('%Y-%m-%d')), class: 'groups'
+    - @date = @date - 1.day
+    &nbsp;
+    = link_to " за #{@date.strftime('%d.%m.%Y')} ", orders_path(date: @date.strftime('%Y-%m-%d')), class: 'groups'
+  %td
+    По месяцам:
+    - if @month.beginning_of_month.to_date < Date.current.beginning_of_month
+      - month_prev = @month + 1.month
+      = link_to " #{month_prev.strftime('%B %Y')} ", orders_path(month: month_prev.strftime('%Y-%m')), class: 'groups'
+      %nbsp;
+    = link_to " #{@month.strftime('%B %Y')} ", orders_path(month: @month.strftime('%Y-%m')), class: 'groups'
+    - @month = @month - 1.month
+    %nbsp;
+    = link_to " #{@month.strftime('%B %Y')} ", orders_path(month: @month.strftime('%Y-%m')), class: 'groups'
+
 
 .info_
   - process = Bproce.find(Rails.configuration.x.dms.process_ko)
   = link_to process.name, process
-

@@ -33,7 +33,23 @@ class OrdersController < ApplicationController
   end
 
   def index
-    orders = Order.unfinished #.filter(filtering_params(params))
+    if params[:date].present?
+      @date = by_date(params[:date])
+      @month = @date
+      @title_order = "за #{@date.strftime('%d.%m.%Y')}"
+      orders = Order.by_period(@date.beginning_of_day, @date.end_of_day)
+    elsif params[:month].present?
+      @month = by_month(params[:month])
+      @date = @month
+      @title_order = "за #{@month.strftime('%B %Y')}"
+      orders = Order.by_period(@month.beginning_of_month, @month.end_of_month)
+    else
+      @date = Order.select(:created_at).where('created_at < ?', Date.current.beginning_of_day).limit(1).pluck(:created_at).first
+      @month = @date
+      @title_order = 'не исполненные'
+      orders = Order.unfinished # .filter(filtering_params(params))
+    end
+    @title_order += " - #{orders.count}"
     @orders = orders.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
   end
 
@@ -148,5 +164,17 @@ class OrdersController < ApplicationController
 
   def filtering_params(params)
     params.slice(:status, :codpred, :unfinished)
+  end
+
+  def by_date(date_string)
+    Time.zone.parse(date_string)
+  rescue StandardError
+    Date.current
+  end
+
+  def by_month(month_string)
+    Time.zone.parse(month_string + '-01')
+  rescue StandardError
+    Date.current
   end
 end

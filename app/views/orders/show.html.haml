@@ -3,7 +3,10 @@
 .id_ ##{@order.id}
 
 %h2
-  #{@order.order_type} от #{@order.created_at.strftime('%d.%m.%Y %H:%m')}
+  #{@order.order_type} от 
+  = link_to " #{@order.created_at.strftime('%d.%m.%Y %H:%m')} ", orders_path(date: @order.created_at.strftime('%Y-%m-%d'))
+
+  
 %h2
   Договор № #{@order.contract_number} от #{@order.contract_date}
 %h3

@@ -15,5 +15,5 @@ class Order < ApplicationRecord
   scope :status, ->(status) { where status: status }
   scope :codpred, ->(codpred) { where codpred: codpred } # { where("coppred like ?", "{codpred}%")}
   scope :unfinished, -> { where.not(status: 'Исполнено') } # незавершенные
-
+  scope :by_period, ->(start, finish) { where(created_at: (start..finish)) }
 end
