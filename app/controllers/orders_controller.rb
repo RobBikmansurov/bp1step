@@ -33,24 +33,27 @@ class OrdersController < ApplicationController
   end
 
   def index
+    @date = Order.select(:created_at).order('created_at DESC').where('created_at < ?', Date.current.beginning_of_day).limit(1).pluck(:created_at).first
+    @month = @date
     if params[:date].present?
       @date = by_date(params[:date])
       @month = @date
-      @title_order = "за #{@date.strftime('%d.%m.%Y')}"
+      @title_order = "Распоряжения за #{@date.strftime('%d.%m.%Y')}"
       orders = Order.by_period(@date.beginning_of_day, @date.end_of_day)
     elsif params[:month].present?
       @month = by_month(params[:month])
-      @date = @month
-      @title_order = "за #{@month.strftime('%B %Y')}"
+      @date = @month + 1.day
+      @title_order = "Распоряжения за #{@month.strftime('%B %Y')}"
       orders = Order.by_period(@month.beginning_of_month, @month.end_of_month)
+    elsif params[:search].present?
+      orders = Order.search(params[:search])
+      @title_order = 'Найдено'
     else
-      @date = Order.select(:created_at).where('created_at < ?', Date.current.beginning_of_day).limit(1).pluck(:created_at).first
-      @month = @date
-      @title_order = 'не исполненные'
+      @title_order = 'Не исполненные распоряжения'
       orders = Order.unfinished # .filter(filtering_params(params))
     end
     @title_order += " - #{orders.count}"
-    @orders = orders.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
+    @orders = orders.includes(:user).order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
   end
 
   def show

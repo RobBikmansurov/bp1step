@@ -16,4 +16,12 @@ class Order < ApplicationRecord
   scope :codpred, ->(codpred) { where codpred: codpred } # { where("coppred like ?", "{codpred}%")}
   scope :unfinished, -> { where.not(status: 'Исполнено') } # незавершенные
   scope :by_period, ->(start, finish) { where(created_at: (start..finish)) }
+
+  def self.search(search)
+    return where(nil) if search.blank?
+
+    where('client_name ILIKE ? or contract_number ILIKE ? or contract_number = ?',
+          "%#{search}%", "%#{search}%", search.to_i.to_s)
+  end
+
 end
