@@ -618,7 +618,7 @@ create_roles_executors(b.id, 2, [dev.id], 'Контролер', 'видит вс
               contract_number: Faker::IDNumber.valid, contract_date: Faker::Date.backward(10), status: "Новое")
 end
 5.times do
-  Order.create(order_type: "Распоряжение о открытии счетов", codpred: 6390, client_name: Faker::Company.name, author_id: dev.id, 
+  Order.create(order_type: "Распоряжение о открытии счетов", codpred: 6390, client_name: Faker::Company.name, author_id: developer.id, 
               contract_number: Faker::IDNumber.valid, contract_date: Faker::Date.backward(10), status: "Новое")
 end
 puts "#{b.id}: #{b.name}"
