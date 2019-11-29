@@ -3,6 +3,8 @@
 Rails.application.routes.draw do
   resources :orders, except: %i[new create] do
     get :create_from_file, on: :collection
+    get :back_from_approved, on: :member
+    get :back_from_completed, on: :member
   end
   resources :bproces, only: :autocomlete do
     get :autocomplete, on: :collection

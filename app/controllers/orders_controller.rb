@@ -4,7 +4,7 @@ class OrdersController < ApplicationController
   include Users
 
   before_action :authenticate_user!, except: %i[create_from_file]
-  before_action :set_order, only: %i[show update destroy]
+  before_action :set_order, only: %i[show update destroy back_from_approved back_from_completed]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def create_from_file
@@ -33,7 +33,9 @@ class OrdersController < ApplicationController
   end
 
   def index
-    @date = Order.select(:created_at).order('created_at DESC').where('created_at < ?', Date.current.beginning_of_day).limit(1).pluck(:created_at).first
+    @date = Order.select(:created_at).order('created_at DESC').where('created_at < ?', Date.current.beginning_of_day)
+                 .limit(1).pluck(:created_at).first
+    @date = Date.current if @date.blank?
     @month = @date
     if params[:date].present?
       @date = by_date(params[:date])
@@ -67,7 +69,8 @@ class OrdersController < ApplicationController
     comment(@order, action) if command == 'Комментировать'
     complete(@order, action) if command == 'Подтвердить исполнение'
     if @order.update(order_params)
-      redirect_to @order, notice: 'Order was successfully updated.'
+      flash[:notice] = "##{@order.id}  #{@order.order_type} #{@order.status}"
+      redirect_to orders_url
     else
       render :show
     end
@@ -79,6 +82,24 @@ class OrdersController < ApplicationController
     @order.attachment.purge if @order.attachment.attached?
     flash[:notice] = "#{order_destroyed} удалено" if @order.destroy
     redirect_to orders_url
+  end
+
+  def back_from_approved
+    @order.result = @order.result || ''
+    @order.result += time_and_current_user 'ОТМЕНИЛ свое согласование'
+    @order.status = 'Новое'
+    @order.manager_id = nil
+    @order.save
+    render :show
+  end
+
+  def back_from_completed
+    @order.result = @order.result || ''
+    @order.result += time_and_current_user 'ОТМЕНИЛ исполнение'
+    @order.status = 'Согласовано'
+    @order.executor_id = nil
+    @order.save
+    render :show
   end
 
   def sort_column
@@ -180,4 +201,9 @@ class OrdersController < ApplicationController
   rescue StandardError
     Date.current
   end
+
+  def order_policy
+    @order_policy ||= OrderPolicy.new
+  end
+  helper_method :order_policy
 end

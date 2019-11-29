@@ -5,6 +5,9 @@
   = @title_order if @title_order
   - if params[:search].present?
     [ #{params[:search]} ]
+  - if params[:date].present? || params[:month].present?
+    .right
+      = link_to "всего не исполнено: #{Order.unfinished.count}", orders_path, class: 'groups'    
 
 %table
   %tr
@@ -51,7 +54,7 @@
   %td
     = link_to "Не исполнено: #{Order.unfinished.count}", orders_path, class: 'groups'
   %td
-    По дням: 
+    По дням:
     - if @date.to_date < Date.current
       - date_prev = @date + 1.day
       = link_to " за #{date_prev.strftime('%d.%m.%Y')} ", orders_path(date: date_prev.strftime('%Y-%m-%d')), class: 'groups'

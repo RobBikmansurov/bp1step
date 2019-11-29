@@ -23,5 +23,4 @@ class Order < ApplicationRecord
     where('client_name ILIKE ? or contract_number ILIKE ? or contract_number = ?',
           "%#{search}%", "%#{search}%", search.to_i.to_s)
   end
-
 end

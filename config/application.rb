@@ -13,8 +13,7 @@ module BPDoc
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.0
     
-    # Custom directories with classes and modules you want to be autoloadable.
-    # config.autoload_paths += %W(#{config.root}/extras)
+    config.autoload_paths << Rails.root.join('app', 'policy')
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -29,7 +28,6 @@ module BPDoc
     config.time_zone = 'Ekaterinburg'   # 'UTC +06:00'
     #config.active_record.default_timezone = :local # так не работают графики - ActiveRecord::Base.default_timezone must be :utc to use Groupdate 
     config.active_record.default_timezone = :utc
-    config.active_record.sqlite3.represent_boolean_as_integer = true
 
     config.i18n.default_locale = :ru
     config.i18n.available_locales = [:ru, :en]
