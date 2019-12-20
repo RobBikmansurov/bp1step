@@ -71,7 +71,7 @@ group :development do
 end
 
 group :production, :staging do
-  gem 'puma', '>= 3.12.2'
+  gem 'puma', '>= 4.2.1'
   gem 'rails_12factor', require: false
 end
 
