@@ -51,7 +51,7 @@ gem 'faker'
 
 gem 'loofah' # , '>= 2.2.3'
 gem 'nokogiri', '>= 1.10.5'
-gem "rack", ">= 2.0.8"
+gem 'rack', '>= 2.0.8'
 
 group :development do
   gem 'better_errors'
@@ -71,7 +71,7 @@ group :development do
 end
 
 group :production, :staging do
-  gem 'puma'
+  gem 'puma', '>= 3.12.2'
   gem 'rails_12factor', require: false
 end
 
