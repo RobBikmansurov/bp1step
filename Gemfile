@@ -51,7 +51,7 @@ gem 'faker'
 
 gem 'loofah' # , '>= 2.2.3'
 gem 'nokogiri', '>= 1.10.5'
-gem 'rack' # , '>= 2.0.6'
+gem "rack", ">= 2.0.8"
 
 group :development do
   gem 'better_errors'
