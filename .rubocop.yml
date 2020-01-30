@@ -1,8 +1,10 @@
-require: rubocop-rspec
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
 AllCops:
   TargetRubyVersion: 2.6
   Exclude:
-    - 'lib/**/*'
     - 'bin/*'
     - 'tmp/*'
     - 'db/*'
@@ -27,12 +29,13 @@ Style/ClassAndModuleChildren:
 Lint/AmbiguousBlockAssociation:
   Exclude:
     - app/models/*
+    - spec/**/*
 Metrics/ClassLength:
   Exclude:
     - app/controllers/*
-
 Metrics/BlockLength:
   Exclude:
+    - config/**/*
     - spec/**/*_spec.rb
 Metrics/ModuleLength:
   Exclude:

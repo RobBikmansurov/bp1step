@@ -71,7 +71,7 @@ group :development do
 end
 
 group :production, :staging do
-  gem 'puma', '>= 4.2.1'
+  gem 'puma', '>= 4.3.1'
   gem 'rails_12factor', require: false
 end
 
@@ -90,6 +90,8 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'rspec-rails'
   gem 'rubocop', require: false
+  gem 'rubocop-performance'
+  gem 'rubocop-rails'
   gem 'rubocop-rspec', require: false
   gem 'rubycritic', require: false
   gem 'selenium-webdriver'
