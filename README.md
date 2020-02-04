@@ -2,12 +2,15 @@ Business Processes First Step (BP1Step)
 ---
 Business processes documentation organization and generation, the 1st step of introduction of the processes approach in the small business
 
-## General Information
+<details>
+  <summary>General Information</summary>
+    **BP1Step** - первый шаг на небольшом предприятии для наведения порядка в процессах и повышения уровня зрелости организации.
 
-**BP1Step** - первый шаг на небольшом предприятии для наведения порядка в процессах и повышения уровня зрелости организации.
+    **BP1Step** - простой инструмент для документирования процессов, ресурсов, действий сотрудников, это web-приложение на базе Ruby on Rails с несколькими сервисными rake-задачами (например: синхронизация списка пользователей из LDAP, контроль бизнес-правил).
+    Аутентификация пользователей с помощью Devise, ограничения ролей доступа на базе CanCanCan.
+</details>
 
-**BP1Step** - простой инструмент для документирования процессов, ресурсов, действий сотрудников, это web-приложение на базе Ruby on Rails с несколькими сервисными rake-задачами (например: синхронизация списка пользователей из LDAP, контроль бизнес-правил).
-Аутентификация пользователей с помощью Devise, ограничения ролей доступа на базе CanCanCan.
+#
 
 GitHub CI: [![Build Status](https://travis-ci.org/RobBikmansurov/bp1step.svg?branch=master)](https://travis-ci.org/RobBikmansurov/bp1step)
 [![Maintainability](https://api.codeclimate.com/v1/badges/243fc04d775701086f9f/maintainability)](https://codeclimate.com/github/RobBikmansurov/bp1step/maintainability)
@@ -92,6 +95,13 @@ $ docker-compose up
 ```
 
 Now you can access the application with your browser on: http://localhost:3000
+
+
+### Test and Style
+```bash
+$ docker-compose run web rubocop
+$ docker-compose run web rspec
+```
 
 
 ## PostgreSQL install
