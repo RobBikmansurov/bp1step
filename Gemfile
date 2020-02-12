@@ -53,6 +53,8 @@ gem 'loofah' # , '>= 2.2.3'
 gem 'nokogiri', '>= 1.10.5'
 gem 'rack', '>= 2.0.8'
 
+gem 'rails_performance'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
@@ -79,7 +81,8 @@ group :test do
   gem 'capybara'
   gem 'codeclimate-test-reporter', '~> 1.0.0'
   gem 'codecov', require: false
-  gem 'database_cleaner'
+  # gem 'database_cleaner'
+  gem 'database_cleaner-active_record'
   gem 'rails-controller-testing'
   gem 'shoulda-matchers'
   gem 'simplecov'

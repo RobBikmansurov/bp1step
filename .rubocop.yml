@@ -5,6 +5,8 @@ require:
 AllCops:
   TargetRubyVersion: 2.6
   Exclude:
+    - 'lib/tasks/*'
+    - 'lib/paperclip_processors/*'
     - 'bin/*'
     - 'tmp/*'
     - 'db/*'
