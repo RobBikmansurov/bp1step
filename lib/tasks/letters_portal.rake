@@ -5,13 +5,14 @@
 namespace :bp1step do
   desc 'Create Letters from Portal CB RF'
   # создание новых писем из файлов, принятых и расшифрованных с Портала Банка России
-  task letters_from_portal_cb: :environment do
+  task letters_from_portal_cb1: :environment do
     PublicActivity.enabled = false # отключить протоколирование изменений
     logger = Logger.new('log/bp1step.log') # протокол работы
     logger.info '===== ' + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ' :letters_from_portal_cb'
 
     path_from_portal = Rails.root.join(Rails.configuration.x.letters.path_to_portal, 'in')
     logger.info path_from_portal.to_s
+    ## puts path_from_portal.to_s
 
     # .select {|entry| File.directory? File.join('/your_dir',entry) and !(entry =='.' || entry == '..') }
     dirs = 0
@@ -50,7 +51,7 @@ namespace :bp1step do
 
       next unless letter
 
-      next unless letter.created_at < Date.today - 6.days
+      next unless letter.created_at < Time.zone.today - 6.days
 
       Dir.each_child(directory_name) { |file| File.delete directory_name.join(file) }
       Dir.each_child(directory_name) { |file| p file }
@@ -77,8 +78,12 @@ namespace :bp1step do
 
     json_file = File.read(json_file_name)
     json = JSON.parse json_file
-    letter = Letter.new(status: 0, number: json['RegNumber'], sender: get_sender(name),
-                        subject: json['Text'][0..199], source: 'Портал5 БР')
+    subject = json['Text']
+    subject = json['Title'] if subject.nil?
+    reg_number = json['RegNumber'] || '-'
+
+    letter = Letter.new(status: 0, number: reg_number, sender: get_sender(name),
+                        subject: subject[0..199], source: 'Портал5 БР')
     letter.date = Date.parse json['CreationDate'] || Time.current
     letter.duedate = (Time.current + 10.days).strftime('%d.%m.%Y') # срок исполнения - даем 10 дней по умолчанию
     letter_files = json['Files']
@@ -86,6 +91,7 @@ namespace :bp1step do
     letter_files.each do |file|
       letter.body += file['Name'] + "\n" unless file_exclude? file['Name']
     end
+    # print letter.inspect
     return unless letter.save! # письмо создали, теперь присоедним файлы
 
     letter_files.each do |file|
