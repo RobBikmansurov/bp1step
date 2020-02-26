@@ -1,6 +1,6 @@
 RUN_ARGS := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
-.PHONY: help build up start down destroy stop restart logs logs-api ps login-timescale login-api db-shell
+.PHONY: help build up start down destroy stop restart logs logs-api ps login-timescale login-api db-shell setup rspec rubocop
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 build:	## Buids docker compose file in this directory

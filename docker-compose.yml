@@ -17,6 +17,11 @@ services:
       - 5432:5432
     volumes:
       - db-data:/var/lib/postgresql/data:cached
+  redis:
+    image: redis:5-alpine
+    ports:
+    - "6379"
+
   web:
     build:
       context: .
@@ -24,10 +29,12 @@ services:
     # command: bash -c "foreman start -f Procfile.dev-server"
     environment:
       DATABASE_URL: db
+      REDIS_URL: redis://redis:6379
     ports:
       - 3000:3000
     depends_on:
       - db
+      - redis
     volumes:
       - .:/app
 volumes:
