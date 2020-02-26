@@ -5,7 +5,7 @@
 namespace :bp1step do
   desc 'Create Letters from Portal CB RF'
   # создание новых писем из файлов, принятых и расшифрованных с Портала Банка России
-  task letters_from_portal_cb1: :environment do
+  task letters_from_portal_cb: :environment do
     PublicActivity.enabled = false # отключить протоколирование изменений
     logger = Logger.new('log/bp1step.log') # протокол работы
     logger.info '===== ' + Time.current.strftime('%d.%m.%Y %H:%M:%S') + ' :letters_from_portal_cb'
@@ -95,6 +95,7 @@ namespace :bp1step do
     return unless letter.save! # письмо создали, теперь присоедним файлы
 
     letter_files.each do |file|
+      # print file['Name']
       add_file_to_letter(letter.id, file, id) unless file_exclude? file['Name']
     end
     File.open(name.join(id + '.bp1step'), 'w') { |file| file.write(letter.id.to_s) } # признак обработки данного письма с портала
@@ -102,6 +103,7 @@ namespace :bp1step do
 
   def add_file_to_letter(letter_id, file, message_id)
     file_name = file['Name']
+    file_name = file_name[0..-9] if file_name.end_with? '.sig.enc'
     file_name = file_name[0..-5] if file_name.end_with? '.enc'
     return if file_name.downcase.start_with? 'список рассылки'
 
