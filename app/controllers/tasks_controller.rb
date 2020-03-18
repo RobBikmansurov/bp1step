@@ -4,10 +4,12 @@ class TasksController < ApplicationController
   include Reports
   include Users
 
-  respond_to :html, :json
-  before_action :set_task, only: %i[show edit update destroy report]
-  helper_method :sort_column, :sort_direction
   before_action :authenticate_user! # , only: %i[edit new create update check show]
+  before_action :allowed_user!, only: %i[index]
+  before_action :set_task, only: %i[show edit update destroy report]
+  before_action :allowed_task!, only: %i[show edit update destroy report]
+  helper_method :sort_column, :sort_direction, :task_policy
+  respond_to :html, :json
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
@@ -15,7 +17,8 @@ class TasksController < ApplicationController
     params.delete :status if params[:reset].present? && params[:reset] == params[:status]
     if params[:user].present?
       user = User.find(params[:user])
-      tasks = Task.joins(:user_task).where('user_tasks.user_id = ?', params[:user])
+      task_ids = UserTask.where(user_id: user).pluck(:task_id) + Task.where(author_id: user).pluck(:id)
+      tasks = Task.where(id: task_ids).all
       @title_tasks += "исполнителя [ #{user.displayname} ]"
       if params[:status].present?
         tasks = tasks.status(params[:status])
@@ -288,4 +291,23 @@ class TasksController < ApplicationController
   end
   # rubocop:enable Metrics/BlockLength
   # rubocop:enable Metrics/LineLength
+
+  def allowed_task!
+    return if task_policy.allowed_task?(current_user, @task.id)
+
+    flash[:alert] = "Не ваша задача ##{@task.id}"
+    redirect_to current_user
+  end
+
+  def allowed_user!
+    user_id = params[:user] if params[:user].present?
+    return if task_policy.allowed?(current_user, user_id.to_i)
+
+    flash[:alert] = 'Доступ не разрешен'
+    redirect_to current_user
+  end
+
+  def task_policy
+    @task_policy ||= TaskPolicy.new
+  end
 end
