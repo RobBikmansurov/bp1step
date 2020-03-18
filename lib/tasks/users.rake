@@ -43,7 +43,7 @@ namespace :bp1step do
       firstname = firstname.force_encoding('UTF-8') if firstname
       middlename = entry['middlename'].first
       middlename = middlename.force_encoding('UTF-8') if middlename
-      lastname = entry['sn'].first.force_encoding('UTF-8')
+      lastname = entry['sn']&.first.force_encoding('UTF-8')
       displayname = entry['name'].first.force_encoding('UTF-8')
       physicaldeliveryofficename = entry['physicaldeliveryofficename'].first
       # logger.info "#{i}. #{username}\t#{email}\t#{sn} #{givenname} #{middlename}\t#{name}   >> #{uac & 2}" if debug_flag
