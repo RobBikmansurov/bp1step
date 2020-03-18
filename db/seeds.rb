@@ -81,6 +81,10 @@ developer.roles << Role.find_by(name: :analitic)
 developer.roles << Role.find_by(name: :security)
 developer.roles << Role.find_by(name: :admin)
 
+gu = User.create(displayname: 'gu1', username: 'gu1',
+                 lastname: 'ГУЦБ',
+                 email: 'gu1@example.com', password: 'secret', position: 'ГУЦБ')
+
 60.times do |_n|
   name = Faker::Name.name + ' ' + Faker::Name.name
   names = name.split
@@ -614,11 +618,11 @@ create_roles_executors(b.id, 2, [developer.id], 'Исполнитель', 'ис�
 create_roles_executors(b.id, 2, [dev.id], 'Контролер', 'видит все действия над Распоряжениями, ничего не меняет')
 
 10.times do
-  Order.create(order_type: "Распоряжение о закрытии счетов", codpred: 6390, client_name: Faker::Company.name, author_id: dev.id, 
-              contract_number: Faker::IDNumber.valid, contract_date: Faker::Date.backward(10), status: "Новое")
+  Order.create(order_type: 'Распоряжение о закрытии счетов', codpred: 6390, client_name: Faker::Company.name, author_id: dev.id,
+               contract_number: Faker::IDNumber.valid, contract_date: Faker::Date.backward(10), status: 'Новое')
 end
 5.times do
-  Order.create(order_type: "Распоряжение о открытии счетов", codpred: 6390, client_name: Faker::Company.name, author_id: developer.id, 
-              contract_number: Faker::IDNumber.valid, contract_date: Faker::Date.backward(10), status: "Новое")
+  Order.create(order_type: 'Распоряжение об открытии счетов', codpred: 6390, client_name: Faker::Company.name, author_id: developer.id,
+               contract_number: Faker::IDNumber.valid, contract_date: Faker::Date.backward(10), status: 'Новое')
 end
 puts "#{b.id}: #{b.name}"

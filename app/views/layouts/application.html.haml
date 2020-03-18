@@ -52,9 +52,11 @@
                   -if can? :crud, Metric
                     =nav_link "Метрики", metrics_path + '?sort=name'
             =content_tag(:li, :class => nav_current(business_roles_path)) do
-              =link_to "Ресурсы", business_roles_path
+              - if user_signed_in?
+                - if current_user.role? :user
+                  =link_to "Ресурсы", business_roles_path 
               %ul.nav
-                =nav_link "Роли", business_roles_path
+                =nav_link "Роли", business_roles_path 
                 =nav_link "Места", workplaces_path
                 =nav_link "Приложения", bapps_path
                 =nav_link "Инф.ресурсы", iresources_path
@@ -66,15 +68,15 @@
                 =nav_link 'Термины', terms_path
                 - if user_signed_in?
                   -if can? :show, Contract
-                    =nav_link "Договоры", contracts_path
-                    =nav_link "Контрагенты", agents_path
+                    =nav_link "Договоры", contracts_path if current_user.role? :user
+                    =nav_link "Контрагенты", agents_path if current_user.role? :user
             -if user_signed_in?
               =content_tag(:li, :class => nav_current(tasks_path)) do
                 =link_to 'Действия', letters_path
                 %ul.nav
                   = nav_link 'Письма', letters_path
-                  = nav_link 'Задачи', tasks_path 
-                  = nav_link 'Требования', requirements_path
+                  = nav_link 'Задачи', tasks_path if current_user.role? :user
+                  = nav_link 'Требования', requirements_path if current_user.role? :user
                   = nav_link 'Распоряжения', orders_path if current_user.executor_in? Rails.configuration.x.dms.process_ko
             =nav_link "Сотрудники", users_path
           %ul.nav{:style => "float:right"}

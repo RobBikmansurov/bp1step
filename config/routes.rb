@@ -193,6 +193,8 @@ Rails.application.routes.draw do
       patch :update_avatar
       get :move_to # назначить другого пользователя всех бизнес-ролей сотрудника
       post :business_roles_move_to # перенести бизнес-роли новому пользователю
+      get :copy_to
+      post :business_roles_copy_to # копировать другому пользователю все бизнес-роли сотрудника
       get :stop_all # прератить исполнение всех ролей сотрудником
       post :documents_move_to # перенести документы другому пользователю
       get :move_documents_to
