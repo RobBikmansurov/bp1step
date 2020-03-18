@@ -48,8 +48,8 @@ build:
     when: on_success
   script:
     - apt update -q && apt install libpq-dev postgresql-client nodejs -yqq
-    - cp config/database.yml{.example,}
-    - cp config/ldap.yml{.example,}
+    - cp config/database.yml.example config/database.yml
+    - cp config/ldap.yml.example config/ldap.yml
     - gem install bundler --no-document
     - bundle install -j $(nproc) --path=vendor  # Install dependencies into ./vendor/ruby
     - uname -a
@@ -65,8 +65,8 @@ test:rspec:
   allow_failure: true
   script:
     - apt update -q && apt install nodejs -yqq
-    - cp config/database.yml{.example,}
-    - cp config/ldap.yml{.example,}
+    - cp config/database.yml.example config/database.yml
+    - cp config/ldap.yml.example config/ldap.yml
     # change ldap-auth to database-auth 
     - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
     - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
