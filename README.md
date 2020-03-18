@@ -138,6 +138,16 @@ postgres=# \l
 ## unoconv - конвертер в *.PDF
 ```unoconv -f pdf public/store/2472.20200203.Исходный документ.odt```
 
+## monitoring
+
+```bash
+telnet 127.0.0.1 2002
+# если нет соединения - найти и убить процесс soffice (kill )
+ps axvf|grep soffice
+# запустить unoconv в режиме сервера
+unoconv -l &
+```
+
 
 ## Testing
 
