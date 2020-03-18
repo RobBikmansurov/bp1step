@@ -5,12 +5,12 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 build:	## Buids docker compose file in this directory
 	docker-compose -f docker-compose.yml build $(c)
-up:
+up:	## up containers
 	docker-compose -f docker-compose.yml up -d $(c)
 start:
 	docker-compose -f docker-compose.yml start $(c)
 down:	 ## down all containers
-	docker-compose -f docker-compose.yml down $(c)
+	docker-compose down $(c)
 destroy:
 	docker-compose -f docker-compose.yml down -v $(c)
 stop:
@@ -18,7 +18,7 @@ stop:
 restart:
 	docker-compose -f docker-compose.yml stop $(c)
 	docker-compose -f docker-compose.yml up -d $(c)
-logs:
+logs:	## show logs
 	docker-compose -f docker-compose.yml logs --tail=100 -f $(c)
 logs-api:
 	docker-compose -f docker-compose.yml logs --tail=100 -f api
@@ -36,3 +36,5 @@ rspec:	## run Rspec tests
 	docker-compose run web rspec $(RUN_ARGS) 
 rubocop:	## run rubocop
 	docker-compose run web rubocop $(RUN_ARGS) 
+console:	## rails console
+	docker-compose run web rails console
