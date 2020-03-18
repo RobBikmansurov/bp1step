@@ -4,12 +4,14 @@ class OrdersController < ApplicationController
   include Users
 
   before_action :authenticate_user!, except: %i[create_from_file]
+  before_action :allowed_user!, except: %i[create_from_file]
   before_action :set_order, only: %i[show update destroy back_from_approved back_from_completed]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  helper_method :order_policy
 
   def create_from_file
     filename = params[:file]
-    redirect_to orders_url, notice: 'parameter is missing.' unless filename.present?
+    redirect_to orders_url, notice: 'parameter is missing.' if filename.blank?
     path_to_h_tmp = Rails.configuration.x.dms.path_to_h_tmp
     path_from_file_meta = Rails.root.join(path_to_h_tmp, filename)
     redirect_to orders_url, notice: "#{filename} not exists." unless File.file? path_from_file_meta
@@ -164,7 +166,7 @@ class OrdersController < ApplicationController
 
   def approve(order, action)
     result = order.result || ''
-    result += time_and_current_user action unless action.blank?
+    result += time_and_current_user action if action.present?
     result += time_and_current_user 'согласовал исполнение'
     params[:order][:status] = 'Согласовано'
     params[:order][:manager_id] = current_user.id
@@ -179,7 +181,7 @@ class OrdersController < ApplicationController
 
   def complete(order, action)
     result = order.result || ''
-    result += time_and_current_user action unless action.blank?
+    result += time_and_current_user action if action.present?
     result += time_and_current_user 'завершил исполнение'
     params[:order][:status] = 'Исполнено'
     params[:order][:executor_id] = current_user.id
@@ -202,8 +204,14 @@ class OrdersController < ApplicationController
     Date.current
   end
 
+  def allowed_user!
+    return if order_policy.allowed?(current_user)
+
+    flash[:alert] = 'Вы не исполнитель процесса'
+    redirect_to current_user
+  end
+
   def order_policy
     @order_policy ||= OrderPolicy.new
   end
-  helper_method :order_policy
 end

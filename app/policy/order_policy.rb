@@ -27,4 +27,8 @@ class OrderPolicy
   def able_back_from_completed?(user, order)
     order.status == 'Исполнено' && order.executor_id == user.id
   end
+
+  def allowed?(user)
+    user.executor_in? process_id
+  end
 end
