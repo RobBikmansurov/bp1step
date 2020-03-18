@@ -44,7 +44,7 @@ class Requirement < ApplicationRecord
   def tasks_statuses
     tasks_statuses = ''
     task.order(:id).each do |task|
-      tasks_statuses += task.status_mark
+      tasks_statuses += task.status_mark + ' '
     end
     tasks_statuses
   end
