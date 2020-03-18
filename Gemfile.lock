@@ -487,7 +487,7 @@ DEPENDENCIES
   pg
   pg_search
   public_activity
-  puma (>= 4.3.1)
+  puma (>= 4.3.3)
   rack (>= 2.0.8)
   rails (= 5.2.2.1)
   rails-controller-testing
