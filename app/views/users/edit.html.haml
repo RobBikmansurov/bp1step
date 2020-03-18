@@ -55,7 +55,9 @@
 - if @usr.business_roles.any?
   - if current_user.role? :admin
     #move_to
-      = link_to 'Указать нового Исполнителя ролей', move_to_user_path(@usr), remote: true
+      = link_to 'Указать нового Исполнителя ролей (перенести все роли)', move_to_user_path(@usr), remote: true
+    #copy_to
+      = link_to 'Копировать роли другому Исполнителю', copy_to_user_path(@usr), remote: true
       %p= link_to 'Прекратить исполнение всех ролей',
                 stop_all_user_path(@usr),
                 data: { confirm: "Прекратить исполнение всех ролей сотрудником #{@usr.displayname} ?" }

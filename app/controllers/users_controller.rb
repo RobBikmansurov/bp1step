@@ -121,6 +121,27 @@ class UsersController < ApplicationController
     render :edit
   end
 
+  def copy_to
+    @old_user = User.find(params[:id])
+    @new_user = User.new
+    render :copy_to
+  end
+
+  def business_roles_copy_to
+    user_name = params[:user][:user_name]
+    new_user = User.find_by(displayname: user_name)
+    UserBusinessRole.where(user_id: @usr.id).find_each do |user_role|
+      user_role.note + " (#{@usr.displayname})"
+      unless UserBusinessRole.where(user_id: new_user.id, business_role_id: user_role.business_role_id).any?
+        UserBusinessRole.create(user_id: new_user.id,
+                                business_role_id: user_role.business_role_id,
+                                date_from: Time.current,
+                                note:  "#{user_role.note} +(#{@usr.displayname})")
+      end
+    end
+    render :edit
+  end
+
   def stop_all
     UserBusinessRole.where(user_id: @usr.id).each(&:destroy)
     render :edit
