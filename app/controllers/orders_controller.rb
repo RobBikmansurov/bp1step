@@ -4,7 +4,7 @@ class OrdersController < ApplicationController
   include Users
 
   before_action :authenticate_user!, except: %i[create_from_file]
-  before_action :allowed_user!, except: %i[create_from_file]
+  before_action :allowed_user!, except: %i[create_from_file  show]
   before_action :set_order, only: %i[show update destroy back_from_approved back_from_completed]
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   helper_method :order_policy
