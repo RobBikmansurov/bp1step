@@ -46,14 +46,17 @@ db-shell:
 	docker-compose -f docker-compose.yml exec timescale psql -Upostgres
 setup:	## setup database
 	docker-compose run web rails db:setup
-rspec:	## run Rspec tests
+test:	## run Rspec tests
 	docker-compose run web rspec $(RUN_ARGS) 
 rubocop:	## run rubocop
 	docker-compose run web rubocop $(RUN_ARGS) 
-security:	## run security check utulities
+audit:	## run security check utulities
+	docker-compose run web bundle audit check --update
 	docker-compose run web brakeman 
 console:	## rails console
 	docker-compose run web rails console
+bundle:
+	docker-compose run web bundle $(RUN_ARGS)
 
 s:	run-rails
 c:	console
