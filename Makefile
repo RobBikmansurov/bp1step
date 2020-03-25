@@ -3,6 +3,20 @@ THIS_FILE := $(lastword $(MAKEFILE_LIST))
 .PHONY: help build up start down destroy stop restart logs logs-api ps login-timescale login-api db-shell setup rspec rubocop
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+add-migration:
+	docker-compose run web bundle exec rails g migration $(RUN_ARGS)
+add-model:
+	docker-compose run web bundle exec rails g model $(RUN_ARGS)
+db-migrate:
+	docker-compose run web bundle exec rake db:migrate
+db-rollback:
+	docker-compose run web bundle exec rake db:rollback
+run-rails:	## run rails
+	docker-compose run web bundle exec puma -t 1:1 -b tcp://0.0.0.0:3000
+run-sidekiq:	## run sidekiq
+	docker-compose run web bundle exec sidekiq -q critical,9 -q default,5 -q low,1
+
 build:	## Buids docker compose file in this directory
 	docker-compose -f docker-compose.yml build $(c)
 up:	## up containers
@@ -36,5 +50,11 @@ rspec:	## run Rspec tests
 	docker-compose run web rspec $(RUN_ARGS) 
 rubocop:	## run rubocop
 	docker-compose run web rubocop $(RUN_ARGS) 
+security:	## run security check utulities
+	docker-compose run web brakeman 
 console:	## rails console
 	docker-compose run web rails console
+
+s:	run-rails
+c:	console
+off:	down
