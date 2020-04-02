@@ -23,18 +23,21 @@ RSpec.describe BappsController, type: :controller do
       expect(response).to be_successful
       expect(response).to render_template('bapps/index')
     end
+
     it 'loads all of the bapps into @bapps' do
       bapp1 = FactoryBot.create :bapp
       bapp2 = FactoryBot.create :bapp
       get :index
       expect(assigns(:bapps)).to match_array([bapp1, bapp2])
     end
+
     it 'loads bapps for bproce' do
       bapp1 = create :bapp
       bproce_bapp = create :bproce_bapp, bproce: bproce, bapp: bapp1
       get :index, params: { bproce_id: bproce.id }
       expect(response).to render_template :index
     end
+
     it 'loads all bapps with :all' do
       get :index, params: { all: 1 }
       expect(response).to render_template :index

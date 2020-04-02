@@ -35,6 +35,7 @@ describe Bproce do
     it 'return user_name' do
       expect(bproce.user_name).to eq(owner.displayname)
     end
+
     it 'set owner by owner`s name ' do
       FactoryBot.create(:user, displayname: 'DisplayName')
       bproce.user_name = 'DisplayName'
@@ -44,6 +45,7 @@ describe Bproce do
     it 'return parent process name' do
       expect(bproce.parent_name).to eq(parent.name)
     end
+
     it 'set parent process by name ' do
       FactoryBot.create(:bproce, user_id: owner.id, name: 'Parent Name')
       bproce.parent_name = 'Parent Name'

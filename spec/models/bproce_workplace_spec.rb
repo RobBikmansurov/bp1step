@@ -21,6 +21,7 @@ describe BproceWorkplace do
     bproce_workplace.bproce_name = 'BPROCE_NAME'
     expect(bproce_workplace.bproce_name).to eq('BPROCE_NAME')
   end
+
   it 'set workplace by designation' do
     _workplace = FactoryBot.create :workplace, designation: 'designation'
     bproce_workplace.workplace_designation = 'designation'

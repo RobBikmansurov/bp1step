@@ -9,9 +9,10 @@ RSpec.describe 'Managing terms', type: :feature do
     it 'see Terms' do
       visit '/'
       click_link 'Термины'
-      expect(current_path).to eq('/terms')
+      expect(page).to have_current_path('/terms')
       expect(page).to have_content('Термины, определения')
     end
+
     it 'can not update Terms' do
       visit '/'
       click_link 'Термины'
@@ -35,6 +36,7 @@ RSpec.describe 'Managing terms', type: :feature do
 
       expect(page).to have_content 'Вход в систему выполнен.'
     end
+
     it 'can update Terms' do
       # term = FactoryBot.create(:term)
       visit '/'
@@ -43,7 +45,7 @@ RSpec.describe 'Managing terms', type: :feature do
       click_link 'Термины'
       expect(page).to have_content('Добавить Термин')
       click_button 'Добавить Термин'
-      expect(current_path).to eq('/terms/new')
+      expect(page).to have_current_path('/terms/new')
     end
   end
 end

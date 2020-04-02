@@ -7,6 +7,7 @@ RSpec.describe AgentsController, type: :routing do
     it 'routes to #index' do
       expect(get: '/agents').to route_to('agents#index')
     end
+
     it 'routes to #new' do
       expect(get: '/agents/new').to route_to('agents#new')
     end

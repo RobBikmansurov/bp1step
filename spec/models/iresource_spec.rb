@@ -23,6 +23,7 @@ describe Iresource do
     iresource.owner_name = 'DisplayName'
     expect(iresource.owner_name).to eq('DisplayName')
   end
+
   it 'have search method' do
     expect(described_class.search('').first).to eq(described_class.first)
   end

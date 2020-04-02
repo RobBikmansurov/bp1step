@@ -13,15 +13,19 @@ describe BproceMailer do
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: не выделены роли в процессе ##{bproce.id}")
     end
+
     it 'renders the sender email' do
       expect(mail.from).to eql(['bp1step@bankperm.ru'])
     end
+
     it 'renders the receiver email' do
       expect(mail.to).to eql([user.email])
     end
+
     it '@text contains bproce\'s name' do
       expect(mail.body.encoded).to match(bproce.name)
     end
+
     it '@text contains text' do
       expect(mail.body.encoded).to match('не выделены роли')
     end

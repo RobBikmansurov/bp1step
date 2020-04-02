@@ -26,6 +26,7 @@ RSpec.describe IresourcesController, type: :controller do
       get :index
       expect(assigns(:iresources)).to match_array(iresources)
     end
+
     it 'loads letter for user' do
       user = create :user
       iresource_user = create :iresource, user_id: user.id

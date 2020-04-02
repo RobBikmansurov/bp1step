@@ -157,6 +157,7 @@ RSpec.describe BusinessRolesController, type: :controller do
     # get :mail_all, params: { id: business_role.id }
     # expect(assigns(response)).to render_template :show
   end
+
   describe 'reports' do
     it 'render report print' do
       current_user = FactoryBot.create :user

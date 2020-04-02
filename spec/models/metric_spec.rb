@@ -24,6 +24,7 @@ describe Metric do
     it 'return process name' do
       expect(metric.bproce_name).to eq(bproce.name)
     end
+
     it 'set process name by name' do
       bproce1 = FactoryBot.create :bproce, user_id: user.id, name: 'New Process'
       metric.bproce_name = 'New Process'
@@ -40,31 +41,38 @@ describe Metric do
         metric.depth = 1
         expect(metric.period_format_ms(Date.parse('2019-01-15'))).to eq("'01.01.2019 00:00:00' AND '31.12.2019 23:59:59'")
       end
+
       it 'return dates period for month' do
         metric.depth = 2
         expect(metric.period_format_ms(Date.parse('2019-02-15'))).to eq("'01.02.2019 00:00:00' AND '28.02.2019 23:59:59'")
       end
+
       it 'return dates period for day' do
         metric.depth = 3
         expect(metric.period_format_ms(Date.parse('2019-03-15 15:15:00'))).to eq("'15.03.2019 00:00:00' AND '15.03.2019 23:59:59'")
       end
+
       it 'return dates period for hour' do
         metric.depth = 4
         expect(metric.period_format_ms(Time.zone.parse('2019-03-15 15:15:00')))
           .to eq("'15.03.2019 15:00:00' AND '15.03.2019 15:59:59'")
       end
+
       it 'return begining of year' do
         metric.depth = 1
         expect(metric.date_format_ms(Date.parse('2019-01-15'))).to eq("'01.01.2019'")
       end
+
       it 'return begining of month' do
         metric.depth = 2
         expect(metric.date_format_ms(Date.parse('2019-02-15'))).to eq("'01.02.2019'")
       end
+
       it 'return begining of day' do
         metric.depth = 3
         expect(metric.date_format_ms(Date.parse('2019-03-15 15:15:00'))).to eq("'15.03.2019'")
       end
+
       it 'return begining of hour' do
         metric.depth = 4
         expect(metric.date_format_ms(Time.zone.parse('2019-03-15 15:15:00'))).to eq("'15.03.2019 15'")
@@ -78,9 +86,11 @@ describe Metric do
     it 'by_depth' do
       expect(described_class.by_depth('').first).to eq(described_class.first)
     end
+
     it 'by_depth_title empty' do
       expect(described_class.by_depth_title('')).to eq('')
     end
+
     it 'by_depth_title 2' do
       expect(described_class.by_depth_title(2)).to eq(' [глубина данных: 2]')
     end
@@ -88,9 +98,11 @@ describe Metric do
     it 'by_metric_type' do
       expect(described_class.by_metric_type('').first).to eq(described_class.first)
     end
+
     it 'by_metric_type empty' do
       expect(described_class.by_metric_type_title('')).to eq('')
     end
+
     it 'by_metric_type 3' do
       expect(described_class.by_metric_type_title(3)).to eq(' [тип: 3]')
     end

@@ -45,6 +45,7 @@ RSpec.describe ContractsController do
       get :index, params: { status: 'Согласование' }
       expect(assigns(:contracts)).to match_array([contract_w_status])
     end
+
     it 'returns contracts for bproce' do
       bproce1 = FactoryBot.create :bproce, user_id: user.id
       contract1 = FactoryBot.create :contract, owner_id: user.id, agent_id: agent.id
@@ -52,6 +53,7 @@ RSpec.describe ContractsController do
       get :index, params: { bproce_id: bproce1.to_param }
       expect(assigns(:contracts)).to match_array([contract1])
     end
+
     it 'returns contracts for bproce and status' do
       bproce1 = FactoryBot.create :bproce, user_id: user.id
       contract1 = FactoryBot.create :contract, owner_id: user.id, agent_id: agent.id, status: 'Привет'
@@ -59,22 +61,26 @@ RSpec.describe ContractsController do
       get :index, params: { bproce_id: bproce1.to_param, status: 'Привет' }
       expect(assigns(:contracts)).to match_array([contract1])
     end
+
     it 'returns contracts with type' do
       contract_with_type = FactoryBot.create :contract, owner_id: user.id, agent_id: agent.id, contract_type: 'AnyType'
       get :index, params: { type: 'AnyType' }
       expect(assigns(:contracts)).to match_array([contract_with_type])
     end
+
     it 'returns contracts with place' do
       contract_with_place = FactoryBot.create :contract, owner_id: user.id, agent_id: agent.id, contract_place: 'Place'
       get :index, params: { place: 'Place' }
       expect(assigns(:contracts)).to match_array([contract_with_place])
     end
+
     it 'returns contracts for user' do
       user1 = FactoryBot.create :user
       contract_users = FactoryBot.create :contract, owner_id: user1.id, agent_id: agent.id
       get :index, params: { user: user1.id }
       expect(assigns(:contracts)).to match_array([contract_users])
     end
+
     it 'returns contracts for payer' do
       payer = FactoryBot.create :user
       contract_payers = FactoryBot.create :contract, owner_id: user.id, payer_id: payer.id, agent_id: agent.id
@@ -224,6 +230,7 @@ RSpec.describe ContractsController do
       get :approval_sheet, params: { id: contract.to_param }
       expect(response).to be_successful
     end
+
     it 'print' do
       get :index, params: { format: 'odt' }
       expect(response).to be_successful

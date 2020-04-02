@@ -36,6 +36,7 @@ RSpec.describe TasksController, type: :controller do
       get :index, params: { status: '50' }
       # expect(assigns(:tasks)).to match_array([task50])
     end
+
     it 'load tasks for user' do
       user = create :user
       task_u = FactoryBot.create :task, author_id: user.id
@@ -57,11 +58,13 @@ RSpec.describe TasksController, type: :controller do
       get :new
       expect(assigns(:task)).to be_a_new(Task)
     end
+
     it 'assigns a new task from letter' do
       letter = FactoryBot.create :letter
       get :new, params: { letter_id: letter.id }
       expect(assigns(:task)).to be_a_new(Task)
     end
+
     it 'assigns a new task from requirement' do
       requirement = FactoryBot.create :requirement, author_id: author.id
       get :new, params: { requirement_id: requirement.id }

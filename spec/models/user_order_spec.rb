@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe UserOrder, type: :model do
@@ -10,5 +11,4 @@ RSpec.describe UserOrder, type: :model do
     it { is_expected.to belong_to(:order) }
     it { is_expected.to belong_to(:user) }
   end
-
 end

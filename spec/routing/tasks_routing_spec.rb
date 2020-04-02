@@ -35,6 +35,7 @@ RSpec.describe TasksController, type: :routing do
     it 'routes to #destroy' do
       expect(delete: '/tasks/1').to route_to('tasks#destroy', id: '1')
     end
+
     it 'routes to #create_user' do
       expect(get: '/tasks/1/create_user').to route_to('tasks#create_user', id: '1')
     end

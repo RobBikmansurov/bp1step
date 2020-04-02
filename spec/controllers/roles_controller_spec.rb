@@ -13,6 +13,7 @@ RSpec.describe RolesController, type: :controller do
       get :index
       expect(response).to be_successful
     end
+
     it 'render template index' do
       get :index
       expect(response).to render_template :index

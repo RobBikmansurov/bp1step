@@ -25,6 +25,7 @@ describe BproceIresource do
     bproce_iresource.bproce_name = bproce.name
     expect(bproce_iresource.bproce_name).to eq(bproce.name)
   end
+
   it 'set iresource by label' do
     bproce_iresource.iresource_label = iresource.label
     expect(bproce_iresource.iresource_label).to eq(iresource.label)

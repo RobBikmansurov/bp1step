@@ -25,6 +25,7 @@ describe DocumentDirective do
       document_directive.document_name = document.name
       expect(document_directive.document_name).to eq(document.name)
     end
+
     it 'set directive by number' do
       document_directive.directive_number = "  ##{directive.id}"
       expect(document_directive.directive_number).to eq(directive.name)

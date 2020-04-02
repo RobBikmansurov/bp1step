@@ -19,6 +19,7 @@ RSpec.describe MetricsController, type: :controller do
       expect(response).to be_successful
       expect(response).to render_template('metrics/index')
     end
+
     it 'loads all of the metrics into @metricss' do
       get :index
       expect(assigns(:metrics)).to match_array([metric, metric1])
