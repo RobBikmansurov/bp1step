@@ -131,12 +131,12 @@ class UsersController < ApplicationController
     user_name = params[:user][:user_name]
     new_user = User.find_by(displayname: user_name)
     UserBusinessRole.where(user_id: @usr.id).find_each do |user_role|
-      user_role.note + " (#{@usr.displayname})"
+      user_role.note += " (#{@usr.displayname})"
       unless UserBusinessRole.where(user_id: new_user.id, business_role_id: user_role.business_role_id).any?
         UserBusinessRole.create(user_id: new_user.id,
                                 business_role_id: user_role.business_role_id,
                                 date_from: Time.current,
-                                note:  "#{user_role.note} +(#{@usr.displayname})")
+                                note: "#{user_role.note} +(#{@usr.displayname})")
       end
     end
     render :edit
@@ -281,10 +281,6 @@ class UsersController < ApplicationController
 
   def sort_column
     params[:sort] || 'displayname'
-  end
-
-  def sort_direction
-    params[:direction] || 'asc'
   end
 
   def find_user

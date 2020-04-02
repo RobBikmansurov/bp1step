@@ -85,7 +85,7 @@ class LettersController < ApplicationController
     end
   end
 
-  # rubocop:disable Metrics/LineLength
+  # rubocop:disable Layout/LineLength
   def update
     status_was = @letter.status # старые значения
     if @letter.update(letter_params)
@@ -312,10 +312,6 @@ class LettersController < ApplicationController
     params[:sort] || 'id' # вверху - самые новые письма
   end
 
-  def sort_direction
-    params[:direction] || 'desc'
-  end
-
   def record_not_found
     flash[:alert] = "Письмо ##{params[:id]} не найдено."
     redirect_to action: :index
@@ -457,5 +453,5 @@ class LettersController < ApplicationController
     user_letter.status
   end
   # rubocop:enable Metrics/BlockLength
-  # rubocop:enable Metrics/LineLength
+  # rubocop:enable Layout/LineLength
 end

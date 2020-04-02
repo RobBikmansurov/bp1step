@@ -13,7 +13,8 @@ class DirectivesController < ApplicationController
     directives = directives.where(title: params[:title]) if params[:title].present?
     directives = directives.where(body: params[:body]) if params[:body].present?
     directives = directives.where(status: params[:status]) if params[:status].present?
-    @directives = directives.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
+    @directives = directives.order(sort_order(sort_column, sort_direction)).page(params[:page])
+    @header = header(params)
   end
 
   def show
@@ -62,15 +63,13 @@ class DirectivesController < ApplicationController
   private
 
   def directive_params
-    params.require(:directive).permit(:title, :number, :approval, :name, :note, :body, :annotation, :status, :action)
+    params.require(:directive)
+          .permit(:title, :number, :approval, :name, :note, :body, :annotation, :status, :action)
+          .merge(:sort, :direction)
   end
 
   def sort_column
     params[:sort] || 'number'
-  end
-
-  def sort_direction
-    params[:direction] || 'asc'
   end
 
   def set_directive
@@ -81,5 +80,17 @@ class DirectivesController < ApplicationController
     else
       @directive = params[:id].present? ? Directive.find(params[:id]) : Directive.new
     end
+  end
+
+  def header(params)
+    header = 'Директивы '
+    %i[title body status search].each do |key|
+      next if params[key].blank?
+
+      header += 'в статусе ' if key == :status
+      header += 'поиск ' if key == :search
+      header += "[#{params[key]}]"
+    end
+    header
   end
 end

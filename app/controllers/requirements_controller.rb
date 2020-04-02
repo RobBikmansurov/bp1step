@@ -138,10 +138,6 @@ class RequirementsController < ApplicationController
     params[:sort] || 'duedate'
   end
 
-  def sort_direction
-    params[:direction] || 'desc'
-  end
-
   def record_not_found
     flash[:alert] = "Требование ##{params[:id]} не найдено"
     redirect_to action: :index

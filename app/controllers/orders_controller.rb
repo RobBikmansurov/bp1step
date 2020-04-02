@@ -18,6 +18,7 @@ class OrdersController < ApplicationController
     @order = create_order_from(path_from_file_meta)
     flash[:alert] = @order.errors.messages
     redirect_to(orders_url) && return unless @order.valid?
+
     flash[:alert] = ''
     @order.save
 
@@ -80,6 +81,7 @@ class OrdersController < ApplicationController
 
   def destroy
     redirect_to(orders_url) && return unless @order.status == 'Новое'
+
     order_destroyed = "##{@order.id} #{@order.order_type}"
     @order.attachment.purge if @order.attachment.attached?
     flash[:notice] = "#{order_destroyed} удалено" if @order.destroy
@@ -106,10 +108,6 @@ class OrdersController < ApplicationController
 
   def sort_column
     params[:sort] || 'created_at'
-  end
-
-  def sort_direction
-    params[:direction] || 'desc'
   end
 
   private

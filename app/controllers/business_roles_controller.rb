@@ -134,14 +134,6 @@ class BusinessRolesController < ApplicationController
     params.require(:user_business_role).permit(:user_id, :user_name, :business_role_id, :note, :date_from, :date_to)
   end
 
-  def sort_column
-    params[:sort] || 'name'
-  end
-
-  def sort_direction
-    params[:direction] || 'asc'
-  end
-
   def business_role
     if params[:search].present? # это поиск
       @business_roles = BusinessRole.search(params[:search])

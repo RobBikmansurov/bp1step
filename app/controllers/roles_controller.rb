@@ -45,14 +45,6 @@ class RolesController < ApplicationController
     params.require(:role).permit(:name, :description, :user_id)
   end
 
-  def sort_column
-    params[:sort] || 'name'
-  end
-
-  def sort_direction
-    params[:direction] || 'asc'
-  end
-
   def set_role
     @role = params[:id].present? ? Role.find(params[:id]) : Role.new
   end

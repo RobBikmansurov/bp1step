@@ -69,14 +69,6 @@ class BappsController < ApplicationController
     render json: @bapps.map(&:name)
   end
 
-  def sort_column
-    params[:sort] || 'name'
-  end
-
-  def sort_direction
-    params[:direction] || 'asc'
-  end
-
   private
 
   def bapp_params

@@ -7,7 +7,7 @@ class Bproce < ApplicationRecord
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
 
-  include PgSearch
+  include PgSearch::Model
   pg_search_scope :search__by_all_column,
                   against: %i[description goal id name fullname shortname],
                   using: { tsearch: { prefix: true } }

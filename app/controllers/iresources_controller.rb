@@ -119,10 +119,6 @@ class IresourcesController < ApplicationController
     params[:sort] || 'label'
   end
 
-  def sort_direction
-    params[:direction] || 'asc'
-  end
-
   def iresource
     if params[:search].present? # это поиск
       iresources = Iresource.search(params[:search])

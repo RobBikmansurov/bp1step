@@ -38,7 +38,8 @@ class User < ApplicationRecord
 
   # before_create :create_role
   after_create :create_role
-  before_save :ldap_email, :ldap_firstname, :ldap_displayname, :ldap_email
+  attr_accessor :disable_ldap
+  before_save :ldap_email, :ldap_firstname, :ldap_displayname, :ldap_email unless :disable_ldap
 
   # attr_accessible :username, :email, :password, :password_confirmation, :remember_me,
   #                :firstname, :lastname, :displayname, :role_ids,

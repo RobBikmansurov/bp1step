@@ -19,7 +19,6 @@ RSpec.configure do |config|
   config.before :all do
     FactoryBot.reload
     FactoryBot.factories.clear
-    FactoryBot.sequences.clear
     FactoryBot.find_definitions
   end
 
