@@ -44,7 +44,7 @@ user4.roles << Role.find_by(name: :author)
 
 user5 = User.create(displayname: 'Путин В.В.', username: 'putinx', lastname: 'Х',
                     email: 'putinx@example.com', password: 'putinx', department: 'Библиотека',
-                    position: 'Юрист', office: '201', phone: '2201')
+                    position: 'Юрист', office: '201', phone: '2201', active: false)
 user5.roles << Role.find_by(name: :keeper)
 user5.roles << Role.find_by(name: :user)
 

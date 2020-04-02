@@ -2,6 +2,8 @@
 
 class User < ApplicationRecord
   include LDAP
+  self.per_page = 20
+
   scope :active, -> { where(active: true) }
 
   has_attached_file :avatar,
