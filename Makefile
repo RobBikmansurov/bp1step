@@ -1,6 +1,6 @@
 RUN_ARGS := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
-.PHONY: help build up start down destroy stop restart logs logs-api ps login-timescale login-api db-shell setup rspec rubocop
+.PHONY: help build up start down destroy stop restart logs logs-api ps login-timescale login-api db-shell setup rspec rubocop web
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
@@ -55,9 +55,10 @@ audit:	## run security check utulities
 	docker-compose run web brakeman 
 console:	## rails console
 	docker-compose run web rails console
-bundle:
-	docker-compose run web bundle $(RUN_ARGS)
+web:		## rub web container
+	docker-compose run web $(RUN_ARGS)
 
 s:	run-rails
 c:	console
 off:	down
+w:	web

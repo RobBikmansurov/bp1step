@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'rails', '5.2.2.1'
+gem 'rails', '5.2.4'
 
 gem 'bootsnap'
 
@@ -73,7 +73,7 @@ group :development do
 end
 
 group :production, :staging do
-  gem "puma", ">= 4.3.3"
+  gem 'puma', '>= 4.3.3'
   gem 'rails_12factor', require: false
 end
 
@@ -93,9 +93,10 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'rspec-rails'
   gem 'rubocop', require: false
-  gem 'rubocop-performance'
-  gem 'rubocop-rails'
+  gem 'rubocop-performance', require: false
+  gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
-  gem 'rubycritic', require: false
+  gem 'rubocop-faker', require: false
+  gem 'rubycritic'
   gem 'selenium-webdriver'
 end

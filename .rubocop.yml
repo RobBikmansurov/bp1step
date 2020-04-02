@@ -1,7 +1,8 @@
 require:
   - rubocop-performance
-  - rubocop-rails
   - rubocop-rspec
+  - rubocop-faker
+  - rubocop-rails
 AllCops:
   TargetRubyVersion: 2.6
   Exclude:
@@ -12,8 +13,6 @@ AllCops:
     - 'db/*'
     - 'config/**/*'
     - 'db/migrate/*'
-    - 'spec/**/*'
-    - 'spec/features/**/*'
     - 'coverage/*'
     - 'Guardfile'
     - 'node_modules/**/*'
@@ -22,8 +21,6 @@ Rails:
   Enabled: true
 Style/Documentation:
   Enabled: false
-Metrics/LineLength:
-  Max: 132
 Style/AsciiComments:
   Enabled: false
 Style/ClassAndModuleChildren:
@@ -42,6 +39,10 @@ Metrics/BlockLength:
 Metrics/ModuleLength:
   Exclude:
     - spec/**/*_spec.rb
+Layout/LineLength:
+  Max: 132
+Lint/RaiseException:
+  Enabled: true
 
 # TODO:
 Metrics/AbcSize:
@@ -52,3 +53,12 @@ Metrics/CyclomaticComplexity:
   Enabled: false
 Metrics/PerceivedComplexity:
   Enabled: false
+Lint/StructNewOverride:
+  Enabled: true
+Style/HashEachMethods:
+  Enabled: true
+Style/HashTransformKeys:
+  Enabled: true
+Style/HashTransformValues:
+  Enabled: true
+

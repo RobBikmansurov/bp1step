@@ -16,12 +16,11 @@ RUN apt-get update && apt-get install -y \
 
 ENV LANG C.UTF-8
 
-RUN mkdir /app
 WORKDIR /app
 
 EXPOSE 3000
 
-COPY Gemfile .
-COPY Gemfile.lock .
+ADD Gemfile Gemfile.lock /app/
 RUN gem update bundler
 RUN bundle install --jobs 4
+# COPY . /app/
