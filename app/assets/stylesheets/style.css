@@ -312,3 +312,10 @@ user span {
 user:hover span {
   max-width: 20rem;
 }
+
+textarea {
+  vertical-align: top;
+  height: 50px;
+  overflow: hidden;
+  resize: none;
+}

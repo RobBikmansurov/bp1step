@@ -9,4 +9,5 @@
 //= require autocomplete-rails
 //= require chartkick
 //= require Chart.bundle
+//= require textarea.auto-resizer
 //= require_tree .
