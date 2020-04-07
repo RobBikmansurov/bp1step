@@ -38,5 +38,10 @@ BPDoc::Application.configure do
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
 
   config.assets.compile = true
-  
+
+  config.x.letters.path_to_portal = 'portal'
+  config.x.letters.path_to_rps = 'svk_in'
+  config.x.dms.path_to_h_tmp = 'h_tmp'
+  config.x.dms.process_ko = 1  # id процесса ЭДО. Распоряжения КО
+ 
 end

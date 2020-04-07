@@ -59,6 +59,7 @@ module BPDoc
       ]
       end)
     end
+    config.action_controller.always_permitted_parameters = %w( controller action format page per_page search direction sort)
     
   end
 end
