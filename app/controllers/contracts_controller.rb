@@ -320,10 +320,6 @@ class ContractsController < ApplicationController
     params[:sort] || 'lft'
   end
 
-  def sort_direction
-    params[:direction] || 'asc'
-  end
-
   def record_not_found
     flash[:alert] = 'Неверный #id, договор не найден'
     redirect_to action: :index

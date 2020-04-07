@@ -24,23 +24,28 @@ RSpec.describe BprocesController, type: :controller do
       expect(response).to be_successful
       expect(response).to render_template('bproces/index')
     end
+
     it 'returns finded processes with param search' do
       bproce.name = 'sms-information'
       get :index, params: { search: 'sms' }
       # expect(assigns(:bproces)).to match_array([bproce])
     end
+
     it 'loads all bprocesses into @bproces' do
       get :index, params: {}
       expect(assigns(:bproces)).to match_array([bproce, bproce1])
     end
+
     it 'loads all bprocesses with params all' do
       get :index, params: { all: 1 }
       expect(assigns(:bproces)).to match_array([bproce, bproce1])
     end
+
     it 'loads all bprocesses with params all' do
       get :index, params: { tag: 'web' }
       # expect(assigns(:bproces)).to match_array([bproce, bproce1])
     end
+
     it 'loads bproceses for user' do
       bproce_u = FactoryBot.create :bproce, user_id: user1.id
       get :index, params: { user: user1.id }
@@ -174,22 +179,27 @@ RSpec.describe BprocesController, type: :controller do
       get :check_list, params: { id: bproce.to_param }
       expect(response).to be_successful
     end
+
     it 'check_list_improve' do
       get :check_list_improve, params: { id: bproce.to_param }
       expect(response).to be_successful
     end
+
     it 'doc' do
       get :doc, params: { id: bproce.to_param }
       expect(response).to be_successful
     end
+
     it 'order' do
       get :order, params: { id: bproce.to_param }
       expect(response).to be_successful
     end
+
     it 'card' do
       get :card, params: { id: bproce.to_param }
       expect(response).to be_successful
     end
+
     it 'print' do
       get :index, params: { id: bproce.to_param, format: 'pdf' }
       expect(response).to be_successful

@@ -23,6 +23,7 @@ RSpec.describe UserTask, type: :model do
     user_task.user_name = 'Иванов'
     expect(user_task.user_name).to eq('Иванов')
   end
+
   it 'return отв. for user' do
     user_task = FactoryBot.create :user_task, task_id: task.id, user_id: user.id, status: 1
     expect(user_task.responsible?).to eq(true)

@@ -14,15 +14,19 @@ describe UserWorkplaceMailer do
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: Ваше Рабочее место - #{workplace.designation}")
     end
+
     it 'renders the sender email' do
       expect(mail.from).to eql(['bp1step@bankperm.ru'])
     end
+
     it 'renders the receiver email' do
       expect(mail.to).to eql([user.email])
     end
+
     it '@text contains bproce\'s name' do
       expect(mail.body.encoded).to match(user.displayname)
     end
+
     it '@text contains text' do
       expect(mail.body.encoded).to match('Вам назначено')
     end
@@ -35,15 +39,19 @@ describe UserWorkplaceMailer do
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: Рабочее место #{workplace.designation}")
     end
+
     it 'renders the sender email' do
       expect(mail.from).to eql(['bp1step@bankperm.ru'])
     end
+
     it 'renders the receiver email' do
       expect(mail.to).to eql([user.email])
     end
+
     it '@text contains bproce\'s name' do
       expect(mail.body.encoded).to match(user.displayname)
     end
+
     it '@text contains text' do
       expect(mail.body.encoded).to match('не ваше.')
     end

@@ -28,6 +28,14 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:update_avatar, keys: [:avatar])
   end
 
+  def sort_direction
+    params[:direction] || 'asc'
+  end
+
+  def sort_column
+    params[:sort] || 'name'
+  end
+
   def sort_order(column, direction)
     direction = direction.casecmp('asc').zero? ? 'asc' : 'desc'
     "#{column} #{direction}"

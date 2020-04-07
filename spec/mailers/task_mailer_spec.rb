@@ -13,15 +13,19 @@ describe TaskMailer do
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: не исполнена Задача #{task.id}")
     end
+
     it 'renders the sender email' do
       expect(mail.from).to eql(['bp1step@bankperm.ru'])
     end
+
     it 'renders the receiver email' do
       expect(mail.to).to eql([user.email])
     end
+
     it '@text contains task\'s name' do
       expect(mail.body.encoded).to match(task.name)
     end
+
     it '@text contains text' do
       expect(mail.body.encoded).to match('которая не исполнена в срок!')
     end
@@ -34,12 +38,15 @@ describe TaskMailer do
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: 5 дн. на Задачу #{task.id}")
     end
+
     it 'renders the sender email' do
       expect(mail.from).to eql(['bp1step@bankperm.ru'])
     end
+
     it 'renders the receiver email' do
       expect(mail.to).to eql([user.email])
     end
+
     it '@text contains task\'s name' do
       expect(mail.body.encoded).to match(task.name)
     end

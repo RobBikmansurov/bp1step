@@ -15,19 +15,24 @@ describe UserLetterMailer do
     it 'renders correct subject for status = 1' do
       expect(mail.subject).to eql("BP1Step: Вы - отв.исполнитель Письма ##{letter.name}")
     end
+
     it 'renders correct subject for status = 0' do
       user_letter.status = 0
       expect(mail.subject).to eql("BP1Step: Вы - исполнитель Письма ##{letter.name}")
     end
+
     it 'renders the sender email' do
       expect(mail.from).to eql(['bp1step@bankperm.ru'])
     end
+
     it 'renders the receiver email' do
       expect(mail.to).to eql([user.email])
     end
+
     it '@text contains bproce\'s name' do
       expect(mail.body.encoded).to match(user.displayname)
     end
+
     it '@text contains text' do
       expect(mail.body.encoded).to match('исполнителем </a>')
     end
@@ -40,15 +45,19 @@ describe UserLetterMailer do
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: удален исполнитель Письма ##{letter.name}")
     end
+
     it 'renders the sender email' do
       expect(mail.from).to eql(['bp1step@bankperm.ru'])
     end
+
     it 'renders the receiver email' do
       expect(mail.to).to eql([user.email])
     end
+
     it '@text contains bproce\'s name' do
       expect(mail.body.encoded).to match(user.displayname)
     end
+
     it '@text contains text' do
       expect(mail.body.encoded).to match('удален из исполнителей Письма')
     end

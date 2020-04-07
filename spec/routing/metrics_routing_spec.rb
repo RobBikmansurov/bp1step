@@ -35,9 +35,11 @@ RSpec.describe MetricsController, type: :routing do
     it 'routes to #set' do
       expect(get: '/metrics/1/set').to route_to('metrics#set', id: '1')
     end
+
     it 'routes to #test' do
       expect(get: '/metrics/1/test').to route_to('metrics#test', id: '1')
     end
+
     it 'routes to #set_values' do
       expect(get: '/metrics/1/set_values').to route_to('metrics#set_values', id: '1')
     end

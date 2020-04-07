@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :user_order do
-    user nil
-    order nil
+    user { nil }
+    order { nil }
   end
 end

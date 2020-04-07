@@ -14,7 +14,7 @@ class Document < ApplicationRecord
   # attr_accessible :name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved,
   #               :note, :place, :document_file, :file_delete, :bproce_id
 
-  include PgSearch
+  include PgSearch::Model
   pg_search_scope :full_search,
                   against: [
                     [:name, 'A'],

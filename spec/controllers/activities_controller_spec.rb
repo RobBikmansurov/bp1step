@@ -19,20 +19,24 @@ RSpec.describe ActivitiesController, type: :controller do
       get :index
       expect(response).to render_template('activities/index')
     end
+
     it 'return 200 OK' do
       get :index
       expect(response).to be_successful
     end
+
     it 'assign activities for letter' do
       letter = FactoryBot.create :letter, author_id: author.id
       get :index, params: { id: letter.id, type: 'letter' }
       expect(response).to render_template('activities/index')
     end
+
     it 'assign activities for contract' do
       contract = FactoryBot.create :contract, owner_id: author.id
       get :index, params: { id: contract.id, type: 'contract' }
       expect(response).to render_template('activities/index')
     end
+
     it 'assign activities for any type' do
       task = FactoryBot.create :task, author_id: author.id
       get :index, params: { id: task.id, type: 'task' }

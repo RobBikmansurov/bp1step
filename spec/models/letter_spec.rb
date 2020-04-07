@@ -29,28 +29,35 @@ describe Letter do
     letter.author_name = 'DisplayName'
     expect(letter.author_name).to eq('DisplayName')
   end
+
   it 'return correct status_name' do
     expect(letter.status_name).to eq('Новое')
   end
+
   it 'return correct status_name after update' do
     letter.status = 10
     expect(letter.status_name).to eq('На исполнении')
   end
+
   it 'set status by name' do
     letter.status_name = 'Завершено'
     expect(letter.status).to eq(90)
   end
+
   it 'return empty action' do
     expect(letter.action).to eq('')
   end
+
   it 'add action to result' do
     letter.result = '1'
     letter.action = '23'
     expect(letter.result).to eq('123')
   end
+
   it 'return name' do
     expect(letter.name).to eq('№123-1 от 01.01.19')
   end
+
   it 'have search method' do
     expect(described_class.search('').first).to eq(described_class.first)
   end

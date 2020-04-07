@@ -20,6 +20,7 @@ RSpec.describe HomeController, type: :controller do
     get :create_letter, params: { id: user.id }
     expect(response).to be_successful
   end
+
   it 'creates letter for registered user' do
     user = FactoryBot.create :user, phone: '911'
     user.roles << Role.find_or_create_by(name: 'admin', description: 'description')

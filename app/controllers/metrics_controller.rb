@@ -248,10 +248,6 @@ class MetricsController < ApplicationController
     params[:sort] || 'id'
   end
 
-  def sort_direction
-    params[:direction] || 'asc'
-  end
-
   def record_not_found
     flash[:alert] = "Метрика ##{params[:id]} не найдена."
     redirect_to action: :index

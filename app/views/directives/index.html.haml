@@ -1,32 +1,6 @@
 -title "Руководящие документы, Директивы, Указания"
 -search 'Директиву'
--if params[:title].present?
-  %h2
-    Директивы
-    [
-    = params[:title]
-    ]  
--else
-  -if params[:body].present?
-    %h2
-      Директивы
-      [
-      = params[:body]
-      ]  
-  -else
-    -if params[:status].present?
-      %h2
-        Директивы - статус
-        [
-        = params[:status]
-        ]  
-    -else
-      %h1
-        Директивы
-        -if params[:search].present?
-          [ 
-          = params[:search]
-          ]
+%h2= @header
 %table
   %tr
     %th= sortable "number", "Номер"

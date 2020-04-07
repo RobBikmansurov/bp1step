@@ -88,7 +88,7 @@ class TasksController < ApplicationController
     render :create_user
   end
 
-  # rubocop:disable Metrics/LineLength
+  # rubocop:disable Layout/LineLength
   def update
     status_was = @task.status # старые значения записи
     duedate_was = @task.duedate
@@ -163,10 +163,6 @@ class TasksController < ApplicationController
 
   def sort_column
     params[:sort] || 'id' # вверху - самые новые задачи
-  end
-
-  def sort_direction
-    params[:direction] || 'desc'
   end
 
   def enabled_statuses(task, current_user_id)
@@ -290,7 +286,7 @@ class TasksController < ApplicationController
     user_task.status
   end
   # rubocop:enable Metrics/BlockLength
-  # rubocop:enable Metrics/LineLength
+  # rubocop:enable Layout/LineLength
 
   def allowed_task!
     return if task_policy.allowed_task?(current_user, @task.id)

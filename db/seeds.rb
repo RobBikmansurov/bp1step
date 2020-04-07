@@ -44,7 +44,7 @@ user4.roles << Role.find_by(name: :author)
 
 user5 = User.create(displayname: 'Путин В.В.', username: 'putinx', lastname: 'Х',
                     email: 'putinx@example.com', password: 'putinx', department: 'Библиотека',
-                    position: 'Юрист', office: '201', phone: '2201')
+                    position: 'Юрист', office: '201', phone: '2201', active: false)
 user5.roles << Role.find_by(name: :keeper)
 user5.roles << Role.find_by(name: :user)
 
@@ -128,8 +128,8 @@ end
   wp = Workplace.find(Workplace.pluck(:id).sample)
   wp.user_workplace.create(
     user_id: User.pluck(:id).sample,
-    date_from: Faker::Date.backward(120),
-    date_to: Faker::Date.forward(120),
+    date_from: Faker::Date.backward(days: 120),
+    date_to: Faker::Date.forward(days: 120),
     note: ''
   )
 end
@@ -238,8 +238,8 @@ puts 'processes created'
 # iresource
 Array.new(50) do |_i|
   url = Faker::Internet.url.sub 'http:', ['//srv', '//s', 'aws:', 'https:', 'ftp:'][rand(5)]
-  label = Faker::Lorem.words(6).join(' ')[0, 20]
-  label = Faker::Lorem.words(6).join(' ')[0, 20] if Iresource.where(label: label).any?
+  label = Faker::Lorem.words(number: 6).join(' ')[0, 20]
+  label = Faker::Lorem.words(number: 6).join(' ')[0, 20] if Iresource.where(label: label).any?
   Iresource.create!(
     level: %w[FS DB SPR API local][rand(5)],
     label: label,
@@ -256,7 +256,7 @@ Array.new(50) do |_i|
   BproceIresource.create(bproce_id: Bproce.pluck(:id).sample, iresource_id: Iresource.last.id)
   if rand(20) == 1
     BproceIresource.create(bproce_id: Bproce.pluck(:id).sample, iresource_id: Iresource.last.id,
-                           rpurpose: Faker::Lorem.sentence(1))
+                           rpurpose: Faker::Lorem.sentence(word_count: 1))
   end
 end
 puts 'iresources created'
@@ -278,9 +278,9 @@ Array.new(150) do |_i|
   status = 'Действует'
   status = 'НеДействует' if rand(20) == 1
   status = 'Согласование' if rand(20) == 1
-  date = Faker::Date.backward(rand(400)) # date_begin
-  date_end = Faker::Date.forward(rand(400)) if status == 'НеДействует'
-  date_end = Faker::Date.forward(rand(400)) if status == 'Действует' && rand(2) == 1
+  date = Faker::Date.backward(days: rand(400)) # date_begin
+  date_end = Faker::Date.forward(days: rand(400)) if status == 'НеДействует'
+  date_end = Faker::Date.forward(days: rand(400)) if status == 'Действует' && rand(2) == 1
   payer_id = nil
   payer_id = User.pluck(:id).sample unless rand(5) == 1
   place = "ST#{rand(10)}"
@@ -309,7 +309,7 @@ Array.new(150) do |_i|
   BproceContract.create(bproce_id: Bproce.pluck(:id).sample, contract_id: contract_id)
   if rand(20) == 1
     BproceContract.create(bproce_id: Bproce.pluck(:id).sample, contract_id: contract_id,
-                          purpose: Faker::Lorem.sentence(1))
+                          purpose: Faker::Lorem.sentence(word_count: 1))
   end
 end
 puts 'contracts created'
@@ -382,7 +382,7 @@ Array.new(100) do |_i|
   approved = nil
   approveorgan = ''
   if %w[НеДействует Утвержден].include?(status)
-    approved = Faker::Date.backward(rand(400))
+    approved = Faker::Date.backward(days: rand(400))
     approveorgan = ['Председатель Правления', 'Генеральный директор', 'Правление', 'Совет Директоров', 'Общее собрание'][rand(5)]
   end
   note = Faker::Lorem.sentence if rand(5) == 1
@@ -411,10 +411,14 @@ Array.new(100) do |_i|
   end
   directive_id = Directive.pluck(:id).sample
   unless DocumentDirective.where(document_id: document_id).where(directive_id: directive_id).any?
-    DocumentDirective.create!(directive_id: directive_id, document_id: document_id, note: Faker::Lorem.sentence(1)) if rand(20) == 1
+    if rand(20) == 1
+      DocumentDirective.create!(directive_id: directive_id, document_id: document_id, note: Faker::Lorem.sentence(word_count: 1))
+    end
   end
   BproceDocument.create!(bproce_id: Bproce.pluck(:id).sample, document_id: document_id)
-  BproceDocument.create!(bproce_id: Bproce.pluck(:id).sample, document_id: document_id, purpose: Faker::Lorem.sentence(1)) if rand(20) == 1
+  if rand(20) == 1
+    BproceDocument.create!(bproce_id: Bproce.pluck(:id).sample, document_id: document_id, purpose: Faker::Lorem.sentence(word_count: 1))
+  end
 end
 puts 'documents created'
 
@@ -434,7 +438,7 @@ Array.new(300) do |_l|
   number += "-#{rand(33)}" if rand(5) == 1
   number += "-#{rand(33)}" if rand(5) == 1
   number += "/#{rand(20)}" if rand(6) == 1
-  date = Faker::Date.backward(rand(200))
+  date = Faker::Date.backward(days: rand(200))
   duedate = date + 7 + rand(9)
   in_out = 1 # входящее
   in_out = 2 if rand(5) == 1
@@ -445,13 +449,13 @@ Array.new(300) do |_l|
     letter_id = Letter.pluck(:id).sample if status == 90 && rand(5).zero?
     max_reg_number = Letter.where('in_out = 2').maximum(:regnumber).to_i
     regnumber = max_reg_number + 1 # next registration number for current year and directiom
-    regdate = Faker::Date.backward(rand(200))
+    regdate = Faker::Date.backward(days: rand(200))
   end
   sender = "#{Faker::Company.suffix} #{Faker::Company.name}" unless rand(5).zero? # new sender
   letter = Letter.create!(
     number: number,
     date: date,
-    subject: Faker::Lorem.sentence(4),
+    subject: Faker::Lorem.sentence(word_count: 4),
     status: status,
     source: %w[курьер почта email портал][rand(4)],
     sender: sender,
@@ -496,7 +500,7 @@ def create_user_requirement(requirement_id, user_id = nil)
 end
 
 Array.new(20) do |_l|
-  date = Faker::Date.backward(rand(200))
+  date = Faker::Date.backward(days: rand(200))
   duedate = date + 7 + rand(9)
   status = [0, 5, 9, 15, 15, 15, 15, 15, 15, 90, 90, 90, 90, 90, 90][rand(15)]
   if rand(7) == 1
@@ -504,10 +508,10 @@ Array.new(20) do |_l|
     source = nil
   else
     letter_id = nil
-    source = Faker::Lorem.words(rand(1..6)).join(' ')
+    source = Faker::Lorem.words(number: rand(1..6)).join(' ')
   end
   Requirement.create!(
-    label: Faker::Lorem.words(rand(2..7)).join(' '),
+    label: Faker::Lorem.words(number: rand(2..7)).join(' '),
     date: date,
     duedate: duedate,
     status: status,
@@ -521,7 +525,7 @@ Array.new(20) do |_l|
     create_user_requirement(requirement.id)
     create_user_requirement(requirement.id) if rand(3) == 1
     requirement.status = status
-    requirement.result = Faker::Lorem.paragraph(rand(3))
+    requirement.result = Faker::Lorem.paragraph(sentence_count: rand(3))
   end
   requirement.save
 end
@@ -533,7 +537,7 @@ def create_user_task(task_id, user_id = nil)
 end
 
 Array.new(100) do |_l|
-  date = Faker::Date.backward(rand(200))
+  date = Faker::Date.backward(days: rand(200))
   duedate = date + 7 + rand(9)
   completion_date = date + rand(30)
   status = [0, 5, 20, 50, 50, 50, 50, 50, 90, 90, 90, 90, 90, 90, 90][rand(15)]
@@ -545,7 +549,7 @@ Array.new(100) do |_l|
     requirement_id = (Requirement.pluck(:id).sample if rand(5) == 1)
   end
   task = Task.create(
-    name: Faker::Lorem.words(rand(2..7)).join(' '),
+    name: Faker::Lorem.words(number: rand(2..7)).join(' '),
     created_at: date,
     duedate: duedate,
     completion_date: completion_date,
@@ -559,7 +563,7 @@ Array.new(100) do |_l|
     create_user_task(task.id)
     create_user_task(task.id) if rand(3) == 1
     task.status = status
-    task.result = Faker::Lorem.paragraph(rand(3))
+    task.result = Faker::Lorem.paragraph(sentence_count: rand(3))
   end
   task.save
 end
@@ -590,7 +594,7 @@ Bapp.create(name: '1С:Бухгалтерия.Кадры', description: '1С:Б�
   BproceBapp.create!(
     bproce_id: Bproce.pluck(:id).sample,
     bapp_id: Bapp.pluck(:id).sample,
-    apurpose: Faker::Lorem.sentence(1)
+    apurpose: Faker::Lorem.sentence(word_count: 1)
   )
 end
 puts 'applications created'
@@ -619,10 +623,10 @@ create_roles_executors(b.id, 2, [dev.id], 'Контролер', 'видит вс
 
 10.times do
   Order.create(order_type: 'Распоряжение о закрытии счетов', codpred: 6390, client_name: Faker::Company.name, author_id: dev.id,
-               contract_number: Faker::IDNumber.valid, contract_date: Faker::Date.backward(10), status: 'Новое')
+               contract_number: Faker::IDNumber.valid, contract_date: Faker::Date.backward(days: 10), status: 'Новое')
 end
 5.times do
   Order.create(order_type: 'Распоряжение об открытии счетов', codpred: 6390, client_name: Faker::Company.name, author_id: developer.id,
-               contract_number: Faker::IDNumber.valid, contract_date: Faker::Date.backward(10), status: 'Новое')
+               contract_number: Faker::IDNumber.valid, contract_date: Faker::Date.backward(days: 10), status: 'Новое')
 end
 puts "#{b.id}: #{b.name}"

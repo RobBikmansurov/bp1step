@@ -8,11 +8,11 @@ class TermsController < ApplicationController
   before_action :set_term, only: %i[show update destroy]
 
   def index
-    @terms = Term.order(:shortname)
+    @terms = Term.all
     if params[:all].blank?
       @terms = @terms.searchtype(params[:apptype]) if params[:apptype].present?
       @terms = @terms.search(params[:search]) if params[:search].present?
-      @terms = @terms.order(sort_order(sort_column, sort_direction)).paginate(per_page: 10, page: params[:page])
+      @terms = @terms.order(sort_order(sort_column, sort_direction)).page(params[:page])
     end
     respond_to do |format|
       format.html
@@ -84,14 +84,6 @@ class TermsController < ApplicationController
 
   def term_params
     params.require(:term).permit(:name, :shortname, :description, :note)
-  end
-
-  def sort_column
-    params[:sort] || 'name'
-  end
-
-  def sort_direction
-    params[:direction] || 'asc'
   end
 
   def set_term

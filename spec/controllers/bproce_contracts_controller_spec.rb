@@ -46,6 +46,7 @@ RSpec.describe BproceContractsController, type: :controller do
         post :create, params: { bproce_contract: add_proce_to_contract }
         expect(response).to redirect_to(BproceContract.last.contract)
       end
+
       it 'redirects to the created bproce_contract with bproce_name and contract_id' do
         post :create, params: { bproce_contract: valid_attributes_w_name }
         expect(response).to redirect_to(BproceContract.last.contract)

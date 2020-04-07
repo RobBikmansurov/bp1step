@@ -32,11 +32,13 @@ describe User do
   it 'have search method' do
     expect(described_class.search('').first).to eq(described_class.first)
   end
+
   it 'set user by displayname' do
     user = FactoryBot.create :user, displayname: 'Иванов'
     user.user_name = 'Иванов'
     expect(user.user_name).to eq('Иванов')
   end
+
   it 'show first symbols from full name' do
     user = create :user, lastname: 'Фамилия', firstname: 'Имя', middlename: 'Отчество'
     expect(user.user3).to eq('ИОФ')
@@ -45,6 +47,7 @@ describe User do
   it 'check exists role' do
     expect(user.role?(:admin)).to eq true
   end
+
   it 'check non exists role' do
     expect(user.role?(:admin1)).to eq false
   end

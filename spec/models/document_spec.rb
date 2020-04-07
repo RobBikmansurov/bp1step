@@ -24,6 +24,7 @@ describe Document do
   context 'when have_attached_file' do
     it { is_expected.to have_attached_file(:document_file) }
     it { is_expected.not_to validate_attachment_presence(:document_file) }
+
     it do
       expect(subject).not_to validate_attachment_size(:document_file)
         .less_than(2.megabytes)
@@ -34,6 +35,7 @@ describe Document do
     document.name = '1234567890' * 6
     expect(document.shortname).to eq(('1234567890' * 5).to_s)
   end
+
   it 'set owner by owner`s name' do
     document.owner_name = 'Bush'
     expect(document.owner_name).to eq('Bush')

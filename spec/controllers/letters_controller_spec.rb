@@ -29,21 +29,25 @@ RSpec.describe LettersController, type: :controller do
       get :index
       expect(assigns(:letters)).to match_array([letter, letter1])
     end
+
     it 'loads letter for date' do
       letter_new = FactoryBot.create :letter, author_id: author.id, date: '2011-01-01'
       get :index, params: { date: '2011-01-01' }
       expect(assigns(:letters)).to match_array([letter_new])
     end
+
     it 'loads letter for regdate' do
       letter_new = FactoryBot.create :letter, author_id: author.id, regdate: '2011-01-01'
       get :index, params: { regdate: '2011-01-01' }
       expect(assigns(:letters)).to match_array([letter_new])
     end
+
     it 'loads letter for status' do
       letter_new = FactoryBot.create :letter, author_id: author.id, status: 90
       get :index, params: { status: 90 }
       expect(assigns(:letters)).to match_array([letter_new])
     end
+
     it 'loads letter for user' do
       user = FactoryBot.create :user
       letter_new = FactoryBot.create :letter, author_id: author.id
@@ -176,14 +180,17 @@ RSpec.describe LettersController, type: :controller do
     get :clone, params: { id: letter.id }
     expect(response).to render_template('clone')
   end
+
   it 'create outgoing letter' do
     get :create_outgoing, params: { id: letter.id }
     expect(response).to render_template :create_outgoing
   end
+
   it 'create task' do
     get :create_task, params: { id: letter.id }
     expect(response).to redirect_to "/tasks/new?letter_id=#{letter.id}"
   end
+
   it 'create requirement' do
     get :create_requirement, params: { id: letter.id }
     expect(response).to redirect_to "/requirements/new?letter_id=#{letter.id}"
@@ -200,6 +207,7 @@ RSpec.describe LettersController, type: :controller do
     get :senders
     expect(response).to render_template :senders
   end
+
   it 'display sender list with status' do
     get :senders, params: { status: 90 }
     expect(response).to render_template :senders
@@ -213,6 +221,7 @@ RSpec.describe LettersController, type: :controller do
       get :check, params: { id: letter.to_param }
       expect(response).to be_successful
     end
+
     it 'render week report' do
       current_user = FactoryBot.create :user
       letter1 = create :letter, author: user, regdate: Date.current - 5
@@ -220,6 +229,7 @@ RSpec.describe LettersController, type: :controller do
       get :log_week, params: { week_day: Date.current - 5 }
       expect(response).to be_successful
     end
+
     it 'render reestr report' do
       current_user = FactoryBot.create :user
       get :reestr, params: { id: letter.id }

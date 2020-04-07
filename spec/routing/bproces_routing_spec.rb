@@ -35,9 +35,11 @@ RSpec.describe BprocesController, type: :routing do
     it 'routes to #card' do
       expect(get: '/bproces/1/card').to route_to('bproces#card', id: '1')
     end
+
     it 'routes to #order' do
       expect(get: '/bproces/1/order').to route_to('bproces#order', id: '1')
     end
+
     it 'routes to #autocomplete' do
       expect(get: '/bproces/autocomplete').to route_to('bproces#autocomplete')
     end

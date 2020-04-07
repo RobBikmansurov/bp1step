@@ -155,6 +155,7 @@ RSpec.describe WorkplacesController, type: :controller do
       get :index, params: { format: 'odt' }
       expect(response).to be_successful
     end
+
     it 'render switch' do
       get :switch
       expect(response).to be_successful

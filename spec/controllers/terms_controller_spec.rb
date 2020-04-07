@@ -20,6 +20,7 @@ RSpec.describe TermsController, type: :controller do
       expect(response).to be_successful
       expect(response).to render_template('terms/index')
     end
+
     it 'loads all of the terms into @terms' do
       term1 = FactoryBot.create(:term)
       term2 = FactoryBot.create(:term)

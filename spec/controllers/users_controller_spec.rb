@@ -25,6 +25,7 @@ RSpec.describe UsersController, type: :controller do
       get :index
       expect(assigns(:users)).to match_array([user, user1])
     end
+
     it 'lists users from office' do
       get :index
       expect(assigns(:users)).to match_array([user, user1])
@@ -34,6 +35,7 @@ RSpec.describe UsersController, type: :controller do
       get :index, params: { office: 2 }
       expect(assigns(:users)).to match_array([user1])
     end
+
     it 'lists users with role' do
       get :index, params: { role: 'admin' }
       expect(assigns(:users)).to match_array([user])
@@ -47,6 +49,7 @@ RSpec.describe UsersController, type: :controller do
         put :update, params: { id: user.to_param,
                                user: { position: 'Должность' } }
       end
+
       it 'assigns the requested user' do
         put :update, params: { id: user.to_param,
                                user: { position: 'Должность' } }
@@ -70,6 +73,7 @@ RSpec.describe UsersController, type: :controller do
     post :documents_move_to, params: { id: user.id, user: { user_name: new_user.displayname } }
     expect(response).to redirect_to(new_user)
   end
+
   it 'business_roles_move_to' do
     business_role = create :business_role, bproce_id: bproce.id
     user_business_role = create :user_business_role, business_role_id: business_role.id, user_id: user.id
@@ -77,26 +81,32 @@ RSpec.describe UsersController, type: :controller do
     post :business_roles_move_to, params: { id: user.id, user: { user_name: new_user.displayname } }
     expect(response).to render_template(:edit)
   end
+
   it 'render uworkplaces' do
     get :uworkplaces, params: { id: user.id }
     expect(response).to render_template :uworkplaces
   end
+
   it 'render uroles' do
     get :uroles, params: { id: user.id }
     expect(response).to render_template :uroles
   end
+
   it 'render documents' do
     get :documents, params: { id: user.id }
     expect(response).to render_template :documents
   end
+
   it 'render contracts' do
     get :contracts, params: { id: user.id }
     expect(response).to render_template :contracts
   end
+
   it 'render resources' do
     get :resources, params: { id: user.id }
     expect(response).to render_template :resources
   end
+
   it 'render processes' do
     get :processes, params: { id: user.id }
     expect(response).to render_template :processes
@@ -114,6 +124,7 @@ RSpec.describe UsersController, type: :controller do
       get :order, params: { id: user.to_param }
       expect(response).to be_successful
     end
+
     it 'generate pass' do
       get :pass, params: { id: user.to_param }
       expect(response).to be_successful

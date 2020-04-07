@@ -25,9 +25,11 @@ describe Directive do
     it 'return short name' do
       expect(directive.shortname).to eq('Закон 123-ФЗ от 01.01.2019')
     end
+
     it 'return middle name' do
       expect(directive.midname).to eq('Закон РФ №123-ФЗ 01.01.2019')
     end
+
     it 'set directive name by #id and return directive name' do
       directive.directive_name = 'abracadabra  #100'
       expect(directive.id).to eq(100)
@@ -39,10 +41,12 @@ describe Directive do
       directive.approval = nil
       expect(directive.shortname).to eq('Закон 123-ФЗ')
     end
+
     it 'return middle name' do
       directive.approval = nil
       expect(directive.midname).to eq('Закон РФ №123-ФЗ')
     end
+
     it 'return directive name' do
       directive.approval = nil
       expect(directive.directive_name).to eq("Закон РФ №123-ФЗ   ##{directive.id}")
@@ -52,6 +56,7 @@ describe Directive do
   it 'have search method' do
     expect(described_class.search('').first).to eq(described_class.first)
   end
+
   it 'return all directives of bproce, linked through documents' do
     owner = FactoryBot.create :user
     bproce1 = FactoryBot.create :bproce, user_id: owner.id

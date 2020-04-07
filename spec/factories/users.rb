@@ -17,5 +17,7 @@ FactoryBot.define do
     # User.new :avatar => Rails.root.join("spec/factories/images/rails.png").open
     # avatar { fixture_file_upload(Rails.root.join('spec/factories/images/rails.png'), 'image/png') }
     # avatar { Rails.root.join("spec/factories/images/rails.png").open }
+
+    disable_ldap { true }
   end
 end

@@ -36,10 +36,12 @@ describe Requirement do
   it 'return correct status_name' do
     expect(requirement.status_name).to eq('Новое') # REQUIREMENT_STATUS.key(0))
   end
+
   it 'return correct status_name after update' do
     requirement.status = 15
     expect(requirement.status_name).to eq('На исполнении') # REQUIREMENT_STATUS.key(15))
   end
+
   it 'have search method' do
     expect(described_class.search('').first).to eq(described_class.first)
   end

@@ -22,11 +22,13 @@ describe BproceBapp do
     bproce_bapp.bproce_name = 'BPROCE_NAME'
     expect(bproce_bapp.bproce_name).to eq('BPROCE_NAME')
   end
+
   it 'set bapp by name' do
     _bapp = FactoryBot.create :bapp, name: 'APP_NAME', description: 'APP_DESCRIPT'
     bproce_bapp.bapp_name = 'APP_NAME'
     expect(bproce_bapp.bapp_name).to eq('APP_DESCRIPT')
   end
+
   it 'have search method' do
     expect(described_class.search('').first).to eq(described_class.first)
   end

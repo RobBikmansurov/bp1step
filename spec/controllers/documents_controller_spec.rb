@@ -31,39 +31,47 @@ RSpec.describe DocumentsController, type: :controller do
       get :index
       expect(assigns(:documents)).to match_array([document, doc2])
     end
+
     it 'returns documents for bproce if param bproce_id present' do
       get :index, params: { bproce_id: bproce.id, status: document.status }
       expect(assigns(:documents)).to match_array([document])
     end
+
     it 'returns documents for directive' do
       document1 = create :document, owner: owner
       document_directive = create :document_directive, document: document1, directive: directive
       get :index, params: { directive_id: directive.id }
       expect(response).to render_template :index
     end
+
     it 'returns documents with :place' do
       document_place = create :document, owner: owner, place: 'Place'
       get :index, params: { place: 'Place', format: 'html' }
       expect(response).to render_template :index
     end
+
     it 'returns documents with :dlevel' do
       document_dlevel = create :document, owner: owner, dlevel: 3
       get :index, params: { dlevel: 3 }
       expect(response).to render_template :index
     end
+
     it 'returns documents with :part' do
       document_dlevel = create :document, owner: owner, part: 1
       get :index, params: { part: 1 }
       expect(response).to render_template :index
     end
+
     it 'returns documents with :status' do
       get :index, params: { status: document.status }
       expect(response).to render_template :index
     end
+
     it 'returns documents for user' do
       get :index, params: { user: owner.id }
       expect(response).to render_template :index
     end
+
     it 'returns documents with :tag' do
       # document.tags = 'tag'
       # document.save
@@ -197,6 +205,7 @@ RSpec.describe DocumentsController, type: :controller do
       get :index, params: { format: 'odt' } #  id: document.to_param }
       expect(response).to be_successful
     end
+
     it 'approval_sheet' do
       current_user = FactoryBot.create :user
       get :approval_sheet, params: { id: document.to_param }

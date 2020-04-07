@@ -11,7 +11,7 @@ require 'paperclip/matchers'
 # require 'capybara/rails'
 require 'public_activity/testing'
 
-Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
 
 require 'capybara/rspec'
 require 'selenium/webdriver'

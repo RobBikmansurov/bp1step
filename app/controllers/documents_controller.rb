@@ -38,7 +38,7 @@ class DocumentsController < ApplicationController
         ORDER BY cast (part as integer), name
       SQL
     else
-      @documents = Document.order(:name).all
+      @documents = Document.all
       if params[:place].present? # список документов по месту хранения
         if params[:place].empty?
           @documents = @documents.where("place = ''")
@@ -77,8 +77,9 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       format.html do
         if params[:all].blank?
+
           @documents = @documents.order(sort_order(sort_column, sort_direction))
-                                 .paginate(per_page: 10, page: params[:page])
+                                 .page(params[:page])
         end
       end
       format.odt { print }
@@ -258,7 +259,8 @@ class DocumentsController < ApplicationController
   def document_params
     params.require(:document)
           .permit(:name, :dlevel, :description, :owner_name, :status, :approveorgan, :approved,
-                  :note, :place, :file_delete, :bproce_id, :document_file)
+                  :note, :place, :file_delete, :bproce_id, :document_file, :sort)
+          .merge(sort: 'id', direction: 'ASC')
   end
 
   def document_file_params
@@ -382,13 +384,5 @@ class DocumentsController < ApplicationController
   def record_not_found
     flash[:alert] = 'Неверный #id, Документ не найден.'
     redirect_to action: :index
-  end
-
-  def sort_column
-    params[:sort] || 'name'
-  end
-
-  def sort_direction
-    params[:direction] || 'asc'
   end
 end

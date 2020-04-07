@@ -125,10 +125,6 @@ class WorkplacesController < ApplicationController
     params[:sort] || 'designation'
   end
 
-  def sort_direction
-    params[:direction] || 'asc'
-  end
-
   def set_workplace
     if params[:search].present? # это поиск
       @workplaces = Workplace.search(params[:search])

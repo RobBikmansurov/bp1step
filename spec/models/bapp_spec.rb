@@ -18,6 +18,7 @@ describe Bapp do
   it 'have search method' do
     expect(described_class.search('').first).to eq(described_class.first)
   end
+
   it 'have searchtype method' do
     expect(described_class.searchtype('').first).to eq(described_class.first)
   end

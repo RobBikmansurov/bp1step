@@ -15,15 +15,19 @@ describe ContractMailer do
     it 'sends an email' do
       # expect(ActionMailer::Base.deliveries.count).to eq 1
     end
+
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: #{action} файл договора ##{contract.id}")
     end
+
     it 'renders the sender email' do
       expect(mail.from).to eql(['bp1step@bankperm.ru'])
     end
+
     it 'renders the receiver email' do
       expect(mail.to).to eql([owner.email, payer.email, 'bard@bankperm.ru'])
     end
+
     it 'text contains contract\'s scan file name' do
       expect(mail.body.encoded).to match(scan.scan_file_name)
     end
@@ -35,15 +39,19 @@ describe ContractMailer do
     it 'sends an email' do
       # expect(ActionMailer::Base.deliveries.count).to eq 1
     end
+
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: #{action} договор ##{contract.id}")
     end
+
     it 'renders the sender email' do
       expect(mail.from).to eql(['bp1step@bankperm.ru'])
     end
+
     it 'renders the receiver email' do
       expect(mail.to).to eql([owner.email, payer.email, 'bard@bankperm.ru'])
     end
+
     it 'text contains contract\'s description' do
       expect(mail.body.encoded).to match(contract.description)
     end
@@ -56,6 +64,7 @@ describe ContractMailer do
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: укажите процессы договора ##{contract.id}")
     end
+
     it 'renders the receiver email' do
       expect(mail.to).to eql([owner.email])
     end
@@ -69,12 +78,15 @@ describe ContractMailer do
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: #{text} договор ##{contract.id}")
     end
+
     it 'renders the receiver email' do
       expect(mail.to).to eql([owner.email, payer.email])
     end
+
     it 'text contains contract\'s description' do
       expect(mail.body.encoded).to match(contract.description)
     end
+
     it 'text contains contract\'s agent name' do
       expect(mail.body.encoded).to match(contract.agent.name)
     end
@@ -87,12 +99,15 @@ describe ContractMailer do
     it 'renders correct subject' do
       expect(mail.subject).to eql("BP1Step: согласование договора ##{contract.id}")
     end
+
     it 'renders the receiver email' do
       expect(mail.to).to eql([owner.email])
     end
+
     it 'text contains contract\'s description' do
       expect(mail.body.encoded).to match(contract.description)
     end
+
     it 'text contains contract\'s agent name' do
       expect(mail.body.encoded).to match(contract.agent.name)
     end

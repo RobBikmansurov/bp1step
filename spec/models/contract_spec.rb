@@ -8,9 +8,10 @@ describe Contract do
   let(:payer) { FactoryBot.create(:user, displayname: 'Smith') }
   let(:user) { FactoryBot.create(:user, displayname: 'DisplayName') }
   let(:agent1) { FactoryBot.create(:agent, name: 'AgentName') }
-  # rubocop:disable Metrics/LineLength
-  let(:contract) { FactoryBot.create :contract, agent_id: agent.id, owner_id: owner.id, payer_id: payer.id, number: '100', name: 'Доп.соглашение' }
-  # rubocop:enable Metrics/LineLength
+  let(:contract) do
+    FactoryBot.create :contract, agent_id: agent.id, owner_id: owner.id,
+                                 payer_id: payer.id, number: '100', name: 'Доп.соглашение'
+  end
   let!(:parent_contract) { FactoryBot.create(:contract, agent_id: agent1.id, owner_id: user.id, number: '100/1', name: 'Договор') }
 
   context 'with validates' do
@@ -38,38 +39,48 @@ describe Contract do
   it 'return owner name' do
     expect(contract.owner_name).to eq('Bush')
   end
+
   it 'set owner by owner`s name' do
     contract.owner_name = 'DisplayName'
     expect(contract.owner_name).to eq('DisplayName')
   end
+
   it 'return payer name' do
     expect(contract.payer_name).to eq('Smith')
   end
+
   it 'set payer by payer`s name' do
     contract.payer_name = 'DisplayName'
     expect(contract.payer_name).to eq('DisplayName')
   end
+
   it 'return agent name' do
     expect(contract.agent_name).to eq('Oracle')
   end
+
   it 'set agent by payer`s name' do
     contract.agent_name = 'AgentName'
     expect(contract.agent_name).to eq('AgentName')
   end
+
   it 'set parent contract by name' do
     contract.parent_name = parent_contract.autoname
     expect(contract.parent_name).to eq(parent_contract.autoname)
   end
+
   it 'return short name' do
     expect(contract.shortname).to eq('№ 100 Доп.соглашение')
   end
+
   it 'return short name < 50 chars' do
     contract.name = '1234567890' * 6
     expect(contract.shortname).to eq("№ 100 #{'1234567890' * 5}")
   end
+
   it 'return auto name' do
     expect(contract.autoname).to eq("##{contract.id} №100 | Доп.соглашение")
   end
+
   it 'have search method' do
     expect(described_class.search('').first).to eq(described_class.first)
   end

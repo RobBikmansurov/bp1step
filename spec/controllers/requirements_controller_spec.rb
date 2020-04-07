@@ -48,6 +48,7 @@ RSpec.describe RequirementsController, type: :controller do
       get :show, params: { id: requirement.to_param }
       expect(assigns(:requirement)).to eq(requirement)
     end
+
     it 'show with :sort' do
       get :show, params: { id: requirement.to_param, sort: 'id' }
       expect(assigns(:requirement)).to eq(requirement)
@@ -87,7 +88,6 @@ RSpec.describe RequirementsController, type: :controller do
         post :create, params: { requirement: requirement_created }
         requirement = Requirement.where(label: 'label_created').first
         expect(response).to redirect_to requirement_path(requirement.id)
-
       end
     end
 
@@ -176,14 +176,17 @@ RSpec.describe RequirementsController, type: :controller do
       get :tasks_list, params: { id: requirement.to_param }
       expect(response).to be_successful
     end
+
     it 'tasks_report' do
       get :tasks_report, params: { id: requirement.to_param }
       expect(response).to be_successful
     end
+
     it 'tasks_list requirement_with_letter' do
       get :tasks_list, params: { id: requirement_with_letter.to_param }
       expect(response).to be_successful
     end
+
     it 'tasks_report requirement_with_letter' do
       get :tasks_report, params: { id: requirement_with_letter.to_param }
       expect(response).to be_successful

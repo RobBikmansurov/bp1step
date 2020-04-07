@@ -11,18 +11,18 @@ RSpec.describe 'User logs in and logs out', type: :feature do
 
     click_link 'Войти'
     expect(page).to have_css('h2', text: 'Log in')
-    expect(current_path).to eq(new_user_session_path)
+    expect(page).to have_current_path(new_user_session_path, ignore_query: true)
 
     login 'someone@example.tld', 'somepassword'
 
     expect(page).to have_css('h1', text: 'Welcome to RSpec Rails Examples')
-    expect(current_path).to eq '/'
+    expect(page).to have_current_path '/'
     expect(page).to have_content 'Signed in successfully'
     expect(page).to have_content 'Hello, someone@example.tld'
 
     click_button 'Log out'
 
-    expect(current_path).to eq '/'
+    expect(page).to have_current_path '/'
     expect(page).to have_content 'Signed out successfully'
     expect(page).not_to have_content 'someone@example.tld'
   end

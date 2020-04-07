@@ -23,6 +23,7 @@ describe BusinessRole do
     business_role.bproce_name = 'BPROCE_NAME'
     expect(business_role.bproce_name).to eq('BPROCE_NAME')
   end
+
   it 'have search method' do
     expect(described_class.search('').first).to eq(described_class.first)
   end

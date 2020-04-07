@@ -51,6 +51,7 @@ RSpec.describe BproceWorkplacesController, type: :controller do
         post :create, params: { bproce_workplace: add_proce_to_workplace }
         expect(response).to redirect_to(BproceWorkplace.last.workplace)
       end
+
       it 'redirects to the created bproce_workplace with bproce_name and workplace_id' do
         post :create, params: { bproce_workplace: valid_attributes_w_name }
         expect(response).to redirect_to(BproceWorkplace.last.workplace)

@@ -76,12 +76,4 @@ class AgentsController < ApplicationController
     params.require(:agent).permit(:shortname, :name, :town, :address, :contacts,
                                   :note, :inn, :dms_name)
   end
-
-  def sort_column
-    params[:sort] || 'name'
-  end
-
-  def sort_direction
-    params[:direction] || 'asc'
-  end
 end

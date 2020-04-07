@@ -28,7 +28,7 @@
   -@users.each do |user|
     %tr
       %td
-        %p{style: ('text-decoration: line-through;' if !user.active)} 
+        .div{style: ('text-decoration: line-through;' if !user.active)} 
           -if can? :show, user
             = link_to user.displayname, user
           -else
@@ -38,7 +38,7 @@
         -if user.phone
           = "&nbsp; &#9742;&nbsp;".html_safe + user.phone.to_s
       %td
-        %p{style: ('text-decoration: line-through;' if !user.active)} 
+        .div{style: ('text-decoration: line-through;' if !user.active)} 
           = user.position
       -if user.office
         %td= link_to user.office, users_path + '?office=' + user.office, class: 'groups'

@@ -35,12 +35,14 @@ RSpec.describe RequirementsController, type: :routing do
     it 'routes to #create_task' do
       expect(get: '/requirements/1/create_task').to route_to('requirements#create_task', id: '1')
     end
+
     it 'routes to #create_user' do
       expect(get: '/requirements/1/create_user').to route_to('requirements#create_user', id: '1')
     end
     # it "routes to #update_user" do
     #  expect(:post => "/requirements").to route_to("requirements#update_user")
     # end
+
     it 'routes to #tasks_list' do
       expect(get: '/requirements/1/tasks_list').to route_to('requirements#tasks_list', id: '1')
     end
