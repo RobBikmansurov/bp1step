@@ -25,6 +25,7 @@ services:
   web:
     build:
       context: .
+    container_name: bp1step
     command: /bin/bash -c "rm -f /tmp/server.pid && bundle exec rails server -b 0.0.0.0 -P /tmp/server.pid"
     # command: bash -c "foreman start -f Procfile.dev-server"
     environment:

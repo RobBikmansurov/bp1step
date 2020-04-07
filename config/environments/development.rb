@@ -35,6 +35,7 @@ BPDoc::Application.configure do
   config.assets.debug = false
 
   I18n.enforce_available_locales = false
+  config.i18n.fallbacks = [I18n.default_locale]
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
