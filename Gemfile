@@ -51,6 +51,7 @@ gem 'faker'
 
 gem 'loofah' # , '>= 2.2.3'
 gem 'nokogiri', '>= 1.10.8'
+gem 'rack', '>= 2.2.2'
 
 gem 'rails_performance'
 

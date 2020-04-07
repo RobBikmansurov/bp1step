@@ -485,6 +485,7 @@ DEPENDENCIES
   pg_search
   public_activity
   puma (>= 4.3.3)
+  rack (>= 2.2.2)
   rails (= 5.2.4.2)
   rails-controller-testing
   rails3-jquery-autocomplete
