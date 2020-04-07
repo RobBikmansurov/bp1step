@@ -304,7 +304,7 @@ class DocumentsController < ApplicationController
           t.add_column(:responsible, :displayname) # владелец документа, если задан
         else
           t.add_column(:responsible) do |document| # владелец документа, если задан
-            document.owner.displayname.to_s if document.owner_id
+            document.owner&.displayname.to_s if document.owner_id
           end
         end
 
