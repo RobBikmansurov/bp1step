@@ -11,6 +11,7 @@ version: '3'
 services:
   db:
     image: postgres:11-alpine
+    container_name: bp1step_pg
     environment:
       POSTGRES_PASSWORD: secret
     ports:
@@ -19,6 +20,7 @@ services:
       - db-data:/var/lib/postgresql/data:cached
   redis:
     image: redis:5-alpine
+    container_name: bp1step_redis
     ports:
     - "6379"
 

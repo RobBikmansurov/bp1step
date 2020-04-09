@@ -2,7 +2,7 @@
 # /path/to/your/app/Dockerfile
 # docker-compose up
 
-FROM ruby:2.6.3-slim-stretch
+FROM ruby:2.6.3-stretch
 
 RUN apt-get update && apt-get install -y \
   curl \
