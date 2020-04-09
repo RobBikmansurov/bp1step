@@ -1,38 +1,37 @@
 = simple_form_for(@document) do |f|
   = f.error_notification
-  = f.input :name, :as => :text
-  = f.input :dlevel, :collection => 1..4, :as => :radio_buttons, :hint => 'Политики, Стратегии(1) - Положения, Описания(2) - Регламенты, Инструкции(3) - Свидетельства: Акты, Протоколы, Журналы(4)'
+  = f.input :name, as: :text
+  = f.input :dlevel, collection: [['1', '1 - Политики, Стратегии'],
+                                  ['2', '2 - Положения, Описания процессов'],
+                                  ['3', '3 - Регламенты, Инструкции'],
+                                  ['4', '4 - Свидетельства: Акты, Протоколы, Журналы']],
+                                  label_method: :second, value_method: :first
   = f.input :description
   = f.hidden_field :bproce_id
   = f.label 'Ответственный за документ'
   = f.autocomplete_field :owner_name, autocomplete_users_path
-  
-  -#= f.association :status_id, Category.all
-  = f.input :status, :collection => %w[Утвержден Проект Согласование НеДействует], :prompt => 'Статус документа', :input_html => { :value => 'Утвержден'}
-  = f.input :approveorgan, :collection => %w[ПредседательПравления Правление СоветДиректоров ОбщееСобрание], :prompt => 'Уполномоченный орган'
-  -if @document.approved
-    = f.input :approved, :as => :string, :input_html =>{:class=>'datepicker', :value => @document.approved.strftime("%d.%m.%Y")}
-  -else
-    = f.input :approved, :as => :string, :input_html =>{:class=>'datepicker'}
+
+  = f.input :status, collection: %w[Утвержден Проект Согласование НеДействует], prompt: 'Статус документа', input_html: { value: 'Утвержден' }
+  = f.input :approveorgan, collection: %w[ПредседательПравления Правление СоветДиректоров ОбщееСобрание], prompt: 'Уполномоченный орган'
+  - if @document.approved
+    = f.input :approved, as: :string, input_html: { class: 'datepicker', value: @document.approved.strftime('%d.%m.%Y') }
+  - else
+    = f.input :approved, as: :string, input_html: { class: 'datepicker' }
   = f.input :note
 
-  -if can? :edit_document_place, Document
-    = f.input :place, :hint => 'Место хранения оригиналов на бумаге (кратко: отдел папка)'
-  -else
+  - if can? :edit_document_place, Document
+    = f.input :place, hint: 'Место хранения оригиналов на бумаге (кратко: отдел папка)'
+  - else
     - @document.place = '!?' if @document.place.blank?
     =  f.hidden_field :place
     Место хранения оригиналов на бумаге:
     %b= link_to @document.place, documents_path(place: @document.place), class: 'groups', title: DOCUMENT_PLACE.key(@document.place)
 
     %p
-  -if can? :manage_tag, @document
-    = f.input :tag_list, :label => 'Теги (через запятую)'
+  - if can? :manage_tag, @document
+    = f.input :tag_list, label: 'Теги (через запятую)'
   = f.error :base
-  
-  -if can? :update, @document
+
+  - if can? :update, @document
     %p
     = f.button :submit
-
--#= @document_directives.inspect
--#= @document.directive
--#=@bproce.inspect

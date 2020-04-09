@@ -49,8 +49,7 @@ namespace :bp1step do
         letter = Letter.where(id: f.gets).first
       end
 
-      next unless letter
-
+      next unless letter # directory without Letters
       next unless letter.created_at < Time.zone.today - 6.days
 
       Dir.each_child(directory_name) { |file| File.delete directory_name.join(file) }
