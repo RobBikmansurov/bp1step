@@ -45,6 +45,7 @@ module BPDoc
     config.filter_parameters += [:password]
 
     ActsAsTaggableOn.strict_case_match = true
+    ActsAsTaggableOn.remove_unused_tags = true
     Rails.application.config.action_dispatch.cookies_serializer = :hybrid
 
     initializer 'setup_asset_pipeline', :group => :all do |app|

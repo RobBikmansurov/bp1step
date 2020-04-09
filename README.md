@@ -148,6 +148,13 @@ ps axvf|grep soffice
 unoconv -l &
 ```
 
+## Services (job queues, cache servers, search engines, etc.)* 
+
+````bash
+crontab -l
+whenever --update-crontab
+crontab -e
+````
 
 ## Testing
 

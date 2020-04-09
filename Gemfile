@@ -21,7 +21,7 @@ gem 'will_paginate', '~> 3.0'
 # gem 'execjs'
 gem 'haml-rails'
 
-gem 'acts-as-taggable-on'
+gem 'acts-as-taggable-on', '>=6.5.0'
 gem 'awesome_nested_set' # , :git => 'git://github.com/collectiveidea/awesome_nested_set'
 gem 'chartkick', '>= 3.3.0'
 gem 'groupdate'

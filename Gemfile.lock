@@ -445,7 +445,7 @@ PLATFORMS
 DEPENDENCIES
   actionpack-action_caching
   actionpack-page_caching
-  acts-as-taggable-on
+  acts-as-taggable-on (>= 6.5.0)
   alphabetical_paginate
   awesome_nested_set
   better_errors
