@@ -2,7 +2,7 @@
 
 # applications for processes
 class Bapp < ApplicationRecord
-  acts_as_taggable
+  acts_as_taggable_on :tags
 
   validates :name, presence: true,
                    uniqueness: true,

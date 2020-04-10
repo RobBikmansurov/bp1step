@@ -2,17 +2,17 @@
   = f.error_notification
   = f.input :name
   = f.input :apptype
-  = f.input :description, :as => :text
-  = f.input :purpose, :as => :text
+  = f.input :description, as: :text
+  = f.input :purpose, as: :text
   = f.input :version_app
   = f.input :directory_app
   = f.input :distribution_app
   = f.input :executable_file
   = f.input :licence
   = f.input :source_app
-  = f.input :note, :as => :text
+  = f.input :note, as: :text
   -if can? :manage_tag, @bapp
-    = f.input :tag_list, :label => 'Теги (через запятую)'
+    = f.input :tag_list, label: 'Теги (через запятую)', input_html: { value: @bapp.tag_list.join(', ') }
   = f.error :base
   -if can? :update, @bapp
     = f.button :submit

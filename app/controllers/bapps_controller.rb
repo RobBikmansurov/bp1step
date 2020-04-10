@@ -50,10 +50,11 @@ class BappsController < ApplicationController
   def update
     @bproce_bapp = BproceBapp.new(bapp_id: @bapp.id)
     if @bapp.update(bapp_params)
-      @bapp.tag_list.add 'ms' # params[:bapp][:tag_list]
+      @bapp.tag_list = params[:bapp][:tag_list]
       @bapp.save
-      flash[:notice] = 'Successfully updated bapp.'
-      respond_with(@bapp)
+      @bapp.reload
+
+      redirect_to @bapp, notice: 'Приложение сохранено.'
     else
       render action: 'edit'
     end
