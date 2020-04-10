@@ -1,88 +1,83 @@
--title "Каталог Приложений"
--search "Приложение"
--if @bp.nil?
+- title 'Каталог Приложений'
+- search 'Приложение'
+- if @bp.nil?
   %h1
     Каталог Приложений
-    -if params[:search].present?
-      [ 
-      = params[:search]
-      ]
-    -else
-      -if params[:tag].present?
-        %sup
-          = params[:tag]
-      -else
-        -if params[:apptype].present?
-          %sub
-            = params[:apptype]
--else
+    - if params[:search].present?
+      [ #{params[:search]} ]
+    - elsif params[:tag].present?
+      тег [ #{params[:tag]} ]
+    - elsif params[:apptype].present?
+      тип [ #{params[:apptype]} ]
+- else
   %h2
     Приложения процесса
     = link_to @bp.name, bproce_path(@bp)
 %table
   %tr
-    %th= sortable "name", "Наименование"
-    %th= sortable "description", "Описание"
-    -if !@bp.nil?
+    %th= sortable 'name', 'Наименование'
+    %th= sortable 'description', 'Описание'
+    - if !@bp
       %th Назначение в процессе
-    -if can? :destroy, Bapp
+    - if can? :destroy, Bapp
       %th
-    -if can? :manage, Bapp
+    - if can? :manage, Bapp
       %th
-  
-  -if @bp.nil?
-    -@bapps.each do |bapp|
+  - if @bp.nil?
+    - @bapps.each do |bapp|
       %tr
         %td= link_to bapp.name, bapp
         %td
           = bapp.description
-          -if can? :manage_tag, bapp
+          - if can? :manage_tag, bapp
             %sup= bapp.tag_list
         - if can? :manage, bapp
-          %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_bapp_path(bapp), class: 'button-img'
-        -if can? :destroy, bapp
-          %td= link_to image_tag('action_stop.gif', :alt => 'Удалить'), bapp, data: { confirm: bapp.name + "\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
-  -else
-    -@bproce_bapps.each do |ba|   # приложения процесса bp
+          %td= link_to image_tag('page_edit.gif', alt: 'Изменить'), edit_bapp_path(bapp), class: 'button-img'
+        - if can? :destroy, bapp
+          %td= link_to image_tag('action_stop.gif', alt: 'Удалить'), bapp, data: { confirm: bapp.name + "\nДействительно хотите удалить приложение?" }, method: 'delete', class: 'button-img'
+  - else
+    - @bproce_bapps.each do |ba|   # приложения процесса bp
       %tr
-        -if ba.bapp
+        - if ba.bapp
           %td= link_to ba.bapp.name, ba.bapp
           %td= ba.bapp.description
           %td= link_to ba.apurpose, edit_bproce_bapp_path(ba)
           - if can? :manage, ba.bapp
             %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'), edit_bapp_path(ba.bapp), class: 'button-img'
           - if can? :destroy, ba.bapp
-            %td= link_to image_tag('action_stop.gif', :alt => 'Удалить'), ba, data: { confirm: 'Приложение: ' + ba.bapp.name + "\nДействительно хотите исключить его из процесса?" }, :method => 'delete', class: 'button-img'
-        -else
-          %td{:colspan => 3}
-            =ba.inspect
+            %td= link_to image_tag('action_stop.gif', alt: 'Удалить'), ba, data: { confirm: 'Приложение: ' + ba.bapp.name + "\nДействительно хотите исключить его из процесса?" }, method: 'delete', class: 'button-img'
+        - else
+          %td{ colspan: 3 }
+            = ba.inspect
 
--if !params[:all].present?
+- if !params[:all].present?
   .apple_pagination
-    -if @bp.nil?
+    - if @bp.nil?
       = will_paginate @bapps
-    -else
+    - else
       = will_paginate @bproce_bapps
 
--if @bp.nil?
+- if @bp.nil?
   - if can? :destroy, Bapp
-    = link_to 'Каталог', bapps_path + '.odt?all=1', :class => 'button'
+    = link_to 'Каталог', "#{bapps_path}.odt?all=1", class: 'button'
   - if can? :manage, Bapp
-    -if request.query_string
-      = link_to 'Список', bapps_path + '.odt?' + request.query_string, :class => 'button'
-    -else
-      = link_to 'Список', bapps_path + '.odt', :class => 'button'
-    = link_to "Добавить новое приложение" , new_bapp_path, :class => 'button'
--else
+    - if request.query_string
+      = link_to 'Список', "#{bapps_path}.odt?#{request.query_string}", class: 'button'
+    - else
+      = link_to 'Список', "#{bapps_path}.odt", class: 'button'
+    = link_to 'Добавить новое приложение' , new_bapp_path, class: 'button'
+- else
   - if can? :destroy, Bapp
-    = link_to "Добавить новое приложение в процесс" , new_bproce_bapp_path, :class => 'button'
+    = link_to "Добавить новое приложение в процесс", new_bproce_bapp_path, class: 'button'
 
 %p
-%br
-Тип:
-- Bapp.select("apptype, count(id) as count").group(:apptype).order(:apptype).each do |bapp|
-  -if !bapp.apptype.to_s.empty?
-    = link_to bapp.apptype, bapps_path + '?apptype=' + bapp.apptype.to_s, class: 'groups'
-%p
-Теги:
-= raw Bapp.all_tags.map { |t| link_to t.name, tag_bapps_path(t.name), class: 'tags' }.join('&nbsp; ')
+%table
+  %td
+    Тип:
+    - Bapp.select('apptype, count(id) as count').group(:apptype).order(:apptype).each do |bapp|
+      - unless bapp.apptype&.empty?
+        = link_to " #{bapp.apptype} ", "#{bapps_path}?apptype=#{bapp.apptype}", class: 'groups'
+        &nbsp;
+  %td
+    Теги:
+    = raw Bapp.all_tags.map { |t| link_to " #{t.name} ", tag_bapps_path(t.name), class: 'tags' }.join('&nbsp; ')

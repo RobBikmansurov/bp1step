@@ -57,12 +57,7 @@
         = link_to metr.name, metric_path(metr)
       &nbsp;
 
-.info_
-  создан
-  = @metric.created_at.strftime('%d.%m.%Y %H:%M:%S') if @metric.created_at
-  %br
-  изменен
-  = @metric.updated_at.strftime('%d.%m.%Y %H:%M:%S') if @metric.updated_at
+= render 'activities/info_activity', track_type: 'Metric', track_item: @metric
 
 %p
 - if can? :update, @metric

@@ -55,26 +55,7 @@
 
 =render 'tasks'
 
-%hr
-
-.info_
-  -activity1 = PublicActivity::Activity.where(trackable_type: "Requirement", trackable_id: @requirement.id).order("created_at asc").first
-  -if activity1
-    = link_to 'создал', activities_path(type: "Requirement", id: @requirement.id)
-    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity1.owner.displayname.to_s
-  -else
-    создан
-    = @requirement.created_at.strftime('%d.%m.%Y %H:%M:%S')
-  %br
-  -activity2 = PublicActivity::Activity.where(trackable_type: "Requirement", trackable_id: @requirement.id).order("created_at asc").last
-  -if activity2
-    = link_to 'изменил', activities_path(type: "Requirement", id: @requirement.id)
-    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity2.owner.displayname.to_s
-  -else
-    изменен
-    = @requirement.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+= render 'activities/info_activity', track_type: 'Requirement', track_item: @requirement
 
 %p
 = link_to 'Back', requirements_path, class: 'button'

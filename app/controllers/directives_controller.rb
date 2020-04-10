@@ -65,7 +65,6 @@ class DirectivesController < ApplicationController
   def directive_params
     params.require(:directive)
           .permit(:title, :number, :approval, :name, :note, :body, :annotation, :status, :action)
-          .merge(:sort, :direction)
   end
 
   def sort_column

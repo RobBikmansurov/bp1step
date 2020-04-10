@@ -46,12 +46,7 @@
   #create_user
     = link_to 'Добавить Сотрудника', create_user_workplace_path(@workplace), remote: true
 
-.info_
-  создан
-  = @workplace.created_at.strftime('%d.%m.%Y %H:%M:%S') if @workplace.created_at
-  %br
-  изменен
-  = @workplace.updated_at.strftime('%d.%m.%Y %H:%M:%S') if @workplace.updated_at
+= render 'activities/info_activity', track_type: 'Workplace', track_item: @workplace
 %p
 - if can? :update, Workplace
   = link_to 'Edit', edit_workplace_path(@workplace), :class => 'button'

@@ -92,25 +92,7 @@
       = link_to 'Добавить файл (скан)', scan_create_contract_path(@contract), remote: true
 %hr
 
-.info_
-  - activity1 = PublicActivity::Activity.where(trackable_type: 'Contract', trackable_id: @contract.id).order('created_at asc').first
-  - if activity1
-    = link_to 'создал', activities_path(type: 'Contract', id: @contract.id)
-    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    - if activity1.owner
-      = activity1.owner.displayname.to_s
-  - else
-    создан
-    = @contract.created_at.strftime('%d.%m.%Y %H:%M:%S')
-  %br
-  - activity2 = PublicActivity::Activity.where(trackable_type: 'Contract', trackable_id: @contract.id).order('created_at asc').last
-  - if activity2
-    = link_to 'изменил', activities_path(type: 'Contract', id: @contract.id)
-    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity2.owner.displayname.to_s
-  - else
-    изменен
-    = @contract.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+= render 'activities/info_activity', track_type: 'Contract', track_item: @contract
 
 %p
 - if can? :update, @contract

@@ -44,7 +44,7 @@ module BPDoc
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
 
-    ActsAsTaggableOn.strict_case_match = true
+    # ActsAsTaggableOn.strict_case_match = true
     ActsAsTaggableOn.remove_unused_tags = true
     Rails.application.config.action_dispatch.cookies_serializer = :hybrid
 

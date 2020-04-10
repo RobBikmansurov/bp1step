@@ -74,7 +74,7 @@ class BappsController < ApplicationController
   def bapp_params
     params.require(:bapp).permit(:name, :description, :apptype, :purpose, :version_app,
                                  :directory_app, :distribution_app, :executable_file,
-                                 :licence, :source_app, :note)
+                                 :licence, :source_app, :note, :tag_list)
   end
 
   def set_app

@@ -66,24 +66,7 @@
 Теги документа:
 = raw @document.tags.map { |t| link_to t, tag_documents_path(t.name), class: 'tags' }.join('&nbsp; ')
 
-.info_
-  -activity1 = PublicActivity::Activity.where(trackable_type: "Document", trackable_id: @document.id).order("created_at asc").first
-  -if activity1
-    = link_to 'создал', activities_path(type: "Document", id: @document.id)
-    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity1.owner.displayname.to_s
-  -else
-    создан
-    = @document.created_at.strftime('%d.%m.%Y %H:%M:%S')
-  %br
-  -activity2 = PublicActivity::Activity.where(trackable_type: "Document", trackable_id: @document.id).order("created_at asc").last
-  -if activity2
-    = link_to 'изменил', activities_path(type: "Document", id: @document.id)
-    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity2.owner.displayname.to_s
-  -else
-    изменен
-    = @document.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+= render 'activities/info_activity', track_type: 'Document', track_item: @document
 
 %p
 -if can? :update, @document

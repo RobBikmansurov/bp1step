@@ -1,25 +1,22 @@
--title 'Приложение ' + @bapp.name
--search "Приложение"
-.id_
-  \#
-  = @bapp.id
+- title 'Приложение ' + @bapp.name
+- search 'Приложение'
+.id_ ##{@bapp.id}
+
 %h2
   = @bapp.name
--if not @bapp.apptype.blank?
+- if @bapp.apptype.present?
   %h4
     Тип приложения:
-    = link_to @bapp.apptype, bapps_path + '?apptype=' + @bapp.apptype.to_s, class: 'groups'
+    = link_to @bapp.apptype, "#{bapps_path}?apptype=#{@bapp.apptype}", class: 'groups'
 %h4
   Описание:
   = @bapp.description
 %h4
   Назначение:
-  -if @bapp.purpose.blank?
-    не определено
-  -else
-    = @bapp.purpose
+  = @bapp.purpose || 'не определено'
+
 %p
--if @bapp.version_app
+- if @bapp.version_app
   %p
     %bВерсия
     = @bapp.version_app
@@ -45,43 +42,35 @@
 %hr
 %h3 Используется в процессах:
 
--if @bapp.id? # новая запись еще нигде не используется
+- if @bapp.id? # новая запись еще нигде не используется
   %table
     %tr
       %th Процесс:
       %th Назначение приложения в процессе
       %th
-    -@bapp.bproce_bapps.each do |bp|
+    - @bapp.bproce_bapps.each do |bp|
       %tr
         %td
-          -if bp.bproce_id
-            -if bp.bproce
+          - if bp.bproce_id
+            - if bp.bproce
               = link_to bp.bproce.name, bproce_path(bp.bproce_id)
-            -else
-              = bp.inspect  # ссылка на несуществующий процесс
-          -else
+            - else
+              = bp.inspect # ссылка на несуществующий процесс
+          - else
             = bp.inspect
         %td
-          -if bp.apurpose.blank?
+          - if bp.apurpose.blank?
             = link_to 'не определено', edit_bproce_bapp_path(bp)
-          -else
+          - else
             = link_to bp.apurpose, bproce_bapp_path(bp)
         %td
 
 Теги приложения:
-= raw @bapp.tag_list.map { |t| link_to t, bapps_path + '/tags/' + t, class: 'tags' }.join('&nbsp; ')
--#if @bapp.tags.any?
-  - @bapp.tags.each do |tag|
-    = link_to tag.name, tag_path(:tag => tag.name)
+= raw @bapp.tag_list.map { |t| link_to t, "#{bapps_path}/tags/#{t}", class: 'tags' }.join('&nbsp; ')
 
-.info_
-  создан
-  = @bapp.created_at.strftime('%d.%m.%Y %H:%M:%S')
-  %br
-  изменен
-  = @bapp.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+= render 'activities/info_activity', track_type: 'Bapp', track_item: @bapp
 
 %p
 - if can? :update, @bapp
-  = link_to 'Edit', edit_bapp_path(@bapp), :class => 'button'
-= link_to 'Back', bapps_path, :class => 'button'
+  = link_to 'Edit', edit_bapp_path(@bapp), class: 'button'
+= link_to 'Back', bapps_path, class: 'button'

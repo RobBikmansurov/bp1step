@@ -65,12 +65,8 @@
           -else
             = link_to bproce_iresource.rpurpose, bproce_iresource_path(bproce_iresource)
         %td
-.info_
-  создан
-  = @iresource.created_at.strftime('%d.%m.%Y %H:%M:%S')
-  %br
-  изменен
-  = @iresource.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+
+= render 'activities/info_activity', track_type: 'Iresource', track_item: @iresource
 
 %p
 -if can? :update, Iresource

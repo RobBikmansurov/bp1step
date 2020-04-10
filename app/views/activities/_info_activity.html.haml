@@ -1,0 +1,19 @@
+.info_
+  -activity1 = PublicActivity::Activity.where(trackable_type: track_type, trackable_id: track_item).order("created_at asc").first
+  -if activity1
+    = link_to 'создал', activities_path(type: track_type, id: track_item)
+    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    -if activity1.owner
+      = activity1.owner.displayname
+  -else
+    создан
+    = track_item.created_at.strftime('%d.%m.%Y %H:%M:%S')
+  %br
+  -activity2 = PublicActivity::Activity.where(trackable_type: track_type, trackable_id: track_item).order("created_at asc").last
+  -if activity2
+    = link_to 'изменил', activities_path(type: track_type, id: track_item)
+    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+    = activity2.owner.displayname
+  -else
+    изменен
+    = track_item.updated_at.strftime('%d.%m.%Y %H:%M:%S')

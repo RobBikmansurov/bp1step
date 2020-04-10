@@ -75,24 +75,7 @@
 = simple_format(@task.result, {}, {})
 %hr
 
-.info_
-  - activity1 = PublicActivity::Activity.where(trackable_type: 'task', trackable_id: @task.id).order('created_at asc').first
-  - if activity1
-    = link_to 'создал', activities_path(type: 'task', id: @task.id)
-    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity1.owner.displayname.to_s
-  - else
-    создан
-    = @task.created_at.strftime('%d.%m.%Y %H:%M:%S')
-  %br
-  - activity2 = PublicActivity::Activity.where(trackable_type: 'task', trackable_id: @task.id).order('created_at asc').last
-  - if activity2
-    = link_to 'изменил', activities_path(type: 'task', id: @task.id)
-    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity2.owner.displayname.to_s
-  - else
-    изменен
-    = @task.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+= render 'activities/info_activity', track_type: 'Task', track_item: @task
 
 %p
 = link_to 'Back', tasks_path, class: 'button'

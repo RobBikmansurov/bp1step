@@ -138,24 +138,8 @@
     %br
 = render 'tasks' if @tasks.any?
 
-.info_
-  - activity1 = PublicActivity::Activity.where(trackable_type: 'Letter', trackable_id: @letter.id).order('created_at asc').first
-  - if activity1
-    = link_to 'создал', activities_path(type: 'Letter', id: @letter.id)
-    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity1.owner.displayname.to_s
-  - else
-    создан
-    = @letter.created_at.strftime('%d.%m.%Y %H:%M:%S')
-  %br
-  - activity2 = PublicActivity::Activity.where(trackable_type: 'Letter', trackable_id: @letter.id).order('created_at asc').last
-  - if activity2
-    = link_to 'изменил', activities_path(type: 'Letter', id: @letter.id)
-    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity2.owner.displayname.to_s
-  - else
-    изменен
-    = @letter.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+= render 'activities/info_activity', track_type: 'Letter', track_item: @letter
+
 %p
 - if @letter.in_out == 1
   = link_to 'Back', letters_path, class: 'button'

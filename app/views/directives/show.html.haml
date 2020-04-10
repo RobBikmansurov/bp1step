@@ -59,24 +59,7 @@
       = link_to bp.user.displayname, user_path(bp.user)
     %br
 
-.info_
-  -activity1 = PublicActivity::Activity.where(trackable_type: "Directive", trackable_id: @directive.id).order("created_at asc").first
-  -if activity1
-    = link_to 'создал', activities_path(type: "Directive", id: @directive.id)
-    = activity1.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity1.owner.displayname.to_s
-  -else
-    создан
-    = @directive.created_at.strftime('%d.%m.%Y %H:%M:%S')
-  %br
-  -activity2 = PublicActivity::Activity.where(trackable_type: "Directive", trackable_id: @directive.id).order("created_at asc").last
-  -if activity2
-    = link_to 'изменил', activities_path(type: "Directive", id: @directive.id)
-    = activity2.updated_at.strftime('%d.%m.%Y %H:%M:%S')
-    = activity2.owner.displayname.to_s
-  -else
-    изменен
-    = @directive.updated_at.strftime('%d.%m.%Y %H:%M:%S')
+= render 'activities/info_activity', track_type: 'Directive', track_item: @directive
 
 %p
 -if can? :update, @directive
