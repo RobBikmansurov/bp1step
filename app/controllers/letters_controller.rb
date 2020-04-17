@@ -312,6 +312,10 @@ class LettersController < ApplicationController
     params[:sort] || 'id' # вверху - самые новые письма
   end
 
+  def sort_direction
+    params[:direction] || 'DESC'
+  end
+
   def record_not_found
     flash[:alert] = "Письмо ##{params[:id]} не найдено."
     redirect_to action: :index
