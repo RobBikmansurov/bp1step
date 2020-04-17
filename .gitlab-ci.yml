@@ -60,7 +60,8 @@ build:
     # - psql -h postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
     - bundle exec rake db:create db:migrate RAILS_ENV=test
 
-test:rspec:
+rspec:
+  stage: build
   extends: .base
   allow_failure: true
   script:
@@ -75,7 +76,8 @@ test:rspec:
     - bundle exec rake db:create db:migrate RAILS_ENV=test
     - bundle exec rspec
   
-test:rubocop:
+rubocop:
+  stage: build
   extends: .base
   allow_failure: true
   script:
@@ -84,13 +86,14 @@ test:rubocop:
     - ls -al .rubocop.yml
     - rubocop --config .rubocop.yml  --format offenses
 
-test:bundle_audit:
+bundle_audit:
+  stage: build
   extends: .base
   allow_failure: true
   script:
     - bundle exec bundle audit check --update
 
-deploy_staging:
+to_staging:
   stage: deploy
   dependencies:
     - build
@@ -112,7 +115,7 @@ deploy_staging:
   only:
     - master
 
-deploy_production:
+to_production:
   stage: deploy
   dependencies:
     - build
