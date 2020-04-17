@@ -35,6 +35,10 @@ class Requirement < ApplicationRecord
     "[#{label}] от #{date.strftime('%d.%m.%y')}"
   end
 
+  def identify
+    "Требование (##{id}) [#{label}] от #{date.strftime('%d.%m.%Y')}"
+  end
+
   def self.search(search)
     return where(nil) if search.blank?
 

@@ -1,8 +1,6 @@
--title "Документ " + truncate(@document.name, length: 30)
+-title "#{@document.identify}"
 -search 'Документ'
-.id_
-  \#
-  = @document.id
+.id_{onclick: "copyToClipboard('#{@document.identify}')"} ##{@document.id}
 %h2= @document.name
 %h3 Описание:
 - text = add_link_from_id(@document.description, 'documents')

@@ -1,6 +1,6 @@
-- title "Задача #{@task.name}"
+- title "#{@task.identify}"
 - search 'Задачу'
-.id_ ##{@task.id}
+.id_{onclick: "copyToClipboard('#{@task.identify}')"} ##{@task.id}
 
 = render 'form'
 

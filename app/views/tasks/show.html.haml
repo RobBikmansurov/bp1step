@@ -1,6 +1,6 @@
-- title "Задача [#{@task.name}]"
+- title "#{@task.identify}"
 - search 'Задача'
-.id_ ##{@task.id}
+.id_{onclick: "copyToClipboard('#{@task.identify}')"} ##{@task.id}
 
 %h2
   Задача ##{@task.id} от #{@task.created_at.strftime('%d.%m.%Y')}

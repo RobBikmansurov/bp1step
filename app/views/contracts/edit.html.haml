@@ -1,10 +1,8 @@
--title @contract.contract_type + " №" + @contract.number
--search "Договор" 
-.id_
-  \#
-  = @contract.id
-%h2
-  = @contract.contract_type
+- title @contract.identify
+- search 'Договор'
+.id_{ onclick: "copyToClipboard('#{@contract.identify}')"} ##{@contract.id}
+
+%h2= @contract.contract_type
 
 = render 'form'
 = render 'form_bproce_link'

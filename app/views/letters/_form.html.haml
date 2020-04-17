@@ -58,9 +58,8 @@
   = f.hidden_field :letter_id
   - if @letter.id
     %h3 Результат исполнения:
+    = simple_format(@letter.result, {}, {})
     = f.input :action, as: :text
-  = simple_format(@letter.result, {}, {})
-
-  %p
+  
   = f.button :submit, 'Сохранить'
   = f.button :submit, 'Сохранить и Завершить'

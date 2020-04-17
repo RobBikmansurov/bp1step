@@ -1,4 +1,4 @@
-- title "Письмо № #{@letter.number} от #{@letter.date.strftime('%d.%m.%Y')}"
+- title "#{@letter.identify}"
 - search 'Письмо'
 %table
   %tr
@@ -46,7 +46,8 @@
                 %b
                   = link_to @letter.regdate.strftime('%d.%m.%Y'), letters_path(regdate: @letter.regdate.strftime('%d.%m.%Y'))
     %td
-      .id_ ##{@letter.id}
+      .id_{onclick: "copyToClipboard('#{@letter.identify}')"} ##{@letter.id}
+
       .large
         - if @letter.in_out == 1
           Отправитель:

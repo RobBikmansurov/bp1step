@@ -216,6 +216,9 @@ a.groups:hover, a.groups-s:hover {
   background-color: #000;
   border-radius: 3px;
 }
+.id_:hover {
+  background-color: #3385ff;
+}
 
 .id_show_ {
   display:inline-block;

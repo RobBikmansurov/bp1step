@@ -24,4 +24,8 @@ module Tasks
   def action=(action)
     self.result += action if action.present?
   end
+
+  def identify
+    "Задача (##{id}) \"#{name}\" от #{created_at.strftime('%d.%m.%Y')}"
+  end
 end

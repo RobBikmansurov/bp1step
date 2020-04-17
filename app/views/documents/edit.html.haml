@@ -1,10 +1,8 @@
--title "Документ"
--search "Документ" 
-.id_
-  \#
-  = @document.id
-%h1 Документ
+-title "#{@document.identify}"
+-search 'Документ'
+.id_{onclick: "copyToClipboard('#{@document.identify}')"} ##{@document.id}
 
+%h1 Документ
 = render 'form'
 = render 'form_bproce_link'
 = render 'form_directive'

@@ -1,8 +1,6 @@
--title "Требование ##{@requirement.id} от #{@requirement.date.strftime("%d.%m.%Y")}"
+-title "#{@requirement.identify}"
 -search "Требование"
-.id_
-  \#
-  = @requirement.id
+.id_{onclick: "copyToClipboard('#{@requirement.identify}')"} ##{@requirement.id}
 
 %h2
   Требование

@@ -10,4 +10,5 @@
 //= require chartkick
 //= require Chart.bundle
 //= require textarea.auto-resizer
+//= copy-to-clipboard.js
 //= require_tree .

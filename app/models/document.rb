@@ -86,6 +86,12 @@ class Document < ApplicationRecord
     name[0..49]
   end
 
+  def identify
+    _status = status
+    _data = approved&.strftime('%d.%m.%Y')
+    "Документ (##{id}) \"#{name}\" #{_status} #{_data}"
+  end
+
   private
 
   # интерполяция для paperclip - вернуть дату последней загрузки файла документа в формате ГГГГММДД

@@ -49,6 +49,10 @@ class Letter < ApplicationRecord
     "№#{number} от #{date.strftime('%d.%m.%y')}"
   end
 
+  def identify
+    "#{in_out == 1 ? 'Вх.' : 'Исх.'}№ #{number} от #{date.strftime('%d.%m.%Y')} (##{id})"
+  end
+
   def self.search(search)
     return where(nil) if search.blank?
 

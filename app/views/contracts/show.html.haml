@@ -1,13 +1,11 @@
-- title @contract.contract_type + " №" + @contract.number
+- title @contract.identify
 - search 'Договор'
-.id_ ##{@contract.id}
+.id_{ onclick: "copyToClipboard('#{@contract.identify}')"} ##{@contract.id}
 
 %h3
   = link_to @contract.contract_type.to_s, contracts_path + '?type=' + @contract.contract_type.to_s, class: 'groups'
-  №
-  %b #{@contract.number} #{@contract.name}
-  = 'от ' + @contract.date_begin.strftime('%d.%m.%Y') if @contract.date_begin
-  = 'по ' + @contract.date_end.strftime('%d.%m.%Y') if @contract.date_end
+  %b № #{@contract.number} "#{@contract.name}"
+  #{@contract.dates}
 %h3= link_to @contract.agent.name, agent_path(@contract.agent.id) if @contract.agent
 - if @contract.parent
   %h3
