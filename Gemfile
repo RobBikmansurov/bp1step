@@ -8,8 +8,6 @@ gem 'bootsnap'
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '~> 4.1.0'
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails'
 gem 'jquery-rails'
 gem 'jquery-ui-rails', '5.0.5'
 
