@@ -62,5 +62,4 @@ web:		## rub web container
 
 s:	run-rails
 c:	console
-off:	down
 w:	web

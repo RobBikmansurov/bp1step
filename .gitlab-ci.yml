@@ -61,7 +61,7 @@ build:
     - bundle exec rake db:create db:migrate RAILS_ENV=test
 
 rspec:
-  stage: build
+  stage: test
   extends: .base
   allow_failure: true
   script:
@@ -77,7 +77,7 @@ rspec:
     - bundle exec rspec
   
 rubocop:
-  stage: build
+  stage: test
   extends: .base
   allow_failure: true
   script:
@@ -87,7 +87,7 @@ rubocop:
     - rubocop --config .rubocop.yml  --format offenses
 
 bundle_audit:
-  stage: build
+  stage: test
   extends: .base
   allow_failure: true
   script:
