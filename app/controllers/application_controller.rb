@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
   end
 
   def sort_direction
-    params[:direction] || 'asc'
+    params[:direction] || 'desc'
   end
 
   def sort_column
