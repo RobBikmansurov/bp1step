@@ -39,7 +39,7 @@ class Bproce < ApplicationRecord
   has_many :iresource, through: :bproce_iresource
   has_many :workplaces, through: :bproce_workplaces
   has_many :metrics, dependent: :destroy
-  belongs_to :bproce, foreign_key: 'parent_id', optional: true # родительский процесс
+  belongs_to :bproce, inverse_of: :parent_id, optional: true # родительский процесс
 
   # has_many :parent_bp, class_name: 'Bproce', foreign_key: 'parent_id' # родительский процесс
   # belongs_to :parent, class_name: 'Bproce'
