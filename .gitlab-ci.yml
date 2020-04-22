@@ -5,6 +5,10 @@ variables:
   POSTGRES_PASSWORD: secret
   DATABASE_URL: postgres
 
+cache:
+  paths:
+    - ./vendor
+
 stages:
   - build
   - test
