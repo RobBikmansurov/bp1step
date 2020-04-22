@@ -87,9 +87,8 @@ class Document < ApplicationRecord
   end
 
   def identify
-    _status = status
-    _data = approved&.strftime('%d.%m.%Y')
-    "Документ (##{id}) \"#{name}\" #{_status} #{_data}"
+    data = approved&.strftime('%d.%m.%Y')
+    "Документ (##{id}) \"#{name}\" #{status} #{data}"
   end
 
   private
