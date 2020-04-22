@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'a user' do
   describe 'without a role' do
-    before (:each) do
+    before :each do
       @person = create(:person)
       sign_in_as(nil) # no role
     end
