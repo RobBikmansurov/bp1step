@@ -8,9 +8,9 @@ gem 'bootsnap'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '~> 4.1.0'
 gem 'jquery-rails'
 gem 'jquery-ui-rails', '5.0.5'
+gem 'uglifier', '~> 4.1.0'
 
 gem 'alphabetical_paginate'
 gem 'cancancan', '~> 2.2'
@@ -90,10 +90,10 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'rspec-rails'
   gem 'rubocop', require: false
+  gem 'rubocop-faker', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
-  gem 'rubocop-faker', require: false
   gem 'rubycritic'
   gem 'selenium-webdriver'
 end
