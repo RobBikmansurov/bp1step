@@ -148,7 +148,8 @@ RSpec.describe BusinessRolesController, type: :controller do
       user = create :user
       user_business_role = create :user_business_role, user_id: user.id, business_role_id: business_role.id
       put :update_user, params: { id: business_role.to_param,
-                                  user_business_role: { user_id: user.id, business_role_id: business_role.id, status: 0, user_name: user.displayname } }
+                                  user_business_role: { user_id: user.id,
+                                                        business_role_id: business_role.id, status: 0, user_name: user.displayname } }
       expect(assigns(:business_role)).to eq(business_role)
     end
   end

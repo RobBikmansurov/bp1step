@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do
   let(:author) { FactoryBot.create :user }
-  let(:task_attributes) { { name: 'Task0', description: 'description', status: 0, duedate: Date.current + 1, author_id: author.id } }
+  let(:task_attributes) { { name: 'Task0', description: 'descr', status: 0, duedate: Date.current + 1, author_id: author.id } }
   let!(:task) { FactoryBot.create :task, author_id: author.id }
   let!(:task1) { FactoryBot.create :task, author_id: author.id }
 

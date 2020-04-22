@@ -162,7 +162,8 @@ RSpec.describe RequirementsController, type: :controller do
       user = create :user
       user_requirement = create :user_requirement, user_id: user.id, requirement_id: requirement.id
       put :update_user, params: { id: requirement.to_param,
-                                  user_requirement: { user_id: user.id, requirement_id: requirement.id, status: 0, user_name: user.displayname } }
+                                  user_requirement: { user_id: user.id,
+                                                      requirement_id: requirement.id, status: 0, user_name: user.displayname } }
       expect(assigns(:requirement)).to eq(requirement)
     end
   end
