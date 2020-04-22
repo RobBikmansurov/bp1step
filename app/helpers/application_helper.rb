@@ -76,7 +76,7 @@ module ApplicationHelper
   def red_text(text, condition)
     return text unless condition
 
-    raw("<span style='color: red;'>#{text}</span>")
+    raw("<span style='color: red;'>#{text}</span>") # rubocop:disable Rails/OutputSafety
   end
 
   def days_left_as_text(duedate, alarm)
