@@ -44,9 +44,10 @@ class Directive < ApplicationRecord
 
   # все директивы процесса (связаны с ним через документы процесса)
   def directives_of_bproce(bproce_id)
+    id = bproce_id.to_i
     Directive.find_by_sql(<<-SQL.squish)
       SELECT directives.* FROM directives, document_directives, bproce_documents
-      WHERE bproce_documents.bproce_id = #{bproce_id}
+      WHERE bproce_documents.bproce_id = #{id}
         and bproce_documents.document_id = document_directives.document_id
         and directives.id = document_directives.directive_id
       GROUP by directives.id

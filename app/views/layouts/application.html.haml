@@ -83,7 +83,7 @@
           %a{ href: '/' } BP1Step
           2012-2020
         .span-3
-          rev. #{Git::REVISION[0..6]}
+          rev. #{(Git::REVISION || 'debug!')[0..6]}
         .span-3.last
           - if user_signed_in?
             - if can? :assign_roles, User
