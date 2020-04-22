@@ -7,7 +7,7 @@ variables:
 
 cache:
   paths:
-    - vendor/ruby
+    - ./vendor
 
 stages:
   - build
@@ -16,11 +16,13 @@ stages:
 
 .base:
   image: ruby:2.6.3
+  dependencies:
+    - build
   cache:
     key: gems_and_packages
     paths:
       - apt-cache/
-      - vendor/ruby
+      - ./vendor
     policy: pull
   before_script:
     - gem install bundler --no-document
@@ -73,7 +75,7 @@ rspec:
     - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
     - sed -i 's/before_save :ldap_email/# before_save :ldap_email/g' app/models/user.rb
     #- bundle install -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
-    #- bundle exec rake db:create db:migrate RAILS_ENV=test
+    - bundle exec rake db:create db:migrate RAILS_ENV=test
     - bundle exec rspec
   
 rubocop:
