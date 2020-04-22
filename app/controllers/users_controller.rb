@@ -283,6 +283,10 @@ class UsersController < ApplicationController
     params[:sort] || 'displayname'
   end
 
+  def sort_direction
+    params[:direction] || 'asc'
+  end
+
   def find_user
     if params[:search].present? # это поиск
       @users = User.search(params[:search])

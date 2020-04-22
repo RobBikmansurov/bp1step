@@ -80,7 +80,7 @@ rspec:
   
 rubocop:
   stage: test
-  extends: .base
+  # extends: .base
   allow_failure: true
   script:
     - gem install rubocop rubocop-rails rubocop-rspec rubocop-performance rubocop-faker
