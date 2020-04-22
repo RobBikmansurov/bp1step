@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-include Warden::Test::Helpers
-Warden.test_mode!
+# include Warden::Test::Helpers
+# Warden.test_mode!
 
 describe 'admin searching for a specific user' do
   context 'when logged in as admin' do

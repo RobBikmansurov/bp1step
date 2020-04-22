@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-include Warden::Test::Helpers
-Warden.test_mode!
+# include Warden::Test::Helpers
+# Warden.test_mode!
 
 RSpec.describe 'Managing terms', type: :feature do
   context "Any users see list of terms and can't update it" do
