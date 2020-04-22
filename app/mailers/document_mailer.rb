@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DocumentMailer < ActionMailer::Base
+class DocumentMailer < ApplicationMailer
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   # рассылка об отсутствии файла документа

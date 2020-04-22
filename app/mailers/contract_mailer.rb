@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ContractMailer < ActionMailer::Base
+class ContractMailer < ApplicationMailer
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   # рассылка ответственным об изменении договора или скана

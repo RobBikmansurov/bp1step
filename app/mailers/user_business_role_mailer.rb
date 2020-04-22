@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UserBusinessRoleMailer < ActionMailer::Base
+class UserBusinessRoleMailer < ApplicationMailer
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   # рассылка о назначении исполнителя на роль в процессе

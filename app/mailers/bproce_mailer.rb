@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class BproceMailer < ActionMailer::Base
+class BproceMailer < ApplicationMailer
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   # рассылка об отстутствии ролей в процессе

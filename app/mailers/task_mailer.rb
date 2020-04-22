@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TaskMailer < ActionMailer::Base
+class TaskMailer < ApplicationMailer
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   # рассылка исполнителям о просроченных письмах

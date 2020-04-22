@@ -71,3 +71,9 @@ Lint/UselessAssignment:
   Exclude:
     - spec/**/*_spec.rb
     - spec/features/*.rb
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false
+Rails/HelperInstanceVariable:
+  Enabled: false
+Lint/LiteralAsCondition:
+  Enabled: false

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UserWorkplaceMailer < ActionMailer::Base
+class UserWorkplaceMailer < ApplicationMailer
   default from: 'BP1Step <bp1step@bankperm.ru>'
 
   # рассылка о назначении сотруднику РМ
