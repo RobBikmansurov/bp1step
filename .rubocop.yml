@@ -67,3 +67,7 @@ RSpec/MultipleExpectations:
   Enabled: false
 RSpec:
   Enabled: false
+Lint/UselessAssignment:
+  Exclude:
+    - spec/**/*_spec.rb
+    - spec/features/*.rb
