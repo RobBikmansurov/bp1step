@@ -5,10 +5,6 @@ variables:
   POSTGRES_PASSWORD: secret
   DATABASE_URL: postgres
 
-cache:
-  paths:
-    - ./vendor
-
 stages:
   - build
   - test
@@ -89,6 +85,7 @@ rubocop:
 
 bundle_audit:
   stage: test
+  extends: .base
   allow_failure: true
   script:
     - bundle exec bundle audit check --update
