@@ -197,8 +197,8 @@ RSpec.describe LettersController, type: :controller do
   end
 
   it 'register letter' do
-    letter.update_column :letter_id, letter1.id
-    letter.update_column :in_out, 2
+    letter.update! letter_id: letter1.id
+    letter.update! in_out: 2
     get :register, params: { id: letter.id }
     expect(response).to redirect_to "/letters/#{letter.id}?letter_id=#{letter.id}"
   end
