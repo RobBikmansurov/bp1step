@@ -58,14 +58,14 @@ build:
     # check postgres
     #- export PGPASSWORD=$POSTGRES_PASSWORD
     # - psql -h postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
-    - bundle exec rake db:create db:migrate RAILS_ENV=test
+    - bundle exec rake db:setup RAILS_ENV=test
 
 rspec:
   stage: test
   extends: .base
   allow_failure: true
   script:
-    # - apt update -q && apt install nodejs -yqq
+    - apt update -q && apt install nodejs -yqq
     - cp config/database.yml.example config/database.yml
     - cp config/ldap.yml.example config/ldap.yml
     # change ldap-auth to database-auth 
@@ -81,7 +81,7 @@ rubocop:
   extends: .base
   allow_failure: true
   script:
-    - gem install rubocop rubocop-rspec rubocop-performance
+    - gem install rubocop rubocop-rails rubocop-rspec rubocop-performance rubocop-faker
     - rubocop -V
     - ls -al .rubocop.yml
     - rubocop --config .rubocop.yml  --format offenses
