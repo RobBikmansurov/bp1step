@@ -65,15 +65,15 @@ rspec:
   extends: .base
   allow_failure: true
   script:
-    - apt update -q && apt install nodejs -yqq
+    # - apt update -q && apt install nodejs -yqq
     - cp config/database.yml.example config/database.yml
     - cp config/ldap.yml.example config/ldap.yml
     # change ldap-auth to database-auth 
     - sed -i 's/config.authentication_keys = \[ :username \]/config.authentication_keys = \[ :email \]/' config/initializers/devise.rb
     - sed -i 's/devise :ldap_authenticatable/devise :database_authenticatable/g' app/models/user.rb
     - sed -i 's/before_save :ldap_email/# before_save :ldap_email/g' app/models/user.rb
-    - bundle install -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
-    - bundle exec rake db:create db:migrate RAILS_ENV=test
+    #- bundle install -j $(nproc) --path vendor  # Install dependencies into ./vendor/ruby
+    #- bundle exec rake db:create db:migrate RAILS_ENV=test
     - bundle exec rspec
   
 rubocop:
@@ -81,7 +81,7 @@ rubocop:
   extends: .base
   allow_failure: true
   script:
-    - gem install rubocop rubocop-rspec
+    - gem install rubocop rubocop-rspec rubocop-performance
     - rubocop -V
     - ls -al .rubocop.yml
     - rubocop --config .rubocop.yml  --format offenses
