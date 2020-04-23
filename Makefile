@@ -1,6 +1,6 @@
 RUN_ARGS := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
-.PHONY: help build up start down destroy stop restart logs logs-api ps login-timescale login-api db-shell setup test rubocop-a rubocop web
+.PHONY: help build up start down destroy stop restart logs logs-api ps login-timescale login-api psql setup test rubocop-a rubocop web
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
@@ -42,8 +42,8 @@ login-timescale:
 	docker-compose -f docker-compose.yml exec timescale /bin/bash
 login-api:
 	docker-compose -f docker-compose.yml exec api /bin/bash
-db-shell:
-	docker-compose -f docker-compose.yml exec timescale psql -Upostgres
+psql:	## psql console
+	docker-compose -f docker-compose.yml exec db psql --host db --user postgres postgres
 setup:	## setup database
 	docker-compose run web rails db:setup
 test:	## run Rspec tests
