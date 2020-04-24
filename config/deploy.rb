@@ -64,10 +64,6 @@ set :puma_init_active_record, true
 
 set :bundle_jobs, 4 # default: nil, only available for Bundler >= 1.4
 
-
-require "whenever/capistrano"
-set :whenever_command, "bundle exec whenever"
-
 namespace :deploy do
   desc 'Setup'
   task :setup do
