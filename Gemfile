@@ -68,6 +68,7 @@ group :development do
   gem 'capistrano3-puma'
   gem 'sshkit-sudo'
   # gem 'log-analyzer', require: false
+  # gem 'rack-mini-profiler', require: ['enable_rails_patches']
 end
 
 group :production, :staging do

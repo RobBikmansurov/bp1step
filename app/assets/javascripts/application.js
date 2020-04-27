@@ -5,10 +5,8 @@
 // the compiled file.
 //
 //= require jquery-1.9.1.min.js
-//= require jquery_ujs
 //= require autocomplete-rails
 //= require chartkick
 //= require Chart.bundle
 //= require textarea.auto-resizer
-//= copy-to-clipboard.js
 //= require_tree .

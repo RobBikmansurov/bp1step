@@ -12,7 +12,10 @@ RUN apt-get update && apt-get install -y \
   curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
   apt-get update && apt-get install -y nodejs \
-  && rm -rf /var/lib/apt/lists/*
+  && apt-get clean \
+  && rm -rf /var/cache/apt/archives/* \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+  && truncate -s 0 /var/log/*log
 
 ENV LANG C.UTF-8
 
