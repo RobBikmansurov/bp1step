@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BusinessRoleMailer < ApplicationMailer
-  default from: 'BP1Step <bp1step@bankperm.ru>'
+  # default from: 'BP1Step <bp1step@bankperm.ru>'
 
   # рассылка всем исполнителям роли
   def mail_all(business_role, current_user, text)
