@@ -54,7 +54,7 @@ rubocop-a:	## run rubocop -a
 	docker-compose run web rubocop -a $(RUN_ARGS) 
 audit:	## run security check utulities
 	docker-compose run web bundle audit check --update
-	docker-compose run web brakeman --ignore-model-output --rails5 --color
+	docker-compose run web brakeman --ignore-model-output --rails5 --color --except FileAccess
 console:	## rails console
 	docker-compose run web rails console
 web:		## rub web container

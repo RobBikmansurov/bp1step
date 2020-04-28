@@ -10,7 +10,7 @@ class OrdersController < ApplicationController
   helper_method :order_policy
 
   def create_from_file
-    filename = params[:file]
+    filename = sanitize(params[:file])
     redirect_to orders_url, notice: 'parameter is missing.' if filename.blank?
     path_to_h_tmp = Rails.configuration.x.dms.path_to_h_tmp
     path_from_file_meta = Rails.root.join(path_to_h_tmp, filename)

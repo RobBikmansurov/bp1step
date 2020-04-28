@@ -89,6 +89,8 @@ bundle_audit:
   allow_failure: true
   script:
     - bundle exec bundle audit check --update
+    - gem install brakeman
+    - brakeman --ignore-model-output --rails5 --color --except FileAccess
 
 to_staging:
   stage: deploy

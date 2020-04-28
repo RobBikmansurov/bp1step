@@ -260,7 +260,7 @@ class MetricsController < ApplicationController
   def update_or_create_value(metric, new_value, time_at = Time.current)
     return unless new_value&.positive?
 
-    period = ActiveRecord::Base::sanitize_sql("dtime BETWEEN %s", metric.period_format_pg)
+    period = ActiveRecord::Base.sanitize_sql('dtime BETWEEN %s', metric.period_format_pg)
     value = MetricValue.where(metric_id: metric.id).where(period).first
     value ||= MetricValue.new(metric_id: metric.id) # не нашли? - новое значение
     value.value = new_value
