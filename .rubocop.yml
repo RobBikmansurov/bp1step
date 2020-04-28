@@ -43,6 +43,10 @@ Layout/LineLength:
   Max: 132
 Lint/RaiseException:
   Enabled: true
+Layout/SpaceAroundMethodCallOperator: 
+  Enabled: true
+Style/ExponentialNotation:
+  Enabled: true
 
 # TODO:
 Metrics/AbcSize:
