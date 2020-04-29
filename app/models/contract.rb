@@ -77,7 +77,7 @@ class Contract < ApplicationRecord
     if date_end
       'c ' + date + ' по ' + date_end&.strftime('%d.%m.%Y')
     else
-      ' от ' + date
+      'от ' + date
     end
   end
 
