@@ -8,11 +8,6 @@ RSpec.describe BproceDocumentsController, type: :routing do
       expect(get: '/bproce_documents/1').to route_to('bproce_documents#show', id: '1')
     end
 
-    it 'redirect to /pages/about if route is broken' do
-      # expect(get: '/bproce_documents').not_to be_routable
-      expect(get: '/bproce_documents').to route_to(controller: 'pages', action: 'about', path: 'bproce_documents')
-    end
-
     it 'routes to #edit' do
       expect(get: '/bproce_documents/1/edit').to route_to('bproce_documents#edit', id: '1')
     end
