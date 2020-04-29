@@ -2,18 +2,23 @@
 
 require 'rails_helper'
 
-RSpec.describe 'orders/index', order_type: :view do
-  let(:author) { FactoryBot.create(:user) }
-  let(:order) { FactoryBot.create(:order, author_id: author.id) }
-  let(:order1) { FactoryBot.create(:order, author_id: author.id) }
+RSpec.describe 'orders/index' do
+  let(:author) { create :user }
+  let!(:order) { create :order, author: author }
+  let!(:order1) { create :order, author: author }
+  let(:bproce) { create :bproce, user: author}
+  before :each do
+    @orders = Order.all
+    @date = order.created_at
+    @month = @date
+    Rails.configuration.x.dms.process_ko = bproce.id
+  end
 
   it 'renders a list of orders' do
+    allow(view).to receive_messages(:will_paginate => nil) # Add this
     render
-    assert_select 'tr>td', text: 'Type'.to_s, count: 2
-    assert_select 'tr>td', text: 2.to_s, count: 2
-    assert_select 'tr>td', text: nil.to_s, count: 2
-    assert_select 'tr>td', text: 'Contract Number'.to_s, count: 2
-    assert_select 'tr>td', text: 'Status'.to_s, count: 2
-    assert_select 'tr>td', text: 'MyText'.to_s, count: 2
+    expect(rendered).to match order.order_type
+    expect(rendered).to match order1.order_type
+    expect(rendered).to match order.author.displayname
   end
 end

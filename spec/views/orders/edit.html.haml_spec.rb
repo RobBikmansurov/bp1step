@@ -2,16 +2,13 @@
 
 require 'rails_helper'
 
-RSpec.describe 'orders/edit', order_type: :view do
-  before(:each) do
-    @order = assign(:order, Order.create!(
-                              order_type: '',
-                              codpred: 1,
-                              author: nil,
-                              contract_number: 'MyString',
-                              status: 'MyString',
-                              result: 'MyText'
-                            ))
+RSpec.describe 'orders/edit' do
+  let(:author) { create :user }
+  let!(:order) { create :order, author: author }
+  let(:bproce) { create :bproce, user: author}
+  before :each do
+    @order = Order.find(order.id)
+    Rails.configuration.x.dms.process_ko = bproce.id
   end
 
   it 'renders the edit order form' do
@@ -21,12 +18,6 @@ RSpec.describe 'orders/edit', order_type: :view do
       assert_select 'input[name=?]', 'order[order_type]'
 
       assert_select 'input[name=?]', 'order[codpred]'
-
-      assert_select 'input[name=?]', 'order[author_id]'
-
-      assert_select 'input[name=?]', 'order[contract_number]'
-
-      assert_select 'input[name=?]', 'order[status]'
 
       assert_select 'textarea[name=?]', 'order[result]'
     end

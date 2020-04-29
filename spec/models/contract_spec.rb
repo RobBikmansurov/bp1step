@@ -28,9 +28,9 @@ describe Contract do
   end
 
   context 'with associations' do
-    it { is_expected.to belong_to(:parent).class_name('Contract') }
+    it { is_expected.to belong_to(:parent).class_name('Contract').optional }
     it { is_expected.to belong_to(:owner).class_name('User') }
-    it { is_expected.to belong_to(:payer).class_name('User') }
+    it { is_expected.to belong_to(:payer).class_name('User').optional }
     it { is_expected.to belong_to(:agent).class_name('Agent') }
     it { is_expected.to have_many(:bproce_contract).dependent(:destroy) }
     it { is_expected.to have_many(:contract_scan).dependent(:destroy) }

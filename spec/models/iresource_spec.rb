@@ -12,7 +12,7 @@ describe Iresource do
   end
 
   context 'with associations' do
-    it { is_expected.to belong_to(:user) }
+    it { is_expected.to belong_to(:user).optional }
     it { is_expected.to have_many(:bproce_iresources) }
     it { is_expected.to have_many(:bproces).through(:bproce_iresources) }
   end

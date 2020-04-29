@@ -12,7 +12,7 @@ describe Requirement do
   end
 
   context 'with associations' do
-    it { is_expected.to belong_to(:letter) }
+    it { is_expected.to belong_to(:letter).optional }
     it { is_expected.to belong_to(:author) }
     it { is_expected.to have_many(:user) }
     it { is_expected.to have_many(:user_requirement).dependent(:destroy) }
