@@ -15,12 +15,11 @@
 - unless @agent.note.blank?
   %h3Примечания:
   = markdown(@agent.note)
-- unless @agent.dms_name.blank?
-  %h3
+%h3
+  - unless @agent.dms_name.blank?
     есть в СЭД #{}
     = link_to @agent.dms_name, agents_path(dms_name: @agent.dms_name), class: 'groups'
-- unless @agent.responsible_id.blank?
-  %h3
+  - unless @agent.responsible_id.blank?
     Ответственный:
     = link_to @agent.responsible&.displayname, user_path(@agent.responsible)
 
