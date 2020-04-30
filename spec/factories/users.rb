@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :user do
+  factory :user, aliases: [:author] do
     sequence(:id, &:to_s)
     username      { "u#{id}" }
     email         { "mail#{id}@example.com" }

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe RequirementsController, type: :controller do
+RSpec.describe RequirementsController do
   let(:author) { create(:user) }
   let(:requirement) { create :requirement, author: author }
   let(:requirement_created) { { label: 'label_created', author_id: author.id, status: 5 } }
@@ -14,10 +14,12 @@ RSpec.describe RequirementsController, type: :controller do
   let!(:task) { create :task, author: author, requirement: requirement }
   let(:user) { create :user }
   let!(:user_requirement) { create :user_requirement, requirement: requirement, user: user }
+  let(:current_user) { create :user }
 
   before do
-    @user = FactoryBot.create(:user)
+    @user = author
     @user.roles << Role.find_or_create_by(name: 'author', description: 'Автор')
+    @user.roles << Role.find_or_create_by(name: 'user`', description: 'description')
     sign_in @user
     allow(controller).to receive(:authenticate_user!).and_return(true)
   end
@@ -44,7 +46,8 @@ RSpec.describe RequirementsController, type: :controller do
 
   describe 'GET show' do
     it 'assigns the requested requirement as @requirement' do
-      requirement = Requirement.create! valid_attributes
+      puts requirement.inspect
+      puts requirement.to_param
       get :show, params: { id: requirement.to_param }
       expect(assigns(:requirement)).to eq(requirement)
     end
