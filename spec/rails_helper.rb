@@ -11,6 +11,9 @@ require 'paperclip/matchers'
 # require 'capybara/rails'
 require 'public_activity/testing'
 
+# Rails.env
+# ActiveRecord::Base.connection_config
+
 Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
 
 require 'capybara/rspec'

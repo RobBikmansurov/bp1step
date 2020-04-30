@@ -26,7 +26,7 @@ RSpec.configure do |config|
 
   config.filter_run_when_matching :focus
 
-  config.example_status_persistence_file_path = 'spec/example_status.txt'
+  config.example_status_persistence_file_path = 'spec/rspec_status.txt'
   config.order = :random
   Kernel.srand config.seed
 end

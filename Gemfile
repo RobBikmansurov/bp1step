@@ -91,11 +91,11 @@ end
 group :development, :test do
   gem 'factory_bot_rails'
   gem 'rspec-rails'
-  gem 'rubocop', require: false
-  gem 'rubocop-faker', require: false
-  gem 'rubocop-performance', require: false
-  gem 'rubocop-rails', require: false
-  gem 'rubocop-rspec', require: false
+  gem 'rubocop'
+  gem 'rubocop-faker'
+  gem 'rubocop-performance'
+  gem 'rubocop-rails'
+  gem 'rubocop-rspec'
   gem 'rubycritic'
   gem 'selenium-webdriver'
 end

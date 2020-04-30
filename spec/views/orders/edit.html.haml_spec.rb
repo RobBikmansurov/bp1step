@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe 'orders/edit' do
   let(:author) { create :user }
   let!(:order) { create :order, author: author }
-  let(:bproce) { create :bproce, user: author}
+  let(:bproce) { create :bproce, user: author }
   before :each do
     @order = Order.find(order.id)
     Rails.configuration.x.dms.process_ko = bproce.id

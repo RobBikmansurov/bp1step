@@ -236,7 +236,7 @@ Bproce.create!(name: 'Управление изменениями', shortname: '
 puts 'processes created'
 
 # iresource
-Array.new(50) do |_i|
+50.times do |_i|
   url = Faker::Internet.url.sub 'http:', ['//srv', '//s', 'aws:', 'https:', 'ftp:'][rand(5)]
   label = Faker::Lorem.words(number: 6).join(' ')[0, 20]
   label = Faker::Lorem.words(number: 6).join(' ')[0, 20] if Iresource.where(label: label).any?
@@ -262,19 +262,21 @@ end
 puts 'iresources created'
 
 # agents
-Array.new(75) do |_i|
+75.times do |i|
   company_name = Faker::Company.name
   Agent.create!(name: "#{Faker::Company.suffix} #{company_name}",
                 shortname: company_name[0, 30],
                 town: Faker::Address.city[0, 30],
                 address: Faker::Address.street_address,
                 contacts: Faker::PhoneNumber.cell_phone,
+                inn: i % 3 == 0 ? Faker::Bank.account_number(digits: 9) : '',
+                dms_name: i % 7 == 0 ? 'Диадок' : '',
                 note: Faker::Lorem.sentence)
 end
 puts 'agents created'
 
 # contracts
-Array.new(150) do |_i|
+150.times do |_i|
   status = 'Действует'
   status = 'НеДействует' if rand(20) == 1
   status = 'Согласование' if rand(20) == 1
@@ -374,7 +376,7 @@ end
 puts 'Directives created'
 
 # documents
-Array.new(100) do |_i|
+100.times do |_i|
   status = 'Утвержден'
   status = 'НеДействует' if rand(20) == 1
   status = 'Проект' if rand(30) == 1
@@ -433,7 +435,7 @@ end
 
 # Letter.destroy_all
 sender = "#{Faker::Company.suffix} #{Faker::Company.name}" # first sender
-Array.new(300) do |_l|
+300.times do |_l|
   number = rand(9..9909).to_s
   number += "-#{rand(33)}" if rand(5) == 1
   number += "-#{rand(33)}" if rand(5) == 1
@@ -499,7 +501,7 @@ def create_user_requirement(requirement_id, user_id = nil)
   )
 end
 
-Array.new(20) do |_l|
+20.times do |_l|
   date = Faker::Date.backward(days: rand(200))
   duedate = date + 7 + rand(9)
   status = [0, 5, 9, 15, 15, 15, 15, 15, 15, 90, 90, 90, 90, 90, 90][rand(15)]
@@ -536,7 +538,7 @@ def create_user_task(task_id, user_id = nil)
   UserTask.create(user_id: user_id, task_id: task_id, status: rand(2))
 end
 
-Array.new(100) do |_l|
+100.times do |_l|
   date = Faker::Date.backward(days: rand(200))
   duedate = date + 7 + rand(9)
   completion_date = date + rand(30)
@@ -548,8 +550,10 @@ Array.new(100) do |_l|
     letter_id = nil
     requirement_id = (Requirement.pluck(:id).sample if rand(5) == 1)
   end
-  task = Task.create(
-    name: Faker::Lorem.words(number: rand(2..7)).join(' '),
+  name = Faker::Lorem.words(number: rand(2..7)).join(' ')
+  name += _l.to_s if Task.where(name: name).any? # имя задачи должно быть уникальное
+  task = Task.new(
+    name: name,
     created_at: date,
     duedate: duedate,
     completion_date: completion_date,

@@ -9,6 +9,7 @@ config/ldap.yml
 config/secret/*
 config/initializers/secret_token.rb
 secret/*
+spec/rspec_status.txt
 spec/example_status.txt
 *.0
 *.rar
@@ -43,3 +44,4 @@ favicon.ico
 ldap-auth.txt
 ldap.rb
 node_modules/*
+storage/*

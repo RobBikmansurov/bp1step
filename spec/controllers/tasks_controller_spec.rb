@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do
-  let(:author) { FactoryBot.create :user }
+  let(:author) { create :user }
   let(:task_attributes) { { name: 'Task0', description: 'descr', status: 0, duedate: Date.current + 1, author_id: author.id } }
-  let!(:task) { FactoryBot.create :task, author_id: author.id }
-  let!(:task1) { FactoryBot.create :task, author_id: author.id }
+  let!(:task) { create :task, author: author }
+  let!(:task1) { create :task, author: author }
 
   before do
     @user = FactoryBot.create(:user)
@@ -127,9 +127,9 @@ RSpec.describe TasksController, type: :controller do
         expect(assigns(:task)).to eq(task)
       end
 
-      it 'redirects to the task' do
+      it 'redirects to user`s page< because this task not for user' do
         put :update, params: { id: task.to_param, task: task_attributes }
-        expect(response).to redirect_to(task)
+        expect(response).to redirect_to(@user)
       end
     end
 
@@ -190,9 +190,9 @@ RSpec.describe TasksController, type: :controller do
 
   describe 'report' do
     it 'render report check' do
-      user = FactoryBot.create :user
+      user = @user
       user_task = UserTask.create task_id: task.id, user_id: user.id
-      current_user = FactoryBot.create :user
+      current_user = @user
       get :report, params: { id: task.to_param }
       expect(response).to be_successful
     end
