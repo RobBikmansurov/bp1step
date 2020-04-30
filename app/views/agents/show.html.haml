@@ -1,19 +1,13 @@
 -title 'Контрагент ' + @agent.name
 -search "Контрагент"
-.id_
-  \#
-  = @agent.id
+.id_{ onclick: "copyToClipboard('#{@agent.identify}')"} ##{@agent.id}
 %h2
   Контрагент 
   = '[' + @agent.shortname + ']' if @agent.shortname
   &nbsp;
-  %b
-    = ' ИНН: ' + @agent.inn if @agent.inn
-
+  %b= ' ИНН: ' + @agent.inn if @agent.inn
 %h2
-  %b= @agent.name
-  -if !@agent.town.blank?
-    %b= ", г. #{@agent.town}"
+  %b= @agent.fullname
 %h3Адрес:
 = markdown(@agent.address)
 %h3Контакты:
@@ -25,6 +19,11 @@
   %h3
     есть в СЭД #{}
     = link_to @agent.dms_name, agents_path(dms_name: @agent.dms_name), class: 'groups'
+- unless @agent.responsible_id.blank?
+  %h3
+    Ответственный:
+    = link_to @agent.responsible&.displayname, user_path(@agent.responsible)
+
 %hr
 -if @contracts.any?
   %h3

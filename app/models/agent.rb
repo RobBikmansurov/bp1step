@@ -13,6 +13,8 @@ class Agent < ApplicationRecord
   validates :shortname, length: { maximum: 255 }
   validates :address, length: { maximum: 255 }
 
+  belongs_to :responsible, class_name: 'User', optional: true
+
   def self.search(search)
     return where(nil) if search.blank?
 
@@ -22,4 +24,25 @@ class Agent < ApplicationRecord
 
   include PublicActivity::Model
   tracked owner: proc { |controller, _model| controller.current_user }
+
+  def fullname
+    city = ", г. #{town}" if town.present?
+
+    "\"#{name}\"#{city}"
+  end
+
+  def identify
+    tax = " ИНН #{inn}"
+
+    "Контрагент (##{id}) #{fullname}#{tax}"
+  end
+
+  def responsible_name
+    responsible.try(:displayname)
+  end
+
+  def responsible_name=(name)
+    self.responsible = User.find_by(displayname: name) if name.present?
+  end
+
 end

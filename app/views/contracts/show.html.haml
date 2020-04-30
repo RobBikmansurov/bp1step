@@ -6,7 +6,7 @@
   = link_to @contract.contract_type.to_s, contracts_path + '?type=' + @contract.contract_type.to_s, class: 'groups'
   %b № #{@contract.number} "#{@contract.name}"
   #{@contract.dates}
-%h3= link_to @contract.agent.name, agent_path(@contract.agent.id) if @contract.agent
+%h3= link_to @contract.agent.fullname, agent_path(@contract.agent.id) if @contract.agent
 - if @contract.parent
   %h3
     к

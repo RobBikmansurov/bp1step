@@ -47,7 +47,7 @@ psql:	## psql console
 setup:	## setup database
 	docker-compose run web rails db:setup
 test:	## run Rspec tests
-	docker-compose run web rspec $(RUN_ARGS) 
+	docker-compose run web bundle exec rspec $(RUN_ARGS) 
 rubocop:	## run rubocop
 	docker-compose run web rubocop $(RUN_ARGS) 
 rubocop-a:	## run rubocop -a
@@ -56,7 +56,7 @@ audit:	## run security check utulities
 	docker-compose run web bundle audit check --update
 	docker-compose run web brakeman --ignore-model-output --rails5 --color --except FileAccess
 console:	## rails console
-	docker-compose run web rails console
+	RAILS_ENV=development docker-compose run web rails console
 web:		## rub web container
 	docker-compose run web $(RUN_ARGS)
 

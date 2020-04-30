@@ -74,6 +74,6 @@ class AgentsController < ApplicationController
 
   def agent_params
     params.require(:agent).permit(:shortname, :name, :town, :address, :contacts,
-                                  :note, :inn, :dms_name)
+                                  :note, :inn, :dms_name, :responsible_name)
   end
 end

@@ -16,8 +16,6 @@ engines:
     enabled: true
   fixme:
     enabled: true
-  rubocop:
-    enabled: true
 ratings:
   paths:
   - Gemfile.lock
@@ -34,3 +32,6 @@ exclude_paths:
 - config/
 - db/
 - spec/
+plugins:
+  rubocop:
+    enabled: true

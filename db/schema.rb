@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_09_122939) do
+ActiveRecord::Schema.define(version: 2020_04_30_104452) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 2020_04_09_122939) do
     t.text "note"
     t.string "inn", limit: 12
     t.string "dms_name"
+    t.integer "responsible_id"
   end
 
   create_table "bapps", id: :serial, force: :cascade do |t|

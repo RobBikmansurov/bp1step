@@ -1,8 +1,6 @@
 -title 'Контрагент ' + @agent.name
 -search "Контрагента"
-.id_
-  \#
-  = @agent.id
+.id_{ onclick: "copyToClipboard('#{@agent.identify}')"} ##{@agent.id}
 %h1 Контрагент 
 = render 'form'
 %p
