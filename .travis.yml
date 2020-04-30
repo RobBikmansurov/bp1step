@@ -25,6 +25,8 @@ script:
 
   - rm ./spec/policy/order_policy_spec.rb
   - rm ./spec/controllers/requirements_controller_spec.rb
+  - rm ./spec/controllers/tasks_controller_spec.rb
+  - rm ./spec/views/orders/show.html.haml_spec.rb
   - bundle exec rspec --exclude-pattern "spec/features/*_spec.rb"
 
   - bundle exec codeclimate-test-reporter
