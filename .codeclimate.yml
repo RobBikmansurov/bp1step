@@ -35,3 +35,4 @@ exclude_paths:
 plugins:
   rubocop:
     enabled: true
+    channel: rubocop-0-82

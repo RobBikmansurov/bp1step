@@ -1,30 +1,30 @@
--title 'Контрагент ' + @agent.name
--search "Контрагент"
-.id_{ onclick: "copyToClipboard('#{@agent.identify}')"} ##{@agent.id}
+- title 'Контрагент ' + @agent.name
+- search 'Контрагент'
+.id_{ onclick: "copyToClipboard('#{@agent.identify}')" } ##{@agent.id}
 %h2
-  Контрагент 
+  Контрагент
   = '[' + @agent.shortname + ']' if @agent.shortname
   &nbsp;
-  %b= ' ИНН: ' + @agent.inn if @agent.inn
+  %b= ' ИНН: ' + @agent.inn if @agent.inn.present?
 %h2
   %b= @agent.fullname
 %h3Адрес:
 = markdown(@agent.address)
 %h3Контакты:
 = markdown(@agent.contacts)
-- unless @agent.note.blank?
+- if @agent.note.present?
   %h3Примечания:
   = markdown(@agent.note)
 %h3
-  - unless @agent.dms_name.blank?
-    есть в СЭД #{}
+  - if @agent.dms_name.present?
+    есть в СЭД
     = link_to @agent.dms_name, agents_path(dms_name: @agent.dms_name), class: 'groups'
-  - unless @agent.responsible_id.blank?
+  - if @agent.responsible_id.present?
     Ответственный:
     = link_to @agent.responsible&.displayname, user_path(@agent.responsible)
 
 %hr
--if @contracts.any?
+- if @contracts.any?
   %h3
     Договоры с
     %b= @agent.name
@@ -36,37 +36,36 @@
       %th Отв.
       %th Статус
       %th От
-      -if can? :manage, Contract
+      - if can? :manage, Contract
         %th
-      -if can? :destroy, Contract
+      - if can? :destroy, Contract
         %th
-      
     - @contracts.each do |contract|
       %tr
         %td= contract.id
         %td
-          = "—" * (contract.depth)
-          -if contract.contract_scan.first  #  если есть скан
-            -if can? :view_contract, contract
+          = '—' * contract.depth
+          - if contract.contract_scan.first # если есть скан
+            - if can? :view_contract, contract
               - if File.exist?(contract.contract_scan.first.scan.path)
                 = link_to image_tag('action_go.gif', alt: 'См.', title: 'Смотреть'), contract.contract_scan.first.scan.url, class: 'button-img'
-          =contract.contract_type
+          = contract.contract_type
           = link_to contract.shortname, contract_path(contract)
         %td
           = contract.owner&.displayname
           = contract.payer&.displayname
         %td= contract.status
-        %td= contract.date_begin.strftime('%d.%m.%Y') if contract.date_begin
+        %td= contract.date_begin&.strftime('%d.%m.%Y')
         - if can? :manage, contract
-          %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_contract_path(contract), class: 'button-img'
+          %td= link_to image_tag('page_edit.gif', alt: 'Изменить'), edit_contract_path(contract), class: 'button-img'
         - if can? :destroy, contract
-          %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), contract, data: { confirm: 'Договор"' + contract.autoname + "\"\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
+          %td= link_to image_tag('action_stop.gif', alt: 'Удалить'), contract, data: { confirm: 'Договор"' + contract.autoname + "\"\nДействительно хотите удалить?" }, method: 'delete', class: 'button-img'
 
 = render 'activities/info_activity', track_type: 'Agent', track_item: @agent
 
 %p
--if can? :update, Agent
-  = link_to 'Edit', edit_agent_path(@agent), :class => 'button'
-= link_to 'Back', agents_path, :class => 'button'
--if can? :update, Agent or can? :create, Contract
-  = link_to 'Новый договор', new_contract_agent_path(@agent), :class => 'button'
+- if can? :update, Agent
+  = link_to 'Edit', edit_agent_path(@agent), class: 'button'
+= link_to 'Back', agents_path, class: 'button'
+- if can? :update, Agent or can? :create, Contract
+  = link_to 'Новый договор', new_contract_agent_path(@agent), class: 'button'

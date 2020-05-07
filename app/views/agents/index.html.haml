@@ -1,9 +1,13 @@
--search "Контрагент" 
--title "Список контрагентов"
+- search 'Контрагент'
+- title 'Список контрагентов'
 
 %h2
   Список контрагентов
   - if params[:search].present?
+    - if params[:search].start_with? '#'
+      с id
+    - elsif params[:search].to_i > 1_000_000
+      с ИНН
     [ #{params[:search]} ]
   - elsif params[:dms_name].present?
     участников СЭД [ #{params[:dms_name]} ]
@@ -11,13 +15,13 @@
 %table
   %tr
     %th #
-    -#= sortable "id", "#"
+    -# = sortable "id", "#"
     %th Наименование
     %th Город
     %th Контакты
-    -if can? :update, Agent
+    - if can? :update, Agent
       %th
-    -if can? :destroy, Agent
+    - if can? :destroy, Agent
       %th
   - @agents.each do |agent|
     %tr
@@ -26,18 +30,18 @@
           = "##{agent.id}"
       %td= link_to agent.name, agent
       %td= agent.town
-      %td=  truncate(agent.contacts, :length => 80, :omission => ' ...')
+      %td= truncate(agent.contacts, length: 80, omission: ' ...')
       - if can? :manage, agent
-        %td= link_to image_tag('page_edit.gif', :alt => 'Изменить'),  edit_agent_path(agent), class: 'button-img'
+        %td= link_to image_tag('page_edit.gif', alt: 'Изменить'), edit_agent_path(agent), class: 'button-img'
       - if can? :destroy, agent
-        %td=link_to image_tag('action_stop.gif', :alt => 'Удалить'), agent, data: { confirm: 'Контрагент"' + agent.name + "\"\nДействительно хотите удалить?" }, :method => 'delete', class: 'button-img'
+        %td= link_to image_tag('action_stop.gif', alt: 'Удалить'), agent, data: { confirm: 'Контрагент"' + agent.name + "\"\nДействительно хотите удалить?" }, method: 'delete', class: 'button-img'
 
 .apple_pagination
   = will_paginate @agents
 
 %p
 - if can? :destroy, Agent
-  = link_to "Добавить Контрагента" , new_agent_path, :class => 'button'
+  = link_to 'Добавить Контрагента', new_agent_path, class: 'button'
 %p
 СЭД:
 - Agent.select('dms_name, count(id) as count').group(:dms_name).order(:dms_name).each do |d|

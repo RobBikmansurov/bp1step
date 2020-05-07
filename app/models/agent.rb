@@ -17,9 +17,11 @@ class Agent < ApplicationRecord
 
   def self.search(search)
     return where(nil) if search.blank?
+    return where('inn ILIKE ?', "%#{search}") if search.to_i > 1_000_000
+    return where('id = ?', search[1..].to_i) if search.start_with? '#'
 
-    where('name ILIKE ? or shortname ILIKE ? or contacts ILIKE ? or id = ? or inn ILIKE ?',
-          "%#{search}%", "%#{search}%", "%#{search}%", search.to_i.to_s, "%#{search}%")
+    where('name ILIKE ? or shortname ILIKE ? or contacts ILIKE ?',
+          "%#{search}%", "%#{search}%", "%#{search}%")
   end
 
   include PublicActivity::Model
@@ -32,7 +34,7 @@ class Agent < ApplicationRecord
   end
 
   def identify
-    tax = " ИНН #{inn}"
+    tax = " ИНН #{inn}" if inn.present?
 
     "Контрагент (##{id}) #{fullname}#{tax}"
   end
@@ -44,5 +46,4 @@ class Agent < ApplicationRecord
   def responsible_name=(name)
     self.responsible = User.find_by(displayname: name) if name.present?
   end
-
 end
