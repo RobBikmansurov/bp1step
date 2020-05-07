@@ -1,5 +1,9 @@
 ---
-engines:
+version: "2"
+plugins:
+  rubocop:
+    enabled: true
+    channel: rubocop-0-79
   brakeman:
     enabled: true
   csslint:
@@ -16,23 +20,11 @@ engines:
     enabled: true
   fixme:
     enabled: true
-ratings:
-  paths:
-  - Gemfile.lock
-  - "**.erb"
-  - "**.haml"
-  - "**.rb"
-  - "**.rhtml"
-  - "**.slim"
-  - "**.css"
-  - "**.coffee"
-  - "**.inc"
-  - "**.js"
-exclude_paths:
+  bundler-audit:
+    enabled: true
+  reek:
+    enabled: true
+exclude_patterns:
 - config/
 - db/
 - spec/
-plugins:
-  rubocop:
-    enabled: true
-    channel: rubocop-0-82

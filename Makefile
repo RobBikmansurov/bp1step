@@ -1,6 +1,6 @@
 RUN_ARGS := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
-.PHONY: help build up start down destroy stop restart logs logs-api ps login-timescale login-api psql setup test rubocop-a rubocop web
+.PHONY: help build up start down destroy stop restart logs logs-api ps login-timescale login-api psql setup test rubocop-a rubocop web codeclimate
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
@@ -59,6 +59,9 @@ console:	## rails console
 	RAILS_ENV=development docker-compose run web rails console
 web:		## rub web container
 	docker-compose run web $(RUN_ARGS)
+codeclimate:	## run Codeclimate CLI
+	# docker pull codeclimate/codeclimate
+	docker run --interactive --tty --rm --env CODECLIMATE_CODE="$PWD" --volume "$PWD":/code  --volume /var/run/docker.sock:/var/run/docker.sock --volume /tmp/cc:/tmp/cc  codeclimate/codeclimate
 
 s:	run-rails
 c:	console
