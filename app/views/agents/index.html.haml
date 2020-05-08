@@ -17,7 +17,7 @@
     %th #
     -# = sortable "id", "#"
     %th Наименование
-    %th Город
+    %th Ответственный
     %th Контакты
     - if can? :update, Agent
       %th
@@ -26,10 +26,11 @@
   - @agents.each do |agent|
     %tr
       %td
-        .id_show_
-          = "##{agent.id}"
-      %td= link_to agent.name, agent
-      %td= agent.town
+        .id_show_= "##{agent.id}"
+      %td= link_to agent.fullname, agent
+      %td
+        - if agent.responsible_id.present?
+          = agent.responsible&.displayname
       %td= truncate(agent.contacts, length: 80, omission: ' ...')
       - if can? :manage, agent
         %td= link_to image_tag('page_edit.gif', alt: 'Изменить'), edit_agent_path(agent), class: 'button-img'
