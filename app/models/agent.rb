@@ -18,7 +18,7 @@ class Agent < ApplicationRecord
   def self.search(search)
     return where(nil) if search.blank?
     return where('inn ILIKE ?', "%#{search}") if search.to_i > 1_000_000
-    return where('id = ?', search[1..].to_i) if search.start_with? '#'
+    return where('id = ?', search[1..-1].to_i) if search.start_with? '#'
 
     where('name ILIKE ? or shortname ILIKE ? or contacts ILIKE ?',
           "%#{search}%", "%#{search}%", "%#{search}%")
