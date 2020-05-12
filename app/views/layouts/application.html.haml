@@ -13,78 +13,75 @@
     = yield(:head)
   %body
     .container
-      #header.span-24.last
-        %logo.span-7
-          = link_to image_tag('logo.png', alt: 'Home', height: 50), '/', class: 'button-img'
-        #search.span-15
-          - if params[:controller] == 'pages' || params[:controller] == 'activities' || params[:controller] == 'bproce_business_roles'
-            &nbsp;
-          - else
+      .header
+        .header__logo= link_to image_tag('logo.png', alt: 'Home', height: 50), '/', class: 'button-img'
+        .header__search
+          - unless %w[pages activities bproce_business_roles home].include? params[:controller]
             %form.inline{ method: 'get' }
               %input{ name: 'search', type: 'search', value: params[:search], placeholder: "искать #{yield :search}", required: true }
               -# %button{type: 'submit'} Искать
             %sup введите подстроку поиска
-        #users.span-2.last
-          .right
-            - if user_signed_in?
-              = link_to image_tag('logout.png', alt: 'Выйти', height: 20), destroy_user_session_path, method: :delete, class: 'button-img'
-            - else
-              = link_to 'Войти', new_user_session_path
-        #menu.span-24.last
-          %ul.nav
-            = content_tag(:li, class: nav_current(bproces_path)) do
-              = link_to 'Процессы', bproces_path
-              %ul.nav
-                = nav_link 'Процессы', bproces_path
-                - if user_signed_in?
-                  - if can? :crud, Metric
-                    = nav_link 'Метрики', metrics_path + '?sort=name'
-            = content_tag(:li, class: nav_current(business_roles_path)) do
+        .header__login
+          - if user_signed_in?
+            = link_to image_tag('logout.png', alt: 'Выйти', height: 20), destroy_user_session_path, method: :delete, class: 'button-img'
+          - else
+            = link_to 'Войти', new_user_session_path
+
+      #menu.span-24.last
+        %ul.nav
+          = content_tag(:li, class: nav_current(bproces_path)) do
+            = link_to 'Процессы', bproces_path
+            %ul.nav
+              = nav_link 'Процессы', bproces_path
               - if user_signed_in?
-                - if current_user.role? :user
-                  = link_to 'Ресурсы', business_roles_path
-              %ul.nav
-                = nav_link 'Роли', business_roles_path
-                = nav_link 'Места', workplaces_path
-                = nav_link 'Приложения', bapps_path
-                = nav_link 'Инф.ресурсы', iresources_path
-            = content_tag(:li, class: nav_current(bproces_path)) do
-              = link_to 'Документы', documents_path
-              %ul.nav
-                = nav_link 'Документы', documents_path
-                = nav_link 'Директивы', directives_path
-                = nav_link 'Термины', terms_path
-                - if user_signed_in?
-                  - if can? :show, Contract
-                    = nav_link 'Договоры', contracts_path if current_user.role? :user
-                    = nav_link 'Контрагенты', agents_path if current_user.role? :user
+                - if can? :crud, Metric
+                  = nav_link 'Метрики', metrics_path + '?sort=name'
+          = content_tag(:li, class: nav_current(business_roles_path)) do
             - if user_signed_in?
-              = content_tag(:li, class: nav_current(tasks_path)) do
-                = link_to 'Действия', letters_path
-                %ul.nav
-                  = nav_link 'Письма', letters_path + '?direction=desc&sort=id'
-                  = nav_link 'Задачи', tasks_path if current_user.role? :user
-                  = nav_link 'Требования', requirements_path if current_user.role? :user
-                  = nav_link 'Распоряжения', orders_path if current_user.executor_in? Rails.configuration.x.dms.process_ko
-            = nav_link 'Сотрудники', users_path
-          %ul.nav{ style: 'float:right' }
-            -# %li Настройки
-            - if user_signed_in?
-              = nav_link current_user.displayname, user_path(current_user)
-            = nav_link '?', '/about'
+              - if current_user.role? :user
+                = link_to 'Ресурсы', business_roles_path
+            %ul.nav
+              = nav_link 'Роли', business_roles_path
+              = nav_link 'Места', workplaces_path
+              = nav_link 'Приложения', bapps_path
+              = nav_link 'Инф.ресурсы', iresources_path
+          = content_tag(:li, class: nav_current(bproces_path)) do
+            = link_to 'Документы', documents_path
+            %ul.nav
+              = nav_link 'Документы', documents_path
+              = nav_link 'Директивы', directives_path
+              = nav_link 'Термины', terms_path
+              - if user_signed_in?
+                - if can? :show, Contract
+                  = nav_link 'Договоры', contracts_path if current_user.role? :user
+                  = nav_link 'Контрагенты', agents_path if current_user.role? :user
+          - if user_signed_in?
+            = content_tag(:li, class: nav_current(tasks_path)) do
+              = link_to 'Действия', letters_path
+              %ul.nav
+                = nav_link 'Письма', letters_path + '?direction=desc&sort=id'
+                = nav_link 'Задачи', tasks_path if current_user.role? :user
+                = nav_link 'Требования', requirements_path if current_user.role? :user
+                = nav_link 'Распоряжения', orders_path if current_user.executor_in? Rails.configuration.x.dms.process_ko
+          = nav_link 'Сотрудники', users_path
+        %ul.nav{ style: 'float:right' }
+          -# %li Настройки
+          - if user_signed_in?
+            = nav_link current_user.displayname, user_path(current_user)
+          = nav_link '?', '/about'
       #main.span-24.last
         - flash.each do |name, msg|
           = content_tag :div, msg, id: "flash_#{name}"
         = yield
       %hr
-      #footer
-        .span-18
+      .footer
+        .footer__about
           &copy;
-          %a{ href: '/' } BP1Step
+          = link_to 'BP1Step', '/'
           2012-2020
-        .span-3
+        .footer__version
           rev. #{(Git::REVISION || 'debug!')[0..6]}
-        .span-3.last
+        .footer__status
           - if user_signed_in?
             - if can? :assign_roles, User
               .right

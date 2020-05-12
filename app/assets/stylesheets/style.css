@@ -323,3 +323,42 @@ textarea {
   resize: none;
   width: 440px;
 }
+
+/* header */
+.header {
+  display: grid;
+  grid-template-columns: 1fr 1fr min-content;
+    padding: 0.5em;
+    column-gap: 1em;
+}
+
+.header__logo {
+  width: 150px;
+}
+
+.header__search {
+
+}
+
+.header__login {
+  width: 5em;
+}
+
+/* footer */
+.footer {
+  display: grid;
+  grid-template-columns: 1fr min-content min-content;
+  column-gap: 1em;
+}
+
+.footer__about {
+
+}
+
+.footer__version {
+  width: 5em;
+}
+
+.footer__status {
+  width: 10em;
+}
