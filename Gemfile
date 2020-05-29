@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'rails', '5.2.4.2'
+gem 'rails', '5.2.4.3'
 
 gem 'bootsnap'
 
@@ -56,6 +56,7 @@ gem 'rails_performance' # monitor the performance
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'byebug'
   gem 'capistrano', '~>3.10.0'
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
@@ -72,7 +73,7 @@ group :development do
 end
 
 group :production, :staging do
-  gem 'puma', '>= 4.3.3'
+  gem 'puma', '>= 4.3.5'
   gem 'rails_12factor', require: false
 end
 
