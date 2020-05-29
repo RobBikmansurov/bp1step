@@ -512,7 +512,7 @@ end
     letter_id = nil
     source = Faker::Lorem.words(number: rand(1..6)).join(' ')
   end
-  Requirement.create!(
+  requirement = Requirement.create(
     label: Faker::Lorem.words(number: rand(2..7)).join(' '),
     date: date,
     duedate: duedate,
@@ -522,7 +522,6 @@ end
     author_id: User.pluck(:id).sample,
     letter_id: letter_id
   )
-  requirement = Requirement.last
   if status.positive?
     create_user_requirement(requirement.id)
     create_user_requirement(requirement.id) if rand(3) == 1
@@ -542,7 +541,8 @@ end
   date = Faker::Date.backward(days: rand(200))
   duedate = date + 7 + rand(9)
   completion_date = date + rand(30)
-  status = [0, 5, 20, 50, 50, 50, 50, 50, 90, 90, 90, 90, 90, 90, 90][rand(15)]
+  status = 90
+  status = [0, 5, 20, 50, 50, 50, 50, 50][rand(8)] if rand(3) == 1
   if rand(5) == 1
     letter_id = Letter.pluck(:id).sample
     requirement_id = nil
@@ -552,7 +552,7 @@ end
   end
   name = Faker::Lorem.words(number: rand(2..7)).join(' ')
   name += _l.to_s if Task.where(name: name).any? # имя задачи должно быть уникальное
-  task = Task.new(
+  task = Task.create(
     name: name,
     created_at: date,
     duedate: duedate,
@@ -566,6 +566,7 @@ end
   if status.positive?
     create_user_task(task.id)
     create_user_task(task.id) if rand(3) == 1
+    create_user_task(task.id) if rand(5) == 1
     task.status = status
     task.result = Faker::Lorem.paragraph(sentence_count: rand(3))
   end
