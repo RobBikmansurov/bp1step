@@ -57,7 +57,7 @@ audit:	## run security check utulities
 	docker-compose run web brakeman --ignore-model-output --rails5 --color --except FileAccess
 console:	## rails console
 	RAILS_ENV=development docker-compose run web rails console
-web:		## rub web container
+web:		## run web container
 	docker-compose run web $(RUN_ARGS)
 codeclimate:	## run Codeclimate CLI
 	# docker pull codeclimate/codeclimate
