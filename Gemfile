@@ -42,9 +42,6 @@ gem 'tzinfo-data'
 gem 'exception_notification'
 gem 'whenever' # cron jobs (crontab -l, crontab -e)
 
-gem 'actionpack-action_caching'
-gem 'actionpack-page_caching' # кеширование
-
 gem 'faker'
 
 gem 'loofah', '>= 2.5.0'

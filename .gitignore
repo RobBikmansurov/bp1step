@@ -45,3 +45,5 @@ ldap-auth.txt
 ldap.rb
 node_modules/*
 storage/*
+
+.byebug_history
