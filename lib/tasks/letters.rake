@@ -41,10 +41,8 @@ namespace :bp1step do
         l_number = name
         l_sender = 'Отделение по Пермскому краю ЦБ РФ'
         l_subject = ' ' + name
-      # when /\AVES\d{6}_\d{1,}\(\d{1,}\)/
-      # when /\AVES\d{6}_+/                                 # вестник банка росии
-      when /\AВестник Банка России/
-        l_number = name[/№ \d{1,}.*\(\d{1,}\)/]
+      when /\AВЕСТНИК БАНКА РОССИИ/ # вестник банка росии
+        l_number = name[/№ \d{1,}.*\(.*\)/]
         l_date = name[/\d\d\.\d\d\.\d{1,4}/]
         l_sender = 'Банк России'
         l_subject = "Вестник Банка России #{l_number} от #{l_date}"
