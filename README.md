@@ -91,9 +91,9 @@ Development environment requirements :
 $ git clone git@github.com:RobBikmansurov/bp1step.git
 $ cd bp1step
 $ docker-compose build
-$ docker-compose run web bundle install
-$ docker-compose run web rake db:create
-$ docker-compose run web rake db:setup
+$ docker-compose run app bundle install
+$ docker-compose run app rake db:create
+$ docker-compose run app rake db:setup
 $ docker-compose up
 ```
 
