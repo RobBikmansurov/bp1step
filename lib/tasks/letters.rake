@@ -41,13 +41,11 @@ namespace :bp1step do
         l_number = name
         l_sender = 'Отделение по Пермскому краю ЦБ РФ'
         l_subject = ' ' + name
-      # when /\AVES\d{6}_\d{1,}\(\d{1,}\)/
-      when /\AVES\d{6}_+/                                 # вестник банка росии
-        l_number = name[/_\d+\(?f?/]
-        l_number = (l_number[1..l_number.size - 2]).to_s
-        l_number = "#{l_number.to_i} #{name[/\(\d+\)?f?/]}"
+      when /\AВЕСТНИК БАНКА РОССИИ/ # вестник банка росии
+        l_number = name[/№ \d{1,}.*\(.*\)/]
+        l_date = name[/\d\d\.\d\d\.\d{1,4}/]
         l_sender = 'Банк России'
-        l_subject = "Вестник Банка России No #{l_number} от #{l_date}"
+        l_subject = "Вестник Банка России #{l_number} от #{l_date}"
       when /\AGR-OT-\d+/                                  # gr-ot-MM.DOC
         l_number = name
         l_sender = 'Отделение по Пермскому краю ЦБ РФ'

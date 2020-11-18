@@ -15,9 +15,11 @@ Business processes documentation organization and generation, the 1st step of in
 
 #
 
-GitHub CI: [![Build Status](https://travis-ci.org/RobBikmansurov/bp1step.svg?branch=master)](https://travis-ci.org/RobBikmansurov/bp1step)
+[![Build Status](https://travis-ci.org/RobBikmansurov/bp1step.svg?branch=master)](https://travis-ci.org/RobBikmansurov/bp1step)
 [![Maintainability](https://api.codeclimate.com/v1/badges/243fc04d775701086f9f/maintainability)](https://codeclimate.com/github/RobBikmansurov/bp1step/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/243fc04d775701086f9f/test_coverage)](https://codeclimate.com/github/RobBikmansurov/bp1step/test_coverage)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 
 Язык: русский
 
@@ -91,9 +93,9 @@ Development environment requirements :
 $ git clone git@github.com:RobBikmansurov/bp1step.git
 $ cd bp1step
 $ docker-compose build
-$ docker-compose run web bundle install
-$ docker-compose run web rake db:create
-$ docker-compose run web rake db:setup
+$ docker-compose run app bundle install
+$ docker-compose run app rake db:create
+$ docker-compose run app rake db:setup
 $ docker-compose up
 ```
 

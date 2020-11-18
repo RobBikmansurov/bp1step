@@ -24,7 +24,7 @@ services:
     ports:
     - "6379"
 
-  web:
+  app:
     build:
       context: .
     container_name: bp1step

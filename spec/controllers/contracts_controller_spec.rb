@@ -201,8 +201,6 @@ RSpec.describe ContractsController do
   end
 
   it 'return clone' do
-    contract = create :contract, owner: user, agent: agent
-    p contract.inspect
     bproce_contract = create :bproce_contract, bproce: bproce, contract: contract
     get :clone, params: { id: contract.id }
     expect(response).to render_template('contracts/clone')
