@@ -106,34 +106,31 @@ $ docker-compose run web rubocop
 $ docker-compose run web rspec
 ```
 
-
-## PostgreSQL install
+### PostgreSQL create database
+```
 sudo su postgres
 psql
 postgres=# create role bp1step with createdb login password 'pgbp1step';
 postgres=# create extension citext;
 postgres=# create database bp1step owner bp1step;
 postgres=# \l
+```
 
 
+```
 >gem install bundler
 >bundle install
 
-Для работы с пользователями, хранящими пароли в БД необходимо выполнить скрипт
-
+# Для работы с пользователями, хранящими пароли в БД необходимо выполнить скрипт
 >./db.auth.on
-
 >rake db:setup
-
 >rake db:seed
-
 >rails g public_activity:migration
-
 >rake db:migrate
+>bundle exec rails s
 
->rails s
-
-Далее в браузере http://localhost:3000
+# Далее в браузере http://localhost:3000
+```
 
 ## unoconv - конвертер в *.PDF
 ```unoconv -f pdf public/store/2472.20200203.Исходный документ.odt```
@@ -176,7 +173,7 @@ The author will be grateful for any help for improving the style and writing tes
 MIT
  see in LICENSE file.
 
- Copyright &copy; 2012-2019 Rob Bikmansurov. All rights reserved.
+ Copyright &copy; 2012-2020 Rob Bikmansurov. All rights reserved.
  
  Author: [Rob Bikmansurov](https://bikmansurov.ru), contact: ](mailto:robb@mail.ru)
 
