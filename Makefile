@@ -3,6 +3,10 @@ THIS_FILE := $(lastword $(MAKEFILE_LIST))
 .PHONY: help build up start down destroy stop restart logs logs-api ps login-timescale login-api psql setup test rubocop rubocop-a console app codeclimate
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+help1:
+	@awk -F ':|##' '/^[^\t].+?:.*?##/ {\
+	printf "\033[36m%-30s\033[0m %s\n", $$1, $$NF \
+	}' $(MAKEFILE_LIST)
 
 add-migration:
 	docker-compose run app bundle exec rails g migration $(RUN_ARGS)

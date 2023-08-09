@@ -23,7 +23,7 @@ gem 'haml-rails'
 
 gem 'acts-as-taggable-on', '>=6.5.0'
 gem 'awesome_nested_set' # , :git => 'git://github.com/collectiveidea/awesome_nested_set'
-gem 'chartkick', '>= 3.3.0'
+gem 'chartkick', '>= 3.4.0'
 gem 'groupdate'
 gem 'jcrop-rails-v2'
 gem 'odf-report'
@@ -35,7 +35,7 @@ gem 'the_sortable_tree', '>= 2.4.0'
 # gem 'pdf-reader'
 gem 'pg'
 gem 'pg_search'
-gem 'tiny_tds', '~> 0.7.0' # MS SQL
+## gem 'tiny_tds', '~> 0.7.0', require: false # MS SQL
 
 gem 'tzinfo-data'
 

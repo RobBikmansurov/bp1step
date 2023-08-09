@@ -36,7 +36,7 @@ class User < ApplicationRecord
   # аутентификация - через БД
   # devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
   # аутентификация - через LDAP
-  devise :ldap_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
 
   # before_create :create_role
   after_create :create_role

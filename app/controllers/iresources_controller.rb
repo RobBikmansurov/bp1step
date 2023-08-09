@@ -112,7 +112,7 @@ class IresourcesController < ApplicationController
   def iresource_params
     params.require(:iresource).permit(:level, :label, :location, :alocation, :volume, :note,
                                       :access_read, :access_write, :access_other, :risk_category,
-                                      :user_id, :owner_name)
+                                      :user_id, :owner_name, :level)
   end
 
   def sort_column
