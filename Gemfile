@@ -42,8 +42,6 @@ gem 'tzinfo-data'
 gem 'exception_notification'
 gem 'whenever' # cron jobs (crontab -l, crontab -e)
 
-gem 'faker'
-
 gem 'loofah', '>= 2.5.0'
 gem 'nokogiri', '>= 1.10.8'
 gem 'rack', '>= 2.2.3'
@@ -88,6 +86,7 @@ end
 
 group :development, :test do
   gem 'factory_bot_rails'
+  gem 'faker'
   gem 'rspec-rails'
   gem 'rubocop'
   gem 'rubocop-faker'

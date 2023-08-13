@@ -4,8 +4,8 @@
 class Agent < ApplicationRecord
   # attr_accessible :shortname, :name, :town, :address, :contacts, :agent_name, :note
 
-  has_many :contract, through: :agent_contract
   has_many :agent_contract, dependent: :destroy
+  has_many :contract, through: :agent_contract
 
   validates :name, presence: true,
                    length: { minimum: 3, maximum: 255 }

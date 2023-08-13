@@ -4,7 +4,8 @@ require:
   - rubocop-faker
   - rubocop-rails
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.7.2
+  NewCops: enable
   Exclude:
     - 'lib/tasks/*'
     - 'lib/paperclip_processors/*'
