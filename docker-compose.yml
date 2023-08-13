@@ -8,37 +8,54 @@
 # docker-compose run web rake -T bp1step:
 version: '3'
 
+x-environments: &environments
+    HISTFILE: /app/log/.bash_history
+    EDITOR: vim
+    BUNDLE_APP_CONFIG: ../.bundle
+    DATABASE_URL: postgres://postgres:secret@postgres:5432
+    REDIS_DSN: redis://redis:6379
+
 services:
-  db:
-    image: postgres:11-alpine
-    container_name: bp1step_pg
+  postgres:
+    image: postgres:14-alpine
     environment:
       POSTGRES_PASSWORD: secret
     ports:
       - 5432:5432
     volumes:
-      - db-data:/var/lib/postgresql/data:cached
+      - postgres:/var/lib/postgresql/data:cached
+    healthcheck:
+      test: pg_isready -U postgres -h 127.0.0.1
+      interval: 10s
+
   redis:
     image: redis:5-alpine
-    container_name: bp1step_redis
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - redis:/data
     ports:
-    - "6379"
+      - 6379
+    healthcheck:
+      test: redis-cli ping
+      interval: 10s
 
-  app:
+  app: 
     build:
       context: .
     container_name: bp1step
     command: /bin/bash -c "rm -f /tmp/server.pid && bundle exec rails server -b 0.0.0.0 -P /tmp/server.pid"
     # command: bash -c "foreman start -f Procfile.dev-server"
     environment:
-      DATABASE_HOST: db
+      DATABASE_HOST: postgres
       REDIS_URL: redis://redis:6379
     ports:
       - 3000:3000
     depends_on:
-      - db
+      - postgres
       - redis
     volumes:
       - .:/app
 volumes:
-  db-data:
+  postgres:
+  redis:

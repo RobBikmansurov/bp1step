@@ -86,17 +86,14 @@ Demo: [bp1step.herokuapp.com](https://bp1step.herokuapp.com/about) - без вх
 ### Install
 
 Development environment requirements :
-- [Ruby](https://www.ruby-lang.org/en/) >= 2.6.3
 - [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
 
 ```bash
 $ git clone git@github.com:RobBikmansurov/bp1step.git
 $ cd bp1step
-$ docker-compose build
-$ docker-compose run app bundle install
-$ docker-compose run app rake db:create
-$ docker-compose run app rake db:setup
-$ docker-compose up
+$ gem install dip
+$ dip provision
+$ dip up
 ```
 
 Now you can access the application with your browser on: http://localhost:3000
@@ -104,35 +101,10 @@ Now you can access the application with your browser on: http://localhost:3000
 
 ### Test and Style
 ```bash
-$ docker-compose run web rubocop
-$ docker-compose run web rspec
+$ dip rubocop
+$ dip rspec
 ```
 
-### PostgreSQL create database
-```
-sudo su postgres
-psql
-postgres=# create role bp1step with createdb login password 'pgbp1step';
-postgres=# create extension citext;
-postgres=# create database bp1step owner bp1step;
-postgres=# \l
-```
-
-
-```
->gem install bundler
->bundle install
-
-# Для работы с пользователями, хранящими пароли в БД необходимо выполнить скрипт
->./db.auth.on
->rake db:setup
->rake db:seed
->rails g public_activity:migration
->rake db:migrate
->bundle exec rails s
-
-# Далее в браузере http://localhost:3000
-```
 
 ## unoconv - конвертер в *.PDF
 ```unoconv -f pdf public/store/2472.20200203.Исходный документ.odt```
@@ -158,7 +130,7 @@ crontab -e
 ## Testing
 
 ```
-$ docker-compose run web rspec
+$ dip rspec
 ```
 The author will be grateful for any help for improving the style and writing tests.
 

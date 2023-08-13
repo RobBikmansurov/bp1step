@@ -2,8 +2,7 @@
 
 FactoryBot.define do
   factory :agent do
-    sequence(:id, &:to_s)
-    name { "agent-#{id}" }
-    town { "city#{id}" }
+    name { Faker::Company.name }
+    town { Faker::Address.city }
   end
 end

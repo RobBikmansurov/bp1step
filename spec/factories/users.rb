@@ -3,11 +3,11 @@
 FactoryBot.define do
   factory :user, aliases: [:author] do
     sequence(:id, &:to_s)
-    username      { "u#{id}" }
-    email         { "mail#{id}@example.com" }
+    username      { Faker::Internet.username }
+    email         { Faker::Internet.email }
     displayname   { "displayname#{id}" }
-    lastname      { "lastname#{id}" }
-    firstname     { "firstname#{id}" }
+    lastname      { Faker::Name.last_name }
+    firstname     { Faker::Name.first_name }
     password        { 'password' }
     # password_confirmation 'password'
     encrypted_password { 'secret' }

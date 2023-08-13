@@ -21,7 +21,6 @@ class Contract < ApplicationRecord
   validates :contract_place, length: { maximum: 30 }
   # validates :owner_id, presence: :true
 
-  belongs_to :agent
   belongs_to :owner, class_name: 'User'
   belongs_to :payer, class_name: 'User', optional: true
   # belongs_to :parent, class_name: 'Contract'
@@ -30,6 +29,7 @@ class Contract < ApplicationRecord
   has_many :bproce, through: :bproce_contract
   has_many :bproce_contract, dependent: :destroy
   has_many :contract_scan, dependent: :destroy
+  has_one :agent, through: :agent_contract
   # has_many :children, :class => 'Contract', foreign_key: :parent_id
 
   # attr_accessible :owner_name, :owner_id, :payer_name, :payer_id, :agent_name, :agent_id,
