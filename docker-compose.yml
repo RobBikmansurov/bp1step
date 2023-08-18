@@ -12,6 +12,7 @@ x-environments: &environments
     HISTFILE: /app/log/.bash_history
     EDITOR: vim
     BUNDLE_APP_CONFIG: ../.bundle
+    DATABASE_HOST: postgres
     DATABASE_URL: postgres://postgres:secret@postgres:5432
     REDIS_DSN: redis://redis:6379
 
@@ -40,22 +41,33 @@ services:
       test: redis-cli ping
       interval: 10s
 
-  app: 
+  app:
     build:
       context: .
-    container_name: bp1step
+      args:
+        BASE_IMAGE: ruby:2.7.3-slim
+        POSTGRES_VERSION: '14'
+        RUBYGEMS_VERSION: '3.3.26'
+        BUNDLER_VERSION: '2.4.13'
     command: /bin/bash -c "rm -f /tmp/server.pid && bundle exec rails server -b 0.0.0.0 -P /tmp/server.pid"
     # command: bash -c "foreman start -f Procfile.dev-server"
     environment:
-      DATABASE_HOST: postgres
-      REDIS_URL: redis://redis:6379
+      <<: *environments
     ports:
       - 3000:3000
     depends_on:
       - postgres
       - redis
+    working_dir: ${WORK_DIR:-/app}
     volumes:
-      - .:/app
+      - .:/app:cached
+      - ./..:/gems:cached
+      - .psqlrc:/root/.psqlrc:ro
+      - rails_cache:/app/tmp/cache
+      - bundle:/usr/local/bundle
+
 volumes:
   postgres:
   redis:
+  rails_cache:
+  bundle:

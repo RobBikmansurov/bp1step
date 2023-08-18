@@ -14,7 +14,7 @@ describe Requirement do
   context 'with associations' do
     it { is_expected.to belong_to(:letter).optional }
     it { is_expected.to belong_to(:author) }
-    it { is_expected.to have_many(:user) }
+    it { is_expected.to have_many(:user).through(:user_requirement) }
     it { is_expected.to have_many(:user_requirement).dependent(:destroy) }
     it { is_expected.to have_many(:task) }
   end

@@ -31,7 +31,7 @@ describe Contract do
     it { is_expected.to belong_to(:parent).class_name('Contract').optional }
     it { is_expected.to belong_to(:owner).class_name('User') }
     it { is_expected.to belong_to(:payer).class_name('User').optional }
-    it { is_expected.to has_one(:agent).through('agent_contract') }
+    it { is_expected.to belong_to(:agent) }
     it { is_expected.to have_many(:bproce_contract).dependent(:destroy) }
     it { is_expected.to have_many(:contract_scan).dependent(:destroy) }
   end

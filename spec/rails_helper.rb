@@ -62,6 +62,7 @@ RSpec.configure do |config|
   config.include Paperclip::Shoulda::Matchers
 
   config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::TestHelpers, type: :controller
 end
 
 PublicActivity.enabled = false

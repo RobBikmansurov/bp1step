@@ -16,8 +16,8 @@ class Requirement < ApplicationRecord
   belongs_to :letter, optional: true
   # belongs_to :user
   belongs_to :author, class_name: 'User'
-  has_many :user, through: :user_requirement
   has_many :user_requirement, dependent: :destroy # ответственные за Требование
+  has_many :user, through: :user_requirement
   has_many :task, dependent: :destroy
 
   # attr_accessible :label, :date, :source, :duedate, :body, :status, :status_name,

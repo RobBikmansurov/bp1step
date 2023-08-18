@@ -26,10 +26,10 @@ class Contract < ApplicationRecord
   # belongs_to :parent, class_name: 'Contract'
   # belongs_to :contract
 
-  has_many :bproce, through: :bproce_contract
   has_many :bproce_contract, dependent: :destroy
+  has_many :bproce, through: :bproce_contract
   has_many :contract_scan, dependent: :destroy
-  has_one :agent, through: :agent_contract
+  belongs_to :agent
   # has_many :children, :class => 'Contract', foreign_key: :parent_id
 
   # attr_accessible :owner_name, :owner_id, :payer_name, :payer_id, :agent_name, :agent_id,

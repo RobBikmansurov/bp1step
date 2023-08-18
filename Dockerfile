@@ -1,27 +1,28 @@
-# Dockerfile
-# /path/to/your/app/Dockerfile
-# docker-compose up
+ARG BASE_IMAGE
+
+FROM ${BASE_IMAGE}
 
 ARG POSTGRES_VERSION
 ARG RUBYGEMS_VERSION
 ARG BUNDLER_VERSION
 
-FROM ruby:2.7.2-slim
-
-RUN apt-get update && apt-get install -y \
-  curl \
+RUN apt-get -qq update && \
+  DEBIAN_FRONTEND=noninteractive apt-get -qy install \
+  curl less vim \
   build-essential \
   freetds-dev freetds-bin \
-  libpq-dev shared-mime-info apt-utils && \
-  curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+  libpq-dev lsb-release shared-mime-info apt-utils && \
+  echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/postgres.list && \
+  curl -sS https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+  curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-  apt-get update && apt-get install -y nodejs \
+  apt-get -qq update && \
+  DEBIAN_FRONTEND=noninteractive apt-get -qy install nodejs && \
+  apt-get -y install postgresql-client-${POSTGRES_VERSION} \
   && apt-get clean \
   && rm -rf /var/cache/apt/archives/* \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
   && truncate -s 0 /var/log/*log
-
-WORKDIR /app
 
 ENV LANG=C.UTF-8 \
   BUNDLE_JOBS=4 \

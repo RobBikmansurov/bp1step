@@ -2,6 +2,6 @@
 
 if Rails.env.test?  
   ActiveSupport.on_load(:active_record) do
-    ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.create_unlogged_tables = true 
+    #ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.create_unlogged_tables = true 
   end
 end
