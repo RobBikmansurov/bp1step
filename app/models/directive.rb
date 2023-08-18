@@ -18,14 +18,14 @@ class Directive < ApplicationRecord
 
   def shortname
     if approval
-      title + ' ' + number + ' от ' + approval.strftime('%d.%m.%Y')
+      "#{title} #{number} от #{approval.strftime('%d.%m.%Y')}"
     else
-      title + ' ' + number
+      "#{title} #{number}"
     end
   end
 
   def midname
-    title + ' ' + body + ' №' + number + (approval ? ' ' + approval.strftime('%d.%m.%Y') : '')
+    "#{title} #{body} №#{number}#{approval ? " #{approval.strftime('%d.%m.%Y')}" : ''}"
   end
 
   # добавляет #id в конце строки

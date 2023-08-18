@@ -64,10 +64,10 @@ class Document < ApplicationRecord
     return unless document_file
 
     extention = File.extname(document_file.path)
-    if extention != '.pdf'
-      document_file.path[0, document_file.path.length - extention.length] + '.pdf' # путь к файлу PDF для просмотра
+    if extention == '.pdf'
+      document_file.path # путь к файлу PDF для просмотра
     else
-      document_file.path
+      "#{document_file.path[0, document_file.path.length - extention.length]}.pdf"
     end
   end
 
@@ -75,10 +75,10 @@ class Document < ApplicationRecord
     return unless document_file
 
     extention = File.extname(document_file.path)
-    if extention != '.pdf'
-      document_file.url.gsub(extention, '.pdf') # url файла PDF для просмотра
+    if extention == '.pdf'
+      document_file.url # url файла PDF для просмотра
     else
-      document_file.url
+      document_file.url.gsub(extention, '.pdf')
     end
   end
 

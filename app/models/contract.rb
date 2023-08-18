@@ -75,9 +75,9 @@ class Contract < ApplicationRecord
   def dates
     date = date_begin&.strftime('%d.%m.%Y')
     if date_end
-      'c ' + date + ' по ' + date_end&.strftime('%d.%m.%Y')
+      "c #{date} по #{date_end&.strftime('%d.%m.%Y')}"
     else
-      'от ' + date
+      "от #{date}"
     end
   end
 

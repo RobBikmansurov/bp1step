@@ -13,7 +13,7 @@ class User < ApplicationRecord
                     default_url: '/store/images/:style/missing.png',
                     url: '/store/images/:id.:style.:extension',
                     path: ':rails_root/public/store/images/:id.:style.:extension'
-  validates_attachment_content_type :avatar, content_type: %r{\Aimage\/.*\Z}
+  validates_attachment_content_type :avatar, content_type: %r{\Aimage/.*\Z}
   do_not_validate_attachment_file_type :avatar # paperclip >4.0
   validates :avatar, attachment_presence: false
 
@@ -41,6 +41,7 @@ class User < ApplicationRecord
   # before_create :create_role
   after_create :create_role
   attr_accessor :disable_ldap
+
   before_save :ldap_email, :ldap_firstname, :ldap_displayname, :ldap_email unless :disable_ldap
 
   # attr_accessible :username, :email, :password, :password_confirmation, :remember_me,

@@ -9,8 +9,8 @@ class UserTask < ApplicationRecord
   belongs_to :user
   belongs_to :task
 
-  scope :user, ->(user) { where('user_id = ?', user) }
-  scope :unviewed, -> { where('review_date IS NULL').joins(:task).merge(Task.unfinished) }
+  scope :user, ->(user) { where(user_id: user) }
+  scope :unviewed, -> { where(review_date: nil).joins(:task).merge(Task.unfinished) }
 
   # attr_accessible :user_id, :task_id, :status, :review_date, :user_name, :status_boolean
   attr_reader :responsible
