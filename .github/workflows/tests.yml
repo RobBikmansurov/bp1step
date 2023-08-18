@@ -1,0 +1,61 @@
+name: Tests
+
+on:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    env:
+      BUNDLE_WITHOUT: production
+
+    services:
+      postgres:
+        image: postgres:14-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: bp1step_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.3
+          bundler-cache: true
+
+      - name: Setup database and Run RSpec
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:password@localhost:5432/bp1step_test
+        run: |
+          bin/rails db:schema:load
+          bin/rails db:migrate
+          bundle exec rspec
+
+      - name: Run linters
+        run: |
+          gem install rubocop rubocop-performance rubocop-rails rubocop-rspec
+          rubocop --parallel
+        continue-on-error: false
+
+      - name: Run security checks
+        run: |
+          gem install bundler-audit
+          bundler-audit --update
+          gem install brakeman
+          brakeman -q -w2
+        continue-on-error: true
