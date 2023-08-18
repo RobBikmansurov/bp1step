@@ -10,7 +10,7 @@ gem 'bootsnap'
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'jquery-rails'
-gem 'jquery-ui-rails', '5.0.5'
+gem 'jquery-ui-rails', '6.0.0'
 gem 'uglifier', '~> 4.1.0'
 
 gem 'alphabetical_paginate'
