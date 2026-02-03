@@ -47,3 +47,5 @@ node_modules/*
 storage/*
 
 .byebug_history
+.DS_Store
+docker
